@@ -1,0 +1,35 @@
+# Local analysis outputs and environment artefacts
+artifacts/
+outputs/
+results/
+.Rproj.user/
+renv/library/
+__pycache__/
+*.pyc
+
+# Credentials and private connection material
+.env
+*.pem
+*.key
+id_rsa*
+
+# Private project operations and source inputs
+discovery/inputs/
+discovery/operations/
+!discovery/operations/contract-settlement.md
+!discovery/operations/decision-frontier.md
+!discovery/operations/implementation-command-contract.md
+!discovery/operations/language-and-execution-approval.md
+!discovery/operations/shared-contract-proposal.md
+!discovery/operations/source-contract-proposal.md
+
+# Clinical/source-specific audit extracts
+discovery/research/aiu-hpc-environment-audit.md
+discovery/research/clinical-*
+discovery/research/embedded-clinical-header-scan.json
+discovery/research/*-structure.json
+
+# Private delegation and review records
+discovery/reviews/opus-*
+discovery/reviews/spark-*
+discovery/reviews/three-study-design-changes.diff

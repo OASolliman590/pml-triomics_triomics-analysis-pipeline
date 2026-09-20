@@ -1,0 +1,605 @@
+{
+  "status": "BLOCKED; command specifications only",
+  "tickets": [
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "A-T01",
+      "title": "Validate and explain a synthetic Study configuration",
+      "dependencies": [],
+      "stage": "A",
+      "tests": [
+        "config"
+      ],
+      "path": "discovery/tickets/A-T01.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "A-T02",
+      "title": "Generate and ingest explicitly keyed synthetic multi-Block data",
+      "dependencies": [
+        "A-T01"
+      ],
+      "stage": "A",
+      "tests": [
+        "ingest",
+        "simulate-study"
+      ],
+      "path": "discovery/tickets/A-T02.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "A-T03",
+      "title": "Assemble a Study without silently changing its Samples",
+      "dependencies": [
+        "A-T02"
+      ],
+      "stage": "A",
+      "tests": [
+        "containers",
+        "sample-alignment"
+      ],
+      "path": "discovery/tickets/A-T03.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "A-T04",
+      "title": "Run the approved proteomic policy with complete provenance",
+      "dependencies": [
+        "A-T03"
+      ],
+      "stage": "A",
+      "tests": [
+        "profile-contract",
+        "profile-protein"
+      ],
+      "path": "discovery/tickets/A-T04.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "A-T05",
+      "title": "Run the approved metabolomic policy with an explicit reference",
+      "dependencies": [
+        "A-T04"
+      ],
+      "stage": "A",
+      "tests": [
+        "profile-metabolite"
+      ],
+      "path": "discovery/tickets/A-T05.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "A-T06",
+      "title": "Preserve lipid chemistry and endpoint meaning end to end",
+      "dependencies": [
+        "A-T04"
+      ],
+      "stage": "A",
+      "tests": [
+        "derived-lipids",
+        "profile-lipid"
+      ],
+      "path": "discovery/tickets/A-T06.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "A-T07",
+      "title": "Apply approved preprocessing inside a held-out split",
+      "dependencies": [
+        "A-T04",
+        "A-T05",
+        "A-T06"
+      ],
+      "stage": "A",
+      "tests": [
+        "preprocessing-resampling"
+      ],
+      "path": "discovery/tickets/A-T07.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "A-T08",
+      "title": "Reproduce, extend and hand off a complete A stage",
+      "dependencies": [
+        "A-T07",
+        "A-T09"
+      ],
+      "stage": "A",
+      "tests": [
+        "a-end-to-end",
+        "resume"
+      ],
+      "path": "discovery/tickets/A-T08.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "A-T09",
+      "title": "clinical source/dictionary/linkage",
+      "dependencies": [
+        "A-T02"
+      ],
+      "stage": "A",
+      "tests": [
+        "clinical-ingest"
+      ],
+      "path": "discovery/tickets/A-T09.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "B-T01",
+      "title": "Independent two-group inference slice",
+      "dependencies": [
+        "A-T08"
+      ],
+      "stage": "B",
+      "tests": [
+        "independent-statistics"
+      ],
+      "path": "discovery/tickets/B-T01.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "B-T02",
+      "title": "Declared contrasts and continuous covariates",
+      "dependencies": [
+        "B-T01"
+      ],
+      "stage": "B",
+      "tests": [
+        "design-contrasts"
+      ],
+      "path": "discovery/tickets/B-T02.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "B-T03",
+      "title": "Paired inference and shared representation",
+      "dependencies": [
+        "B-T01"
+      ],
+      "stage": "B",
+      "tests": [
+        "paired-statistics"
+      ],
+      "path": "discovery/tickets/B-T03.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "B-T04",
+      "title": "Multi-visit and trajectory inference",
+      "dependencies": [
+        "B-T02",
+        "B-T03"
+      ],
+      "stage": "B",
+      "tests": [
+        "repeated-trajectories"
+      ],
+      "path": "discovery/tickets/B-T04.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "B-T05",
+      "title": "Count-dependent precision slice",
+      "dependencies": [
+        "B-T01",
+        "B-T03"
+      ],
+      "stage": "B",
+      "tests": [
+        "count-adjusted-statistics"
+      ],
+      "path": "discovery/tickets/B-T05.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "B-T06",
+      "title": "Feature families, thresholds and sensitivity",
+      "dependencies": [
+        "B-T02",
+        "B-T03"
+      ],
+      "stage": "B",
+      "tests": [
+        "statistical-families"
+      ],
+      "path": "discovery/tickets/B-T06.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "B-T07",
+      "title": "Reproducible B CLI/report handoff milestone",
+      "dependencies": [
+        "B-T04",
+        "B-T05",
+        "B-T06",
+        "B-T08",
+        "B-T09"
+      ],
+      "stage": "B",
+      "tests": [
+        "b-milestone"
+      ],
+      "path": "discovery/tickets/B-T07.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "B-T08",
+      "title": "one clinical association family",
+      "dependencies": [
+        "A-T09",
+        "B-T01"
+      ],
+      "stage": "B",
+      "tests": [
+        "clinical-between"
+      ],
+      "path": "discovery/tickets/B-T08.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "B-T09",
+      "title": "longitudinal clinical association",
+      "dependencies": [
+        "B-T08",
+        "B-T03"
+      ],
+      "stage": "B",
+      "tests": [
+        "clinical-within"
+      ],
+      "path": "discovery/tickets/B-T09.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "C-01",
+      "title": "common result and baseline PCA slice",
+      "dependencies": [
+        "B-T07"
+      ],
+      "stage": "C",
+      "tests": [
+        "integration-baseline"
+      ],
+      "path": "discovery/tickets/C-01.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "C-02",
+      "title": "supervised baseline and evaluation",
+      "dependencies": [
+        "C-01",
+        "A-T07"
+      ],
+      "stage": "C",
+      "tests": [
+        "integration-validation"
+      ],
+      "path": "discovery/tickets/C-02.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "C-03",
+      "title": "DIABLO categorical slice",
+      "dependencies": [
+        "C-02"
+      ],
+      "stage": "C",
+      "tests": [
+        "integration-diablo"
+      ],
+      "path": "discovery/tickets/C-03.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "C-04",
+      "title": "continuous block.spls slice",
+      "dependencies": [
+        "C-03"
+      ],
+      "stage": "C",
+      "tests": [
+        "integration-continuous"
+      ],
+      "path": "discovery/tickets/C-04.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "C-05",
+      "title": "MOFA slice",
+      "dependencies": [
+        "C-04"
+      ],
+      "stage": "C",
+      "tests": [
+        "integration-mofa"
+      ],
+      "path": "discovery/tickets/C-05.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "C-06",
+      "title": "comparison and D handoff slice",
+      "dependencies": [
+        "C-05",
+        "C-08"
+      ],
+      "stage": "C",
+      "tests": [
+        "integration-handoff"
+      ],
+      "path": "discovery/tickets/C-06.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "C-08",
+      "title": "score/clinical association handoff",
+      "dependencies": [
+        "C-05",
+        "B-T08",
+        "B-T09"
+      ],
+      "stage": "C",
+      "tests": [
+        "clinical-score-handoff"
+      ],
+      "path": "discovery/tickets/C-08.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "C-09",
+      "title": "incremental clinical prediction, conditional",
+      "dependencies": [
+        "C-08",
+        "C-02"
+      ],
+      "stage": "C",
+      "tests": [
+        "clinical-incremental-prediction"
+      ],
+      "path": "discovery/tickets/C-09.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "D-T01",
+      "title": "Explain all candidates with every route disabled. Milestone 7. Blocked by approved A/B/C identity/result contracts, the preceding pipeline milestones and D decisions.",
+      "dependencies": [
+        "C-06"
+      ],
+      "stage": "D",
+      "tests": [
+        "d-disabled"
+      ],
+      "path": "discovery/tickets/D-T01.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "D-T02",
+      "title": "Map ambiguous lipids locally. Milestone 7. Blocked by D-T01 and approved parser/resource licences.",
+      "dependencies": [
+        "D-T01"
+      ],
+      "stage": "D",
+      "tests": [
+        "d-lipid-mapping"
+      ],
+      "path": "discovery/tickets/D-T02.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "D-T03",
+      "title": "Map gene products and reactions locally. Milestone 7. Blocked by D-T01 and chosen resource/ChEBI review.",
+      "dependencies": [
+        "D-T01"
+      ],
+      "stage": "D",
+      "tests": [
+        "d-reaction-mapping"
+      ],
+      "path": "discovery/tickets/D-T03.md"
+    },
+    {
+      "required_mapping_gates": "D-T02, D-T03, or both according to the declared enrichment method and consumed namespaces; selected gates required before method execution.",
+      "enabled_adapter_gates": null,
+      "id": "D-T04",
+      "title": "Perform one explicitly specified enrichment analysis. Milestone 7. Blocked by relevant D-T02/03, universe/rank ADR and method/multiplicity decisions.",
+      "dependencies": [
+        "D-T01"
+      ],
+      "stage": "D",
+      "tests": [
+        "d-enrichment-contract"
+      ],
+      "path": "discovery/tickets/D-T04.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": "For each explicitly enabled adapter: its ticket plus rights/model/resource gates; disabled or optional-unavailable is reported without treating the adapter complete.",
+      "id": "D-T05",
+      "title": "Prove optional-route failure and required-route completeness. Milestone 7. Blocked by D-T01 and each adapter included.",
+      "dependencies": [
+        "D-T01"
+      ],
+      "stage": "D",
+      "tests": [
+        "d-resource-state"
+      ],
+      "path": "discovery/tickets/D-T05.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "D-T06",
+      "title": "Native MOFA enrichment, conditional. Milestone 7 conditional subroute. Blocked by D-T04 plus model-input ADR, pinned backend and independent null/sign review.",
+      "dependencies": [
+        "D-T04",
+        "D-T05"
+      ],
+      "stage": "D",
+      "tests": [
+        "d-mofa-input"
+      ],
+      "path": "discovery/tickets/D-T06.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "D-T07",
+      "title": "BioPAN comparison, conditional. Milestone 7 conditional subroute. Blocked by D-T02/05 plus local rights, compatible quantitative/design contract and calculation review.",
+      "dependencies": [
+        "D-T02",
+        "D-T05"
+      ],
+      "stage": "D",
+      "tests": [
+        "d-biopan-design"
+      ],
+      "path": "discovery/tickets/D-T07.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": "For each explicitly enabled adapter: its ticket plus rights/model/resource gates; disabled or optional-unavailable is reported without treating the adapter complete.",
+      "id": "D-T08",
+      "title": "Full-pipeline offline, safe report. Milestone 8 only, after milestone 7 disposition. Blocked by approved A/B/C report exports, D-T01/05 and all adapters chosen for milestone.",
+      "dependencies": [
+        "D-T05"
+      ],
+      "stage": "report",
+      "tests": [
+        "d-report-safety"
+      ],
+      "path": "discovery/tickets/D-T08.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "D-T09",
+      "title": "Reproducible paired and independent two-group walkthroughs. Milestone 9 only, after milestone 8 and preceding pipeline milestone disposition. Blocked by D-T08 and approved runnable pipeline/fixtures.",
+      "dependencies": [
+        "D-T13",
+        "D-T15"
+      ],
+      "stage": "report",
+      "tests": [
+        "workflow-vignettes"
+      ],
+      "path": "discovery/tickets/D-T09.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "D-T10",
+      "title": "target request/evidence account, milestone 7",
+      "dependencies": [
+        "D-T03"
+      ],
+      "stage": "D",
+      "tests": [
+        "target-request"
+      ],
+      "path": "discovery/tickets/D-T10.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "D-T11",
+      "title": "named target and alternatives, milestone 7",
+      "dependencies": [
+        "D-T10"
+      ],
+      "stage": "D",
+      "tests": [
+        "target-alternatives"
+      ],
+      "path": "discovery/tickets/D-T11.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "D-T12",
+      "title": "descriptive discovery, milestone 7",
+      "dependencies": [
+        "D-T11"
+      ],
+      "stage": "D",
+      "tests": [
+        "target-discovery"
+      ],
+      "path": "discovery/tickets/D-T12.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "D-T13",
+      "title": "target dossier, milestone 8",
+      "dependencies": [
+        "D-T08",
+        "D-T12"
+      ],
+      "stage": "report",
+      "tests": [
+        "target-dossier"
+      ],
+      "path": "discovery/tickets/D-T13.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "D-T14",
+      "title": "one quantitative target method, conditional milestone 7",
+      "dependencies": [
+        "D-T11",
+        "D-T12"
+      ],
+      "stage": "D",
+      "tests": [
+        "target-quantitative"
+      ],
+      "path": "discovery/tickets/D-T14.md"
+    },
+    {
+      "required_mapping_gates": null,
+      "enabled_adapter_gates": null,
+      "id": "D-T15",
+      "title": "clinical association report",
+      "dependencies": [
+        "D-T08",
+        "C-08"
+      ],
+      "stage": "report",
+      "tests": [
+        "clinical-report"
+      ],
+      "path": "discovery/tickets/D-T15.md"
+    }
+  ]
+}

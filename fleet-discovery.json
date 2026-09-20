@@ -1,0 +1,157 @@
+{
+  "version": "delegate-discover.v1",
+  "discovered": [
+    {
+      "key": "codex",
+      "skill": "codex-delegate",
+      "binary": "codex",
+      "version": null,
+      "path": "C:\\Users\\salma\\AppData\\Local\\OpenAI\\Codex\\bin\\1e3e57cdf0634c02\\codex.exe",
+      "authenticated": null,
+      "supports": [
+        "model",
+        "effort",
+        "sandbox",
+        "timeout",
+        "readOnly"
+      ],
+      "models": {
+        "status": "reported",
+        "values": [
+          "gpt-6-astra",
+          "gpt-reserve",
+          "gpt-5.6-sol",
+          "gpt-5.6-terra",
+          "gpt-5.6-luna",
+          "gpt-5.5",
+          "gpt-5.4-mini",
+          "gpt-5.3-codex-spark",
+          "codex-auto-review"
+        ],
+        "truncated": false
+      }
+    },
+    {
+      "key": "grok",
+      "skill": "grok-delegate",
+      "binary": "grok",
+      "version": null,
+      "path": "C:\\Users\\salma\\.local\\bin\\grok.exe",
+      "authenticated": null,
+      "supports": [
+        "model",
+        "effort",
+        "sandbox",
+        "timeout",
+        "readOnly"
+      ],
+      "models": {
+        "status": "failed",
+        "values": [],
+        "truncated": false
+      }
+    },
+    {
+      "key": "aider",
+      "skill": "aider-delegate",
+      "binary": "aider",
+      "version": null,
+      "path": "C:\\Users\\salma\\.local\\bin\\aider.exe",
+      "authenticated": null,
+      "supports": [
+        "model",
+        "timeout",
+        "readOnly"
+      ],
+      "models": {
+        "status": "unsupported",
+        "values": [],
+        "truncated": false
+      }
+    },
+    {
+      "key": "warp",
+      "skill": "warp-delegate",
+      "binary": "oz",
+      "version": null,
+      "path": "C:\\Program Files\\Warp\\bin\\oz.cmd",
+      "authenticated": null,
+      "supports": [
+        "model",
+        "timeout"
+      ],
+      "models": {
+        "status": "unsupported",
+        "values": [],
+        "truncated": false
+      }
+    }
+  ],
+  "missing": [
+    {
+      "key": "claude",
+      "binary": "claude",
+      "skill": "claude-delegate"
+    },
+    {
+      "key": "cline",
+      "binary": "cline",
+      "skill": "cline-delegate"
+    },
+    {
+      "key": "commandcode",
+      "binary": "cmd",
+      "skill": "commandcode-delegate"
+    },
+    {
+      "key": "opencode",
+      "binary": "opencode",
+      "skill": "opencode-delegate"
+    },
+    {
+      "key": "agy",
+      "binary": "agy",
+      "skill": "agy-delegate"
+    },
+    {
+      "key": "kimi",
+      "binary": "kimi",
+      "skill": "kimi-delegate"
+    },
+    {
+      "key": "qoder",
+      "binary": "qodercli",
+      "skill": "qoder-delegate"
+    },
+    {
+      "key": "vibe",
+      "binary": "vibe",
+      "skill": "vibe-delegate"
+    },
+    {
+      "key": "cursor",
+      "binary": "cursor-agent",
+      "skill": "cursor-delegate"
+    },
+    {
+      "key": "pi",
+      "binary": "pi",
+      "skill": "pi-delegate"
+    },
+    {
+      "key": "omp",
+      "binary": "omp",
+      "skill": "omp-delegate"
+    },
+    {
+      "key": "copilot",
+      "binary": "copilot",
+      "skill": "copilot-delegate"
+    },
+    {
+      "key": "zcode",
+      "binary": "zcode",
+      "skill": "zcode-delegate"
+    }
+  ]
+}
