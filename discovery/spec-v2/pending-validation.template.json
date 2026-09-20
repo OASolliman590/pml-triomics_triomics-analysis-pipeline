@@ -1,0 +1,15 @@
+{
+  "schema_version": "2.0",
+  "items": [],
+  "item_contract": [
+    "packet_id",
+    "commit",
+    "environment_ref",
+    "command",
+    "required_artifacts",
+    "blocked_by",
+    "status",
+    "next_action"
+  ],
+  "note": "An empty template means no implementation run has recorded work here, not that no validation is needed."
+}

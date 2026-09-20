@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "run_id": "triomics-20260920-sol-01",
+  "items": [
+    {"id":"HOST-R-PACKAGES","status":"pending","evidence":"R 4.6.1 found at C:/Program Files/R/R-4.6.1; testthat, yaml, jsonlite, jsonvalidate, digest, renv and BiocManager are not installed."},
+    {"id":"HOST-QUARTO","status":"pending","evidence":"No Quarto executable found on PATH or standard checked locations."},
+    {"id":"GITHUB-AUTH","status":"blocked","evidence":"gh 2.97.0 is installed, but the active OASolliman590 keyring token is invalid; no push or PR has been performed."},
+    {"id":"REAL-DATA","status":"not_run","evidence":"No participant assay matrices or clinical workbook are in this public repository; no real-data validation claimed."},
+    {"id":"NOTION","status":"not_requested","evidence":"No verified destination supplied; no sync attempted."}
+  ]
+}
+

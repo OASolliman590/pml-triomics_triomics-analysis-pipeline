@@ -1,0 +1,171 @@
+{
+  "retrieved_date": "2026-09-20",
+  "base_repository": "OASolliman590/pml-triomics_triomics-analysis-pipeline",
+  "base_commit": "c8f0eeca520ee44cc730a35d37ce4e7f85dcd379",
+  "note": "URLs/version observations are source metadata, not installed locks or proof of the latest patch release. Historical repo reviews are not new independent review.",
+  "sources": [
+    {
+      "id": "H01",
+      "type": "repository_settlement",
+      "location": "discovery/operations/contract-settlement.md",
+      "version_or_date": "2026-09-06",
+      "claim": "Accepted representation, fit/apply, family, clinical ownership and common-result settlement.",
+      "status": "read_from_repository",
+      "runtime_verified": false
+    },
+    {
+      "id": "H02",
+      "type": "repository_approval",
+      "location": "discovery/operations/language-and-execution-approval.md",
+      "version_or_date": "2026-09-06",
+      "claim": "R core plus Python was explicitly approved; older fleet overrides are now superseded by the user.",
+      "status": "read_from_repository",
+      "runtime_verified": false
+    },
+    {
+      "id": "H03",
+      "type": "repository_review",
+      "location": "discovery/reviews/astra-design-arbitration.md",
+      "version_or_date": "2026-09-06",
+      "claim": "Prior independent review settled scientific semantics; it is not an independent audit of this new kit.",
+      "status": "read_from_repository",
+      "runtime_verified": false
+    },
+    {
+      "id": "H04",
+      "type": "repository_specs",
+      "location": "discovery/spec-drafts/",
+      "version_or_date": "base commit c8f0eeca520ee44cc730a35d37ce4e7f85dcd379",
+      "claim": "A/B/C/D drafts plus clinical and target extensions retain full historical scope; v2 normalizes accepted decisions.",
+      "status": "reviewed_relevant_sections",
+      "runtime_verified": false
+    },
+    {
+      "id": "H05",
+      "type": "user_upload",
+      "location": "CLAUDE.md; KICKOFF_PROMPT.md; PIPELINE_EXECUTION_PROMPT.md; TRIOMICS_EXECUTION_PROMPT.md",
+      "version_or_date": "uploaded 2026-09-20",
+      "claim": "Original architecture, no raw processing, reusable block count, clinical/target goals and historical constraints.",
+      "status": "read_full_uploads",
+      "runtime_verified": false
+    },
+    {
+      "id": "W01",
+      "type": "official_package",
+      "location": "https://bioconductor.org/packages/release/bioc/html/limma.html",
+      "version_or_date": "observed 3.68.4 / Bioconductor 3.23",
+      "claim": "Linear-model omics framework; official release installation uses R 4.6. Metadata is not a complete installed lock.",
+      "status": "web_metadata_checked_2026-09-20",
+      "runtime_verified": false
+    },
+    {
+      "id": "W02",
+      "type": "official_package",
+      "location": "https://bioconductor.org/packages/release/bioc/html/DEqMS.html",
+      "version_or_date": "observed 1.30.0",
+      "claim": "Count-dependent variance modeling on top of limma for quantified proteomics.",
+      "status": "web_metadata_checked_2026-09-20",
+      "runtime_verified": false
+    },
+    {
+      "id": "W03",
+      "type": "official_package",
+      "location": "https://bioconductor.org/packages/release/bioc/html/mixOmics.html",
+      "version_or_date": "observed 6.36.0; R>=4.4 package floor",
+      "claim": "Provides multivariate integration/classification/regression; release-family installation is not equivalent to package minimum R.",
+      "status": "web_metadata_checked_2026-09-20",
+      "runtime_verified": false
+    },
+    {
+      "id": "W04",
+      "type": "official_manual",
+      "location": "https://bioc-release.r-universe.dev/mixOmics/doc/manual.html",
+      "version_or_date": "release manual inspected; runtime pin pending",
+      "claim": "Fit/predict/outcome/missingness semantics must be qualified per method, rather than an unconditional complete-matrix rule.",
+      "status": "documentation_evidence_not_execution",
+      "runtime_verified": false
+    },
+    {
+      "id": "W05",
+      "type": "official_package",
+      "location": "https://bioconductor.org/packages/release/bioc/html/MOFA2.html",
+      "version_or_date": "observed 1.22.0",
+      "claim": "Probabilistic multi-omics factor model with training/downstream interfaces and Python bridge dependencies.",
+      "status": "web_metadata_checked_2026-09-20",
+      "runtime_verified": false
+    },
+    {
+      "id": "W06",
+      "type": "maintainer_documentation",
+      "location": "https://biofam.github.io/MOFA2/faq.html",
+      "version_or_date": "checked 2026-09-20",
+      "claim": "Missing values can be accommodated in model likelihood; factor structure/variance is exploratory, not guaranteed biological interpretation.",
+      "status": "documentation_evidence_not_execution",
+      "runtime_verified": false
+    },
+    {
+      "id": "W07",
+      "type": "primary_study",
+      "location": "https://pubmed.ncbi.nlm.nih.gov/41587770/",
+      "doi": "10.1111/bph.70331",
+      "version_or_date": "online 2026-01-26; journal May 2026",
+      "claim": "Article abstract reports FCN3-related drug-binding studies by SPR. Compound-specific raw sensorgrams and numerical Kd were not reviewed in this task.",
+      "status": "abstract_verified_no_raw_assay_review",
+      "runtime_verified": false
+    },
+    {
+      "id": "W08",
+      "type": "official_terms",
+      "location": "https://www.kegg.jp/kegg/legal.html",
+      "version_or_date": "terms dated 2024-10-01; checked 2026-09-20",
+      "claim": "Academic website access is not blanket commercial/service/redistribution permission. Operation-specific entitlement is required.",
+      "status": "terms_checked_not_legal_advice",
+      "runtime_verified": false
+    },
+    {
+      "id": "W09",
+      "type": "official_API_terms",
+      "location": "https://www.kegg.jp/kegg/rest/",
+      "version_or_date": "updated 2026-06-17",
+      "claim": "API academic-use restriction and rate ceiling require adapter policy; do not assume an unrestricted public database.",
+      "status": "terms_checked_not_entitlement_confirmation",
+      "runtime_verified": false
+    },
+    {
+      "id": "W10",
+      "type": "official_terms",
+      "location": "https://reactome.org/license",
+      "version_or_date": "checked 2026-09-20",
+      "claim": "Current terms distinguish CC0 data, attribution-governed artwork and software-specific licenses/exceptions; old news summaries cannot license all assets.",
+      "status": "terms_checked_not_redistribution_audit",
+      "runtime_verified": false
+    },
+    {
+      "id": "W11",
+      "type": "community_primary_guidance",
+      "location": "https://sandbox.lipidomicstandards.org/lipid-species-quantification/",
+      "version_or_date": "checked 2026-09-20",
+      "claim": "Quantification/normalization should specify standards, sample amount, units and relative-normalization basis; no universal mandatory within-class closure.",
+      "status": "guidance_not_study_validation",
+      "runtime_verified": false
+    },
+    {
+      "id": "W12",
+      "type": "official_host_documentation",
+      "location": "https://developers.openai.com/de-DE/docs/agent-configuration/subagents",
+      "version_or_date": "checked 2026-09-20; localized official page",
+      "claim": "Host agent model/effort configuration and inheritance matter; per-account effective availability still requires runtime discovery.",
+      "status": "documentation_checked_no_host_agents_spawned",
+      "runtime_verified": false
+    },
+    {
+      "id": "W13",
+      "type": "official_installation",
+      "location": "https://bioconductor.org/install/",
+      "version_or_date": "checked 2026-09-20",
+      "claim": "Use a coherent supported R/Bioconductor release; verify actual package installation rather than inferring environment from a language floor.",
+      "status": "documentation_checked",
+      "runtime_verified": false
+    }
+  ]
+}

@@ -1,0 +1,238 @@
+{
+  "spec_freeze_gate": {
+    "id": "G0",
+    "reviewer": "astra",
+    "effort": "low",
+    "status": "pending",
+    "requires": [
+      "bundle validation",
+      "actual model/effort resolution",
+      "independent spec review",
+      "resolved correctness blockers",
+      "content freeze hashes"
+    ]
+  },
+  "milestones": [
+    {
+      "id": "M1",
+      "gate_id": "G1",
+      "title": "Package/config/CLI",
+      "packets": [
+        "A-T01"
+      ],
+      "requires_prior_gate": null,
+      "reviewer_role": "astra",
+      "requested_effort": "low",
+      "review_on": "immutable integrated commit plus bounded diff/acceptance evidence",
+      "required_documentation": "DOC-M1",
+      "acceptance": "All required packets actually accepted; each conditional packet accepted or explicitly recorded blocked/deferred without completion credit. Review correctness blockers resolved. A conditional requirement needed by a consumer cannot be bypassed by disposition.",
+      "core_gate_may_pass_with_conditional_unavailable": true,
+      "initial_review_calls": 1,
+      "maximum_focused_rereviews": 1,
+      "required_commands": [
+        "Rscript --vanilla tools/check-package.R"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "M2",
+      "gate_id": "G2",
+      "title": "Synthetic ingest/identity/clinical source",
+      "packets": [
+        "A-T02",
+        "A-T03",
+        "A-T09"
+      ],
+      "requires_prior_gate": "G1",
+      "reviewer_role": "astra",
+      "requested_effort": "low",
+      "review_on": "immutable integrated commit plus bounded diff/acceptance evidence",
+      "required_documentation": "DOC-M2",
+      "acceptance": "All required packets actually accepted; each conditional packet accepted or explicitly recorded blocked/deferred without completion credit. Review correctness blockers resolved. A conditional requirement needed by a consumer cannot be bypassed by disposition.",
+      "core_gate_may_pass_with_conditional_unavailable": true,
+      "initial_review_calls": 1,
+      "maximum_focused_rereviews": 1,
+      "required_commands": [
+        "Rscript --vanilla tools/check-package.R"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "M3",
+      "gate_id": "G3",
+      "title": "Three profiles and immutable preparation",
+      "packets": [
+        "A-T04",
+        "A-T05",
+        "A-T06",
+        "A-T07",
+        "A-T08"
+      ],
+      "requires_prior_gate": "G2",
+      "reviewer_role": "astra",
+      "requested_effort": "low",
+      "review_on": "immutable integrated commit plus bounded diff/acceptance evidence",
+      "required_documentation": "DOC-M3",
+      "acceptance": "All required packets actually accepted; each conditional packet accepted or explicitly recorded blocked/deferred without completion credit. Review correctness blockers resolved. A conditional requirement needed by a consumer cannot be bypassed by disposition.",
+      "core_gate_may_pass_with_conditional_unavailable": true,
+      "initial_review_calls": 1,
+      "maximum_focused_rereviews": 1,
+      "required_commands": [
+        "Rscript --vanilla tools/check-package.R"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "M4",
+      "gate_id": "G4",
+      "title": "Models, multiplicity and clinical associations",
+      "packets": [
+        "B-T01",
+        "B-T02",
+        "B-T03",
+        "B-T04",
+        "B-T05",
+        "B-T06",
+        "B-T08",
+        "B-T09",
+        "B-T07"
+      ],
+      "requires_prior_gate": "G3",
+      "reviewer_role": "astra",
+      "requested_effort": "low",
+      "review_on": "immutable integrated commit plus bounded diff/acceptance evidence",
+      "required_documentation": "DOC-M4",
+      "acceptance": "All required packets actually accepted; each conditional packet accepted or explicitly recorded blocked/deferred without completion credit. Review correctness blockers resolved. A conditional requirement needed by a consumer cannot be bypassed by disposition.",
+      "core_gate_may_pass_with_conditional_unavailable": true,
+      "initial_review_calls": 1,
+      "maximum_focused_rereviews": 1,
+      "required_commands": [
+        "Rscript --vanilla tools/check-package.R"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "M5",
+      "gate_id": "G5",
+      "title": "Common integration/baseline/evaluation",
+      "packets": [
+        "C-01",
+        "C-02"
+      ],
+      "requires_prior_gate": "G4",
+      "reviewer_role": "astra",
+      "requested_effort": "low",
+      "review_on": "immutable integrated commit plus bounded diff/acceptance evidence",
+      "required_documentation": "DOC-M5",
+      "acceptance": "All required packets actually accepted; each conditional packet accepted or explicitly recorded blocked/deferred without completion credit. Review correctness blockers resolved. A conditional requirement needed by a consumer cannot be bypassed by disposition.",
+      "core_gate_may_pass_with_conditional_unavailable": true,
+      "initial_review_calls": 1,
+      "maximum_focused_rereviews": 1,
+      "required_commands": [
+        "Rscript --vanilla tools/check-package.R"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "M6",
+      "gate_id": "G6",
+      "title": "DIABLO, block.spls, MOFA and clinical score handoff",
+      "packets": [
+        "C-03",
+        "C-04",
+        "C-05",
+        "C-08",
+        "C-09",
+        "C-06"
+      ],
+      "requires_prior_gate": "G5",
+      "reviewer_role": "astra",
+      "requested_effort": "low",
+      "review_on": "immutable integrated commit plus bounded diff/acceptance evidence",
+      "required_documentation": "DOC-M6",
+      "acceptance": "All required packets actually accepted; each conditional packet accepted or explicitly recorded blocked/deferred without completion credit. Review correctness blockers resolved. A conditional requirement needed by a consumer cannot be bypassed by disposition.",
+      "core_gate_may_pass_with_conditional_unavailable": true,
+      "initial_review_calls": 1,
+      "maximum_focused_rereviews": 1,
+      "required_commands": [
+        "Rscript --vanilla tools/check-package.R"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "M7",
+      "gate_id": "G7",
+      "title": "Annotation and target investigation",
+      "packets": [
+        "D-T01",
+        "D-T02",
+        "D-T03",
+        "D-T04",
+        "D-T05",
+        "D-T06",
+        "D-T07",
+        "D-T10",
+        "D-T11",
+        "D-T12",
+        "D-T14"
+      ],
+      "requires_prior_gate": "G6",
+      "reviewer_role": "astra",
+      "requested_effort": "low",
+      "review_on": "immutable integrated commit plus bounded diff/acceptance evidence",
+      "required_documentation": "DOC-M7",
+      "acceptance": "All required packets actually accepted; each conditional packet accepted or explicitly recorded blocked/deferred without completion credit. Review correctness blockers resolved. A conditional requirement needed by a consumer cannot be bypassed by disposition.",
+      "core_gate_may_pass_with_conditional_unavailable": true,
+      "initial_review_calls": 1,
+      "maximum_focused_rereviews": 1,
+      "required_commands": [
+        "Rscript --vanilla tools/check-package.R"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "M8",
+      "gate_id": "G8",
+      "title": "Safe offline report and dossier",
+      "packets": [
+        "D-T08",
+        "D-T13",
+        "D-T15"
+      ],
+      "requires_prior_gate": "G7",
+      "reviewer_role": "astra",
+      "requested_effort": "low",
+      "review_on": "immutable integrated commit plus bounded diff/acceptance evidence",
+      "required_documentation": "DOC-M8",
+      "acceptance": "All required packets actually accepted; each conditional packet accepted or explicitly recorded blocked/deferred without completion credit. Review correctness blockers resolved. A conditional requirement needed by a consumer cannot be bypassed by disposition.",
+      "core_gate_may_pass_with_conditional_unavailable": true,
+      "initial_review_calls": 1,
+      "maximum_focused_rereviews": 1,
+      "required_commands": [
+        "Rscript --vanilla tools/check-package.R"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "M9",
+      "gate_id": "G9",
+      "title": "Reproduction, final system acceptance and close",
+      "packets": [
+        "D-T09"
+      ],
+      "requires_prior_gate": "G8",
+      "reviewer_role": "astra",
+      "requested_effort": "low",
+      "review_on": "immutable integrated commit plus bounded diff/acceptance evidence",
+      "required_documentation": "DOC-M9",
+      "acceptance": "All required packets actually accepted; each conditional packet accepted or explicitly recorded blocked/deferred without completion credit. Review correctness blockers resolved. A conditional requirement needed by a consumer cannot be bypassed by disposition.",
+      "core_gate_may_pass_with_conditional_unavailable": true,
+      "initial_review_calls": 1,
+      "maximum_focused_rereviews": 1,
+      "required_commands": [
+        "Rscript --vanilla tools/check-package.R"
+      ],
+      "status": "not_started"
+    }
+  ]
+}

@@ -1,0 +1,358 @@
+{
+  "schema_version": "2.0",
+  "run_id": null,
+  "spec_hash": null,
+  "freeze_approval_ref": null,
+  "base_commit": "c8f0eeca520ee44cc730a35d37ce4e7f85dcd379",
+  "effective_fleet": {},
+  "active_workers": [],
+  "packets": {
+    "A-T01": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "A-T02": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "A-T03": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "A-T09": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "A-T04": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "A-T05": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "A-T06": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "A-T07": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "A-T08": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "B-T01": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "B-T02": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "B-T03": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "B-T04": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "B-T05": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "B-T06": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "B-T08": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "B-T09": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "B-T07": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "C-01": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "C-02": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "C-03": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "C-04": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "C-05": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "C-08": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "C-09": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "C-06": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "D-T01": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "D-T02": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "D-T03": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "D-T04": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "D-T05": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "D-T06": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "D-T07": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "D-T10": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "D-T11": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "D-T12": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "D-T14": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "D-T08": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "D-T13": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "D-T15": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    },
+    "D-T09": {
+      "status": "not_started",
+      "attempts": 0,
+      "commit": null,
+      "acceptance_refs": [],
+      "blockers": []
+    }
+  },
+  "milestones": {
+    "M1": {
+      "status": "not_started",
+      "review_ref": null,
+      "commit": null
+    },
+    "M2": {
+      "status": "not_started",
+      "review_ref": null,
+      "commit": null
+    },
+    "M3": {
+      "status": "not_started",
+      "review_ref": null,
+      "commit": null
+    },
+    "M4": {
+      "status": "not_started",
+      "review_ref": null,
+      "commit": null
+    },
+    "M5": {
+      "status": "not_started",
+      "review_ref": null,
+      "commit": null
+    },
+    "M6": {
+      "status": "not_started",
+      "review_ref": null,
+      "commit": null
+    },
+    "M7": {
+      "status": "not_started",
+      "review_ref": null,
+      "commit": null
+    },
+    "M8": {
+      "status": "not_started",
+      "review_ref": null,
+      "commit": null
+    },
+    "M9": {
+      "status": "not_started",
+      "review_ref": null,
+      "commit": null
+    }
+  },
+  "conditional_dispositions": {},
+  "usage": {
+    "provider_reported_tokens": null,
+    "provider_reported_cost": null,
+    "currency": null
+  },
+  "publication": {
+    "branch": null,
+    "push_verified": false,
+    "pr": null,
+    "notion_synced": false
+  },
+  "close_state": "not_started"
+}

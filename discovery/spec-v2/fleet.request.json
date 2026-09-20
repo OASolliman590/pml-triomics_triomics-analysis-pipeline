@@ -1,0 +1,39 @@
+{
+  "format": "triomics-role-request/1",
+  "is_native_host_configuration": false,
+  "roles": {
+    "sol": {
+      "requested_label": "Sol",
+      "effort": "high",
+      "responsibility": "parent integration/acceptance/close",
+      "max_instances": 1
+    },
+    "luna": {
+      "requested_label": "Luna",
+      "effort": "max",
+      "responsibility": "bounded code/tests",
+      "max_concurrent": 3
+    },
+    "terra": {
+      "requested_label": "Terra",
+      "effort": "max",
+      "responsibility": "bounded documentation",
+      "max_concurrent": 2
+    },
+    "astra": {
+      "requested_label": "Astra",
+      "effort": "low",
+      "responsibility": "read-only independent spec/milestone/risky-diff review",
+      "max_concurrent": 1
+    }
+  },
+  "total_active_worker_cap": 4,
+  "child_depth": 1,
+  "concurrent_heavy_model_fit_cap": 1,
+  "automatic_model_substitution": false,
+  "premium_service_tier": false,
+  "credits_or_subscription_changes": false,
+  "per_packet_repair_attempts": 2,
+  "per_milestone_focused_rereviews": 1,
+  "rule": "Resolve actual authenticated IDs and effective effort through supported host configuration. Model names/effort availability are not established by this request JSON. Keep host config project-local and preserve unrelated settings."
+}

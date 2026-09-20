@@ -1,0 +1,354 @@
+{
+  "requirements": [
+    {
+      "id": "R01",
+      "requirement": "Downstream-only, reusable N-block pipeline; no raw processing or study constants.",
+      "packets": [
+        "A-T01",
+        "A-T02",
+        "A-T08",
+        "D-T09"
+      ]
+    },
+    {
+      "id": "R02",
+      "requirement": "Keyed source/feature/sample/subject identity and arbitrary block labels/counts.",
+      "packets": [
+        "A-T01",
+        "A-T02",
+        "A-T03",
+        "A-T08",
+        "C-01",
+        "D-T01",
+        "D-T09"
+      ]
+    },
+    {
+      "id": "R03",
+      "requirement": "Faithful source-role/conversion, authoritative pairing and clinical linkage.",
+      "packets": [
+        "A-T02",
+        "A-T03",
+        "A-T09",
+        "B-T03"
+      ]
+    },
+    {
+      "id": "R04",
+      "requirement": "Immutable quantity/mask/preprocessing/state provenance and method-specific order.",
+      "packets": [
+        "A-T01",
+        "A-T02",
+        "A-T03",
+        "A-T04",
+        "A-T05",
+        "A-T06",
+        "A-T07",
+        "A-T08"
+      ]
+    },
+    {
+      "id": "R05",
+      "requirement": "Train-only fit/apply, no held-out refit or leakage through feature selection.",
+      "packets": [
+        "A-T03",
+        "A-T04",
+        "A-T05",
+        "A-T07",
+        "A-T08",
+        "C-02"
+      ]
+    },
+    {
+      "id": "R06",
+      "requirement": "Explicit evidence-qualified missingness/normalization without assay-wide assumptions.",
+      "packets": [
+        "A-T04",
+        "A-T05",
+        "A-T06"
+      ]
+    },
+    {
+      "id": "R07",
+      "requirement": "Lipid structural resolution, fixed parent quantities and compositional interpretation.",
+      "packets": [
+        "A-T06",
+        "D-T02",
+        "D-T07"
+      ]
+    },
+    {
+      "id": "R08",
+      "requirement": "Declared estimands and same representation within Analysis/context, not across incompatible questions.",
+      "packets": [
+        "B-T01",
+        "B-T02",
+        "B-T03",
+        "B-T04",
+        "B-T09",
+        "B-T07",
+        "C-01"
+      ]
+    },
+    {
+      "id": "R09",
+      "requirement": "Correct per-feature model/rank/uncertainty and repeated design eligibility.",
+      "packets": [
+        "B-T01",
+        "B-T02",
+        "B-T03",
+        "B-T04",
+        "B-T05",
+        "B-T09",
+        "B-T07"
+      ]
+    },
+    {
+      "id": "R10",
+      "requirement": "Fixed per-block/claim multiplicity, failed-member accounting and no union-FDR claim.",
+      "packets": [
+        "B-T01",
+        "B-T02",
+        "B-T03",
+        "B-T04",
+        "B-T06",
+        "B-T07",
+        "D-T04"
+      ]
+    },
+    {
+      "id": "R11",
+      "requirement": "Count-provenance and qualified DEqMS rather than automatic count-triggered substitution.",
+      "packets": [
+        "A-T04",
+        "B-T01",
+        "B-T05"
+      ]
+    },
+    {
+      "id": "R12",
+      "requirement": "Effect units, directional consistency applicability and non-equivalent sensitivity tests.",
+      "packets": [
+        "B-T01",
+        "B-T02",
+        "B-T03",
+        "B-T06"
+      ]
+    },
+    {
+      "id": "R13",
+      "requirement": "Leakage-safe matched nested evaluation and explicitly limited prediction claims.",
+      "packets": [
+        "A-T07",
+        "C-01",
+        "C-02",
+        "C-03",
+        "C-04",
+        "C-05",
+        "C-09",
+        "C-06"
+      ]
+    },
+    {
+      "id": "R14",
+      "requirement": "Protected six-field common integration and honest native/projection variance/score semantics.",
+      "packets": [
+        "C-01",
+        "C-02",
+        "C-03",
+        "C-04",
+        "C-05",
+        "C-06",
+        "D-T06"
+      ]
+    },
+    {
+      "id": "R15",
+      "requirement": "Actual PCA/PLS, DIABLO, continuous block.spls and MOFA capabilities with native checks.",
+      "packets": [
+        "C-01",
+        "C-03",
+        "C-04",
+        "C-05",
+        "C-06"
+      ]
+    },
+    {
+      "id": "R16",
+      "requirement": "Typed clinical dictionaries, observations/objectives and source/privacy/coverage.",
+      "packets": [
+        "A-T09",
+        "B-T08",
+        "B-T09",
+        "B-T07",
+        "C-08",
+        "D-T15"
+      ]
+    },
+    {
+      "id": "R17",
+      "requirement": "B-owned eligible clinical associations, time/covariate/missingness rules, no silent fallback.",
+      "packets": [
+        "A-T09",
+        "B-T08",
+        "B-T09"
+      ]
+    },
+    {
+      "id": "R18",
+      "requirement": "Score training/selection/unit lineage and distinction from independent validation.",
+      "packets": [
+        "B-T08",
+        "B-T09",
+        "C-08",
+        "C-09",
+        "C-06",
+        "D-T15"
+      ]
+    },
+    {
+      "id": "R19",
+      "requirement": "Conditional matched clinical-only/molecular-only/combined predictive evaluation.",
+      "packets": [
+        "C-02",
+        "C-08",
+        "C-09",
+        "D-T15"
+      ]
+    },
+    {
+      "id": "R20",
+      "requirement": "Both B/C annotation routes, full evidence, safe unavailable states and no upstream refit.",
+      "packets": [
+        "D-T01",
+        "D-T02",
+        "D-T03",
+        "D-T04",
+        "D-T05",
+        "D-T06",
+        "D-T07",
+        "D-T08"
+      ]
+    },
+    {
+      "id": "R21",
+      "requirement": "Namespace/taxon/resolution mapping and valid enrichment universes/method meaning.",
+      "packets": [
+        "A-T06",
+        "D-T01",
+        "D-T02",
+        "D-T03",
+        "D-T04",
+        "D-T06",
+        "D-T07",
+        "D-T11"
+      ]
+    },
+    {
+      "id": "R22",
+      "requirement": "Imported/selected evidence isolation and explicit selection/overlap validity.",
+      "packets": [
+        "A-T02",
+        "B-T06",
+        "D-T01",
+        "D-T04",
+        "D-T12"
+      ]
+    },
+    {
+      "id": "R23",
+      "requirement": "Target assess/compare/discover; metabolism never certifies binding, flux or causality.",
+      "packets": [
+        "D-T10",
+        "D-T11",
+        "D-T12",
+        "D-T14",
+        "D-T08",
+        "D-T13"
+      ]
+    },
+    {
+      "id": "R24",
+      "requirement": "Target alternative/contradictory/ambiguous evidence and no double-counted replication.",
+      "packets": [
+        "D-T10",
+        "D-T11",
+        "D-T12",
+        "D-T14",
+        "D-T13"
+      ]
+    },
+    {
+      "id": "R25",
+      "requirement": "Release/hash/operation-specific rights, offline policy and no private external upload.",
+      "packets": [
+        "D-T01",
+        "D-T02",
+        "D-T03",
+        "D-T05",
+        "D-T06",
+        "D-T07",
+        "D-T10"
+      ]
+    },
+    {
+      "id": "R26",
+      "requirement": "Safe local report, clinical disclosure controls and no public participant-level data.",
+      "packets": [
+        "A-T09",
+        "B-T08",
+        "D-T08",
+        "D-T13",
+        "D-T15"
+      ]
+    },
+    {
+      "id": "R27",
+      "requirement": "Substantive oracle/null/weak/adversarial/missingness/calibration tests, not fake validation.",
+      "packets": [
+        "B-T04",
+        "B-T05",
+        "C-02",
+        "C-03",
+        "C-04",
+        "C-05",
+        "C-09",
+        "C-06",
+        "D-T06",
+        "D-T07",
+        "D-T14",
+        "D-T09"
+      ]
+    },
+    {
+      "id": "R28",
+      "requirement": "Real environment lock, atomic artifacts, cache invalidation, restart and reproducibility.",
+      "packets": [
+        "A-T01",
+        "A-T03",
+        "A-T08",
+        "B-T07",
+        "C-05",
+        "C-08",
+        "D-T05",
+        "D-T08",
+        "D-T09"
+      ]
+    },
+    {
+      "id": "R29",
+      "requirement": "Honest scope, status, reporting, conditional capability and final close accounting.",
+      "packets": [
+        "A-T01",
+        "A-T08",
+        "B-T07",
+        "C-06",
+        "D-T05",
+        "D-T08",
+        "D-T13",
+        "D-T15",
+        "D-T09"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "run_id": "triomics-20260920-sol-01",
+  "approved_utc_date": "2026-09-20",
+  "repository": "OASolliman590/pml-triomics_triomics-analysis-pipeline",
+  "branch": "spec/harden-v2-20260920",
+  "base_commit": "c8f0eeca520ee44cc730a35d37ce4e7f85dcd379",
+  "approved_content_sha256": "f0d482db62f16c8e4c802c99c1fd88e501f29959bc475d67f934b40c6f6ae5d2",
+  "candidate_file_count": 92,
+  "delivery_file_count": 93,
+  "initial_audit": {
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "low",
+    "effective_settings_exposed_to_reviewer": false,
+    "review_ref": "docs/implementation/reviews/G0-initial-audit.md",
+    "verdict": "changes_required"
+  },
+  "correction_ref": "docs/implementation/change-records/G0-001-resource-service-ownership.md",
+  "focused_rereview": {
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "low",
+    "effective_settings_exposed_to_reviewer": false,
+    "review_ref": "docs/implementation/reviews/G0-focused-rereview.md",
+    "verdict": "pass"
+  },
+  "validator": {
+    "command": "python tools/spec/validate_spec.py --verify-delivery",
+    "status": "pass",
+    "scope": "specification_consistency_only",
+    "implementation_packets": 41,
+    "required_packets": 37,
+    "conditional_packets": ["C-09", "D-T06", "D-T07", "D-T14"]
+  },
+  "sol_disposition": "G0_accepted",
+  "implementation_authorized": true
+}
+

@@ -1,0 +1,328 @@
+schema_version: '2.0'
+study_id: synthetic_independent
+data_class: synthetic
+sources:
+- source_id: sample_metadata
+  file: metadata.tsv
+  format: tsv
+  role: sample_metadata
+  selection_history: full_unselected
+  selection_evidence: Explicit synthetic fixture construction; not real participant
+    data.
+  sha256: de9a7a6f45f296b07c9733de174521ea06e3b2cc7a74cb63547824f2a622fa2c
+- source_id: block_1
+  file: proteomics.tsv
+  format: tsv
+  role: measurement_matrix
+  selection_history: full_unselected
+  selection_evidence: All ten deliberately synthetic feature rows supplied; no outcome-based
+    selection.
+  sha256: e2744731cf39baaa9767cb66f8e419cde8cc1090e5105a39afbb1a691944a843
+- source_id: block_2
+  file: lipidomics.tsv
+  format: tsv
+  role: measurement_matrix
+  selection_history: full_unselected
+  selection_evidence: All ten deliberately synthetic feature rows supplied; no outcome-based
+    selection.
+  sha256: 4e39a06bf00f0650aec1fac6c3b8222777e5158ac01628ffe3b7017f34b790c3
+- source_id: block_3
+  file: metabolomics.tsv
+  format: tsv
+  role: measurement_matrix
+  selection_history: full_unselected
+  selection_evidence: All ten deliberately synthetic feature rows supplied; no outcome-based
+    selection.
+  sha256: 2015689535ded9f0ef9909038932714f58d624b92bba912e5021d67d7d567e06
+metadata:
+  file: metadata.tsv
+  sample_id: sample_id
+  subject_id: null
+  column_types:
+    sample_id: string
+    group: factor
+  factor_levels:
+    group:
+    - control
+    - treatment
+blocks:
+- block_id: block_1
+  name: Demo assay 1
+  profile: proteomics
+  profile_spec_ref: null
+  file: proteomics.tsv
+  feature_id_column: feature_id
+  id_namespace: synthetic
+  feature_metadata: null
+  source_refs:
+  - block_1
+  sample_map: null
+  missing_tokens:
+  - NA
+  - ''
+  measurement:
+    quantity: intensity
+    scale: linear
+    units: synthetic_arbitrary_units
+    acquisition: Explicitly synthetic; no instrument or participants
+    missingness_assumption: unknown
+    missingness_evidence: No missing values deliberately introduced in this tiny parsing/CLI
+      fixture.
+    upstream_steps: []
+    original_mask_status: known
+    denominator_ref: null
+  preprocessing:
+    context_id: primary
+    filter:
+      prevalence: 0.7
+      min_observed: 3
+      scope: global
+      stratum: null
+      selection_justification: Synthetic fixture engineering choice; not a universal
+        scientific default.
+    transform:
+      method: log2
+      zero_policy: error
+      zero_value: null
+      reference_set: null
+      log_base: 2
+    normalisation:
+      method: median_shift
+      reference: training_median
+      reference_file: null
+      metadata_column: null
+      standards_map: null
+      qualification_ref: null
+    imputation:
+      method: none
+      tail_probability: null
+      scale_multiplier: null
+      k: null
+      trees: null
+      qualification_ref: null
+    derive: []
+  annotation_route: none
+- block_id: block_2
+  name: Demo assay 2
+  profile: lipidomics
+  profile_spec_ref: null
+  file: lipidomics.tsv
+  feature_id_column: feature_id
+  id_namespace: synthetic
+  feature_metadata: null
+  source_refs:
+  - block_2
+  sample_map: null
+  missing_tokens:
+  - NA
+  - ''
+  measurement:
+    quantity: intensity
+    scale: linear
+    units: synthetic_arbitrary_units
+    acquisition: Explicitly synthetic; no instrument or participants
+    missingness_assumption: unknown
+    missingness_evidence: No missing values deliberately introduced in this tiny parsing/CLI
+      fixture.
+    upstream_steps: []
+    original_mask_status: known
+    denominator_ref: null
+  preprocessing:
+    context_id: primary
+    filter:
+      prevalence: 0.7
+      min_observed: 3
+      scope: global
+      stratum: null
+      selection_justification: Synthetic fixture engineering choice; not a universal
+        scientific default.
+    transform:
+      method: log2
+      zero_policy: error
+      zero_value: null
+      reference_set: null
+      log_base: 2
+    normalisation:
+      method: none
+      reference: none
+      reference_file: null
+      metadata_column: null
+      standards_map: null
+      qualification_ref: null
+    imputation:
+      method: none
+      tail_probability: null
+      scale_multiplier: null
+      k: null
+      trees: null
+      qualification_ref: null
+    derive: []
+  annotation_route: none
+- block_id: block_3
+  name: Demo assay 3
+  profile: metabolomics
+  profile_spec_ref: null
+  file: metabolomics.tsv
+  feature_id_column: feature_id
+  id_namespace: synthetic
+  feature_metadata: null
+  source_refs:
+  - block_3
+  sample_map: null
+  missing_tokens:
+  - NA
+  - ''
+  measurement:
+    quantity: intensity
+    scale: linear
+    units: synthetic_arbitrary_units
+    acquisition: Explicitly synthetic; no instrument or participants
+    missingness_assumption: unknown
+    missingness_evidence: No missing values deliberately introduced in this tiny parsing/CLI
+      fixture.
+    upstream_steps: []
+    original_mask_status: known
+    denominator_ref: null
+  preprocessing:
+    context_id: primary
+    filter:
+      prevalence: 0.7
+      min_observed: 3
+      scope: global
+      stratum: null
+      selection_justification: Synthetic fixture engineering choice; not a universal
+        scientific default.
+    transform:
+      method: log2
+      zero_policy: error
+      zero_value: null
+      reference_set: null
+      log_base: 2
+    normalisation:
+      method: pqn
+      reference: training_median
+      reference_file: null
+      metadata_column: null
+      standards_map: null
+      qualification_ref: null
+    imputation:
+      method: none
+      tail_probability: null
+      scale_multiplier: null
+      k: null
+      trees: null
+      qualification_ref: null
+    derive: []
+  annotation_route: none
+analyses:
+- analysis_id: primary_comparison
+  block_ids:
+  - block_1
+  - block_2
+  - block_3
+  preparation_context_id: primary
+  design:
+    kind: independent
+    condition: group
+    condition_type: factor
+    subject_id: null
+    repeated: false
+    representation: levels
+    reference_level: control
+    target_level: treatment
+    between_group: null
+    visit_column: null
+    reference_visit: null
+    target_visit: null
+    covariates: []
+    missing_visits: error
+    time_column: null
+    time_unit: null
+    time_origin: null
+    spline_knots: []
+    spline_boundary: []
+    residual_contract_ref: null
+  statistics:
+    method: limma
+    contrasts:
+    - contrast_id: target_minus_reference
+      weights:
+        condition.control: -1
+        condition.treatment: 1
+      interpretation: Synthetic target-minus-reference fixture only
+    trend: false
+    robust: false
+    q_threshold: 0.05
+    effect_threshold: 0.5
+    effect_unit: log2_fold_change
+    family_scope: one_scalar_contrast_all_retained_features
+    selection_validity: qualified
+    selection_justification: Synthetic complete unselected feature inventory; inference
+      not validated by this fixture.
+    dependence_justification: Synthetic software example; runtime method validity
+      still requires the stated calibration protocol.
+    rank_sensitivity: false
+    count_metadata: null
+    fallback: none
+  integration:
+  - integration_id: baseline_pca
+    method: concat_pca
+    required: true
+    outcome: null
+    n_components: 2
+    scale_features: true
+    block_scaling: inverse_sqrt_p
+    score_definition: native
+    design_matrix: null
+    keepX: {}
+    keepY: null
+    tuning_grid_ref: null
+    prediction_rule: null
+    mofa_convergence: not_applicable
+    mofa_seed_repeats: 1
+    native_options_ref: null
+    selection:
+      method: none
+      value: null
+    evaluation:
+      mode: exploratory
+      generalization_unit: sample
+      outer_folds: 2
+      inner_folds: 2
+      repeats: 1
+      stratification: null
+      temporal_rule_ref: null
+      primary_metric: none
+      max_fits: 10
+      uncertainty_protocol_ref: null
+  completeness: strict
+clinical:
+  enabled: false
+  dictionary_file: null
+  observations_file: null
+  links_file: null
+  objectives: []
+annotation:
+  resources: []
+  requests: []
+target_investigation:
+  enabled: false
+  mode: assess
+  targets: []
+  drug_ref: null
+  context_ref: null
+  universe_ref: null
+  external_evidence_file: null
+  mechanism_file: null
+  protocol_ref: null
+  quantitative_method_ref: null
+  required: false
+execution:
+  seed: 20260920
+  network_policy: offline
+  workers: 1
+  cpu_limit: 1
+  memory_gib: 2
+  max_fits: 10
+  audience: synthetic_demo
+  disclosure_policy_ref: null

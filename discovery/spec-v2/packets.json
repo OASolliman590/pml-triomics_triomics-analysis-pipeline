@@ -1,0 +1,3251 @@
+{
+  "schema_version": "2.0",
+  "packet_count": 41,
+  "base_commit": "c8f0eeca520ee44cc730a35d37ce4e7f85dcd379",
+  "packets": [
+    {
+      "id": "A-T01",
+      "title": "Package skeleton, strict configuration and stage-aware CLI",
+      "goal": "Package skeleton, strict configuration and stage-aware CLI.",
+      "component": "A",
+      "milestone": "M1",
+      "dependencies": [],
+      "requires_review_gates": [],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "DESCRIPTION",
+        "NAMESPACE",
+        ".Rbuildignore",
+        "renv.lock",
+        "renv/activate.R",
+        "renv/settings.json",
+        ".Rprofile",
+        "R/config.R",
+        "R/contracts.R",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "inst/exec/triomics",
+        "inst/schema/config.schema.json",
+        "tools/check-package.R",
+        "tests/testthat.R",
+        "tools/capture-environment.R",
+        "tests/testthat/test-A-T01.R",
+        "inst/examples/tickets/A-T01.yaml",
+        "docs/implementation/registrations/A-T01.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs"
+      ],
+      "runtime_output_root": "artifacts/acceptance/A-T01",
+      "requirements": [
+        "R01",
+        "R02",
+        "R04",
+        "R28",
+        "R29"
+      ],
+      "acceptance": [
+        {
+          "id": "A-T01-AC1",
+          "criterion": "Duplicate YAML keys, unknown keys and malformed types fail before file mutation and identify the key; help/exit-code tests execute."
+        },
+        {
+          "id": "A-T01-AC2",
+          "criterion": "Native R package build/check wrapper exists, derives tarball name from DESCRIPTION, preserves logs and fails on errors or undisposed warnings; no added rcmdcheck."
+        },
+        {
+          "id": "A-T01-AC3",
+          "criterion": "Validation-only checks the requested implemented stage without requiring future modules and writes no analysis checkpoint."
+        },
+        {
+          "id": "A-T01-AC4",
+          "criterion": "A genuine coherent R/Bioconductor lock and installation/session manifests are captured on the authorized host; no invented lock or claim that all optional packages are installed."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='A-T01', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/A-T01.yaml --stage A --output artifacts/acceptance/A-T01 --validate-only"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "A-T02",
+      "title": "Synthetic generator and faithful keyed source ingest",
+      "goal": "Synthetic generator and faithful keyed source ingest.",
+      "component": "A",
+      "milestone": "M2",
+      "dependencies": [
+        "A-T01"
+      ],
+      "requires_review_gates": [
+        "G1"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/simulate.R",
+        "R/ingest.R",
+        "R/source_manifest.R",
+        "R/identity.R",
+        "R/contracts_study.R",
+        "tests/testthat/test-A-T02.R",
+        "inst/examples/tickets/A-T02.yaml",
+        "docs/implementation/registrations/A-T02.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/A-T02",
+      "requirements": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R22"
+      ],
+      "acceptance": [
+        {
+          "id": "A-T02-AC1",
+          "criterion": "Protected simulator signature produces labelled truth/seed for independent, paired, continuous and time-series designs with two and five blocks."
+        },
+        {
+          "id": "A-T02-AC2",
+          "criterion": "Reordered sample columns yield identical keyed values; leading-zero IDs and duplicate molecular labels retain unique source-row feature keys."
+        },
+        {
+          "id": "A-T02-AC3",
+          "criterion": "Summary/statistic columns cannot be measurements; conversion hash/role checks reject stale or conflicting workbook exports."
+        },
+        {
+          "id": "A-T02-AC4",
+          "criterion": "Original masks, upstream selection and whole-assay absence remain distinct; no fabricated clinical metadata or source identities."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='A-T02', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/A-T02.yaml --stage A --output artifacts/acceptance/A-T02"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "A-T03",
+      "title": "Study assembly and common preparation-state infrastructure",
+      "goal": "Study assembly and common preparation-state infrastructure.",
+      "component": "A",
+      "milestone": "M2",
+      "dependencies": [
+        "A-T02"
+      ],
+      "requires_review_gates": [
+        "G1"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/study.R",
+        "R/profile_registry.R",
+        "R/preparation.R",
+        "R/state_store.R",
+        "tests/testthat/test-A-T03.R",
+        "inst/examples/tickets/A-T03.yaml",
+        "docs/implementation/registrations/A-T03.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/A-T03",
+      "requirements": [
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R28"
+      ],
+      "acceptance": [
+        {
+          "id": "A-T03-AC1",
+          "criterion": "SE/MAE dimensions and sample maps validate before and after shape changes; no positional merges or hidden global intersections."
+        },
+        {
+          "id": "A-T03-AC2",
+          "criterion": "Register six-function profiles and prepare_fit/prepare_apply interfaces without branching on display names; renaming blocks leaves behavior unchanged."
+        },
+        {
+          "id": "A-T03-AC3",
+          "criterion": "Atomic typed state refs preserve hashes, masks, training IDs and operation order; stale/partial state is rejected."
+        },
+        {
+          "id": "A-T03-AC4",
+          "criterion": "All shared machinery needed by A-T04/05/06 exists here; no profile depends on proteomic-specific code or shared-file editing."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='A-T03', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/A-T03.yaml --stage A --output artifacts/acceptance/A-T03"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "A-T09",
+      "title": "Clinical dictionaries, typed observations and sample/visit linkage",
+      "goal": "Clinical dictionaries, typed observations and sample/visit linkage.",
+      "component": "A",
+      "milestone": "M2",
+      "dependencies": [
+        "A-T02"
+      ],
+      "requires_review_gates": [
+        "G1"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/clinical_ingest.R",
+        "R/clinical_dictionary.R",
+        "R/clinical_linkage.R",
+        "tests/testthat/test-A-T09.R",
+        "inst/examples/tickets/A-T09.yaml",
+        "docs/implementation/registrations/A-T09.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/A-T09",
+      "requirements": [
+        "R03",
+        "R16",
+        "R17",
+        "R26"
+      ],
+      "acceptance": [
+        {
+          "id": "A-T09-AC1",
+          "criterion": "Wide/long clinical inputs produce dictionary/observation/link artifacts with verified types, units, source and time semantics."
+        },
+        {
+          "id": "A-T09-AC2",
+          "criterion": "Static conflicts, missing codebooks, ambiguous nearest-visit joins and duplicate matches are refused without guessed mapping."
+        },
+        {
+          "id": "A-T09-AC3",
+          "criterion": "Censored comparator/limit and multi-select sets survive ingest; all-placeholder fields are unavailable, not numeric."
+        },
+        {
+          "id": "A-T09-AC4",
+          "criterion": "Private IDs/free text remain excluded from predictors and public outputs; per-variable/per-visit coverage is auditable."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='A-T09', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/A-T09.yaml --stage A --output artifacts/acceptance/A-T09"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "A-T04",
+      "title": "Proteomic profile and provenance-qualified missingness",
+      "goal": "Proteomic profile and provenance-qualified missingness.",
+      "component": "A",
+      "milestone": "M3",
+      "dependencies": [
+        "A-T03"
+      ],
+      "requires_review_gates": [
+        "G2"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/profile_proteomics.R",
+        "tests/testthat/test-A-T04.R",
+        "inst/examples/tickets/A-T04.yaml",
+        "docs/implementation/registrations/A-T04.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/A-T04",
+      "requirements": [
+        "R04",
+        "R05",
+        "R06",
+        "R11"
+      ],
+      "acceptance": [
+        {
+          "id": "A-T04-AC1",
+          "criterion": "Explicit log2/none and median-shift normalization match hand calculations; already-transformed data cannot be logged again."
+        },
+        {
+          "id": "A-T04-AC2",
+          "criterion": "Filtering uses original observations and occurs before imputation; unknown missingness does not select a censoring model."
+        },
+        {
+          "id": "A-T04-AC3",
+          "criterion": "Requested MinProb/QRILC/VSN lanes require pinned qualification and supported fit/apply behavior; unavailable lanes stay explicit."
+        },
+        {
+          "id": "A-T04-AC4",
+          "criterion": "Peptide/PSM metadata remain aligned with feature keys and provenance for B; non-inductive preprocessing cannot pass predictive eligibility."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='A-T04', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/A-T04.yaml --stage A --output artifacts/acceptance/A-T04"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "A-T05",
+      "title": "Metabolomic profile with explicit frozen normalization reference",
+      "goal": "Metabolomic profile with explicit frozen normalization reference.",
+      "component": "A",
+      "milestone": "M3",
+      "dependencies": [
+        "A-T03"
+      ],
+      "requires_review_gates": [
+        "G2"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/profile_metabolomics.R",
+        "tests/testthat/test-A-T05.R",
+        "inst/examples/tickets/A-T05.yaml",
+        "docs/implementation/registrations/A-T05.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/A-T05",
+      "requirements": [
+        "R04",
+        "R05",
+        "R06"
+      ],
+      "acceptance": [
+        {
+          "id": "A-T05-AC1",
+          "criterion": "PQN uses positive linear ratios against a frozen supplied/training reference and correct method-specific order relative to log2."
+        },
+        {
+          "id": "A-T05-AC2",
+          "criterion": "Unknown missingness cannot automatically become MAR; training-median baseline is explicit, not a biological default."
+        },
+        {
+          "id": "A-T05-AC3",
+          "criterion": "kNN/RF requires qualified donor/model fit/apply behavior; held-out rows cannot alter trained parameters."
+        },
+        {
+          "id": "A-T05-AC4",
+          "criterion": "Zero/negative/reference mismatch and all-missing features receive named errors; every loss and imputed value has lineage."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='A-T05', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/A-T05.yaml --stage A --output artifacts/acceptance/A-T05"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "A-T06",
+      "title": "Lipid profile, molecular resolution and quantity-preserving derivation",
+      "goal": "Lipid profile, molecular resolution and quantity-preserving derivation.",
+      "component": "A",
+      "milestone": "M3",
+      "dependencies": [
+        "A-T03"
+      ],
+      "requires_review_gates": [
+        "G2"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/profile_lipidomics.R",
+        "R/lipid_derivation.R",
+        "tests/testthat/test-A-T06.R",
+        "inst/examples/tickets/A-T06.yaml",
+        "docs/implementation/registrations/A-T06.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/A-T06",
+      "requirements": [
+        "R04",
+        "R06",
+        "R07",
+        "R21"
+      ],
+      "acceptance": [
+        {
+          "id": "A-T06-AC1",
+          "criterion": "Class totals are derived in linear space over a fixed parent universe, with partial/estimated/unavailable coverage labels; no sum of logs."
+        },
+        {
+          "id": "A-T06-AC2",
+          "criterion": "Optional within-class fractions/CLR have explicit denominator, units and zero policy and cannot erase total abundance without disclosure."
+        },
+        {
+          "id": "A-T06-AC3",
+          "criterion": "Weighted carbon/double-bond endpoints match known arithmetic; sum-composition labels never imply sn positions or chain identities."
+        },
+        {
+          "id": "A-T06-AC4",
+          "criterion": "Renaming a block does not change policy; unresolved standards/calibration cannot produce molar concentrations from intensity."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='A-T06', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/A-T06.yaml --stage A --output artifacts/acceptance/A-T06"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "A-T07",
+      "title": "Fold-local preparation and held-out mutation invariants",
+      "goal": "Fold-local preparation and held-out mutation invariants.",
+      "component": "A",
+      "milestone": "M3",
+      "dependencies": [
+        "A-T04",
+        "A-T05",
+        "A-T06"
+      ],
+      "requires_review_gates": [
+        "G2"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/resampling_preparation.R",
+        "tests/testthat/test-A-T07.R",
+        "inst/examples/tickets/A-T07.yaml",
+        "docs/implementation/registrations/A-T07.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/A-T07",
+      "requirements": [
+        "R04",
+        "R05",
+        "R13"
+      ],
+      "acceptance": [
+        {
+          "id": "A-T07-AC1",
+          "criterion": "Outer/inner training-only preprocessing returns immutable state; held-out value/outcome mutations cannot change training feature set/references/imputer/scales."
+        },
+        {
+          "id": "A-T07-AC2",
+          "criterion": "Apply never refits, and feature ordering mismatches fail rather than silently reselection."
+        },
+        {
+          "id": "A-T07-AC3",
+          "criterion": "Feature-level missingness and absent views exercise actual profile pathways; non-inductive methods reject unsupported prediction."
+        },
+        {
+          "id": "A-T07-AC4",
+          "criterion": "Per-fold B/C preparation contexts bind the same values and maps, without forcing primary descriptive/inferential analyses to use an imputed context."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='A-T07', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/A-T07.yaml --stage A --output artifacts/acceptance/A-T07"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "A-T08",
+      "title": "Complete A export, reproducible examples and profile extension handoff",
+      "goal": "Complete A export, reproducible examples and profile extension handoff.",
+      "component": "A",
+      "milestone": "M3",
+      "dependencies": [
+        "A-T07",
+        "A-T09"
+      ],
+      "requires_review_gates": [
+        "G2"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/export_a.R",
+        "tests/testthat/test-A-T08.R",
+        "inst/examples/tickets/A-T08.yaml",
+        "docs/implementation/registrations/A-T08.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/A-T08",
+      "requirements": [
+        "R01",
+        "R02",
+        "R04",
+        "R05",
+        "R28",
+        "R29"
+      ],
+      "acceptance": [
+        {
+          "id": "A-T08-AC1",
+          "criterion": "An independent and a paired synthetic study execute all requested A capabilities with full source/feature/state/clinical export lineage."
+        },
+        {
+          "id": "A-T08-AC2",
+          "criterion": "Fourth/fifth arbitrary-named profiles register through the declared interface without altering orchestration."
+        },
+        {
+          "id": "A-T08-AC3",
+          "criterion": "Resume reuses only complete matching artifacts; changed source/config/version invalidates affected descendants."
+        },
+        {
+          "id": "A-T08-AC4",
+          "criterion": "A handoff and limitations distinguish source validation from real-data scientific validation and optional method qualification."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='A-T08', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/A-T08.yaml --stage A --output artifacts/acceptance/A-T08"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "B-T01",
+      "title": "Independent two-group limma inference and result envelope",
+      "goal": "Independent two-group limma inference and result envelope.",
+      "component": "B",
+      "milestone": "M4",
+      "dependencies": [
+        "A-T08"
+      ],
+      "requires_review_gates": [
+        "G3"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/design_core.R",
+        "R/statistics_limma.R",
+        "R/results_b.R",
+        "tests/testthat/test-B-T01.R",
+        "inst/examples/tickets/B-T01.yaml",
+        "docs/implementation/registrations/B-T01.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/B-T01",
+      "requirements": [
+        "R08",
+        "R09",
+        "R10",
+        "R11",
+        "R12"
+      ],
+      "acceptance": [
+        {
+          "id": "B-T01-AC1",
+          "criterion": "Explicit contrasts give hand-derived effect, ordinary SE and df; reversing contrast reverses effect but not two-sided p."
+        },
+        {
+          "id": "B-T01-AC2",
+          "criterion": "Moderated SE/statistic/effective df match installed limma outputs on an actual numeric fixture; not mocked package success."
+        },
+        {
+          "id": "B-T01-AC3",
+          "criterion": "Per-feature missing-row rank/estimability and zero residual support are handled with full failure accounting."
+        },
+        {
+          "id": "B-T01-AC4",
+          "criterion": "Effect unit and independent-sample directional-consistency not-applicable are explicit; source hashes bind every result."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='B-T01', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/B-T01.yaml --stage B --output artifacts/acceptance/B-T01"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "B-T02",
+      "title": "Multigroup contrasts, continuous terms and mean-retaining analyses",
+      "goal": "Multigroup contrasts, continuous terms and mean-retaining analyses.",
+      "component": "B",
+      "milestone": "M4",
+      "dependencies": [
+        "B-T01"
+      ],
+      "requires_review_gates": [
+        "G3"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/design_contrasts.R",
+        "R/design_levels.R",
+        "tests/testthat/test-B-T02.R",
+        "inst/examples/tickets/B-T02.yaml",
+        "docs/implementation/registrations/B-T02.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/B-T02",
+      "requirements": [
+        "R08",
+        "R09",
+        "R10",
+        "R12"
+      ],
+      "acceptance": [
+        {
+          "id": "B-T02-AC1",
+          "criterion": "At least three groups and continuous predictors use declared model-column weights without hardcoded labels or arbitrary YAML eval."
+        },
+        {
+          "id": "B-T02-AC2",
+          "criterion": "Aliased covariates and absent factor levels fail estimability checks rather than silently dropping requested contrasts."
+        },
+        {
+          "id": "B-T02-AC3",
+          "criterion": "Separate subject-mean/visit-level analyses retain between-person signal and their own representation IDs."
+        },
+        {
+          "id": "B-T02-AC4",
+          "criterion": "A joint-contrast claim and separate scalar families are distinct declarations; effect-unit/reference direction remains auditable."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='B-T02', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/B-T02.yaml --stage B --output artifacts/acceptance/B-T02"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "B-T03",
+      "title": "Paired delta and difference-in-change analysis",
+      "goal": "Paired delta and difference-in-change analysis.",
+      "component": "B",
+      "milestone": "M4",
+      "dependencies": [
+        "B-T01"
+      ],
+      "requires_review_gates": [
+        "G3"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/design_paired.R",
+        "tests/testthat/test-B-T03.R",
+        "inst/examples/tickets/B-T03.yaml",
+        "docs/implementation/registrations/B-T03.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/B-T03",
+      "requirements": [
+        "R03",
+        "R08",
+        "R09",
+        "R10",
+        "R12"
+      ],
+      "acceptance": [
+        {
+          "id": "B-T03-AC1",
+          "criterion": "Delta equals declared target minus reference for each verified subject; exact hand-calculated change and difference-in-change are recovered."
+        },
+        {
+          "id": "B-T03-AC2",
+          "criterion": "Complete-pair error and explicit per-contrast attrition modes report population change; no visit imputation or guessed pairing."
+        },
+        {
+          "id": "B-T03-AC3",
+          "criterion": "Static covariates are modifiers of change, time-varying covariates use declared transformations, and projected-out level targets fail."
+        },
+        {
+          "id": "B-T03-AC4",
+          "criterion": "Per-subject/group directional counts include zeros and exclusions; C input is the identical signed delta map, not centered twice."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='B-T03', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/B-T03.yaml --stage B --output artifacts/acceptance/B-T03"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "B-T04",
+      "title": "Qualified multivisit and trajectory fixed-subject inference",
+      "goal": "Qualified multivisit and trajectory fixed-subject inference.",
+      "component": "B",
+      "milestone": "M4",
+      "dependencies": [
+        "B-T02",
+        "B-T03"
+      ],
+      "requires_review_gates": [
+        "G3"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/design_repeated.R",
+        "R/design_trajectory.R",
+        "tests/testthat/test-B-T04.R",
+        "inst/examples/tickets/B-T04.yaml",
+        "docs/implementation/registrations/B-T04.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/B-T04",
+      "requirements": [
+        "R08",
+        "R09",
+        "R10",
+        "R27"
+      ],
+      "acceptance": [
+        {
+          "id": "B-T04-AC1",
+          "criterion": "Full fixed-subject design uses actual per-feature rank/df; ordinary centered-plus-duplicateCorrelation shortcut is prohibited."
+        },
+        {
+          "id": "B-T04-AC2",
+          "criterion": "Explicit time origin/units, spline knots/boundaries and contrasts are used; irregular eligible visits work and unsupported covariance fails."
+        },
+        {
+          "id": "B-T04-AC3",
+          "criterion": "Actual ordinary-reference and null/uncertainty calibration protocol executes for the declared supported missing/time patterns."
+        },
+        {
+          "id": "B-T04-AC4",
+          "criterion": "An unqualified repeated capability remains unavailable with evidence; it is not marked implemented merely because a refusal path exists."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='B-T04', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/B-T04.yaml --stage B --output artifacts/acceptance/B-T04"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "B-T05",
+      "title": "Count-dependent precision with DEqMS",
+      "goal": "Count-dependent precision with DEqMS.",
+      "component": "B",
+      "milestone": "M4",
+      "dependencies": [
+        "B-T01",
+        "B-T03"
+      ],
+      "requires_review_gates": [
+        "G3"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/statistics_deqms.R",
+        "tests/testthat/test-B-T05.R",
+        "inst/examples/tickets/B-T05.yaml",
+        "docs/implementation/registrations/B-T05.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/B-T05",
+      "requirements": [
+        "R09",
+        "R11",
+        "R27"
+      ],
+      "acceptance": [
+        {
+          "id": "B-T05-AC1",
+          "criterion": "Counts align by feature identity, remain positive and have peptide/PSM and acquisition provenance; permuted/invalid counts fail."
+        },
+        {
+          "id": "B-T05-AC2",
+          "criterion": "Pinned DEqMS API and outputs execute against the official reference workflow; actual method-specific SE/p fields are checked."
+        },
+        {
+          "id": "B-T05-AC3",
+          "criterion": "Count summary for deltas is justified and validated; no guessed minimum/mean summary from unrelated samples."
+        },
+        {
+          "id": "B-T05-AC4",
+          "criterion": "Requested unavailable DEqMS yields a named status; a declared limma fallback has separate provenance and is not presented as DEqMS."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='B-T05', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/B-T05.yaml --stage B --output artifacts/acceptance/B-T05"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "B-T06",
+      "title": "Fixed testing families, nominations and rank sensitivity",
+      "goal": "Fixed testing families, nominations and rank sensitivity.",
+      "component": "B",
+      "milestone": "M4",
+      "dependencies": [
+        "B-T02",
+        "B-T03"
+      ],
+      "requires_review_gates": [
+        "G3"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/multiplicity.R",
+        "R/nominations.R",
+        "R/rank_sensitivity.R",
+        "tests/testthat/test-B-T06.R",
+        "inst/examples/tickets/B-T06.yaml",
+        "docs/implementation/registrations/B-T06.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/B-T06",
+      "requirements": [
+        "R10",
+        "R12",
+        "R22"
+      ],
+      "acceptance": [
+        {
+          "id": "B-T06-AC1",
+          "criterion": "Declared complete family includes failed internal p=1 rows; published failed p/q remain null and all member counts reconcile."
+        },
+        {
+          "id": "B-T06-AC2",
+          "criterion": "Adding another block leaves original q unchanged; imported p/q sidecars never affect inference or family membership."
+        },
+        {
+          "id": "B-T06-AC3",
+          "criterion": "Outcome-selected unknown inventory and invalid model/selection/dependence cannot release validated q; effect threshold remains a reporting filter."
+        },
+        {
+          "id": "B-T06-AC4",
+          "criterion": "Eligible paired/two-group Wilcoxon sensitivity uses explicit ties/zero/exact policies; adjusted or unsupported designs do not silently run unadjusted tests."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='B-T06', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/B-T06.yaml --stage B --output artifacts/acceptance/B-T06"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "B-T08",
+      "title": "Clinical molecular/score association service",
+      "goal": "Clinical molecular/score association service.",
+      "component": "B",
+      "milestone": "M4",
+      "dependencies": [
+        "A-T09",
+        "B-T01"
+      ],
+      "requires_review_gates": [
+        "G3"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/clinical_objectives.R",
+        "R/clinical_association.R",
+        "tests/testthat/test-B-T08.R",
+        "inst/examples/tickets/B-T08.yaml",
+        "docs/implementation/registrations/B-T08.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/B-T08",
+      "requirements": [
+        "R16",
+        "R17",
+        "R18",
+        "R26"
+      ],
+      "acceptance": [
+        {
+          "id": "B-T08-AC1",
+          "criterion": "Typed continuous endpoint response against declared clinical predictors executes with units, adjusted effect/uncertainty and patient counts."
+        },
+        {
+          "id": "B-T08-AC2",
+          "criterion": "Unsupported clinical response types, unknown coding, censored values and constant/non-estimable fields stay explicit rather than Pearson fallback."
+        },
+        {
+          "id": "B-T08-AC3",
+          "criterion": "Fixed clinical endpoint families and endpoint training/selection ancestry are enforced with synthetic score inputs before C exists."
+        },
+        {
+          "id": "B-T08-AC4",
+          "criterion": "Private identities never enter ordinary exports; clinical complete-case exclusions are distinct from molecular imputation."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='B-T08', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/B-T08.yaml --stage B --output artifacts/acceptance/B-T08"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "B-T09",
+      "title": "Longitudinal clinical change and interaction associations",
+      "goal": "Longitudinal clinical change and interaction associations.",
+      "component": "B",
+      "milestone": "M4",
+      "dependencies": [
+        "B-T08",
+        "B-T03"
+      ],
+      "requires_review_gates": [
+        "G3"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/clinical_longitudinal.R",
+        "tests/testthat/test-B-T09.R",
+        "inst/examples/tickets/B-T09.yaml",
+        "docs/implementation/registrations/B-T09.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/B-T09",
+      "requirements": [
+        "R08",
+        "R09",
+        "R16",
+        "R17",
+        "R18"
+      ],
+      "acceptance": [
+        {
+          "id": "B-T09-AC1",
+          "criterion": "Between-person and within-person clinical associations are distinct; repeated records are not treated as independent patients."
+        },
+        {
+          "id": "B-T09-AC2",
+          "criterion": "Baseline-to-later objectives enforce actual information horizon/baseline-adjustment and avoid silently importing later predictors."
+        },
+        {
+          "id": "B-T09-AC3",
+          "criterion": "Effect modification uses an estimable interaction coefficient, not a difference in subgroup significance."
+        },
+        {
+          "id": "B-T09-AC4",
+          "criterion": "Same-data score/outcome selection blocks independent-confirmation claims; per-objective unit maps, time windows and missingness are audited."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='B-T09', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/B-T09.yaml --stage B --output artifacts/acceptance/B-T09"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "B-T07",
+      "title": "B CLI/export and Markdown reproduction handoff",
+      "goal": "B CLI/export and Markdown reproduction handoff.",
+      "component": "B",
+      "milestone": "M4",
+      "dependencies": [
+        "B-T04",
+        "B-T05",
+        "B-T06",
+        "B-T08",
+        "B-T09"
+      ],
+      "requires_review_gates": [
+        "G3"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/export_b.R",
+        "tests/testthat/test-B-T07.R",
+        "inst/examples/tickets/B-T07.yaml",
+        "docs/implementation/registrations/B-T07.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/B-T07",
+      "requirements": [
+        "R08",
+        "R09",
+        "R10",
+        "R16",
+        "R28",
+        "R29"
+      ],
+      "acceptance": [
+        {
+          "id": "B-T07-AC1",
+          "criterion": "Full B tested/failed/family/clinical bundles and nomination lineage export through public contracts; D needs no private model inspection."
+        },
+        {
+          "id": "B-T07-AC2",
+          "criterion": "Independent and paired end-to-end smoke commands execute, including signed effects, no silent loss and unavailable methods."
+        },
+        {
+          "id": "B-T07-AC3",
+          "criterion": "Model/representation hashes match matrices supplied to C and restart respects all dependency hashes."
+        },
+        {
+          "id": "B-T07-AC4",
+          "criterion": "Markdown reproduction explains commands, verified environment, unrun qualifications and limitations; no premature claim of final HTML/vignettes."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='B-T07', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/B-T07.yaml --stage B --output artifacts/acceptance/B-T07"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "C-01",
+      "title": "Common integration contract and concatenation PCA",
+      "goal": "Common integration contract and concatenation PCA.",
+      "component": "C",
+      "milestone": "M5",
+      "dependencies": [
+        "B-T07"
+      ],
+      "requires_review_gates": [
+        "G4"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/integration_contract.R",
+        "R/integration_eligibility.R",
+        "R/integration_pca.R",
+        "R/integration_consensus.R",
+        "tests/testthat/test-C-01.R",
+        "inst/examples/tickets/C-01.yaml",
+        "docs/implementation/registrations/C-01.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/C-01",
+      "requirements": [
+        "R02",
+        "R08",
+        "R13",
+        "R14",
+        "R15"
+      ],
+      "acceptance": [
+        {
+          "id": "C-01-AC1",
+          "criterion": "Six-field common result validates exact unit/feature maps and finite retained outputs; mixed studies/summary inputs are refused."
+        },
+        {
+          "id": "C-01-AC2",
+          "criterion": "PCA train/apply matches native prcomp and the explicit per-block projection fraction matches SSE reduction."
+        },
+        {
+          "id": "C-01-AC3",
+          "criterion": "Feature/block scaling and dense selection are explicit; zero-variance exclusion and rank limits have lineage."
+        },
+        {
+          "id": "C-01-AC4",
+          "criterion": "Two/five renamed blocks, changed column order, projected-out targets and unequal coverage exercise real eligibility pathways."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='C-01', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-01.yaml --stage C --output artifacts/acceptance/C-01"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "C-02",
+      "title": "Supervised concatenation baseline and nested evaluation service",
+      "goal": "Supervised concatenation baseline and nested evaluation service.",
+      "component": "C",
+      "milestone": "M5",
+      "dependencies": [
+        "C-01",
+        "A-T07"
+      ],
+      "requires_review_gates": [
+        "G4"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/integration_baseline_supervised.R",
+        "R/evaluation.R",
+        "R/splits.R",
+        "tests/testthat/test-C-02.R",
+        "inst/examples/tickets/C-02.yaml",
+        "docs/implementation/registrations/C-02.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/C-02",
+      "requirements": [
+        "R05",
+        "R13",
+        "R14",
+        "R19",
+        "R27"
+      ],
+      "acceptance": [
+        {
+          "id": "C-02-AC1",
+          "criterion": "Categorical PLS-DA and scalar PLS baselines use native predictions with frozen training transforms and declared prediction rules."
+        },
+        {
+          "id": "C-02-AC2",
+          "criterion": "Subject-disjoint nested folds perform filtering/normalization/imputation/scaling/selection/tuning inside training only; leakage mutation tests pass."
+        },
+        {
+          "id": "C-02-AC3",
+          "criterion": "Infeasible folds, rank or class support fail explicitly; failed predictions/folds remain in the denominator ledger."
+        },
+        {
+          "id": "C-02-AC4",
+          "criterion": "Balanced-error/RMSE and baseline comparisons have exact definitions; budget guards stop before exceeding declared fit count."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='C-02', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-02.yaml --stage C --output artifacts/acceptance/C-02"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "C-03",
+      "title": "Categorical DIABLO with explicit design and native prediction",
+      "goal": "Categorical DIABLO with explicit design and native prediction.",
+      "component": "C",
+      "milestone": "M6",
+      "dependencies": [
+        "C-02"
+      ],
+      "requires_review_gates": [
+        "G5"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/integration_diablo.R",
+        "tests/testthat/test-C-03.R",
+        "inst/examples/tickets/C-03.yaml",
+        "docs/implementation/registrations/C-03.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/C-03",
+      "requirements": [
+        "R13",
+        "R14",
+        "R15",
+        "R27"
+      ],
+      "acceptance": [
+        {
+          "id": "C-03-AC1",
+          "criterion": "Actual block.splsda fit, wrapper-controlled tuning and native prediction use categorical outcomes, explicit named design/keepX/components and pinned NA capability checks."
+        },
+        {
+          "id": "C-03-AC2",
+          "criterion": "Training anchor/sign/standardization consensus follows the exact algorithm; block reorder and loading-sign perturbations preserve the convention."
+        },
+        {
+          "id": "C-03-AC3",
+          "criterion": "Held-out prediction/score extraction uses native APIs and stored transforms, never Y or naive loading multiplication."
+        },
+        {
+          "id": "C-03-AC4",
+          "criterion": "Native predictor-block variance meaning and sparse support are verified; degenerate or missing common outputs cannot become fake success."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='C-03', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-03.yaml --stage C --output artifacts/acceptance/C-03"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "C-04",
+      "title": "Continuous block.spls adapter",
+      "goal": "Continuous block.spls adapter.",
+      "component": "C",
+      "milestone": "M6",
+      "dependencies": [
+        "C-02"
+      ],
+      "requires_review_gates": [
+        "G5"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/integration_block_spls.R",
+        "tests/testthat/test-C-04.R",
+        "inst/examples/tickets/C-04.yaml",
+        "docs/implementation/registrations/C-04.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/C-04",
+      "requirements": [
+        "R13",
+        "R14",
+        "R15",
+        "R27"
+      ],
+      "acceptance": [
+        {
+          "id": "C-04-AC1",
+          "criterion": "Scalar continuous Y is n-by-1 with declared mode/keepY/scaling; native fit, wrapper-controlled tuning and native prediction are exercised."
+        },
+        {
+          "id": "C-04-AC2",
+          "criterion": "Response block is excluded from common predictor loadings/variance/selected, with native response diagnostics retained."
+        },
+        {
+          "id": "C-04-AC3",
+          "criterion": "Held-out Y mutations leave preprocessing, predictor scores and predictions invariant."
+        },
+        {
+          "id": "C-04-AC4",
+          "criterion": "Common consensus/variance/NA qualification follows the declared contract; labels clearly distinguish regression from DIABLO classification."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='C-04', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-04.yaml --stage C --output artifacts/acceptance/C-04"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "C-05",
+      "title": "MOFA2 training, reload and stability",
+      "goal": "MOFA2 training, reload and stability.",
+      "component": "C",
+      "milestone": "M6",
+      "dependencies": [
+        "C-02"
+      ],
+      "requires_review_gates": [
+        "G5"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/integration_mofa.R",
+        "R/mofa_state.R",
+        "tools/check-mofa-environment.R",
+        "tests/testthat/test-C-05.R",
+        "inst/examples/tickets/C-05.yaml",
+        "docs/implementation/registrations/C-05.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/C-05",
+      "requirements": [
+        "R13",
+        "R14",
+        "R15",
+        "R27",
+        "R28"
+      ],
+      "acceptance": [
+        {
+          "id": "C-05-AC1",
+          "criterion": "Actual MOFA2+mofapy2 training, save and reload runs in one verified isolated environment; failed backend setup is not reported as trained."
+        },
+        {
+          "id": "C-05-AC2",
+          "criterion": "Gaussian views, native factor/weight/variance outputs and supported cell/per-sample missing views conform to the shared contract."
+        },
+        {
+          "id": "C-05-AC3",
+          "criterion": "Seed sensitivity aligns sign/permutation and distinguishes subspace instability from a software bug; no forced recovery in weak/null controls."
+        },
+        {
+          "id": "C-05-AC4",
+          "criterion": "No unseen-subject predictive claim without qualified inductive inference; native enrichment inputs have typed sidecar hashes."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='C-05', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-05.yaml --stage C --output artifacts/acceptance/C-05"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "C-08",
+      "title": "Integration endpoint lineage and B-owned clinical handoff",
+      "goal": "Integration endpoint lineage and B-owned clinical handoff.",
+      "component": "C",
+      "milestone": "M6",
+      "dependencies": [
+        "C-03",
+        "C-04",
+        "C-05",
+        "B-T08",
+        "B-T09"
+      ],
+      "requires_review_gates": [
+        "G5"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/integration_endpoints.R",
+        "R/clinical_score_requests.R",
+        "tests/testthat/test-C-08.R",
+        "inst/examples/tickets/C-08.yaml",
+        "docs/implementation/registrations/C-08.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/C-08",
+      "requirements": [
+        "R16",
+        "R18",
+        "R19",
+        "R28"
+      ],
+      "acceptance": [
+        {
+          "id": "C-08-AC1",
+          "criterion": "PCA/DIABLO/block.spls/MOFA score endpoints export unit, scale, orientation, training Y/subjects and selection lineage."
+        },
+        {
+          "id": "C-08-AC2",
+          "criterion": "Orchestrator schedules a new B association request on immutable endpoints; no B-to-C recursion or duplicated clinical modeling."
+        },
+        {
+          "id": "C-08-AC3",
+          "criterion": "DIABLO association with training Y is descriptive; same-data selected MOFA factor claims retain the selection restriction."
+        },
+        {
+          "id": "C-08-AC4",
+          "criterion": "Unit/visit/time/coverage mismatches fail; feature associations and score associations remain distinct artifact requests."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='C-08', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-08.yaml --stage C --output artifacts/acceptance/C-08"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "C-09",
+      "title": "Matched incremental clinical prediction for one declared endpoint",
+      "goal": "Matched incremental clinical prediction for one declared endpoint.",
+      "component": "C",
+      "milestone": "M6",
+      "dependencies": [
+        "C-08",
+        "C-02"
+      ],
+      "requires_review_gates": [
+        "G5"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "conditional",
+      "conditional_gate": "A concrete endpoint/model/deployment and uncertainty protocol is required; no real endpoint was supplied in this task.",
+      "files_allowed": [
+        "R/clinical_prediction_comparison.R",
+        "tests/testthat/test-C-09.R",
+        "inst/examples/tickets/C-09.yaml",
+        "docs/implementation/registrations/C-09.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/C-09",
+      "requirements": [
+        "R13",
+        "R18",
+        "R19",
+        "R27"
+      ],
+      "acceptance": [
+        {
+          "id": "C-09-AC1",
+          "criterion": "One explicitly approved endpoint/deployment protocol defines supported response model, horizon and information set."
+        },
+        {
+          "id": "C-09-AC2",
+          "criterion": "Clinical-only, molecular-only and combined candidates use identical patients, outer folds and metric definitions with nested selection."
+        },
+        {
+          "id": "C-09-AC3",
+          "criterion": "No full-cohort MOFA representation can precede held-out evaluation unless qualified fold-local new-subject inference is available."
+        },
+        {
+          "id": "C-09-AC4",
+          "criterion": "Report incremental metric uncertainty, failure denominators, tested-candidate history and remaining qualification without a guaranteed benefit."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='C-09', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-09.yaml --stage C --output artifacts/acceptance/C-09"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "C-06",
+      "title": "Cross-backend comparison and full D handoff",
+      "goal": "Cross-backend comparison and full D handoff.",
+      "component": "C",
+      "milestone": "M6",
+      "dependencies": [
+        "C-03",
+        "C-04",
+        "C-05",
+        "C-08"
+      ],
+      "requires_review_gates": [
+        "G5"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/export_c.R",
+        "R/integration_comparison.R",
+        "tests/testthat/test-C-06.R",
+        "inst/examples/tickets/C-06.yaml",
+        "docs/implementation/registrations/C-06.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/C-06",
+      "requirements": [
+        "R13",
+        "R14",
+        "R15",
+        "R18",
+        "R27",
+        "R29"
+      ],
+      "acceptance": [
+        {
+          "id": "C-06-AC1",
+          "criterion": "Both nomination branches and complete integration eligibility/native/common/selection/variance evidence export to D."
+        },
+        {
+          "id": "C-06-AC2",
+          "criterion": "Comparisons declare matched samples/features/context and distinguish native variance definitions rather than ranking unlike metrics."
+        },
+        {
+          "id": "C-06-AC3",
+          "criterion": "C-07 evaluation evidence includes null/weak/strong/adversarial controls and matched baseline information, with actual runs or explicit unrun records."
+        },
+        {
+          "id": "C-06-AC4",
+          "criterion": "Backend/clinical prediction conditional statuses remain visible; no empty adapter can satisfy C completion."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-06.yaml --stage C --output artifacts/acceptance/C-06"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "D-T01",
+      "title": "Evidence routing and full accounting with routes disabled",
+      "goal": "Evidence routing and full accounting with routes disabled.",
+      "component": "D",
+      "milestone": "M7",
+      "dependencies": [
+        "C-06"
+      ],
+      "requires_review_gates": [
+        "G6"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+      "R/evidence_bundle.R",
+      "R/annotation_router.R",
+      "R/resource_manifest.R",
+      "tests/testthat/test-D-T01.R",
+        "inst/examples/tickets/D-T01.yaml",
+        "docs/implementation/registrations/D-T01.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/D-T01",
+      "requirements": [
+      "R02",
+      "R20",
+      "R21",
+      "R22",
+        "R25"
+      ],
+      "acceptance": [
+        {
+          "id": "D-T01-AC1",
+          "criterion": "B/C nominations reach both compatible namespace routes; full tested/family/selection evidence remains available."
+        },
+        {
+          "id": "D-T01-AC2",
+          "criterion": "All routes disabled yields meaningful machine-readable accounting, not absent biology or fake enrichment."
+        },
+        {
+          "id": "D-T01-AC3",
+          "criterion": "Unknown/mixed study IDs, source roles and duplicate nominations are rejected or reconciled without duplicated measured rows."
+        },
+      {
+        "id": "D-T01-AC4",
+        "criterion": "Imported statistics are labeled external display/concordance and cannot enter B corrections or D enrichment."
+      },
+      {
+        "id": "D-T01-AC5",
+        "criterion": "The shared local-resource service enforces exact version/hash, operation-specific rights, cache and offline policy; absent resources yield safe unavailable status without hosted study upload."
+      }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='D-T01', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T01.yaml --stage D --output artifacts/acceptance/D-T01"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "D-T02",
+      "title": "Local lipid mapping with explicit structural ambiguity",
+      "goal": "Local lipid mapping with explicit structural ambiguity.",
+      "component": "D",
+      "milestone": "M7",
+      "dependencies": [
+        "D-T01"
+      ],
+      "requires_review_gates": [
+        "G6"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/annotation_lipids.R",
+        "tests/testthat/test-D-T02.R",
+        "inst/examples/tickets/D-T02.yaml",
+        "docs/implementation/registrations/D-T02.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/D-T02",
+      "requirements": [
+        "R07",
+        "R20",
+        "R21",
+        "R25"
+      ],
+      "acceptance": [
+        {
+          "id": "D-T02-AC1",
+          "criterion": "Class/sum-composition mappings retain true structural resolution and do not invent chain positions or isomers."
+        },
+        {
+          "id": "D-T02-AC2",
+          "criterion": "Aliases/one-to-many mappings preserve measured-row identity and ambiguity groups without multiplying observations."
+        },
+      {
+        "id": "D-T02-AC3",
+        "criterion": "Lipid mapping uses D-T01's reviewed shared resource service; local version/hash/rights gates run and absent resources produce safe unavailable statuses."
+        },
+        {
+          "id": "D-T02-AC4",
+          "criterion": "Synthetic known/ambiguous/unmapped lipids test actual local parsing/mapping, not only mocked network success."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='D-T02', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T02.yaml --stage D --output artifacts/acceptance/D-T02"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "D-T03",
+      "title": "Local gene-product and reaction mapping",
+      "goal": "Local gene-product and reaction mapping.",
+      "component": "D",
+      "milestone": "M7",
+      "dependencies": [
+        "D-T01"
+      ],
+      "requires_review_gates": [
+        "G6"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+    "files_allowed": [
+      "R/annotation_reactions.R",
+      "tests/testthat/test-D-T03.R",
+        "inst/examples/tickets/D-T03.yaml",
+        "docs/implementation/registrations/D-T03.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/D-T03",
+      "requirements": [
+        "R20",
+        "R21",
+        "R25"
+      ],
+      "acceptance": [
+        {
+          "id": "D-T03-AC1",
+          "criterion": "Mappings require namespace/taxon/resource identity and preserve isoform/protein-group/compound ambiguity."
+        },
+        {
+          "id": "D-T03-AC2",
+          "criterion": "GO function annotation and reaction edges remain typed separately; unknown IDs are not coerced into another namespace."
+        },
+      {
+        "id": "D-T03-AC3",
+        "criterion": "Reaction mapping uses D-T01's reviewed shared resource service so operation-specific rights, cache hash and offline policy are enforced with no automatic hosted study upload."
+        },
+        {
+          "id": "D-T03-AC4",
+          "criterion": "Two nomination sources for one feature produce shared evidence lineage, not independent corroboration."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='D-T03', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T03.yaml --stage D --output artifacts/acceptance/D-T03"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "D-T04",
+      "title": "Declared-universe local over-representation analysis",
+      "goal": "Declared-universe local over-representation analysis.",
+      "component": "D",
+      "milestone": "M7",
+      "dependencies": [
+        "D-T02",
+        "D-T03"
+      ],
+      "requires_review_gates": [
+        "G6"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/enrichment_ora.R",
+        "R/enrichment_family.R",
+        "tests/testthat/test-D-T04.R",
+        "inst/examples/tickets/D-T04.yaml",
+        "docs/implementation/registrations/D-T04.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/D-T04",
+      "requirements": [
+        "R10",
+        "R20",
+        "R21",
+        "R22"
+      ],
+      "acceptance": [
+        {
+          "id": "D-T04-AC1",
+          "criterion": "Hypergeometric upper-tail P[X>=k] matches hand-calculated N/K/n/k examples, including k=0 and empty/ineligible sets."
+        },
+        {
+          "id": "D-T04-AC2",
+          "criterion": "Measured eligible universe and mapping/aggregation rule are frozen; selected lists cannot be their own background."
+        },
+        {
+          "id": "D-T04-AC3",
+          "criterion": "Full predeclared set family and failed-member accounting are retained; no post-hoc split or pooled all-omics significance claim."
+        },
+        {
+          "id": "D-T04-AC4",
+          "criterion": "Unknown/outcome-selected inventories or incompatible mappings cannot produce validated enrichment q or pathway activation claims."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='D-T04', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T04.yaml --stage D --output artifacts/acceptance/D-T04"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "D-T05",
+      "title": "Optional/required resource failure, status and completeness",
+      "goal": "Optional/required resource failure, status and completeness.",
+      "component": "D",
+      "milestone": "M7",
+      "dependencies": [
+        "D-T01",
+        "D-T02",
+        "D-T03",
+        "D-T04"
+      ],
+      "requires_review_gates": [
+        "G6"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/annotation_status.R",
+        "tests/testthat/test-D-T05.R",
+        "inst/examples/tickets/D-T05.yaml",
+        "docs/implementation/registrations/D-T05.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/D-T05",
+      "requirements": [
+        "R20",
+        "R25",
+        "R28",
+        "R29"
+      ],
+      "acceptance": [
+        {
+          "id": "D-T05-AC1",
+          "criterion": "Optional unavailable and required unavailable routes have different run completeness/exit behavior."
+        },
+        {
+          "id": "D-T05-AC2",
+          "criterion": "Resource rights/content hash changes invalidate cached output; native/source missingness is not a negative result."
+        },
+        {
+          "id": "D-T05-AC3",
+          "criterion": "All-disabled and partial-resource end-to-end cases preserve completed B/C evidence."
+        },
+        {
+          "id": "D-T05-AC4",
+          "criterion": "Conditional adapters remain separate incomplete capabilities and are not completed by this status handler."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='D-T05', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T05.yaml --stage D --output artifacts/acceptance/D-T05"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "D-T06",
+      "title": "Native MOFA enrichment under a qualified model/input contract",
+      "goal": "Native MOFA enrichment under a qualified model/input contract.",
+      "component": "D",
+      "milestone": "M7",
+      "dependencies": [
+        "D-T04",
+        "D-T05",
+        "C-05"
+      ],
+      "requires_review_gates": [
+        "G6"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "conditional",
+      "conditional_gate": "A release-pinned native model/input/null and resource qualification must pass before activation.",
+      "files_allowed": [
+        "R/enrichment_mofa.R",
+        "tests/testthat/test-D-T06.R",
+        "inst/examples/tickets/D-T06.yaml",
+        "docs/implementation/registrations/D-T06.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/D-T06",
+      "requirements": [
+        "R14",
+        "R20",
+        "R21",
+        "R25",
+        "R27"
+      ],
+      "acceptance": [
+        {
+          "id": "D-T06-AC1",
+          "criterion": "Pinned run_enrichment inputs come from typed native model/data/annotation artifacts, not loadings or selected IDs alone."
+        },
+        {
+          "id": "D-T06-AC2",
+          "criterion": "Exact native arguments, sign/null statistic, denominator and family interpretation are verified by reference numeric checks."
+        },
+        {
+          "id": "D-T06-AC3",
+          "criterion": "Missing native sidecars/resources fail visibly; D never refits MOFA or invents a substitute model."
+        },
+        {
+          "id": "D-T06-AC4",
+          "criterion": "Executed validation and rights evidence are required before this capability is complete."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='D-T06', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T06.yaml --stage D --output artifacts/acceptance/D-T06"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "D-T07",
+      "title": "Conditional BioPAN quantitative lipid comparison",
+      "goal": "Conditional BioPAN quantitative lipid comparison.",
+      "component": "D",
+      "milestone": "M7",
+      "dependencies": [
+        "D-T02",
+        "D-T05"
+      ],
+      "requires_review_gates": [
+        "G6"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "conditional",
+      "conditional_gate": "Lawful local execution and a compatible validated quantitative/design contract are required.",
+      "files_allowed": [
+        "R/enrichment_biopan.R",
+        "tests/testthat/test-D-T07.R",
+        "inst/examples/tickets/D-T07.yaml",
+        "docs/implementation/registrations/D-T07.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/D-T07",
+      "requirements": [
+        "R07",
+        "R20",
+        "R21",
+        "R25",
+        "R27"
+      ],
+      "acceptance": [
+        {
+          "id": "D-T07-AC1",
+          "criterion": "Local executable/resource access and intended-use rights are verified without exporting private study data."
+        },
+        {
+          "id": "D-T07-AC2",
+          "criterion": "Input quantitative scale, grouping and design are compatible; CLR/delta/loadings and adjusted paired claims are not silently coerced."
+        },
+        {
+          "id": "D-T07-AC3",
+          "criterion": "Native calculation agrees with a declared reference case and carries exact versions/inputs."
+        },
+        {
+          "id": "D-T07-AC4",
+          "criterion": "Unsupported design/rights/runtime remains unavailable and does not block unrelated offline reporting."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='D-T07', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T07.yaml --stage D --output artifacts/acceptance/D-T07"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "D-T10",
+      "title": "Target identity, request ledger and external assay evidence",
+      "goal": "Target identity, request ledger and external assay evidence.",
+      "component": "D",
+      "milestone": "M7",
+      "dependencies": [
+        "D-T03"
+      ],
+      "requires_review_gates": [
+        "G6"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/target_request.R",
+        "R/target_evidence.R",
+        "tests/testthat/test-D-T10.R",
+        "inst/examples/tickets/D-T10.yaml",
+        "docs/implementation/registrations/D-T10.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/D-T10",
+      "requirements": [
+        "R23",
+        "R24",
+        "R25"
+      ],
+      "acceptance": [
+        {
+          "id": "D-T10-AC1",
+          "criterion": "Target/drug namespace, species, entity/construct, study context and request selection history are explicit."
+        },
+        {
+          "id": "D-T10-AC2",
+          "criterion": "Binding, functional, engagement and association assays retain exact endpoint/units/source and are never collapsed to a potency score."
+        },
+        {
+          "id": "D-T10-AC3",
+          "criterion": "External published assay evidence is not marked as measured by the pipeline; absent affinity values remain unavailable."
+        },
+        {
+          "id": "D-T10-AC4",
+          "criterion": "Ambiguous IDs, context mismatch and duplicated publications/evidence groups preserve uncertainty and provenance."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='D-T10', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T10.yaml --stage D --output artifacts/acceptance/D-T10"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "D-T11",
+      "title": "Named-target and alternative mechanism evidence profiles",
+      "goal": "Named-target and alternative mechanism evidence profiles.",
+      "component": "D",
+      "milestone": "M7",
+      "dependencies": [
+        "D-T10"
+      ],
+      "requires_review_gates": [
+        "G6"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/target_assessment.R",
+        "R/target_alternatives.R",
+        "tests/testthat/test-D-T11.R",
+        "inst/examples/tickets/D-T11.yaml",
+        "docs/implementation/registrations/D-T11.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/D-T11",
+      "requirements": [
+        "R21",
+        "R23",
+        "R24"
+      ],
+      "acceptance": [
+        {
+          "id": "D-T11-AC1",
+          "criterion": "Only documented signed/unsigned contextual paths link effects to mechanisms; non-enzymatic targets get no invented substrate reactions."
+        },
+        {
+          "id": "D-T11-AC2",
+          "criterion": "Support, contradiction, ambiguous, unmeasured and noncomparable evidence are retained; no forced winning target."
+        },
+        {
+          "id": "D-T11-AC3",
+          "criterion": "Shared features/adducts/pathways and B/C analyses of the same observations do not multiply independent confirmation."
+        },
+        {
+          "id": "D-T11-AC4",
+          "criterion": "Metabolite/clinical changes never become binding, flux, causal mediation or an inferred experimental Kd."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='D-T11', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T11.yaml --stage D --output artifacts/acceptance/D-T11"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "D-T12",
+      "title": "Bounded unranked exploratory target discovery",
+      "goal": "Bounded unranked exploratory target discovery.",
+      "component": "D",
+      "milestone": "M7",
+      "dependencies": [
+        "D-T11"
+      ],
+      "requires_review_gates": [
+        "G6"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/target_discovery.R",
+        "tests/testthat/test-D-T12.R",
+        "inst/examples/tickets/D-T12.yaml",
+        "docs/implementation/registrations/D-T12.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/D-T12",
+      "requirements": [
+        "R22",
+        "R23",
+        "R24"
+      ],
+      "acceptance": [
+        {
+          "id": "D-T12-AC1",
+          "criterion": "Versioned target universe and enumeration rule account for every included/excluded target."
+        },
+        {
+          "id": "D-T12-AC2",
+          "criterion": "Discovery outputs are unranked exploratory profiles with prior-data/selection history, not validated target probabilities."
+        },
+        {
+          "id": "D-T12-AC3",
+          "criterion": "Equal evidence yields ties or indistinguishable profiles; unequal annotation coverage cannot force ranking."
+        },
+        {
+          "id": "D-T12-AC4",
+          "criterion": "Evaluation-data-derived reference signatures are rejected and unknown overlap makes the affected axis unassessable."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='D-T12', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T12.yaml --stage D --output artifacts/acceptance/D-T12"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "D-T14",
+      "title": "One separately approved quantitative target method",
+      "goal": "One separately approved quantitative target method.",
+      "component": "D",
+      "milestone": "M7",
+      "dependencies": [
+        "D-T11",
+        "D-T12"
+      ],
+      "requires_review_gates": [
+        "G6"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "conditional",
+      "conditional_gate": "No quantitative target-ranking/inference method was approved in the inspected settlement; it cannot be invented during implementation.",
+      "files_allowed": [
+        "R/target_quantitative.R",
+        "tests/testthat/test-D-T14.R",
+        "inst/examples/tickets/D-T14.yaml",
+        "docs/implementation/registrations/D-T14.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/D-T14",
+      "requirements": [
+        "R23",
+        "R24",
+        "R27"
+      ],
+      "acceptance": [
+        {
+          "id": "D-T14-AC1",
+          "criterion": "A specific approved estimator/score, reference universe, comparison, null and target-family protocol are frozen before coding."
+        },
+        {
+          "id": "D-T14-AC2",
+          "criterion": "Leakage/overlap/context and coverage calibration are executed on the protocol-defined validation evidence."
+        },
+        {
+          "id": "D-T14-AC3",
+          "criterion": "Target-level p/q or score meaning is kept separate from B block q and is never described as binding probability without calibration."
+        },
+        {
+          "id": "D-T14-AC4",
+          "criterion": "Without the method/protocol approval, record blocked scientific scope; a refusal stub cannot be accepted as the promised method."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='D-T14', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T14.yaml --stage D --output artifacts/acceptance/D-T14"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "D-T08",
+      "title": "Safe offline full-pipeline Quarto report",
+      "goal": "Safe offline full-pipeline Quarto report.",
+      "component": "D",
+      "milestone": "M8",
+      "dependencies": [
+        "D-T05"
+      ],
+      "requires_review_gates": [
+        "G7"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/report.R",
+        "R/report_security.R",
+        "inst/report/triomics.qmd",
+        "inst/report/styles.css",
+        "tests/testthat/test-D-T08.R",
+        "inst/examples/tickets/D-T08.yaml",
+        "docs/implementation/registrations/D-T08.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/D-T08",
+      "requirements": [
+        "R20",
+        "R23",
+        "R26",
+        "R28",
+        "R29"
+      ],
+      "acceptance": [
+        {
+          "id": "D-T08-AC1",
+          "criterion": "Actual Quarto render produces self-contained HTML with no runtime CDN and complete A/B/C/D/clinical/target section statuses."
+        },
+        {
+          "id": "D-T08-AC2",
+          "criterion": "Untrusted IDs/labels, path traversal, inline HTML/JS and private metadata cannot escape into executable or public report output."
+        },
+        {
+          "id": "D-T08-AC3",
+          "criterion": "Plots/tables preserve effect units, family/context, counts, uncertainty and source lineage; renderer does not fit models."
+        },
+        {
+          "id": "D-T08-AC4",
+          "criterion": "Optional unavailable routes remain visible and required missing evidence prevents a falsely complete analysis report."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='D-T08', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T08.yaml --stage report --output artifacts/acceptance/D-T08"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "D-T13",
+      "title": "Auditable target dossier report section",
+      "goal": "Auditable target dossier report section.",
+      "component": "D",
+      "milestone": "M8",
+      "dependencies": [
+        "D-T08",
+        "D-T12"
+      ],
+      "requires_review_gates": [
+        "G7"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/report_targets.R",
+        "inst/report/sections/targets.qmd",
+        "tests/testthat/test-D-T13.R",
+        "inst/examples/tickets/D-T13.yaml",
+        "docs/implementation/registrations/D-T13.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/D-T13",
+      "requirements": [
+        "R23",
+        "R24",
+        "R26",
+        "R29"
+      ],
+      "acceptance": [
+        {
+          "id": "D-T13-AC1",
+          "criterion": "Render per-axis binding/engagement/function/omics assessability, external sources, alternatives, contradictions and missing data."
+        },
+        {
+          "id": "D-T13-AC2",
+          "criterion": "Same-study clinical/molecular evidence preserves overlap and cannot be displayed as independent replication."
+        },
+        {
+          "id": "D-T13-AC3",
+          "criterion": "No hardcoded FCN3/dapagliflozin conclusion or affinity; unsupported quantities remain unavailable with source-specific notes."
+        },
+        {
+          "id": "D-T13-AC4",
+          "criterion": "Quantitative method unavailable status is explicit; successful dossier rendering does not complete D-T14."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='D-T13', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T13.yaml --stage report --output artifacts/acceptance/D-T13"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "D-T15",
+      "title": "Clinical objectives and association reporting",
+      "goal": "Clinical objectives and association reporting.",
+      "component": "D",
+      "milestone": "M8",
+      "dependencies": [
+        "D-T08",
+        "C-08"
+      ],
+      "requires_review_gates": [
+        "G7"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "R/report_clinical.R",
+        "inst/report/sections/clinical.qmd",
+        "tests/testthat/test-D-T15.R",
+        "inst/examples/tickets/D-T15.yaml",
+        "docs/implementation/registrations/D-T15.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/D-T15",
+      "requirements": [
+        "R16",
+        "R18",
+        "R19",
+        "R26",
+        "R29"
+      ],
+      "acceptance": [
+        {
+          "id": "D-T15-AC1",
+          "criterion": "Display dictionary/coverage, objective/model/adjustment, effects/intervals/units, per-cell counts and missingness without identifiers."
+        },
+        {
+          "id": "D-T15-AC2",
+          "criterion": "Training-outcome descriptive associations, valid held-out comparisons and unavailable objectives are visually/textually distinct."
+        },
+        {
+          "id": "D-T15-AC3",
+          "criterion": "Audience-specific suppression rules apply to tables and plots; private data cannot leak through tooltips or embedded exports."
+        },
+        {
+          "id": "D-T15-AC4",
+          "criterion": "Patient-level scores are distinguished from contrast enrichment and clinical evidence from target binding."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='D-T15', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T15.yaml --stage report --output artifacts/acceptance/D-T15"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    },
+    {
+      "id": "D-T09",
+      "title": "Reproducible paired and independent walkthroughs and final system check",
+      "goal": "Reproducible paired and independent walkthroughs and final system check.",
+      "component": "D",
+      "milestone": "M9",
+      "dependencies": [
+        "D-T13",
+        "D-T15"
+      ],
+      "requires_review_gates": [
+        "G8"
+      ],
+      "risk": "high",
+      "owner_role": "luna",
+      "requested_effort": "max",
+      "status": "not_started",
+      "scope_type": "required",
+      "conditional_gate": null,
+      "files_allowed": [
+        "vignettes/paired-study.qmd",
+        "vignettes/independent-study.qmd",
+        "R/reproduction_manifest.R",
+        "tests/testthat/test-D-T09.R",
+        "inst/examples/tickets/D-T09.yaml",
+        "docs/implementation/registrations/D-T09.json"
+      ],
+      "files_forbidden": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "discovery/**",
+        "docs/adr/**",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**",
+        "other packet-owned files",
+        "private study inputs",
+        "DESCRIPTION",
+        "NAMESPACE",
+        "renv.lock",
+        ".Rbuildignore",
+        "inst/exec/triomics",
+        "R/cli.R",
+        "R/stage_registry.R",
+        "R/contracts.R",
+        "inst/schema/**",
+        "man/**"
+      ],
+      "runtime_output_root": "artifacts/acceptance/D-T09",
+      "requirements": [
+        "R01",
+        "R02",
+        "R27",
+        "R28",
+        "R29"
+      ],
+      "acceptance": [
+        {
+          "id": "D-T09-AC1",
+          "criterion": "Both vignettes execute the actual installed pipeline on synthetic inputs and regenerate inspectable figures/tables/manifests."
+        },
+        {
+          "id": "D-T09-AC2",
+          "criterion": "Full package tests, native build/check, offline render and checkpoint/resume tests pass on the final merged commit."
+        },
+        {
+          "id": "D-T09-AC3",
+          "criterion": "Requirements, all 41 tickets, conditional capabilities, real-data validation and publication status reconcile without silent omission."
+        },
+        {
+          "id": "D-T09-AC4",
+          "criterion": "Final handover has exact commit/environment/commands/artifact hashes, remaining work and cleanly stopped owned agents; no manufactured completion."
+        }
+      ],
+      "tests": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='D-T09', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T09.yaml --stage report --output artifacts/acceptance/D-T09"
+      ],
+      "stop_condition": "Return <=10-line receipt with commit, exact commands/results, discovered test count, acceptance artifact refs and remaining gaps; stop. Do not start another packet.",
+      "repair_budget": 2,
+      "registration_rule": "Submit only packet-owned registration request; Sol applies shared CLI/namespace/dependency registration serially. A-T01 owns initial shared skeleton."
+    }
+  ]
+}
