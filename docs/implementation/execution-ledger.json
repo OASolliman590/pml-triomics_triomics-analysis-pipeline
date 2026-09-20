@@ -7,15 +7,20 @@
   "effective_fleet": {
     "sol": {"requested_model": "gpt-5.6-sol", "requested_effort": "high", "role": "parent", "effective_settings_exposed": false},
     "astra": {"requested_model": "gpt-6-astra", "requested_effort": "low", "dispatch_authenticated": true, "effective_settings_exposed": false},
-    "luna": {"requested_model": "gpt-5.6-luna", "requested_effort": "max", "host_schema_supported": true, "dispatch_authenticated": false},
+    "luna": {"requested_model": "gpt-5.6-luna", "requested_effort": "max", "host_schema_supported": true, "dispatch_authenticated": true},
     "terra": {"requested_model": "gpt-5.6-terra", "requested_effort": "max", "host_schema_supported": true, "dispatch_authenticated": false},
     "host_total_slot_cap_including_parent": 4,
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {"task":"/root/luna_a_t01","packet":"A-T01","model":"gpt-5.6-luna","effort":"max","worktree":"C:/Users/salma/.codex/worktrees/4d70/PML MultiOmics Analysis Pipeline","base_commit":"b56e942b6b2b223074d63f232d73737a82efc4bd"}
+  ],
+  "orchestration_events": [
+    {"event":"app_thread_setup_unregistered","client_thread_id":"client-new-thread:cf06dc8c-d2bd-47ed-8d79-db76540885a8","disposition":"No stable thread ID after bounded waits; reused its isolated worktree with the permitted single Luna subagent; no duplicate app worker observed."}
+  ],
   "packets": {
-    "A-T01":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
+    "A-T01":{"status":"in_progress","attempts":1,"commit":null,"acceptance_refs":[],"blockers":[]},
     "A-T02":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
     "A-T03":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
     "A-T09":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
@@ -73,4 +78,3 @@
   "publication": {"branch":"spec/harden-v2-20260920","push_verified":false,"pr":null,"notion_synced":false},
   "close_state": "open"
 }
-
