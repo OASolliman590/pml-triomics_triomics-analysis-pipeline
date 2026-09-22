@@ -14,13 +14,16 @@
     "heavy_model_fit_cap": 1
   },
   "active_workers": [
-    {"task":"/root/luna_a_t01","packet":"A-T01","model":"gpt-5.6-luna","effort":"max","worktree":"C:/Users/salma/.codex/worktrees/4d70/PML MultiOmics Analysis Pipeline","base_commit":"b56e942b6b2b223074d63f232d73737a82efc4bd"}
+    {"task":"/root/luna_a_t01_resume","packet":"A-T01","model":"gpt-5.6-luna","effort":"max","worktree":"E:/PML MultiOmics Analysis Pipeline/.worktrees/a-t01","base_commit":"b56e942b6b2b223074d63f232d73737a82efc4bd","phase":"repair_1"}
   ],
   "orchestration_events": [
-    {"event":"app_thread_setup_unregistered","client_thread_id":"client-new-thread:cf06dc8c-d2bd-47ed-8d79-db76540885a8","disposition":"No stable thread ID after bounded waits; reused its isolated worktree with the permitted single Luna subagent; no duplicate app worker observed."}
+    {"event":"app_thread_setup_unregistered","client_thread_id":"client-new-thread:cf06dc8c-d2bd-47ed-8d79-db76540885a8","disposition":"No stable thread ID after bounded waits; no duplicate app worker observed."},
+    {"event":"worktree_relocated","packet":"A-T01","disposition":"The run-created external worktrees were verified clean and removed; the worker test was moved from the integration checkout into the ignored isolated worktree at E:/PML MultiOmics Analysis Pipeline/.worktrees/a-t01."},
+    {"event":"worker_recovered","packet":"A-T01","from":"/root/luna_a_t01","to":"/root/luna_a_t01_resume","disposition":"Original worker remained pending_init after interruption; replacement Luna max continued the same initial attempt from preserved state."},
+    {"event":"packet_review_failed","packet":"A-T01","candidate_commit":"aa1595f94f0556fb3210702192307b5a4ab7bccb","review_ref":"docs/implementation/reviews/A-T01-initial-review.md","disposition":"Three P1 spec gaps, one P2 taxonomy gap, and a non-reproducible Sol test required bounded repair 1."}
   ],
   "packets": {
-    "A-T01":{"status":"in_progress","attempts":1,"commit":null,"acceptance_refs":[],"blockers":[]},
+    "A-T01":{"status":"in_progress","attempts":1,"repair_attempts":1,"candidate_commit":"aa1595f94f0556fb3210702192307b5a4ab7bccb","commit":null,"acceptance_refs":["docs/implementation/reviews/A-T01-initial-review.md"],"blockers":[]},
     "A-T02":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
     "A-T03":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
     "A-T09":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
