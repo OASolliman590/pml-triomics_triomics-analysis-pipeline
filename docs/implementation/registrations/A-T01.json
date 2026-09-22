@@ -1,0 +1,27 @@
+{
+  "packet_id": "A-T01",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": []
+  },
+  "dependencies": {
+    "imports": ["digest", "jsonlite", "jsonvalidate", "yaml"],
+    "suggests": ["BiocManager", "renv", "testthat"]
+  },
+  "stage_registry": {
+    "A": {"validation_only": true, "execution": false},
+    "B": {"validation_only": false, "execution": false},
+    "C": {"validation_only": false, "execution": false},
+    "D": {"validation_only": false, "execution": false},
+    "report": {"validation_only": false, "execution": false},
+    "all": {"validation_only": false, "execution": false}
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "request": "Mechanically register the initial package, CLI, namespace, and lock on the integration branch after review."
+}
