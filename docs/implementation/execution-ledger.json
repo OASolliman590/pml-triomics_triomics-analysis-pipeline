@@ -13,8 +13,11 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {"task":"triomics-implement","packet":"A-T01","model":"grok-4.7","worktree":".worktrees/a-t01-repair","base_commit":"aa1595f94f0556fb3210702192307b5a4ab7bccb","phase":"repair_1"}
+  ],
   "orchestration_events": [
+    {"event":"implement_workflow_started","date":"2026-10-11","workflow":"triomics-implement","worktree":".worktrees/a-t01-repair","branch":"repair/a-t01","disposition":"Serial packet workflow started at the A-T01 repair. Workers do not commit. Sol reviews and lands."},
     {"event":"redundancy_debate_clear","date":"2026-10-11","workflow":"triomics-redundancy-debate","effective_model":"grok-4.7","findings":0,"disposition":"Four read-only scanners found no live double ownership. Spec hash unchanged. gpt-6-astra was not available."},
     {"event":"windows_worker_absent","packet":"A-T01","disposition":"The registered A-T01 worktree gitdir still points at E:/. The repair tests remain on disk under .worktrees/a-t01 and were not integrated."},
     {"event":"app_thread_setup_unregistered","client_thread_id":"client-new-thread:cf06dc8c-d2bd-47ed-8d79-db76540885a8","disposition":"No stable thread ID after bounded waits; no duplicate app worker observed."},
