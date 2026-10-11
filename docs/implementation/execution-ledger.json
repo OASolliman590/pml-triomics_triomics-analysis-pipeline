@@ -15,6 +15,7 @@
   },
   "active_workers": [],
   "orchestration_events": [
+    {"event":"g1_accepted","date":"2026-10-11","workflow":"triomics-m1-review","effective_model":"grok-4.7","verdict":"pass","disposition":"Astra-role review found no P0 or P1. Sol accepted G1 for required A-T01 behavior. The Mac host lock was not regenerated."},
     {"event":"a_t01_sol_verified","date":"2026-10-11","commit":"0f2f53f5fe5237bf7a164bc1943dcc644fe6871b","integration_commit":"ee9fd36250414904b438bb14e782aa89179d2774","disposition":"Independent Sol rerun: testthat 72 passed, 0 failed, 0 skipped. Fresh validate-only CLI exited 0. A second run against the existing acceptance summary exited 4 and left the file unchanged. The workflow verifier had treated that second run as a product failure."},
     {"event":"implement_workflow_started","date":"2026-10-11","workflow":"triomics-implement","worktree":".worktrees/a-t01-repair","branch":"repair/a-t01","disposition":"Serial packet workflow started at the A-T01 repair. Workers do not commit. Sol reviews and lands."},
     {"event":"redundancy_debate_clear","date":"2026-10-11","workflow":"triomics-redundancy-debate","effective_model":"grok-4.7","findings":0,"disposition":"Four read-only scanners found no live double ownership. Spec hash unchanged. gpt-6-astra was not available."},
@@ -25,7 +26,7 @@
     {"event":"packet_review_failed","packet":"A-T01","candidate_commit":"aa1595f94f0556fb3210702192307b5a4ab7bccb","review_ref":"docs/implementation/reviews/A-T01-initial-review.md","disposition":"Three P1 spec gaps, one P2 taxonomy gap, and a non-reproducible Sol test required bounded repair 1."}
   ],
   "packets": {
-    "A-T01":{"status":"sol_verified","attempts":1,"repair_attempts":1,"candidate_commit":"0f2f53f5fe5237bf7a164bc1943dcc644fe6871b","commit":"ee9fd36250414904b438bb14e782aa89179d2774","acceptance_refs":["docs/implementation/reviews/A-T01-initial-review.md"],"blockers":["G1 Astra milestone review pending"]},
+    "A-T01":{"status":"accepted","attempts":1,"repair_attempts":1,"candidate_commit":"0f2f53f5fe5237bf7a164bc1943dcc644fe6871b","commit":"ee9fd36250414904b438bb14e782aa89179d2774","acceptance_refs":["docs/implementation/reviews/A-T01-initial-review.md","docs/implementation/reviews/M1-astra-review.md"],"blockers":["renv.lock was not regenerated on this Mac"]},
     "A-T02":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
     "A-T03":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
     "A-T09":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
@@ -68,7 +69,7 @@
     "D-T09":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]}
   },
   "milestones": {
-    "M1":{"status":"not_started","review_ref":null,"commit":null},
+    "M1":{"status":"accepted","review_ref":"docs/implementation/reviews/M1-astra-review.md","commit":"ee9fd36250414904b438bb14e782aa89179d2774"},
     "M2":{"status":"not_started","review_ref":null,"commit":null},
     "M3":{"status":"not_started","review_ref":null,"commit":null},
     "M4":{"status":"not_started","review_ref":null,"commit":null},
