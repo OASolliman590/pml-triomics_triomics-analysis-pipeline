@@ -68,6 +68,16 @@ triomics_validate_only <- function(config, config_path, stage, output) {
   invisible(summary)
 }
 
+triomics_cli_exit <- function(error) {
+  if (identical(error$code, "A_STAGE_UNAVAILABLE")) {
+    3L
+  } else if (identical(error$code, "A_ARTIFACT_FINALIZE")) {
+    4L
+  } else {
+    2L
+  }
+}
+
 triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
   tryCatch({
     options <- triomics_parse_cli(args)
@@ -96,7 +106,7 @@ triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
     0L
   }, triomics_error = function(error) {
     cat(paste0("triomics ", error$code, ": ", conditionMessage(error), "\n"), file = stderr())
-    2L
+    triomics_cli_exit(error)
   }, error = function(error) {
     cat(paste0("triomics A_INTERNAL: ", conditionMessage(error), "\n"), file = stderr())
     1L

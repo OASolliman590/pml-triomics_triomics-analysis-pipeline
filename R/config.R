@@ -21,11 +21,42 @@ triomics_resolve_schema_ref <- function(schema, ref) {
   }, parts, init = schema)
 }
 
+triomics_is_yaml_sequence <- function(value) {
+  is.list(value) && is.null(names(value))
+}
+
+triomics_schema_key <- function(instance_path) {
+  if (!is.character(instance_path) || length(instance_path) != 1L || !nzchar(instance_path)) {
+    return("config")
+  }
+  parts <- strsplit(sub("^/", "", instance_path), "/", fixed = TRUE)[[1L]]
+  parts <- parts[nzchar(parts)]
+  if (length(parts) == 0L) return("config")
+  key <- ""
+  for (part in parts) {
+    if (grepl("^[0-9]+$", part)) {
+      key <- paste0(key, "[", as.integer(part) + 1L, "]")
+    } else if (!nzchar(key)) {
+      key <- part
+    } else {
+      key <- paste(key, part, sep = ".")
+    }
+  }
+  key
+}
+
 triomics_check_config_keys <- function(value, node, schema, path = "") {
   if (!is.null(node$`$ref`)) {
     node <- triomics_resolve_schema_ref(schema, node$`$ref`)
   }
   if (is.null(node)) return(invisible(NULL))
+  if (identical(node$type, "array") && !triomics_is_yaml_sequence(value)) {
+    key <- if (nzchar(path)) path else "<root>"
+    triomics_abort("A_CONFIG_TYPE",
+                   paste0("Invalid configuration at '", key, "': expected an array."),
+                   key = key,
+                   remediation = "Provide a YAML sequence for the named field.")
+  }
   if (is.list(value) && !is.null(names(value)) && length(names(value)) > 0L) {
     properties <- node$properties
     if (!is.null(properties)) {
@@ -58,7 +89,8 @@ triomics_config_json_value <- function(value, node, schema) {
   if (!is.null(node$`$ref`)) node <- triomics_resolve_schema_ref(schema, node$`$ref`)
   if (is.null(node)) return(value)
   if (identical(node$type, "array")) {
-    elements <- if (is.list(value)) value else as.list(value)
+    if (!triomics_is_yaml_sequence(value)) return(value)
+    elements <- value
     if (!is.null(node$items)) {
       elements <- lapply(elements, triomics_config_json_value,
                          node = node$items, schema = schema)
@@ -85,7 +117,7 @@ triomics_validation_failure <- function(result) {
     }
     if (length(candidates) > 0L) {
       index <- candidates[[1L]]
-      key <- gsub("/", ".", sub("^/", "", errors$instancePath[[index]]), fixed = TRUE)
+      key <- triomics_schema_key(errors$instancePath[[index]])
       return(list(key = key, keyword = errors$keyword[[index]], message = errors$message[[index]]))
     }
     if ("params" %in% names(errors) && "missingProperty" %in% names(errors$params)) {
@@ -102,17 +134,21 @@ triomics_read_config <- function(path) {
     triomics_abort("A_CONFIG_MISSING", "Configuration file does not exist.", key = "config",
                    remediation = "Provide a readable configuration file path.")
   }
-  handlers <- list(map = function(values) {
-    keys <- names(values)
-    duplicate <- unique(keys[duplicated(keys)])
-    if (length(duplicate) > 0L) {
-      triomics_abort("A_CONFIG_DUPLICATE_KEY",
-                     paste0("Duplicate configuration key '", duplicate[[1L]], "'."),
-                     key = duplicate[[1L]],
-                     remediation = "Remove the repeated YAML mapping before validation.")
-    }
-    values
-  })
+  handlers <- list(
+    map = function(values) {
+      keys <- names(values)
+      duplicate <- unique(keys[duplicated(keys)])
+      if (length(duplicate) > 0L) {
+        triomics_abort("A_CONFIG_DUPLICATE_KEY",
+                       paste0("Duplicate configuration key '", duplicate[[1L]], "'."),
+                       key = duplicate[[1L]],
+                       remediation = "Remove the repeated YAML mapping before validation.")
+      }
+      values
+    },
+    # Keep one-element sequences as lists so they are not collapsed to scalars.
+    seq = function(value) as.list(value)
+  )
   parsed <- tryCatch(yaml::yaml.load_file(path, handlers = handlers, eval.expr = FALSE),
                      error = function(e) e)
   if (inherits(parsed, "error")) {
@@ -157,21 +193,46 @@ triomics_read_config <- function(path) {
   parsed
 }
 
+triomics_resolve_declared_input <- function(path, key, root) {
+  invalid <- !is.character(path) || length(path) != 1L || is.na(path) || !nzchar(path)
+  candidate <- if (invalid) {
+    NA_character_
+  } else if (grepl("^(?:[A-Za-z]:[/\\\\]|/)", path)) {
+    path
+  } else {
+    file.path(root, path)
+  }
+  resolved <- if (invalid) NA_character_ else normalizePath(candidate, winslash = "/", mustWork = FALSE)
+  if (invalid || !file.exists(resolved)) {
+    triomics_abort("A_SOURCE_MISSING",
+                   paste0("Declared input file does not exist at '", key, "'."),
+                   key = key,
+                   remediation = "Check source paths relative to the configuration file.")
+  }
+  resolved
+}
+
 triomics_validate_config_paths <- function(config, config_path) {
   root <- dirname(normalizePath(config_path, winslash = "/", mustWork = TRUE))
-  paths <- character()
-  if (length(config$sources) > 0L) {
-    paths <- c(paths, vapply(config$sources, function(source) source$file, character(1L)))
+  checks <- list()
+  if (triomics_is_yaml_sequence(config$sources)) {
+    for (i in seq_along(config$sources)) {
+      checks[[length(checks) + 1L]] <- list(key = sprintf("sources[%d].file", i),
+                                            path = config$sources[[i]]$file)
+    }
   }
-  if (!is.null(config$metadata$file)) paths <- c(paths, config$metadata$file)
-  resolved <- vapply(paths, function(path) {
-    candidate <- if (grepl("^(?:[A-Za-z]:[/\\\\]|/)", path)) path else file.path(root, path)
-    normalizePath(candidate, winslash = "/", mustWork = FALSE)
-  }, character(1L))
-  missing <- resolved[!file.exists(resolved)]
-  if (length(missing) > 0L) {
-    triomics_abort("A_SOURCE_MISSING", paste0("Declared input file does not exist: ", basename(missing[[1L]]), "."),
-                   key = "sources.file", remediation = "Check source paths relative to the configuration file.")
+  if (is.list(config$metadata)) {
+    checks[[length(checks) + 1L]] <- list(key = "metadata.file", path = config$metadata$file)
+  }
+  if (triomics_is_yaml_sequence(config$blocks)) {
+    for (i in seq_along(config$blocks)) {
+      checks[[length(checks) + 1L]] <- list(key = sprintf("blocks[%d].file", i),
+                                            path = config$blocks[[i]]$file)
+    }
+  }
+  resolved <- character(length(checks))
+  for (i in seq_along(checks)) {
+    resolved[[i]] <- triomics_resolve_declared_input(checks[[i]]$path, checks[[i]]$key, root)
   }
   invisible(resolved)
 }

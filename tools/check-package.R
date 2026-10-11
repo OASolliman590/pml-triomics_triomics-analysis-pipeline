@@ -49,23 +49,36 @@ main <- function(args = commandArgs(trailingOnly = TRUE)) {
     stop("DESCRIPTION has an invalid package name or version.", call. = FALSE)
   }
   dir.create(options$output, recursive = TRUE, showWarnings = FALSE)
+  options$output <- normalizePath(options$output, winslash = "/", mustWork = TRUE)
   tarball_name <- paste0(package, "_", version, ".tar.gz")
   tarball <- file.path(options$output, tarball_name)
   if (file.exists(tarball) || file.exists(file.path(options$output, "build.log")) ||
       file.exists(file.path(options$output, "check.log"))) {
     stop("Output directory already contains a prior package-check run.", call. = FALSE)
   }
+  appledouble <- list.files(options$root, pattern = "^\\._", all.files = TRUE,
+                            recursive = TRUE, full.names = TRUE)
+  if (length(appledouble) > 0L) unlink(appledouble)
   rcmd <- if (.Platform$OS.type == "windows") file.path(R.home("bin"), "Rcmd.exe") else file.path(R.home("bin"), "R")
+  # Build and check on a local volume. External volumes inject AppleDouble sidecars
+  # that R CMD check reports as package warnings.
+  work <- tempfile("triomics-package-check-")
+  dir.create(work)
   old_wd <- getwd()
-  on.exit(setwd(old_wd), add = TRUE)
-  setwd(options$output)
+  on.exit({
+    setwd(old_wd)
+    unlink(work, recursive = TRUE)
+  }, add = TRUE)
+  setwd(work)
   command_prefix <- if (.Platform$OS.type == "windows") character() else "CMD"
   build <- capture_native(
     rcmd,
     c(command_prefix, "build", "--no-build-vignettes", shQuote(options$root)),
     file.path(options$output, "build.log")
   )
-  if (build$status != 0L || length(build$warnings) > 0L || !file.exists(tarball)) {
+  built <- file.path(work, tarball_name)
+  if (build$status != 0L || length(build$warnings) > 0L || !file.exists(built) ||
+      !file.copy(built, tarball, overwrite = FALSE)) {
     cat("R CMD build failed; see build.log.\n", file = stderr())
     return(1L)
   }
@@ -74,7 +87,7 @@ main <- function(args = commandArgs(trailingOnly = TRUE)) {
     c(command_prefix, "check", "--no-manual", "--no-build-vignettes", shQuote(tarball_name)),
     file.path(options$output, "check.log")
   )
-  check_dir <- file.path(options$output, paste0(package, ".Rcheck"))
+  check_dir <- file.path(work, paste0(package, ".Rcheck"))
   check_log <- file.path(check_dir, "00check.log")
   summary <- if (file.exists(check_log)) readLines(check_log, warn = FALSE) else character()
   status_line <- grep("^Status:", summary, value = TRUE)
