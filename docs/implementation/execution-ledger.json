@@ -13,10 +13,10 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {"task":"/root/luna_a_t01_resume","packet":"A-T01","model":"gpt-5.6-luna","effort":"max","worktree":"E:/PML MultiOmics Analysis Pipeline/.worktrees/a-t01","base_commit":"b56e942b6b2b223074d63f232d73737a82efc4bd","phase":"repair_1"}
-  ],
+  "active_workers": [],
   "orchestration_events": [
+    {"event":"redundancy_debate_clear","date":"2026-10-11","workflow":"triomics-redundancy-debate","effective_model":"grok-4.7","findings":0,"disposition":"Four read-only scanners found no live double ownership. Spec hash unchanged. gpt-6-astra was not available."},
+    {"event":"windows_worker_absent","packet":"A-T01","disposition":"The registered A-T01 worktree gitdir still points at E:/. The repair tests remain on disk under .worktrees/a-t01 and were not integrated."},
     {"event":"app_thread_setup_unregistered","client_thread_id":"client-new-thread:cf06dc8c-d2bd-47ed-8d79-db76540885a8","disposition":"No stable thread ID after bounded waits; no duplicate app worker observed."},
     {"event":"worktree_relocated","packet":"A-T01","disposition":"The run-created external worktrees were verified clean and removed; the worker test was moved from the integration checkout into the ignored isolated worktree at E:/PML MultiOmics Analysis Pipeline/.worktrees/a-t01."},
     {"event":"worker_recovered","packet":"A-T01","from":"/root/luna_a_t01","to":"/root/luna_a_t01_resume","disposition":"Original worker remained pending_init after interruption; replacement Luna max continued the same initial attempt from preserved state."},
