@@ -13,10 +13,9 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {"task":"triomics-implement","packet":"A-T01","model":"grok-4.7","worktree":".worktrees/a-t01-repair","base_commit":"aa1595f94f0556fb3210702192307b5a4ab7bccb","phase":"repair_1"}
-  ],
+  "active_workers": [],
   "orchestration_events": [
+    {"event":"a_t01_sol_verified","date":"2026-10-11","commit":"0f2f53f5fe5237bf7a164bc1943dcc644fe6871b","integration_commit":"ee9fd36250414904b438bb14e782aa89179d2774","disposition":"Independent Sol rerun: testthat 72 passed, 0 failed, 0 skipped. Fresh validate-only CLI exited 0. A second run against the existing acceptance summary exited 4 and left the file unchanged. The workflow verifier had treated that second run as a product failure."},
     {"event":"implement_workflow_started","date":"2026-10-11","workflow":"triomics-implement","worktree":".worktrees/a-t01-repair","branch":"repair/a-t01","disposition":"Serial packet workflow started at the A-T01 repair. Workers do not commit. Sol reviews and lands."},
     {"event":"redundancy_debate_clear","date":"2026-10-11","workflow":"triomics-redundancy-debate","effective_model":"grok-4.7","findings":0,"disposition":"Four read-only scanners found no live double ownership. Spec hash unchanged. gpt-6-astra was not available."},
     {"event":"windows_worker_absent","packet":"A-T01","disposition":"The registered A-T01 worktree gitdir still points at E:/. The repair tests remain on disk under .worktrees/a-t01 and were not integrated."},
@@ -26,7 +25,7 @@
     {"event":"packet_review_failed","packet":"A-T01","candidate_commit":"aa1595f94f0556fb3210702192307b5a4ab7bccb","review_ref":"docs/implementation/reviews/A-T01-initial-review.md","disposition":"Three P1 spec gaps, one P2 taxonomy gap, and a non-reproducible Sol test required bounded repair 1."}
   ],
   "packets": {
-    "A-T01":{"status":"in_progress","attempts":1,"repair_attempts":1,"candidate_commit":"aa1595f94f0556fb3210702192307b5a4ab7bccb","commit":null,"acceptance_refs":["docs/implementation/reviews/A-T01-initial-review.md"],"blockers":[]},
+    "A-T01":{"status":"sol_verified","attempts":1,"repair_attempts":1,"candidate_commit":"0f2f53f5fe5237bf7a164bc1943dcc644fe6871b","commit":"ee9fd36250414904b438bb14e782aa89179d2774","acceptance_refs":["docs/implementation/reviews/A-T01-initial-review.md"],"blockers":["G1 Astra milestone review pending"]},
     "A-T02":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
     "A-T03":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
     "A-T09":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
