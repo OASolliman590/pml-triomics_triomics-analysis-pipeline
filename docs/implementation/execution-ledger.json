@@ -13,7 +13,9 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {"task":"triomics-implement-2","packet":"A-T02","model":"grok-4.7","worktree":".worktrees/a-t01-repair","base_commit":"0f2f53f5fe5237bf7a164bc1943dcc644fe6871b","phase":"implement"}
+  ],
   "orchestration_events": [
     {"event":"g1_accepted","date":"2026-10-11","workflow":"triomics-m1-review","effective_model":"grok-4.7","verdict":"pass","disposition":"Astra-role review found no P0 or P1. Sol accepted G1 for required A-T01 behavior. The Mac host lock was not regenerated."},
     {"event":"a_t01_sol_verified","date":"2026-10-11","commit":"0f2f53f5fe5237bf7a164bc1943dcc644fe6871b","integration_commit":"ee9fd36250414904b438bb14e782aa89179d2774","disposition":"Independent Sol rerun: testthat 72 passed, 0 failed, 0 skipped. Fresh validate-only CLI exited 0. A second run against the existing acceptance summary exited 4 and left the file unchanged. The workflow verifier had treated that second run as a product failure."},
