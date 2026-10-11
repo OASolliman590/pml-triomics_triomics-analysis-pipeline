@@ -1,0 +1,23 @@
+#!/usr/bin/env Rscript
+
+script_arg <- grep("^--file=", commandArgs(FALSE), value = TRUE)
+script_path <- if (length(script_arg)) sub("^--file=", "", script_arg[[1L]]) else ""
+script_path <- normalizePath(script_path, winslash = "/", mustWork = TRUE)
+source_root <- normalizePath(file.path(dirname(script_path), "..", ".."),
+                             winslash = "/", mustWork = FALSE)
+options(triomics.source_root = source_root)
+local_sources <- file.path(source_root, "R")
+if (dir.exists(local_sources)) {
+  for (file in sort(list.files(local_sources, pattern = "\\.R$", full.names = TRUE))) {
+    sys.source(file, envir = .GlobalEnv)
+  }
+  status <- triomics_main(commandArgs(trailingOnly = TRUE))
+} else {
+  if (!requireNamespace("triomics", quietly = TRUE)) {
+    cat("triomics A_PACKAGE_MISSING: Install the triomics package before using this executable.\n",
+        file = stderr())
+    quit(save = "no", status = 2L)
+  }
+  status <- triomics:::triomics_main(commandArgs(trailingOnly = TRUE))
+}
+quit(save = "no", status = as.integer(status))

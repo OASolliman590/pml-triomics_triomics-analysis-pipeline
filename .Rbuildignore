@@ -1,0 +1,12 @@
+^\.git$
+^\.github$
+^\.agents$
+^\.codex$
+^\.worktrees$
+^artifacts$
+^docs$
+^discovery$
+^renv\.lock$
+^renv$
+^tools$
+^\.Rprofile$

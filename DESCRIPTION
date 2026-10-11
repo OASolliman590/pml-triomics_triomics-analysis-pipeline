@@ -1,0 +1,18 @@
+Package: triomics
+Title: Downstream Multi-Omics Analysis
+Version: 0.1.0
+Authors@R: person("Triomics", "Maintainers", role = c("aut", "cre"), email = "maintainers@example.invalid")
+Description: Strict configuration and stage-aware orchestration for local multi-omics analysis.
+License: GPL-3
+Encoding: UTF-8
+Depends: R (>= 4.6.0)
+Imports:
+    digest,
+    jsonlite,
+    jsonvalidate,
+    yaml
+Suggests:
+    BiocManager,
+    renv,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
