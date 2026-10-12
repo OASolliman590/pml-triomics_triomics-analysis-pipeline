@@ -96,13 +96,17 @@ triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
                      module = "cli", stage = options$stage,
                      remediation = "Provide --config FILE and --output DIR.")
     }
-    if (!isTRUE(options$validate_only)) {
-      triomics_abort("A_STAGE_UNAVAILABLE", "Only validation-only stage A is implemented in this packet.",
+    if (isTRUE(options$validate_only)) {
+      config <- triomics_read_config(options$config)
+      triomics_validate_only(config, options$config, options$stage, options$output)
+    } else if (identical(options$stage, "A")) {
+      triomics_execute_stage_a(options$config, options$output)
+    } else {
+      triomics_abort("A_STAGE_UNAVAILABLE",
+                     paste0("Execution is not implemented for stage '", options$stage, "'."),
                      key = "stage", module = "cli", stage = options$stage,
-                     remediation = "Use --validate-only for the implemented request.")
+                     remediation = "Use --validate-only for stage A, or run an accepted stage.")
     }
-    config <- triomics_read_config(options$config)
-    triomics_validate_only(config, options$config, options$stage, options$output)
     0L
   }, triomics_error = function(error) {
     cat(paste0("triomics ", error$code, ": ", conditionMessage(error), "\n"), file = stderr())

@@ -1,1 +1,2 @@
 # Package internals are intentionally accessed through the local CLI and tests.
+export(simulate_study)

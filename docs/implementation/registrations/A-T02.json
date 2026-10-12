@@ -1,0 +1,56 @@
+{
+  "packet_id": "A-T02",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": [
+      "simulate_study"
+    ]
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ]
+  },
+  "stage_registry": {
+    "A": {
+      "validation_only": true,
+      "execution": true
+    },
+    "B": {
+      "validation_only": false,
+      "execution": false
+    },
+    "C": {
+      "validation_only": false,
+      "execution": false
+    },
+    "D": {
+      "validation_only": false,
+      "execution": false
+    },
+    "report": {
+      "validation_only": false,
+      "execution": false
+    },
+    "all": {
+      "validation_only": false,
+      "execution": false
+    }
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "request": "Export simulate_study only. Enable stage A execution and dispatch a non-validate-only stage A request to triomics_execute_stage_a. Do not enable stages B, C, D, report, or all. Sol owns NAMESPACE, R/cli.R, R/stage_registry.R, and renv.lock."
+}
