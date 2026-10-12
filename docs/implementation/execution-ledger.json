@@ -33,17 +33,14 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "task": "triomics-implement-4",
-      "packet": "B-T02",
-      "model": "grok-4.7",
-      "worktree": ".worktrees/a-t01-repair",
-      "base_commit": "ddc0ae5",
-      "phase": "implement"
-    }
-  ],
+  "active_workers": [],
   "orchestration_events": [
+    {
+      "event": "b_t02_b_t03_b_t08_verified_b_t04_blocked",
+      "date": "2026-10-12",
+      "commit": "bded42a",
+      "disposition": "Sol reran B-T02, B-T03, and B-T08 after removing the unfinished B-T04 sources. B-T04 was not merged."
+    },
     {
       "event": "wave_a_t03_b_t01_sol_verified",
       "date": "2026-10-12",
@@ -235,25 +232,33 @@
       "integration_commit": "2e4971e"
     },
     "B-T02": {
-      "status": "not_started",
-      "attempts": 0,
-      "commit": null,
+      "status": "sol_verified",
+      "attempts": 1,
+      "commit": "bded42a",
       "acceptance_refs": [],
-      "blockers": []
+      "blockers": [
+        "208 passed without B-T04 loaded"
+      ],
+      "integration_commit": "pending"
     },
     "B-T03": {
-      "status": "not_started",
-      "attempts": 0,
-      "commit": null,
+      "status": "sol_verified",
+      "attempts": 1,
+      "commit": "bded42a",
       "acceptance_refs": [],
-      "blockers": []
+      "blockers": [
+        "275 passed without B-T04 loaded"
+      ],
+      "integration_commit": "pending"
     },
     "B-T04": {
-      "status": "not_started",
-      "attempts": 0,
+      "status": "blocked",
+      "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
-      "blockers": []
+      "blockers": [
+        "balanced_visits_one_cell_removed null upper bound 0.0804819 from 23/400 exceeds 0.08. Seeds 1001:1400 and the bound were not changed. AC4 passed."
+      ]
     },
     "B-T05": {
       "status": "not_started",
@@ -270,11 +275,14 @@
       "blockers": []
     },
     "B-T08": {
-      "status": "not_started",
-      "attempts": 0,
-      "commit": null,
+      "status": "sol_verified",
+      "attempts": 1,
+      "commit": "bded42a",
       "acceptance_refs": [],
-      "blockers": []
+      "blockers": [
+        "139 passed without B-T04 loaded"
+      ],
+      "integration_commit": "pending"
     },
     "B-T09": {
       "status": "not_started",
