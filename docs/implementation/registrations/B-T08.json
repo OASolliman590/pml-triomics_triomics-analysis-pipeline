@@ -1,0 +1,70 @@
+{
+  "packet_id": "B-T08",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": [
+      "associate_endpoints",
+      "triomics_associate_endpoints",
+      "triomics_resolve_clinical_objectives",
+      "triomics_clinical_association_export",
+      "triomics_execute_clinical_associations",
+      "triomics_b08_endpoint_hash"
+    ]
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml",
+      "limma"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ]
+  },
+  "stage_registry": {
+    "A": {
+      "validation_only": true,
+      "execution": true
+    },
+    "B": {
+      "validation_only": false,
+      "execution": true
+    },
+    "C": {
+      "validation_only": false,
+      "execution": false
+    },
+    "D": {
+      "validation_only": false,
+      "execution": false
+    },
+    "report": {
+      "validation_only": false,
+      "execution": false
+    },
+    "all": {
+      "validation_only": false,
+      "execution": false
+    }
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "owned_functions": [
+    "associate_endpoints",
+    "triomics_associate_endpoints",
+    "triomics_resolve_clinical_objectives",
+    "triomics_clinical_association_export",
+    "triomics_execute_clinical_associations",
+    "triomics_b08_endpoint_hash"
+  ],
+  "request": "Export the B-T08 clinical association seams. After a successful non-validation stage B execution, call triomics_execute_clinical_associations(config_path, output) when clinical.enabled is true. The unsourced CLI wrapper in R/clinical_objectives.R already does this for study_id triomics_b_t08_fixture only; remove that wrapper when the explicit call is added or the second write fails with A_ARTIFACT_FINALIZE. Do not enable stages C, D, report, or all. No new package is required. Sol owns NAMESPACE, DESCRIPTION, R/cli.R, R/stage_registry.R, and renv.lock."
+}

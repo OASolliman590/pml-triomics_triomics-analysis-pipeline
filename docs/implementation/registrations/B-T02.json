@@ -1,0 +1,73 @@
+{
+  "packet_id": "B-T02",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": [
+      "triomics_resolve_analysis",
+      "triomics_fit_block_models",
+      "triomics_execute_stage_b",
+      "resolve_analysis",
+      "fit_block_models"
+    ]
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml",
+      "limma"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ]
+  },
+  "stage_registry": {
+    "A": {
+      "validation_only": true,
+      "execution": true
+    },
+    "B": {
+      "validation_only": false,
+      "execution": true
+    },
+    "C": {
+      "validation_only": false,
+      "execution": false
+    },
+    "D": {
+      "validation_only": false,
+      "execution": false
+    },
+    "report": {
+      "validation_only": false,
+      "execution": false
+    },
+    "all": {
+      "validation_only": false,
+      "execution": false
+    }
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "owned_functions": [
+    "triomics_b02_resolve",
+    "triomics_b02_fit",
+    "triomics_b02_owns"
+  ],
+  "extends": [
+    "triomics_resolve_analysis",
+    "resolve_analysis",
+    "triomics_fit_block_models",
+    "fit_block_models"
+  ],
+  "namespace_edits": false,
+  "request": "Do not edit NAMESPACE. B-T02 wraps triomics_resolve_analysis for multigroup, continuous, and subject-mean requests and dispatches triomics_fit_block_models only when resolved$lane is b_t02. The two-group levels lane remains B-T01. limma is already requested by B-T01. Keep both dispatch points if a later collate reorder would overwrite them: .onLoad installs the namespace wrapper, and the CLI source path installs the global wrapper before triomics_main. Sol owns NAMESPACE, DESCRIPTION, R/cli.R, R/stage_registry.R, R/contracts.R, inst/schema, man, and renv.lock."
+}
