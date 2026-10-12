@@ -1,0 +1,41 @@
+{
+  "packet_id": "A-T03",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": [
+      "prepare_fit",
+      "prepare_apply"
+    ]
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml",
+      "SummarizedExperiment",
+      "MultiAssayExperiment"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ]
+  },
+  "stage_registry": {
+    "A": {"validation_only": true, "execution": true},
+    "B": {"validation_only": false, "execution": false},
+    "C": {"validation_only": false, "execution": false},
+    "D": {"validation_only": false, "execution": false},
+    "report": {"validation_only": false, "execution": false},
+    "all": {"validation_only": false, "execution": false}
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "request": "Export prepare_fit and prepare_apply. Add SummarizedExperiment and MultiAssayExperiment to Imports. Keep stage A execution dispatch through the existing triomics_execute_stage_a ingest path. Do not enable stages B, C, D, report, or all. Sol owns NAMESPACE, DESCRIPTION, R/cli.R, R/stage_registry.R, and renv.lock. Profile dispatch stays on profile id, not block display name."
+}

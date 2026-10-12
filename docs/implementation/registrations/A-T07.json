@@ -1,0 +1,69 @@
+{
+  "packet_id": "A-T07",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": [
+      "triomics_nested_split_plan",
+      "triomics_validate_split_plan",
+      "triomics_finalize_split_plan",
+      "triomics_fold_prepare",
+      "triomics_fold_prepare_apply",
+      "triomics_fold_parameter_snapshot"
+    ]
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ]
+  },
+  "stage_registry": {
+    "A": {
+      "validation_only": true,
+      "execution": true
+    },
+    "B": {
+      "validation_only": false,
+      "execution": false
+    },
+    "C": {
+      "validation_only": false,
+      "execution": false
+    },
+    "D": {
+      "validation_only": false,
+      "execution": false
+    },
+    "report": {
+      "validation_only": false,
+      "execution": false
+    },
+    "all": {
+      "validation_only": false,
+      "execution": false
+    }
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "owned_functions": [
+    "triomics_nested_split_plan",
+    "triomics_validate_split_plan",
+    "triomics_finalize_split_plan",
+    "triomics_fold_prepare",
+    "triomics_fold_prepare_apply",
+    "triomics_fold_parameter_snapshot"
+  ],
+  "request": "Export the fold-preparation seams listed in namespace_exports. Do not add a package. Nested split plans and fold-local prepare_fit/prepare_apply stay in R/resampling_preparation.R and call the existing preparation and profile services. Stage A execution stays on triomics_execute_stage_a. Do not enable stages B, C, D, report, or all. Sol owns NAMESPACE, DESCRIPTION, R/cli.R, R/stage_registry.R, and renv.lock."
+}

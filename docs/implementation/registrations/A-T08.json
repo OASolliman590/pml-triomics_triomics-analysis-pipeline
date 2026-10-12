@@ -1,0 +1,49 @@
+{
+  "packet_id": "A-T08",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": [
+      "triomics_export_a",
+      "triomics_export_cache_key",
+      "triomics_export_resume_decision",
+      "triomics_a_handoff_limitations"
+    ]
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml",
+      "SummarizedExperiment",
+      "MultiAssayExperiment"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ]
+  },
+  "stage_registry": {
+    "A": {"validation_only": true, "execution": true},
+    "B": {"validation_only": false, "execution": false},
+    "C": {"validation_only": false, "execution": false},
+    "D": {"validation_only": false, "execution": false},
+    "report": {"validation_only": false, "execution": false},
+    "all": {"validation_only": false, "execution": false}
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "owned_functions": [
+    "triomics_export_a",
+    "triomics_export_cache_key",
+    "triomics_export_resume_decision",
+    "triomics_a_handoff_limitations"
+  ],
+  "request": "Export the A handoff seams listed in namespace_exports. Do not add a package. Keep stage A execution on triomics_execute_stage_a until Sol wires triomics_export_a. Fourth and fifth profiles must enter through triomics_register_profile; do not add profile-specific orchestration branches or enable stages B, C, D, report, or all. Sol owns NAMESPACE, DESCRIPTION, R/cli.R, R/stage_registry.R, and renv.lock. Optional methods remain unqualified."
+}

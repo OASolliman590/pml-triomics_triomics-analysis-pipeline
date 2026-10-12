@@ -1,0 +1,7 @@
+discovery/
+docs/
+paper/
+artifacts/
+._*
+**/._*
+*.Rcheck
