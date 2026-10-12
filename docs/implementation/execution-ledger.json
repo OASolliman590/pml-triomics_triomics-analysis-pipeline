@@ -239,7 +239,7 @@
       "blockers": [
         "208 passed without B-T04 loaded"
       ],
-      "integration_commit": "pending"
+      "integration_commit": "9cd36fe"
     },
     "B-T03": {
       "status": "sol_verified",
@@ -249,7 +249,7 @@
       "blockers": [
         "275 passed without B-T04 loaded"
       ],
-      "integration_commit": "pending"
+      "integration_commit": "9cd36fe"
     },
     "B-T04": {
       "status": "blocked",
@@ -282,7 +282,7 @@
       "blockers": [
         "139 passed without B-T04 loaded"
       ],
-      "integration_commit": "pending"
+      "integration_commit": "9cd36fe"
     },
     "B-T09": {
       "status": "not_started",
