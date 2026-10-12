@@ -101,6 +101,8 @@ triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
       triomics_validate_only(config, options$config, options$stage, options$output)
     } else if (identical(options$stage, "A")) {
       triomics_execute_stage_a(options$config, options$output)
+    } else if (identical(options$stage, "B")) {
+      triomics_execute_stage_b(options$config, options$output)
     } else {
       triomics_abort("A_STAGE_UNAVAILABLE",
                      paste0("Execution is not implemented for stage '", options$stage, "'."),

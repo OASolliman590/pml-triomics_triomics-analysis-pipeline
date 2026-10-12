@@ -1,2 +1,11 @@
 # Package internals are intentionally accessed through the local CLI and tests.
 export(simulate_study)
+export(triomics_export_a)
+export(triomics_export_cache_key)
+export(triomics_export_resume_decision)
+export(triomics_a_handoff_limitations)
+export(triomics_resolve_analysis)
+export(triomics_fit_block_models)
+export(triomics_execute_stage_b)
+export(resolve_analysis)
+export(fit_block_models)

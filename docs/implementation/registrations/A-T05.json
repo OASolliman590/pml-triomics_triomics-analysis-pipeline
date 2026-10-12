@@ -1,0 +1,44 @@
+{
+  "packet_id": "A-T05",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": []
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ]
+  },
+  "stage_registry": {
+    "A": {"validation_only": true, "execution": true},
+    "B": {"validation_only": false, "execution": false},
+    "C": {"validation_only": false, "execution": false},
+    "D": {"validation_only": false, "execution": false},
+    "report": {"validation_only": false, "execution": false},
+    "all": {"validation_only": false, "execution": false}
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "owned_functions": [
+    "triomics_metabolomics_profile",
+    "triomics_register_metabolomics_profile",
+    "triomics_metabolomics_operations",
+    "triomics_metabolomics_predictive_eligibility",
+    "triomics_metabolomics_lane_decision",
+    "triomics_metabolomics_imputation_description"
+  ],
+  "request": "Do not export new symbols. Do not add impute, missForest, or randomForest. Metabolomics registers on profile id metabolomics after the shared profile registry exists. kNN and RF are inductive triomics wrappers pinned to package triomics 0.1.0 with native_fit triomics_metabolomics_knn_fit and triomics_metabolomics_rf_fit; they are not impute.knn or missForest. Stage A execution stays on triomics_execute_stage_a. Do not enable stages B, C, D, report, or all. Sol owns NAMESPACE, DESCRIPTION, R/cli.R, R/stage_registry.R, and renv.lock. MinProb, QRILC, VSN, CLR, median_shift, sample_amount, and internal_standard stay unavailable for this profile."
+}

@@ -1,0 +1,43 @@
+{
+  "packet_id": "A-T04",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": []
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ]
+  },
+  "stage_registry": {
+    "A": {"validation_only": true, "execution": true},
+    "B": {"validation_only": false, "execution": false},
+    "C": {"validation_only": false, "execution": false},
+    "D": {"validation_only": false, "execution": false},
+    "report": {"validation_only": false, "execution": false},
+    "all": {"validation_only": false, "execution": false}
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "owned_functions": [
+    "triomics_proteomics_profile",
+    "triomics_register_proteomics_profile",
+    "triomics_proteomics_operations",
+    "triomics_proteomics_predictive_eligibility",
+    "triomics_proteomics_lane_decision"
+  ],
+  "request": "Do not export new symbols. Do not add vsn or imputeLCMD. Proteomics registers on profile id proteomics after the shared profile registry exists. Stage A execution stays on triomics_execute_stage_a. Do not enable stages B, C, D, report, or all. Sol owns NAMESPACE, DESCRIPTION, R/cli.R, R/stage_registry.R, and renv.lock. MinProb, QRILC, and VSN stay unavailable until a pinned qualification matches an executed fit/apply runtime."
+}

@@ -1,0 +1,47 @@
+{
+  "packet_id": "A-T06",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": []
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ]
+  },
+  "stage_registry": {
+    "A": {"validation_only": true, "execution": true},
+    "B": {"validation_only": false, "execution": false},
+    "C": {"validation_only": false, "execution": false},
+    "D": {"validation_only": false, "execution": false},
+    "report": {"validation_only": false, "execution": false},
+    "all": {"validation_only": false, "execution": false}
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "owned_functions": [
+    "triomics_lipidomics_profile",
+    "triomics_register_lipidomics_profile",
+    "triomics_lipidomics_operations",
+    "triomics_lipidomics_policy_identity",
+    "triomics_lipid_derivation_result",
+    "triomics_lipid_endpoints",
+    "triomics_lipid_endpoint_sample",
+    "triomics_lipid_clr_record",
+    "triomics_lipid_amount_record"
+  ],
+  "request": "Do not export new symbols. Do not add compositions, lipidr, or a CLR dependency. Lipidomics registers on profile id lipidomics after the shared profile registry exists. Class sums, weighted carbon and double-bond indices, within-class fractions, and CLR stay in this profile and run in linear space before log. Stage A execution stays on triomics_execute_stage_a. Do not enable stages B, C, D, report, or all. Sol owns NAMESPACE, DESCRIPTION, R/cli.R, R/stage_registry.R, and renv.lock."
+}

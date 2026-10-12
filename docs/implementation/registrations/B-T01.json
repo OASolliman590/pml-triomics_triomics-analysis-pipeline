@@ -1,0 +1,50 @@
+{
+  "packet_id": "B-T01",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": [
+      "triomics_resolve_analysis",
+      "triomics_fit_block_models",
+      "triomics_execute_stage_b",
+      "resolve_analysis",
+      "fit_block_models"
+    ]
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml",
+      "limma"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ]
+  },
+  "stage_registry": {
+    "A": {"validation_only": true, "execution": true},
+    "B": {"validation_only": false, "execution": true},
+    "C": {"validation_only": false, "execution": false},
+    "D": {"validation_only": false, "execution": false},
+    "report": {"validation_only": false, "execution": false},
+    "all": {"validation_only": false, "execution": false}
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "owned_functions": [
+    "triomics_resolve_analysis",
+    "triomics_fit_block_models",
+    "triomics_execute_stage_b",
+    "resolve_analysis",
+    "fit_block_models"
+  ],
+  "request": "Add limma to Imports and export the B seams listed in namespace_exports. Dispatch non-validate stage B execution to triomics_execute_stage_b. Leave B validation_only false so the A-T01 --stage B --validate-only exit 3 expectation remains intact. Do not enable stages C, D, report, or all. Sol owns NAMESPACE, DESCRIPTION, R/cli.R, R/stage_registry.R, and renv.lock."
+}

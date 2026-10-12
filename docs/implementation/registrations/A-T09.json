@@ -1,0 +1,43 @@
+{
+  "packet_id": "A-T09",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": []
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ]
+  },
+  "stage_registry": {
+    "A": {"validation_only": true, "execution": true},
+    "B": {"validation_only": false, "execution": false},
+    "C": {"validation_only": false, "execution": false},
+    "D": {"validation_only": false, "execution": false},
+    "report": {"validation_only": false, "execution": false},
+    "all": {"validation_only": false, "execution": false}
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "owned_functions": [
+    "triomics_load_clinical_dictionary",
+    "triomics_parse_clinical_token",
+    "triomics_ingest_clinical",
+    "triomics_write_clinical_artifacts",
+    "triomics_clinical_resolve_links"
+  ],
+  "request": "Do not export new symbols. After molecular stage A ingest, when clinical.enabled is true, call triomics_ingest_clinical(config, config_path, ingested$sample_registry) and triomics_write_clinical_artifacts(bundle, output). Leave ingested$clinical_observations empty; A-T02 still rejects fabricated clinical observations on the molecular study. Do not enable stages B, C, D, report, or all. Sol owns NAMESPACE, DESCRIPTION, R/cli.R, R/stage_registry.R, and renv.lock. No new package is required."
+}
