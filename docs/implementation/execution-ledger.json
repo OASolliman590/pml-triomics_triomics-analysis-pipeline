@@ -14,9 +14,10 @@
     "heavy_model_fit_cap": 1
   },
   "active_workers": [
-    {"task":"triomics-implement-2","packet":"A-T02","model":"grok-4.7","worktree":".worktrees/a-t01-repair","base_commit":"0f2f53f5fe5237bf7a164bc1943dcc644fe6871b","phase":"implement"}
+    {"task":"triomics-implement-3","packet":"A-T03","model":"grok-4.7","worktree":".worktrees/a-t01-repair","base_commit":"12021f9","phase":"implement"}
   ],
   "orchestration_events": [
+    {"event":"a_t02_sol_verified","date":"2026-10-12","commit":"12021f9","integration_commit":"99bc6b9","disposition":"A-T02 tests passed 218/0. A-T01 regression passed 72/0. Stage A CLI exited 0 after Sol enabled stage A execution and exported simulate_study. B, C, D, report, and all stay closed."},
     {"event":"g1_accepted","date":"2026-10-11","workflow":"triomics-m1-review","effective_model":"grok-4.7","verdict":"pass","disposition":"Astra-role review found no P0 or P1. Sol accepted G1 for required A-T01 behavior. The Mac host lock was not regenerated."},
     {"event":"a_t01_sol_verified","date":"2026-10-11","commit":"0f2f53f5fe5237bf7a164bc1943dcc644fe6871b","integration_commit":"ee9fd36250414904b438bb14e782aa89179d2774","disposition":"Independent Sol rerun: testthat 72 passed, 0 failed, 0 skipped. Fresh validate-only CLI exited 0. A second run against the existing acceptance summary exited 4 and left the file unchanged. The workflow verifier had treated that second run as a product failure."},
     {"event":"implement_workflow_started","date":"2026-10-11","workflow":"triomics-implement","worktree":".worktrees/a-t01-repair","branch":"repair/a-t01","disposition":"Serial packet workflow started at the A-T01 repair. Workers do not commit. Sol reviews and lands."},
@@ -29,7 +30,7 @@
   ],
   "packets": {
     "A-T01":{"status":"accepted","attempts":1,"repair_attempts":1,"candidate_commit":"0f2f53f5fe5237bf7a164bc1943dcc644fe6871b","commit":"ee9fd36250414904b438bb14e782aa89179d2774","acceptance_refs":["docs/implementation/reviews/A-T01-initial-review.md","docs/implementation/reviews/M1-astra-review.md"],"blockers":["renv.lock was not regenerated on this Mac"]},
-    "A-T02":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
+    "A-T02":{"status":"sol_verified","attempts":1,"commit":"12021f9","integration_commit":"99bc6b9","acceptance_refs":[],"blockers":["M2 review waits for A-T03 and A-T09"]},
     "A-T03":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
     "A-T09":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
     "A-T04":{"status":"not_started","attempts":0,"commit":null,"acceptance_refs":[],"blockers":[]},
