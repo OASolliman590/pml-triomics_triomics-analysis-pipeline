@@ -2,7 +2,7 @@ triomics_stage_registry <- function() {
   data.frame(
     stage = c("A", "B", "C", "D", "report", "all"),
     validation_only = c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE),
-    execution = c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),
+    execution = c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE),
     stringsAsFactors = FALSE
   )
 }
