@@ -516,6 +516,31 @@ testthat::test_that("A-T03-AC3 state refs keep hashes, masks, training ids, and 
   applied <- prepare_apply(held, fit_spec("alpha", "baseline", dir, NULL, ops, "apply"), fitted$state_refs)
   testthat::expect_identical(applied$state_refs$alpha$state_hash, fitted$state_refs$alpha$state_hash)
   testthat::expect_equal(as.numeric(analysis_of(applied, "alpha")["fa", "s3"]), 100, tolerance = 1e-12)
+
+  changed_filter <- ops
+  changed_filter[[2L]]$min_observed <- 2L
+  expect_code(
+    prepare_apply(held, fit_spec("alpha", "baseline", dir, NULL, changed_filter, "changed-filter"), fitted$state_refs),
+    "A_STATE_STALE"
+  )
+
+  zero_values <- matrix(c(0, 16), nrow = 1L, dimnames = list("fz", c("s1", "s2")))
+  zero_study <- triomics_assemble_study(manual_study(
+    "study", registry[1:2, , drop = FALSE], list(alpha = zero_values),
+    list(alpha = observed_mask(zero_values)),
+    list(alpha = named_map("alpha", c("s1", "s2"), c("s1", "s2"))),
+    list(feature_rows("study", "alpha", "fz", "zero"))
+  ))
+  zero_ops <- baseline_ops(transform = "log2", zero_policy = "declared_replacement", zero_value = 1)
+  zero_dir <- tempfile("a-t03-parameter-state-")
+  dir.create(zero_dir)
+  zero_fit <- prepare_fit(zero_study, fit_spec("alpha", "baseline", zero_dir, c("s1", "s2"), zero_ops))
+  changed_zero <- zero_ops
+  changed_zero[[4L]]$zero_value <- 16
+  expect_code(
+    prepare_apply(zero_study, fit_spec("alpha", "baseline", zero_dir, NULL, changed_zero, "changed-zero"), zero_fit$state_refs),
+    "A_STATE_STALE"
+  )
   reread <- triomics_read_state(applied$state_refs$alpha, dir)
   fa_median_2 <- reread$learned_parameters$medians[[which(vapply(reread$learned_parameters$medians, function(row) row$feature_key, character(1)) == "fa")]]$median
   testthat::expect_equal(fa_median_2, 2, tolerance = 1e-12)
@@ -588,6 +613,36 @@ testthat::test_that("A-T03-AC3 state refs keep hashes, masks, training ids, and 
   testthat::expect_identical(blocked$predictive_status$alpha, "unavailable")
   testthat::expect_equal(analysis_of(blocked, "alpha"), analysis_of(assembled, "alpha"))
   testthat::expect_false(any(abs(analysis_of(blocked, "alpha") - analysis_of(assembled, "alpha")) > 0, na.rm = TRUE))
+
+  frozen_unavailable <- lapply(ops, function(op) {
+    op$apply <- "unavailable"
+    op
+  })
+  frozen_fit <- prepare_fit(
+    assembled,
+    fit_spec("alpha", "blocked", dir, c("s1", "s2"), frozen_unavailable, "frozen-unavailable")
+  )
+  omitted_capability <- prepare_apply(
+    assembled,
+    fit_spec("alpha", "blocked", dir, NULL, ops, "omitted-capability"),
+    frozen_fit$state_refs
+  )
+  testthat::expect_identical(omitted_capability$predictive_status$alpha, "unavailable")
+  testthat::expect_identical(omitted_capability$state_refs$alpha, frozen_fit$state_refs$alpha)
+  testthat::expect_identical(analysis_of(omitted_capability, "alpha"), analysis_of(assembled, "alpha"))
+
+  conflicting_capability <- lapply(ops, function(op) {
+    op$apply <- "fit_apply"
+    op
+  })
+  explicit_reenable <- prepare_apply(
+    assembled,
+    fit_spec("alpha", "blocked", dir, NULL, conflicting_capability, "explicit-reenable"),
+    frozen_fit$state_refs
+  )
+  testthat::expect_identical(explicit_reenable$predictive_status$alpha, "unavailable")
+  testthat::expect_identical(explicit_reenable$state_refs$alpha, frozen_fit$state_refs$alpha)
+  testthat::expect_identical(analysis_of(explicit_reenable, "alpha"), analysis_of(assembled, "alpha"))
 })
 
 testthat::test_that("A-T03-AC4 shared preparation runs a caller-supplied profile without proteomic code", {
@@ -619,6 +674,35 @@ testthat::test_that("A-T03-AC4 shared preparation runs a caller-supplied profile
   ), display_names = c(panel = "proteomics"))
   ops <- baseline_ops()
   ops[[4L]]$method <- "plus_one"
+  custom$normalise <- function(se, params) {
+    if (identical(params$operation$method, "none")) return(se)
+    if (!identical(params$operation$method, "double")) {
+      triomics_abort("A_CONFIG_METHOD", "Unexpected normalisation method.", key = "normalise")
+    }
+    mat <- SummarizedExperiment::assay(se, "analysis")
+    mat[] <- mat * 2
+    SummarizedExperiment::assay(se, "analysis") <- mat
+    se
+  }
+  triomics_register_profile("custom_panel", custom)
+  ordered_ops <- ops[c(1L, 2L, 3L, 5L, 4L, 6L)]
+  ordered_ops[[4L]]$method <- "double"
+  ordered_dir <- tempfile("a-t03-custom-order-")
+  dir.create(ordered_dir)
+  ordered_fit <- prepare_fit(
+    assembled,
+    fit_spec("panel", "custom_panel", ordered_dir, c("s1", "s2"), ordered_ops, "custom-order")
+  )
+  testthat::expect_equal(
+    as.numeric(analysis_of(ordered_fit, "panel")["fa", c("s1", "s2")]),
+    c(9, 7),
+    tolerance = 1e-12
+  )
+  ordered_state <- triomics_read_state(ordered_fit$state_refs$panel, ordered_dir)
+  expected_order <- c("validate", "filter", "derive", "normalise", "transform", "impute")
+  testthat::expect_identical(vapply(ordered_state$operation_order, `[[`, character(1), "stage"), expected_order)
+  testthat::expect_identical(vapply(ordered_fit$operation_ledger$panel, `[[`, character(1), "stage"), expected_order)
+
   dir <- tempfile("a-t03-custom-")
   dir.create(dir)
   fitted <- prepare_fit(assembled, fit_spec("panel", "custom_panel", dir, c("s1", "s2"), ops))

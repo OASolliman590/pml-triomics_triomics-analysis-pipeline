@@ -56,12 +56,10 @@ triomics_record_operation <- function(se, operation, input_scale, output_scale) 
                    key = "transform", module = "preparation", stage = "A",
                    remediation = "Keep the declared input scale. Do not log transformed values again.")
   }
-  completed[[length(completed) + 1L]] <- list(
-    stage = operation$stage,
-    method = operation$method,
-    input_scale = input_scale,
-    output_scale = output_scale
-  )
+  recorded <- operation
+  recorded$input_scale <- input_scale
+  recorded$output_scale <- output_scale
+  completed[[length(completed) + 1L]] <- recorded
   triomics$completed <- completed
   triomics$scale <- output_scale
   se <- triomics_set_triomics(se, triomics)
@@ -334,8 +332,12 @@ triomics_freeze_operations <- function(block_spec) {
     operation$stage
   }, character(1))
   expected <- c("validate", "filter", "derive", "transform", "normalise", "impute")
-  if (!identical(stages, expected)) {
-    triomics_abort("A_CONFIG_OPERATION", "Operation order must be validate, filter, derive, transform, normalise, impute.",
+  if (length(stages) != length(expected) || anyDuplicated(stages) || !setequal(stages, expected) ||
+      match("validate", stages) > match("filter", stages) ||
+      match("filter", stages) > match("derive", stages) ||
+      match("derive", stages) > min(match(c("transform", "normalise"), stages)) ||
+      match("impute", stages) != length(stages)) {
+    triomics_abort("A_CONFIG_OPERATION", "Operations must validate, filter, and derive before transform and normalise, with impute last.",
                    key = "operations", module = "preparation", stage = "A",
                    remediation = "Derive quantitative endpoints before log or closure.")
   }
@@ -563,20 +565,43 @@ prepare_apply <- function(study, preparation_spec, state_refs) {
     }
     state <- triomics_read_state(ref, spec$state_dir)
     operations <- triomics_freeze_operations(block_spec)
-    fit_stages <- vapply(state$operation_order, function(operation) as.character(operation$stage), character(1))
-    fit_methods <- vapply(state$operation_order, function(operation) as.character(operation$method), character(1))
-    now_stages <- vapply(operations, function(operation) operation$stage, character(1))
-    now_methods <- vapply(operations, function(operation) operation$method, character(1))
-    if (!identical(fit_stages, now_stages) || !identical(fit_methods, now_methods)) {
-      triomics_abort("A_STATE_STALE", "Apply operations do not match the frozen fit operation order.",
+    frozen_apply_unavailable <- any(vapply(
+      state$operation_order,
+      function(operation) identical(operation$apply, "unavailable"),
+      logical(1L)
+    ))
+    fit_operations <- lapply(state$operation_order, function(operation) {
+      operation$input_scale <- NULL
+      operation$output_scale <- NULL
+      operation$apply <- NULL
+      operation
+    })
+    requested_operations <- lapply(operations, function(operation) {
+      operation$apply <- NULL
+      operation
+    })
+    operations_match <- length(fit_operations) == length(requested_operations) && all(vapply(
+      seq_along(requested_operations), function(i) {
+        requested <- requested_operations[[i]]
+        frozen <- fit_operations[[i]]
+        requested_names <- names(requested)[!vapply(requested, is.null, logical(1L))]
+        all(requested_names %in% names(frozen)) && all(vapply(requested_names, function(name) {
+          identical(triomics_canonical_json(requested[[name]]), triomics_canonical_json(frozen[[name]]))
+        }, logical(1L)))
+      }, logical(1L)
+    ))
+    if (!operations_match) {
+      triomics_abort("A_STATE_STALE", "Apply operations do not match the frozen fit parameters and order.",
                      key = "operations", module = "preparation", stage = "A",
-                     remediation = "Use the same method order as the fit state.")
+                     remediation = "Use the same methods, parameters, and order as the fit state.")
     }
-    if (any(vapply(operations, function(operation) identical(operation$apply, "unavailable"), logical(1L)))) {
+    if (frozen_apply_unavailable ||
+        any(vapply(operations, function(operation) identical(operation$apply, "unavailable"), logical(1L)))) {
       study$predictive_status[[block_id]] <- "unavailable"
       study$state_refs[[block_id]] <- ref
       next
     }
+    operations <- fit_operations
     profile <- triomics_registered_profile(block_spec$profile_id)
     se <- study$experiments[[block_id]]
     for (operation in operations) {
