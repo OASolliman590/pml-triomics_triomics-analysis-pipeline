@@ -359,6 +359,107 @@ testthat::test_that("A-T09-AC2 ambiguous nearest joins and duplicate matches are
   testthat::expect_null(lost[[1L]]$sample_id)
 })
 
+testthat::test_that("A-T09-AC2 explicit observation and registry sample identities must agree", {
+  study <- predecessor_study()
+  registry <- data.frame(
+    sample_id = c("SYN_01", "SYN_ALT"), subject_id = c("S1", "S1"),
+    visit_id = c("V1", "V1"), collection_time = c("2020-01-01", "2020-01-01"),
+    stringsAsFactors = FALSE
+  )
+  rows <- base_wide_rows()
+  rows[[1L]][["sample_id"]] <- "SYN_ALT"
+  expect_code(
+    ingest_case(base_dictionary(), rows, base_links(), registry),
+    "A_CLINICAL_JOIN_AMBIGUOUS"
+  )
+
+  links <- base_links()
+  links[[1L]][["sample_id"]] <- "SYN_02"
+  expect_code(
+    ingest_case(base_dictionary(), base_wide_rows(), links, study$sample_registry),
+    "A_CLINICAL_JOIN_AMBIGUOUS"
+  )
+})
+
+testthat::test_that("A-T09-AC2 exact-visit links refuse a contradictory requested sample", {
+  registry <- data.frame(
+    sample_id = c("P1", "P2"), subject_id = c("S9", "S9"),
+    visit_id = c("V1", "V2"), collection_time = c("2020-01-01", "2020-01-11"),
+    stringsAsFactors = FALSE
+  )
+  dictionary <- list(dict_row(
+    "glucose", "Glucose", "continuous", "mmol/L", "verified", "measured",
+    "predictor", "visit", "ordinary", "verified", time_format = "iso8601_date"
+  ))
+  rows <- list(c(
+    subject_id = "S9", visit_id = "V1", sample_id = "", time = "2020-01-01",
+    time_unit = "day", glucose = "5"
+  ))
+  links <- list(c(
+    link_id = "E1", subject_id = "S9", visit_id = "V1", sample_id = "P2",
+    cardinality = "one_to_one", match_rule = "exact_visit", reference_time = "",
+    window_days = "", tie_rule = ""
+  ))
+  expect_code(
+    ingest_case(dictionary, rows, links, registry,
+                objectives = list(objective_of("glucose_between", "glucose"))),
+    "A_CLINICAL_JOIN_AMBIGUOUS"
+  )
+})
+
+testthat::test_that("A-T09-AC2 nearest-visit links refuse a contradictory requested sample", {
+  registry <- data.frame(
+    sample_id = c("P1", "P2"), subject_id = c("S9", "S9"),
+    visit_id = c("V1", "V2"), collection_time = c("2020-01-05", "2020-01-20"),
+    stringsAsFactors = FALSE
+  )
+  dictionary <- list(dict_row(
+    "glucose", "Glucose", "continuous", "mmol/L", "verified", "measured",
+    "predictor", "visit", "ordinary", "verified", time_format = "iso8601_date"
+  ))
+  rows <- list(c(
+    subject_id = "S9", visit_id = "V1", sample_id = "", time = "2020-01-06",
+    time_unit = "day", glucose = "5"
+  ))
+  links <- list(c(
+    link_id = "N1", subject_id = "S9", visit_id = "V1", sample_id = "P2",
+    cardinality = "one_to_one", match_rule = "nearest_visit",
+    reference_time = "2020-01-06", window_days = "10", tie_rule = "unique_minimum"
+  ))
+  expect_code(
+    ingest_case(dictionary, rows, links, registry,
+                objectives = list(objective_of("glucose_between", "glucose"))),
+    "A_CLINICAL_JOIN_AMBIGUOUS"
+  )
+})
+
+testthat::test_that("A-T09-AC1 sample-scoped exact links allow an unspecified visit", {
+  registry <- data.frame(
+    sample_id = "P1", subject_id = "S9", visit_id = "V1",
+    collection_time = "2020-01-05", stringsAsFactors = FALSE
+  )
+  dictionary <- list(dict_row(
+    "glucose", "Glucose", "continuous", "mmol/L", "verified", "measured",
+    "predictor", "sample", "ordinary", "verified"
+  ))
+  rows <- list(c(
+    subject_id = "S9", visit_id = "", sample_id = "P1", time = "",
+    time_unit = "", glucose = "5"
+  ))
+  links <- list(c(
+    link_id = "S1", subject_id = "S9", visit_id = "", sample_id = "P1",
+    cardinality = "one_to_one", match_rule = "exact_sample", reference_time = "",
+    window_days = "", tie_rule = ""
+  ))
+  bundle <- ingest_case(
+    dictionary, rows, links, registry,
+    objectives = list(objective_of("glucose_between", "glucose"))
+  )
+  link <- Filter(function(item) identical(item$variable_id, "glucose"), bundle$links)[[1L]]
+  testthat::expect_identical(link$status, "approved")
+  testthat::expect_identical(link$sample_id, "P1")
+})
+
 testthat::test_that("A-T09-AC3 censored limits and multi-select sets survive ingest", {
   study <- predecessor_study()
   bundle <- ingest_case(base_dictionary(), base_wide_rows(), base_links(), study$sample_registry)

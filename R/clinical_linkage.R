@@ -167,6 +167,13 @@ triomics_clinical_resolve_links <- function(observations, links_path, registry, 
             "sample_id", "clinical_linkage", "Do not relabel the sample to the other subject."
           )
         }
+        registry_visit <- frame$visit_id[[hit]]
+        if (nzchar(row$visit_id) && nzchar(registry_visit) && !identical(registry_visit, row$visit_id)) {
+          triomics_clinical_fail(
+            "A_CLINICAL_JOIN_AMBIGUOUS", "The sample registry visit disagrees with the link.",
+            "sample_id", "clinical_linkage", "Do not relabel the sample to another visit."
+          )
+        }
         result$status <- "approved"
         result$sample_id <- frame$sample_id[[hit]]
       }
@@ -248,6 +255,20 @@ triomics_clinical_resolve_links <- function(observations, links_path, registry, 
       result <- list(link_id = NULL, status = "unmatched", sample_id = NULL, requested_sample_id = NULL,
                      distance_days = NULL, cardinality = NULL, match_rule = NULL, tie_rule = NULL,
                      window_days = NULL, reference_time = NULL, source_sha256 = links_sha)
+    }
+    if (identical(result$status, "approved") && !is.null(result$requested_sample_id) &&
+        !identical(result$requested_sample_id, result$sample_id)) {
+      triomics_clinical_fail(
+        "A_CLINICAL_JOIN_AMBIGUOUS", "The requested link sample disagrees with its resolved sample.",
+        "sample_id", "clinical_linkage", "Refuse the contradictory identity. Do not choose another sample."
+      )
+    }
+    if (identical(result$status, "approved") && !is.null(obs$sample_id) &&
+        nzchar(obs$sample_id) && !identical(obs$sample_id, result$sample_id)) {
+      triomics_clinical_fail(
+        "A_CLINICAL_JOIN_AMBIGUOUS", "The observation sample disagrees with its resolved link.",
+        "sample_id", "clinical_linkage", "Refuse the contradictory identity. Do not choose another sample."
+      )
     }
     links[[length(links) + 1L]] <- list(
       link_id = if (is.null(result$link_id)) paste0("unmatched|", obs$observation_id) else paste(result$link_id, obs$observation_id, sep = "|"),
