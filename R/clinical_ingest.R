@@ -477,7 +477,7 @@ triomics_ingest_clinical <- function(config, config_path, sample_registry) {
   bundle
 }
 
-triomics_write_clinical_artifacts <- function(bundle, output) {
+triomics_write_clinical_artifacts <- function(bundle, output, privacy_class = "synthetic") {
   if (!triomics_sha256_text(bundle$config_sha256)) {
     triomics_clinical_fail(
       "A_CLINICAL_DEFINITION_UNRESOLVED", "Clinical artifacts require the configuration hash.",
@@ -518,7 +518,7 @@ triomics_write_clinical_artifacts <- function(bundle, output) {
       producer_commit = "not-recorded",
       inputs = inputs,
       reason_codes = bundle$reason_codes,
-      privacy_class = "synthetic"
+      privacy_class = privacy_class
     )
     triomics_write_envelope(envelope, file.path(output, "clinical", paste0(name, ".envelope.json")))
   }

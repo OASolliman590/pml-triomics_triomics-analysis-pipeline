@@ -483,5 +483,101 @@ testthat::test_that("A-T09 Stage A writes clinical artifacts for an enabled clin
   config <- triomics_test_resource("examples", "tickets", "A-T09.yaml")
   output <- tempfile("a-t09-stage-a-")
   triomics_execute_stage_a(config, output)
-  testthat::expect_true(file.exists(file.path(output, "clinical", "observations.json")))
+  clinical_dir <- file.path(output, "clinical")
+  payload_names <- c("dictionary", "observations", "links", "coverage", "public_view", "subjects", "visits")
+  payloads <- file.path(clinical_dir, paste0(payload_names, ".json"))
+  envelopes <- file.path(clinical_dir, paste0(payload_names, ".envelope.json"))
+  testthat::expect_true(all(file.exists(c(payloads, envelopes))))
+
+  observations <- jsonlite::read_json(payloads[[2L]], simplifyVector = FALSE)
+  glucose <- Filter(function(row) identical(row$variable_id, "glucose"), observations)[[1L]]
+  testthat::expect_equal(glucose$numeric_value, 5.4)
+  testthat::expect_identical(glucose$units, "mmol/L")
+  testthat::expect_identical(glucose$units_verification, "verified")
+  testthat::expect_identical(glucose$time_semantics, "visit")
+  testthat::expect_identical(glucose$time, "2026-09-20")
+  testthat::expect_identical(glucose$time_unit, "day")
+  testthat::expect_identical(glucose$source_row, 1L)
+  testthat::expect_match(glucose$source_sha256, "^[0-9a-f]{64}$")
+
+  links <- jsonlite::read_json(payloads[[3L]], simplifyVector = FALSE)
+  exact_link <- Filter(function(row) identical(row$match_rule, "exact_sample") &&
+                         identical(row$sample_id, "SYN_01") && identical(row$status, "approved"), links)
+  testthat::expect_length(exact_link, 1L)
+  subjects <- jsonlite::read_json(payloads[[6L]], simplifyVector = FALSE)
+  testthat::expect_match(subjects[[1L]]$subject_key, "^sub_[0-9a-f]{16}$")
+  exported <- paste(vapply(c(payloads, envelopes), function(path) {
+    paste(readLines(path, warn = FALSE), collapse = "\n")
+  }, character(1)), collapse = "\n")
+  testthat::expect_false(grepl("SYN_SUBJECT_01", exported, fixed = TRUE))
+  privacy <- vapply(envelopes, function(path) {
+    jsonlite::read_json(path, simplifyVector = TRUE)$privacy_class
+  }, character(1))
+  testthat::expect_true(all(privacy == "synthetic"))
+})
+
+stage_a_ticket_variant <- function(variant) {
+  path <- triomics_test_resource("examples", "tickets", "A-T09.yaml")
+  lines <- readLines(path, warn = FALSE)
+  if (identical(variant, "disabled")) {
+    lines <- sub("^  enabled: true$", "  enabled: false", lines)
+  } else if (identical(variant, "disabled_empty_missing")) {
+    lines <- sub("^  enabled: true$", "  enabled: false", lines)
+    lines <- sub("^  dictionary_file: .*", "  dictionary_file: ../data/clinical/missing-dictionary.tsv", lines)
+    lines <- sub("^  observations_file: .*", "  observations_file: ../data/clinical/missing-observations.tsv", lines)
+    lines <- sub("^  links_file: .*", "  links_file: ../data/clinical/missing-links.tsv", lines)
+    objective_start <- match("  objectives:", lines)
+    annotation_start <- match("annotation:", lines)
+    lines <- c(lines[seq_len(objective_start - 1L)], "  objectives: []", lines[annotation_start:length(lines)])
+  } else if (identical(variant, "private")) {
+    lines <- sub("^data_class: synthetic$", "data_class: real", lines)
+    lines <- sub("^  audience: synthetic_demo$", "  audience: private_research", lines)
+  } else if (identical(variant, "aggregate")) {
+    lines <- sub("^data_class: synthetic$", "data_class: real", lines)
+    lines <- sub("^  audience: synthetic_demo$", "  audience: approved_aggregate", lines)
+  } else {
+    stop("Unknown A-T09 config variant.", call. = FALSE)
+  }
+  config_path <- tempfile(".A-T09-stage-config-", tmpdir = dirname(path), fileext = ".yaml")
+  writeLines(lines, config_path, useBytes = TRUE)
+  config_path
+}
+
+testthat::test_that("A-T09 Stage A rejects disabled clinical objectives", {
+  config <- stage_a_ticket_variant("disabled")
+  on.exit(unlink(config), add = TRUE)
+  output <- tempfile("a-t09-disabled-stage-a-")
+  expect_code(triomics_execute_stage_a(config, output), "A_CLINICAL_DEFINITION_UNRESOLVED")
+  testthat::expect_false(file.exists(file.path(output, "registries", "run.json")))
+})
+
+testthat::test_that("A-T09 Stage A skips clinical sources when disabled without objectives", {
+  config <- stage_a_ticket_variant("disabled_empty_missing")
+  on.exit(unlink(config), add = TRUE)
+  output <- tempfile("a-t09-disabled-empty-stage-a-")
+  triomics_execute_stage_a(config, output)
+  testthat::expect_true(file.exists(file.path(output, "A", "assays.json")))
+  testthat::expect_true(file.exists(file.path(output, "registries", "run.json")))
+  testthat::expect_false(dir.exists(file.path(output, "clinical")))
+})
+
+testthat::test_that("A-T09 Stage A labels real private clinical artifacts sensitive", {
+  config <- stage_a_ticket_variant("private")
+  on.exit(unlink(config), add = TRUE)
+  output <- tempfile("a-t09-private-stage-a-")
+  triomics_execute_stage_a(config, output)
+  envelopes <- list.files(file.path(output, "clinical"), pattern = "\\.envelope\\.json$", full.names = TRUE)
+  privacy <- vapply(envelopes, function(path) {
+    jsonlite::read_json(path, simplifyVector = TRUE)$privacy_class
+  }, character(1))
+  testthat::expect_gt(length(envelopes), 0L)
+  testthat::expect_true(all(privacy == "sensitive"))
+})
+
+testthat::test_that("A-T09 Stage A fails closed for aggregate audience without disclosure policy", {
+  config <- stage_a_ticket_variant("aggregate")
+  on.exit(unlink(config), add = TRUE)
+  output <- tempfile("a-t09-aggregate-stage-a-")
+  expect_code(triomics_execute_stage_a(config, output), "A_CLINICAL_DISCLOSURE_UNSUPPORTED")
+  testthat::expect_length(list.files(file.path(output, "clinical")), 0L)
 })

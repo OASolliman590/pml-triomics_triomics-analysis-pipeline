@@ -682,9 +682,19 @@ triomics_execute_stage_a <- function(config_path, output) {
   }
   config <- triomics_read_config(config_path)
   ingested <- triomics_ingest_configured_study(config, config_path)
+  audience <- config$execution$audience
+  if (isTRUE(config$clinical$enabled) && identical(audience, "approved_aggregate")) {
+    triomics_abort(
+      "A_CLINICAL_DISCLOSURE_UNSUPPORTED",
+      "Clinical participant-level artifacts cannot be written for an approved aggregate audience without an implemented disclosure policy.",
+      key = "execution.disclosure_policy_ref", module = "ingest", stage = "A",
+      remediation = "Do not export clinical artifacts for this audience until an approved disclosure policy is implemented."
+    )
+  }
+  clinical_bundle <- triomics_ingest_clinical(config, config_path, ingested$sample_registry)
   if (isTRUE(config$clinical$enabled)) {
-    clinical_bundle <- triomics_ingest_clinical(config, config_path, ingested$sample_registry)
-    triomics_write_clinical_artifacts(clinical_bundle, output)
+    privacy_class <- if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive"
+    triomics_write_clinical_artifacts(clinical_bundle, output, privacy_class = privacy_class)
   }
   payload <- list(
     schema_version = "2.0",
