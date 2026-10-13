@@ -686,8 +686,7 @@ testthat::test_that("B-T03 effect units, failed-family members, and DEqMS stay e
 })
 
 testthat::test_that("B-T03 the paired fixture recovers subject deltas from predecessor matrices", {
-  root <- testthat::test_path("..", "..")
-  config_path <- file.path(root, "inst", "examples", "tickets", "B-T03.yaml")
+  config_path <- triomics_test_resource("examples", "tickets", "B-T03.yaml")
   config <- triomics_read_config(config_path)
   ingested <- triomics_ingest_configured_study(config, config_path)
   analysis <- config$analyses[[1L]]
@@ -706,11 +705,11 @@ testthat::test_that("B-T03 the paired fixture recovers subject deltas from prede
   )
   fitted <- b03_run(study, analysis, analysis$statistics)
   metadata <- utils::read.delim(
-    file.path(root, "discovery", "spec-v2", "examples", "paired", "metadata.tsv"),
+    triomics_test_resource("examples", "data", "paired", "metadata.tsv"),
     stringsAsFactors = FALSE
   )
   table <- utils::read.delim(
-    file.path(root, "discovery", "spec-v2", "examples", "paired", "proteomics.tsv"),
+    triomics_test_resource("examples", "data", "paired", "proteomics.tsv"),
     check.names = FALSE,
     stringsAsFactors = FALSE
   )

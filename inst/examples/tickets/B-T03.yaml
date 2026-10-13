@@ -3,19 +3,19 @@ study_id: triomics_b_t03_fixture
 data_class: synthetic
 sources:
   - source_id: sample_metadata
-    file: ../../../discovery/spec-v2/examples/paired/metadata.tsv
+    file: ../data/paired/metadata.tsv
     format: tsv
     role: sample_metadata
     selection_history: full_unselected
     selection_evidence: Synthetic schema fixture; no participant data.
   - source_id: block_1
-    file: ../../../discovery/spec-v2/examples/paired/proteomics.tsv
+    file: ../data/paired/proteomics.tsv
     format: tsv
     role: measurement_matrix
     selection_history: full_unselected
     selection_evidence: Synthetic schema fixture; no outcome-based selection.
 metadata:
-  file: ../../../discovery/spec-v2/examples/paired/metadata.tsv
+  file: ../data/paired/metadata.tsv
   sample_id: sample_id
   subject_id: subject
   column_types:
@@ -31,7 +31,7 @@ blocks:
     name: Synthetic paired proteome
     profile: proteomics
     profile_spec_ref: null
-    file: ../../../discovery/spec-v2/examples/paired/proteomics.tsv
+    file: ../data/paired/proteomics.tsv
     feature_id_column: feature_id
     id_namespace: synthetic
     feature_metadata: null
