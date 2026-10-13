@@ -33,8 +33,23 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "task": "triomics-implement-5",
+      "packet": "B-T05",
+      "model": "grok-4.7",
+      "worktree": ".worktrees/a-t01-repair",
+      "base_commit": "bded42a",
+      "phase": "implement"
+    }
+  ],
   "orchestration_events": [
+    {
+      "event": "continue_from_b_t05",
+      "date": "2026-10-12",
+      "workflow": "triomics-implement-5",
+      "disposition": "B-T04 stays blocked. Centered and raw ordinary fits both reject 23/400 on the one-cell pattern, upper bound 0.08048. DEqMS 1.30.0 is installed. The next run starts at B-T05, which depends on B-T01 and B-T03."
+    },
     {
       "event": "b_t02_b_t03_b_t08_verified_b_t04_blocked",
       "date": "2026-10-12",
