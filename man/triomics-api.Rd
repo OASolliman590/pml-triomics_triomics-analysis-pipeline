@@ -79,8 +79,8 @@ The simulator deliberately has no seed argument. Stage A orchestration must
 set \code{options("triomics.execution_context")} to a list containing one
 integer \code{seed}, one non-empty \code{study_id}, and the recorded RNG kinds
 \code{Mersenne-Twister}, \code{Inversion}, and \code{Rejection}. The returned
-truth record includes the supplied seed and study identifier so the synthetic
-study can be replayed.
+truth record includes the supplied seed, while the study record includes the
+study identifier, so the synthetic study can be replayed.
 }
 \seealso{\code{system.file("exec", "triomics", package = "triomics")}}
 \examples{
