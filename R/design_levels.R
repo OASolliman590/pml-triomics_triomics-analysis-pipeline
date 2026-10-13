@@ -479,9 +479,9 @@ resolve_analysis <- triomics_resolve_analysis
 
 triomics_b02_rebind <- function(envir, name, value) {
   if (!exists(name, envir = envir, inherits = FALSE)) return(invisible(FALSE))
-  if (bindingIsLocked(name, envir)) unlockBinding(name, envir)
+  if (base::bindingIsLocked(name, envir)) base::unlockBinding(name, envir)
   assign(name, value, envir = envir)
-  try(lockBinding(name, envir), silent = TRUE)
+  try(base::lockBinding(name, envir), silent = TRUE)
   invisible(TRUE)
 }
 
@@ -493,7 +493,9 @@ triomics_b02_dispatch_fit <- function(original, parent) {
     if (isTRUE(is.list(resolved_analysis) && identical(resolved_analysis$lane, "b_t02"))) {
       triomics_b02_fit(resolved_analysis, statistics_spec)
     } else {
-      b_t02_original(resolved_analysis, statistics_spec)
+      get("b_t02_original", envir = environment(), inherits = TRUE)(
+        resolved_analysis, statistics_spec
+      )
     }
   }
   environment(dispatch) <- env

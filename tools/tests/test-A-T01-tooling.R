@@ -80,6 +80,21 @@ run_case("native package checking derives names and preserves logs", function() 
   assert_true(file.exists(file.path(output, "check.log")), "check.log was not preserved.")
 })
 
+run_case("native package checking never archives repository history", function() {
+  root <- new_check_fixture()
+  output <- tempfile("triomics-check-history-")
+  dir.create(file.path(root, ".git", "objects"), recursive = TRUE)
+  writeLines("must not ship", file.path(root, ".git", "objects", "sentinel"))
+  on.exit(unlink(c(root, output), recursive = TRUE), add = TRUE)
+  result <- run_package_check(root, output)
+  tarball <- file.path(output, "fixturecheck_0.1.0.tar.gz")
+  assert_true(status_code(result) == 0L, paste(result, collapse = "\n"))
+  assert_true(file.exists(tarball), "The package-check tarball was not created.")
+  members <- utils::untar(tarball, list = TRUE)
+  assert_true(!any(grepl("(^|/)\\.git($|/)", members)),
+              "The package archive contains repository history.")
+})
+
 run_case("native package checking fails on an undisposed package warning", function() {
   root <- new_check_fixture(warn_on_load = TRUE)
   output <- tempfile("triomics-check-warning-")
@@ -153,4 +168,4 @@ run_case("A-T08 profile extensions remain registry-driven", function() {
               "A-T08 source hard-codes the fourth or fifth profile name.")
 })
 
-cat("Repository-only tooling checks passed: 5 cases.\n")
+cat("Repository-only tooling checks passed: 6 cases.\n")

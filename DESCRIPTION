@@ -11,6 +11,10 @@ Imports:
     jsonlite,
     jsonvalidate,
     limma,
+    methods,
+    MultiAssayExperiment,
+    S4Vectors,
+    SummarizedExperiment,
     yaml
 Suggests:
     BiocManager,

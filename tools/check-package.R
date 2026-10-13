@@ -38,6 +38,24 @@ capture_native <- function(command, args, log_path) {
   list(status = as.integer(status), warnings = warnings, output = as.character(output))
 }
 
+stage_package_source <- function(root, work, package) {
+  source_dir <- file.path(work, paste0(package, "-source"))
+  dir.create(source_dir)
+  entries <- list.files(root, all.files = TRUE, no.. = TRUE, full.names = FALSE)
+  prefixed <- file.path(package, entries)
+  excluded <- tools:::inRbuildignore(prefixed, root)
+  entries <- entries[!excluded]
+  for (entry in entries) {
+    copied <- file.copy(
+      file.path(root, entry), source_dir,
+      recursive = dir.exists(file.path(root, entry)),
+      copy.date = TRUE
+    )
+    if (!isTRUE(copied)) stop("Could not stage package source entry: ", entry, call. = FALSE)
+  }
+  source_dir
+}
+
 main <- function(args = commandArgs(trailingOnly = TRUE)) {
   options <- parse_args(args, default_root)
   description_path <- file.path(options$root, "DESCRIPTION")
@@ -69,11 +87,12 @@ main <- function(args = commandArgs(trailingOnly = TRUE)) {
     setwd(old_wd)
     unlink(work, recursive = TRUE)
   }, add = TRUE)
+  staged_root <- stage_package_source(options$root, work, package)
   setwd(work)
   command_prefix <- if (.Platform$OS.type == "windows") character() else "CMD"
   build <- capture_native(
     rcmd,
-    c(command_prefix, "build", "--no-build-vignettes", shQuote(options$root)),
+    c(command_prefix, "build", "--no-build-vignettes", shQuote(staged_root)),
     file.path(options$output, "build.log")
   )
   built <- file.path(work, tarball_name)

@@ -1065,7 +1065,9 @@ triomics_b03_dispatch_fit <- function(original, parent) {
     if (isTRUE(is.list(resolved_analysis) && identical(resolved_analysis$lane, "b_t03"))) {
       triomics_b03_fit(resolved_analysis, statistics_spec)
     } else {
-      b_t03_original(resolved_analysis, statistics_spec)
+      get("b_t03_original", envir = environment(), inherits = TRUE)(
+        resolved_analysis, statistics_spec
+      )
     }
   }
   environment(dispatch) <- env
