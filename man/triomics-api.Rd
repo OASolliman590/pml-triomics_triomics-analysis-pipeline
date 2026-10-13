@@ -74,5 +74,33 @@ stage B execution summary.
 \code{resolve_analysis} and \code{fit_block_models} are aliases for their
 \code{triomics_} counterparts. These interfaces enforce the frozen analysis
 contracts and do not infer undeclared scientific choices.
+
+The simulator deliberately has no seed argument. Stage A orchestration must
+set \code{options("triomics.execution_context")} to a list containing one
+integer \code{seed}, one non-empty \code{study_id}, and the recorded RNG kinds
+\code{Mersenne-Twister}, \code{Inversion}, and \code{Rejection}. The returned
+truth record includes the supplied seed and study identifier so the synthetic
+study can be replayed.
 }
 \seealso{\code{system.file("exec", "triomics", package = "triomics")}}
+\examples{
+old_context <- getOption("triomics.execution_context")
+options(triomics.execution_context = list(
+  seed = 7L,
+  study_id = "documented-synthetic-example",
+  rng_kind = "Mersenne-Twister",
+  normal_kind = "Inversion",
+  sample_kind = "Rejection"
+))
+simulated <- simulate_study(
+  n_subjects = 4L,
+  n_features = c(proteome = 2L, metabolome = 2L),
+  design = "two_group",
+  effect_size = 1,
+  prop_affected = 0.5,
+  missingness = 0,
+  shared_factor_strength = 0.2
+)
+simulated$truth$seed
+options(triomics.execution_context = old_context)
+}
