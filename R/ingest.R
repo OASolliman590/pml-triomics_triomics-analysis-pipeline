@@ -682,6 +682,10 @@ triomics_execute_stage_a <- function(config_path, output) {
   }
   config <- triomics_read_config(config_path)
   ingested <- triomics_ingest_configured_study(config, config_path)
+  if (isTRUE(config$clinical$enabled)) {
+    clinical_bundle <- triomics_ingest_clinical(config, config_path, ingested$sample_registry)
+    triomics_write_clinical_artifacts(clinical_bundle, output)
+  }
   payload <- list(
     schema_version = "2.0",
     study_id = config$study_id,

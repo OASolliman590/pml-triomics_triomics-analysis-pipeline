@@ -1,0 +1,2 @@
+subject_id	sample_id	visit_id	specimen	time	time_unit	scope	source_row	glucose
+SYN_SUBJECT_01	SYN_01	VISIT_01	synthetic_specimen	2026-09-20	day	visit	1	5.4

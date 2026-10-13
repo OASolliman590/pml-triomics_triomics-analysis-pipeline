@@ -191,9 +191,9 @@ analyses:
     completeness: strict
 clinical:
   enabled: true
-  dictionary_file: null
-  observations_file: null
-  links_file: null
+  dictionary_file: ../data/clinical/dictionary.tsv
+  observations_file: ../data/clinical/observations.tsv
+  links_file: ../data/clinical/links.tsv
   objectives:
     - objective_id: glucose_between
       analysis_id: synthetic_primary

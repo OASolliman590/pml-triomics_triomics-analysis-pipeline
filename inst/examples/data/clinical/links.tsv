@@ -1,0 +1,2 @@
+link_id	subject_id	visit_id	sample_id	cardinality	match_rule
+SYN_LINK_01	SYN_SUBJECT_01	VISIT_01	SYN_01	one_to_one	exact_sample

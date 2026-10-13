@@ -478,3 +478,10 @@ testthat::test_that("A-T09-AC4 disabled clinical does not ingest or fit supplied
   expect_code(triomics_ingest_clinical(config, config_path, data.frame(sample_id = "SYN_01", stringsAsFactors = FALSE)),
               "A_CLINICAL_DEFINITION_UNRESOLVED")
 })
+
+testthat::test_that("A-T09 Stage A writes clinical artifacts for an enabled clinical ticket", {
+  config <- triomics_test_resource("examples", "tickets", "A-T09.yaml")
+  output <- tempfile("a-t09-stage-a-")
+  triomics_execute_stage_a(config, output)
+  testthat::expect_true(file.exists(file.path(output, "clinical", "observations.json")))
+})
