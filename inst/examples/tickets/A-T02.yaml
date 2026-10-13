@@ -3,25 +3,25 @@ study_id: triomics_a_t02_fixture
 data_class: synthetic
 sources:
   - source_id: sample_metadata
-    file: ../../../discovery/spec-v2/examples/independent/metadata.tsv
+    file: ../data/independent/metadata.tsv
     format: tsv
     role: sample_metadata
     selection_history: full_unselected
     selection_evidence: Synthetic schema fixture; no participant data.
   - source_id: block_1
-    file: ../../../discovery/spec-v2/examples/independent/proteomics.tsv
+    file: ../data/independent/proteomics.tsv
     format: tsv
     role: measurement_matrix
     selection_history: full_unselected
     selection_evidence: Synthetic schema fixture; no outcome-based selection.
   - source_id: block_2
-    file: ../../../discovery/spec-v2/examples/independent/metabolomics.tsv
+    file: ../data/independent/metabolomics.tsv
     format: tsv
     role: measurement_matrix
     selection_history: full_unselected
     selection_evidence: Synthetic schema fixture; no outcome-based selection.
 metadata:
-  file: ../../../discovery/spec-v2/examples/independent/metadata.tsv
+  file: ../data/independent/metadata.tsv
   sample_id: sample_id
   subject_id: null
   column_types:
@@ -36,7 +36,7 @@ blocks:
     name: Synthetic proteome
     profile: proteomics
     profile_spec_ref: null
-    file: ../../../discovery/spec-v2/examples/independent/proteomics.tsv
+    file: ../data/independent/proteomics.tsv
     feature_id_column: feature_id
     id_namespace: synthetic
     feature_metadata: null
@@ -90,7 +90,7 @@ blocks:
     name: Synthetic metabolome
     profile: metabolomics
     profile_spec_ref: null
-    file: ../../../discovery/spec-v2/examples/independent/metabolomics.tsv
+    file: ../data/independent/metabolomics.tsv
     feature_id_column: feature_id
     id_namespace: synthetic
     feature_metadata: null

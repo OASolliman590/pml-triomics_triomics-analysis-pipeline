@@ -506,7 +506,7 @@ testthat::test_that("rank sensitivity stays a separate Wilcoxon result", {
 })
 
 testthat::test_that("the stage B fixture envelope matches limma on predecessor matrices", {
-  config_path <- testthat::test_path("..", "..", "inst", "examples", "tickets", "B-T01.yaml")
+  config_path <- triomics_test_resource("examples", "tickets", "B-T01.yaml")
   output <- tempfile("b-t01-stage-")
   dir.create(output)
   written <- triomics_execute_stage_b(config_path, output)

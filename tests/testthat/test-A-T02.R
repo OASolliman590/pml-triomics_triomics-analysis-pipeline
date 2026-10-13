@@ -457,16 +457,13 @@ testthat::test_that("A-T02-AC2 reordered columns, leading zeros, and duplicate l
   write_tsv(duplicate_cols, c("feature_id", "001", "001"), list(c("A", "1", "2")))
   expect_code(ingest_one(duplicate_cols, "001"), "A_ID_DUPLICATE_SAMPLE")
 
-  raw <- read_tsv_lines(testthat::test_path("..", "..", "discovery", "spec-v2", "examples",
-                                            "independent", "proteomics.tsv"))
+  raw <- read_tsv_lines(triomics_test_resource("examples", "data", "independent", "proteomics.tsv"))
   reversed <- tempfile(fileext = ".tsv")
   order_rev <- c(1L, rev(seq_along(raw$header)[-1L]))
   write_tsv(reversed, raw$header[order_rev], lapply(raw$rows, function(row) row[order_rev]))
-  meta <- read_tsv_lines(testthat::test_path("..", "..", "discovery", "spec-v2", "examples",
-                                             "independent", "metadata.tsv"))
+  meta <- read_tsv_lines(triomics_test_resource("examples", "data", "independent", "metadata.tsv"))
   sample_ids <- vapply(meta$rows, `[[`, character(1), 1L)
-  original <- ingest_one(testthat::test_path("..", "..", "discovery", "spec-v2", "examples",
-                                             "independent", "proteomics.tsv"),
+  original <- ingest_one(triomics_test_resource("examples", "data", "independent", "proteomics.tsv"),
                          sample_ids, block_id = "block_1")
   permutated <- ingest_one(reversed, sample_ids, block_id = "block_1")
   testthat::expect_identical(original$assays$block_1, permutated$assays$block_1)
@@ -681,11 +678,10 @@ testthat::test_that("A-T02-AC4 masks, selection, and structural absence stay dis
 })
 
 testthat::test_that("A-T02 stage A ingest uses predecessor fixtures without a checkpoint", {
-  config_path <- testthat::test_path("..", "..", "inst", "examples", "tickets", "A-T02.yaml")
+  config_path <- triomics_test_resource("examples", "tickets", "A-T02.yaml")
   config <- triomics_read_config(config_path)
   ingested <- triomics_ingest_configured_study(config, config_path)
-  raw <- read_tsv_lines(testthat::test_path("..", "..", "discovery", "spec-v2", "examples",
-                                            "independent", "proteomics.tsv"))
+  raw <- read_tsv_lines(triomics_test_resource("examples", "data", "independent", "proteomics.tsv"))
   expected <- as.numeric(raw$rows[[1L]][[match("SYN_12", raw$header)]])
   key <- triomics_feature_key(config$study_id, "block_1", "1")
   testthat::expect_equal(ingested$assays$block_1[key, "SYN_12"], expected, tolerance = 1e-8)

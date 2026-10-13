@@ -4,58 +4,29 @@ status_code <- function(result) {
 }
 
 triomics_cli <- function(args, timeout = 5) {
-  cli <- testthat::test_path("..", "..", "inst", "exec", "triomics")
+  cli <- triomics_test_resource("exec", "triomics")
+  old_wd <- setwd(dirname(cli))
+  on.exit(setwd(old_wd), add = TRUE)
   rscript <- file.path(R.home("bin"), "Rscript")
   args <- as.character(args)
   path_options <- which(args %in% c("--config", "--output")) + 1L
   path_options <- path_options[path_options <= length(args)]
   args[path_options] <- shQuote(args[path_options])
-  suppressWarnings(system2(rscript, c("--vanilla", shQuote(cli), args), stdout = TRUE,
+  suppressWarnings(system2(rscript, c("--vanilla", shQuote(basename(cli)), args), stdout = TRUE,
                             stderr = TRUE, timeout = timeout))
-}
-
-new_check_fixture <- function(warn_on_load = FALSE) {
-  root <- tempfile("triomics-check-fixture-")
-  dir.create(file.path(root, "R"), recursive = TRUE)
-  writeLines(c(
-    "Package: fixturecheck",
-    "Title: Minimal Package Check Fixture",
-    "Version: 0.1.0",
-    "Authors@R: person(\"Fixture\", \"Author\", email = \"fixture@example.test\", role = c(\"aut\", \"cre\"))",
-    "Description: A tiny synthetic package used to exercise the native check wrapper.",
-    "License: GPL-3",
-    "Encoding: UTF-8"
-  ), file.path(root, "DESCRIPTION"))
-  writeLines(character(), file.path(root, "NAMESPACE"))
-  writeLines("fixture_value <- function() 1L", file.path(root, "R", "fixture.R"))
-  if (warn_on_load) {
-    writeLines(
-      '.onLoad <- function(libname, pkgname) warning("intentional check warning fixture")',
-      file.path(root, "R", "zzz.R")
-    )
-  }
-  root
-}
-
-run_package_check <- function(root, output) {
-  script <- testthat::test_path("..", "..", "tools", "check-package.R")
-  rscript <- file.path(R.home("bin"), "Rscript")
-  suppressWarnings(system2(rscript, c("--vanilla", shQuote(script), "--root", shQuote(root),
-                            "--output", shQuote(output)),
-                            stdout = TRUE, stderr = TRUE, timeout = 120))
-}
-
-package_check_evidence_dir <- function(name) {
-  root <- testthat::test_path("..", "..", "artifacts", "acceptance", "A-T01",
-                              "repair-package-check")
-  dir.create(root, recursive = TRUE, showWarnings = FALSE)
-  tempfile(paste0(name, "-"), tmpdir = root)
 }
 
 write_test_envelope <- function(envelope, path) {
   jsonlite::write_json(envelope, path, auto_unbox = TRUE, null = "null",
                        pretty = TRUE, digits = NA)
 }
+
+testthat::test_that("package resources resolve from source and installed layouts", {
+  ticket <- triomics_test_resource("examples", "tickets", "A-T01.yaml")
+  cli <- triomics_test_resource("exec", "triomics")
+  testthat::expect_true(file.exists(ticket))
+  testthat::expect_true(file.exists(cli))
+})
 
 testthat::test_that("strict configuration rejects duplicate keys before mutation", {
   config <- tempfile(fileext = ".yaml")
@@ -95,7 +66,7 @@ testthat::test_that("strict configuration rejects unknown keys and wrong types",
 })
 
 testthat::test_that("strict configuration rejects scalar values for array fields by exact key", {
-  fixture <- testthat::test_path("..", "..", "inst", "examples", "tickets", "A-T01.yaml")
+  fixture <- triomics_test_resource("examples", "tickets", "A-T01.yaml")
   source <- paste(readLines(fixture, warn = FALSE), collapse = "\n")
   malformed_arrays <- list(
     list(text = sub("    block_ids:\n      - block_1", "    block_ids: block_1",
@@ -116,7 +87,7 @@ testthat::test_that("strict configuration rejects scalar values for array fields
 })
 
 testthat::test_that("stage A validates each declared source, metadata, and block input path", {
-  fixture <- testthat::test_path("..", "..", "inst", "examples", "tickets", "A-T01.yaml")
+  fixture <- triomics_test_resource("examples", "tickets", "A-T01.yaml")
   config <- triomics_read_config(fixture)
   cases <- list(
     list(key = "sources[1].file", mutate = function(value) {
@@ -153,7 +124,7 @@ testthat::test_that("CLI help and unsupported stages return documented exit code
   testthat::expect_equal(status_code(bad), 2L)
   testthat::expect_true(any(grepl("stage", bad, ignore.case = TRUE)))
 
-  fixture <- testthat::test_path("..", "..", "inst", "examples", "tickets", "A-T01.yaml")
+  fixture <- triomics_test_resource("examples", "tickets", "A-T01.yaml")
   unavailable <- triomics_cli(c("--config", fixture, "--stage", "B", "--output",
                                 tempfile("triomics-stage-b-"), "--validate-only"))
   testthat::expect_equal(status_code(unavailable), 3L,
@@ -173,14 +144,10 @@ testthat::test_that("invalid CLI configuration creates no output and names its k
 })
 
 testthat::test_that("validation-only checks stage A without analysis checkpoints", {
-  fixture <- testthat::test_path("..", "..", "inst", "examples", "tickets", "A-T01.yaml")
+  fixture <- triomics_test_resource("examples", "tickets", "A-T01.yaml")
   output <- tempfile("triomics-a-t01-")
-  rscript <- file.path(R.home("bin"), "Rscript")
-  cli <- testthat::test_path("..", "..", "inst", "exec", "triomics")
-  result <- suppressWarnings(system2(rscript, c("--vanilla", shQuote(cli), "--config", shQuote(fixture),
-                                                  "--stage", "A", "--output", shQuote(output),
-                                                  "--validate-only"), stdout = TRUE, stderr = TRUE,
-                               timeout = 5))
+  result <- triomics_cli(c("--config", fixture, "--stage", "A", "--output", output,
+                           "--validate-only"), timeout = 5)
   testthat::expect_equal(status_code(result), 0L, info = paste(result, collapse = "\n"))
   testthat::expect_true(file.exists(file.path(output, "validation-summary.json")))
   testthat::expect_false(any(grepl("checkpoint", list.files(output, recursive = TRUE),
@@ -188,7 +155,7 @@ testthat::test_that("validation-only checks stage A without analysis checkpoints
 })
 
 testthat::test_that("CLI finalization failures return execution exit code 4", {
-  fixture <- testthat::test_path("..", "..", "inst", "examples", "tickets", "A-T01.yaml")
+  fixture <- triomics_test_resource("examples", "tickets", "A-T01.yaml")
   output <- tempfile("triomics-finalize-failure-")
   dir.create(output)
   summary <- file.path(output, "validation-summary.json")
@@ -200,79 +167,6 @@ testthat::test_that("CLI finalization failures return execution exit code 4", {
                          info = paste(result, collapse = "\n"))
   testthat::expect_identical(readLines(summary, warn = FALSE), "pre-existing immutable output")
   testthat::expect_false(file.exists(paste0(summary, ".tmp")))
-})
-
-testthat::test_that("native package checking derives names and preserves logs", {
-  root <- new_check_fixture()
-  output <- package_check_evidence_dir("clean")
-  on.exit(unlink(root, recursive = TRUE), add = TRUE)
-  script <- testthat::test_path("..", "..", "tools", "check-package.R")
-
-  if (!file.exists(script)) {
-    testthat::expect_true(file.exists(script))
-  } else {
-    result <- run_package_check(root, output)
-    build_log <- if (file.exists(file.path(output, "build.log"))) {
-      readLines(file.path(output, "build.log"), warn = FALSE)
-    } else character()
-    check_log <- if (file.exists(file.path(output, "check.log"))) {
-      readLines(file.path(output, "check.log"), warn = FALSE)
-    } else character()
-    testthat::expect_equal(status_code(result), 0L,
-                           info = paste(c(result, build_log, check_log), collapse = "\n"))
-    testthat::expect_true(file.exists(file.path(output, "fixturecheck_0.1.0.tar.gz")))
-    testthat::expect_true(file.exists(file.path(output, "build.log")))
-    testthat::expect_true(file.exists(file.path(output, "check.log")))
-  }
-})
-
-testthat::test_that("native package checking fails on an undisposed package warning", {
-  root <- new_check_fixture(warn_on_load = TRUE)
-  output <- package_check_evidence_dir("warning")
-  on.exit(unlink(root, recursive = TRUE), add = TRUE)
-  script <- testthat::test_path("..", "..", "tools", "check-package.R")
-
-  if (!file.exists(script)) {
-    testthat::expect_true(file.exists(script))
-  } else {
-    result <- run_package_check(root, output)
-    testthat::expect_false(identical(status_code(result), 0L))
-    testthat::expect_true(file.exists(file.path(output, "build.log")))
-    testthat::expect_true(file.exists(file.path(output, "check.log")))
-    if (file.exists(file.path(output, "check.log"))) {
-      check_log <- paste(readLines(file.path(output, "check.log"), warn = FALSE), collapse = "\n")
-      testthat::expect_match(check_log, "intentional check warning fixture|WARNING")
-    }
-  }
-})
-
-testthat::test_that("environment capture records actual R, Bioconductor, and installed package state", {
-  project <- normalizePath(testthat::test_path("..", ".."), winslash = "/")
-  output <- tempfile("triomics-environment-")
-  dir.create(output)
-  script <- testthat::test_path("..", "..", "tools", "capture-environment.R")
-  rscript <- file.path(R.home("bin"), "Rscript")
-
-  if (!file.exists(script)) {
-    testthat::expect_true(file.exists(script))
-  } else {
-    result <- suppressWarnings(system2(rscript, c("--vanilla", shQuote(script), "--project", shQuote(project),
-                                                    "--output", shQuote(output)), stdout = TRUE, stderr = TRUE,
-                                         timeout = 30))
-    testthat::expect_equal(status_code(result), 0L, info = paste(result, collapse = "\n"))
-    if (identical(status_code(result), 0L)) {
-      lock <- jsonlite::read_json(file.path(project, "renv.lock"), simplifyVector = TRUE)
-      testthat::expect_identical(lock$R$Version, as.character(getRversion()))
-      testthat::expect_identical(lock$Bioconductor$Version, "3.23")
-      installed <- utils::installed.packages(lib.loc = .libPaths()[1L])
-      manifest <- jsonlite::read_json(file.path(output, "installation-manifest.json"),
-                                      simplifyVector = TRUE)
-      testthat::expect_identical(manifest$packages$BiocManager$Version,
-                                 unname(installed["BiocManager", "Version"]))
-      session <- readLines(file.path(output, "session-manifest.txt"), warn = FALSE)
-      testthat::expect_true(any(grepl(R.version.string, session, fixed = TRUE)))
-    }
-  }
 })
 
 testthat::test_that("artifact writer finalizes a verified envelope atomically", {

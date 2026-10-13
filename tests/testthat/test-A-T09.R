@@ -124,7 +124,7 @@ objective_of <- function(objective_id, predictor_ref) {
 }
 
 predecessor_study <- function() {
-  config_path <- testthat::test_path("..", "..", "inst", "examples", "tickets", "A-T02.yaml")
+  config_path <- triomics_test_resource("examples", "tickets", "A-T02.yaml")
   config <- triomics_read_config(config_path)
   triomics_ingest_configured_study(config, config_path)
 }

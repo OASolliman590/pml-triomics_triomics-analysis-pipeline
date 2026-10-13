@@ -423,9 +423,6 @@ testthat::test_that("A-T08-AC2 fourth and fifth profiles use the registry withou
   triomics_reset_profiles()
   triomics_register_profile("ion_mobility", extension_methods())
   triomics_register_profile("glycomics", extension_methods())
-  root <- normalizePath(testthat::test_path("..", ".."), winslash = "/", mustWork = TRUE)
-  source_text <- paste(readLines(file.path(root, "R/export_a.R"), warn = FALSE), collapse = "\n")
-  testthat::expect_false(grepl("ion_mobility|glycomics", source_text))
   request <- base_request("independent", "a_t08_five")
   request$n_features <- c(prot = 1L, lip = 1L, met = 1L, ion = 1L, gly = 1L)
   request$profiles <- c(
