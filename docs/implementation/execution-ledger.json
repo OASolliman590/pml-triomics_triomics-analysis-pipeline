@@ -33,37 +33,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "role": "astra_focused_milestone_reviewer",
-      "milestone": "M3/G3",
-      "client_thread_id": "client-new-thread:c8c198e2-31ab-4754-aa7a-c5d69903af32",
-      "thread_id": "01a13a4b-9f1f-7e90-ad6a-2d9d06256cdb",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "snapshot_commit": "af323f80dc91fd0f70e1ca9fc7664ab3956aaea5",
-      "status": "active"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "g3_focused_review_active",
+    "status": "g3_accepted_ready_for_next_legal_packet",
     "last_reconciled": "2026-10-14",
-    "active_handoffs": [
-      {
-        "role": "astra_focused_milestone_reviewer",
-        "milestone": "M3/G3",
-        "client_thread_id": "client-new-thread:c8c198e2-31ab-4754-aa7a-c5d69903af32",
-        "thread_id": "01a13a4b-9f1f-7e90-ad6a-2d9d06256cdb",
-        "snapshot_commit": "af323f80dc91fd0f70e1ca9fc7664ab3956aaea5",
-        "allowed_next_transition": "astra_verdict_to_sol_gate_disposition",
-        "wait_cursor": null,
-        "status": "active"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Focused Astra low re-review is active on immutable clean M3 snapshot af323f8 after 885 focused assertions and package Status: OK. No downstream packet may start before Sol records the verdict."
+    "disposition": "Focused Astra low re-review passed on immutable M3 snapshot af323f8. Sol accepted G3. The next dependency-legal Stage B packet may be dispatched; B-T04 remains independently blocked."
   },
   "orchestration_events": [
+    {
+      "event": "g3_focused_astra_rereview_passed_gate_accepted",
+      "date": "2026-10-14",
+      "thread_id": "01a13a4b-9f1f-7e90-ad6a-2d9d06256cdb",
+      "wait_cursor": "27acbcb1-ac84-4a42-ad50-91056c6f17ff:1",
+      "snapshot_commit": "af323f80dc91fd0f70e1ca9fc7664ab3956aaea5",
+      "review_ref": "docs/implementation/reviews/M3-astra-review.md",
+      "verdict": "pass",
+      "independent_assertions_passed": 580,
+      "findings_addressed": ["G3-01", "G3-02", "G3-03"],
+      "disposition": "Sol accepted G3 as a synthetic-software milestone. Real-data scientific validation remains outstanding and kNN/RF remain unavailable in v2."
+    },
     {
       "event": "g3_focused_astra_rereview_dispatched",
       "date": "2026-10-14",
@@ -405,17 +395,17 @@
       "integration_commit": "e691ab9"
     },
     "A-T04": {
-      "status": "sol_verified",
+      "status": "accepted",
       "attempts": 1,
       "commit": "ddc0ae5",
-      "acceptance_refs": [],
-      "blockers": [
-        "milestone review not yet run"
+      "acceptance_refs": [
+        "docs/implementation/reviews/M3-astra-review.md"
       ],
+      "blockers": [],
       "integration_commit": "2e4971e"
     },
     "A-T05": {
-      "status": "change_accepted_integrated_pending_g3",
+      "status": "accepted",
       "attempts": 1,
       "repair_attempts": 2,
       "change_attempts": 1,
@@ -428,49 +418,46 @@
       "acceptance_refs": [
         "docs/implementation/reviews/A-T05-G3-repair1-review.md",
         "docs/implementation/reviews/A-T05-G3-repair2-review.md",
-        "docs/implementation/reviews/A-T05-G3-001-review.md"
+        "docs/implementation/reviews/A-T05-G3-001-review.md",
+        "docs/implementation/reviews/M3-astra-review.md"
       ],
-      "blockers": [
-        "packet change accepted, but G3 focused Astra re-review is pending"
-      ],
+      "blockers": [],
       "integration_commit": "a194a6b"
     },
     "A-T06": {
-      "status": "repair_1_accepted_integrated_pending_g3",
+      "status": "accepted",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "ddc0ae5",
       "candidate_commit": "6903639f86cc54a3c6b1e4c2cde9b8ef84aefd36",
       "acceptance_refs": [
-        "docs/implementation/reviews/A-T06-G3-repair1-review.md"
+        "docs/implementation/reviews/A-T06-G3-repair1-review.md",
+        "docs/implementation/reviews/M3-astra-review.md"
       ],
-      "blockers": [
-        "packet repair accepted, but G3 is blocked by A-T05"
-      ],
+      "blockers": [],
       "integration_commit": "62b2e7d"
     },
     "A-T07": {
-      "status": "sol_verified",
+      "status": "accepted",
       "attempts": 1,
       "commit": "ddc0ae5",
-      "acceptance_refs": [],
-      "blockers": [
-        "milestone review not yet run"
+      "acceptance_refs": [
+        "docs/implementation/reviews/M3-astra-review.md"
       ],
+      "blockers": [],
       "integration_commit": "2e4971e"
     },
     "A-T08": {
-      "status": "repair_1_accepted_integrated_pending_g3",
+      "status": "accepted",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "ddc0ae5",
       "candidate_commit": "a8761b0d4589b8dd5816c0d36b502b99b056479f",
       "acceptance_refs": [
-        "docs/implementation/reviews/A-T08-G3-repair1-review.md"
+        "docs/implementation/reviews/A-T08-G3-repair1-review.md",
+        "docs/implementation/reviews/M3-astra-review.md"
       ],
-      "blockers": [
-        "packet repair accepted, but G3 is blocked by A-T05"
-      ],
+      "blockers": [],
       "integration_commit": "610a732"
     },
     "B-T01": {
@@ -725,11 +712,13 @@
       "integration_commit": "e691ab9c9d798e650a73802e98bac78b9598bfd9"
     },
     "M3": {
-      "status": "focused_astra_rereview_active",
+      "status": "accepted",
       "review_ref": "docs/implementation/reviews/M3-astra-review.md",
       "commit": "af323f80dc91fd0f70e1ca9fc7664ab3956aaea5",
       "integration_commit": "a194a6b",
       "blocking_packet": null,
+      "astra_thread_id": "01a13a4b-9f1f-7e90-ad6a-2d9d06256cdb",
+      "focused_review_verdict": "pass",
       "accepted_repair_integration_commits": [
         "610a732",
         "62b2e7d"

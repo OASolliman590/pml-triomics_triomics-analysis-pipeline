@@ -49,3 +49,32 @@ self-qualify kNN/RF without an authoritative approval source. Both A-T05
 candidates remain unintegrated. G3 is therefore blocked and did not enter the one
 permitted focused Astra re-review. A-T04 and A-T07 remain Sol-verified but cannot
 be accepted while the milestone is blocked.
+
+## Focused re-review after G3-001
+
+Date: 2026-10-14
+Reviewer role: fresh Astra low, read-only
+Immutable snapshot: `af323f80dc91fd0f70e1ca9fc7664ab3956aaea5`
+Verdict: `PASS`
+
+- **G3-01 — addressed.** Referenced state existence, structure, hashes and
+  identity are checked before reuse. Missing, corrupt, malformed and incomplete
+  state probes refresh the bounded state/handoff/index while unaffected state is
+  reused.
+- **G3-02 — addressed.** Weighted carbon and double-bond endpoints carry index
+  quantities and property-count units; saturation ratio is dimensionless.
+- **G3-03 — addressed under change record G3-001.** Metabolomic kNN/RF always
+  return `unavailable / qualification_unavailable_in_v2`; caller-supplied
+  qualification cannot activate them. `none` and fold-local training median
+  remain executable.
+
+Astra independently reran 580 assertions with no failures, warnings or skips,
+plus both malformed-state probes. It found exactly seven allowlisted A-owned
+files in the focused diff, no Stage B changes, and matching frozen-file
+checksums. The full-suite, CLI and package-check results remained supplied Sol
+evidence rather than independently rerun evidence.
+
+Nonblocking scientific limits remain explicit: Omar's studies were not used,
+real-data scientific validation is absent, and advanced imputation qualification
+is intentionally unavailable. Sol therefore accepts G3 as a software milestone,
+not as evidence of biological validity.
