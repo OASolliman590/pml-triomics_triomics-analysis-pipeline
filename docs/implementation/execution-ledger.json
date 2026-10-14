@@ -70,14 +70,14 @@
         "packet": "B-T05",
         "thread_id": "01a13a51-1b06-7040-8341-3405f4d99166",
         "allowed_next_transition": "worker_receipt_to_fresh_sol_review",
-        "wait_cursor": null,
+        "wait_cursor": "3aa7fd42-6009-4fac-a466-5d7c820f02d7:7",
         "status": "active"
       },
       {
         "packet": "B-T06",
         "thread_id": "01a13a51-245d-7f03-9caa-9418378fc3a0",
         "allowed_next_transition": "worker_receipt_to_fresh_sol_review",
-        "wait_cursor": null,
+        "wait_cursor": "5543c6ab-7fd7-47ee-aa9f-1370f865a121:5",
         "status": "active"
       },
       {
@@ -85,7 +85,7 @@
         "client_thread_id": "client-new-thread:7d2e5b4a-8fd2-494a-8294-a0eb987d13a4",
         "thread_id": "01a13a51-2ef1-7ad3-aa40-fc7611d98b7e",
         "allowed_next_transition": "worker_receipt_to_fresh_sol_review",
-        "wait_cursor": null,
+        "wait_cursor": "748a59c0-258b-4eb5-a2ee-8c05ccabe6ea:4",
         "status": "active"
       }
     ],
