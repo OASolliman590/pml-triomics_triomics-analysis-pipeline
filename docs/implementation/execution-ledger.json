@@ -35,15 +35,6 @@
   },
   "active_workers": [
     {
-      "role": "luna_packet_repairer",
-      "packet": "B-T05",
-      "thread_id": "01a13a51-1b06-7040-8341-3405f4d99166",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "candidate_commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
-      "status": "active"
-    },
-    {
       "role": "sol_cross_cutting_reviewer",
       "packet": "B-T09",
       "client_thread_id": "client-new-thread:353030f6-675b-4f04-b222-92e80b398f64",
@@ -59,14 +50,6 @@
     "last_reconciled": "2026-10-14",
     "active_handoffs": [
       {
-        "packet": "B-T05",
-        "thread_id": "01a13a51-1b06-7040-8341-3405f4d99166",
-        "candidate_commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
-        "allowed_next_transition": "repair_receipt_to_single_focused_sol_rereview",
-        "wait_cursor": "3aa7fd42-6009-4fac-a466-5d7c820f02d7:44",
-        "status": "active"
-      },
-      {
         "packet": "B-T09-registration",
         "client_thread_id": "client-new-thread:353030f6-675b-4f04-b222-92e80b398f64",
         "thread_id": "01a13a74-71bb-7901-a86d-27b2263df49a",
@@ -77,9 +60,21 @@
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T05 targeted repair 1 remains active. B-T09 packet repair is integrated and its Sol-owned registration is under fresh independent cross-cutting review. B-T06 and B-T04 remain blocked."
+    "disposition": "B-T05, B-T06 and B-T04 are blocked after their bounded review paths. B-T09 packet repair is integrated and its Sol-owned registration remains under fresh independent cross-cutting review."
   },
   "orchestration_events": [
+    {
+      "event": "b_t05_focused_rereview_blocked",
+      "date": "2026-10-14",
+      "worker_thread_id": "01a13a51-1b06-7040-8341-3405f4d99166",
+      "review_thread_id": "01a13a60-0604-77b3-a42b-cbbc951ec81c",
+      "candidate_commit": "efd830884b894d79441af5a948fa3b600ff8e4db",
+      "verdict": "changes_required",
+      "tests_passed": 63,
+      "adjacent_tests_passed": 516,
+      "blocking_finding": "Missing count metadata bypasses B-T05 handling, suppressing requested method identity, named unavailability and explicit limma fallback for level requests.",
+      "disposition": "The one permitted focused re-review is exhausted. B-T05 remains unintegrated and blocked; shared path, dependency and serialization work cannot repair the packet dispatch gate."
+    },
     {
       "event": "b_t09_cross_cutting_registration_review_dispatched",
       "date": "2026-10-14",
@@ -682,12 +677,15 @@
       ]
     },
     "B-T05": {
-      "status": "repair_1_active",
+      "status": "blocked",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
+      "repair_candidate_commit": "efd830884b894d79441af5a948fa3b600ff8e4db",
       "acceptance_refs": [],
-      "blockers": []
+      "blockers": [
+        "AC4 remains unmet after the single focused re-review: missing count metadata bypasses B-T05 and suppresses the requested method identity, named unavailability and explicit limma fallback for level requests."
+      ]
     },
     "B-T06": {
       "status": "blocked",
