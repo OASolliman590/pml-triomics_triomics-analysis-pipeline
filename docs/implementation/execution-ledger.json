@@ -35,14 +35,14 @@
   },
   "active_workers": [
     {
-      "role": "luna",
+      "role": "sol_reviewer",
       "packet": "A-T05/G3-001",
-      "client_thread_id": "client-new-thread:375945ff-63db-4c43-8070-623a622ff1fc",
-      "thread_id": "01a13a31-e30a-7321-8b3f-a13c009a30e9",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "client_thread_id": "client-new-thread:a913f744-efe1-4484-8cb9-2a87205e44cb",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "base_commit": "11e3cf7",
-      "status": "active"
+      "candidate_commit": "e969279d356c1891204e9eae5be9c3d94d44c4df",
+      "status": "worktree_preparing"
     }
   ],
   "orchestration_control": {
@@ -50,20 +50,40 @@
     "last_reconciled": "2026-10-14",
     "active_handoffs": [
       {
-        "role": "luna_implementer",
+        "role": "sol_reviewer",
         "packet": "A-T05/G3-001",
-        "client_thread_id": "client-new-thread:375945ff-63db-4c43-8070-623a622ff1fc",
-        "thread_id": "01a13a31-e30a-7321-8b3f-a13c009a30e9",
+        "client_thread_id": "client-new-thread:a913f744-efe1-4484-8cb9-2a87205e44cb",
         "base_commit": "11e3cf7",
-        "allowed_next_transition": "worker_result_to_fresh_sol_review",
-        "wait_cursor": "c14f54c0-7540-4d7c-aa13-b06cfb98b509:6",
-        "status": "active"
+        "candidate_commit": "e969279d356c1891204e9eae5be9c3d94d44c4df",
+        "allowed_next_transition": "review_verdict_to_integration_or_bounded_repair",
+        "wait_cursor": null,
+        "status": "worktree_preparing"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
     "disposition": "Omar approved Option 1 in G3-001: kNN/RF stay fail-closed in v2 while none and training-median remain executable. One bounded change implementation and affected reviews are authorized; no worker is active yet."
   },
   "orchestration_events": [
+    {
+      "event": "a_t05_option1_worker_completed_review_dispatched",
+      "date": "2026-10-14",
+      "worker_thread_id": "01a13a31-e30a-7321-8b3f-a13c009a30e9",
+      "review_client_thread_id": "client-new-thread:a913f744-efe1-4484-8cb9-2a87205e44cb",
+      "candidate_commit": "e969279d356c1891204e9eae5be9c3d94d44c4df",
+      "tests": {
+        "red_exit": 1,
+        "red_failures": 8,
+        "red_passed": 107,
+        "packet_passed": 125,
+        "packet_failures": 0,
+        "packet_skips": 0,
+        "stage_a_cli_exit": 0,
+        "full_suite_passed": 2321,
+        "full_suite_failures": 0,
+        "full_suite_skips": 0
+      },
+      "disposition": "Worker stopped after one allowlisted code/test/registration change plus a committed local evidence receipt. Fresh Sol 6.1 high review is active; no integration has occurred."
+    },
     {
       "event": "a_t05_option1_luna_dispatched",
       "date": "2026-10-14",
@@ -328,11 +348,12 @@
       "integration_commit": "2e4971e"
     },
     "A-T05": {
-      "status": "authorized_change_implementing",
+      "status": "authorized_change_review_pending",
       "attempts": 1,
       "repair_attempts": 2,
       "change_attempts": 1,
       "change_record_ref": "docs/implementation/change-records/G3-001-metabolomics-imputation-fail-closed.md",
+      "change_candidate_commit": "e969279d356c1891204e9eae5be9c3d94d44c4df",
       "commit": "ddc0ae5",
       "candidate_commit": "4c51fcc",
       "final_candidate_commit": "d21f6b0",
