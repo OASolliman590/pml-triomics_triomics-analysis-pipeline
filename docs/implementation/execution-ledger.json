@@ -43,10 +43,10 @@
     },
     {
       "packet": "A-T06",
-      "thread_id": "01a1394a-7fba-76c1-a7f9-43fb2c26ae4a",
-      "role": "luna_max",
-      "worktree": "/Users/megastore/.codex/worktrees/e4b8/PML MultiOmics Analysis Pipeline",
-      "attempt": "repair_1"
+      "thread_id": "01a13952-7a9b-7b21-ade4-df1c943fa558",
+      "role": "sol_6_1_high_reviewer",
+      "worktree": "/Users/megastore/.codex/worktrees/0c4c/PML MultiOmics Analysis Pipeline",
+      "attempt": "repair_1_review"
     },
     {
       "packet": "A-T08",
@@ -68,11 +68,11 @@
         "next_transition": "Read the packet verdict immediately; integrate only if accepted, otherwise use the remaining bounded repair budget."
       },
       {
-        "thread_id": "01a1394a-7fba-76c1-a7f9-43fb2c26ae4a",
-        "role": "luna_max",
+        "thread_id": "01a13952-7a9b-7b21-ade4-df1c943fa558",
+        "role": "sol_6_1_high_reviewer",
         "packet": "A-T06",
-        "snapshot_commit": "d96ca310cea5715f40e2cae72d59a29d411713bb",
-        "next_transition": "Inspect the repair commit and dispatch a fresh Sol 6.1 high packet review."
+        "candidate_commit": "6903639f86cc54a3c6b1e4c2cde9b8ef84aefd36",
+        "next_transition": "Read the packet verdict immediately; integrate only if accepted, otherwise use the remaining bounded repair budget."
       },
       {
         "thread_id": "01a13951-a93c-7622-baf2-cda795f91a0d",
@@ -83,7 +83,7 @@
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "A-T05 and A-T08 repair 1 are under separate fresh Sol 6.1 high reviews; the isolated Luna-max repair_1 worker remains active for A-T06."
+    "disposition": "A-T05, A-T06 and A-T08 repair 1 are under separate fresh Sol 6.1 high packet reviews."
   },
   "orchestration_events": [
     {
@@ -289,10 +289,11 @@
       "integration_commit": "2e4971e"
     },
     "A-T06": {
-      "status": "repair_1_in_progress",
+      "status": "repair_1_review_in_progress",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "ddc0ae5",
+      "candidate_commit": "6903639f86cc54a3c6b1e4c2cde9b8ef84aefd36",
       "acceptance_refs": [],
       "blockers": [
         "G3-02: weighted endpoints and ratios inherit scientifically incorrect quantity/unit labels"
