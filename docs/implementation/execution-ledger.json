@@ -36,10 +36,10 @@
   "active_workers": [
     {
       "packet": "A-T05",
-      "thread_id": "01a13953-4957-7810-b5ff-efc8c9582b38",
-      "role": "luna_max",
-      "worktree": "/Users/megastore/.codex/worktrees/e8a2/PML MultiOmics Analysis Pipeline",
-      "attempt": "repair_2"
+      "thread_id": "01a13960-bdc8-79e3-99d0-a92ced159d16",
+      "role": "sol_6_1_high_reviewer",
+      "worktree": "/Users/megastore/.codex/worktrees/fb29/PML MultiOmics Analysis Pipeline",
+      "attempt": "repair_2_review"
     }
   ],
   "orchestration_control": {
@@ -47,15 +47,15 @@
     "last_reconciled": "2026-10-14",
     "active_handoffs": [
       {
-        "thread_id": "01a13953-4957-7810-b5ff-efc8c9582b38",
-        "role": "luna_max",
+        "thread_id": "01a13960-bdc8-79e3-99d0-a92ced159d16",
+        "role": "sol_6_1_high_reviewer",
         "packet": "A-T05",
-        "base_candidate_commit": "4c51fcca5e0306c83e4aac539414443fd692ebed",
-        "next_transition": "Inspect the final repair commit and dispatch a fresh Sol 6.1 high packet re-review."
+        "candidate_commit": "d21f6b0",
+        "next_transition": "Read the final packet verdict immediately; integrate only if accepted, otherwise mark A-T05/G3 blocked because repair budget is exhausted."
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "A-T06 and A-T08 repairs are accepted and integrated. A-T05 final repair_2 remains active."
+    "disposition": "A-T06 and A-T08 repairs are accepted and integrated. A-T05 final repair_2 is under fresh Sol 6.1 high review."
   },
   "orchestration_events": [
     {
@@ -275,11 +275,12 @@
       "integration_commit": "2e4971e"
     },
     "A-T05": {
-      "status": "repair_2_in_progress",
+      "status": "repair_2_review_in_progress",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "ddc0ae5",
       "candidate_commit": "4c51fcc",
+      "final_candidate_commit": "d21f6b0",
       "acceptance_refs": [
         "docs/implementation/reviews/A-T05-G3-repair1-review.md"
       ],
