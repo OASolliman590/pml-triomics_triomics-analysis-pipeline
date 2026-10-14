@@ -33,15 +33,54 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "role": "astra_focused_milestone_reviewer",
+      "milestone": "M3/G3",
+      "client_thread_id": "client-new-thread:c8c198e2-31ab-4754-aa7a-c5d69903af32",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "snapshot_commit": "af323f80dc91fd0f70e1ca9fc7664ab3956aaea5",
+      "status": "worktree_preparing"
+    }
+  ],
   "orchestration_control": {
-    "status": "g3_snapshot_preparing",
+    "status": "g3_focused_review_active",
     "last_reconciled": "2026-10-14",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "role": "astra_focused_milestone_reviewer",
+        "milestone": "M3/G3",
+        "client_thread_id": "client-new-thread:c8c198e2-31ab-4754-aa7a-c5d69903af32",
+        "snapshot_commit": "af323f80dc91fd0f70e1ca9fc7664ab3956aaea5",
+        "allowed_next_transition": "astra_verdict_to_sol_gate_disposition",
+        "wait_cursor": null,
+        "status": "worktree_preparing"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "A-T05 G3-001 was accepted by fresh Sol 6.1 high review and integrated as a194a6b. Fresh A-T05, Stage A CLI, full-suite and package-check evidence passed. Next: immutable G3 snapshot and focused Astra low re-review."
+    "disposition": "Focused Astra low re-review is active on immutable clean M3 snapshot af323f8 after 885 focused assertions and package Status: OK. No downstream packet may start before Sol records the verdict."
   },
   "orchestration_events": [
+    {
+      "event": "g3_focused_astra_rereview_dispatched",
+      "date": "2026-10-14",
+      "client_thread_id": "client-new-thread:c8c198e2-31ab-4754-aa7a-c5d69903af32",
+      "snapshot_commit": "af323f80dc91fd0f70e1ca9fc7664ab3956aaea5",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "snapshot_tests": {
+        "focused_passed": 885,
+        "failures": 0,
+        "warnings": 0,
+        "skips": 0,
+        "package_check_exit": 0,
+        "package_check_status": "Status: OK",
+        "build_log_sha256": "7cd0863442994d1d7f9dc0b45b33543c8b75ebe16e3f789553d8dac5988b5789",
+        "check_log_sha256": "8e43b0af9a0043a1002f36d9f205397c6b58d12f8b33a79648e2031b0820f2bf"
+      },
+      "disposition": "One allowed focused M3 re-review covers only G3-01, G3-02 and G3-03 on a clean immutable A-only repair diff."
+    },
     {
       "event": "a_t05_option1_accepted_integrated_verified",
       "date": "2026-10-14",
@@ -684,9 +723,9 @@
       "integration_commit": "e691ab9c9d798e650a73802e98bac78b9598bfd9"
     },
     "M3": {
-      "status": "snapshot_preparing_for_focused_rereview",
+      "status": "focused_astra_rereview_active",
       "review_ref": "docs/implementation/reviews/M3-astra-review.md",
-      "commit": "d96ca310cea5715f40e2cae72d59a29d411713bb",
+      "commit": "af323f80dc91fd0f70e1ca9fc7664ab3956aaea5",
       "integration_commit": "a194a6b",
       "blocking_packet": null,
       "accepted_repair_integration_commits": [

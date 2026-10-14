@@ -1,8 +1,8 @@
 # Implementation handover
 
 Run `triomics-20260920-sol-01` is active on branch
-`spec/harden-v2-20260920`. A-T05 G3-001 is integrated and the immutable G3
-focused re-review snapshot is the next transition.
+`spec/harden-v2-20260920`. A-T05 G3-001 is integrated and one focused Astra low
+re-review is active on immutable snapshot `af323f8`.
 
 G0 and G1 remain accepted. G2 is accepted on immutable milestone snapshot
 `8b0754c1ea581ba18c4bb2e7eb862c26eeb625a7` after its one permitted focused
