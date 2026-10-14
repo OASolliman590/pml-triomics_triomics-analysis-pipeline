@@ -33,15 +33,44 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "role": "luna",
+      "packet": "A-T05/G3-001",
+      "client_thread_id": "client-new-thread:375945ff-63db-4c43-8070-623a622ff1fc",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "base_commit": "11e3cf7",
+      "status": "worktree_preparing"
+    }
+  ],
   "orchestration_control": {
     "status": "resuming_authorized_change",
     "last_reconciled": "2026-10-14",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "role": "luna_implementer",
+        "packet": "A-T05/G3-001",
+        "client_thread_id": "client-new-thread:375945ff-63db-4c43-8070-623a622ff1fc",
+        "base_commit": "11e3cf7",
+        "allowed_next_transition": "worker_result_to_fresh_sol_review",
+        "wait_cursor": null,
+        "status": "worktree_preparing"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
     "disposition": "Omar approved Option 1 in G3-001: kNN/RF stay fail-closed in v2 while none and training-median remain executable. One bounded change implementation and affected reviews are authorized; no worker is active yet."
   },
   "orchestration_events": [
+    {
+      "event": "a_t05_option1_luna_dispatched",
+      "date": "2026-10-14",
+      "client_thread_id": "client-new-thread:375945ff-63db-4c43-8070-623a622ff1fc",
+      "base_commit": "11e3cf7",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "disposition": "One isolated test-first implementation of G3-001 is active. Exact A-T05 allowlist only; next legal transition is fresh Sol 6.1 high review."
+    },
     {
       "event": "a_t05_option1_authorized",
       "date": "2026-10-14",
@@ -297,10 +326,10 @@
       "integration_commit": "2e4971e"
     },
     "A-T05": {
-      "status": "authorized_change_pending_implementation",
+      "status": "authorized_change_implementing",
       "attempts": 1,
       "repair_attempts": 2,
-      "change_attempts": 0,
+      "change_attempts": 1,
       "change_record_ref": "docs/implementation/change-records/G3-001-metabolomics-imputation-fail-closed.md",
       "commit": "ddc0ae5",
       "candidate_commit": "4c51fcc",
