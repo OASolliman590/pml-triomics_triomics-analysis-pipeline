@@ -38,11 +38,12 @@
       "role": "sol_reviewer",
       "packet": "A-T05/G3-001",
       "client_thread_id": "client-new-thread:a913f744-efe1-4484-8cb9-2a87205e44cb",
+      "thread_id": "01a13a3b-d273-7c53-b991-4ff940e0a2b3",
       "requested_model": "gpt-6.1-sol",
       "requested_effort": "high",
       "base_commit": "11e3cf7",
       "candidate_commit": "e969279d356c1891204e9eae5be9c3d94d44c4df",
-      "status": "worktree_preparing"
+      "status": "active"
     }
   ],
   "orchestration_control": {
@@ -53,11 +54,12 @@
         "role": "sol_reviewer",
         "packet": "A-T05/G3-001",
         "client_thread_id": "client-new-thread:a913f744-efe1-4484-8cb9-2a87205e44cb",
+        "thread_id": "01a13a3b-d273-7c53-b991-4ff940e0a2b3",
         "base_commit": "11e3cf7",
         "candidate_commit": "e969279d356c1891204e9eae5be9c3d94d44c4df",
         "allowed_next_transition": "review_verdict_to_integration_or_bounded_repair",
         "wait_cursor": null,
-        "status": "worktree_preparing"
+        "status": "active"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
