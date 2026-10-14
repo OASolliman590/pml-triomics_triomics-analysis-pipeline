@@ -44,15 +44,6 @@
       "status": "active"
     },
     {
-      "role": "sol_packet_reviewer",
-      "packet": "B-T06",
-      "thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "candidate_commit": "9b85bbd616a797c03f133fb43a5f0cce1260bb7d",
-      "status": "active"
-    },
-    {
       "role": "luna_packet_repairer",
       "packet": "B-T09",
       "thread_id": "01a13a51-2ef1-7ad3-aa40-fc7611d98b7e",
@@ -75,14 +66,6 @@
         "status": "active"
       },
       {
-        "packet": "B-T06",
-        "thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a",
-        "candidate_commit": "9b85bbd616a797c03f133fb43a5f0cce1260bb7d",
-        "allowed_next_transition": "focused_rereview_verdict_to_sol_gate_disposition",
-        "wait_cursor": "a3cf8c2c-1096-496b-adec-a355869de0a2:2",
-        "status": "active"
-      },
-      {
         "packet": "B-T09",
         "thread_id": "01a13a51-2ef1-7ad3-aa40-fc7611d98b7e",
         "candidate_commit": "be1b52df2777e4cefbce6b23e9d10e536a6ca082",
@@ -92,9 +75,21 @@
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T05 targeted repair 1 is active after an initial changes_required review. B-T06 repair 1 is in focused Sol re-review. B-T09 repair 1 remains active. B-T04 remains independently blocked."
+    "disposition": "B-T05 and B-T09 targeted repair 1 remain active. B-T06 is blocked after its single focused re-review left AC4 unresolved; its candidate is not integrated. B-T04 remains independently blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t06_focused_rereview_blocked",
+      "date": "2026-10-14",
+      "review_thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a",
+      "candidate_commit": "9b85bbd616a797c03f133fb43a5f0cce1260bb7d",
+      "verdict": "blocked",
+      "tests_passed": 52,
+      "targeted_probes_passed": 13,
+      "targeted_probes_failed": 1,
+      "blocking_finding": "The max(1, ...) tolerance is not scale invariant; weights control=0 and treatment=1e-9 still trigger Wilcoxon for a treatment-mean contrast.",
+      "disposition": "The one permitted focused re-review is exhausted. B-T06 remains unintegrated and blocked; no further repair was dispatched."
+    },
     {
       "event": "b_t05_review_changes_required_repair_1_dispatched",
       "date": "2026-10-14",
@@ -659,13 +654,15 @@
       "blockers": []
     },
     "B-T06": {
-      "status": "focused_sol_rereview_active",
+      "status": "blocked",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
       "repair_candidate_commit": "9b85bbd616a797c03f133fb43a5f0cce1260bb7d",
       "acceptance_refs": [],
-      "blockers": []
+      "blockers": [
+        "AC4 remains unresolved after the single focused re-review: the Wilcoxon contrast check is not scale invariant and admits a treatment-mean contrast with weights 0 and 1e-9."
+      ]
     },
     "B-T08": {
       "status": "sol_verified",
