@@ -36,10 +36,10 @@
   "active_workers": [
     {
       "packet": "A-T05",
-      "thread_id": "01a13950-2e69-72e0-88f1-c12936b946cd",
-      "role": "sol_6_1_high_reviewer",
-      "worktree": "/Users/megastore/.codex/worktrees/5808/PML MultiOmics Analysis Pipeline",
-      "attempt": "repair_1_review"
+      "thread_id": "01a13953-4957-7810-b5ff-efc8c9582b38",
+      "role": "luna_max",
+      "worktree": "/Users/megastore/.codex/worktrees/e8a2/PML MultiOmics Analysis Pipeline",
+      "attempt": "repair_2"
     },
     {
       "packet": "A-T06",
@@ -61,11 +61,11 @@
     "last_reconciled": "2026-10-14",
     "active_handoffs": [
       {
-        "thread_id": "01a13950-2e69-72e0-88f1-c12936b946cd",
-        "role": "sol_6_1_high_reviewer",
+        "thread_id": "01a13953-4957-7810-b5ff-efc8c9582b38",
+        "role": "luna_max",
         "packet": "A-T05",
-        "candidate_commit": "4c51fcc",
-        "next_transition": "Read the packet verdict immediately; integrate only if accepted, otherwise use the remaining bounded repair budget."
+        "base_candidate_commit": "4c51fcca5e0306c83e4aac539414443fd692ebed",
+        "next_transition": "Inspect the final repair commit and dispatch a fresh Sol 6.1 high packet re-review."
       },
       {
         "thread_id": "01a13952-7a9b-7b21-ade4-df1c943fa558",
@@ -83,7 +83,7 @@
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "A-T05, A-T06 and A-T08 repair 1 are under separate fresh Sol 6.1 high packet reviews."
+    "disposition": "A-T05 final repair_2 is active after repair_1 review found marker-only qualification; A-T06 and A-T08 repair_1 remain under separate fresh Sol 6.1 high reviews."
   },
   "orchestration_events": [
     {
@@ -98,6 +98,14 @@
         "A-T05 qualification could name nonexistent native fit/apply APIs"
       ],
       "disposition": "G3 remains closed. One bounded repair attempt per affected packet is authorized, followed by fresh Sol packet review and one focused Astra re-review."
+    },
+    {
+      "event": "a_t05_g3_repair_1_changes_required",
+      "date": "2026-10-14",
+      "candidate_commit": "4c51fcca5e0306c83e4aac539414443fd692ebed",
+      "review_ref": "docs/implementation/reviews/A-T05-G3-repair1-review.md",
+      "verdict": "changes_required",
+      "disposition": "Nonexistent APIs are rejected, but copied labels can still self-qualify without a resolved version-bound artifact. Final repair_2 dispatched."
     },
     {
       "event": "g2_accepted_and_run_paused",
@@ -277,14 +285,16 @@
       "integration_commit": "2e4971e"
     },
     "A-T05": {
-      "status": "repair_1_review_in_progress",
+      "status": "repair_2_in_progress",
       "attempts": 1,
-      "repair_attempts": 1,
+      "repair_attempts": 2,
       "commit": "ddc0ae5",
       "candidate_commit": "4c51fcc",
-      "acceptance_refs": [],
+      "acceptance_refs": [
+        "docs/implementation/reviews/A-T05-G3-repair1-review.md"
+      ],
       "blockers": [
-        "G3-03: optional method qualification is not bound to existing, versioned native fit/apply APIs"
+        "Repair 1 rejected nonexistent APIs but remained marker-only; copied labels and same-name incompatible functions could still qualify"
       ],
       "integration_commit": "2e4971e"
     },
