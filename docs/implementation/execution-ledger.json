@@ -33,37 +33,39 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "role": "sol_rereviewer",
-      "packet": "A-T05/G3-001",
-      "thread_id": "01a13a3b-d273-7c53-b991-4ff940e0a2b3",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "base_commit": "11e3cf7",
-      "candidate_commit": "6845d5c6aa8d8de6f115ce5e122d0775659551e6",
-      "status": "focused_rereview_active"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "resuming_authorized_change",
+    "status": "g3_snapshot_preparing",
     "last_reconciled": "2026-10-14",
-    "active_handoffs": [
-      {
-        "role": "sol_rereviewer",
-        "packet": "A-T05/G3-001",
-        "thread_id": "01a13a3b-d273-7c53-b991-4ff940e0a2b3",
-        "base_commit": "11e3cf7",
-        "candidate_commit": "6845d5c6aa8d8de6f115ce5e122d0775659551e6",
-        "allowed_next_transition": "rereview_acceptance_to_serial_integration",
-        "wait_cursor": null,
-        "status": "focused_rereview_active"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar approved Option 1 in G3-001: kNN/RF stay fail-closed in v2 while none and training-median remain executable. One bounded change implementation and affected reviews are authorized; no worker is active yet."
+    "disposition": "A-T05 G3-001 was accepted by fresh Sol 6.1 high review and integrated as a194a6b. Fresh A-T05, Stage A CLI, full-suite and package-check evidence passed. Next: immutable G3 snapshot and focused Astra low re-review."
   },
   "orchestration_events": [
+    {
+      "event": "a_t05_option1_accepted_integrated_verified",
+      "date": "2026-10-14",
+      "candidate_commit": "6845d5c6aa8d8de6f115ce5e122d0775659551e6",
+      "integration_commit": "a194a6b",
+      "review_ref": "docs/implementation/reviews/A-T05-G3-001-review.md",
+      "verdict": "accepted_pending_g3",
+      "tests": {
+        "packet_passed": 125,
+        "packet_failures": 0,
+        "packet_warnings": 0,
+        "packet_skips": 0,
+        "stage_a_cli_exit": 0,
+        "full_suite_passed": 2321,
+        "full_suite_failures": 0,
+        "full_suite_warnings": 0,
+        "full_suite_skips": 0,
+        "package_check_exit": 0,
+        "package_check_status": "Status: OK",
+        "build_log_sha256": "b97ba89aca85a093817a5e8a4e00a11efe9cc9341e1cacfe1dd8cf9cc7150777",
+        "check_log_sha256": "a6e3126f4db8e0bc8eba0d1ec24ec5220ebffbb95e032490a6ebf6c84377f71e"
+      },
+      "disposition": "Caller-authored qualification can no longer activate metabolomic kNN/RF in v2. The packet change is accepted; G3 remains pending its focused Astra re-review."
+    },
     {
       "event": "a_t05_option1_repair_1_completed_rereview_dispatched",
       "date": "2026-10-14",
@@ -372,7 +374,7 @@
       "integration_commit": "2e4971e"
     },
     "A-T05": {
-      "status": "authorized_change_focused_rereview",
+      "status": "change_accepted_integrated_pending_g3",
       "attempts": 1,
       "repair_attempts": 2,
       "change_attempts": 1,
@@ -384,10 +386,13 @@
       "final_candidate_commit": "d21f6b0",
       "acceptance_refs": [
         "docs/implementation/reviews/A-T05-G3-repair1-review.md",
-        "docs/implementation/reviews/A-T05-G3-repair2-review.md"
+        "docs/implementation/reviews/A-T05-G3-repair2-review.md",
+        "docs/implementation/reviews/A-T05-G3-001-review.md"
       ],
-      "blockers": [],
-      "integration_commit": "2e4971e"
+      "blockers": [
+        "packet change accepted, but G3 focused Astra re-review is pending"
+      ],
+      "integration_commit": "a194a6b"
     },
     "A-T06": {
       "status": "repair_1_accepted_integrated_pending_g3",
@@ -679,11 +684,11 @@
       "integration_commit": "e691ab9c9d798e650a73802e98bac78b9598bfd9"
     },
     "M3": {
-      "status": "authorized_change_pending_implementation",
+      "status": "snapshot_preparing_for_focused_rereview",
       "review_ref": "docs/implementation/reviews/M3-astra-review.md",
       "commit": "d96ca310cea5715f40e2cae72d59a29d411713bb",
-      "integration_commit": "62b2e7d",
-      "blocking_packet": "A-T05",
+      "integration_commit": "a194a6b",
+      "blocking_packet": null,
       "accepted_repair_integration_commits": [
         "610a732",
         "62b2e7d"

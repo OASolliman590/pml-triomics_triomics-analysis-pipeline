@@ -1,8 +1,8 @@
 # Implementation handover
 
-Run `triomics-20260920-sol-01` is stopped blocked on branch
-`spec/harden-v2-20260920`. No run-owned worker, reviewer, or polling loop is
-active.
+Run `triomics-20260920-sol-01` is active on branch
+`spec/harden-v2-20260920`. A-T05 G3-001 is integrated and the immutable G3
+focused re-review snapshot is the next transition.
 
 G0 and G1 remain accepted. G2 is accepted on immutable milestone snapshot
 `8b0754c1ea581ba18c4bb2e7eb862c26eeb625a7` after its one permitted focused
@@ -23,29 +23,29 @@ scientifically validated.
 ## Current programme state
 
 - M2/G2: accepted; review is in `reviews/M2-astra-review.md`.
-- M3/G3: blocked. A-T08 and A-T06 repairs were independently accepted and
-  integrated as `610a732` and `62b2e7d`; their combined integrated suite passed
-  455 assertions. A-T05 exhausted both repairs. A caller-authored artifact with
-  current API fingerprints can still self-qualify kNN/RF without authoritative
-  approval. Candidates `4c51fcc` and `d21f6b0` were not integrated.
+- M3/G3: focused re-review pending. A-T08 and A-T06 repairs were independently
+  accepted and integrated as `610a732` and `62b2e7d`. After Omar approved
+  change record G3-001, A-T05 kNN/RF were made fail-closed in v2; `none` and
+  fold-local training median remain executable. Candidate `6845d5c` was accepted
+  by fresh Sol 6.1 high review and integrated as `a194a6b`. The integrated full
+  suite passed 2,321 assertions and package check reported `Status: OK`.
 - B-T02, B-T03, and B-T08 remain Sol-verified.
 - B-T04 remains blocked: 23/400 false discoveries for the one-cell-removed null
   pattern; upper 95% bound 0.08048 exceeds the frozen 0.08 limit.
 - B-T05, B-T06, B-T09, B-T07, all C, and all D remain unstarted.
 - B-T04, B-T05, B-T06, and B-T09 all require G3. No downstream implementation
-  packet is currently legal. The focused Astra G3 re-review was not run.
+  packet is legal until the focused Astra G3 re-review is accepted.
 
 ## Literal resume instruction
 
 Read root `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `execution-ledger.json`, this handover, `reviews/M2-astra-review.md`, and
 `reviews/M3-astra-review.md`, and both A-T05 G3 repair reviews. Verify HEAD and
-dirty state. Do not repeat G2, the initial G3 review, or either exhausted A-T05
-repair. Resume only after an authorized contract-compliant source of
-`MethodQualification` approval is available or an explicit accepted change
-record alters the affected scientific contract. Then use a newly authorized
-repair path, rerun M3 verification, and obtain the focused Astra re-review. Do
-not restart B-T05 until G3 is accepted. Preserve B-T04's seeds and 0.08 bound.
+dirty state. Do not repeat G2, the initial G3 review, either exhausted A-T05
+repair, or the accepted G3-001 implementation/review. Build an immutable snapshot
+from the integrated branch, obtain the one focused Astra low re-review, and let
+Sol record the G3 disposition. Do not restart B-T05 until G3 is accepted.
+Preserve B-T04's seeds and 0.08 bound.
 
 ## Orchestration correction
 
