@@ -50,10 +50,10 @@
     },
     {
       "packet": "A-T08",
-      "thread_id": "01a1394a-6f6c-7912-976d-a63c11532b62",
-      "role": "luna_max",
-      "worktree": "/Users/megastore/.codex/worktrees/9677/PML MultiOmics Analysis Pipeline",
-      "attempt": "repair_1"
+      "thread_id": "01a13951-a93c-7622-baf2-cda795f91a0d",
+      "role": "sol_6_1_high_reviewer",
+      "worktree": "/Users/megastore/.codex/worktrees/79d2/PML MultiOmics Analysis Pipeline",
+      "attempt": "repair_1_review"
     }
   ],
   "orchestration_control": {
@@ -75,15 +75,15 @@
         "next_transition": "Inspect the repair commit and dispatch a fresh Sol 6.1 high packet review."
       },
       {
-        "thread_id": "01a1394a-6f6c-7912-976d-a63c11532b62",
-        "role": "luna_max",
+        "thread_id": "01a13951-a93c-7622-baf2-cda795f91a0d",
+        "role": "sol_6_1_high_reviewer",
         "packet": "A-T08",
-        "snapshot_commit": "d96ca310cea5715f40e2cae72d59a29d411713bb",
-        "next_transition": "Inspect the repair commit and dispatch a fresh Sol 6.1 high packet review."
+        "candidate_commit": "a8761b0d4589b8dd5816c0d36b502b99b056479f",
+        "next_transition": "Read the packet verdict immediately; integrate only if accepted, otherwise use the remaining bounded repair budget."
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "A-T05 repair 1 is under fresh Sol 6.1 high review; isolated Luna-max repair_1 workers remain active for A-T06 and A-T08."
+    "disposition": "A-T05 and A-T08 repair 1 are under separate fresh Sol 6.1 high reviews; the isolated Luna-max repair_1 worker remains active for A-T06."
   },
   "orchestration_events": [
     {
@@ -310,10 +310,11 @@
       "integration_commit": "2e4971e"
     },
     "A-T08": {
-      "status": "repair_1_in_progress",
+      "status": "repair_1_review_in_progress",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "ddc0ae5",
+      "candidate_commit": "a8761b0d4589b8dd5816c0d36b502b99b056479f",
       "acceptance_refs": [],
       "blockers": [
         "G3-01: resume does not validate the referenced fit-state payload and hash before reuse"
