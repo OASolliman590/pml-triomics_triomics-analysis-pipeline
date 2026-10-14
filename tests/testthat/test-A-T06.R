@@ -547,6 +547,8 @@ testthat::test_that("A-T06-AC3 weighted carbon and double-bond endpoints match t
   testthat::expect_equal(carbon$sample$value, (2 * 16 + 3 * 18) / 5, tolerance = 1e-8)
   testthat::expect_gt(abs(carbon$sample$value - 17), 1e-6)
   testthat::expect_identical(carbon$sample$coverage, "complete")
+  testthat::expect_identical(carbon$endpoint$quantity, "weighted_total_carbon_index")
+  testthat::expect_identical(carbon$endpoint$units, "carbon_atoms")
   testthat::expect_identical(carbon$endpoint$sn_positions, "not_implied")
   testthat::expect_identical(carbon$endpoint$chain_identities, "not_implied")
   testthat::expect_identical(carbon$endpoint$structural_resolution, "sum_composition")
@@ -563,6 +565,8 @@ testthat::test_that("A-T06-AC3 weighted carbon and double-bond endpoints match t
   )
   bond <- sample_record(bond_fit, "pc_db", "s1")
   testthat::expect_equal(bond$sample$value, 0.6, tolerance = 1e-8)
+  testthat::expect_identical(bond$endpoint$quantity, "weighted_total_double_bond_index")
+  testthat::expect_identical(bond$endpoint$units, "double_bonds")
   testthat::expect_identical(bond$endpoint$sn_positions, "not_implied")
   testthat::expect_identical(bond$endpoint$chain_identities, "not_implied")
 
@@ -608,7 +612,10 @@ testthat::test_that("A-T06-AC3 weighted carbon and double-bond endpoints match t
     assemble_lipid(values),
     fit_spec(new_dir("a-t06-ratio-"), c("s1", "s2"), ratio_ops, "ratio")
   )
-  testthat::expect_equal(sample_record(ratio_fit, "pc_ratio", "s1")$sample$value, 2 / 3, tolerance = 1e-8)
+  ratio <- sample_record(ratio_fit, "pc_ratio", "s1")
+  testthat::expect_equal(ratio$sample$value, 2 / 3, tolerance = 1e-8)
+  testthat::expect_identical(ratio$endpoint$quantity, "saturated_to_unsaturated_ratio")
+  testthat::expect_identical(ratio$endpoint$units, "dimensionless")
   unsat_zero <- matrix(c(2, 0, 2, 0), nrow = 2, dimnames = dimnames(values))
   unsat_fit <- prepare_fit(
     assemble_lipid(unsat_zero),

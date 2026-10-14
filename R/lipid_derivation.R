@@ -541,9 +541,22 @@ triomics_lipid_class_endpoints <- function(frame, assay, mask, request, hash) {
   }
   feature_key <- if (identical(n_classes, 1L)) request$endpoint_id else paste0(request$endpoint_id, "::", class_id)
   estimand <- if (identical(mode, "sum")) "linear_class_total" else if (identical(mode, "weighted")) "abundance_weighted_mean" else "saturated_over_unsaturated"
+  # These are composition indices; parent signal units do not imply molecule-level weights.
+  endpoint_quantity <- switch(method,
+    weighted_carbons = "weighted_total_carbon_index",
+    weighted_double_bonds = "weighted_total_double_bond_index",
+    saturated_unsaturated_ratio = "saturated_to_unsaturated_ratio",
+    quantity
+  )
+  endpoint_units <- switch(method,
+    weighted_carbons = "carbon_atoms",
+    weighted_double_bonds = "double_bonds",
+    saturated_unsaturated_ratio = "dimensionless",
+    units
+  )
   list(triomics_lipid_endpoint_shell(
     feature_key, request$endpoint_id, method, class_id, frame, request, hash,
-    quantity, units, estimand, totals, class_total_retained = identical(mode, "sum")
+    endpoint_quantity, endpoint_units, estimand, totals, class_total_retained = identical(mode, "sum")
   ))
 }
 
