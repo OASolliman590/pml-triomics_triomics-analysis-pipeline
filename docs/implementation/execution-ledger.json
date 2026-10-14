@@ -35,11 +35,19 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "paused",
+    "status": "active",
     "last_reconciled": "2026-10-14",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "thread_id": "01a13944-4ccc-75f3-a5c8-d1d5cd5be668",
+        "role": "astra_low",
+        "gate": "G3",
+        "snapshot_commit": "d96ca310cea5715f40e2cae72d59a29d411713bb",
+        "next_transition": "Read the completed verdict immediately; accept G3 or dispatch the one permitted focused repair/re-review path."
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "All run-owned implementer, reviewer, and Astra chats completed and are being archived. No polling or new packet remains active."
+    "disposition": "Fresh Astra-low G3 milestone audit is active on the immutable, Stage-B-free M3 snapshot."
   },
   "orchestration_events": [
     {
