@@ -385,9 +385,11 @@ testthat::test_that("B-T09 counts subjects missing the declared between-person v
 
 testthat::test_that("B-T09 canonical schema admits only complete longitudinal objectives", {
   base <- readLines(triomics_test_resource("examples", "tickets", "B-T09.yaml"), warn = FALSE)
-  write_config <- function(mode, fields = character()) {
+  write_config <- function(mode, fields = character(), study_id = "triomics_b_t09_fixture") {
     replacement <- paste(c(paste0("      mode: ", mode), paste0("      ", fields)), collapse = "\n")
     config <- sub("      mode: between_person", replacement, base, fixed = TRUE)
+    config <- sub("study_id: triomics_b_t09_fixture", paste0("study_id: ", study_id),
+                  config, fixed = TRUE)
     path <- tempfile(fileext = ".yaml")
     writeLines(config, path)
     path
@@ -422,4 +424,17 @@ testthat::test_that("B-T09 canonical schema admits only complete longitudinal ob
     modifier$clinical$objectives[[1L]]$modifier_ref,
     "treatment_group"
   )
+
+  source_longitudinal <- write_config(
+    "within_person", c("baseline_visit_ref: V0", "later_visit_ref: V1"),
+    study_id = "nonfixture_longitudinal_study"
+  )
+  error <- b09_expect_code(
+    triomics_cli_prepare_registered_b09(
+      list(stage = "B", validate_only = FALSE, config = source_longitudinal),
+      c("--config", source_longitudinal, "--stage", "B", "--output", tempfile())
+    ),
+    "B_DESIGN_UNSUPPORTED"
+  )
+  testthat::expect_match(conditionMessage(error), "eligible endpoint bundle")
 })

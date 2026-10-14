@@ -79,14 +79,17 @@ triomics_cli_exit <- function(error) {
 }
 
 triomics_cli_prepare_registered_b09 <- function(options, args) {
-  if (!isNamespace(topenv(environment())) || !identical(options$stage, "B") ||
-      isTRUE(options$validate_only) || is.null(options$config)) {
+  if (!identical(options$stage, "B") || isTRUE(options$validate_only) ||
+      is.null(options$config)) {
     return(FALSE)
   }
   config <- triomics_read_config(options$config)
   if (!isTRUE(config$clinical$enabled)) return(FALSE)
   if (identical(config$study_id, "triomics_b_t09_fixture")) {
-    return(isTRUE(triomics_b09_prepare_cli(args)))
+    if (isNamespace(topenv(environment()))) {
+      return(isTRUE(triomics_b09_prepare_cli(args)))
+    }
+    return(FALSE)
   }
   objectives <- config$clinical$objectives
   modes <- if (is.list(objectives) && length(objectives)) {

@@ -47,3 +47,21 @@ Fresh coordinator checks after integration:
 The Sol-owned cross-cutting registration still requires an independent fresh
 Sol review before B-T09 is released to milestone review. All evidence is public
 and synthetic; it is not real-data scientific validation.
+
+## Cross-cutting registration review
+
+Initial verdict: `changes_required`.
+
+The fresh reviewer independently passed 80 B-T09 assertions, 139 B-T08
+regression assertions, 25 schema probes, package installation, both public-
+fixture CLI paths and the namespace export check. One P1 defect remained:
+non-fixture longitudinal modes failed closed in the installed CLI but source-
+tree execution bypassed the guard, exited 0 and wrote Stage B output while
+silently omitting the clinical objective.
+
+Sol repair 1 moves the non-fixture longitudinal guard outside the installed-
+namespace condition while leaving source-fixture preparation to the existing
+packet hook. A regression now requires source execution to return
+`B_DESIGN_UNSUPPORTED` before analysis when the eligible endpoint bundle and
+clinical view are unavailable. The B-T09 suite passes 83 assertions after this
+repair. One focused registration re-review is pending.
