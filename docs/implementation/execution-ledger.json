@@ -38,10 +38,11 @@
       "role": "astra_focused_milestone_reviewer",
       "milestone": "M3/G3",
       "client_thread_id": "client-new-thread:c8c198e2-31ab-4754-aa7a-c5d69903af32",
+      "thread_id": "01a13a4b-9f1f-7e90-ad6a-2d9d06256cdb",
       "requested_model": "gpt-6-astra",
       "requested_effort": "low",
       "snapshot_commit": "af323f80dc91fd0f70e1ca9fc7664ab3956aaea5",
-      "status": "worktree_preparing"
+      "status": "active"
     }
   ],
   "orchestration_control": {
@@ -52,10 +53,11 @@
         "role": "astra_focused_milestone_reviewer",
         "milestone": "M3/G3",
         "client_thread_id": "client-new-thread:c8c198e2-31ab-4754-aa7a-c5d69903af32",
+        "thread_id": "01a13a4b-9f1f-7e90-ad6a-2d9d06256cdb",
         "snapshot_commit": "af323f80dc91fd0f70e1ca9fc7664ab3956aaea5",
         "allowed_next_transition": "astra_verdict_to_sol_gate_disposition",
         "wait_cursor": null,
-        "status": "worktree_preparing"
+        "status": "active"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
