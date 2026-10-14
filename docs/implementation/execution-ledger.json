@@ -33,13 +33,57 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "packet": "A-T05",
+      "thread_id": "01a1394a-6909-7330-bd16-915cb60163e0",
+      "role": "luna_max",
+      "worktree": "/Users/megastore/.codex/worktrees/8967/PML MultiOmics Analysis Pipeline",
+      "attempt": "repair_1"
+    },
+    {
+      "packet": "A-T06",
+      "thread_id": "01a1394a-7fba-76c1-a7f9-43fb2c26ae4a",
+      "role": "luna_max",
+      "worktree": "/Users/megastore/.codex/worktrees/e4b8/PML MultiOmics Analysis Pipeline",
+      "attempt": "repair_1"
+    },
+    {
+      "packet": "A-T08",
+      "thread_id": "01a1394a-6f6c-7912-976d-a63c11532b62",
+      "role": "luna_max",
+      "worktree": "/Users/megastore/.codex/worktrees/9677/PML MultiOmics Analysis Pipeline",
+      "attempt": "repair_1"
+    }
+  ],
   "orchestration_control": {
     "status": "active",
     "last_reconciled": "2026-10-14",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "thread_id": "01a1394a-6909-7330-bd16-915cb60163e0",
+        "role": "luna_max",
+        "packet": "A-T05",
+        "snapshot_commit": "d96ca310cea5715f40e2cae72d59a29d411713bb",
+        "next_transition": "Inspect the repair commit and dispatch a fresh Sol 6.1 high packet review."
+      },
+      {
+        "thread_id": "01a1394a-7fba-76c1-a7f9-43fb2c26ae4a",
+        "role": "luna_max",
+        "packet": "A-T06",
+        "snapshot_commit": "d96ca310cea5715f40e2cae72d59a29d411713bb",
+        "next_transition": "Inspect the repair commit and dispatch a fresh Sol 6.1 high packet review."
+      },
+      {
+        "thread_id": "01a1394a-6f6c-7912-976d-a63c11532b62",
+        "role": "luna_max",
+        "packet": "A-T08",
+        "snapshot_commit": "d96ca310cea5715f40e2cae72d59a29d411713bb",
+        "next_transition": "Inspect the repair commit and dispatch a fresh Sol 6.1 high packet review."
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "G3 initial Astra review requires bounded repairs in A-T05, A-T06 and A-T08. Repair dispatch is the next transition."
+    "disposition": "Three isolated Luna-max repair_1 workers are active for the independent A-T05, A-T06 and A-T08 G3 findings."
   },
   "orchestration_events": [
     {
@@ -233,9 +277,9 @@
       "integration_commit": "2e4971e"
     },
     "A-T05": {
-      "status": "repair_required",
+      "status": "repair_1_in_progress",
       "attempts": 1,
-      "repair_attempts": 0,
+      "repair_attempts": 1,
       "commit": "ddc0ae5",
       "acceptance_refs": [],
       "blockers": [
@@ -244,9 +288,9 @@
       "integration_commit": "2e4971e"
     },
     "A-T06": {
-      "status": "repair_required",
+      "status": "repair_1_in_progress",
       "attempts": 1,
-      "repair_attempts": 0,
+      "repair_attempts": 1,
       "commit": "ddc0ae5",
       "acceptance_refs": [],
       "blockers": [
@@ -265,9 +309,9 @@
       "integration_commit": "2e4971e"
     },
     "A-T08": {
-      "status": "repair_required",
+      "status": "repair_1_in_progress",
       "attempts": 1,
-      "repair_attempts": 0,
+      "repair_attempts": 1,
       "commit": "ddc0ae5",
       "acceptance_refs": [],
       "blockers": [
