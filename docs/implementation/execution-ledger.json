@@ -38,10 +38,11 @@
       "role": "luna",
       "packet": "A-T05/G3-001",
       "client_thread_id": "client-new-thread:375945ff-63db-4c43-8070-623a622ff1fc",
+      "thread_id": "01a13a31-e30a-7321-8b3f-a13c009a30e9",
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "base_commit": "11e3cf7",
-      "status": "worktree_preparing"
+      "status": "active"
     }
   ],
   "orchestration_control": {
@@ -52,10 +53,11 @@
         "role": "luna_implementer",
         "packet": "A-T05/G3-001",
         "client_thread_id": "client-new-thread:375945ff-63db-4c43-8070-623a622ff1fc",
+        "thread_id": "01a13a31-e30a-7321-8b3f-a13c009a30e9",
         "base_commit": "11e3cf7",
         "allowed_next_transition": "worker_result_to_fresh_sol_review",
         "wait_cursor": null,
-        "status": "worktree_preparing"
+        "status": "active"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
