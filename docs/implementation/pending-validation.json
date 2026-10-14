@@ -2,11 +2,12 @@
   "schema_version": "1.0",
   "run_id": "triomics-20260920-sol-01",
   "items": [
-    {"id":"HOST-R-PACKAGES","status":"pending","evidence":"R 4.6.1 found at C:/Program Files/R/R-4.6.1; testthat, yaml, jsonlite, jsonvalidate, digest, renv and BiocManager are not installed."},
+    {"id":"HOST-R-PACKAGES","status":"resolved_for_current_checks","evidence":"On 2026-10-14 the integrated suite ran 2,296 assertions with zero failures/warnings/skips and the package wrapper completed R CMD build/check with Status: OK. This does not certify every future optional adapter."},
     {"id":"HOST-QUARTO","status":"pending","evidence":"No Quarto executable found on PATH or standard checked locations."},
-    {"id":"GITHUB-AUTH","status":"blocked","evidence":"gh 2.97.0 is installed, but the active OASolliman590 keyring token is invalid; no push or PR has been performed."},
+    {"id":"GITHUB-AUTH","status":"not_rechecked","evidence":"No push or PR was attempted during the 2026-10-14 G2 repair and pause cycle."},
     {"id":"REAL-DATA","status":"not_run","evidence":"No participant assay matrices or clinical workbook are in this public repository; no real-data validation claimed."},
-    {"id":"NOTION","status":"not_requested","evidence":"No verified destination supplied; no sync attempted."}
+    {"id":"NOTION","status":"not_synced","evidence":"Local progress documentation was updated on 2026-10-14. No Notion write or read-back verification was attempted in this cycle."},
+    {"id":"B-T04-CALIBRATION","status":"blocked","evidence":"The one-cell-removed null pattern produced 23/400 discoveries; its 95% upper bound 0.08048 exceeds the frozen 0.08 limit. Seeds and threshold remain unchanged."}
   ]
 }
 

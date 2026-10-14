@@ -33,17 +33,38 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "task": "triomics-implement-5",
-      "packet": "B-T05",
-      "model": "grok-4.7",
-      "worktree": ".worktrees/a-t01-repair",
-      "base_commit": "bded42a",
-      "phase": "implement"
-    }
-  ],
+  "active_workers": [],
+  "orchestration_control": {
+    "status": "paused",
+    "last_reconciled": "2026-10-14",
+    "active_handoffs": [],
+    "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
+    "disposition": "All run-owned implementer, reviewer, and Astra chats completed and are being archived. No polling or new packet remains active."
+  },
   "orchestration_events": [
+    {
+      "event": "g2_accepted_and_run_paused",
+      "date": "2026-10-14",
+      "integration_commit": "e691ab9c9d798e650a73802e98bac78b9598bfd9",
+      "snapshot_commit": "8b0754c1ea581ba18c4bb2e7eb862c26eeb625a7",
+      "review_ref": "docs/implementation/reviews/M2-astra-review.md",
+      "disposition": "Astra focused re-review accepted all three repaired findings. Sol accepted G2 as synthetic software evidence, documented the missed-handoff control failure, and paused before G3."
+    },
+    {
+      "event": "g2_repairs_integrated_and_verified",
+      "date": "2026-10-14",
+      "integration_commit": "e691ab9c9d798e650a73802e98bac78b9598bfd9",
+      "tests": {
+        "full_suite_passed": 2296,
+        "failures": 0,
+        "warnings": 0,
+        "skips": 0,
+        "snapshot_focused_passed": 512,
+        "integrated_package_check": "passed",
+        "snapshot_package_check": "Status: OK"
+      },
+      "disposition": "A-T03 and A-T09 focused Sol re-reviews accepted; coordinator cherry-picked serially and reran combined verification."
+    },
     {
       "event": "continue_from_b_t05",
       "date": "2026-10-12",
@@ -157,34 +178,36 @@
       ]
     },
     "A-T02": {
-      "status": "sol_verified",
+      "status": "accepted",
       "attempts": 1,
       "commit": "12021f9",
       "integration_commit": "99bc6b9",
-      "acceptance_refs": [],
-      "blockers": [
-        "M2 review waits for A-T03 and A-T09"
-      ]
+      "acceptance_refs": [
+        "docs/implementation/reviews/M2-astra-review.md"
+      ],
+      "blockers": []
     },
     "A-T03": {
-      "status": "sol_verified",
+      "status": "accepted",
       "attempts": 1,
-      "commit": "ddc0ae5",
-      "acceptance_refs": [],
-      "blockers": [
-        "milestone review not yet run"
+      "repair_attempts": 1,
+      "commit": "901e39ba8adf324aa9bdc352cf8e1b1f63d133b5",
+      "acceptance_refs": [
+        "docs/implementation/reviews/M2-astra-review.md"
       ],
-      "integration_commit": "2e4971e"
+      "blockers": [],
+      "integration_commit": "f671254"
     },
     "A-T09": {
-      "status": "sol_verified",
+      "status": "accepted",
       "attempts": 1,
-      "commit": "ddc0ae5",
-      "acceptance_refs": [],
-      "blockers": [
-        "milestone review not yet run"
+      "repair_attempts": 2,
+      "commit": "9c4929aab3717a12d2a8f477c46e471a1280f0e4",
+      "acceptance_refs": [
+        "docs/implementation/reviews/M2-astra-review.md"
       ],
-      "integration_commit": "2e4971e"
+      "blockers": [],
+      "integration_commit": "e691ab9"
     },
     "A-T04": {
       "status": "sol_verified",
@@ -482,9 +505,10 @@
       "commit": "ee9fd36250414904b438bb14e782aa89179d2774"
     },
     "M2": {
-      "status": "sol_verified_pending_review",
-      "review_ref": null,
-      "commit": "2e4971e"
+      "status": "accepted",
+      "review_ref": "docs/implementation/reviews/M2-astra-review.md",
+      "commit": "8b0754c1ea581ba18c4bb2e7eb862c26eeb625a7",
+      "integration_commit": "e691ab9c9d798e650a73802e98bac78b9598bfd9"
     },
     "M3": {
       "status": "sol_verified_pending_review",
@@ -492,9 +516,9 @@
       "commit": "2e4971e"
     },
     "M4": {
-      "status": "sol_verified_pending_review",
+      "status": "in_progress_not_ready_for_review",
       "review_ref": null,
-      "commit": "2e4971e"
+      "commit": "9cd36fe"
     },
     "M5": {
       "status": "not_started",

@@ -61,3 +61,16 @@ an unavailable model. No premium/fast tier, subscription changes or new credits.
 Use `discovery/spec-v2/prompts/MASTER_SOL_PROMPT.md`. Restore the execution ledger
 and actual Git state; never recreate completed packets from memory. `CLAUDE.md`
 and `discovery/SPEC-KIT.md` point here and do not define competing instructions.
+
+## Omar-facing progress reporting
+
+For Omar-facing reports and Notion updates, read `docs/OMAR_PROGRESS_CONTRACT.md`. Keep a plain-language briefing and separate software evidence from scientific evidence. First adoption is orientation only. Preserve the existing scientific spec, task IDs, approval gates and orchestration limits. Only the coordinator publishes shared Notion progress. Never claim a sync without read-back verification.
+
+## Completion handoff control
+
+Read `docs/implementation/ORCHESTRATION_CONTROL.md` before dispatching or resuming
+run-owned chats. The coordinator must reconcile every completed turn into the
+next authorized transition, use `wait_threads` when otherwise idle, and must not
+finish a response while a run-owned chat is active unless Omar explicitly pauses
+the run. Before stopping, reconcile thread state with the ledger, archive this
+run's idle chats, and leave a literal resume instruction.
