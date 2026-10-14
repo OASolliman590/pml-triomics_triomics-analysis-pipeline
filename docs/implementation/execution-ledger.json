@@ -44,22 +44,23 @@
       "status": "active"
     },
     {
-      "role": "luna_packet_implementer",
+      "role": "sol_packet_reviewer",
       "packet": "B-T06",
-      "client_thread_id": "client-new-thread:9e2f0cf6-4bd9-46be-9d73-e5b9d4b79106",
-      "thread_id": "01a13a51-245d-7f03-9caa-9418378fc3a0",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "client_thread_id": "client-new-thread:e5df53b3-f963-43da-a027-c3b7c21aa064",
+      "thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "candidate_commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
       "status": "active"
     },
     {
-      "role": "luna_packet_implementer",
+      "role": "sol_packet_reviewer",
       "packet": "B-T09",
-      "client_thread_id": "client-new-thread:7d2e5b4a-8fd2-494a-8294-a0eb987d13a4",
-      "thread_id": "01a13a51-2ef1-7ad3-aa40-fc7611d98b7e",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "status": "active"
+      "client_thread_id": "client-new-thread:58eedb71-cc1c-4852-aff7-1a2c6a3f431b",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "candidate_commit": "be1b52df2777e4cefbce6b23e9d10e536a6ca082",
+      "status": "worktree_preparing"
     }
   ],
   "orchestration_control": {
@@ -75,24 +76,47 @@
       },
       {
         "packet": "B-T06",
-        "thread_id": "01a13a51-245d-7f03-9caa-9418378fc3a0",
-        "allowed_next_transition": "worker_receipt_to_fresh_sol_review",
-        "wait_cursor": "5543c6ab-7fd7-47ee-aa9f-1370f865a121:5",
+        "thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a",
+        "candidate_commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
+        "allowed_next_transition": "review_verdict_to_sol_gate_disposition",
+        "wait_cursor": null,
         "status": "active"
       },
       {
         "packet": "B-T09",
-        "client_thread_id": "client-new-thread:7d2e5b4a-8fd2-494a-8294-a0eb987d13a4",
-        "thread_id": "01a13a51-2ef1-7ad3-aa40-fc7611d98b7e",
-        "allowed_next_transition": "worker_receipt_to_fresh_sol_review",
-        "wait_cursor": "748a59c0-258b-4eb5-a2ee-8c05ccabe6ea:4",
-        "status": "active"
+        "client_thread_id": "client-new-thread:58eedb71-cc1c-4852-aff7-1a2c6a3f431b",
+        "candidate_commit": "be1b52df2777e4cefbce6b23e9d10e536a6ca082",
+        "allowed_next_transition": "bind_stable_thread_then_review_verdict_to_sol_gate_disposition",
+        "wait_cursor": null,
+        "status": "worktree_preparing"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "G3 is accepted. Three dependency-legal, disjoint Stage B packets are active in fresh Luna max worktrees: B-T05, B-T06 and B-T09. Each must stop for a fresh Sol 6.1 high review. B-T04 remains independently blocked."
+    "disposition": "B-T05 implementation remains active. B-T06 and B-T09 workers completed inside their allowlists and fresh Sol 6.1 high reviews are active or preparing. B-T04 remains independently blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t06_b_t09_workers_completed_reviews_dispatched",
+      "date": "2026-10-14",
+      "packets": {
+        "B-T06": {
+          "worker_thread_id": "01a13a51-245d-7f03-9caa-9418378fc3a0",
+          "candidate_commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
+          "tests_passed": 43,
+          "cli_exit": 0,
+          "review_thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a"
+        },
+        "B-T09": {
+          "worker_thread_id": "01a13a51-2ef1-7ad3-aa40-fc7611d98b7e",
+          "candidate_commit": "be1b52df2777e4cefbce6b23e9d10e536a6ca082",
+          "tests_passed": 54,
+          "cli_exit": 0,
+          "review_client_thread_id": "client-new-thread:58eedb71-cc1c-4852-aff7-1a2c6a3f431b",
+          "declared_gap": "Shared closed config schema cannot yet express horizon, baseline-adjustment or modifier fields; reviewer must decide the registration-handoff disposition."
+        }
+      },
+      "disposition": "Both candidates stopped for independent review; neither is integrated."
+    },
     {
       "event": "stage_b_b_t05_b_t06_b_t09_workers_dispatched",
       "date": "2026-10-14",
@@ -567,9 +591,9 @@
       "blockers": []
     },
     "B-T06": {
-      "status": "implementation_active",
+      "status": "sol_review_active",
       "attempts": 1,
-      "commit": null,
+      "commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
       "acceptance_refs": [],
       "blockers": []
     },
@@ -584,9 +608,9 @@
       "integration_commit": "9cd36fe"
     },
     "B-T09": {
-      "status": "implementation_active",
+      "status": "sol_review_preparing",
       "attempts": 1,
-      "commit": null,
+      "commit": "be1b52df2777e4cefbce6b23e9d10e536a6ca082",
       "acceptance_refs": [],
       "blockers": []
     },
