@@ -47,10 +47,11 @@
       "role": "sol_cross_cutting_reviewer",
       "packet": "B-T09",
       "client_thread_id": "client-new-thread:353030f6-675b-4f04-b222-92e80b398f64",
+      "thread_id": "01a13a74-71bb-7901-a86d-27b2263df49a",
       "requested_model": "gpt-6.1-sol",
       "requested_effort": "high",
       "snapshot_commit": "15f5031",
-      "status": "worktree_preparing"
+      "status": "active"
     }
   ],
   "orchestration_control": {
@@ -68,10 +69,11 @@
       {
         "packet": "B-T09-registration",
         "client_thread_id": "client-new-thread:353030f6-675b-4f04-b222-92e80b398f64",
+        "thread_id": "01a13a74-71bb-7901-a86d-27b2263df49a",
         "snapshot_commit": "15f5031",
-        "allowed_next_transition": "bind_stable_thread_then_registration_review_to_sol_disposition",
+        "allowed_next_transition": "registration_review_to_sol_disposition",
         "wait_cursor": null,
-        "status": "worktree_preparing"
+        "status": "active"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
