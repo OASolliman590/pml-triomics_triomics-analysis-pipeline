@@ -1,29 +1,10 @@
 # Metabolomic profile. PQN quotients are positive linear ratios against a frozen
 # reference; log2, when requested, runs after PQN even though the shared stage
-# list names transform before normalisation.
+# list names transform before normalisation. kNN and RF remain conditional method
+# names but are unavailable in v2 until an authoritative qualification route exists.
 
 triomics_metabolomics_supported_methods <- function() {
   c("identity", "none", "prevalence", "log2", "pqn", "training_median")
-}
-
-triomics_metabolomics_lane_contracts <- function() {
-  list(
-    knn = list(
-      package = "triomics", version = "0.1.0",
-      native_fit = "triomics_metabolomics_knn_fit",
-      native_apply = "triomics_metabolomics_knn_apply",
-      fit_apply = TRUE, inductive = TRUE,
-      distance = "rms_shared_observed", weights = "inverse_distance",
-      donors = "training_samples_only"
-    ),
-    rf = list(
-      package = "triomics", version = "0.1.0",
-      native_fit = "triomics_metabolomics_rf_fit",
-      native_apply = "triomics_metabolomics_rf_apply",
-      fit_apply = TRUE, inductive = TRUE,
-      donors = "training_rows_observed_target", forest = "bootstrap_stumps"
-    )
-  )
 }
 
 triomics_metabolomics_imputation_description <- function(method) {
@@ -41,7 +22,7 @@ triomics_metabolomics_imputation_description <- function(method) {
   }
   if (is.character(method) && length(method) == 1L && method %in% c("knn", "rf")) {
     return(list(
-      method = method, role = "qualified_mar",
+      method = method, role = "conditional_unavailable",
       biological_default = FALSE, mechanism = "mar"
     ))
   }
@@ -49,30 +30,6 @@ triomics_metabolomics_imputation_description <- function(method) {
     method = if (is.character(method) && length(method) == 1L) method else "unknown",
     role = "unsupported", biological_default = FALSE, mechanism = "unspecified"
   )
-}
-
-triomics_metabolomics_same_marker <- function(left, right) {
-  if (is.null(left) && is.null(right)) return(TRUE)
-  identical(left, right)
-}
-
-triomics_metabolomics_qualification_pinned <- function(qualification, method, contract) {
-  if (!is.list(qualification) || is.null(names(qualification))) return(FALSE)
-  if (!identical(qualification$status, "pinned")) return(FALSE)
-  if (!identical(qualification$method_id, method)) return(FALSE)
-  if (!identical(qualification$package, contract$package)) return(FALSE)
-  version <- qualification$version
-  if (!is.character(version) || length(version) != 1L || is.na(version) || !nzchar(version)) return(FALSE)
-  if (!identical(version, contract$version)) return(FALSE)
-  if (!identical(qualification$native_fit, contract$native_fit)) return(FALSE)
-  if (!triomics_metabolomics_same_marker(qualification$native_apply, contract$native_apply)) return(FALSE)
-  if (!isTRUE(qualification$fit_apply) || !isTRUE(qualification$inductive)) return(FALSE)
-  for (field in c("distance", "weights", "donors", "forest")) {
-    if (!is.null(contract[[field]]) && !identical(qualification[[field]], contract[[field]])) return(FALSE)
-  }
-  contexts <- qualification$contexts
-  if (is.null(contexts) || !any(as.character(contexts) == "metabolomics")) return(FALSE)
-  TRUE
 }
 
 triomics_metabolomics_assumption <- function(operation) {
@@ -89,6 +46,9 @@ triomics_metabolomics_lane_decision <- function(operation) {
   if (is.null(method) || !is.character(method) || length(method) != 1L || is.na(method)) {
     return(list(status = "unavailable", reason = "method_not_registered"))
   }
+  if (method %in% c("knn", "rf")) {
+    return(list(status = "unavailable", reason = "qualification_unavailable_in_v2"))
+  }
   if (method %in% triomics_metabolomics_supported_methods()) {
     return(list(status = "fit_apply", reason = "supported"))
   }
@@ -99,35 +59,7 @@ triomics_metabolomics_lane_decision <- function(operation) {
   )) {
     return(list(status = "unavailable", reason = "not_metabolomic_policy"))
   }
-  contracts <- triomics_metabolomics_lane_contracts()
-  if (!method %in% names(contracts)) {
-    return(list(status = "unavailable", reason = "method_not_registered"))
-  }
-  assumption <- triomics_metabolomics_assumption(operation)
-  if (!identical(assumption, "mar")) {
-    reason <- if (identical(assumption, "unknown")) {
-      "unknown_missingness_is_not_mar"
-    } else {
-      "missingness_does_not_select_mar"
-    }
-    return(list(status = "unavailable", reason = reason))
-  }
-  evidence <- operation$missingness_evidence
-  if (!is.character(evidence) || length(evidence) != 1L || is.na(evidence) || !nzchar(evidence)) {
-    return(list(status = "unavailable", reason = "mar_evidence_missing"))
-  }
-  qualification <- operation$qualification
-  if (is.null(qualification)) return(list(status = "unavailable", reason = "qualification_missing"))
-  if (is.list(qualification) && identical(qualification$method_id, method)) {
-    if (is.null(qualification$native_apply) || length(qualification$native_apply) == 0L ||
-        !isTRUE(qualification$fit_apply)) {
-      return(list(status = "unavailable", reason = "inductive_fit_apply_not_supported"))
-    }
-  }
-  if (!triomics_metabolomics_qualification_pinned(qualification, method, contracts[[method]])) {
-    return(list(status = "unavailable", reason = "qualification_not_pinned"))
-  }
-  list(status = "fit_apply", reason = "qualified_inductive")
+  list(status = "unavailable", reason = "method_not_registered")
 }
 
 triomics_metabolomics_predictive_eligibility <- function(operation) {
@@ -1230,11 +1162,6 @@ triomics_metabolomics_impute <- function(se, params) {
     return(triomics_metabolomics_training_median(se, params))
   }
   decision <- triomics_metabolomics_lane_decision(params$operation)
-  if (!identical(decision$status, "fit_apply")) {
-    triomics_metabolomics_refuse_operation(params$operation, decision)
-  }
-  if (identical(method, "knn")) return(triomics_metabolomics_knn(se, params))
-  if (identical(method, "rf")) return(triomics_metabolomics_rf(se, params))
   triomics_metabolomics_refuse_operation(params$operation, decision)
 }
 

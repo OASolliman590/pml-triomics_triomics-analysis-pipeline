@@ -379,25 +379,16 @@ testthat::test_that("A-T05-AC2 unknown missingness is not rewritten as MAR and t
   testthat::expect_identical(as.character(none_state$learned_parameters$missingness_assumption), "unknown")
   testthat::expect_false(identical(as.character(none_state$learned_parameters$missingness_assumption), "mar"))
 
-  bare <- list(stage = "impute", method = "knn", k = 1L, qualification = knn_pin())
-  testthat::expect_identical(
-    triomics_metabolomics_lane_decision(bare)$reason,
-    "unknown_missingness_is_not_mar"
-  )
   knn_unknown <- triomics_metabolomics_operations(
     impute = "knn", k = 1L, qualification = knn_pin(),
     missingness_assumption = "unknown",
     missingness_evidence = "This text must not turn unknown into MAR."
   )
-  testthat::expect_identical(triomics_metabolomics_lane_decision(knn_unknown[[6L]])$reason, "unknown_missingness_is_not_mar")
-  testthat::expect_true(all(vapply(knn_unknown, function(op) identical(op$apply, "unavailable"), logical(1L))))
   before <- snapshot(study)
   unknown_err <- expect_code(
     prepare_fit(study, fit_spec(new_dir("a-t05-unk-"), c("s1", "s2"), knn_unknown, "unk")),
     "A_CONFIG_METHOD"
   )
-  testthat::expect_match(conditionMessage(unknown_err), "Unknown missingness", fixed = TRUE)
-  testthat::expect_match(conditionMessage(unknown_err), "MAR", fixed = TRUE)
   testthat::expect_equal(snapshot(study), before, tolerance = 1e-8)
 
   mcar <- triomics_metabolomics_operations(
@@ -408,7 +399,6 @@ testthat::test_that("A-T05-AC2 unknown missingness is not rewritten as MAR and t
     prepare_fit(assemble_block(values, mask = mask), fit_spec(new_dir("a-t05-mcar-"), c("s1", "s2"), mcar, "mcar")),
     "A_CONFIG_METHOD"
   )
-  testthat::expect_match(conditionMessage(mcar_err), "missingness_does_not_select_mar", fixed = TRUE)
 
   median_ops <- triomics_metabolomics_operations(
     impute = "training_median", missingness_assumption = "unknown",
@@ -424,6 +414,18 @@ testthat::test_that("A-T05-AC2 unknown missingness is not rewritten as MAR and t
   testthat::expect_false(isTRUE(median_state$learned_parameters$imputation_role$biological_default))
   testthat::expect_false(identical(as.character(median_state$learned_parameters$imputation_role$mechanism), "mar"))
 
+  heldout_values <- values
+  heldout_values["f1", "s3"] <- 8000
+  heldout_dir <- new_dir("a-t05-med-heldout-")
+  heldout_fit <- prepare_fit(
+    assemble_block(heldout_values, mask = mask),
+    fit_spec(heldout_dir, c("s1", "s2"), median_ops, "median-heldout")
+  )
+  heldout_state <- triomics_read_state(heldout_fit$state_refs$alpha, heldout_dir)
+  testthat::expect_equal(vector_at(heldout_fit, "f1", "s2"), 2, tolerance = 1e-8)
+  testthat::expect_identical(as.character(heldout_state$training_unit_ids), c("s1", "s2"))
+  testthat::expect_equal(heldout_state$learned_parameters$medians[[1L]]$median, 2, tolerance = 1e-8)
+
   unknown_mask <- mask
   unknown_mask["f2", "s3"] <- "unknown"
   unknown_values <- values
@@ -437,199 +439,57 @@ testthat::test_that("A-T05-AC2 unknown missingness is not rewritten as MAR and t
   testthat::expect_equal(snapshot(unknown_study), before_unknown, tolerance = 1e-8)
 })
 
-testthat::test_that("A-T05-AC3 kNN fits training donors only and held-out rows do not change them", {
+testthat::test_that("A-T05-AC3 kNN and RF remain unavailable despite caller-authored current API evidence", {
   register_metabolomics()
   values <- matrix(
-    c(1, 10, 100, 100, 1, 2, 100, 100),
-    nrow = 2, byrow = TRUE,
-    dimnames = list(c("a", "b"), c("s1", "s2", "s3", "s4"))
-  )
-  values["b", "s4"] <- NA_real_
-  mask <- observed_mask(values)
-  mask["b", "s4"] <- "known_missing"
-  study <- assemble_block(values, mask = mask)
-  ops <- triomics_metabolomics_operations(
-    impute = "knn", k = 1L, qualification = knn_pin(),
-    missingness_assumption = "mar",
-    missingness_evidence = "Synthetic MAR fixture. Not an assay-wide default."
-  )
-  testthat::expect_identical(triomics_metabolomics_lane_decision(ops[[6L]])$status, "fit_apply")
-  dir <- new_dir("a-t05-knn-")
-  fitted <- prepare_fit(study, fit_spec(dir, c("s1", "s2"), ops, "knn"))
-  testthat::expect_equal(vector_at(fitted, "b", "s4"), 2, tolerance = 1e-8)
-  testthat::expect_identical(mask_of(fitted)["b", "s4"], "known_imputed")
-  state <- triomics_read_state(fitted$state_refs$alpha, dir)
-  donors <- as.character(state$learned_parameters$knn$donor_sample_ids)
-  testthat::expect_identical(donors, c("s1", "s2"))
-  testthat::expect_false("s3" %in% donors || "s4" %in% donors)
-
-  changed <- values
-  changed["a", "s3"] <- 0
-  changed["b", "s3"] <- 0
-  changed_dir <- new_dir("a-t05-knn2-")
-  changed_fit <- prepare_fit(
-    assemble_block(changed, mask = mask),
-    fit_spec(changed_dir, c("s1", "s2"), ops, "knn2")
-  )
-  testthat::expect_equal(vector_at(changed_fit, "b", "s4"), 2, tolerance = 1e-8)
-  changed_state <- triomics_read_state(changed_fit$state_refs$alpha, changed_dir)
-  testthat::expect_identical(
-    changed_state$learned_parameters$knn$donor_hash,
-    state$learned_parameters$knn$donor_hash
-  )
-
-  weighted_values <- matrix(
-    c(1, 2, 10, 1, 2, NA),
-    nrow = 2, byrow = TRUE,
-    dimnames = list(c("a", "b"), c("s1", "s2", "s3"))
-  )
-  weighted_mask <- observed_mask(weighted_values)
-  weighted_mask["b", "s3"] <- "known_missing"
-  weighted_ops <- triomics_metabolomics_operations(
-    impute = "knn", k = 2L, qualification = knn_pin(),
-    missingness_assumption = "mar", missingness_evidence = "Synthetic MAR fixture."
-  )
-  weighted <- prepare_fit(
-    assemble_block(weighted_values, mask = weighted_mask),
-    fit_spec(new_dir("a-t05-k2-"), c("s1", "s2"), weighted_ops, "k2")
-  )
-  testthat::expect_equal(vector_at(weighted, "b", "s3"), 26 / 17, tolerance = 1e-8)
-
-  decoy <- matrix(
-    c(1, 2, 3, NA, 2, 3),
-    nrow = 2, byrow = TRUE,
-    dimnames = list(c("a", "b"), c("s1", "s2", "s3"))
-  )
-  decoy_mask <- observed_mask(decoy)
-  decoy_mask["b", "s1"] <- "known_missing"
-  decoy_ops <- triomics_metabolomics_operations(
-    impute = "knn", k = 1L, qualification = knn_pin(),
-    missingness_assumption = "mar", missingness_evidence = "Synthetic MAR fixture."
-  )
-  decoy_fit <- prepare_fit(
-    assemble_block(decoy, mask = decoy_mask),
-    fit_spec(new_dir("a-t05-decoy-"), c("s1", "s2", "s3"), decoy_ops, "decoy")
-  )
-  testthat::expect_equal(vector_at(decoy_fit, "b", "s1"), 2, tolerance = 1e-8)
-
-  fresh <- assemble_block(values, mask = mask)
-  applied <- prepare_apply(fresh, fit_spec(dir, NULL, ops, "knn-apply"), fitted$state_refs)
-  testthat::expect_equal(vector_at(applied, "b", "s4"), 2, tolerance = 1e-8)
-  testthat::expect_identical(applied$state_refs$alpha$state_hash, fitted$state_refs$alpha$state_hash)
-  testthat::expect_identical(
-    triomics_read_state(applied$state_refs$alpha, dir)$learned_parameters$knn$donor_hash,
-    state$learned_parameters$knn$donor_hash
-  )
-
-  short <- matrix(c(1, NA_real_), nrow = 1, dimnames = list("a", c("s1", "s2")))
-  short_mask <- observed_mask(short)
-  short_mask["a", "s2"] <- "known_missing"
-  short_ops <- triomics_metabolomics_operations(
-    impute = "knn", k = 2L, qualification = knn_pin(),
-    missingness_assumption = "mar", missingness_evidence = "Synthetic MAR fixture."
-  )
-  expect_code(
-    prepare_fit(assemble_block(short, mask = short_mask), fit_spec(new_dir("a-t05-kshort-"), "s1", short_ops, "kshort")),
-    "A_SCALE_NEIGHBORS"
-  )
-  missing_k <- triomics_metabolomics_operations(
-    impute = "knn", qualification = knn_pin(),
-    missingness_assumption = "mar", missingness_evidence = "Synthetic MAR fixture."
-  )
-  expect_code(
-    prepare_fit(study, fit_spec(new_dir("a-t05-nok-"), c("s1", "s2"), missing_k, "nok")),
-    "A_CONFIG_METHOD"
-  )
-})
-
-testthat::test_that("A-T05-AC3 RF requires a pinned inductive fit and ignores held-out rows", {
-  register_metabolomics()
-  values <- matrix(
-    c(1, 2, 3, 9, 2, 4, 6, NA),
-    nrow = 2, byrow = TRUE,
-    dimnames = list(c("x", "y"), c("s1", "s2", "s3", "s4"))
+    c(1, NA, 3, 4, 2, 5), nrow = 2, byrow = TRUE,
+    dimnames = list(c("x", "y"), c("s1", "s2", "s3"))
   )
   mask <- observed_mask(values)
-  mask["y", "s4"] <- "known_missing"
-  ops <- triomics_metabolomics_operations(
-    impute = "rf", trees = 4L, qualification = rf_pin(),
-    missingness_assumption = "mar",
-    missingness_evidence = "Synthetic MAR fixture for an inductive forest."
-  )
-  dir <- new_dir("a-t05-rf-")
-  fitted <- prepare_fit(assemble_block(values, mask = mask), fit_spec(dir, c("s1", "s2", "s3"), ops, "rf"))
-  observed <- c(2, 4, 6)
-  imputed <- vector_at(fitted, "y", "s4")
-  testthat::expect_gte(imputed, min(observed) - 1e-8)
-  testthat::expect_lte(imputed, max(observed) + 1e-8)
-  testthat::expect_identical(mask_of(fitted)["y", "s4"], "known_imputed")
-  state <- triomics_read_state(fitted$state_refs$alpha, dir)
-  testthat::expect_identical(as.character(state$learned_parameters$rf$donor_sample_ids), c("s1", "s2", "s3"))
-  testthat::expect_false("s4" %in% as.character(state$learned_parameters$rf$donor_sample_ids))
+  mask["x", "s2"] <- "known_missing"
 
-  changed <- values
-  changed["x", "s4"] <- 1000
-  changed_dir <- new_dir("a-t05-rf2-")
-  changed_fit <- prepare_fit(assemble_block(changed, mask = mask), fit_spec(changed_dir, c("s1", "s2", "s3"), ops, "rf2"))
-  changed_state <- triomics_read_state(changed_fit$state_refs$alpha, changed_dir)
-  testthat::expect_identical(changed_state$learned_parameters$rf$forest_hash, state$learned_parameters$rf$forest_hash)
-
-  applied <- prepare_apply(
-    assemble_block(values, mask = mask),
-    fit_spec(dir, NULL, ops, "rf-apply"),
-    fitted$state_refs
-  )
-  testthat::expect_equal(vector_at(applied, "y", "s4"), imputed, tolerance = 1e-8)
-  testthat::expect_identical(applied$state_refs$alpha$state_hash, fitted$state_refs$alpha$state_hash)
-
-  transductive <- triomics_metabolomics_operations(
-    impute = "rf", trees = 2L,
-    missingness_assumption = "mar", missingness_evidence = "Synthetic MAR fixture.",
-    qualification = list(
-      status = "pinned", method_id = "rf", package = "missForest", version = "1.5",
-      native_fit = "missForest", native_apply = NULL, fit_apply = FALSE,
-      contexts = "metabolomics"
+  for (method in c("knn", "rf")) {
+    fit_api <- if (identical(method, "knn")) triomics_metabolomics_knn else triomics_metabolomics_rf
+    description <- triomics_metabolomics_imputation_description(method)
+    testthat::expect_identical(description$method, method)
+    testthat::expect_identical(description$role, "conditional_unavailable")
+    testthat::expect_false(isTRUE(description$biological_default))
+    qualification <- if (identical(method, "knn")) knn_pin() else rf_pin()
+    current_fingerprint <- triomics_hash_text(paste(deparse(body(fit_api)), collapse = "\n"))
+    qualification$implementation_fingerprint <- current_fingerprint
+    qualification$approval_source <- "caller-authored"
+    qualification$artifact <- list(
+      status = "accepted", method_id = method, package = "triomics", version = "0.1.0",
+      native_fit = qualification$native_fit, native_apply = qualification$native_apply,
+      fit_apply = TRUE, inductive = TRUE,
+      implementation_fingerprint = current_fingerprint
     )
-  )
-  testthat::expect_identical(
-    triomics_metabolomics_lane_decision(transductive[[6L]])$reason,
-    "inductive_fit_apply_not_supported"
-  )
-  before <- snapshot(assemble_block(values, mask = mask))
-  trans_study <- assemble_block(values, mask = mask)
-  expect_code(
-    prepare_fit(trans_study, fit_spec(new_dir("a-t05-trans-"), c("s1", "s2", "s3"), transductive, "trans")),
-    "A_CONFIG_METHOD"
-  )
-  testthat::expect_equal(snapshot(trans_study), before, tolerance = 1e-8)
-
-  vague <- triomics_metabolomics_operations(
-    impute = "knn", k = 1L,
-    missingness_assumption = "mar", missingness_evidence = "Synthetic MAR fixture.",
-    qualification = list(
-      status = "pinned", method_id = "knn", package = "impute", version = "1.76.0",
-      native_fit = "impute.knn", native_apply = "impute.knn", fit_apply = TRUE,
-      distance = "rms_shared_observed", weights = "inverse_distance",
-      donors = "training_samples_only", contexts = "metabolomics"
+    ops <- triomics_metabolomics_operations(
+      impute = method, k = 1L, trees = 2L, qualification = qualification,
+      missingness_assumption = "mar",
+      missingness_evidence = "Caller-authored evidence is not qualification authority."
     )
-  )
-  testthat::expect_identical(triomics_metabolomics_lane_decision(vague[[6L]])$reason, "qualification_not_pinned")
-  no_pin <- triomics_metabolomics_operations(
-    impute = "rf", trees = 2L, missingness_assumption = "mar",
-    missingness_evidence = "Synthetic MAR fixture."
-  )
-  testthat::expect_identical(triomics_metabolomics_lane_decision(no_pin[[6L]])$reason, "qualification_missing")
+    ops[[6L]]$api_label <- qualification$native_fit
+    ops[[6L]]$qualification_artifact <- qualification$artifact
+    ops[[6L]]$implementation_fingerprint <- current_fingerprint
 
-  all_missing <- matrix(c(NA_real_, 1, NA_real_, 2), nrow = 2, dimnames = list(c("gone", "keep"), c("s1", "s2")))
-  all_mask <- observed_mask(all_missing)
-  all_mask["gone", ] <- "known_missing"
-  expect_code(
-    prepare_fit(
-      assemble_block(all_missing, mask = all_mask),
-      fit_spec(new_dir("a-t05-allrf-"), c("s1", "s2"), ops, "allrf")
-    ),
-    "A_SCALE_ALL_MISSING"
-  )
+    expected <- list(status = "unavailable", reason = "qualification_unavailable_in_v2")
+    testthat::expect_identical(triomics_metabolomics_lane_decision(ops[[6L]]), expected)
+    testthat::expect_identical(triomics_metabolomics_predictive_eligibility(ops[[6L]]), "unavailable")
+    testthat::expect_true(all(vapply(ops, function(op) identical(op$apply, "unavailable"), logical(1L))))
+
+    study <- assemble_block(values, mask = mask)
+    original_study <- study
+    err <- testthat::capture_error(
+      prepare_fit(study, fit_spec(new_dir(paste0("a-t05-", method, "-refuse-")), c("s1", "s3"), ops, method))
+    )
+    testthat::expect_s3_class(err, "triomics_error")
+    if (inherits(err, "triomics_error")) {
+      testthat::expect_identical(err$code, "A_CONFIG_METHOD")
+      testthat::expect_match(conditionMessage(err), "qualification_unavailable_in_v2", fixed = TRUE)
+    }
+    testthat::expect_identical(study, original_study)
+  }
 })
 
 testthat::test_that("A-T05-AC4 zeros, reference mismatch, all-missing features and losses carry named lineage", {
