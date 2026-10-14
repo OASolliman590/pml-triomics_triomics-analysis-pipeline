@@ -45,12 +45,11 @@
       "status": "active"
     },
     {
-      "role": "sol_packet_reviewer",
+      "role": "luna_packet_repairer",
       "packet": "B-T06",
-      "client_thread_id": "client-new-thread:e5df53b3-f963-43da-a027-c3b7c21aa064",
-      "thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
+      "thread_id": "01a13a51-245d-7f03-9caa-9418378fc3a0",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
       "candidate_commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
       "status": "active"
     },
@@ -80,10 +79,10 @@
       },
       {
         "packet": "B-T06",
-        "thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a",
+        "thread_id": "01a13a51-245d-7f03-9caa-9418378fc3a0",
         "candidate_commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
-        "allowed_next_transition": "review_verdict_to_sol_gate_disposition",
-        "wait_cursor": null,
+        "allowed_next_transition": "repair_receipt_to_single_focused_sol_rereview",
+        "wait_cursor": "5543c6ab-7fd7-47ee-aa9f-1370f865a121:54",
         "status": "active"
       },
       {
@@ -97,9 +96,23 @@
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T05, B-T06 and B-T09 workers completed inside their allowlists. Three fresh Sol 6.1 high reviews are active or preparing. B-T04 remains independently blocked."
+    "disposition": "B-T05 and B-T09 fresh Sol reviews remain active. B-T06 initial review returned changes_required and targeted repair 1 is active for three bounded P1 findings. B-T04 remains independently blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t06_review_changes_required_repair_1_dispatched",
+      "date": "2026-10-14",
+      "review_thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a",
+      "worker_thread_id": "01a13a51-245d-7f03-9caa-9418378fc3a0",
+      "candidate_commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
+      "verdict": "changes_required",
+      "findings": [
+        "selection validation leaked across blocks and changed block_1 q values",
+        "missing selection inventory was treated as complete instead of failing closed",
+        "an incompatible treatment-mean contrast silently triggered two-group Wilcoxon"
+      ],
+      "disposition": "Targeted repair 1 may address only the three findings and add regressions, then must stop for the single focused re-review."
+    },
     {
       "event": "b_t05_worker_completed_review_dispatched",
       "date": "2026-10-14",
@@ -611,8 +624,9 @@
       "blockers": []
     },
     "B-T06": {
-      "status": "sol_review_active",
+      "status": "repair_1_active",
       "attempts": 1,
+      "repair_attempts": 1,
       "commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
       "acceptance_refs": [],
       "blockers": []
