@@ -382,3 +382,44 @@ testthat::test_that("B-T09 counts subjects missing the declared between-person v
   testthat::expect_identical(row$objective_audit$missingness$n_excluded_endpoint, 1L)
   testthat::expect_identical(row$objective_audit$missingness$reasons$endpoint_visit_missing, 1L)
 })
+
+testthat::test_that("B-T09 canonical schema admits only complete longitudinal objectives", {
+  base <- readLines(triomics_test_resource("examples", "tickets", "B-T09.yaml"), warn = FALSE)
+  write_config <- function(mode, fields = character()) {
+    replacement <- paste(c(paste0("      mode: ", mode), paste0("      ", fields)), collapse = "\n")
+    config <- sub("      mode: between_person", replacement, base, fixed = TRUE)
+    path <- tempfile(fileext = ".yaml")
+    writeLines(config, path)
+    path
+  }
+
+  parsed <- triomics_read_config(write_config(
+    "within_person", c("baseline_visit_ref: V0", "later_visit_ref: V1")
+  ))
+  testthat::expect_identical(parsed$clinical$objectives[[1L]]$mode, "within_person")
+
+  b09_expect_code(
+    triomics_read_config(write_config("within_person", "baseline_visit_ref: V0")),
+    "A_CONFIG_SCHEMA"
+  )
+
+  baseline_fields <- c(
+    "baseline_visit_ref: V0", "later_visit_ref: V1", "horizon_days: 30",
+    "baseline_adjustment: true", "outcome_estimand: later_level"
+  )
+  baseline <- triomics_read_config(write_config("baseline_to_later", baseline_fields))
+  testthat::expect_identical(baseline$clinical$objectives[[1L]]$horizon_days, 30L)
+
+  b09_expect_code(
+    triomics_read_config(write_config("baseline_to_later", baseline_fields[-5L])),
+    "A_CONFIG_SCHEMA"
+  )
+
+  modifier <- triomics_read_config(write_config(
+    "effect_modification", "modifier_ref: treatment_group"
+  ))
+  testthat::expect_identical(
+    modifier$clinical$objectives[[1L]]$modifier_ref,
+    "treatment_group"
+  )
+})

@@ -1287,6 +1287,31 @@
           "type": "string",
           "minLength": 1
         },
+        "baseline_visit_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "later_visit_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "horizon_days": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "baseline_adjustment": {
+          "type": "boolean"
+        },
+        "outcome_estimand": {
+          "enum": [
+            "later_level",
+            "change"
+          ]
+        },
+        "modifier_ref": {
+          "type": "string",
+          "minLength": 1
+        },
         "adjustments": {
           "type": "array",
           "items": {
@@ -1335,6 +1360,64 @@
         "family_ref",
         "hypothesis_status",
         "protocol_ref"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "within_person"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          "then": {
+            "required": [
+              "baseline_visit_ref",
+              "later_visit_ref"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "baseline_to_later"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          "then": {
+            "required": [
+              "baseline_visit_ref",
+              "later_visit_ref",
+              "horizon_days",
+              "baseline_adjustment",
+              "outcome_estimand"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "effect_modification"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          "then": {
+            "required": [
+              "modifier_ref"
+            ]
+          }
+        }
       ],
       "additionalProperties": false
     },

@@ -42,15 +42,6 @@
       "requested_effort": "max",
       "candidate_commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
       "status": "active"
-    },
-    {
-      "role": "sol_packet_reviewer",
-      "packet": "B-T09",
-      "thread_id": "01a13a5e-446b-7f53-ba70-435b976f59ee",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "candidate_commit": "0ca50369e2fb52c819a54abdfc8ff4480d9efc88",
-      "status": "active"
     }
   ],
   "orchestration_control": {
@@ -64,20 +55,26 @@
         "allowed_next_transition": "repair_receipt_to_single_focused_sol_rereview",
         "wait_cursor": "3aa7fd42-6009-4fac-a466-5d7c820f02d7:44",
         "status": "active"
-      },
-      {
-        "packet": "B-T09",
-        "thread_id": "01a13a5e-446b-7f53-ba70-435b976f59ee",
-        "candidate_commit": "0ca50369e2fb52c819a54abdfc8ff4480d9efc88",
-        "allowed_next_transition": "focused_rereview_verdict_to_sol_gate_disposition",
-        "wait_cursor": "1974d905-9424-4034-8a68-3fd0fb3d0f16:8",
-        "status": "active"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T05 targeted repair 1 remains active. B-T09 repair 1 completed and its single focused Sol re-review is active. B-T06 and B-T04 remain blocked."
+    "disposition": "B-T05 targeted repair 1 remains active. B-T09 packet repair passed focused review and is integrated; Sol-owned registration is implemented pending an independent cross-cutting review. B-T06 and B-T04 remain blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t09_packet_accepted_integrated_registration_implemented",
+      "date": "2026-10-14",
+      "review_thread_id": "01a13a5e-446b-7f53-ba70-435b976f59ee",
+      "candidate_commit": "0ca50369e2fb52c819a54abdfc8ff4480d9efc88",
+      "integration_commits": ["f7973fe", "2da6c09"],
+      "review_ref": "docs/implementation/reviews/B-T09-review.md",
+      "change_record_ref": "docs/implementation/change-records/M4-001-b-t09-longitudinal-cli-registration.md",
+      "verdict": "accepted_subject_to_sol_registration",
+      "tests_passed_after_registration": 80,
+      "source_cli_exit": 0,
+      "installed_cli_exit": 0,
+      "disposition": "Packet defects are resolved. Shared schema/NAMESPACE/CLI registration is implemented by Sol and awaits a fresh independent cross-cutting review before release."
+    },
     {
       "event": "b_t09_repair_1_completed_focused_rereview_dispatched",
       "date": "2026-10-14",
@@ -686,13 +683,18 @@
       "integration_commit": "9cd36fe"
     },
     "B-T09": {
-      "status": "focused_sol_rereview_active",
+      "status": "registration_review_pending",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "be1b52df2777e4cefbce6b23e9d10e536a6ca082",
       "repair_candidate_commit": "0ca50369e2fb52c819a54abdfc8ff4480d9efc88",
-      "acceptance_refs": [],
-      "blockers": []
+      "acceptance_refs": [
+        "docs/implementation/reviews/B-T09-review.md"
+      ],
+      "blockers": [
+        "Sol-owned schema/NAMESPACE/CLI registration requires fresh cross-cutting review before release."
+      ],
+      "integration_commits": ["f7973fe", "2da6c09"]
     },
     "B-T07": {
       "status": "not_started",

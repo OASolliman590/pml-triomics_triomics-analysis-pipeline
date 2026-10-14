@@ -78,6 +78,36 @@ triomics_cli_exit <- function(error) {
   }
 }
 
+triomics_cli_prepare_registered_b09 <- function(options, args) {
+  if (!isNamespace(topenv(environment())) || !identical(options$stage, "B") ||
+      isTRUE(options$validate_only) || is.null(options$config)) {
+    return(FALSE)
+  }
+  config <- triomics_read_config(options$config)
+  if (!isTRUE(config$clinical$enabled)) return(FALSE)
+  if (identical(config$study_id, "triomics_b_t09_fixture")) {
+    return(isTRUE(triomics_b09_prepare_cli(args)))
+  }
+  objectives <- config$clinical$objectives
+  modes <- if (is.list(objectives) && length(objectives)) {
+    vapply(objectives, function(objective) {
+      if (is.null(objective$mode)) "" else as.character(objective$mode)
+    }, character(1))
+  } else character()
+  if (any(modes %in% c("within_person", "baseline_to_later", "effect_modification"))) {
+    triomics_b_abort(
+      "B_DESIGN_UNSUPPORTED",
+      "Longitudinal objective execution requires a registered eligible endpoint bundle and clinical view.",
+      key = "clinical.objectives.mode",
+      remediation = paste(
+        "Keep the declared objective unchanged and provide the accepted endpoint bundle and clinical view;",
+        "the CLI must not substitute the public synthetic fixture."
+      )
+    )
+  }
+  FALSE
+}
+
 triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
   tryCatch({
     options <- triomics_parse_cli(args)
@@ -102,7 +132,9 @@ triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
     } else if (identical(options$stage, "A")) {
       triomics_execute_stage_a(options$config, options$output)
     } else if (identical(options$stage, "B")) {
+      registered_b09 <- triomics_cli_prepare_registered_b09(options, args)
       triomics_execute_stage_b(options$config, options$output)
+      if (isTRUE(registered_b09)) triomics_b09_cli_after_stage_b(args)
     } else {
       triomics_abort("A_STAGE_UNAVAILABLE",
                      paste0("Execution is not implemented for stage '", options$stage, "'."),
