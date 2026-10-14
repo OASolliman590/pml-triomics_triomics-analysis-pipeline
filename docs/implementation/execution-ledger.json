@@ -35,13 +35,20 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "stopped_blocked",
+    "status": "resuming_authorized_change",
     "last_reconciled": "2026-10-14",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "A-T05 is blocked after both permitted repairs because caller-authored current-hash artifacts can self-qualify. G3 and all packets requiring G3 are blocked; no run-owned worker or reviewer remains active."
+    "disposition": "Omar approved Option 1 in G3-001: kNN/RF stay fail-closed in v2 while none and training-median remain executable. One bounded change implementation and affected reviews are authorized; no worker is active yet."
   },
   "orchestration_events": [
+    {
+      "event": "a_t05_option1_authorized",
+      "date": "2026-10-14",
+      "change_record_ref": "docs/implementation/change-records/G3-001-metabolomics-imputation-fail-closed.md",
+      "evidence_ref": "reports/2026-10-14-metabolomics-imputation-validity-survey.md",
+      "disposition": "User-approved contract disposition keeps metabolomic kNN/RF unavailable in v2 with reason qualification_unavailable_in_v2. None and training-median remain supported. One bounded change implementation, fresh Sol review, integrated M3 verification, and focused Astra re-review are authorized."
+    },
     {
       "event": "g3_initial_review_changes_required",
       "date": "2026-10-14",
@@ -290,9 +297,11 @@
       "integration_commit": "2e4971e"
     },
     "A-T05": {
-      "status": "blocked",
+      "status": "authorized_change_pending_implementation",
       "attempts": 1,
       "repair_attempts": 2,
+      "change_attempts": 0,
+      "change_record_ref": "docs/implementation/change-records/G3-001-metabolomics-imputation-fail-closed.md",
       "commit": "ddc0ae5",
       "candidate_commit": "4c51fcc",
       "final_candidate_commit": "d21f6b0",
@@ -300,9 +309,7 @@
         "docs/implementation/reviews/A-T05-G3-repair1-review.md",
         "docs/implementation/reviews/A-T05-G3-repair2-review.md"
       ],
-      "blockers": [
-        "Repair budget exhausted: caller-authored artifacts with current API fingerprints can still self-qualify without an authoritative MethodQualification approval source"
-      ],
+      "blockers": [],
       "integration_commit": "2e4971e"
     },
     "A-T06": {
@@ -595,7 +602,7 @@
       "integration_commit": "e691ab9c9d798e650a73802e98bac78b9598bfd9"
     },
     "M3": {
-      "status": "blocked",
+      "status": "authorized_change_pending_implementation",
       "review_ref": "docs/implementation/reviews/M3-astra-review.md",
       "commit": "d96ca310cea5715f40e2cae72d59a29d411713bb",
       "integration_commit": "62b2e7d",
