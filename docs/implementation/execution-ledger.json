@@ -35,14 +35,14 @@
   },
   "active_workers": [
     {
-      "role": "luna_repair",
+      "role": "sol_rereviewer",
       "packet": "A-T05/G3-001",
-      "thread_id": "01a13a31-e30a-7321-8b3f-a13c009a30e9",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "thread_id": "01a13a3b-d273-7c53-b991-4ff940e0a2b3",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "base_commit": "11e3cf7",
-      "candidate_commit": "e969279d356c1891204e9eae5be9c3d94d44c4df",
-      "status": "repair_1_active"
+      "candidate_commit": "6845d5c6aa8d8de6f115ce5e122d0775659551e6",
+      "status": "focused_rereview_active"
     }
   ],
   "orchestration_control": {
@@ -50,20 +50,34 @@
     "last_reconciled": "2026-10-14",
     "active_handoffs": [
       {
-        "role": "luna_repair",
+        "role": "sol_rereviewer",
         "packet": "A-T05/G3-001",
-        "thread_id": "01a13a31-e30a-7321-8b3f-a13c009a30e9",
+        "thread_id": "01a13a3b-d273-7c53-b991-4ff940e0a2b3",
         "base_commit": "11e3cf7",
-        "candidate_commit": "e969279d356c1891204e9eae5be9c3d94d44c4df",
-        "allowed_next_transition": "repair_result_to_focused_sol_rereview",
+        "candidate_commit": "6845d5c6aa8d8de6f115ce5e122d0775659551e6",
+        "allowed_next_transition": "rereview_acceptance_to_serial_integration",
         "wait_cursor": null,
-        "status": "repair_1_active"
+        "status": "focused_rereview_active"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
     "disposition": "Omar approved Option 1 in G3-001: kNN/RF stay fail-closed in v2 while none and training-median remain executable. One bounded change implementation and affected reviews are authorized; no worker is active yet."
   },
   "orchestration_events": [
+    {
+      "event": "a_t05_option1_repair_1_completed_rereview_dispatched",
+      "date": "2026-10-14",
+      "worker_thread_id": "01a13a31-e30a-7321-8b3f-a13c009a30e9",
+      "review_thread_id": "01a13a3b-d273-7c53-b991-4ff940e0a2b3",
+      "candidate_commit": "6845d5c6aa8d8de6f115ce5e122d0775659551e6",
+      "tests": {
+        "packet_passed": 125,
+        "packet_failures": 0,
+        "packet_skips": 0,
+        "diff_check_exit": 0
+      },
+      "disposition": "The committed receipt was removed; the candidate now names only the three authorized files. Focused Sol re-review is active."
+    },
     {
       "event": "a_t05_option1_review_changes_required",
       "date": "2026-10-14",
@@ -358,13 +372,13 @@
       "integration_commit": "2e4971e"
     },
     "A-T05": {
-      "status": "authorized_change_repair_1",
+      "status": "authorized_change_focused_rereview",
       "attempts": 1,
       "repair_attempts": 2,
       "change_attempts": 1,
       "change_repair_attempts": 1,
       "change_record_ref": "docs/implementation/change-records/G3-001-metabolomics-imputation-fail-closed.md",
-      "change_candidate_commit": "e969279d356c1891204e9eae5be9c3d94d44c4df",
+      "change_candidate_commit": "6845d5c6aa8d8de6f115ce5e122d0775659551e6",
       "commit": "ddc0ae5",
       "candidate_commit": "4c51fcc",
       "final_candidate_commit": "d21f6b0",
