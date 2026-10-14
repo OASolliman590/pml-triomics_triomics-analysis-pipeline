@@ -35,12 +35,11 @@
   },
   "active_workers": [
     {
-      "role": "sol_packet_reviewer",
+      "role": "luna_packet_repairer",
       "packet": "B-T05",
-      "client_thread_id": "client-new-thread:183da223-b4ba-4137-8eeb-01bf5672e8e1",
-      "thread_id": "01a13a60-0604-77b3-a42b-cbbc951ec81c",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
+      "thread_id": "01a13a51-1b06-7040-8341-3405f4d99166",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
       "candidate_commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
       "status": "active"
     },
@@ -69,11 +68,10 @@
     "active_handoffs": [
       {
         "packet": "B-T05",
-        "client_thread_id": "client-new-thread:183da223-b4ba-4137-8eeb-01bf5672e8e1",
-        "thread_id": "01a13a60-0604-77b3-a42b-cbbc951ec81c",
+        "thread_id": "01a13a51-1b06-7040-8341-3405f4d99166",
         "candidate_commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
-        "allowed_next_transition": "review_verdict_to_sol_gate_disposition",
-        "wait_cursor": null,
+        "allowed_next_transition": "repair_receipt_to_single_focused_sol_rereview",
+        "wait_cursor": "3aa7fd42-6009-4fac-a466-5d7c820f02d7:44",
         "status": "active"
       },
       {
@@ -94,9 +92,23 @@
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T05 fresh Sol review remains active. B-T06 repair 1 completed and its single focused Sol re-review is active. B-T09 repair 1 remains active. B-T04 remains independently blocked."
+    "disposition": "B-T05 targeted repair 1 is active after an initial changes_required review. B-T06 repair 1 is in focused Sol re-review. B-T09 repair 1 remains active. B-T04 remains independently blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t05_review_changes_required_repair_1_dispatched",
+      "date": "2026-10-14",
+      "review_thread_id": "01a13a60-0604-77b3-a42b-cbbc951ec81c",
+      "worker_thread_id": "01a13a51-1b06-7040-8341-3405f4d99166",
+      "candidate_commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
+      "verdict": "changes_required",
+      "findings": [
+        "the packet CLI hook was overwritten by older wrappers and never reached qualified or fallback execution",
+        "incompatible assay/effect units were trusted and copied into results",
+        "delta count summaries included observations not used in the feature-specific fit"
+      ],
+      "disposition": "Targeted repair 1 must address only the three packet-owned defects; lock, config-relative path and serialization registration remain Sol-owned acceptance prerequisites."
+    },
     {
       "event": "b_t06_repair_1_completed_focused_rereview_dispatched",
       "date": "2026-10-14",
@@ -639,8 +651,9 @@
       ]
     },
     "B-T05": {
-      "status": "sol_review_active",
+      "status": "repair_1_active",
       "attempts": 1,
+      "repair_attempts": 1,
       "commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
       "acceptance_refs": [],
       "blockers": []
