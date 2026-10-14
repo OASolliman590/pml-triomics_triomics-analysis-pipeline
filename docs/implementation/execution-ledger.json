@@ -35,15 +35,14 @@
   },
   "active_workers": [
     {
-      "role": "sol_reviewer",
+      "role": "luna_repair",
       "packet": "A-T05/G3-001",
-      "client_thread_id": "client-new-thread:a913f744-efe1-4484-8cb9-2a87205e44cb",
-      "thread_id": "01a13a3b-d273-7c53-b991-4ff940e0a2b3",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
+      "thread_id": "01a13a31-e30a-7321-8b3f-a13c009a30e9",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
       "base_commit": "11e3cf7",
       "candidate_commit": "e969279d356c1891204e9eae5be9c3d94d44c4df",
-      "status": "active"
+      "status": "repair_1_active"
     }
   ],
   "orchestration_control": {
@@ -51,21 +50,30 @@
     "last_reconciled": "2026-10-14",
     "active_handoffs": [
       {
-        "role": "sol_reviewer",
+        "role": "luna_repair",
         "packet": "A-T05/G3-001",
-        "client_thread_id": "client-new-thread:a913f744-efe1-4484-8cb9-2a87205e44cb",
-        "thread_id": "01a13a3b-d273-7c53-b991-4ff940e0a2b3",
+        "thread_id": "01a13a31-e30a-7321-8b3f-a13c009a30e9",
         "base_commit": "11e3cf7",
         "candidate_commit": "e969279d356c1891204e9eae5be9c3d94d44c4df",
-        "allowed_next_transition": "review_verdict_to_integration_or_bounded_repair",
+        "allowed_next_transition": "repair_result_to_focused_sol_rereview",
         "wait_cursor": null,
-        "status": "active"
+        "status": "repair_1_active"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
     "disposition": "Omar approved Option 1 in G3-001: kNN/RF stay fail-closed in v2 while none and training-median remain executable. One bounded change implementation and affected reviews are authorized; no worker is active yet."
   },
   "orchestration_events": [
+    {
+      "event": "a_t05_option1_review_changes_required",
+      "date": "2026-10-14",
+      "review_thread_id": "01a13a3b-d273-7c53-b991-4ff940e0a2b3",
+      "candidate_commit": "e969279d356c1891204e9eae5be9c3d94d44c4df",
+      "review_ref": "docs/implementation/reviews/A-T05-G3-001-review.md",
+      "verdict": "changes_required",
+      "finding": "A local acceptance receipt was committed outside the exact A-T05 allowlist; no production correctness blocker was found.",
+      "disposition": "Focused repair 1 was sent to the same Luna worker. It may remove only the committed evidence file, rerun A-T05, and stop for focused re-review."
+    },
     {
       "event": "a_t05_option1_worker_completed_review_dispatched",
       "date": "2026-10-14",
@@ -350,10 +358,11 @@
       "integration_commit": "2e4971e"
     },
     "A-T05": {
-      "status": "authorized_change_review_pending",
+      "status": "authorized_change_repair_1",
       "attempts": 1,
       "repair_attempts": 2,
       "change_attempts": 1,
+      "change_repair_attempts": 1,
       "change_record_ref": "docs/implementation/change-records/G3-001-metabolomics-imputation-fail-closed.md",
       "change_candidate_commit": "e969279d356c1891204e9eae5be9c3d94d44c4df",
       "commit": "ddc0ae5",
