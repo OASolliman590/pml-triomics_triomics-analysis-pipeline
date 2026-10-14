@@ -33,29 +33,13 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "packet": "A-T05",
-      "thread_id": "01a13960-bdc8-79e3-99d0-a92ced159d16",
-      "role": "sol_6_1_high_reviewer",
-      "worktree": "/Users/megastore/.codex/worktrees/fb29/PML MultiOmics Analysis Pipeline",
-      "attempt": "repair_2_review"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "active",
+    "status": "stopped_blocked",
     "last_reconciled": "2026-10-14",
-    "active_handoffs": [
-      {
-        "thread_id": "01a13960-bdc8-79e3-99d0-a92ced159d16",
-        "role": "sol_6_1_high_reviewer",
-        "packet": "A-T05",
-        "candidate_commit": "d21f6b0",
-        "next_transition": "Read the final packet verdict immediately; integrate only if accepted, otherwise mark A-T05/G3 blocked because repair budget is exhausted."
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "A-T06 and A-T08 repairs are accepted and integrated. A-T05 final repair_2 is under fresh Sol 6.1 high review."
+    "disposition": "A-T05 is blocked after both permitted repairs because caller-authored current-hash artifacts can self-qualify. G3 and all packets requiring G3 are blocked; no run-owned worker or reviewer remains active."
   },
   "orchestration_events": [
     {
@@ -96,6 +80,37 @@
       "review_ref": "docs/implementation/reviews/A-T06-G3-repair1-review.md",
       "verdict": "accepted",
       "disposition": "Weighted carbon/double-bond endpoints now carry property-count index units and the saturation ratio is dimensionless without implying molar weighting."
+    },
+    {
+      "event": "a_t05_g3_repair_2_blocked",
+      "date": "2026-10-14",
+      "candidate_commit": "d21f6b0472ca6ed809768d9ff45ac71026aa7dd0",
+      "review_ref": "docs/implementation/reviews/A-T05-G3-repair2-review.md",
+      "verdict": "blocked",
+      "tests": {
+        "packet_passed": 169,
+        "failures": 0,
+        "warnings": 0,
+        "skips": 0,
+        "stage_a_cli_exit": 0,
+        "adversarial_self_qualification_reproduced": true
+      },
+      "disposition": "Repair budget exhausted. Neither A-T05 candidate was integrated; fingerprints cannot substitute for authoritative qualification approval."
+    },
+    {
+      "event": "g3_stopped_blocked",
+      "date": "2026-10-14",
+      "accepted_repair_integration_commits": [
+        "610a732",
+        "62b2e7d"
+      ],
+      "integrated_focused_tests": {
+        "A-T06_and_A-T08_passed": 455,
+        "failures": 0,
+        "warnings": 0,
+        "skips": 0
+      },
+      "disposition": "G3 cannot enter focused Astra re-review because A-T05 remains blocked. B-T04, B-T05, B-T06 and B-T09 all require G3; no unrelated implementation packet is legal."
     },
     {
       "event": "g2_accepted_and_run_paused",
@@ -275,17 +290,18 @@
       "integration_commit": "2e4971e"
     },
     "A-T05": {
-      "status": "repair_2_review_in_progress",
+      "status": "blocked",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "ddc0ae5",
       "candidate_commit": "4c51fcc",
       "final_candidate_commit": "d21f6b0",
       "acceptance_refs": [
-        "docs/implementation/reviews/A-T05-G3-repair1-review.md"
+        "docs/implementation/reviews/A-T05-G3-repair1-review.md",
+        "docs/implementation/reviews/A-T05-G3-repair2-review.md"
       ],
       "blockers": [
-        "Repair 1 rejected nonexistent APIs but remained marker-only; copied labels and same-name incompatible functions could still qualify"
+        "Repair budget exhausted: caller-authored artifacts with current API fingerprints can still self-qualify without an authoritative MethodQualification approval source"
       ],
       "integration_commit": "2e4971e"
     },
@@ -299,7 +315,7 @@
         "docs/implementation/reviews/A-T06-G3-repair1-review.md"
       ],
       "blockers": [
-        "focused G3 Astra re-review pending"
+        "packet repair accepted, but G3 is blocked by A-T05"
       ],
       "integration_commit": "62b2e7d"
     },
@@ -323,7 +339,7 @@
         "docs/implementation/reviews/A-T08-G3-repair1-review.md"
       ],
       "blockers": [
-        "focused G3 Astra re-review pending"
+        "packet repair accepted, but G3 is blocked by A-T05"
       ],
       "integration_commit": "610a732"
     },
@@ -579,10 +595,15 @@
       "integration_commit": "e691ab9c9d798e650a73802e98bac78b9598bfd9"
     },
     "M3": {
-      "status": "changes_required_pending_repairs",
+      "status": "blocked",
       "review_ref": "docs/implementation/reviews/M3-astra-review.md",
       "commit": "d96ca310cea5715f40e2cae72d59a29d411713bb",
-      "integration_commit": "2e4971e"
+      "integration_commit": "62b2e7d",
+      "blocking_packet": "A-T05",
+      "accepted_repair_integration_commits": [
+        "610a732",
+        "62b2e7d"
+      ]
     },
     "M4": {
       "status": "in_progress_not_ready_for_review",
@@ -627,5 +648,5 @@
     "pr": null,
     "notion_synced": false
   },
-  "close_state": "open"
+  "close_state": "open_blocked"
 }

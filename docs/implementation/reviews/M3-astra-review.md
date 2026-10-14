@@ -37,9 +37,15 @@ The snapshot remained clean and the frozen specification, seeds, thresholds,
 and packet identities were unchanged. These findings concern synthetic software
 behavior; they do not constitute real-data scientific validation.
 
-## Sol disposition
+## Sol disposition and bounded repair outcome
 
-G3 is not accepted. Sol authorized one bounded repair attempt for each affected
-packet, followed by fresh Sol 6.1 high packet review and the one permitted focused
-Astra G3 re-review. A-T04 and A-T07 remain Sol-verified but cannot be accepted
-until the milestone closes.
+G3 is not accepted. A-T08 and A-T06 repairs passed fresh Sol 6.1 high review and
+were integrated as `610a732` and `62b2e7d`. Their combined integrated suite
+passed 455 assertions with no failures, warnings, or skips.
+
+A-T05 exhausted both permitted repairs. Final review independently demonstrated
+that a caller-authored artifact carrying current API fingerprints can still
+self-qualify kNN/RF without an authoritative approval source. Both A-T05
+candidates remain unintegrated. G3 is therefore blocked and did not enter the one
+permitted focused Astra re-review. A-T04 and A-T07 remain Sol-verified but cannot
+be accepted while the milestone is blocked.
