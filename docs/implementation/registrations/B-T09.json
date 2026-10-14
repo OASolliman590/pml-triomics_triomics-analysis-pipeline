@@ -1,0 +1,85 @@
+{
+  "packet_id": "B-T09",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": [
+      "associate_longitudinal_endpoints",
+      "triomics_associate_longitudinal_endpoints",
+      "triomics_execute_longitudinal_associations"
+    ]
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml",
+      "limma"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ]
+  },
+  "stage_registry": {
+    "A": {
+      "validation_only": true,
+      "execution": true
+    },
+    "B": {
+      "validation_only": false,
+      "execution": true
+    },
+    "C": {
+      "validation_only": false,
+      "execution": false
+    },
+    "D": {
+      "validation_only": false,
+      "execution": false
+    },
+    "report": {
+      "validation_only": false,
+      "execution": false
+    },
+    "all": {
+      "validation_only": false,
+      "execution": false
+    }
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "owned_functions": [
+    "triomics_b09_variable",
+    "triomics_b09_observation_value",
+    "triomics_b09_sample_subject",
+    "triomics_b09_endpoint_rows",
+    "triomics_b09_sample_time",
+    "triomics_b09_horizon",
+    "triomics_b09_audit_shell",
+    "triomics_b09_record_exclusion",
+    "triomics_b09_adjustment_variables",
+    "triomics_b09_adjustment_values",
+    "triomics_b09_single_sample",
+    "triomics_b09_collect_rows",
+    "triomics_b09_result_shell",
+    "triomics_b09_fit_objective",
+    "triomics_b09_leak",
+    "triomics_associate_longitudinal_endpoints",
+    "associate_longitudinal_endpoints",
+    "triomics_b09_write_fixture_tables",
+    "triomics_b09_fixture_bundle",
+    "triomics_b09_cli_spec",
+    "triomics_b09_execute_longitudinal_associations",
+    "triomics_b09_prepare_cli",
+    "triomics_b09_cli_after_stage_b"
+  ],
+  "namespace_edits": false,
+  "request": "Sol owns NAMESPACE, DESCRIPTION, R/cli.R, R/stage_registry.R and renv.lock. Export associate_longitudinal_endpoints, triomics_associate_longitudinal_endpoints and triomics_execute_longitudinal_associations. Register the B-T09 synthetic source-CLI route after a successful non-validation stage B execution, with fixture preparation before stage B; keep the existing B-T08 fixture route scoped to its own study id. The local source CLI hook is packet-owned in R/clinical_longitudinal.R, but the installed-package path needs Sol's explicit package/CLI wiring. No new dependency or stage-registry change is required. The public objective schema is closed to additional properties and currently cannot express the direct API fields baseline_visit_ref, later_visit_ref, horizon_days, baseline_adjustment, outcome_estimand or modifier_ref. Do not encode these choices into free-text fields; resolve schema support through the spec's change-record and review process before exposing those modes in canonical YAML. The synthetic B-T09 YAML uses the existing schema-valid between_person fields."
+}
