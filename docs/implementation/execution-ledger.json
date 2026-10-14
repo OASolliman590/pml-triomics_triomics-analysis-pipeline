@@ -40,13 +40,6 @@
       "role": "luna_max",
       "worktree": "/Users/megastore/.codex/worktrees/e8a2/PML MultiOmics Analysis Pipeline",
       "attempt": "repair_2"
-    },
-    {
-      "packet": "A-T06",
-      "thread_id": "01a13952-7a9b-7b21-ade4-df1c943fa558",
-      "role": "sol_6_1_high_reviewer",
-      "worktree": "/Users/megastore/.codex/worktrees/0c4c/PML MultiOmics Analysis Pipeline",
-      "attempt": "repair_1_review"
     }
   ],
   "orchestration_control": {
@@ -59,17 +52,10 @@
         "packet": "A-T05",
         "base_candidate_commit": "4c51fcca5e0306c83e4aac539414443fd692ebed",
         "next_transition": "Inspect the final repair commit and dispatch a fresh Sol 6.1 high packet re-review."
-      },
-      {
-        "thread_id": "01a13952-7a9b-7b21-ade4-df1c943fa558",
-        "role": "sol_6_1_high_reviewer",
-        "packet": "A-T06",
-        "candidate_commit": "6903639f86cc54a3c6b1e4c2cde9b8ef84aefd36",
-        "next_transition": "Read the packet verdict immediately; integrate only if accepted, otherwise use the remaining bounded repair budget."
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "A-T08 repair 1 is accepted and integrated. A-T05 final repair_2 is active; A-T06 repair_1 remains under fresh Sol 6.1 high review."
+    "disposition": "A-T06 and A-T08 repairs are accepted and integrated. A-T05 final repair_2 remains active."
   },
   "orchestration_events": [
     {
@@ -101,6 +87,15 @@
       "review_ref": "docs/implementation/reviews/A-T08-G3-repair1-review.md",
       "verdict": "accepted",
       "disposition": "Referenced fit-state payload integrity is verified before reuse; missing, corrupt and malformed state triggers bounded descendant refresh."
+    },
+    {
+      "event": "a_t06_g3_repair_1_accepted",
+      "date": "2026-10-14",
+      "candidate_commit": "6903639f86cc54a3c6b1e4c2cde9b8ef84aefd36",
+      "integration_commit": "62b2e7d",
+      "review_ref": "docs/implementation/reviews/A-T06-G3-repair1-review.md",
+      "verdict": "accepted",
+      "disposition": "Weighted carbon/double-bond endpoints now carry property-count index units and the saturation ratio is dimensionless without implying molar weighting."
     },
     {
       "event": "g2_accepted_and_run_paused",
@@ -294,16 +289,18 @@
       "integration_commit": "2e4971e"
     },
     "A-T06": {
-      "status": "repair_1_review_in_progress",
+      "status": "repair_1_accepted_integrated_pending_g3",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "ddc0ae5",
       "candidate_commit": "6903639f86cc54a3c6b1e4c2cde9b8ef84aefd36",
-      "acceptance_refs": [],
-      "blockers": [
-        "G3-02: weighted endpoints and ratios inherit scientifically incorrect quantity/unit labels"
+      "acceptance_refs": [
+        "docs/implementation/reviews/A-T06-G3-repair1-review.md"
       ],
-      "integration_commit": "2e4971e"
+      "blockers": [
+        "focused G3 Astra re-review pending"
+      ],
+      "integration_commit": "62b2e7d"
     },
     "A-T07": {
       "status": "sol_verified",
