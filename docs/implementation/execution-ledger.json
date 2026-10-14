@@ -35,13 +35,13 @@
   },
   "active_workers": [
     {
-      "role": "luna_packet_implementer",
+      "role": "sol_packet_reviewer",
       "packet": "B-T05",
-      "client_thread_id": "client-new-thread:2c24de3c-c9cc-4084-b538-1f14db764b6f",
-      "thread_id": "01a13a51-1b06-7040-8341-3405f4d99166",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "status": "active"
+      "client_thread_id": "client-new-thread:183da223-b4ba-4137-8eeb-01bf5672e8e1",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "candidate_commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
+      "status": "worktree_preparing"
     },
     {
       "role": "sol_packet_reviewer",
@@ -70,10 +70,11 @@
     "active_handoffs": [
       {
         "packet": "B-T05",
-        "thread_id": "01a13a51-1b06-7040-8341-3405f4d99166",
-        "allowed_next_transition": "worker_receipt_to_fresh_sol_review",
-        "wait_cursor": "3aa7fd42-6009-4fac-a466-5d7c820f02d7:7",
-        "status": "active"
+        "client_thread_id": "client-new-thread:183da223-b4ba-4137-8eeb-01bf5672e8e1",
+        "candidate_commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
+        "allowed_next_transition": "bind_stable_thread_then_review_verdict_to_sol_gate_disposition",
+        "wait_cursor": null,
+        "status": "worktree_preparing"
       },
       {
         "packet": "B-T06",
@@ -94,9 +95,24 @@
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T05 implementation remains active. B-T06 and B-T09 workers completed inside their allowlists and fresh Sol 6.1 high reviews are active or preparing. B-T04 remains independently blocked."
+    "disposition": "B-T05, B-T06 and B-T09 workers completed inside their allowlists. Three fresh Sol 6.1 high reviews are active or preparing. B-T04 remains independently blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t05_worker_completed_review_dispatched",
+      "date": "2026-10-14",
+      "worker_thread_id": "01a13a51-1b06-7040-8341-3405f4d99166",
+      "candidate_commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
+      "tests_passed": 43,
+      "cli_exit": 0,
+      "review_client_thread_id": "client-new-thread:183da223-b4ba-4137-8eeb-01bf5672e8e1",
+      "declared_handoffs": [
+        "config-relative count-path resolution",
+        "optional dependency and lock registration",
+        "Stage B serialization provenance"
+      ],
+      "disposition": "Candidate stopped for independent review; it is not integrated."
+    },
     {
       "event": "b_t06_b_t09_workers_completed_reviews_dispatched",
       "date": "2026-10-14",
@@ -586,9 +602,9 @@
       ]
     },
     "B-T05": {
-      "status": "implementation_active",
+      "status": "sol_review_preparing",
       "attempts": 1,
-      "commit": null,
+      "commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
       "acceptance_refs": [],
       "blockers": []
     },
