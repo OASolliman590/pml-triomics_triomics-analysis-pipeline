@@ -542,3 +542,39 @@ testthat::test_that("A-T08-AC3 changed source or version invalidates only affect
   testthat::expect_false(isTRUE(artifact_where(reconfig, "handoff", NULL)$reused))
   testthat::expect_false(identical(reconfig$cache_key, original$cache_key))
 })
+
+testthat::test_that("A-T08-AC3 resume rejects missing or corrupt referenced fit state", {
+  request_template <- without_clinical(base_request("independent", "a_t08_state_integrity"))
+  for (damage in c("missing", "corrupt")) {
+    request <- request_template
+    request$study_id <- paste0(request_template$study_id, "_", damage)
+    output <- new_dir(paste0("a-t08-state-", damage, "-"))
+    first <- triomics_export_a(request, output, resume = FALSE)
+    first_state <- artifact_where(first, "state", "prot")
+    state_path <- file.path(first$state_dir, first$state_refs$prot$path)
+
+    if (identical(damage, "missing")) {
+      unlink(state_path)
+    } else {
+      payload <- jsonlite::read_json(state_path, simplifyVector = FALSE)
+      payload$profile_id <- "corrupt_profile"
+      jsonlite::write_json(payload, state_path, auto_unbox = TRUE, null = "null", pretty = TRUE, digits = NA)
+    }
+
+    resumed <- triomics_export_a(request, output, resume = TRUE)
+    testthat::expect_identical(resumed$status, "complete")
+    testthat::expect_true(isTRUE(artifact_where(resumed, "source", "prot")$reused))
+    testthat::expect_true(isTRUE(artifact_where(resumed, "feature", "prot")$reused))
+    testthat::expect_true(isTRUE(artifact_where(resumed, "state", "lip")$reused))
+    testthat::expect_false(isTRUE(artifact_where(resumed, "state", "prot")$reused))
+    testthat::expect_false(isTRUE(artifact_where(resumed, "handoff", NULL)$reused))
+    testthat::expect_false(isTRUE(artifact_where(resumed, "index", NULL)$reused))
+    testthat::expect_true(file.exists(state_path))
+    restored <- tryCatch(
+      triomics_read_state(resumed$state_refs$prot, resumed$state_dir),
+      error = function(error) NULL
+    )
+    testthat::expect_false(is.null(restored))
+    if (!is.null(restored)) testthat::expect_identical(restored$state_hash, first_state$state_hash)
+  }
+})

@@ -202,6 +202,30 @@ triomics_export_candidate <- function(payload_path) {
   )
 }
 
+triomics_export_state_reference_valid <- function(payload, state_dir) {
+  required <- c(
+    "block_id", "profile_id", "state_id", "state_hash", "state_path",
+    "training_unit_ids", "feature_keys"
+  )
+  if (!is.list(payload) || !all(required %in% names(payload))) return(FALSE)
+  tryCatch({
+    state <- triomics_read_state(
+      list(state_id = payload$state_id, state_hash = payload$state_hash, path = payload$state_path),
+      state_dir
+    )
+    identical(as.character(state$block_id), as.character(payload$block_id)) &&
+      identical(as.character(state$profile_id), as.character(payload$profile_id)) &&
+      identical(as.character(state$training_unit_ids), triomics_export_as_chr(payload$training_unit_ids)) &&
+      identical(as.character(state$feature_keys), triomics_export_as_chr(payload$feature_keys))
+  }, error = function(error) FALSE)
+}
+
+triomics_export_discard_state_payload <- function(state_path, state_dir) {
+  path <- tryCatch(triomics_state_path(state_dir, state_path), error = function(error) NULL)
+  if (!is.null(path) && file.exists(path) && !dir.exists(path)) unlink(path)
+  invisible(NULL)
+}
+
 triomics_export_inputs <- function(ids, shas) {
   if (length(ids) < 1L) return(list())
   lapply(seq_along(ids), function(index) list(artifact_id = ids[[index]], sha256 = shas[[index]]))
@@ -492,15 +516,21 @@ triomics_export_a <- function(request, output, resume = FALSE, interrupt = NULL)
   }
 
   artifacts <- list()
+  invalid_state_blocks <- character()
   add_artifact <- function(entry) {
     artifacts[[length(artifacts) + 1L]] <<- entry
   }
-  resolve_new <- function(role, label, cache_key, block_id, artifact_type, payload, inputs, reason_codes, extra) {
+  resolve_new <- function(role, label, cache_key, block_id, artifact_type, payload, inputs, reason_codes, extra,
+                          force_refresh = FALSE) {
     artifact_id <- paste0(role, "-", label, "-", substr(cache_key, 1L, 20L))
     path <- file.path(export_dir, paste0(artifact_id, ".json"))
+    envelope_path <- sub("\\.json$", ".envelope.json", path)
     interrupt_token <- if (is.null(block_id)) role else paste0(role, ":", block_id)
     reused <- FALSE
-    if (isTRUE(resume) && file.exists(path)) {
+    if (isTRUE(force_refresh)) {
+      if (file.exists(path)) unlink(path)
+      if (file.exists(envelope_path)) unlink(envelope_path)
+    } else if (isTRUE(resume) && file.exists(path)) {
       decision <- triomics_export_resume_decision(triomics_export_candidate(path), cache_key)
       reused <- isTRUE(decision$reuse)
     }
@@ -513,7 +543,6 @@ triomics_export_a <- function(request, output, resume = FALSE, interrupt = NULL)
       payload_sha <- written$payload_sha256
       envelope_path <- written$envelope_path
     } else {
-      envelope_path <- sub("\\.json$", ".envelope.json", path)
       payload_sha <- triomics_sha256(path)
       payload <- jsonlite::read_json(path, simplifyVector = FALSE)
     }
@@ -600,7 +629,14 @@ triomics_export_a <- function(request, output, resume = FALSE, interrupt = NULL)
       if (file.exists(state_path)) {
         decision <- triomics_export_resume_decision(triomics_export_candidate(state_path), state_key)
         state_reused <- isTRUE(decision$reuse)
-        if (state_reused) state_payload <- jsonlite::read_json(state_path, simplifyVector = FALSE)
+        if (state_reused) {
+          state_payload <- jsonlite::read_json(state_path, simplifyVector = FALSE)
+          if (!triomics_export_state_reference_valid(state_payload, state_dir)) {
+            state_reused <- FALSE
+            invalid_state_blocks <- c(invalid_state_blocks, block_id)
+            triomics_export_discard_state_payload(state_payload$state_path, state_dir)
+          }
+        }
       }
     }
     feature_plans[[block_id]] <- list(
@@ -754,7 +790,8 @@ triomics_export_a <- function(request, output, resume = FALSE, interrupt = NULL)
         "state", block_id, state_key, block_id, "preparation_state", payload,
         triomics_export_inputs(feature_entry$artifact_id, feature_entry$payload_sha256),
         character(),
-        list(file_sha256 = NULL, state_hash = ref$state_hash, state_id = ref$state_id)
+        list(file_sha256 = NULL, state_hash = ref$state_hash, state_id = ref$state_id),
+        force_refresh = block_id %in% invalid_state_blocks
       )
       state_refs[[block_id]] <- list(state_id = ref$state_id, state_hash = ref$state_hash, path = ref$path)
     } else {
@@ -919,7 +956,8 @@ triomics_export_a <- function(request, output, resume = FALSE, interrupt = NULL)
     list(limitations = limitations, child_artifact_ids = child_ids[child_order]),
     triomics_export_inputs(child_ids[child_order], child_shas[child_order]),
     c("source_validation_only", "scientific_validation_not_established", "optional_methods_not_qualified"),
-    list(file_sha256 = NULL, state_hash = NULL, state_id = NULL)
+    list(file_sha256 = NULL, state_hash = NULL, state_id = NULL),
+    force_refresh = length(invalid_state_blocks) > 0L
   )
 
   index_ids <- vapply(artifacts, function(item) item$artifact_id, character(1))
@@ -956,7 +994,8 @@ triomics_export_a <- function(request, output, resume = FALSE, interrupt = NULL)
     ),
     triomics_export_inputs(handoff_written$entry$artifact_id, handoff_written$entry$payload_sha256),
     character(),
-    list(file_sha256 = NULL, state_hash = NULL, state_id = NULL)
+    list(file_sha256 = NULL, state_hash = NULL, state_id = NULL),
+    force_refresh = length(invalid_state_blocks) > 0L
   )
 
   invisible(list(
