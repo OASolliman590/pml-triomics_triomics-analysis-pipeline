@@ -37,19 +37,24 @@
   "orchestration_control": {
     "status": "active",
     "last_reconciled": "2026-10-14",
-    "active_handoffs": [
-      {
-        "thread_id": "01a13944-4ccc-75f3-a5c8-d1d5cd5be668",
-        "role": "astra_low",
-        "gate": "G3",
-        "snapshot_commit": "d96ca310cea5715f40e2cae72d59a29d411713bb",
-        "next_transition": "Read the completed verdict immediately; accept G3 or dispatch the one permitted focused repair/re-review path."
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Astra-low G3 milestone audit is active on the immutable, Stage-B-free M3 snapshot."
+    "disposition": "G3 initial Astra review requires bounded repairs in A-T05, A-T06 and A-T08. Repair dispatch is the next transition."
   },
   "orchestration_events": [
+    {
+      "event": "g3_initial_review_changes_required",
+      "date": "2026-10-14",
+      "snapshot_commit": "d96ca310cea5715f40e2cae72d59a29d411713bb",
+      "review_ref": "docs/implementation/reviews/M3-astra-review.md",
+      "verdict": "changes_required",
+      "findings": [
+        "A-T08 cached-state payload and hash were not validated before reuse",
+        "A-T06 weighted endpoints and ratios inherited incorrect quantity/unit labels",
+        "A-T05 qualification could name nonexistent native fit/apply APIs"
+      ],
+      "disposition": "G3 remains closed. One bounded repair attempt per affected packet is authorized, followed by fresh Sol packet review and one focused Astra re-review."
+    },
     {
       "event": "g2_accepted_and_run_paused",
       "date": "2026-10-14",
@@ -228,22 +233,24 @@
       "integration_commit": "2e4971e"
     },
     "A-T05": {
-      "status": "sol_verified",
+      "status": "repair_required",
       "attempts": 1,
+      "repair_attempts": 0,
       "commit": "ddc0ae5",
       "acceptance_refs": [],
       "blockers": [
-        "milestone review not yet run"
+        "G3-03: optional method qualification is not bound to existing, versioned native fit/apply APIs"
       ],
       "integration_commit": "2e4971e"
     },
     "A-T06": {
-      "status": "sol_verified",
+      "status": "repair_required",
       "attempts": 1,
+      "repair_attempts": 0,
       "commit": "ddc0ae5",
       "acceptance_refs": [],
       "blockers": [
-        "milestone review not yet run"
+        "G3-02: weighted endpoints and ratios inherit scientifically incorrect quantity/unit labels"
       ],
       "integration_commit": "2e4971e"
     },
@@ -258,12 +265,13 @@
       "integration_commit": "2e4971e"
     },
     "A-T08": {
-      "status": "sol_verified",
+      "status": "repair_required",
       "attempts": 1,
+      "repair_attempts": 0,
       "commit": "ddc0ae5",
       "acceptance_refs": [],
       "blockers": [
-        "milestone review not yet run"
+        "G3-01: resume does not validate the referenced fit-state payload and hash before reuse"
       ],
       "integration_commit": "2e4971e"
     },
@@ -519,9 +527,10 @@
       "integration_commit": "e691ab9c9d798e650a73802e98bac78b9598bfd9"
     },
     "M3": {
-      "status": "sol_verified_pending_review",
-      "review_ref": null,
-      "commit": "2e4971e"
+      "status": "changes_required_pending_repairs",
+      "review_ref": "docs/implementation/reviews/M3-astra-review.md",
+      "commit": "d96ca310cea5715f40e2cae72d59a29d411713bb",
+      "integration_commit": "2e4971e"
     },
     "M4": {
       "status": "in_progress_not_ready_for_review",
