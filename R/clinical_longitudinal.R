@@ -30,7 +30,14 @@ triomics_b09_observation_value <- function(clinical_view, variable, subject_key,
   }, clinical_view$observations)
   if (!length(hits)) return(list(state = "missing", reason = "clinical_observation_absent"))
   if (length(hits) > 1L) return(list(state = "block", reason = "duplicate_clinical_observation"))
-  triomics_b08_coded_value(hits[[1L]], variable)
+  value <- triomics_b08_coded_value(hits[[1L]], variable)
+  value$measurement_time <- if (is.character(hits[[1L]]$time) && length(hits[[1L]]$time) == 1L &&
+                                !is.na(hits[[1L]]$time) && nzchar(hits[[1L]]$time)) {
+    hits[[1L]]$time
+  } else {
+    NULL
+  }
+  value
 }
 
 triomics_b09_sample_subject <- function(sample, links) {
@@ -120,6 +127,7 @@ triomics_b09_audit_shell <- function(objective) {
       later_visit = objective$later_visit_ref,
       declared_horizon_days = objective$horizon_days,
       observed_horizon_days = numeric(),
+      predictor_to_later_horizon_days = numeric(),
       baseline_adjustment = objective$baseline_adjustment
     ),
     missingness = list(
@@ -145,6 +153,28 @@ triomics_b09_record_exclusion <- function(audit, source, reason = NULL) {
   if (is.null(current)) current <- 0L
   audit$missingness$reasons[[reason]] <- as.integer(current + 1L)
   audit
+}
+
+triomics_b09_block_objective <- function(audit, source, reason) {
+  audit <- triomics_b09_record_exclusion(audit, source, reason)
+  audit$missingness$n_included <- 0L
+  list(ok = FALSE, reason = reason, rows = list(), audit = audit)
+}
+
+triomics_b09_measurement_time_status <- function(measurement_time, cutoff_time, reason_after) {
+  valid_date <- function(value) {
+    if (!is.character(value) || length(value) != 1L || is.na(value) || !nzchar(value)) return(NULL)
+    parsed <- suppressWarnings(as.Date(value, format = "%Y-%m-%d"))
+    if (is.na(parsed) || format(parsed, "%Y-%m-%d") != value) return(NULL)
+    parsed
+  }
+  measured <- valid_date(measurement_time)
+  cutoff <- valid_date(cutoff_time)
+  if (is.null(measured) || is.null(cutoff)) {
+    return(list(ok = FALSE, reason = "baseline_information_time_unverified"))
+  }
+  if (measured > cutoff) return(list(ok = FALSE, reason = reason_after))
+  list(ok = TRUE, reason = NULL)
 }
 
 triomics_b09_adjustment_variables <- function(objective, clinical_view, mode) {
@@ -178,6 +208,7 @@ triomics_b09_adjustment_variables <- function(objective, clinical_view, mode) {
 triomics_b09_adjustment_values <- function(clinical_view, variables, subject_key,
                                             visit_ids, mode) {
   values <- numeric()
+  measurement_times <- list()
   for (name in names(variables)) {
     variable <- variables[[name]]
     if (identical(mode, "within_person")) {
@@ -189,14 +220,16 @@ triomics_b09_adjustment_values <- function(clinical_view, variables, subject_key
         return(list(state = "missing", reason = "clinical_adjustment_missing"))
       }
       values[[paste0("adjustment::", name)]] <- after$value - before$value
+      measurement_times[name] <- list(c(before$measurement_time, after$measurement_time))
     } else {
-      visit <- if (identical(mode, "baseline_to_later")) visit_ids[[1L]] else visit_ids[[1L]]
+      visit <- visit_ids[[1L]]
       value <- triomics_b09_observation_value(clinical_view, variable, subject_key, visit)
       if (!identical(value$state, "value")) return(value)
       values[[paste0("adjustment::", name)]] <- value$value
+      measurement_times[name] <- list(value$measurement_time)
     }
   }
-  list(state = "value", values = values)
+  list(state = "value", values = values, measurement_times = measurement_times)
 }
 
 triomics_b09_single_sample <- function(rows, subject_key, visit_id) {
@@ -280,7 +313,6 @@ triomics_b09_collect_rows <- function(endpoint, clinical_view, objective, predic
   audit$time_window$visit_ids <- c(baseline_visit, later_visit)
   collected <- list()
   horizons <- integer()
-  horizon_failure <- NULL
   for (subject in subjects) {
     before <- triomics_b09_single_sample(rows, subject, baseline_visit)
     after <- triomics_b09_single_sample(rows, subject, later_visit)
@@ -334,22 +366,39 @@ triomics_b09_collect_rows <- function(endpoint, clinical_view, objective, predic
       next
     }
     if (identical(mode, "baseline_to_later")) {
-      start_time <- x_before$time
-      if (is.null(start_time) || !nzchar(start_time)) {
-        start_time <- triomics_b09_sample_time(before$row, clinical_view, subject, baseline_visit)
-      }
-      end_time <- triomics_b09_sample_time(after$row, clinical_view, subject, later_visit)
-      horizon <- triomics_b09_horizon(start_time, end_time)
+      baseline_time <- triomics_b09_sample_time(before$row, clinical_view, subject, baseline_visit)
+      later_time <- triomics_b09_sample_time(after$row, clinical_view, subject, later_visit)
+      horizon <- triomics_b09_horizon(baseline_time, later_time)
       if (!isTRUE(horizon$ok)) {
-        audit <- triomics_b09_record_exclusion(audit, "endpoint", horizon$reason)
-        horizon_failure <- horizon$reason
-        next
+        return(triomics_b09_block_objective(audit, "endpoint", horizon$reason))
       }
       horizons <- c(horizons, horizon$days)
       if (!identical(as.numeric(horizon$days), as.numeric(objective$horizon_days))) {
-        audit <- triomics_b09_record_exclusion(audit, "endpoint", "horizon_mismatch")
-        horizon_failure <- "horizon_mismatch"
-        next
+        audit$time_window$observed_horizon_days <- sort(unique(horizons))
+        return(triomics_b09_block_objective(audit, "endpoint", "horizon_mismatch"))
+      }
+      predictor_horizon <- triomics_b09_horizon(x_before$measurement_time, later_time)
+      if (isTRUE(predictor_horizon$ok)) {
+        predictor_horizons <- c(audit$time_window$predictor_to_later_horizon_days,
+                                predictor_horizon$days)
+        audit$time_window$predictor_to_later_horizon_days <- sort(unique(predictor_horizons))
+      }
+      predictor_time <- triomics_b09_measurement_time_status(
+        x_before$measurement_time, baseline_time, "predictor_after_baseline"
+      )
+      if (!isTRUE(predictor_time$ok)) {
+        audit$time_window$observed_horizon_days <- sort(unique(horizons))
+        return(triomics_b09_block_objective(audit, "clinical", predictor_time$reason))
+      }
+      for (name in names(adjustments)) {
+        measurement_time <- adjustment$measurement_times[[name]]
+        adjustment_time <- triomics_b09_measurement_time_status(
+          measurement_time, baseline_time, "adjustment_after_baseline"
+        )
+        if (!isTRUE(adjustment_time$ok)) {
+          audit$time_window$observed_horizon_days <- sort(unique(horizons))
+          return(triomics_b09_block_objective(audit, "clinical", adjustment_time$reason))
+        }
       }
       response <- switch(objective$outcome_estimand,
         later_level = after$row$value,
@@ -370,10 +419,6 @@ triomics_b09_collect_rows <- function(endpoint, clinical_view, objective, predic
   }
   audit$time_window$observed_horizon_days <- sort(unique(horizons))
   audit$missingness$n_included <- as.integer(length(collected))
-  if (identical(mode, "baseline_to_later") && !length(collected) &&
-      !is.null(horizon_failure)) {
-    return(list(ok = FALSE, reason = horizon_failure, rows = collected, audit = audit))
-  }
   list(ok = TRUE, reason = NULL, rows = collected, audit = audit)
 }
 
@@ -463,9 +508,14 @@ triomics_b09_fit_objective <- function(endpoint, clinical_view, objective, robus
       return(triomics_b09_result_shell(objective, endpoint$endpoint_id, response_type,
                                        reason = "baseline_adjustment_choice_undeclared"))
     }
+    if (!is.character(objective$outcome_estimand) || length(objective$outcome_estimand) != 1L ||
+        is.na(objective$outcome_estimand) || !nzchar(objective$outcome_estimand)) {
+      return(triomics_b09_result_shell(objective, endpoint$endpoint_id, response_type,
+                                       reason = "outcome_estimand_undeclared"))
+    }
     if (!objective$outcome_estimand %in% c("later_level", "change")) {
       return(triomics_b09_result_shell(objective, endpoint$endpoint_id, response_type,
-                                       reason = "outcome_estimand_unresolved"))
+                                       reason = "outcome_estimand_unsupported"))
     }
   }
   modifier <- NULL
@@ -794,15 +844,34 @@ triomics_b09_fixture_bundle <- function(clinical_view) {
 }
 
 triomics_b09_cli_spec <- function(config) {
-  objectives <- lapply(config$clinical$objectives, function(objective) {
-    objective$response_ref <- "synthetic_longitudinal_score"
-    objective$endpoint_ref <- "synthetic_longitudinal_score"
-    objective$predictor_ref <- "glucose"
-    objective$mode <- "between_person"
-    objective$time_window_ref <- "V1"
-    objective$objective_version <- "1"
-    objective
-  })
+  objectives <- config$clinical$objectives
+  if (!is.list(objectives) || !length(objectives)) {
+    triomics_b_abort("B_DESIGN_UNSUPPORTED", "The B-T09 fixture route requires a declared objective.",
+                     key = "clinical.objectives")
+  }
+  if (any(!vapply(objectives, function(objective) {
+    identical(objective$mode, "between_person")
+  }, logical(1)))) {
+    triomics_b_abort(
+      "B_DESIGN_UNSUPPORTED",
+      "The B-T09 CLI fixture route cannot execute this declared objective mode.",
+      key = "clinical.objectives.mode",
+      remediation = "Keep the declared mode unchanged. Sol must register its schema fields and CLI dispatch before this route can execute it."
+    )
+  }
+  if (any(!vapply(objectives, function(objective) {
+    identical(objective$endpoint_ref, "synthetic_longitudinal_score") &&
+      identical(objective$response_ref, "synthetic_longitudinal_score") &&
+      identical(objective$predictor_ref, "glucose")
+  }, logical(1)))) {
+    triomics_b_abort("B_DESIGN_UNSUPPORTED", "The B-T09 fixture objective does not match its synthetic endpoint.",
+                     key = "clinical.objectives.endpoint_ref")
+  }
+  family_refs <- vapply(objectives, function(objective) objective$family_ref, character(1))
+  if (length(unique(family_refs)) != 1L || any(!nzchar(family_refs))) {
+    triomics_b_abort("B_FAMILY_UNDECLARED", "The B-T09 fixture objectives must share one declared family.",
+                     key = "clinical.objectives.family_ref")
+  }
   member_ids <- vapply(objectives, function(objective) objective$endpoint_ref, character(1))
   list(
     objectives = objectives,
@@ -818,9 +887,15 @@ triomics_b09_cli_spec <- function(config) {
 triomics_b09_execute_longitudinal_associations <- function(config_path, output) {
   config <- triomics_read_config(config_path)
   if (!isTRUE(config$clinical$enabled)) return(list(status = "not_requested"))
-  if (identical(config$study_id, "triomics_b_t09_fixture")) {
-    triomics_b09_write_fixture_tables(config, config_path)
+  if (!identical(config$study_id, "triomics_b_t09_fixture")) {
+    triomics_b_abort(
+      "B_DESIGN_UNSUPPORTED",
+      "The B-T09 CLI executor only has a public synthetic endpoint fixture.",
+      key = "study_id",
+      remediation = "Use associate_longitudinal_endpoints with the actual endpoint bundle; do not substitute the synthetic fixture."
+    )
   }
+  triomics_b09_write_fixture_tables(config, config_path)
   ingested <- triomics_ingest_configured_study(config, config_path)
   clinical <- triomics_ingest_clinical(config, config_path, ingested$sample_registry)
   bundle <- triomics_b09_fixture_bundle(clinical)
@@ -882,6 +957,8 @@ triomics_b09_execute_longitudinal_associations <- function(config_path, output) 
   invisible(fit)
 }
 
+triomics_execute_longitudinal_associations <- triomics_b09_execute_longitudinal_associations
+
 triomics_b09_prepare_cli <- function(args) {
   options <- triomics_parse_cli(args)
   if (!identical(options$stage, "B") || isTRUE(options$validate_only) || isTRUE(options$help) ||
@@ -890,6 +967,7 @@ triomics_b09_prepare_cli <- function(args) {
   if (!identical(config$study_id, "triomics_b_t09_fixture") || !isTRUE(config$clinical$enabled)) {
     return(invisible(FALSE))
   }
+  triomics_b09_cli_spec(config)
   triomics_b09_write_fixture_tables(config, options$config)
   invisible(TRUE)
 }

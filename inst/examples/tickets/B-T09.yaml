@@ -198,9 +198,9 @@ clinical:
     - objective_id: glucose_longitudinal_between
       analysis_id: synthetic_primary
       mode: between_person
-      response_ref: synthetic_score
+      response_ref: synthetic_longitudinal_score
       predictor_ref: glucose
-      endpoint_ref: synthetic_score
+      endpoint_ref: synthetic_longitudinal_score
       adjustments:
         - variable: age
           role: confounder

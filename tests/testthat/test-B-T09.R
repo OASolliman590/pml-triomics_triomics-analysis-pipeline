@@ -4,6 +4,13 @@ expect_close <- function(actual, expected, tolerance = 1e-7) {
                         info = paste(actual, expected, sep = " != "))
 }
 
+b09_expect_code <- function(expr, code) {
+  error <- testthat::capture_error(force(expr))
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, code)
+  invisible(error)
+}
+
 b09_variable <- function(id, type = "continuous", units = "score_unit",
                          semantics = "visit", codebook = list()) {
   list(
@@ -78,14 +85,15 @@ b09_fixture <- function(x0, x1, y0, y1, x1_offset = 0,
 }
 
 b09_spec <- function(mode, fields = list(), hypothesis_status = "exploratory") {
-  objective <- c(list(
+  objective <- list(
     objective_id = paste0("objective_", mode), objective_version = "1",
     analysis_id = "synthetic_primary", mode = mode,
     response_ref = "score", predictor_ref = "x", endpoint_ref = "score",
     adjustments = list(), time_window_ref = "V0", missingness_policy = "complete_case",
     family_ref = "clinical_family", hypothesis_status = hypothesis_status,
     protocol_ref = "synthetic-b-t09"
-  ), fields)
+  )
+  for (name in names(fields)) objective[[name]] <- fields[[name]]
   list(
     objectives = list(objective),
     family = list(family_id = "clinical_family", member_ids = objective$endpoint_ref,
@@ -182,7 +190,110 @@ testthat::test_that("B-T09-AC2 baseline-to-later uses declared horizon and basel
   ))
   testthat::expect_identical(horizon_blocked$estimation_status, "unavailable")
   testthat::expect_identical(horizon_blocked$estimation_reason, "horizon_mismatch")
-  testthat::expect_identical(horizon_blocked$objective_audit$missingness$reasons$horizon_mismatch, 8L)
+  testthat::expect_identical(horizon_blocked$objective_audit$missingness$reasons$horizon_mismatch, 1L)
+})
+
+testthat::test_that("B-T09-AC2 predictor timestamps cannot move the baseline information cutoff", {
+  x0 <- 0:7
+  y0 <- c(2, 4, 1, 7, 5, 9, 3, 8)
+  y1 <- 8 + 2 * x0 + 0.5 * y0 + c(-0.2, 0.1, 0.1, -0.2, 0.2, -0.1, -0.1, 0.2)
+  fixture <- b09_fixture(x0, x0 + 1, y0, y1)
+  for (i in seq_along(fixture$view$observations)) {
+    observation <- fixture$view$observations[[i]]
+    if (identical(observation$variable_id, "x") && identical(observation$visit_id, "V0")) {
+      fixture$view$observations[[i]]$time <- "2020-01-02"
+    }
+  }
+  fields <- list(
+    baseline_visit_ref = "V0", later_visit_ref = "V1", horizon_days = 30,
+    baseline_adjustment = TRUE, outcome_estimand = "later_level"
+  )
+  row <- b09_result(associate_longitudinal_endpoints(
+    fixture$bundle, fixture$view, b09_spec("baseline_to_later", fields)
+  ))
+
+  testthat::expect_identical(row$estimation_status, "unavailable")
+  testthat::expect_identical(row$estimation_reason, "predictor_after_baseline")
+  testthat::expect_identical(row$objective_audit$time_window$observed_horizon_days, 30L)
+  testthat::expect_equal(row$objective_audit$time_window$predictor_to_later_horizon_days, 29)
+})
+
+testthat::test_that("B-T09-AC2 any observed horizon outside the declaration blocks the objective", {
+  x0 <- 0:7
+  y0 <- c(2, 4, 1, 7, 5, 9, 3, 8)
+  y1 <- 8 + 2 * x0 + 0.5 * y0 + c(-0.2, 0.1, 0.1, -0.2, 0.2, -0.1, -0.1, 0.2)
+  fixture <- b09_fixture(x0, x0 + 1, y0, y1)
+  fixture$bundle$endpoints[[1L]]$samples[[2L]]$time <- "2020-02-01"
+  fields <- list(
+    baseline_visit_ref = "V0", later_visit_ref = "V1", horizon_days = 30,
+    baseline_adjustment = TRUE, outcome_estimand = "later_level"
+  )
+  row <- b09_result(associate_longitudinal_endpoints(
+    fixture$bundle, fixture$view, b09_spec("baseline_to_later", fields)
+  ))
+
+  testthat::expect_identical(row$estimation_status, "unavailable")
+  testthat::expect_identical(row$estimation_reason, "horizon_mismatch")
+  testthat::expect_identical(row$objective_audit$time_window$observed_horizon_days, 31L)
+  testthat::expect_identical(row$objective_audit$missingness$reasons$horizon_mismatch, 1L)
+})
+
+testthat::test_that("B-T09-AC2 later-only static adjustments cannot enter a baseline model", {
+  x0 <- 0:7
+  y0 <- c(2, 4, 1, 7, 5, 9, 3, 8)
+  y1 <- 8 + 2 * x0 + 0.5 * y0 + c(-0.2, 0.1, 0.1, -0.2, 0.2, -0.1, -0.1, 0.2)
+  fixture <- b09_fixture(x0, x0 + 1, y0, y1)
+  fixture$view$dictionary$late_static <- b09_variable(
+    "late_static", units = "units", semantics = "subject_static"
+  )
+  static_values <- c(2, 4, 1, 6, 3, 8, 5, 7)
+  fixture$view$observations <- c(fixture$view$observations, lapply(seq_along(static_values), function(i) {
+    b09_observation("late_static", LETTERS[[i]], "V1", static_values[[i]], "2020-01-31")
+  }))
+  fields <- list(
+    baseline_visit_ref = "V0", later_visit_ref = "V1", horizon_days = 30,
+    baseline_adjustment = TRUE, outcome_estimand = "later_level",
+    adjustments = list(list(variable = "late_static", form = "level",
+                            rationale = "Synthetic adversarial later-only measurement."))
+  )
+  row <- b09_result(associate_longitudinal_endpoints(
+    fixture$bundle, fixture$view, b09_spec("baseline_to_later", fields)
+  ))
+
+  testthat::expect_identical(row$estimation_status, "unavailable")
+  testthat::expect_identical(row$estimation_reason, "adjustment_after_baseline")
+})
+
+testthat::test_that("B-T09 refuses a schema-valid within-person CLI objective instead of relabeling it", {
+  config <- list(
+    study_id = "triomics_b_t09_fixture",
+    clinical = list(objectives = list(list(
+      objective_id = "longitudinal_change", analysis_id = "synthetic_primary",
+      mode = "within_person", response_ref = "synthetic_longitudinal_score",
+      predictor_ref = "glucose", endpoint_ref = "synthetic_longitudinal_score",
+      adjustments = list(), time_window_ref = "V1", missingness_policy = "complete_case",
+      family_ref = "clinical_longitudinal_family", hypothesis_status = "exploratory",
+      protocol_ref = "synthetic-b-t09"
+    )))
+  )
+
+  error <- b09_expect_code(triomics_b09_cli_spec(config), "B_DESIGN_UNSUPPORTED")
+  testthat::expect_match(conditionMessage(error), "declared objective mode")
+})
+
+testthat::test_that("B-T09 missing outcome estimand returns typed unavailability", {
+  x0 <- 0:7
+  y0 <- c(2, 4, 1, 7, 5, 9, 3, 8)
+  y1 <- 8 + 2 * x0 + 0.5 * y0 + c(-0.2, 0.1, 0.1, -0.2, 0.2, -0.1, -0.1, 0.2)
+  fixture <- b09_fixture(x0, x0 + 1, y0, y1)
+  fields <- list(baseline_visit_ref = "V0", later_visit_ref = "V1", horizon_days = 30,
+                 baseline_adjustment = TRUE, outcome_estimand = NULL)
+
+  row <- b09_result(associate_longitudinal_endpoints(
+    fixture$bundle, fixture$view, b09_spec("baseline_to_later", fields)
+  ))
+  testthat::expect_identical(row$estimation_status, "unavailable")
+  testthat::expect_identical(row$estimation_reason, "outcome_estimand_undeclared")
 })
 
 testthat::test_that("B-T09-AC3 effect modification tests the fitted interaction coefficient", {
