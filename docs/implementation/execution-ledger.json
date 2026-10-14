@@ -33,36 +33,39 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "role": "sol_cross_cutting_reviewer",
-      "packet": "B-T09",
-      "client_thread_id": "client-new-thread:353030f6-675b-4f04-b222-92e80b398f64",
-      "thread_id": "01a13a74-71bb-7901-a86d-27b2263df49a",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "snapshot_commit": "219b9b2",
-      "status": "active"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "stage_b_parallel_implementation_active",
+    "status": "m4_blocked_no_legal_downstream_packet",
     "last_reconciled": "2026-10-14",
-    "active_handoffs": [
-      {
-        "packet": "B-T09-registration",
-        "client_thread_id": "client-new-thread:353030f6-675b-4f04-b222-92e80b398f64",
-        "thread_id": "01a13a74-71bb-7901-a86d-27b2263df49a",
-        "snapshot_commit": "219b9b2",
-        "allowed_next_transition": "focused_registration_rereview_to_sol_disposition",
-        "wait_cursor": "d5f9bed4-5b0d-4317-9f69-3b7c91be6208:21",
-        "status": "active"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T05, B-T06 and B-T04 are blocked after their bounded review paths. B-T09 registration repair 1 is in its single focused cross-cutting re-review."
+    "disposition": "B-T09 is accepted after packet and cross-cutting registration review. M4 remains blocked by B-T04, B-T05 and B-T06; B-T07 and later stages are not legally dispatchable. No run-owned chat remains active."
   },
   "orchestration_events": [
+    {
+      "event": "b_t09_registration_rereview_accepted_m4_blocked",
+      "date": "2026-10-14",
+      "review_thread_id": "01a13a74-71bb-7901-a86d-27b2263df49a",
+      "wait_cursor": "d5f9bed4-5b0d-4317-9f69-3b7c91be6208:33",
+      "registration_commit": "15f5031",
+      "registration_repair_commit": "219b9b2",
+      "review_ref": "docs/implementation/reviews/B-T09-review.md",
+      "verdict": "accepted",
+      "tests": {
+        "b_t09_passed": 83,
+        "b_t08_regression_passed": 139,
+        "cli_probes_passed": 13,
+        "full_suite_passed": 2404,
+        "full_suite_failures": 0,
+        "full_suite_warnings": 0,
+        "full_suite_skips": 0,
+        "package_check_status": "Status: OK",
+        "package_check_exit": 0,
+        "build_log_sha256": "d8b558aa37e27eca723b52ece7974568c614682c5a24af4ae8297b9f5d4d1ab4",
+        "check_log_sha256": "c92dad89ffdb5a342bd8247c7f177d5da21dbdd09520833b2751a54a460b644e"
+      },
+      "disposition": "B-T09 is accepted as synthetic software evidence. M4 cannot enter G4 because B-T04, B-T05 and B-T06 remain blocked."
+    },
     {
       "event": "b_t09_registration_review_changes_required_repair_1_dispatched",
       "date": "2026-10-14",
@@ -720,7 +723,7 @@
       "integration_commit": "9cd36fe"
     },
     "B-T09": {
-      "status": "focused_registration_rereview_active",
+      "status": "accepted",
       "attempts": 1,
       "repair_attempts": 1,
       "registration_repair_attempts": 1,
@@ -729,17 +732,17 @@
       "acceptance_refs": [
         "docs/implementation/reviews/B-T09-review.md"
       ],
-      "blockers": [
-        "Sol-owned schema/NAMESPACE/CLI registration requires fresh cross-cutting review before release."
-      ],
-      "integration_commits": ["f7973fe", "2da6c09"]
+      "blockers": [],
+      "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
-      "status": "not_started",
+      "status": "not_started_blocked_by_dependency",
       "attempts": 0,
       "commit": null,
       "acceptance_refs": [],
-      "blockers": []
+      "blockers": [
+        "B-T04 is blocked, so B-T07 is not dependency-legal."
+      ]
     },
     "C-01": {
       "status": "not_started",
@@ -929,9 +932,11 @@
       ]
     },
     "M4": {
-      "status": "in_progress_not_ready_for_review",
+      "status": "blocked_not_ready_for_g4",
       "review_ref": null,
-      "commit": "9cd36fe"
+      "commit": "219b9b2",
+      "milestone_ref": "docs/implementation/milestones/M4.md",
+      "blocking_packets": ["B-T04", "B-T05", "B-T06"]
     },
     "M5": {
       "status": "not_started",

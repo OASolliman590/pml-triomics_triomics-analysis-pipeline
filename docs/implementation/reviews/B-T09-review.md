@@ -64,4 +64,22 @@ namespace condition while leaving source-fixture preparation to the existing
 packet hook. A regression now requires source execution to return
 `B_DESIGN_UNSUPPORTED` before analysis when the eligible endpoint bundle and
 clinical view are unavailable. The B-T09 suite passes 83 assertions after this
-repair. One focused registration re-review is pending.
+repair.
+
+Focused registration re-review verdict: `accepted`.
+
+The reviewer independently passed 83 B-T09 assertions, 139 B-T08 regression
+assertions, and all 13 CLI probes. All six non-fixture source/installed cases
+returned `B_DESIGN_UNSUPPORTED`, exit 2, before creating output. Both public-
+fixture paths completed with effect 2.036438 across 11 subjects, and ordinary
+between-person behavior remained available.
+
+Fresh integrated verification then passed the full 2,404-assertion suite with
+no failure, warning or skip. The first package check found only missing Rd
+entries for the three new exports; Sol added them to the shared API manual. The
+fresh rerun reported `Status: OK`. Build/check log SHA-256 values are
+`d8b558aa37e27eca723b52ece7974568c614682c5a24af4ae8297b9f5d4d1ab4` and
+`c92dad89ffdb5a342bd8247c7f177d5da21dbdd09520833b2751a54a460b644e`.
+
+B-T09 is accepted as synthetic software evidence. It does not establish a
+longitudinal biological association in Omar's studies.

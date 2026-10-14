@@ -1,20 +1,22 @@
 # Implementation handover
 
 Run `triomics-20260920-sol-01` is active on branch
-`spec/harden-v2-20260920`. G3 is accepted on immutable snapshot `af323f8` after
-the one permitted focused Astra low re-review passed.
+`spec/harden-v2-20260920`. G3 is accepted. M4 is blocked and not eligible for
+G4 review; no dependency-legal Stage B, C or D packet remains dispatchable.
 
 G0 and G1 remain accepted. G2 is accepted on immutable milestone snapshot
 `8b0754c1ea581ba18c4bb2e7eb862c26eeb625a7` after its one permitted focused
 Astra re-review. The accepted repair candidates were A-T03 `901e39b` and A-T09
 `9c4929a`; they were integrated as `f671254` and `e691ab9` respectively.
 
-Fresh coordinator evidence on the integrated branch:
+Fresh coordinator evidence after accepted B-T09 integration and registration:
 
-- full local suite: 2,296 passed, 0 failed, 0 warned, 0 skipped;
-- package build/check in `artifacts/package-check-g2-e691ab9`: passed;
-- immutable G2 snapshot: 512 focused A-T02/A-T03/A-T09 assertions passed;
-- immutable snapshot package check: `Status: OK`.
+- full local suite: 2,404 passed, 0 failed, 0 warned, 0 skipped;
+- package build/check in `artifacts/package-check-stage-b-7e11c47-docs`:
+  `Status: OK`;
+- build/check log SHA-256:
+  `d8b558aa37e27eca723b52ece7974568c614682c5a24af4ae8297b9f5d4d1ab4` /
+  `c92dad89ffdb5a342bd8247c7f177d5da21dbdd09520833b2751a54a460b644e`.
 
 This is synthetic software evidence only. None of Omar's fasting,
 diabetic-treatment, or organophosphate study data was read, fitted, uploaded, or
@@ -33,20 +35,26 @@ scientifically validated.
 - B-T02, B-T03, and B-T08 remain Sol-verified.
 - B-T04 remains blocked: 23/400 false discoveries for the one-cell-removed null
   pattern; upper 95% bound 0.08048 exceeds the frozen 0.08 limit.
-- B-T05, B-T06, B-T09, B-T07, all C, and all D remain unstarted.
-- G3-dependent work may now proceed subject to each packet's own dependency and
-  file-boundary gates. B-T04 remains independently blocked and its frozen seeds
-  and 0.08 bound must not change.
+- B-T05 is blocked after its focused review: missing counts still bypass the
+  method-specific unavailable/fallback path. Its candidates are unintegrated.
+- B-T06 is blocked after its focused review: the Wilcoxon contrast check remains
+  scale-dependent for weights 0 and 1e-9. Its candidates are unintegrated.
+- B-T09 is accepted and integrated. It passed 83 packet assertions, 139 B-T08
+  regression assertions, 13 cross-cutting CLI probes, source/installed fixture
+  execution, schema checks and package check. Unsupported real-study
+  longitudinal objectives fail closed until eligible inputs exist.
+- B-T07 is unstarted because it depends on B-T04. G4, all C and all D remain
+  unreleased.
 
 ## Literal resume instruction
 
 Read root `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `execution-ledger.json`, this handover, `reviews/M2-astra-review.md`, and
-`reviews/M3-astra-review.md`, and both A-T05 G3 repair reviews. Verify HEAD and
-dirty state. Do not repeat G2, either G3 review, either exhausted A-T05 repair,
-or the accepted G3-001 implementation/review. Continue from the accepted G3 gate
-with the next dependency-legal Stage B packet. Preserve B-T04's seeds and 0.08
-bound.
+`reviews/M3-astra-review.md`, `milestones/M4.md`, and `reviews/B-T09-review.md`.
+Verify HEAD and dirty state. Do not repeat accepted G2/G3/B-T09 work or any
+exhausted B-T04/B-T05/B-T06 attempt or review. There is no legal downstream
+packet until an explicit accepted change record reopens an affected blocker.
+Preserve B-T04's seeds and 0.08 bound.
 
 ## Orchestration correction
 

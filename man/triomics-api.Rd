@@ -9,11 +9,17 @@
 \alias{triomics_execute_stage_b}
 \alias{resolve_analysis}
 \alias{fit_block_models}
+\alias{associate_longitudinal_endpoints}
+\alias{triomics_associate_longitudinal_endpoints}
+\alias{triomics_execute_longitudinal_associations}
 \title{Triomics simulation, export, and stage B analysis entry points}
 \description{
 Public entry points for generating synthetic studies, exporting a validated
 stage A handoff, resolving a declared stage B analysis, and fitting or
 executing the corresponding block models.
+The longitudinal entry points fit declared between-person, within-person,
+baseline-to-later, or effect-modification clinical objectives when their
+mode-specific requirements and eligible inputs are available.
 }
 \usage{
 simulate_study(
@@ -43,6 +49,20 @@ triomics_fit_block_models(resolved_analysis, statistics_spec)
 fit_block_models(resolved_analysis, statistics_spec)
 
 triomics_execute_stage_b(config_path, output)
+
+triomics_associate_longitudinal_endpoints(
+  endpoint_bundle,
+  clinical_view,
+  objective_spec
+)
+
+associate_longitudinal_endpoints(
+  endpoint_bundle,
+  clinical_view,
+  objective_spec
+)
+
+triomics_execute_longitudinal_associations(config_path, output)
 }
 \arguments{
   \item{n_subjects}{Positive integer number of synthetic subjects.}
@@ -64,11 +84,19 @@ triomics_execute_stage_b(config_path, output)
   \item{resolved_analysis}{Resolved stage B design and block data.}
   \item{statistics_spec}{Declared statistical fitting specification.}
   \item{config_path}{Path to a strict triomics configuration file.}
+  \item{endpoint_bundle}{Eligible endpoint values with subject, visit, time,
+  unit, selection, and training-lineage metadata.}
+  \item{clinical_view}{Validated clinical dictionary, observations, and sample
+  links for the same study.}
+  \item{objective_spec}{Declared longitudinal objectives, fixed testing family,
+  and model options.}
 }
 \value{
 The return value depends on the entry point: a synthetic study, export or
 resume record, handoff limitations, resolved analysis, fitted model result, or
-stage B execution summary.
+stage B execution summary. Longitudinal association functions return typed
+objective, family, audit, and result records; unsupported inputs return a named
+unavailable status or a typed CLI error rather than substituting an analysis.
 }
 \details{
 \code{resolve_analysis} and \code{fit_block_models} are aliases for their
