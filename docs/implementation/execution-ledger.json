@@ -45,12 +45,12 @@
       "status": "active"
     },
     {
-      "role": "luna_packet_repairer",
+      "role": "sol_packet_reviewer",
       "packet": "B-T06",
-      "thread_id": "01a13a51-245d-7f03-9caa-9418378fc3a0",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "candidate_commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
+      "thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "candidate_commit": "9b85bbd616a797c03f133fb43a5f0cce1260bb7d",
       "status": "active"
     },
     {
@@ -78,10 +78,10 @@
       },
       {
         "packet": "B-T06",
-        "thread_id": "01a13a51-245d-7f03-9caa-9418378fc3a0",
-        "candidate_commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
-        "allowed_next_transition": "repair_receipt_to_single_focused_sol_rereview",
-        "wait_cursor": "5543c6ab-7fd7-47ee-aa9f-1370f865a121:54",
+        "thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a",
+        "candidate_commit": "9b85bbd616a797c03f133fb43a5f0cce1260bb7d",
+        "allowed_next_transition": "focused_rereview_verdict_to_sol_gate_disposition",
+        "wait_cursor": "a3cf8c2c-1096-496b-adec-a355869de0a2:2",
         "status": "active"
       },
       {
@@ -94,9 +94,19 @@
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T05 fresh Sol review remains active. B-T06 and B-T09 initial reviews returned changes_required and targeted repair 1 is active for each. B-T04 remains independently blocked."
+    "disposition": "B-T05 fresh Sol review remains active. B-T06 repair 1 completed and its single focused Sol re-review is active. B-T09 repair 1 remains active. B-T04 remains independently blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t06_repair_1_completed_focused_rereview_dispatched",
+      "date": "2026-10-14",
+      "worker_thread_id": "01a13a51-245d-7f03-9caa-9418378fc3a0",
+      "review_thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a",
+      "candidate_commit": "9b85bbd616a797c03f133fb43a5f0cce1260bb7d",
+      "tests_passed": 52,
+      "cli_exit": 0,
+      "disposition": "Three-file targeted repair stopped; the one permitted focused re-review is active."
+    },
     {
       "event": "b_t09_review_changes_required_repair_1_dispatched",
       "date": "2026-10-14",
@@ -636,10 +646,11 @@
       "blockers": []
     },
     "B-T06": {
-      "status": "repair_1_active",
+      "status": "focused_sol_rereview_active",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
+      "repair_candidate_commit": "9b85bbd616a797c03f133fb43a5f0cce1260bb7d",
       "acceptance_refs": [],
       "blockers": []
     },
