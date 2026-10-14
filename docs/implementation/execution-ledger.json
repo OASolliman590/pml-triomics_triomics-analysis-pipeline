@@ -36,10 +36,10 @@
   "active_workers": [
     {
       "packet": "A-T05",
-      "thread_id": "01a1394a-6909-7330-bd16-915cb60163e0",
-      "role": "luna_max",
-      "worktree": "/Users/megastore/.codex/worktrees/8967/PML MultiOmics Analysis Pipeline",
-      "attempt": "repair_1"
+      "thread_id": "01a13950-2e69-72e0-88f1-c12936b946cd",
+      "role": "sol_6_1_high_reviewer",
+      "worktree": "/Users/megastore/.codex/worktrees/5808/PML MultiOmics Analysis Pipeline",
+      "attempt": "repair_1_review"
     },
     {
       "packet": "A-T06",
@@ -61,11 +61,11 @@
     "last_reconciled": "2026-10-14",
     "active_handoffs": [
       {
-        "thread_id": "01a1394a-6909-7330-bd16-915cb60163e0",
-        "role": "luna_max",
+        "thread_id": "01a13950-2e69-72e0-88f1-c12936b946cd",
+        "role": "sol_6_1_high_reviewer",
         "packet": "A-T05",
-        "snapshot_commit": "d96ca310cea5715f40e2cae72d59a29d411713bb",
-        "next_transition": "Inspect the repair commit and dispatch a fresh Sol 6.1 high packet review."
+        "candidate_commit": "4c51fcc",
+        "next_transition": "Read the packet verdict immediately; integrate only if accepted, otherwise use the remaining bounded repair budget."
       },
       {
         "thread_id": "01a1394a-7fba-76c1-a7f9-43fb2c26ae4a",
@@ -83,7 +83,7 @@
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Three isolated Luna-max repair_1 workers are active for the independent A-T05, A-T06 and A-T08 G3 findings."
+    "disposition": "A-T05 repair 1 is under fresh Sol 6.1 high review; isolated Luna-max repair_1 workers remain active for A-T06 and A-T08."
   },
   "orchestration_events": [
     {
@@ -277,10 +277,11 @@
       "integration_commit": "2e4971e"
     },
     "A-T05": {
-      "status": "repair_1_in_progress",
+      "status": "repair_1_review_in_progress",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "ddc0ae5",
+      "candidate_commit": "4c51fcc",
       "acceptance_refs": [],
       "blockers": [
         "G3-03: optional method qualification is not bound to existing, versioned native fit/apply APIs"
