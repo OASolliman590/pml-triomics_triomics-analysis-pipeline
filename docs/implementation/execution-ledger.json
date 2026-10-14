@@ -56,7 +56,7 @@
         "thread_id": "01a13a31-e30a-7321-8b3f-a13c009a30e9",
         "base_commit": "11e3cf7",
         "allowed_next_transition": "worker_result_to_fresh_sol_review",
-        "wait_cursor": null,
+        "wait_cursor": "c14f54c0-7540-4d7c-aa13-b06cfb98b509:6",
         "status": "active"
       }
     ],
