@@ -42,6 +42,15 @@
       "requested_effort": "max",
       "candidate_commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
       "status": "active"
+    },
+    {
+      "role": "sol_cross_cutting_reviewer",
+      "packet": "B-T09",
+      "client_thread_id": "client-new-thread:353030f6-675b-4f04-b222-92e80b398f64",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "snapshot_commit": "15f5031",
+      "status": "worktree_preparing"
     }
   ],
   "orchestration_control": {
@@ -55,12 +64,29 @@
         "allowed_next_transition": "repair_receipt_to_single_focused_sol_rereview",
         "wait_cursor": "3aa7fd42-6009-4fac-a466-5d7c820f02d7:44",
         "status": "active"
+      },
+      {
+        "packet": "B-T09-registration",
+        "client_thread_id": "client-new-thread:353030f6-675b-4f04-b222-92e80b398f64",
+        "snapshot_commit": "15f5031",
+        "allowed_next_transition": "bind_stable_thread_then_registration_review_to_sol_disposition",
+        "wait_cursor": null,
+        "status": "worktree_preparing"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T05 targeted repair 1 remains active. B-T09 packet repair passed focused review and is integrated; Sol-owned registration is implemented pending an independent cross-cutting review. B-T06 and B-T04 remain blocked."
+    "disposition": "B-T05 targeted repair 1 remains active. B-T09 packet repair is integrated and its Sol-owned registration is under fresh independent cross-cutting review. B-T06 and B-T04 remain blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t09_cross_cutting_registration_review_dispatched",
+      "date": "2026-10-14",
+      "snapshot_commit": "15f5031",
+      "client_thread_id": "client-new-thread:353030f6-675b-4f04-b222-92e80b398f64",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "disposition": "Fresh review covers only the Sol-owned schema/NAMESPACE/CLI registration and installed-package delivery before B-T09 release."
+    },
     {
       "event": "b_t09_packet_accepted_integrated_registration_implemented",
       "date": "2026-10-14",
