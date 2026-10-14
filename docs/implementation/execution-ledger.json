@@ -47,13 +47,6 @@
       "role": "sol_6_1_high_reviewer",
       "worktree": "/Users/megastore/.codex/worktrees/0c4c/PML MultiOmics Analysis Pipeline",
       "attempt": "repair_1_review"
-    },
-    {
-      "packet": "A-T08",
-      "thread_id": "01a13951-a93c-7622-baf2-cda795f91a0d",
-      "role": "sol_6_1_high_reviewer",
-      "worktree": "/Users/megastore/.codex/worktrees/79d2/PML MultiOmics Analysis Pipeline",
-      "attempt": "repair_1_review"
     }
   ],
   "orchestration_control": {
@@ -73,17 +66,10 @@
         "packet": "A-T06",
         "candidate_commit": "6903639f86cc54a3c6b1e4c2cde9b8ef84aefd36",
         "next_transition": "Read the packet verdict immediately; integrate only if accepted, otherwise use the remaining bounded repair budget."
-      },
-      {
-        "thread_id": "01a13951-a93c-7622-baf2-cda795f91a0d",
-        "role": "sol_6_1_high_reviewer",
-        "packet": "A-T08",
-        "candidate_commit": "a8761b0d4589b8dd5816c0d36b502b99b056479f",
-        "next_transition": "Read the packet verdict immediately; integrate only if accepted, otherwise use the remaining bounded repair budget."
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "A-T05 final repair_2 is active after repair_1 review found marker-only qualification; A-T06 and A-T08 repair_1 remain under separate fresh Sol 6.1 high reviews."
+    "disposition": "A-T08 repair 1 is accepted and integrated. A-T05 final repair_2 is active; A-T06 repair_1 remains under fresh Sol 6.1 high review."
   },
   "orchestration_events": [
     {
@@ -106,6 +92,15 @@
       "review_ref": "docs/implementation/reviews/A-T05-G3-repair1-review.md",
       "verdict": "changes_required",
       "disposition": "Nonexistent APIs are rejected, but copied labels can still self-qualify without a resolved version-bound artifact. Final repair_2 dispatched."
+    },
+    {
+      "event": "a_t08_g3_repair_1_accepted",
+      "date": "2026-10-14",
+      "candidate_commit": "a8761b0d4589b8dd5816c0d36b502b99b056479f",
+      "integration_commit": "610a732",
+      "review_ref": "docs/implementation/reviews/A-T08-G3-repair1-review.md",
+      "verdict": "accepted",
+      "disposition": "Referenced fit-state payload integrity is verified before reuse; missing, corrupt and malformed state triggers bounded descendant refresh."
     },
     {
       "event": "g2_accepted_and_run_paused",
@@ -321,16 +316,18 @@
       "integration_commit": "2e4971e"
     },
     "A-T08": {
-      "status": "repair_1_review_in_progress",
+      "status": "repair_1_accepted_integrated_pending_g3",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "ddc0ae5",
       "candidate_commit": "a8761b0d4589b8dd5816c0d36b502b99b056479f",
-      "acceptance_refs": [],
-      "blockers": [
-        "G3-01: resume does not validate the referenced fit-state payload and hash before reuse"
+      "acceptance_refs": [
+        "docs/implementation/reviews/A-T08-G3-repair1-review.md"
       ],
-      "integration_commit": "2e4971e"
+      "blockers": [
+        "focused G3 Astra re-review pending"
+      ],
+      "integration_commit": "610a732"
     },
     "B-T01": {
       "status": "sol_verified",
