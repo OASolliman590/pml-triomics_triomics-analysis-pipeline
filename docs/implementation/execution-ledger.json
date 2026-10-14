@@ -33,15 +33,73 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "role": "luna_packet_implementer",
+      "packet": "B-T05",
+      "client_thread_id": "client-new-thread:2c24de3c-c9cc-4084-b538-1f14db764b6f",
+      "thread_id": "01a13a51-1b06-7040-8341-3405f4d99166",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "status": "active"
+    },
+    {
+      "role": "luna_packet_implementer",
+      "packet": "B-T06",
+      "client_thread_id": "client-new-thread:9e2f0cf6-4bd9-46be-9d73-e5b9d4b79106",
+      "thread_id": "01a13a51-245d-7f03-9caa-9418378fc3a0",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "status": "active"
+    },
+    {
+      "role": "luna_packet_implementer",
+      "packet": "B-T09",
+      "client_thread_id": "client-new-thread:7d2e5b4a-8fd2-494a-8294-a0eb987d13a4",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "status": "worktree_preparing"
+    }
+  ],
   "orchestration_control": {
-    "status": "g3_accepted_ready_for_next_legal_packet",
+    "status": "stage_b_parallel_implementation_active",
     "last_reconciled": "2026-10-14",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "packet": "B-T05",
+        "thread_id": "01a13a51-1b06-7040-8341-3405f4d99166",
+        "allowed_next_transition": "worker_receipt_to_fresh_sol_review",
+        "wait_cursor": null,
+        "status": "active"
+      },
+      {
+        "packet": "B-T06",
+        "thread_id": "01a13a51-245d-7f03-9caa-9418378fc3a0",
+        "allowed_next_transition": "worker_receipt_to_fresh_sol_review",
+        "wait_cursor": null,
+        "status": "active"
+      },
+      {
+        "packet": "B-T09",
+        "client_thread_id": "client-new-thread:7d2e5b4a-8fd2-494a-8294-a0eb987d13a4",
+        "allowed_next_transition": "bind_stable_thread_then_worker_receipt_to_fresh_sol_review",
+        "wait_cursor": null,
+        "status": "worktree_preparing"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Focused Astra low re-review passed on immutable M3 snapshot af323f8. Sol accepted G3. The next dependency-legal Stage B packet may be dispatched; B-T04 remains independently blocked."
+    "disposition": "G3 is accepted. Three dependency-legal, disjoint Stage B packets are active in fresh Luna max worktrees: B-T05, B-T06 and B-T09. Each must stop for a fresh Sol 6.1 high review. B-T04 remains independently blocked."
   },
   "orchestration_events": [
+    {
+      "event": "stage_b_b_t05_b_t06_b_t09_workers_dispatched",
+      "date": "2026-10-14",
+      "base_commit": "ea3a47c",
+      "packets": ["B-T05", "B-T06", "B-T09"],
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "disposition": "Dependencies and G3 are satisfied and file allowlists are disjoint. Three fresh isolated workers are active within the four-slot host cap."
+    },
     {
       "event": "g3_focused_astra_rereview_passed_gate_accepted",
       "date": "2026-10-14",
@@ -500,15 +558,15 @@
       ]
     },
     "B-T05": {
-      "status": "not_started",
-      "attempts": 0,
+      "status": "implementation_active",
+      "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": []
     },
     "B-T06": {
-      "status": "not_started",
-      "attempts": 0,
+      "status": "implementation_active",
+      "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": []
@@ -524,8 +582,8 @@
       "integration_commit": "9cd36fe"
     },
     "B-T09": {
-      "status": "not_started",
-      "attempts": 0,
+      "status": "implementation_active",
+      "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": []
