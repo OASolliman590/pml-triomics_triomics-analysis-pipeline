@@ -35,13 +35,40 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m4_blocked_by_b_t05_b_t06_no_legal_downstream_packet",
+    "status": "m4_b_t05_b_t06_reopening_records_pending_astra_audit",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T04 and its installed-package repair are accepted and integrated after initial and focused Sol review. M4 remains blocked by B-T05 and B-T06; B-T07 and later stages are not legally dispatchable. No run-owned agent remains active."
+    "disposition": "Sol reproduced the B-T05 dispatch and B-T06 scale-invariance blockers at their unintegrated candidate commits. M4-003 and M4-004 are proposed but not accepted; fresh Astra audits are the only authorized next transition. No implementation worker is active and B-T07 remains blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t05_b_t06_reopening_diagnostics_completed_records_proposed",
+      "date": "2026-10-15",
+      "packets": ["B-T05", "B-T06"],
+      "candidate_commits": {
+        "B-T05": "efd830884b894d79441af5a948fa3b600ff8e4db",
+        "B-T06": "9b85bbd616a797c03f133fb43a5f0cce1260bb7d"
+      },
+      "candidate_tests": {
+        "B-T05": {"passed": 63, "failed": 0, "warned": 0, "skipped": 0},
+        "B-T06": {"passed": 52, "failed": 0, "warned": 0, "skipped": 0}
+      },
+      "reproduced_failures": {
+        "B-T05": "A missing-count level request with explicit_limma bypasses B-T05 and returns generic unavailable without requested method, named reason or fallback.",
+        "B-T06": "Weights control=0 and treatment=1e-9 incorrectly return completed wilcoxon_rank_sum sensitivity."
+      },
+      "investigation_refs": [
+        "docs/implementation/investigations/B-T05-dispatch-reopening.md",
+        "docs/implementation/investigations/B-T06-scale-invariant-rank-eligibility.md"
+      ],
+      "change_record_refs": [
+        "docs/implementation/change-records/M4-003-b-t05-dispatch-reopening.md",
+        "docs/implementation/change-records/M4-004-b-t06-scale-invariant-rank-eligibility.md"
+      ],
+      "allowed_next_transition": "dispatch separate fresh Astra low read-only audits; no implementation before Omar explicitly accepts each audited record",
+      "disposition": "Both records preserve the frozen scientific scope and propose only bounded second targeted repairs. Private study data were not read or fitted."
+    },
     {
       "event": "b_t04_repair_1_integrated_packet_accepted_m4_blocked",
       "date": "2026-10-15",
