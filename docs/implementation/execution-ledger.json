@@ -33,34 +33,43 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/bt04_sol_review",
-      "packet": "B-T04",
-      "role": "focused_reviewer_repair_1",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "worktree": ".worktrees/b-t04-calibration-repair",
-      "branch": "codex/b-t04-calibration-repair",
-      "base_commit": "fc4872a",
-      "candidate_commit": "9e5f08e",
-      "status": "active"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "b_t04_repair_1_focused_review_active",
+    "status": "m4_blocked_by_b_t05_b_t06_no_legal_downstream_packet",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/bt04_sol_review",
-        "packet": "B-T04",
-        "allowed_next_transition": "reconcile the one permitted focused re-review; if accepted, cherry-pick repair 1 and rerun integrated packet, CLI, full suite and package check"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Luna repair 1 commit 9e5f08e passes 302 packet expectations, the installed-package CLI and R CMD check Status: OK. The same Sol reviewer is performing the one permitted focused re-review; B-T04 remains unaccepted."
+    "disposition": "B-T04 and its installed-package repair are accepted and integrated after initial and focused Sol review. M4 remains blocked by B-T05 and B-T06; B-T07 and later stages are not legally dispatchable. No run-owned agent remains active."
   },
   "orchestration_events": [
+    {
+      "event": "b_t04_repair_1_integrated_packet_accepted_m4_blocked",
+      "date": "2026-10-15",
+      "packet": "B-T04",
+      "initial_candidate_commit": "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
+      "repair_commit": "9e5f08ea3e962119490381bb842523cd373ad2bd",
+      "integration_commits": [
+        "753ae47",
+        "af69a9e"
+      ],
+      "review_agent_name": "/root/bt04_sol_review",
+      "initial_review_verdict": "accept",
+      "focused_rereview_verdict": "accept",
+      "review_ref": "docs/implementation/reviews/B-T04-review.md",
+      "tests": {
+        "b_t04_expectations_passed": 302,
+        "full_suite_expectations_passed": 2706,
+        "failures": 0,
+        "warnings": 0,
+        "skips": 0,
+        "cli_exit": 0,
+        "package_check_status": "Status: OK",
+        "build_log_sha256": "9923a71b7a38fddfe501ed620738b8392647702de6ddde9e337e8bccf645a8a0",
+        "check_log_sha256": "6baea0de66a2c4012af2a5097797d0aab734a2d29adc9a2df1b9baa944dbf63f"
+      },
+      "scientific_disposition": "The ordinary one-cell result remains fail at 23/400 and upper 0.0804819. The production-aligned moderated route passes all five frozen cells without seed, generator or threshold changes.",
+      "disposition": "B-T04 is accepted as synthetic software/calibration evidence. B-T05 and B-T06 still block B-T07 and G4; no downstream packet is legal."
+    },
     {
       "event": "b_t04_repair_1_completed_focused_rereview_dispatched",
       "date": "2026-10-15",
@@ -857,14 +866,24 @@
       "integration_commit": "9cd36fe"
     },
     "B-T04": {
-      "status": "repair_1_in_review",
+      "status": "accepted",
       "attempts": 3,
-      "commit": "9e5f08e",
-      "acceptance_refs": [],
+      "commit": "af69a9e",
+      "candidate_commits": [
+        "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
+        "9e5f08ea3e962119490381bb842523cd373ad2bd"
+      ],
+      "integration_commits": [
+        "753ae47",
+        "af69a9e"
+      ],
+      "acceptance_refs": [
+        "docs/implementation/reviews/B-T04-review.md",
+        "artifacts/acceptance/B-T04/acceptance-record.json",
+        "artifacts/acceptance/B-T04/calibration.json"
+      ],
       "change_record_ref": "docs/implementation/change-records/M4-002-b-t04-production-statistic-calibration.md",
-      "blockers": [
-        "Original ordinary-reference result remains 23/400 with upper bound 0.0804819. M4-002 authorizes a bounded production-statistic alignment repair without changing seeds or the 0.08 bound."
-      ]
+      "blockers": []
     },
     "B-T05": {
       "status": "blocked",
@@ -1110,9 +1129,9 @@
     "M4": {
       "status": "blocked_not_ready_for_g4",
       "review_ref": null,
-      "commit": "219b9b2",
+      "commit": "af69a9e",
       "milestone_ref": "docs/implementation/milestones/M4.md",
-      "blocking_packets": ["B-T04", "B-T05", "B-T06"]
+      "blocking_packets": ["B-T05", "B-T06"]
     },
     "M5": {
       "status": "not_started",

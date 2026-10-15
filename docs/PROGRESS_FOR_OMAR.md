@@ -4,25 +4,24 @@
 metabolomics and lipidomics while keeping the fasting, diabetic-treatment and
 organophosphate studies scientifically separate.
 
-**Works now:** G2 is accepted for synthetic ingest, identity preservation,
-preparation-state freezing and typed clinical linkage. A repaired immutable
-snapshot passed 512 focused assertions and package build/check. The integrated
-branch passed 2,296 assertions with no failures, warnings or skips.
+**Works now:** G3 and five Stage B analysis packets are accepted on synthetic
+fixtures. B-T04 now supports qualified fixed-subject multivisit and trajectory
+analysis; the integrated branch passed 2,706 assertions and package check.
 
-**Changed:** Preprocessing apply can no longer change fit-time parameters or
-re-enable a method frozen as unavailable. Method-specific normalization before
-transformation is supported without relaxing sequencing safeguards. Clinical
-links now refuse contradictory explicit sample identities.
+**Changed:** B-T04's qualification now tests the same limma-moderated statistic
+that the pipeline publishes. The failed ordinary diagnostic remains visible:
+23 discoveries in 400 simulations, upper bound 0.08048. No seed, generator or
+0.08 limit was loosened. The moderated route passed all five declared layouts.
 
-**Not established:** These are fixture-based software results, not biological
-validation. None of the three real studies has been fitted. B-T04 remains blocked
-because one null scenario produced 23 discoveries in 400 simulations, giving a
-95% upper bound of 0.08048 against the frozen 0.08 maximum.
+**Not established:** This is fixture-based software/calibration evidence, not
+biological validation. None of the fasting, diabetic-treatment or
+organophosphate studies has been fitted. Additional covariance, missingness and
+robust-moderation routes remain unavailable. B-T05 and B-T06 remain blocked.
 
-**Next milestone:** G3 must independently review the three assay profiles and
-immutable preparation behavior before additional Stage B work is released.
+**Next milestone:** Resolve B-T05 and B-T06, then implement B-T07 and submit the
+complete M4 snapshot to G4 review.
 
-**Needs Omar:** Nothing during this pause.
+**Needs Omar:** Nothing now.
 
 **Sync:** Local repository documentation updated. No Notion sync or external
 publication was attempted.
@@ -30,15 +29,15 @@ publication was attempted.
 <details>
 <summary>Technical evidence and restart</summary>
 
-Integrated HEAD: `e691ab9c9d798e650a73802e98bac78b9598bfd9`.
-Accepted G2 snapshot: `8b0754c1ea581ba18c4bb2e7eb862c26eeb625a7`.
-Review: `docs/implementation/reviews/M2-astra-review.md`.
+Integrated B-T04 code HEAD: `af69a9e`.
+Review: `docs/implementation/reviews/B-T04-review.md`.
 
-Software evidence: full suite 2,296/0/0/0; integrated and snapshot package checks
-reported `Status: OK`; snapshot focused suite 512/0/0/0. Real-data scientific
-evidence: not run. No required test was skipped.
+Software evidence: B-T04 302/0/0/0; full suite 2,706/0/0/0; package check
+`Status: OK`; CLI AC1–AC4 pass. Real-data scientific evidence: not run. No
+required test was skipped.
 
-Restart: read `docs/implementation/HANDOVER.md`, verify Git state, then run the
-M3/G3 immutable-snapshot review. Do not repeat G2 or loosen B-T04's seeds/bound.
+Restart: read `docs/implementation/HANDOVER.md`, verify Git state, and do not
+repeat accepted B-T04. No downstream packet is legal until B-T05 and B-T06 are
+reopened by accepted records. Do not loosen B-T04's seeds, generator or bound.
 
 </details>

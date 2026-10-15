@@ -9,14 +9,15 @@ G0 and G1 remain accepted. G2 is accepted on immutable milestone snapshot
 Astra re-review. The accepted repair candidates were A-T03 `901e39b` and A-T09
 `9c4929a`; they were integrated as `f671254` and `e691ab9` respectively.
 
-Fresh coordinator evidence after accepted B-T09 integration and registration:
+Fresh coordinator evidence after accepted B-T04 integration and its installed
+package repair:
 
-- full local suite: 2,404 passed, 0 failed, 0 warned, 0 skipped;
-- package build/check in `artifacts/package-check-stage-b-7e11c47-docs`:
+- full local suite: 2,706 passed, 0 failed, 0 warned, 0 skipped;
+- package build/check in `artifacts/package-check-b-t04-af69a9e`:
   `Status: OK`;
 - build/check log SHA-256:
-  `d8b558aa37e27eca723b52ece7974568c614682c5a24af4ae8297b9f5d4d1ab4` /
-  `c92dad89ffdb5a342bd8247c7f177d5da21dbdd09520833b2751a54a460b644e`.
+  `9923a71b7a38fddfe501ed620738b8392647702de6ddde9e337e8bccf645a8a0` /
+  `6baea0de66a2c4012af2a5097797d0aab734a2d29adc9a2df1b9baa944dbf63f`.
 
 This is synthetic software evidence only. None of Omar's fasting,
 diabetic-treatment, or organophosphate study data was read, fitted, uploaded, or
@@ -33,8 +34,11 @@ scientifically validated.
   suite passed 2,321 assertions and package check reported `Status: OK`. Astra's
   focused review found G3-01, G3-02 and G3-03 addressed and returned `PASS`.
 - B-T02, B-T03, and B-T08 remain Sol-verified.
-- B-T04 remains blocked: 23/400 false discoveries for the one-cell-removed null
-  pattern; upper 95% bound 0.08048 exceeds the frozen 0.08 limit.
+- B-T04 is accepted under change record M4-002. The ordinary diagnostic remains
+  failed at 23/400 and upper bound 0.08048; the unchanged production-aligned
+  moderated route passes all five declared cells. Candidate `bb0181b` and
+  targeted installed-package repair `9e5f08e` were independently accepted and
+  integrated as `753ae47` and `af69a9e`. Review: `reviews/B-T04-review.md`.
 - B-T05 is blocked after its focused review: missing counts still bypass the
   method-specific unavailable/fallback path. Its candidates are unintegrated.
 - B-T06 is blocked after its focused review: the Wilcoxon contrast check remains
@@ -43,18 +47,19 @@ scientifically validated.
   regression assertions, 13 cross-cutting CLI probes, source/installed fixture
   execution, schema checks and package check. Unsupported real-study
   longitudinal objectives fail closed until eligible inputs exist.
-- B-T07 is unstarted because it depends on B-T04. G4, all C and all D remain
-  unreleased.
+- B-T07 is unstarted because B-T05 and B-T06 remain blocked. G4, all C and all
+  D remain unreleased.
 
 ## Literal resume instruction
 
 Read root `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
-`execution-ledger.json`, this handover, `reviews/M2-astra-review.md`, and
-`reviews/M3-astra-review.md`, `milestones/M4.md`, and `reviews/B-T09-review.md`.
+`execution-ledger.json`, this handover, `reviews/M2-astra-review.md`,
+`reviews/M3-astra-review.md`, `milestones/M4.md`, `reviews/B-T04-review.md`, and
+`reviews/B-T09-review.md`.
 Verify HEAD and dirty state. Do not repeat accepted G2/G3/B-T09 work or any
-exhausted B-T04/B-T05/B-T06 attempt or review. There is no legal downstream
-packet until an explicit accepted change record reopens an affected blocker.
-Preserve B-T04's seeds and 0.08 bound.
+accepted B-T04 work, or any exhausted B-T05/B-T06 attempt or review. There is no
+legal downstream packet until explicit accepted records reopen the remaining
+blockers. Preserve B-T04's seeds, generator and 0.08 bound.
 
 ## Orchestration correction
 
