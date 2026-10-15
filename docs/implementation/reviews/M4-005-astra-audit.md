@@ -5,7 +5,8 @@
 - Requested role: Astra low, read-only
 - Snapshot: `cfa0be4b80cfafa3a736769c687797e6e0262708`
 - Initial verdict: **PASS WITH REQUIRED CHANGES**
-- Focused rereview: pending
+- Corrected snapshot: `279ecc430fa9cc76e93a3d2a8dd898ef1c5637a0`
+- Focused rereview: **PASS**
 
 The auditor found no P0 safety or scientific blocker. Separating generic artifact
 completion from analytical method outcome is consistent with the frozen data
@@ -26,6 +27,11 @@ Two P1 corrections were required before execution acceptance:
    immutable M4-005 shared-integration review before B-T07 release. The normal
    M4/G4 review remains after B-T07 and retains its own frozen allowance.
 
+The focused rereview confirmed both P1 blockers resolved without a new
+contradiction: only the stale CLI test may change, complete and partial persisted
+fallback states are required, the bounded M4-005 review precedes B-T07, and the
+normal G4 review follows it with its allowance unchanged.
+
 The audit did not authorize implementation, accept M4-005 for Omar, release
-B-T07, or provide scientific validation. The two corrections require one focused
-rereview of the amended record.
+B-T07, or provide scientific validation. Omar's explicit execution acceptance is
+still required.

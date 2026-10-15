@@ -33,32 +33,25 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_005_astra_audit",
-      "role": "astra_read_only_change_record_audit",
-      "change_record": "M4-005",
-      "snapshot_commit": "cfa0be4",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "allowed_next_transition": "perform one focused rereview of the corrected B-T05 test exception and B-T07/M4 review ordering; then reconcile the final verdict"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_005_required_audit_corrections_applied_focused_rereview_pending",
+    "status": "m4_005_audited_awaiting_omar_execution_acceptance",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_005_astra_audit",
-        "role": "astra_read_only_change_record_audit",
-        "snapshot_commit": "cfa0be4",
-        "allowed_next_transition": "focused rereview of the two required corrections; do not implement before Omar accepts the audited record"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The initial M4-005 Astra audit found no P0 and two P1 record contradictions. Both documentation corrections are applied for one focused rereview. B-T05, B-T06, B-T07 and downstream work remain blocked; coding is not authorized until the rereview passes and Omar explicitly accepts execution."
+    "disposition": "The M4-005 focused Astra rereview passed after both P1 record contradictions were corrected. The audited record awaits Omar's explicit execution acceptance. B-T05, B-T06, B-T07 and downstream work remain blocked, and no run-owned agent or handoff is active."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005_astra_focused_rereview_passed_awaiting_omar_acceptance",
+      "date": "2026-10-15",
+      "agent_name": "/root/m4_005_astra_audit",
+      "snapshot_commit": "279ecc430fa9cc76e93a3d2a8dd898ef1c5637a0",
+      "verdict": "pass",
+      "review_ref": "docs/implementation/reviews/M4-005-astra-audit.md",
+      "allowed_next_transition": "Omar explicitly accepts or rejects M4-005 execution; do not implement before acceptance",
+      "disposition": "Both prior P1 blockers are resolved. This audit does not authorize coding, restore either candidate, release B-T07 or replace the normal post-B-T07 G4 review."
+    },
     {
       "event": "m4_005_astra_focused_rereview_dispatched",
       "date": "2026-10-15",
