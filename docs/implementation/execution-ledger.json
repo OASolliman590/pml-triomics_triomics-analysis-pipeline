@@ -35,13 +35,22 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m4_005_audited_awaiting_omar_execution_acceptance",
+    "status": "m4_005_execution_accepted_implementation_plan_preparation",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The M4-005 focused Astra rereview passed after both P1 record contradictions were corrected. The audited record awaits Omar's explicit execution acceptance. B-T05, B-T06, B-T07 and downstream work remain blocked, and no run-owned agent or handoff is active."
+    "disposition": "Omar explicitly accepted audited M4-005 for execution. The detailed implementation plan is being prepared; no coding worker or handoff is active yet. B-T05, B-T06, B-T07 and downstream work remain blocked until their stated gates pass."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005_execution_record_accepted",
+      "date": "2026-10-15",
+      "accepted_by": "Omar",
+      "change_record_ref": "docs/implementation/change-records/M4-005-stage-b-shared-integration.md",
+      "audit_ref": "docs/implementation/reviews/M4-005-astra-audit.md",
+      "allowed_next_transition": "prepare and review the implementation plan, then execute Unit A before Unit B with the authorized worker/reviewer gates",
+      "disposition": "Acceptance authorizes only M4-005's two bounded shared-integration units and review allowances. It does not pre-accept candidates or release B-T07/G4."
+    },
     {
       "event": "m4_005_astra_focused_rereview_passed_awaiting_omar_acceptance",
       "date": "2026-10-15",

@@ -4,7 +4,7 @@
 - Trigger: the exhausted B-T05 and B-T06 final reviews each found a blocker in
   shared integration code outside the authorized packet repair allowlist.
 - Design approval: Omar approved the architectural design on 2026-10-15.
-- Status: **independently audited; Omar execution acceptance required**
+- Status: **accepted for execution by Omar on 2026-10-15**
 - Independent audit: `docs/implementation/reviews/M4-005-astra-audit.md`
 - Focused rereview: **PASS** on `279ecc430fa9cc76e93a3d2a8dd898ef1c5637a0`
 - Inputs:
@@ -194,6 +194,7 @@ or a real-data analysis.
 
 ## User decision
 
-Omar approved this design on 2026-10-15. That approval permits this record and
-its independent audit to be prepared. Coding, candidate restoration and new
-review allowances require Omar's explicit acceptance after the audit passes.
+Omar explicitly accepted M4-005 on 2026-10-15 after the independent audit and
+focused rereview passed. This authorizes the two bounded shared-integration
+units and their review allowances exactly as written. It does not pre-accept
+either implementation, B-T05, B-T06, B-T07 or G4.

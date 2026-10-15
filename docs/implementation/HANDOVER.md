@@ -61,8 +61,9 @@ scientifically validated.
 - M4-005 now defines the only proposed reopening: a shared B-T05 result-boundary
   unit followed by centralized B-T02-through-B-T06 dispatch composition. Its
   independent Astra audit found two record contradictions; both were corrected,
-  and focused rereview passed on `279ecc4`. The record is not execution-authorized
-  until Omar explicitly accepts it. No run-owned agent remains active.
+  and focused rereview passed on `279ecc4`. Omar explicitly accepted M4-005 for
+  execution on 2026-10-15; implementation planning is the next gate. No
+  run-owned agent remains active.
 
 ## Literal resume instruction
 
@@ -73,10 +74,10 @@ Read root `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 Verify HEAD and dirty state. Do not repeat accepted G2/G3/B-T09 work or any
 accepted B-T04 work, or any exhausted B-T05/B-T06 attempt or review. M4-003 and
 M4-004 final cycles are exhausted and blocked; do not integrate or repair either
-candidate under those records. M4-005 is independently audited but still awaits
-Omar's explicit execution acceptance; do not restore candidates, create repair
-worktrees or dispatch implementation before that acceptance. There is no legal
-downstream packet. Preserve B-T04's frozen controls.
+candidate under those records. M4-005 is independently audited and accepted for
+execution; follow its committed implementation plan and sequential Unit A then
+Unit B gates. B-T07 remains illegal until the bounded M4-005 shared-integration
+review passes. Preserve B-T04's frozen controls.
 
 ## Orchestration correction
 
