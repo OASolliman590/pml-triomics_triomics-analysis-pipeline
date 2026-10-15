@@ -18,6 +18,7 @@ Imports:
     yaml
 Suggests:
     BiocManager,
+    DEqMS (== 1.30.0),
     renv,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
