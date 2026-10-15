@@ -33,30 +33,26 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_final_cycle_audit",
-      "role": "astra_low_read_only_cycle_audit",
-      "scope": "M4-003/M4-004 final blocked disposition",
-      "snapshot_commit": "4fa8c02",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_b_t05_b_t06_final_cycles_under_read_only_closure_audit",
+    "status": "m4_final_cycle_audit_correction_applied_focused_rereview_pending",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_final_cycle_audit",
-        "scope": "M4-003/M4-004 final blocked disposition",
-        "allowed_next_transition": "reconcile audit verdict, correct documentation only if required, then close the bounded cycle with no implementation"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T05 and B-T06 final repair/review cycles are exhausted, blocked and unintegrated. A fresh Astra low read-only audit is checking the recorded disposition at snapshot 4fa8c02. No implementation or downstream packet is legal; B-T07 and G4 remain blocked."
+    "disposition": "The final-cycle Astra audit passed all substantive checks and required one stale B-T07 blocker correction. That documentation-only correction is applied; the single focused rereview is the only authorized next transition. No implementation or downstream packet is legal."
   },
   "orchestration_events": [
+    {
+      "event": "m4_003_m4_004_final_cycle_astra_audit_required_correction_applied",
+      "date": "2026-10-15",
+      "agent_name": "/root/m4_final_cycle_audit",
+      "snapshot_commit": "4fa8c02",
+      "verdict": "pass_with_required_changes",
+      "review_ref": "docs/implementation/reviews/M4-final-cycle-astra-audit.md",
+      "required_correction": "replace stale B-T07 blocker naming B-T04 with the actual blocked dependencies B-T05 and B-T06",
+      "allowed_next_transition": "send only this correction to the same Astra auditor for one focused rereview; do not implement",
+      "disposition": "Attempt caps, review evidence, blocker fidelity, candidate non-integration, downstream blocking and evidence language all passed."
+    },
     {
       "event": "m4_003_m4_004_final_cycle_astra_audit_dispatched",
       "date": "2026-10-15",
@@ -1157,7 +1153,7 @@
       "commit": null,
       "acceptance_refs": [],
       "blockers": [
-        "B-T04 is blocked, so B-T07 is not dependency-legal."
+        "B-T05 and B-T06 are blocked and unintegrated, so B-T07 is not dependency-legal."
       ]
     },
     "C-01": {
