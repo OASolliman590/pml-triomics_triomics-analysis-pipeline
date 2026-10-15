@@ -35,32 +35,56 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/bt04_repair",
+      "agent_name": "/root/bt04_sol_review",
       "packet": "B-T04",
-      "role": "implementer_repair_1",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "role": "focused_reviewer_repair_1",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "worktree": ".worktrees/b-t04-calibration-repair",
       "branch": "codex/b-t04-calibration-repair",
       "base_commit": "fc4872a",
-      "candidate_commit": "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
+      "candidate_commit": "9e5f08e",
       "status": "active"
     }
   ],
   "orchestration_control": {
-    "status": "b_t04_integrated_package_gate_failed_repair_1_active",
+    "status": "b_t04_repair_1_focused_review_active",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [
       {
-        "agent_name": "/root/bt04_repair",
+        "agent_name": "/root/bt04_sol_review",
         "packet": "B-T04",
-        "allowed_next_transition": "receive targeted repair 1 for the installed-package CLI test and closure lookup NOTE; reconcile and send only that diff to the same Sol reviewer for the one permitted focused re-review"
+        "allowed_next_transition": "reconcile the one permitted focused re-review; if accepted, cherry-pick repair 1 and rerun integrated packet, CLI, full suite and package check"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The initial Sol review accepted the packet and Sol integrated it as 753ae47, but fresh R CMD check exposed an installed-package CLI test failure and an undefined-global NOTE. Targeted repair 1 is active; B-T04 is not accepted."
+    "disposition": "Luna repair 1 commit 9e5f08e passes 302 packet expectations, the installed-package CLI and R CMD check Status: OK. The same Sol reviewer is performing the one permitted focused re-review; B-T04 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "b_t04_repair_1_completed_focused_rereview_dispatched",
+      "date": "2026-10-15",
+      "worker_agent_name": "/root/bt04_repair",
+      "review_agent_name": "/root/bt04_sol_review",
+      "packet": "B-T04",
+      "repair_commit": "9e5f08e",
+      "repair_base_commit": "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "review_package_ref": ".superpowers/sdd/M4-002-b-t04-production-statistic-calibration/review-bb0181b..9e5f08e.diff",
+      "worker_tests": {
+        "expectations_passed": 302,
+        "failures": 0,
+        "warnings": 0,
+        "skips": 0,
+        "cli_exit": 0,
+        "package_check_status": "Status: OK",
+        "build_log_sha256": "318c28b877abd875d48133b2568fca25911f20109f824073f3dcb3113f2322fa",
+        "check_log_sha256": "09aa9723befc47b7d2e7500947a551e9d873b424133e58bce187a0c14034a5fe"
+      },
+      "allowed_next_transition": "reconcile focused verdict; integrate only if accepted",
+      "disposition": "Repair is limited to R/design_repeated.R and tests/testthat/test-B-T04.R; model and calibration controls are unchanged."
+    },
     {
       "event": "b_t04_integrated_package_gate_failed_repair_1_dispatched",
       "date": "2026-10-15",
@@ -833,9 +857,9 @@
       "integration_commit": "9cd36fe"
     },
     "B-T04": {
-      "status": "repair_1_in_progress",
+      "status": "repair_1_in_review",
       "attempts": 3,
-      "commit": "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
+      "commit": "9e5f08e",
       "acceptance_refs": [],
       "change_record_ref": "docs/implementation/change-records/M4-002-b-t04-production-statistic-calibration.md",
       "blockers": [
