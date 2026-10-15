@@ -35,31 +35,54 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/bt04_repair",
+      "agent_name": "/root/bt04_sol_review",
       "packet": "B-T04",
-      "role": "implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "role": "reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "worktree": ".worktrees/b-t04-calibration-repair",
       "branch": "codex/b-t04-calibration-repair",
       "base_commit": "fc4872a",
+      "candidate_commit": "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
       "status": "active"
     }
   ],
   "orchestration_control": {
-    "status": "b_t04_calibration_repair_active",
+    "status": "b_t04_candidate_under_sol_review",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [
       {
-        "agent_name": "/root/bt04_repair",
+        "agent_name": "/root/bt04_sol_review",
         "packet": "B-T04",
-        "allowed_next_transition": "receive the bounded candidate receipt, reconcile exact diff and tests, then dispatch a fresh Sol 6.1 high review; do not integrate before acceptance"
+        "allowed_next_transition": "reconcile the fresh Sol 6.1 high verdict; integrate only if accepted, otherwise return only accepted targeted findings within the remaining repair budget"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The accepted M4-002 repair is active in one fresh isolated Luna max worker. No other implementation or model-fitting worker is active."
+    "disposition": "Luna's immutable B-T04 candidate is under fresh Sol 6.1 high review. The five-file allowlist and candidate evidence were reconciled; integration remains prohibited until acceptance."
   },
   "orchestration_events": [
+    {
+      "event": "b_t04_candidate_reconciled_sol_review_dispatched",
+      "date": "2026-10-15",
+      "worker_agent_name": "/root/bt04_repair",
+      "review_agent_name": "/root/bt04_sol_review",
+      "packet": "B-T04",
+      "candidate_commit": "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
+      "base_commit": "fc4872a",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "review_package_ref": ".superpowers/sdd/M4-002-b-t04-production-statistic-calibration/review-fc4872a..bb0181b.diff",
+      "worker_tests": {
+        "test_cases": 11,
+        "expectations_passed": 295,
+        "failures": 0,
+        "warnings": 0,
+        "skips": 0,
+        "cli_exit": 0
+      },
+      "allowed_next_transition": "reconcile reviewer verdict; no integration before acceptance",
+      "disposition": "Candidate contains exactly the five allowlisted files. The original ordinary 23/400 failure remains recorded; private study data were not used."
+    },
     {
       "event": "b_t04_calibration_repair_dispatched",
       "date": "2026-10-15",
@@ -774,9 +797,9 @@
       "integration_commit": "9cd36fe"
     },
     "B-T04": {
-      "status": "in_progress",
+      "status": "in_review",
       "attempts": 2,
-      "commit": null,
+      "commit": "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
       "acceptance_refs": [],
       "change_record_ref": "docs/implementation/change-records/M4-002-b-t04-production-statistic-calibration.md",
       "blockers": [
