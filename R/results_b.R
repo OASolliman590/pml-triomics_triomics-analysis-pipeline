@@ -78,6 +78,44 @@ triomics_b_n_subjects <- function(subjects, sample_ids, used) {
   if (length(chosen) == 0L) n_used else as.integer(length(unique(chosen)))
 }
 
+triomics_b_artifact_status <- function(method_status) {
+  if (!is.character(method_status) || length(method_status) != 1L ||
+      is.na(method_status) || !nzchar(method_status)) {
+    triomics_b_abort(
+      "B_RESULT_CONTRACT",
+      "Stage B method status is outside the artifact result contract.",
+      key = "status"
+    )
+  }
+  if (identical(method_status, "fallback_complete")) return("complete")
+  if (identical(method_status, "fallback_partial")) return("partial")
+  if (method_status %in% triomics_envelope_statuses()) return(method_status)
+  triomics_b_abort(
+    "B_RESULT_CONTRACT",
+    "Stage B method status is outside the artifact result contract.",
+    key = "status"
+  )
+}
+
+triomics_b_method_metadata <- function(fit) {
+  fields <- c(
+    "requested_method", "method", "unavailable_reason", "deqms_status",
+    "deqms_version", "fallback_applied", "fallback_provenance"
+  )
+  metadata <- list(method_status = fit$status)
+  for (field in fields) {
+    if (field %in% names(fit)) metadata[[field]] <- fit[[field]]
+  }
+  metadata
+}
+
+triomics_b_reason_codes <- function(fit) {
+  deqms_reason <- if (is.list(fit$deqms_status)) fit$deqms_status$reason else NULL
+  reasons <- unlist(list(fit$unavailable_reason, deqms_reason), use.names = FALSE)
+  reasons <- as.character(reasons)
+  unique(reasons[!is.na(reasons) & nzchar(reasons)])
+}
+
 triomics_b_identity_preparation <- function(config) {
   analyses <- config$analyses
   if (length(analyses) == 0L) {
@@ -145,13 +183,15 @@ triomics_execute_stage_b <- function(config_path, output) {
   )
   resolved <- triomics_resolve_analysis(study, analysis)
   fit <- triomics_fit_block_models(resolved, analysis$statistics)
+  artifact_status <- triomics_b_artifact_status(fit$status)
+  method_metadata <- triomics_b_method_metadata(fit)
   payload <- list(
     schema_version = "2.0",
     study_id = ingested$study_id,
     analysis_id = analysis$analysis_id,
     preparation_context_id = analysis$preparation_context_id,
     representation_id = analysis$design$representation,
-    status = fit$status,
+    status = artifact_status,
     limma_version = fit$limma_version,
     config_sha256 = attr(config, "config_sha256"),
     preparation_refit = FALSE,
@@ -163,6 +203,7 @@ triomics_execute_stage_b <- function(config_path, output) {
     ),
     blocks = fit$blocks
   )
+  payload <- c(payload, method_metadata)
   payload_path <- file.path(output, "B", "block-results.json")
   triomics_write_json_atomic(payload, payload_path)
   inputs <- unname(lapply(ingested$source_manifests, function(source) {
@@ -173,12 +214,12 @@ triomics_execute_stage_b <- function(config_path, output) {
     artifact_id = "stage-b-block-results",
     study_id = ingested$study_id,
     run_id = "b-t01",
-    status = fit$status,
+    status = artifact_status,
     config_sha256 = attr(config, "config_sha256"),
     payload = payload_path,
     producer_commit = "not-recorded",
     inputs = inputs,
-    reason_codes = character(),
+    reason_codes = triomics_b_reason_codes(fit),
     privacy_class = if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive"
   )
   triomics_write_envelope(envelope, file.path(output, "B", "block-results.envelope.json"))
@@ -187,7 +228,8 @@ triomics_execute_stage_b <- function(config_path, output) {
     run_id = "b-t01",
     study_id = ingested$study_id,
     stage = "B",
-    status = fit$status
+    status = artifact_status
   ), file.path(output, "registries", "run.json"))
-  list(status = fit$status, payload_path = payload_path, limma_version = fit$limma_version)
+  list(status = artifact_status, method_status = fit$status,
+       payload_path = payload_path, limma_version = fit$limma_version)
 }

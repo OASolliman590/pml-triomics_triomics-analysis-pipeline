@@ -429,10 +429,28 @@ testthat::test_that("CLI startup routes qualified absolute-path DEqMS and explic
 
   fallback_log <- b05_cli(fallback_config, outputs[[2L]])
   fallback_status <- attr(fallback_log, "status")
-  testthat::expect_identical(if (is.null(fallback_status)) 0L else as.integer(fallback_status), 2L,
+  testthat::expect_identical(if (is.null(fallback_status)) 0L else as.integer(fallback_status), 0L,
                              info = paste(fallback_log, collapse = "\n"))
-  testthat::expect_match(paste(fallback_log, collapse = "\n"), "A_ARTIFACT_INVALID", fixed = TRUE)
   fallback <- jsonlite::read_json(file.path(outputs[[2L]], "B", "block-results.json"),
                                   simplifyVector = FALSE)
-  testthat::expect_identical(fallback$status, "fallback_complete")
+  fallback_envelope_path <- file.path(outputs[[2L]], "B", "block-results.envelope.json")
+  fallback_envelope <- jsonlite::read_json(fallback_envelope_path, simplifyVector = FALSE)
+  fallback_run <- jsonlite::read_json(file.path(outputs[[2L]], "registries", "run.json"),
+                                      simplifyVector = FALSE)
+  testthat::expect_true(triomics_validate_envelope(fallback_envelope_path))
+  testthat::expect_identical(fallback$status, "complete")
+  testthat::expect_identical(fallback$method_status, "fallback_complete")
+  testthat::expect_identical(fallback_envelope$status, "complete")
+  testthat::expect_identical(fallback_run$status, "complete")
+  testthat::expect_identical(fallback$requested_method, "DEqMS")
+  testthat::expect_identical(fallback$method, "limma_explicit_fallback")
+  testthat::expect_true(isTRUE(fallback$fallback_applied))
+  testthat::expect_identical(fallback$deqms_status$status, "unavailable")
+  testthat::expect_identical(fallback$deqms_status$reason, "count_metadata_missing")
+  testthat::expect_identical(fallback_envelope$reason_codes, "count_metadata_missing")
+  testthat::expect_identical(fallback$fallback_provenance$source_method, "limma")
+  testthat::expect_identical(fallback$fallback_provenance$status, "applied")
+  testthat::expect_identical(fallback$fallback_provenance$trigger_reason,
+                             "count_metadata_missing")
+  testthat::expect_true(isTRUE(fallback$fallback_provenance$user_declared))
 })
