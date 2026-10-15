@@ -1,0 +1,76 @@
+{
+  "packet_id": "B-T06",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": [
+      "triomics_resolve_analysis",
+      "triomics_fit_block_models",
+      "triomics_execute_stage_b",
+      "resolve_analysis",
+      "fit_block_models"
+    ]
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml",
+      "limma"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ]
+  },
+  "stage_registry": {
+    "A": {
+      "validation_only": true,
+      "execution": true
+    },
+    "B": {
+      "validation_only": false,
+      "execution": true
+    },
+    "C": {
+      "validation_only": false,
+      "execution": false
+    },
+    "D": {
+      "validation_only": false,
+      "execution": false
+    },
+    "report": {
+      "validation_only": false,
+      "execution": false
+    },
+    "all": {
+      "validation_only": false,
+      "execution": false
+    }
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "owned_functions": [
+    "triomics_b06_family_validation",
+    "triomics_b06_finalize_fit",
+    "triomics_b06_nominate",
+    "triomics_b06_rank_sensitivity",
+    "triomics_b06_install_namespace_dispatch",
+    "triomics_b06_install_global_dispatch"
+  ],
+  "extends": [
+    "triomics_resolve_analysis",
+    "resolve_analysis",
+    "triomics_fit_block_models",
+    "fit_block_models"
+  ],
+  "namespace_edits": false,
+  "request": "Do not edit NAMESPACE. B-T06 wraps the accepted B-T01/B-T02/B-T03 fit dispatch, carries source selection gates from configured ingestion into ResolvedAnalysis, validates fixed per-block families before publishing q, and adds reporting-only nominations and eligible rank sensitivity. Package .onLoad must install B-T02, then B-T03, then B-T06 namespace dispatch. The source CLI path installs the same wrappers before calling the B-T01 main. No new shared exports, stage registration, dependency, or lockfile entry is requested. Sol owns shared registration and any future changes to R/cli.R, R/stage_registry.R, DESCRIPTION, NAMESPACE, inst/schema, man, and renv.lock."
+}
