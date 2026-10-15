@@ -35,13 +35,72 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m4_blocked_no_legal_downstream_packet",
-    "last_reconciled": "2026-10-14",
+    "status": "b_t04_change_record_accepted_pending_repair_dispatch",
+    "last_reconciled": "2026-10-15",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T09 is accepted after packet and cross-cutting registration review. M4 remains blocked by B-T04, B-T05 and B-T06; B-T07 and later stages are not legally dispatchable. No run-owned chat remains active."
+    "disposition": "Omar explicitly accepted M4-002. One bounded, test-first B-T04 repair may now be dispatched to a fresh isolated Luna max worker; no implementation is active yet."
   },
   "orchestration_events": [
+    {
+      "event": "b_t04_change_record_accepted",
+      "date": "2026-10-15",
+      "accepted_by": "Omar",
+      "change_record_ref": "docs/implementation/change-records/M4-002-b-t04-production-statistic-calibration.md",
+      "authorized_next_transition": "dispatch one bounded test-first B-T04 repair to a fresh isolated Luna max worker, then obtain fresh Sol 6.1 high review before integration",
+      "disposition": "The frozen controls remain unchanged. Acceptance authorizes repair work but does not pre-accept the packet."
+    },
+    {
+      "event": "b_t04_calibration_spike_focused_rereview_passed",
+      "date": "2026-10-15",
+      "agent_name": "/root/bt04_spike_audit",
+      "verdict": "pass",
+      "review_ref": "docs/implementation/reviews/B-T04-calibration-spike-astra-audit.md",
+      "change_record_ref": "docs/implementation/change-records/M4-002-b-t04-production-statistic-calibration.md",
+      "minimum_study_level_coverage_lower_bound": 0.9461728,
+      "disposition": "All initial required changes are addressed. M4-002 awaits Omar's explicit acceptance; B-T04 remains blocked and no worker is active."
+    },
+    {
+      "event": "b_t04_calibration_spike_focused_rereview_dispatched",
+      "date": "2026-10-15",
+      "agent_name": "/root/bt04_spike_audit",
+      "scope": "initial required changes only",
+      "candidate_ref": "docs/implementation/change-records/M4-002-b-t04-production-statistic-calibration.md",
+      "allowed_next_transition": "reconcile focused verdict; if pass, request Omar's explicit acceptance; do not implement",
+      "disposition": "This is the one permitted focused re-review. B-T04 remains blocked."
+    },
+    {
+      "event": "b_t04_calibration_spike_audit_reconciled_change_record_proposed",
+      "date": "2026-10-15",
+      "agent_name": "/root/bt04_spike_audit",
+      "verdict": "pass_with_required_changes",
+      "review_ref": "docs/implementation/reviews/B-T04-calibration-spike-astra-audit.md",
+      "change_record_ref": "docs/implementation/change-records/M4-002-b-t04-production-statistic-calibration.md",
+      "probe_sha256": "ae16976c4ad3ae0f63bca343e2738b98b4065ee21d8a38daf519d8e655ab9fa4",
+      "report_sha256": "343b4ccf139301f0941a83148825cb777a8219d3d39d1327a0074ac1d26a1e3d",
+      "required_conditions": [
+        "preserve the ordinary 23/400 failure and QR/SE/df evidence",
+        "qualify robust=FALSE only",
+        "use matching moderated p/SE/df/contrast provenance",
+        "treat pooled interval-level coverage as descriptive and gate on an independent-study lower bound",
+        "do not extend covariance or missingness scope"
+      ],
+      "disposition": "M4-002 is proposed and not accepted. B-T04 stays blocked; no worker may implement until Omar explicitly accepts the record."
+    },
+    {
+      "event": "b_t04_calibration_spike_audit_dispatched",
+      "date": "2026-10-15",
+      "agent_name": "/root/bt04_spike_audit",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "candidate_ref": "docs/implementation/investigations/B-T04-calibration-spike.md",
+      "probe_ref": "docs/implementation/investigations/B-T04-calibration-spike.R",
+      "probe_sha256": "ae16976c4ad3ae0f63bca343e2738b98b4065ee21d8a38daf519d8e655ab9fa4",
+      "held_repeated_source_sha256": "bbca07fa0d06cc915f09c2b698f760cb8da96d13a2abe53d91613e5627976ecb",
+      "held_trajectory_source_sha256": "93af979eb8c86e1e4bd9a2c18b9ea4c60c504aaac0c77e53bba0b33f7292d3b4",
+      "allowed_next_transition": "reconcile verdict; if acceptable, draft an explicit change record for Omar acceptance; do not implement",
+      "disposition": "Read-only audit uses public specification and synthetic evidence only; private study inputs are excluded."
+    },
     {
       "event": "b_t09_registration_rereview_accepted_m4_blocked",
       "date": "2026-10-14",
