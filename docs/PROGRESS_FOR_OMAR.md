@@ -9,7 +9,7 @@ fixtures. B-T04 supports qualified fixed-subject multivisit and trajectory
 analysis; the integrated branch passed 2,706 assertions and package check.
 
 **Changed:** The remaining B-T05 and B-T06 blockers were reproduced. Two bounded
-repair records now passed focused Astra review: preserve DEqMS identity/fallback
+repair records passed focused Astra review: preserve DEqMS identity/fallback
 when counts are missing, and make Wilcoxon eligibility scale-invariant. No code
 from either blocked candidate is integrated yet.
 
@@ -17,13 +17,13 @@ from either blocked candidate is integrated yet.
 biological validation. None of the fasting, diabetic-treatment or
 organophosphate studies has been fitted. B-T04's ordinary 23/400 diagnostic
 remains failed even though its qualified moderated route passed. B-T05 and B-T06
-remain blocked until their audited records are explicitly accepted and repaired.
+remain blocked until their repairs pass and integrate.
 
-**Next milestone:** Resolve B-T05 and B-T06, then implement B-T07 and submit the
-complete M4 snapshot to G4 review.
+**Next milestone:** Run the accepted final B-T05 and B-T06 repair/review cycles,
+then implement B-T07 and submit the complete M4 snapshot to G4 review.
 
-**Needs Omar:** Accept or reject M4-003 and M4-004. Acceptance permits
-one final repair and one additional review per packet; it does not pre-accept code.
+**Needs Omar:** Nothing now. M4-003 and M4-004 are accepted; that authorizes one
+final repair and one additional review per packet, not advance code acceptance.
 
 **Sync:** Local repository documentation updated. No Notion sync or external
 publication was attempted.
@@ -39,7 +39,7 @@ Software evidence: B-T04 302/0/0/0; full suite 2,706/0/0/0; package check
 required test was skipped.
 
 Restart: read `docs/implementation/HANDOVER.md`, verify Git state, and do not
-repeat accepted B-T04. M4-003/M4-004 passed focused audit but remain unaccepted.
-No downstream packet is legal. Do not loosen B-T04's frozen controls.
+repeat accepted B-T04. M4-003/M4-004 are accepted for bounded repair/review.
+No downstream packet is legal until both integrate. Preserve B-T04 controls.
 
 </details>

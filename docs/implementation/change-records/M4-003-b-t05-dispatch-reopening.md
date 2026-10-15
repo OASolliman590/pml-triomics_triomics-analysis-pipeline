@@ -3,7 +3,7 @@
 - Date: 2026-10-15
 - Trigger: the focused review found that missing counts bypass B-T05 before it
   can emit the method-specific AC4 outcome.
-- Status: **proposed; not accepted**
+- Status: **accepted by Omar on 2026-10-15**
 - Evidence: `docs/implementation/investigations/B-T05-dispatch-reopening.md`
 - Independent audit:
   `docs/implementation/reviews/B-T05-reopening-astra-audit.md`
@@ -78,4 +78,6 @@ gate remains required before any consumer is released.
 
 ## User decision
 
-Pending Omar's explicit acceptance. Proposal and audit do not authorize code.
+Omar explicitly accepted M4-003 on 2026-10-15. This authorizes only the
+bounded repair 2 and one-time additional review defined above; it does not
+pre-accept the implementation or release B-T05 consumers.

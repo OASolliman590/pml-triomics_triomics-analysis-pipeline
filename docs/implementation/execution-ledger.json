@@ -35,13 +35,24 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m4_b_t05_b_t06_audited_reopening_records_awaiting_user_acceptance",
+    "status": "m4_b_t05_b_t06_final_repairs_authorized_not_dispatched",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-003 and M4-004 passed their single focused Astra rereviews at corrected snapshot 0dfe88d. Both records remain proposed and not accepted; Omar's explicit acceptance is required before either final Luna repair. No run-owned agent is active and B-T07 remains blocked."
+    "disposition": "Omar accepted audited records M4-003 and M4-004. Each authorizes repair 2 and exactly one additional Sol 6.1 high review; implementation is not accepted in advance. No worker is active yet and B-T07 remains blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t05_b_t06_reopening_records_accepted",
+      "date": "2026-10-15",
+      "accepted_by": "Omar",
+      "change_record_refs": [
+        "docs/implementation/change-records/M4-003-b-t05-dispatch-reopening.md",
+        "docs/implementation/change-records/M4-004-b-t06-scale-invariant-rank-eligibility.md"
+      ],
+      "authorized_next_transition": "run B-T05 then B-T06 as sequential fresh isolated Luna max repair-2 tasks; each receives exactly one fresh Sol 6.1 high review before any serial integration",
+      "disposition": "Acceptance authorizes bounded work only. Existing candidate review exhaustion and attempt counters remain historical; another unresolved result returns the affected packet to blocked."
+    },
     {
       "event": "b_t05_b_t06_reopening_focused_rereviews_passed_awaiting_user",
       "date": "2026-10-15",

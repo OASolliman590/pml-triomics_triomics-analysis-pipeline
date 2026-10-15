@@ -3,7 +3,7 @@
 - Date: 2026-10-15
 - Trigger: the focused review found that an absolute tolerance admits a
   treatment-mean contrast as if it were target minus reference.
-- Status: **proposed; not accepted**
+- Status: **accepted by Omar on 2026-10-15**
 - Evidence:
   `docs/implementation/investigations/B-T06-scale-invariant-rank-eligibility.md`
 - Independent audit:
@@ -82,4 +82,6 @@ before any consumer is released.
 
 ## User decision
 
-Pending Omar's explicit acceptance. Proposal and audit do not authorize code.
+Omar explicitly accepted M4-004 on 2026-10-15. This authorizes only the
+bounded repair 2 and one-time additional review defined above; it does not
+pre-accept the implementation or release B-T06 consumers.
