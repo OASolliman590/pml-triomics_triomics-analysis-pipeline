@@ -33,15 +33,52 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_005a_luna",
+      "role": "luna_implementation",
+      "packet": "M4-005A",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "worktree": ".worktrees/m4-005a-b-t05-result-boundary",
+      "branch": "codex/m4-005a-b-t05-result-boundary",
+      "base_commit": "a8fe83a81cb2b5b4bd77b2c38379b6757babe530"
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_005_implementation_plans_written_awaiting_omar_review",
+    "status": "m4_005a_luna_implementation_active",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_005a_luna",
+        "unit": "M4-005A",
+        "expected_return": "bounded commit plus RED/GREEN, adjacent-test and source-CLI receipt"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar explicitly accepted audited M4-005 for execution. Separate sequential Unit A and Unit B implementation plans are committed and await Omar's review before dispatch. No coding worker or handoff is active; blocked packet states remain unchanged."
+    "disposition": "Omar approved the M4-005 implementation plans and requested continuous execution. Unit A Task 1 restored the exact B-T05 candidate at a8fe83a; one Luna max worker is implementing only the authorized result-boundary adapter and tests. Unit B remains dependency-blocked until Unit A review, installed verification and serial integration pass."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005a_luna_implementation_dispatched",
+      "date": "2026-10-15",
+      "agent_name": "/root/m4_005a_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "worktree": ".worktrees/m4-005a-b-t05-result-boundary",
+      "branch": "codex/m4-005a-b-t05-result-boundary",
+      "integration_base": "c10e7d8bd0331ff782d5a293d0e25ee3fb153f37",
+      "restoration_commit": "a8fe83a81cb2b5b4bd77b2c38379b6757babe530",
+      "restoration_verification": "four working-tree blob hashes matched b6d3970 exactly",
+      "baseline": {
+        "passed": 98,
+        "failed": 0,
+        "warned": 0,
+        "skipped": 0
+      },
+      "allowed_next_transition": "inspect the bounded candidate and report, then dispatch one fresh Sol 6.1 high complete-diff review; at most one targeted repair and one focused rereview are authorized",
+      "disposition": "Allowed edits are R/results_b.R, tests/testthat/test-M4-005-B-T05-integration.R, and only the named stale CLI test block in tests/testthat/test-B-T05.R. Private study data are excluded."
+    },
     {
       "event": "m4_005_implementation_plans_written",
       "date": "2026-10-15",
