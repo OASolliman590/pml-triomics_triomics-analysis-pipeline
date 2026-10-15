@@ -4,8 +4,9 @@
 - Trigger: the fresh M4-005A Sol review found three mandatory adjacent-test
   failures in a B-T01 case that contradicts the already accepted B-T05 fallback
   contract.
-- Status: **proposed; Astra-low audit required before execution**
+- Status: **accepted for bounded execution under Omar's one-shot instruction after Astra-low PASS**
 - Review evidence: `docs/implementation/reviews/M4-005A-sol-review.md`
+- Audit: `docs/implementation/reviews/M4-006-astra-audit.md`
 - Candidate preserved: `97e7c28715581b8dd5c070e41c52f5f4c0bf2523`
 
 ## Root cause
@@ -79,3 +80,13 @@ fallback semantics, does not hide a B-T01 regression, has sufficient tests, and
 does not improperly reset attempts or reviews. Astra may pass, require a focused
 record correction, or fail. It may not implement or accept the code. Execution
 may start only after a pass.
+
+## Audit disposition
+
+A fresh Astra-low audit passed immutable snapshot
+`3e755a4baf0b7068a04b9075eafa7d6fe5e8cd10` without required changes. Omar's
+2026-10-15 instruction approved continuous one-shot execution of the accepted
+plan and directed blocker review through the bounded reviewer/Astra process.
+The audit pass therefore activates only the one test-input correction and
+focused rereview defined here. It does not pre-accept M4-005A or release any
+consumer.

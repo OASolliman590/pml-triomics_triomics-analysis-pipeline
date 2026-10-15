@@ -33,30 +33,25 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_006_astra_audit",
-      "role": "astra_read_only_audit",
-      "packet": "M4-006",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "snapshot_commit": "3e755a4"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_006_astra_audit_active",
+    "status": "m4_006_astra_passed_luna_dispatch_pending",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_006_astra_audit",
-        "unit": "M4-006",
-        "expected_return": "pass, pass with required changes, or fail on the one-test acceptance reconciliation"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The fresh M4-005A Sol review found the adapter sound but blocked integration because three stale B-T01 assertions contradict the accepted explicit-fallback contract and the required file is outside Unit A's allowlist. One fresh Astra-low reviewer is auditing M4-006 at immutable snapshot 3e755a4 before any code correction. Unit A candidate 97e7c28 remains unintegrated; Unit B remains blocked."
+    "disposition": "A fresh Astra-low audit passed M4-006 at immutable snapshot 3e755a4 without required changes. Under Omar's one-shot continuous-execution instruction, one bounded Luna-max correction may now change only the stale B-T01 fallback input, followed by M4-005A's reserved focused Sol rereview. Unit A candidate remains unintegrated and Unit B remains blocked."
   },
   "orchestration_events": [
+    {
+      "event": "m4_006_astra_audit_passed",
+      "date": "2026-10-15",
+      "agent_name": "/root/m4_006_astra_audit",
+      "snapshot_commit": "3e755a4baf0b7068a04b9075eafa7d6fe5e8cd10",
+      "verdict": "pass",
+      "review_ref": "docs/implementation/reviews/M4-006-astra-audit.md",
+      "allowed_next_transition": "dispatch one fresh Luna-max worker to change only the named B-T01 test block's fallback value, then send the fix diff to M4-005A's one focused Sol rereview",
+      "disposition": "The audit found no scientific-contract change, hidden B-T01 regression, counter reset or privacy defect. It does not accept M4-005A or release Unit B/B-T07."
+    },
     {
       "event": "m4_006_astra_audit_dispatched",
       "date": "2026-10-15",
