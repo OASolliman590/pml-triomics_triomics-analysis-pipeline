@@ -1,8 +1,9 @@
 # Implementation handover
 
 Run `triomics-20260920-sol-01` is active on branch
-`spec/harden-v2-20260920`. G3 is accepted. M4 is blocked and not eligible for
-G4 review; no dependency-legal Stage B, C or D packet remains dispatchable.
+`spec/harden-v2-20260920`. G3 is accepted. M4-005 execution is active: Unit A
+is integrated and verified, and Unit B is the next dependency-legal packet.
+M4 is not yet eligible for G4 review.
 
 G0 and G1 remain accepted. G2 is accepted on immutable milestone snapshot
 `8b0754c1ea581ba18c4bb2e7eb862c26eeb625a7` after its one permitted focused
@@ -39,11 +40,13 @@ scientifically validated.
   moderated route passes all five declared cells. Candidate `bb0181b` and
   targeted installed-package repair `9e5f08e` were independently accepted and
   integrated as `753ae47` and `af69a9e`. Review: `reviews/B-T04-review.md`.
-- B-T05 is blocked after its final M4-003 repair/review cycle. Candidate
-  `b6d3970` fixed dispatch and passed 98 packet assertions, but the shared Stage
-  B serializer omits method/unavailability/fallback provenance and the artifact
-  contract rejects fallback statuses. M4-003 permits no further repair/review;
-  the candidate remains unintegrated. Review: `reviews/B-T05-final-repair-review.md`.
+- B-T05's M4-003 cycle remains historically exhausted, but accepted change
+  record M4-005 authorized a bounded shared-integration reopening. Unit A is now
+  integrated through `d76e564`: method/unavailability/fallback provenance is
+  retained, false DEqMS claims are excluded, its exact optional dependency
+  closure is locked, targeted/adjacent tests pass, and package check is
+  `Status: OK`. B-T05 is still not accepted pending Unit B and the shared Astra
+  M4-005 audit.
 - B-T06 is blocked after its final M4-004 repair/review cycle. Candidate
   `086d604` fixed scale-invariant Wilcoxon eligibility and passed 66 assertions,
   but its restored startup wrapper removes the integrated B-T04 dispatch/stage
@@ -58,13 +61,12 @@ scientifically validated.
 - The final blocked-cycle Astra audit passed after correcting B-T07's stale
   dependency reason. Review: `reviews/M4-final-cycle-astra-audit.md`. Neither
   blocked candidate is integrated.
-- M4-005 now defines the only proposed reopening: a shared B-T05 result-boundary
-  unit followed by centralized B-T02-through-B-T06 dispatch composition. Its
-  independent Astra audit found two record contradictions; both were corrected,
-  and focused rereview passed on `279ecc4`. Omar explicitly accepted M4-005 for
-  execution on 2026-10-15. Unit A and Unit B implementation plans are committed
-  under `plans/` and await Omar's plan review before worker dispatch. No run-owned
-  agent remains active.
+- M4-005 defines the bounded reopening: the completed B-T05 result-boundary Unit
+  A followed by centralized B-T02-through-B-T06 dispatch composition Unit B.
+  Omar accepted the record and plans. Unit A passed focused Sol review,
+  registration review and coordinator verification; M4-006's independent Astra
+  audit accepted the one-value stale-test reconciliation. Unit B now starts from
+  the integrated Unit A tree. No run-owned agent is active at this checkpoint.
 
 ## Literal resume instruction
 
@@ -74,11 +76,12 @@ Read root `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `reviews/B-T09-review.md`, then M4-003/M4-004, M4-005 and their audit receipts.
 Verify HEAD and dirty state. Do not repeat accepted G2/G3/B-T09 work or any
 accepted B-T04 work, or any exhausted B-T05/B-T06 attempt or review. M4-003 and
-M4-004 final cycles are exhausted and blocked; do not integrate or repair either
-candidate under those records. M4-005 is independently audited and accepted for
-execution; follow its committed implementation plan and sequential Unit A then
-Unit B gates. B-T07 remains illegal until the bounded M4-005 shared-integration
-review passes. Preserve B-T04's frozen controls.
+M4-004 final cycles are exhausted and blocked; do not repair either candidate
+under those old records. M4-005 is independently audited and accepted for
+execution. Unit A is already integrated; resume at
+`plans/M4-005B-stage-b-dispatch-composition.md`, restoring the six B-T06 files
+only inside its fresh worktree. B-T07 remains illegal until Unit B and the
+bounded M4-005 shared-integration audit pass. Preserve B-T04's frozen controls.
 
 ## Orchestration correction
 

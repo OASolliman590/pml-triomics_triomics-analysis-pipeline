@@ -33,33 +33,45 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_005a_registration_review",
-      "role": "sol_cross_cutting_registration_review",
-      "packet": "M4-005A registration",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "worktree": ".worktrees/m4-005a-b-t05-result-boundary",
-      "branch": "codex/m4-005a-b-t05-result-boundary",
-      "base_commit": "6761e1775a0e90ec5bee061e18a5182e93dbeb9c",
-      "candidate_commit": "7876df4"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_005a_registration_focused_rereview_active",
+    "status": "m4_005a_integrated_m4_005b_dispatch_pending",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_005a_registration_review",
-        "unit": "M4-005A registration",
-        "expected_return": "addressed/not-addressed verdict on complete DEqMS required dependency closure and new-breakage check of the lock-only repair"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The fresh registration review accepted the DESCRIPTION declaration and DEqMS record but found nine required ggplot2-chain lock records missing. Sol recorded the exact installed metadata in lock-only commit 7876df4; recursive required closure is now zero missing. The same reviewer is performing the one focused registration rereview. Integration remains blocked pending its verdict."
+    "disposition": "M4-005A is integrated through d76e564 after its focused Sol rereviews, exact dependency closure and coordinator verification passed. B-T05 is not yet accepted: M4-005 requires Unit B and the shared Astra-low integration audit before acceptance or B-T07 release. The next legal transition is M4-005B restoration and tests."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005a_integrated_and_verified_m4_005b_released",
+      "date": "2026-10-15",
+      "integration_commits": [
+        "09d33f6",
+        "03b9ab0",
+        "45eb7e5",
+        "cc21eb5",
+        "d76e564"
+      ],
+      "review_refs": [
+        "docs/implementation/reviews/M4-005A-sol-review.md",
+        "docs/implementation/reviews/M4-005A-focused-rereview.md",
+        "docs/implementation/reviews/M4-005A-registration-review.md",
+        "docs/implementation/reviews/M4-006-astra-audit.md"
+      ],
+      "verification": {
+        "b_t05_target_passed": 302,
+        "adjacent_b_t01_b_t03_b_t04_passed": 818,
+        "failed": 0,
+        "warned": 0,
+        "skipped": 0,
+        "package_check": "Status: OK",
+        "clean_tarball_install_exit": 0,
+        "installed_b_t05_cli_exit": 0,
+        "dependency_closure_missing_required": 0
+      },
+      "allowed_next_transition": "execute M4-005B in its isolated worktree, then obtain the bounded shared Astra-low M4-005 integration audit before accepting B-T05 or B-T06 and before releasing B-T07",
+      "disposition": "Unit A's integrated tree is byte-identical to the accepted worktree paths. The earlier cherry-pick sequencer omission was detected and corrected serially. This is synthetic software evidence only; no private study data were read and B-T05 is not yet scientifically accepted."
+    },
     {
       "event": "m4_005a_registration_review_changes_required_focused_rereview_dispatched",
       "date": "2026-10-15",
