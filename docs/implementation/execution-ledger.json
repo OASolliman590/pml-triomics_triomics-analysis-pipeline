@@ -33,15 +33,41 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_final_cycle_audit",
+      "role": "astra_low_read_only_cycle_audit",
+      "scope": "M4-003/M4-004 final blocked disposition",
+      "snapshot_commit": "4fa8c02",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low"
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_b_t05_b_t06_final_cycles_exhausted_blocked_no_legal_downstream",
+    "status": "m4_b_t05_b_t06_final_cycles_under_read_only_closure_audit",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_final_cycle_audit",
+        "scope": "M4-003/M4-004 final blocked disposition",
+        "allowed_next_transition": "reconcile audit verdict, correct documentation only if required, then close the bounded cycle with no implementation"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T05 and B-T06 final repair/review cycles are exhausted, blocked and unintegrated. Their narrow repairs passed packet tests, but shared integration blockers remain outside the authorized file sets. No implementation or downstream packet is legal; B-T07 and G4 remain blocked."
+    "disposition": "B-T05 and B-T06 final repair/review cycles are exhausted, blocked and unintegrated. A fresh Astra low read-only audit is checking the recorded disposition at snapshot 4fa8c02. No implementation or downstream packet is legal; B-T07 and G4 remain blocked."
   },
   "orchestration_events": [
+    {
+      "event": "m4_003_m4_004_final_cycle_astra_audit_dispatched",
+      "date": "2026-10-15",
+      "agent_name": "/root/m4_final_cycle_audit",
+      "snapshot_commit": "4fa8c02",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "scope": "attempt/review caps, blocker fidelity, candidate non-integration, downstream legality, Omar evidence language and active handoff consistency",
+      "allowed_next_transition": "reconcile verdict; documentation-only corrections if required; then close this bounded cycle without implementing",
+      "disposition": "This is not a G4 review and cannot authorize implementation or project closure. Private study data are excluded."
+    },
     {
       "event": "b_t06_repair_2_final_review_blocked_unintegrated",
       "date": "2026-10-15",
