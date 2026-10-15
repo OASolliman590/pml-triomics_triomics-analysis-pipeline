@@ -8,10 +8,10 @@ organophosphate studies scientifically separate.
 fixtures. B-T04 supports qualified fixed-subject multivisit and trajectory
 analysis; the integrated branch passed 2,706 assertions and package check.
 
-**Changed:** The remaining B-T05 and B-T06 blockers were reproduced. Two bounded
-repair records passed focused Astra review: preserve DEqMS identity/fallback
-when counts are missing, and make Wilcoxon eligibility scale-invariant. No code
-from either blocked candidate is integrated yet.
+**Changed:** B-T05's final repair fixed dispatch and passed 98 assertions, but
+its review found the shared CLI artifact drops DEqMS/fallback provenance and
+rejects fallback statuses. The candidate is not integrated and no repair remains
+under M4-003. B-T06's separate final cycle can still proceed.
 
 **Not established:** This is fixture-based software/calibration evidence, not
 biological validation. None of the fasting, diabetic-treatment or
@@ -19,11 +19,11 @@ organophosphate studies has been fitted. B-T04's ordinary 23/400 diagnostic
 remains failed even though its qualified moderated route passed. B-T05 and B-T06
 remain blocked until their repairs pass and integrate.
 
-**Next milestone:** Run the accepted final B-T05 and B-T06 repair/review cycles,
-then implement B-T07 and submit the complete M4 snapshot to G4 review.
+**Next milestone:** Finish B-T06's accepted final repair/review. M4 cannot reach
+G4 while B-T05's shared serialization contract remains blocked.
 
-**Needs Omar:** Nothing now. M4-003 and M4-004 are accepted; that authorizes one
-final repair and one additional review per packet, not advance code acceptance.
+**Needs Omar:** Nothing now. The coordinator will finish the independent B-T06
+cycle, then report the exact remaining M4 blocker.
 
 **Sync:** Local repository documentation updated. No Notion sync or external
 publication was attempted.

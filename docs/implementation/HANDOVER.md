@@ -39,9 +39,11 @@ scientifically validated.
   moderated route passes all five declared cells. Candidate `bb0181b` and
   targeted installed-package repair `9e5f08e` were independently accepted and
   integrated as `753ae47` and `af69a9e`. Review: `reviews/B-T04-review.md`.
-- B-T05 remains blocked, but Omar accepted audited record M4-003. Its final
-  bounded repair 2 and one-time additional Sol review are authorized. The
-  candidates remain unintegrated until that cycle passes.
+- B-T05 is blocked after its final M4-003 repair/review cycle. Candidate
+  `b6d3970` fixed dispatch and passed 98 packet assertions, but the shared Stage
+  B serializer omits method/unavailability/fallback provenance and the artifact
+  contract rejects fallback statuses. M4-003 permits no further repair/review;
+  the candidate remains unintegrated. Review: `reviews/B-T05-final-repair-review.md`.
 - B-T06 remains blocked, but Omar accepted audited record M4-004. Its final
   bounded repair 2 and one-time additional Sol review are authorized. The
   candidates remain unintegrated until that cycle passes.
@@ -59,10 +61,10 @@ Read root `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `reviews/M3-astra-review.md`, `milestones/M4.md`, `reviews/B-T04-review.md`, and
 `reviews/B-T09-review.md`, then M4-003/M4-004 and their reopening audit receipts.
 Verify HEAD and dirty state. Do not repeat accepted G2/G3/B-T09 work or any
-accepted B-T04 work, or any exhausted B-T05/B-T06 attempt or review. M4-003 and
-M4-004 are accepted; resume their final repair/review cycles without expanding
-scope. There is no legal downstream packet until both repairs are accepted and
-integrated. Preserve B-T04's seeds, generator and 0.08 bound.
+accepted B-T04 work, or any exhausted B-T05/B-T06 attempt or review. B-T05's
+M4-003 cycle is exhausted and blocked; do not integrate or repair it. M4-004 is
+accepted and its final B-T06 repair/review may proceed without expanding scope.
+There is no legal downstream packet. Preserve B-T04's frozen controls.
 
 ## Orchestration correction
 

@@ -33,33 +33,31 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/bt05_final_review",
-      "role": "sol_6_1_high_one_time_packet_review",
-      "packet": "B-T05",
-      "worktree": ".worktrees/b-t05-final-repair",
-      "branch": "codex/b-t05-final-repair",
-      "integration_base": "3003da4",
-      "candidate_commit": "b6d397072db09b67b765e9e6cf0e2454798f2d12",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_b_t05_final_repair_2_under_one_time_review",
+    "status": "m4_b_t05_exhausted_blocked_b_t06_final_repair_authorized",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/bt05_final_review",
-        "packet": "B-T05",
-        "allowed_next_transition": "reconcile final verdict; integrate and verify only if accepted, otherwise return B-T05 to blocked with no fix round"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T05 repair 2 candidate b6d3970 is under its one authorized fresh Sol 6.1 high review. The worker reported 98 passing packet assertions and source/installed CLI probes, with a concern that the shared serializer omits method/fallback provenance and rejects fallback_complete as an artifact status. No fix round is authorized. B-T06 is not dispatched; B-T07 remains blocked."
+    "disposition": "B-T05 repair 2 candidate b6d3970 is blocked and unintegrated after its one authorized review found two foreign shared-serialization AC4 defects. M4-003 has no repair/re-review remaining. B-T06's independent M4-004 final cycle is the only authorized next implementation; B-T07 remains blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t05_repair_2_final_review_blocked_unintegrated",
+      "date": "2026-10-15",
+      "worker_agent_name": "/root/bt05_final_repair",
+      "review_agent_name": "/root/bt05_final_review",
+      "packet": "B-T05",
+      "candidate_commit": "b6d397072db09b67b765e9e6cf0e2454798f2d12",
+      "verdict": "not_compliant_integration_blocked",
+      "review_ref": "docs/implementation/reviews/B-T05-final-repair-review.md",
+      "blocking_findings": [
+        "shared Stage B serializer omits requested/actual method, named DEqMS unavailability and explicit fallback provenance",
+        "shared artifact envelope rejects fallback_complete and fallback_partial statuses, preventing valid fallback finalization"
+      ],
+      "allowed_next_transition": "continue independent accepted B-T06 final cycle; do not integrate or repair B-T05 under M4-003",
+      "disposition": "Repair 2 and its one-time review are exhausted. Required fixes are outside the packet allowlist; B-T05 remains blocked and B-T07/G4 remain unreleased."
+    },
     {
       "event": "b_t05_repair_2_completed_one_time_review_dispatched",
       "date": "2026-10-15",
@@ -1040,12 +1038,13 @@
     "B-T05": {
       "status": "blocked",
       "attempts": 1,
-      "repair_attempts": 1,
+      "repair_attempts": 2,
       "commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
       "repair_candidate_commit": "efd830884b894d79441af5a948fa3b600ff8e4db",
+      "final_repair_candidate_commit": "b6d397072db09b67b765e9e6cf0e2454798f2d12",
       "acceptance_refs": [],
       "blockers": [
-        "AC4 remains unmet after the single focused re-review: missing count metadata bypasses B-T05 and suppresses the requested method identity, named unavailability and explicit limma fallback for level requests."
+        "AC4 remains unmet after final repair 2 and its one-time review: shared Stage B serialization drops requested/actual method, named DEqMS unavailability and explicit fallback provenance, while the artifact contract rejects fallback_complete/fallback_partial. No further repair or review is authorized under M4-003."
       ]
     },
     "B-T06": {
