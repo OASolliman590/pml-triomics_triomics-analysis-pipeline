@@ -1,0 +1,62 @@
+{
+  "packet_id": "B-T04",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": [
+      "triomics_resolve_analysis",
+      "triomics_fit_block_models",
+      "triomics_execute_stage_b",
+      "resolve_analysis",
+      "fit_block_models"
+    ]
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml",
+      "limma"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ]
+  },
+  "stage_registry": {
+    "A": {"validation_only": true, "execution": true},
+    "B": {"validation_only": false, "execution": true},
+    "C": {"validation_only": false, "execution": false},
+    "D": {"validation_only": false, "execution": false},
+    "report": {"validation_only": false, "execution": false},
+    "all": {"validation_only": false, "execution": false}
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "owned_functions": [
+    "triomics_b04_owns",
+    "triomics_b04_resolve",
+    "triomics_b04_fit",
+    "triomics_b04_calibrate",
+    "triomics_b04_capability",
+    "triomics_b04_time_basis",
+    "triomics_b04_install_namespace_dispatch",
+    "triomics_b04_install_global_dispatch",
+    "triomics_b04_execute_fixture"
+  ],
+  "extends": [
+    "triomics_resolve_analysis",
+    "resolve_analysis",
+    "triomics_fit_block_models",
+    "fit_block_models",
+    "triomics_execute_stage_b"
+  ],
+  "namespace_edits": false,
+  "request": "Do not edit NAMESPACE. B-T04 resolves kind multivisit or trajectory with representation subject_centered and fits them only when resolved$lane is b_t04. .onLoad must call triomics_b02_install_namespace_dispatch, then triomics_b03_install_namespace_dispatch, then triomics_b04_install_namespace_dispatch. The CLI source path must install the global B-T04 wrapper, including the stage B fixture hook, before the B-T03 main wrapper. Natural splines use base splines::ns. No new Imports. duplicateCorrelation, random slopes, and other covariance contracts stay unimplemented. Sol owns NAMESPACE, DESCRIPTION, R/cli.R, R/stage_registry.R, R/contracts.R, inst/schema, man, and renv.lock."
+}
