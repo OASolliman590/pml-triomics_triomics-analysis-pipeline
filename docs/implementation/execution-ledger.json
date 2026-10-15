@@ -35,31 +35,53 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/m4_005a_sol_review",
-      "role": "sol_focused_rereview",
-      "packet": "M4-005A/M4-006",
+      "agent_name": "/root/m4_005a_registration_review",
+      "role": "sol_cross_cutting_registration_review",
+      "packet": "M4-005A registration",
       "requested_model": "gpt-6.1-sol",
       "requested_effort": "high",
       "worktree": ".worktrees/m4-005a-b-t05-result-boundary",
       "branch": "codex/m4-005a-b-t05-result-boundary",
-      "fix_base_commit": "97e7c28715581b8dd5c070e41c52f5f4c0bf2523",
-      "candidate_commit": "85e1d3152c05697e1ccfea4d074d7c9ecbb80d5f"
+      "base_commit": "85e1d3152c05697e1ccfea4d074d7c9ecbb80d5f",
+      "candidate_commit": "6761e17"
     }
   ],
   "orchestration_control": {
-    "status": "m4_005a_focused_sol_rereview_active",
+    "status": "m4_005a_registration_review_active",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [
       {
-        "agent_name": "/root/m4_005a_sol_review",
-        "unit": "M4-005A/M4-006",
-        "expected_return": "addressed/not-addressed verdict on the stale B-T01 blocker and new-breakage check of the one-line fix"
+        "agent_name": "/root/m4_005a_registration_review",
+        "unit": "M4-005A registration",
+        "expected_return": "spec-compliance and quality verdict on the two-file optional DEqMS dependency and lock registration"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-006 produced one-line candidate 85e1d31. Required suites passed 241, 302 and 818 assertions with no failures, warnings or skips. The original M4-005A Sol reviewer is performing the one authorized focused rereview of the stale B-T01 blocker and fix diff. Integration and Unit B remain blocked pending that verdict and coordinator verification."
+    "disposition": "M4-005A's focused rereview passed and closed the stale B-T01 blocker. Coordinator package check then exposed the unimplemented Sol-owned B-T05 dependency request; after adding only DEqMS 1.30.0 to DESCRIPTION Suggests and renv.lock, full build/check and installed CLI verification passed. One fresh Sol-high reviewer is auditing that two-file cross-cutting registration before integration."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005a_focused_rereview_passed_registration_review_dispatched",
+      "date": "2026-10-15",
+      "focused_review_agent_name": "/root/m4_005a_sol_review",
+      "registration_review_agent_name": "/root/m4_005a_registration_review",
+      "unit_candidate_commit": "85e1d3152c05697e1ccfea4d074d7c9ecbb80d5f",
+      "registration_commit": "6761e17",
+      "focused_rereview_verdict": "pass_original_blocker_addressed",
+      "package_gate": {
+        "initial_status": "one_warning_undeclared_optional_DEqMS_dependency",
+        "green_status": "R_CMD_build_and_check_passed",
+        "clean_install_exit": 0,
+        "installed_cli_exit": 0,
+        "installed_envelope_valid": true
+      },
+      "registration_scope": [
+        "DESCRIPTION Suggests DEqMS == 1.30.0",
+        "renv.lock exact local Bioconductor 3.23 DEqMS 1.30.0 record"
+      ],
+      "allowed_next_transition": "integrate Unit A serially only if the cross-cutting registration review accepts the two-file diff; otherwise one focused registration repair/review is required before integration",
+      "disposition": "This review is limited to Sol-owned mechanical registration requested by B-T05. No production/statistical behavior or private study data changed."
+    },
     {
       "event": "m4_006_correction_completed_focused_sol_rereview_dispatched",
       "date": "2026-10-15",
