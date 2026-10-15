@@ -35,31 +35,47 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/bt05_final_repair",
-      "role": "luna_max_final_packet_repair",
+      "agent_name": "/root/bt05_final_review",
+      "role": "sol_6_1_high_one_time_packet_review",
       "packet": "B-T05",
       "worktree": ".worktrees/b-t05-final-repair",
       "branch": "codex/b-t05-final-repair",
       "integration_base": "3003da4",
-      "restored_candidate_head": "48e81fa",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max"
+      "candidate_commit": "b6d397072db09b67b765e9e6cf0e2454798f2d12",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high"
     }
   ],
   "orchestration_control": {
-    "status": "m4_b_t05_final_repair_2_active",
+    "status": "m4_b_t05_final_repair_2_under_one_time_review",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [
       {
-        "agent_name": "/root/bt05_final_repair",
+        "agent_name": "/root/bt05_final_review",
         "packet": "B-T05",
-        "allowed_next_transition": "reconcile candidate and dispatch exactly one fresh Sol 6.1 high review; no implementer fix round"
+        "allowed_next_transition": "reconcile final verdict; integrate and verify only if accepted, otherwise return B-T05 to blocked with no fix round"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T05 repair 2 is active in a fresh isolated Luna max worker after exact historical packet restoration. Its current-base suite exposed 59 passes and 4 in-scope CLI failures before the new repair. B-T06 is accepted but not dispatched; B-T07 remains blocked."
+    "disposition": "B-T05 repair 2 candidate b6d3970 is under its one authorized fresh Sol 6.1 high review. The worker reported 98 passing packet assertions and source/installed CLI probes, with a concern that the shared serializer omits method/fallback provenance and rejects fallback_complete as an artifact status. No fix round is authorized. B-T06 is not dispatched; B-T07 remains blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t05_repair_2_completed_one_time_review_dispatched",
+      "date": "2026-10-15",
+      "worker_agent_name": "/root/bt05_final_repair",
+      "review_agent_name": "/root/bt05_final_review",
+      "packet": "B-T05",
+      "candidate_commit": "b6d397072db09b67b765e9e6cf0e2454798f2d12",
+      "integration_base": "3003da4f91097a8623138d3e326eb1e9d7c88546",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "worker_tests": {"passed": 98, "failed": 0, "warned": 0, "skipped": 0, "source_cli_checked": true, "installed_cli_checked": true},
+      "worker_concern": "Stage B serializer omits method/fallback provenance; fallback_complete payload is written but envelope validation exits 2 with A_ARTIFACT_INVALID.",
+      "review_package_ref": ".superpowers/sdd/M4-003-M4-004-final-repairs/review-task1-3003da4..b6d3970.diff",
+      "allowed_next_transition": "reconcile final verdict; integrate only if accepted; no worker fix or review retry is authorized",
+      "disposition": "Candidate final edit touches only R/statistics_deqms.R and tests/testthat/test-B-T05.R. Private study data were not used."
+    },
     {
       "event": "b_t05_repair_2_dispatched",
       "date": "2026-10-15",
