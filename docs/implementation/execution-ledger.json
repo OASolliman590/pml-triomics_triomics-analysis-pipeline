@@ -33,15 +33,48 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/bt04_repair",
+      "packet": "B-T04",
+      "role": "implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "worktree": ".worktrees/b-t04-calibration-repair",
+      "branch": "codex/b-t04-calibration-repair",
+      "base_commit": "fc4872a",
+      "status": "active"
+    }
+  ],
   "orchestration_control": {
-    "status": "b_t04_change_record_accepted_pending_repair_dispatch",
+    "status": "b_t04_calibration_repair_active",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/bt04_repair",
+        "packet": "B-T04",
+        "allowed_next_transition": "receive the bounded candidate receipt, reconcile exact diff and tests, then dispatch a fresh Sol 6.1 high review; do not integrate before acceptance"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar explicitly accepted M4-002. One bounded, test-first B-T04 repair may now be dispatched to a fresh isolated Luna max worker; no implementation is active yet."
+    "disposition": "The accepted M4-002 repair is active in one fresh isolated Luna max worker. No other implementation or model-fitting worker is active."
   },
   "orchestration_events": [
+    {
+      "event": "b_t04_calibration_repair_dispatched",
+      "date": "2026-10-15",
+      "agent_name": "/root/bt04_repair",
+      "packet": "B-T04",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "worktree": ".worktrees/b-t04-calibration-repair",
+      "branch": "codex/b-t04-calibration-repair",
+      "base_commit": "fc4872a",
+      "change_record_ref": "docs/implementation/change-records/M4-002-b-t04-production-statistic-calibration.md",
+      "brief_ref": ".superpowers/sdd/M4-002-b-t04-production-statistic-calibration/task-1-brief.md",
+      "allowed_next_transition": "receive candidate; reconcile; dispatch fresh Sol 6.1 high review; no integration before review acceptance",
+      "disposition": "Single heavy model-fitting worker active; private studies excluded; exact B-T04 allowlist enforced."
+    },
     {
       "event": "b_t04_change_record_accepted",
       "date": "2026-10-15",
@@ -741,12 +774,13 @@
       "integration_commit": "9cd36fe"
     },
     "B-T04": {
-      "status": "blocked",
-      "attempts": 1,
+      "status": "in_progress",
+      "attempts": 2,
       "commit": null,
       "acceptance_refs": [],
+      "change_record_ref": "docs/implementation/change-records/M4-002-b-t04-production-statistic-calibration.md",
       "blockers": [
-        "balanced_visits_one_cell_removed null upper bound 0.0804819 from 23/400 exceeds 0.08. Seeds 1001:1400 and the bound were not changed. AC4 passed."
+        "Original ordinary-reference result remains 23/400 with upper bound 0.0804819. M4-002 authorizes a bounded production-statistic alignment repair without changing seeds or the 0.08 bound."
       ]
     },
     "B-T05": {
