@@ -33,15 +33,39 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_final_cycle_audit",
+      "role": "astra_low_read_only_focused_rereview",
+      "scope": "corrected B-T07 blocker only",
+      "snapshot_commit": "8eee849",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low"
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_final_cycle_audit_correction_applied_focused_rereview_pending",
+    "status": "m4_final_cycle_audit_correction_under_focused_rereview",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_final_cycle_audit",
+        "scope": "corrected B-T07 blocker only",
+        "allowed_next_transition": "reconcile final focused verdict and close the bounded cycle without implementation"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The final-cycle Astra audit passed all substantive checks and required one stale B-T07 blocker correction. That documentation-only correction is applied; the single focused rereview is the only authorized next transition. No implementation or downstream packet is legal."
+    "disposition": "The final-cycle Astra audit passed all substantive checks and required one stale B-T07 blocker correction. That documentation-only correction is under its single focused Astra rereview at 8eee849. No implementation or downstream packet is legal."
   },
   "orchestration_events": [
+    {
+      "event": "m4_final_cycle_astra_focused_rereview_dispatched",
+      "date": "2026-10-15",
+      "agent_name": "/root/m4_final_cycle_audit",
+      "snapshot_commit": "8eee849",
+      "scope": "only corrected packets.B-T07.blockers",
+      "allowed_next_transition": "reconcile final verdict and close the bounded cycle; do not implement",
+      "disposition": "This exhausts the focused rereview for the final-cycle disposition audit."
+    },
     {
       "event": "m4_003_m4_004_final_cycle_astra_audit_required_correction_applied",
       "date": "2026-10-15",
