@@ -1,4 +1,4 @@
-# Tri-omics — current progress
+# Tri-omics progress
 
 **Goal:** Build a local, reproducible pipeline for quantified proteomics,
 metabolomics and lipidomics while keeping the fasting, diabetic-treatment and
