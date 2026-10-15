@@ -60,6 +60,15 @@
   },
   "orchestration_events": [
     {
+      "event": "m4_005_astra_focused_rereview_dispatched",
+      "date": "2026-10-15",
+      "agent_name": "/root/m4_005_astra_audit",
+      "snapshot_commit": "279ecc4",
+      "scope": "only the corrected B-T05 stale CLI test exception and the corrected pre-B-T07 shared-integration versus post-B-T07 G4 review ordering",
+      "allowed_next_transition": "reconcile final rereview verdict; if pass, present M4-005 to Omar for execution acceptance; do not implement",
+      "disposition": "This is the one focused rereview for the M4-005 record audit and does not consume the future implementation or G4 review allowances."
+    },
+    {
       "event": "m4_005_astra_audit_required_corrections_applied",
       "date": "2026-10-15",
       "agent_name": "/root/m4_005_astra_audit",
