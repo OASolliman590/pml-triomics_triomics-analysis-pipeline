@@ -1,0 +1,81 @@
+{
+  "packet_id": "B-T05",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": [
+      "triomics_resolve_analysis",
+      "triomics_fit_block_models",
+      "triomics_execute_stage_b",
+      "resolve_analysis",
+      "fit_block_models"
+    ]
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml",
+      "limma"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat",
+      "DEqMS (== 1.30.0)"
+    ],
+    "runtime_qualification": {
+      "package": "DEqMS",
+      "version": "1.30.0",
+      "verified_installed_on_worker": true
+    }
+  },
+  "stage_registry": {
+    "A": {"validation_only": true, "execution": true},
+    "B": {"validation_only": false, "execution": true},
+    "C": {"validation_only": false, "execution": false},
+    "D": {"validation_only": false, "execution": false},
+    "report": {"validation_only": false, "execution": false},
+    "all": {"validation_only": false, "execution": false}
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "owned_functions": [
+    "triomics_b05_fit",
+    "triomics_b05_dispatch_fit",
+    "triomics_b05_install_namespace_dispatch",
+    "triomics_b05_install_global_dispatch"
+  ],
+  "extends": [
+    "triomics_fit_block_models",
+    "fit_block_models"
+  ],
+  "namespace_edits": false,
+  "count_metadata_contract": {
+    "required_columns": [
+      "feature_key",
+      "acquisition",
+      "provenance",
+      "exactly_one_of: peptide_count, psm_count"
+    ],
+    "optional_columns": ["block_id", "sample_id"],
+    "identity_rule": "Join by feature_key and, when sample_id is present, by the source sample ID. A block_id is required for multiple analyzed blocks.",
+    "delta_rule": "Delta fits require sample-level counts. Summarize by the minimum count over source observations in retained complete pairs only; feature-only values are unavailable for this representation.",
+    "path_resolution_handoff": "Sol resolves statistics.count_metadata relative to the YAML config file and passes the resolved local table to B-T05. The worker code also accepts an in-memory table for tests."
+  },
+  "stage_b_serialization_handoff": "R/results_b.R currently serializes only status, limma_version, and blocks. Preserve method/requested_method, DEqMS version/API fields, unavailable_reason, fallback_applied, deqms_status, and fallback_provenance in the Stage B artifact so an unavailable route and an explicit limma fallback remain distinguishable after serialization.",
+  "official_reference": {
+    "package": "DEqMS 1.30.0",
+    "workflow": "limma::lmFit, limma::contrasts.fit, limma::eBayes(trend=FALSE), DEqMS::spectraCounteBayes, DEqMS::outputResult",
+    "method_statistic_field": "sca.t",
+    "method_p_field": "sca.P.Value",
+    "url": "https://bioconductor.org/packages/release/bioc/vignettes/DEqMS/inst/doc/DEqMS-package-vignette.html"
+  },
+  "request": "Sol adds DEqMS 1.30.0 to the supported optional dependency/lock, preserves the existing namespace exports, integrates the B-T05 fit wrapper after the B-T02/B-T03 dispatchers, resolves count_metadata against config_path in the CLI path, and serializes method/unavailable/fallback provenance as listed above. Retain the null-count example as an explicit named unavailable result. Do not alter the canonical spec or another packet's files.",
+  "example_note": "B-T05.yaml uses the synthetic B-T03 paired fixture and requests DEqMS without adding an out-of-allowlist static count file. It exercises the explicit unavailable route. The B-T05 behavioral suite exercises qualified DEqMS fits with public synthetic keyed count tables."
+}
