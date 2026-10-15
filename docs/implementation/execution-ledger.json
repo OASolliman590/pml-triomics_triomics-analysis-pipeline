@@ -33,43 +33,35 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/bt05_reopen_audit",
-      "role": "astra_read_only_change_record_audit",
-      "packet": "B-T05",
-      "snapshot_commit": "1acef83",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low"
-    },
-    {
-      "agent_name": "/root/bt06_reopen_audit",
-      "role": "astra_read_only_change_record_audit",
-      "packet": "B-T06",
-      "snapshot_commit": "1acef83",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_b_t05_b_t06_reopening_records_under_astra_audit",
+    "status": "m4_b_t05_b_t06_reopening_records_corrected_focused_rereviews_pending",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/bt05_reopen_audit",
-        "packet": "B-T05",
-        "allowed_next_transition": "reconcile verdict; if required changes exist, make only those record corrections and use at most one focused rereview; otherwise request Omar acceptance"
-      },
-      {
-        "agent_name": "/root/bt06_reopen_audit",
-        "packet": "B-T06",
-        "allowed_next_transition": "reconcile verdict; if required changes exist, make only those record corrections and use at most one focused rereview; otherwise request Omar acceptance"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Sol reproduced the B-T05 dispatch and B-T06 scale-invariance blockers at their unintegrated candidate commits. M4-003 and M4-004 remain proposed and not accepted; separate fresh Astra low audits are active on immutable snapshot 1acef83. No implementation worker is active and B-T07 remains blocked."
+    "disposition": "Both initial Astra audits returned pass with required changes. Sol applied only the requested test, restoration and one-time reopening-governance corrections. M4-003 and M4-004 remain proposed and not accepted; focused rereviews are the only authorized next transition. No implementation worker is active and B-T07 remains blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t05_b_t06_reopening_astra_audits_required_changes_applied",
+      "date": "2026-10-15",
+      "snapshot_commit": "1acef834aeed4090dae7cc9e28416587c388a5ad",
+      "verdicts": {
+        "B-T05": "pass_with_required_changes",
+        "B-T06": "pass_with_required_changes"
+      },
+      "review_refs": [
+        "docs/implementation/reviews/B-T05-reopening-astra-audit.md",
+        "docs/implementation/reviews/B-T06-reopening-astra-audit.md"
+      ],
+      "corrections": [
+        "explicit adversarial regression matrices including B-T06 extreme finite weights",
+        "Sol restoration of all historical packet files before Luna edits only the repair pair",
+        "repair 2 is final; exactly one user-authorized additional review; no further repair or review if unresolved; M4 Astra gate preserved"
+      ],
+      "allowed_next_transition": "commit corrections and send each record to its original Astra auditor for one focused rereview; do not implement",
+      "disposition": "Both audit agents completed and were reconciled. Private study data were not used."
+    },
     {
       "event": "b_t05_b_t06_reopening_astra_audits_dispatched",
       "date": "2026-10-15",

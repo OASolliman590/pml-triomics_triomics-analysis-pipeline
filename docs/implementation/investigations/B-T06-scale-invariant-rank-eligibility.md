@@ -39,7 +39,11 @@ needed for this structural eligibility decision.
 3. Tiny treatment mean `(0, 1e-9)`: unavailable with the existing incompatible
    contrast reason.
 4. Reversed `(1, -1)`: eligible with reversed direction.
-5. Extra/missing/nonfinite weights and adjusted designs: unavailable.
-6. Existing ties, zeros and `exact=FALSE` policy assertions remain unchanged.
+5. Extreme finite `(-1e308, 1e308)`: eligible without computing an overflowing
+   coefficient difference; direction follows the target weight.
+6. Positive/negative scalar multiples retain the same two-sided Wilcoxon p-value
+   while direction changes only with the target coefficient's sign.
+7. Extra/missing/nonfinite weights and adjusted designs: unavailable.
+8. Existing ties, zeros and `exact=FALSE` policy assertions remain unchanged.
 
 The private study directory was not read, fitted or uploaded.

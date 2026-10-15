@@ -50,10 +50,10 @@ other lanes remain outside B-T05.
 
 ## Required regression probes
 
-1. Level request, missing counts, fallback `none`: named DEqMS unavailable with
-   reason `count_metadata_missing`.
-2. Level request, missing counts, fallback `explicit_limma`: separately labelled
-   limma fallback with DEqMS unavailability provenance.
+1. Level request, `NULL` or nonexistent-path counts, fallback `none`: named DEqMS
+   unavailable with reason `count_metadata_missing`.
+2. Level request, `NULL` or nonexistent-path counts, fallback `explicit_limma`:
+   separately labelled limma fallback with DEqMS unavailability provenance.
 3. Valid count metadata: unchanged DEqMS 1.30.0 execution and reference fields.
 4. Non-DEqMS requests and unsupported lanes: unchanged predecessor dispatch.
 5. Source and installed CLI paths: the same AC4 status/provenance behavior.

@@ -5,7 +5,8 @@
   can emit the method-specific AC4 outcome.
 - Status: **proposed; not accepted**
 - Evidence: `docs/implementation/investigations/B-T05-dispatch-reopening.md`
-- Independent audit: pending
+- Independent audit:
+  `docs/implementation/reviews/B-T05-reopening-astra-audit.md`
 
 ## Proposed decision
 
@@ -38,24 +39,41 @@ does not make DEqMS available for B-T02 or another unsupported lane.
 
 ## Authorized work only if Omar accepts
 
-Acceptance authorizes one bounded second targeted repair in a fresh isolated
-Luna max worktree. The worker may reuse the unintegrated candidate commits
+Acceptance authorizes the packet's second and final targeted repair in a fresh
+isolated Luna max worktree. Sol must begin from the then-current integration
+snapshot and restore all four packet-owned files from the unintegrated candidate
+commits
 `b1e753d3b9004737eaf68ecc9916da472f3f5754` and
-`efd830884b894d79441af5a948fa3b600ff8e4db` as historical packet content, but
-must begin from the then-current integration snapshot and modify only:
+`efd830884b894d79441af5a948fa3b600ff8e4db` unchanged:
+
+- `R/statistics_deqms.R`
+- `tests/testthat/test-B-T05.R`
+- `inst/examples/tickets/B-T05.yaml`
+- `docs/implementation/registrations/B-T05.json`
+
+After that restoration, the Luna repair may modify only:
 
 - `R/statistics_deqms.R`
 - `tests/testthat/test-B-T05.R`
 
-The worker must first add failing regressions for missing-count level requests
-with fallback `none` and `explicit_limma`, then make the smallest routing repair.
-It must run the B-T05 suite and synthetic CLI and stop with a concise receipt.
+The worker must replace the candidate regression that expects a missing-count
+level request to bypass B-T05. It must first add failing regressions for both
+`NULL` and nonexistent-path count inputs, each with fallback `none` and
+`explicit_limma`. The assertions must cover named reason, requested method,
+actual method and fallback provenance. Existing delta and unsupported-lane
+dispatch checks remain. Source and installed CLI paths must demonstrate the same
+AC4 behavior. The worker then makes the smallest routing repair, runs the B-T05
+suite and synthetic CLI, and stops with a concise receipt.
 
-A fresh Sol 6.1 high reviewer must inspect the complete packet diff against the
-current integration snapshot and rerun the packet/adversarial tests. Sol may
-integrate only after review acceptance and fresh adjacent/full/package checks.
-This is a new accepted reopening record, not a reinterpretation of the exhausted
-2026-10-14 focused re-review.
+The 2026-10-14 initial review and focused re-review remain exhausted historical
+events; their counters are not reset. This accepted reopening would authorize
+exactly one fresh Sol 6.1 high reopening review of the complete packet diff
+against the current integration snapshot. That reviewer must rerun the packet
+and adversarial tests. Sol may integrate only after review acceptance and fresh
+adjacent/full/package checks. If repair 2 or this single reopening review leaves
+an unresolved blocker, B-T05 returns to blocked with no further packet repair or
+reopening review allowance under this record. The independent Astra M4 milestone
+gate remains required before any consumer is released.
 
 ## User decision
 
