@@ -35,30 +35,50 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/m4_006_luna",
-      "role": "luna_test_reconciliation",
-      "packet": "M4-006",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent_name": "/root/m4_005a_sol_review",
+      "role": "sol_focused_rereview",
+      "packet": "M4-005A/M4-006",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "worktree": ".worktrees/m4-005a-b-t05-result-boundary",
       "branch": "codex/m4-005a-b-t05-result-boundary",
-      "base_commit": "97e7c28715581b8dd5c070e41c52f5f4c0bf2523"
+      "fix_base_commit": "97e7c28715581b8dd5c070e41c52f5f4c0bf2523",
+      "candidate_commit": "85e1d3152c05697e1ccfea4d074d7c9ecbb80d5f"
     }
   ],
   "orchestration_control": {
-    "status": "m4_006_luna_correction_active",
+    "status": "m4_005a_focused_sol_rereview_active",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [
       {
-        "agent_name": "/root/m4_006_luna",
-        "unit": "M4-006",
-        "expected_return": "one-file one-value test correction commit plus B-T01, M4-005A/B-T05 and adjacent suite receipts"
+        "agent_name": "/root/m4_005a_sol_review",
+        "unit": "M4-005A/M4-006",
+        "expected_return": "addressed/not-addressed verdict on the stale B-T01 blocker and new-breakage check of the one-line fix"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "A fresh Astra-low audit passed M4-006. One fresh Luna-max worker is changing only the stale B-T01 fallback input on candidate 97e7c28 and running the required synthetic suites. M4-005A remains unintegrated; its focused Sol rereview and coordinator verification are still required before Unit B."
+    "disposition": "M4-006 produced one-line candidate 85e1d31. Required suites passed 241, 302 and 818 assertions with no failures, warnings or skips. The original M4-005A Sol reviewer is performing the one authorized focused rereview of the stale B-T01 blocker and fix diff. Integration and Unit B remain blocked pending that verdict and coordinator verification."
   },
   "orchestration_events": [
+    {
+      "event": "m4_006_correction_completed_focused_sol_rereview_dispatched",
+      "date": "2026-10-15",
+      "worker_agent_name": "/root/m4_006_luna",
+      "review_agent_name": "/root/m4_005a_sol_review",
+      "candidate_commit": "85e1d3152c05697e1ccfea4d074d7c9ecbb80d5f",
+      "fix_base_commit": "97e7c28715581b8dd5c070e41c52f5f4c0bf2523",
+      "worker_tests": {
+        "b_t01_passed": 241,
+        "m4_005a_b_t05_passed": 302,
+        "adjacent_passed": 818,
+        "failed": 0,
+        "warned": 0,
+        "skipped": 0
+      },
+      "review_scope": "only the original stale B-T01 blocker and the one-line fallback-value fix diff",
+      "allowed_next_transition": "if addressed with no new Critical/Important breakage, run coordinator installed/package verification and integrate M4-005A serially; otherwise block because no second correction or rereview is authorized",
+      "disposition": "The fix commit changes exactly one value in tests/testthat/test-B-T01.R and no production code."
+    },
     {
       "event": "m4_006_luna_correction_dispatched",
       "date": "2026-10-15",
