@@ -33,33 +33,36 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_005a_sol_review",
-      "role": "sol_fresh_review",
-      "packet": "M4-005A",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "worktree": ".worktrees/m4-005a-b-t05-result-boundary",
-      "branch": "codex/m4-005a-b-t05-result-boundary",
-      "base_commit": "c10e7d8bd0331ff782d5a293d0e25ee3fb153f37",
-      "candidate_commit": "97e7c28715581b8dd5c070e41c52f5f4c0bf2523"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_005a_fresh_sol_review_active",
+    "status": "m4_006_record_written_astra_audit_pending",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_005a_sol_review",
-        "unit": "M4-005A",
-        "expected_return": "spec-compliance and task-quality verdicts with fresh target, adjacent and source/installed parity evidence"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-005A Luna implementation returned candidate 97e7c28 with target GREEN 302 pass and source CLI exit 0. One fresh Sol 6.1 high reviewer is reviewing the complete c10e7d8..97e7c28 diff and adjudicating three adjacent B-T01 expectations. Unit B remains dependency-blocked until Unit A review, installed verification and serial integration pass."
+    "disposition": "The fresh M4-005A Sol review found the adapter sound but blocked integration because three stale B-T01 assertions contradict the accepted explicit-fallback contract and the required file is outside Unit A's allowlist. M4-006 proposes one test-input-only reconciliation and awaits a fresh Astra-low audit before execution. Unit A candidate 97e7c28 remains unintegrated; Unit B remains blocked."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005a_review_blocked_m4_006_record_written",
+      "date": "2026-10-15",
+      "review_agent_name": "/root/m4_005a_sol_review",
+      "candidate_commit": "97e7c28715581b8dd5c070e41c52f5f4c0bf2523",
+      "verdict": "blocked_not_approved_for_integration",
+      "review_ref": "docs/implementation/reviews/M4-005A-sol-review.md",
+      "blocking_finding": "tests/testthat/test-B-T01.R requests explicit_limma for missing DEqMS counts but expects the fallback not to run; three mandatory adjacent assertions fail although accepted M4-003, B-T05 AC4 and M4-005 require the explicit fallback",
+      "verification": {
+        "target_passed": 302,
+        "adjacent_passed": 815,
+        "adjacent_failed": 3,
+        "warnings": 0,
+        "skips": 0,
+        "fresh_install_exit": 0,
+        "source_installed_parity_cases_passed": 5
+      },
+      "change_record_ref": "docs/implementation/change-records/M4-006-b-t01-fallback-acceptance-reconciliation.md",
+      "allowed_next_transition": "freeze the M4-006 record in a commit and dispatch one fresh Astra-low audit; no code correction before an audit pass",
+      "disposition": "No production defect or scientific change was identified. Candidate remains unintegrated and M4-005A's in-allowlist repair allowance remains unused."
+    },
     {
       "event": "m4_005a_candidate_completed_fresh_sol_review_dispatched",
       "date": "2026-10-15",
