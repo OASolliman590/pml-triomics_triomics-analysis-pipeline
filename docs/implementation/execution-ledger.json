@@ -33,15 +33,66 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/bt05_reopen_audit",
+      "role": "astra_read_only_change_record_audit",
+      "packet": "B-T05",
+      "snapshot_commit": "1acef83",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low"
+    },
+    {
+      "agent_name": "/root/bt06_reopen_audit",
+      "role": "astra_read_only_change_record_audit",
+      "packet": "B-T06",
+      "snapshot_commit": "1acef83",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low"
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_b_t05_b_t06_reopening_records_pending_astra_audit",
+    "status": "m4_b_t05_b_t06_reopening_records_under_astra_audit",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/bt05_reopen_audit",
+        "packet": "B-T05",
+        "allowed_next_transition": "reconcile verdict; if required changes exist, make only those record corrections and use at most one focused rereview; otherwise request Omar acceptance"
+      },
+      {
+        "agent_name": "/root/bt06_reopen_audit",
+        "packet": "B-T06",
+        "allowed_next_transition": "reconcile verdict; if required changes exist, make only those record corrections and use at most one focused rereview; otherwise request Omar acceptance"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Sol reproduced the B-T05 dispatch and B-T06 scale-invariance blockers at their unintegrated candidate commits. M4-003 and M4-004 are proposed but not accepted; fresh Astra audits are the only authorized next transition. No implementation worker is active and B-T07 remains blocked."
+    "disposition": "Sol reproduced the B-T05 dispatch and B-T06 scale-invariance blockers at their unintegrated candidate commits. M4-003 and M4-004 remain proposed and not accepted; separate fresh Astra low audits are active on immutable snapshot 1acef83. No implementation worker is active and B-T07 remains blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t05_b_t06_reopening_astra_audits_dispatched",
+      "date": "2026-10-15",
+      "snapshot_commit": "1acef83",
+      "audits": [
+        {
+          "agent_name": "/root/bt05_reopen_audit",
+          "packet": "B-T05",
+          "requested_model": "gpt-6-astra",
+          "requested_effort": "low",
+          "change_record_ref": "docs/implementation/change-records/M4-003-b-t05-dispatch-reopening.md"
+        },
+        {
+          "agent_name": "/root/bt06_reopen_audit",
+          "packet": "B-T06",
+          "requested_model": "gpt-6-astra",
+          "requested_effort": "low",
+          "change_record_ref": "docs/implementation/change-records/M4-004-b-t06-scale-invariant-rank-eligibility.md"
+        }
+      ],
+      "allowed_next_transition": "reconcile both verdicts; no implementation before any required corrections, audit pass and Omar's explicit acceptance",
+      "disposition": "Two read-only audits are active within the host cap. They may not implement, merge, dispatch, or accept on the user's behalf."
+    },
     {
       "event": "b_t05_b_t06_reopening_diagnostics_completed_records_proposed",
       "date": "2026-10-15",
