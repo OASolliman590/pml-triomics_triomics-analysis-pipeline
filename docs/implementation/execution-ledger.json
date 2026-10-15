@@ -33,15 +33,46 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_006_luna",
+      "role": "luna_test_reconciliation",
+      "packet": "M4-006",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "worktree": ".worktrees/m4-005a-b-t05-result-boundary",
+      "branch": "codex/m4-005a-b-t05-result-boundary",
+      "base_commit": "97e7c28715581b8dd5c070e41c52f5f4c0bf2523"
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_006_astra_passed_luna_dispatch_pending",
+    "status": "m4_006_luna_correction_active",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_006_luna",
+        "unit": "M4-006",
+        "expected_return": "one-file one-value test correction commit plus B-T01, M4-005A/B-T05 and adjacent suite receipts"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "A fresh Astra-low audit passed M4-006 at immutable snapshot 3e755a4 without required changes. Under Omar's one-shot continuous-execution instruction, one bounded Luna-max correction may now change only the stale B-T01 fallback input, followed by M4-005A's reserved focused Sol rereview. Unit A candidate remains unintegrated and Unit B remains blocked."
+    "disposition": "A fresh Astra-low audit passed M4-006. One fresh Luna-max worker is changing only the stale B-T01 fallback input on candidate 97e7c28 and running the required synthetic suites. M4-005A remains unintegrated; its focused Sol rereview and coordinator verification are still required before Unit B."
   },
   "orchestration_events": [
+    {
+      "event": "m4_006_luna_correction_dispatched",
+      "date": "2026-10-15",
+      "agent_name": "/root/m4_006_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "candidate_base": "97e7c28715581b8dd5c070e41c52f5f4c0bf2523",
+      "worktree": ".worktrees/m4-005a-b-t05-result-boundary",
+      "branch": "codex/m4-005a-b-t05-result-boundary",
+      "allowed_file": "tests/testthat/test-B-T01.R",
+      "allowed_change": "inside the named unavailable/count-invariance block, replace only fallback explicit_limma with none",
+      "allowed_next_transition": "inspect the one-value diff and receipts, then send only the blocker and fix diff to M4-005A's original Sol reviewer for its one focused rereview",
+      "disposition": "No production, scientific, registration or private-data change is authorized; one correction attempt only."
+    },
     {
       "event": "m4_006_astra_audit_passed",
       "date": "2026-10-15",
