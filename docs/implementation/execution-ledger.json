@@ -33,15 +33,52 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/bt05_reopen_audit",
+      "role": "astra_read_only_focused_rereview",
+      "packet": "B-T05",
+      "snapshot_commit": "0dfe88d",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low"
+    },
+    {
+      "agent_name": "/root/bt06_reopen_audit",
+      "role": "astra_read_only_focused_rereview",
+      "packet": "B-T06",
+      "snapshot_commit": "0dfe88d",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low"
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_b_t05_b_t06_reopening_records_corrected_focused_rereviews_pending",
+    "status": "m4_b_t05_b_t06_reopening_records_under_focused_rereview",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/bt05_reopen_audit",
+        "packet": "B-T05",
+        "allowed_next_transition": "reconcile final focused verdict; if pass request Omar acceptance; if fail keep packet blocked"
+      },
+      {
+        "agent_name": "/root/bt06_reopen_audit",
+        "packet": "B-T06",
+        "allowed_next_transition": "reconcile final focused verdict; if pass request Omar acceptance; if fail keep packet blocked"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Both initial Astra audits returned pass with required changes. Sol applied only the requested test, restoration and one-time reopening-governance corrections. M4-003 and M4-004 remain proposed and not accepted; focused rereviews are the only authorized next transition. No implementation worker is active and B-T07 remains blocked."
+    "disposition": "Both initial Astra audits returned pass with required changes. Sol applied only the requested corrections at 0dfe88d, and both original auditors are performing their single focused rereviews. M4-003 and M4-004 remain proposed and not accepted; no implementation worker is active and B-T07 remains blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t05_b_t06_reopening_focused_rereviews_dispatched",
+      "date": "2026-10-15",
+      "snapshot_commit": "0dfe88d",
+      "agents": ["/root/bt05_reopen_audit", "/root/bt06_reopen_audit"],
+      "scope": "only the required changes from each initial audit",
+      "allowed_next_transition": "reconcile both final verdicts; pass permits requesting Omar acceptance, fail leaves the affected record blocked; no implementation",
+      "disposition": "This exhausts the focused change-record rereview for M4-003 and M4-004."
+    },
     {
       "event": "b_t05_b_t06_reopening_astra_audits_required_changes_applied",
       "date": "2026-10-15",
