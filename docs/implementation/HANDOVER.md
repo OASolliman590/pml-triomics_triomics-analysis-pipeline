@@ -44,9 +44,11 @@ scientifically validated.
   B serializer omits method/unavailability/fallback provenance and the artifact
   contract rejects fallback statuses. M4-003 permits no further repair/review;
   the candidate remains unintegrated. Review: `reviews/B-T05-final-repair-review.md`.
-- B-T06 remains blocked, but Omar accepted audited record M4-004. Its final
-  bounded repair 2 and one-time additional Sol review are authorized. The
-  candidates remain unintegrated until that cycle passes.
+- B-T06 is blocked after its final M4-004 repair/review cycle. Candidate
+  `086d604` fixed scale-invariant Wilcoxon eligibility and passed 66 assertions,
+  but its restored startup wrapper removes the integrated B-T04 dispatch/stage
+  chain. M4-004 permits no further repair/review; the candidate remains
+  unintegrated. Review: `reviews/B-T06-final-repair-review.md`.
 - B-T09 is accepted and integrated. It passed 83 packet assertions, 139 B-T08
   regression assertions, 13 cross-cutting CLI probes, source/installed fixture
   execution, schema checks and package check. Unsupported real-study
@@ -61,10 +63,9 @@ Read root `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `reviews/M3-astra-review.md`, `milestones/M4.md`, `reviews/B-T04-review.md`, and
 `reviews/B-T09-review.md`, then M4-003/M4-004 and their reopening audit receipts.
 Verify HEAD and dirty state. Do not repeat accepted G2/G3/B-T09 work or any
-accepted B-T04 work, or any exhausted B-T05/B-T06 attempt or review. B-T05's
-M4-003 cycle is exhausted and blocked; do not integrate or repair it. M4-004 is
-accepted and its final B-T06 repair/review may proceed without expanding scope.
-There is no legal downstream packet. Preserve B-T04's frozen controls.
+accepted B-T04 work, or any exhausted B-T05/B-T06 attempt or review. M4-003 and
+M4-004 final cycles are exhausted and blocked; do not integrate or repair either
+candidate. There is no legal downstream packet. Preserve B-T04's frozen controls.
 
 ## Orchestration correction
 

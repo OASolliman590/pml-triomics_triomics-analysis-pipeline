@@ -8,10 +8,11 @@ organophosphate studies scientifically separate.
 fixtures. B-T04 supports qualified fixed-subject multivisit and trajectory
 analysis; the integrated branch passed 2,706 assertions and package check.
 
-**Changed:** B-T05's final repair fixed dispatch and passed 98 assertions, but
-its review found the shared CLI artifact drops DEqMS/fallback provenance and
-rejects fallback statuses. The candidate is not integrated and no repair remains
-under M4-003. B-T06's separate final cycle can still proceed.
+**Changed:** Both final repairs fixed their narrow defects and passed packet
+tests, but neither candidate is integrated. B-T05 still needs shared CLI
+provenance/status work. B-T06's restored startup wrapper removes the accepted
+B-T04 repeated-analysis dispatch chain. Their authorized repair cycles are now
+exhausted.
 
 **Not established:** This is fixture-based software/calibration evidence, not
 biological validation. None of the fasting, diabetic-treatment or
@@ -19,11 +20,11 @@ organophosphate studies has been fitted. B-T04's ordinary 23/400 diagnostic
 remains failed even though its qualified moderated route passed. B-T05 and B-T06
 remain blocked until their repairs pass and integrate.
 
-**Next milestone:** Finish B-T06's accepted final repair/review. M4 cannot reach
-G4 while B-T05's shared serialization contract remains blocked.
+**Next milestone:** M4 cannot reach G4. Preserve both blocked candidates and
+decide later whether a new audited shared-integration record is warranted.
 
-**Needs Omar:** Nothing now. The coordinator will finish the independent B-T06
-cycle, then report the exact remaining M4 blocker.
+**Needs Omar:** Nothing now; the coordinator is closing this bounded cycle with
+an independent read-only audit of the recorded disposition.
 
 **Sync:** Local repository documentation updated. No Notion sync or external
 publication was attempted.
