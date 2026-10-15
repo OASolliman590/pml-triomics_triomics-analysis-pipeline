@@ -476,7 +476,7 @@ testthat::test_that("DEqMS is unavailable and counts do not change the limma fit
     "not_used_no_automatic_deqms"
   )
   unavailable <- b_fit(c(1, 2, 3, 3, 4, 5), statistics = b_statistics(
-    method = "deqms", fallback = "explicit_limma", count_metadata = "counts.tsv"
+    method = "deqms", fallback = "none", count_metadata = "counts.tsv"
   ))
   testthat::expect_identical(unavailable$fit$status, "unavailable")
   testthat::expect_false(isTRUE(unavailable$fit$fallback_applied))
