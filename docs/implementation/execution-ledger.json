@@ -42,24 +42,37 @@
       "requested_effort": "high",
       "worktree": ".worktrees/m4-005a-b-t05-result-boundary",
       "branch": "codex/m4-005a-b-t05-result-boundary",
-      "base_commit": "85e1d3152c05697e1ccfea4d074d7c9ecbb80d5f",
-      "candidate_commit": "6761e17"
+      "base_commit": "6761e1775a0e90ec5bee061e18a5182e93dbeb9c",
+      "candidate_commit": "7876df4"
     }
   ],
   "orchestration_control": {
-    "status": "m4_005a_registration_review_active",
+    "status": "m4_005a_registration_focused_rereview_active",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [
       {
         "agent_name": "/root/m4_005a_registration_review",
         "unit": "M4-005A registration",
-        "expected_return": "spec-compliance and quality verdict on the two-file optional DEqMS dependency and lock registration"
+        "expected_return": "addressed/not-addressed verdict on complete DEqMS required dependency closure and new-breakage check of the lock-only repair"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-005A's focused rereview passed and closed the stale B-T01 blocker. Coordinator package check then exposed the unimplemented Sol-owned B-T05 dependency request; after adding only DEqMS 1.30.0 to DESCRIPTION Suggests and renv.lock, full build/check and installed CLI verification passed. One fresh Sol-high reviewer is auditing that two-file cross-cutting registration before integration."
+    "disposition": "The fresh registration review accepted the DESCRIPTION declaration and DEqMS record but found nine required ggplot2-chain lock records missing. Sol recorded the exact installed metadata in lock-only commit 7876df4; recursive required closure is now zero missing. The same reviewer is performing the one focused registration rereview. Integration remains blocked pending its verdict."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005a_registration_review_changes_required_focused_rereview_dispatched",
+      "date": "2026-10-15",
+      "review_agent_name": "/root/m4_005a_registration_review",
+      "registration_commit": "6761e1775a0e90ec5bee061e18a5182e93dbeb9c",
+      "repair_commit": "7876df4",
+      "verdict": "changes_required",
+      "blocking_finding": "DEqMS required dependency ggplot2 and eight transitive required packages were installed but absent from renv.lock",
+      "repair_scope": "renv.lock only; exact installed records for ggplot2, gtable, isoband, S7, scales, farver, labeling, RColorBrewer and viridisLite",
+      "repair_verification": "recursive non-base Depends/Imports/LinkingTo closure for DEqMS reports missing_required=0",
+      "allowed_next_transition": "integrate Unit A serially only if the focused registration rereview marks the finding addressed with no new Critical/Important breakage; otherwise preserve the blocker because no second registration repair/rereview is authorized",
+      "disposition": "No package installation, network resolution, production/statistical change or private data use occurred."
+    },
     {
       "event": "m4_005a_focused_rereview_passed_registration_review_dispatched",
       "date": "2026-10-15",
