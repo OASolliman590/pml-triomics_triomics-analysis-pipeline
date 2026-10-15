@@ -35,30 +35,54 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/m4_005a_luna",
-      "role": "luna_implementation",
+      "agent_name": "/root/m4_005a_sol_review",
+      "role": "sol_fresh_review",
       "packet": "M4-005A",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "worktree": ".worktrees/m4-005a-b-t05-result-boundary",
       "branch": "codex/m4-005a-b-t05-result-boundary",
-      "base_commit": "a8fe83a81cb2b5b4bd77b2c38379b6757babe530"
+      "base_commit": "c10e7d8bd0331ff782d5a293d0e25ee3fb153f37",
+      "candidate_commit": "97e7c28715581b8dd5c070e41c52f5f4c0bf2523"
     }
   ],
   "orchestration_control": {
-    "status": "m4_005a_luna_implementation_active",
+    "status": "m4_005a_fresh_sol_review_active",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [
       {
-        "agent_name": "/root/m4_005a_luna",
+        "agent_name": "/root/m4_005a_sol_review",
         "unit": "M4-005A",
-        "expected_return": "bounded commit plus RED/GREEN, adjacent-test and source-CLI receipt"
+        "expected_return": "spec-compliance and task-quality verdicts with fresh target, adjacent and source/installed parity evidence"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar approved the M4-005 implementation plans and requested continuous execution. Unit A Task 1 restored the exact B-T05 candidate at a8fe83a; one Luna max worker is implementing only the authorized result-boundary adapter and tests. Unit B remains dependency-blocked until Unit A review, installed verification and serial integration pass."
+    "disposition": "M4-005A Luna implementation returned candidate 97e7c28 with target GREEN 302 pass and source CLI exit 0. One fresh Sol 6.1 high reviewer is reviewing the complete c10e7d8..97e7c28 diff and adjudicating three adjacent B-T01 expectations. Unit B remains dependency-blocked until Unit A review, installed verification and serial integration pass."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005a_candidate_completed_fresh_sol_review_dispatched",
+      "date": "2026-10-15",
+      "worker_agent_name": "/root/m4_005a_luna",
+      "review_agent_name": "/root/m4_005a_sol_review",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "candidate_commit": "97e7c28715581b8dd5c070e41c52f5f4c0bf2523",
+      "integration_base": "c10e7d8bd0331ff782d5a293d0e25ee3fb153f37",
+      "worker_tests": {
+        "target_passed": 302,
+        "target_failed": 0,
+        "target_warned": 0,
+        "target_skipped": 0,
+        "b_t03_passed": 275,
+        "b_t04_passed": 302,
+        "b_t01_failed": 3,
+        "source_cli_exit": 0
+      },
+      "review_scope": "complete restored B-T05 candidate plus result-boundary adapter; generic/method status separation; provenance; false DEqMS-claim exclusion; source/installed parity; and adjudication of the three B-T01 explicit-fallback expectations",
+      "allowed_next_transition": "if accepted, run coordinator installed verification and integrate serially; if one in-scope finding exists, dispatch the single authorized targeted repair and focused rereview; a required foreign-file or scientific-contract change blocks Unit A",
+      "disposition": "The adjacent B-T01 failures are reported, not waived. The reviewer must identify the controlling contract and whether the issue is inside the authorized Unit A surface. Private study data are excluded."
+    },
     {
       "event": "m4_005a_luna_implementation_dispatched",
       "date": "2026-10-15",
