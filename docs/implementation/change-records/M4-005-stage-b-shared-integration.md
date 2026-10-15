@@ -24,7 +24,9 @@ The first unit makes the existing B-T05 method outcome representable at the
 Stage B artifact boundary. The second unit replaces implicit source-order
 composition with one idempotent Stage B registration path so B-T02 through
 B-T06 coexist. B-T07 and every later consumer remain blocked until both units,
-fresh integrated verification and the independent M4 Astra gate pass.
+fresh integrated verification and the independently bounded M4-005
+shared-integration review pass. The normal M4/G4 acceptance review remains after
+B-T07; it is not a prerequisite for its own required packet.
 
 ## Scientific and data-contract decisions
 
@@ -65,10 +67,18 @@ One fresh Luna max worker may then modify only:
 
 - `R/results_b.R`
 - `tests/testthat/test-M4-005-B-T05-integration.R`
+- only the test block named `CLI startup routes qualified absolute-path DEqMS
+  and explicit fallback` in `tests/testthat/test-B-T05.R`
 
-`R/contracts.R`, the restored B-T05 files, canonical specification, package/CLI
-registration and all other packet files are forbidden. Sol alone updates the
-ledger and integrates an accepted commit.
+The named test is an explicit exception to the otherwise unchanged restoration:
+it currently freezes the demonstrated defect by requiring CLI exit 2,
+`A_ARTIFACT_INVALID` and payload status `fallback_complete`. It must instead
+require completion-policy exit 0, a valid envelope and payload, artifact status
+`complete`, method status `fallback_complete`, actual limma method and explicit
+fallback provenance. No other restored B-T05 test or statistical source may
+change. `R/contracts.R`, canonical specification, package/CLI registration and
+all other packet files are forbidden. Sol alone updates the ledger and
+integrates an accepted commit.
 
 ### Required failing tests before implementation
 
@@ -79,6 +89,9 @@ ledger and integrates an accepted commit.
   `partial` artifact, preserve `fallback_complete` or `fallback_partial` as
   `method_status`, and expose explicit limma provenance and DEqMS
   unavailability.
+- Separate regressions must exercise both complete and partial fallback. They
+  must check the persisted run-registry status as well as payload and envelope
+  status.
 - Ordinary limma output must remain unchanged and must not acquire DEqMS or
   fallback provenance.
 - Source and installed CLI paths must agree. B-T01, B-T03 and B-T04 adjacent
@@ -153,12 +166,21 @@ unchanged. A repair may address only findings inside that unit's listed files.
 Any required foreign-file or scientific-contract change blocks the unit and
 M4-005; it does not authorize another packet repair.
 
-After both reviews pass, Sol integrates serially, runs the named adjacent tests,
-the complete local suite and `Rscript --vanilla tools/check-package.R`, records
-exact counts/exits/skips, and creates an immutable M4 snapshot. A fresh Astra low
-then performs the normal M4/G4 review. B-T07 may start only after Sol accepts
-that review. No result from this record is biological validation or a real-data
-analysis.
+After both unit reviews pass, Sol integrates serially, runs the named adjacent
+tests, the complete local suite and `Rscript --vanilla tools/check-package.R`,
+records exact counts/exits/skips, and creates an immutable M4-005
+shared-integration snapshot. One fresh Astra low performs one initial
+shared-integration review with at most one focused rereview. This additional
+review is limited to M4-005's result boundary, dispatch composition, preserved
+B-T04 controls, source/installed parity and dependency legality. It neither
+consumes nor resets the normal M4/G4 review allowance.
+
+Only after Sol accepts that shared-integration review may B-T05 and B-T06 be
+accepted and B-T07 become dependency-legal, and only when B-T04, B-T08 and B-T09
+also remain accepted. B-T07 then follows its frozen packet implementation and
+review cycle. The normal M4/G4 review occurs only after B-T07 and every other M4
+requirement are accepted. No result from this record is biological validation
+or a real-data analysis.
 
 ## Alternatives rejected
 

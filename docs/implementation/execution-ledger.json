@@ -41,24 +41,38 @@
       "snapshot_commit": "cfa0be4",
       "requested_model": "gpt-6-astra",
       "requested_effort": "low",
-      "allowed_next_transition": "reconcile the audit; apply only authorized documentation corrections and request one focused rereview if required; otherwise present the audited record to Omar for execution acceptance"
+      "allowed_next_transition": "perform one focused rereview of the corrected B-T05 test exception and B-T07/M4 review ordering; then reconcile the final verdict"
     }
   ],
   "orchestration_control": {
-    "status": "m4_005_shared_integration_record_under_independent_audit",
+    "status": "m4_005_required_audit_corrections_applied_focused_rereview_pending",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [
       {
         "agent_name": "/root/m4_005_astra_audit",
         "role": "astra_read_only_change_record_audit",
         "snapshot_commit": "cfa0be4",
-        "allowed_next_transition": "reconcile audit verdict; do not implement before Omar accepts the audited record"
+        "allowed_next_transition": "focused rereview of the two required corrections; do not implement before Omar accepts the audited record"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar approved the M4-005 architectural design. The committed shared-integration record is under a fresh Astra-low read-only audit. B-T05, B-T06, B-T07 and all downstream work remain blocked; coding is not authorized until the audited record receives Omar's explicit execution acceptance."
+    "disposition": "The initial M4-005 Astra audit found no P0 and two P1 record contradictions. Both documentation corrections are applied for one focused rereview. B-T05, B-T06, B-T07 and downstream work remain blocked; coding is not authorized until the rereview passes and Omar explicitly accepts execution."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005_astra_audit_required_corrections_applied",
+      "date": "2026-10-15",
+      "agent_name": "/root/m4_005_astra_audit",
+      "snapshot_commit": "cfa0be4b80cfafa3a736769c687797e6e0262708",
+      "verdict": "pass_with_required_changes",
+      "review_ref": "docs/implementation/reviews/M4-005-astra-audit.md",
+      "required_corrections": [
+        "permit only the stale B-T05 final CLI regression to change from expected artifact invalidity to valid generic artifact status plus preserved fallback method provenance, including complete and partial persistence checks",
+        "replace the cyclic pre-B-T07 G4 requirement with one bounded M4-005 shared-integration review, leaving normal G4 review after B-T07"
+      ],
+      "allowed_next_transition": "send only these corrected sections to the same Astra auditor for one focused rereview; do not implement",
+      "disposition": "No P0 was found. Existing packet attempt counters, frozen B-T04 controls, privacy restrictions and normal G4 review allowance remain unchanged."
+    },
     {
       "event": "m4_005_change_record_astra_audit_dispatched",
       "date": "2026-10-15",
