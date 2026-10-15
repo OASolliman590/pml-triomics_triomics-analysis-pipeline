@@ -35,13 +35,24 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m4_005_execution_accepted_implementation_plan_preparation",
+    "status": "m4_005_implementation_plans_written_awaiting_omar_review",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar explicitly accepted audited M4-005 for execution. The detailed implementation plan is being prepared; no coding worker or handoff is active yet. B-T05, B-T06, B-T07 and downstream work remain blocked until their stated gates pass."
+    "disposition": "Omar explicitly accepted audited M4-005 for execution. Separate sequential Unit A and Unit B implementation plans are committed and await Omar's review before dispatch. No coding worker or handoff is active; blocked packet states remain unchanged."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005_implementation_plans_written",
+      "date": "2026-10-15",
+      "plan_refs": [
+        "docs/implementation/plans/M4-005A-b-t05-result-boundary.md",
+        "docs/implementation/plans/M4-005B-stage-b-dispatch-composition.md"
+      ],
+      "execution_method": "subagent-driven sequential units with Luna max implementation/test work, Sol-owned shared registration, fresh Sol 6.1 high reviews and bounded Astra-low integration review",
+      "allowed_next_transition": "Omar reviews the plans; after confirmation, create Unit A worktree and restore the final B-T05 candidate",
+      "disposition": "Unit B cannot start before Unit A review, installed verification and serial integration pass. No private study data are in scope."
+    },
     {
       "event": "m4_005_execution_record_accepted",
       "date": "2026-10-15",

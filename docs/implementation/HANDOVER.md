@@ -62,8 +62,9 @@ scientifically validated.
   unit followed by centralized B-T02-through-B-T06 dispatch composition. Its
   independent Astra audit found two record contradictions; both were corrected,
   and focused rereview passed on `279ecc4`. Omar explicitly accepted M4-005 for
-  execution on 2026-10-15; implementation planning is the next gate. No
-  run-owned agent remains active.
+  execution on 2026-10-15. Unit A and Unit B implementation plans are committed
+  under `plans/` and await Omar's plan review before worker dispatch. No run-owned
+  agent remains active.
 
 ## Literal resume instruction
 
