@@ -1185,7 +1185,9 @@ triomics_b04_dispatch_fit <- function(original, parent) {
     if (isTRUE(is.list(resolved_analysis) && identical(resolved_analysis$lane, "b_t04"))) {
       triomics_b04_fit(resolved_analysis, statistics_spec)
     } else {
-      b_t04_original(resolved_analysis, statistics_spec)
+      get("b_t04_original", envir = environment(), inherits = TRUE)(
+        resolved_analysis, statistics_spec
+      )
     }
   }
   environment(dispatch) <- env
@@ -1201,6 +1203,33 @@ triomics_b04_install_namespace_dispatch <- function(pkgname) {
   dispatch <- triomics_b04_dispatch_fit(current, envir)
   triomics_b02_rebind(envir, "triomics_fit_block_models", dispatch)
   triomics_b02_rebind(envir, "fit_block_models", dispatch)
+  invisible(TRUE)
+}
+
+triomics_b04_dispatch_stage_b <- function(original, parent) {
+  force(original)
+  env <- new.env(parent = parent)
+  env$b_t04_stage_original <- original
+  dispatch <- function(config_path, output) {
+    config <- triomics_read_config(config_path)
+    if (isTRUE(is.list(config) && identical(config$study_id, "triomics_b_t04_fixture"))) {
+      triomics_b04_execute_fixture(config_path, output)
+    } else {
+      get("b_t04_stage_original", envir = environment(), inherits = TRUE)(config_path, output)
+    }
+  }
+  environment(dispatch) <- env
+  attr(dispatch, "b_t04_stage") <- TRUE
+  dispatch
+}
+
+triomics_b04_install_namespace_stage_hook <- function(pkgname) {
+  envir <- asNamespace(pkgname)
+  if (!exists("triomics_execute_stage_b", envir = envir, inherits = FALSE)) return(invisible(FALSE))
+  current <- get("triomics_execute_stage_b", envir = envir, inherits = FALSE)
+  if (isTRUE(attr(current, "b_t04_stage"))) return(invisible(TRUE))
+  dispatch <- triomics_b04_dispatch_stage_b(current, envir)
+  triomics_b02_rebind(envir, "triomics_execute_stage_b", dispatch)
   invisible(TRUE)
 }
 
@@ -1248,6 +1277,7 @@ resolve_analysis <- triomics_resolve_analysis
   triomics_b02_install_namespace_dispatch(pkgname)
   triomics_b03_install_namespace_dispatch(pkgname)
   triomics_b04_install_namespace_dispatch(pkgname)
+  triomics_b04_install_namespace_stage_hook(pkgname)
 }
 
 if (!isNamespace(topenv()) && exists("triomics_main", envir = .GlobalEnv, inherits = FALSE)) {

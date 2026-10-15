@@ -661,27 +661,67 @@ testthat::test_that("B-T04 does not capture the two-visit paired lane", {
   testthat::expect_identical(resolved$representation_id, "delta")
 })
 
+testthat::test_that("B-T04 stage dispatch owns its fixture and delegates other studies", {
+  parent <- new.env(parent = environment())
+  parent$triomics_read_config <- function(config_path) list(study_id = config_path)
+  parent$triomics_b04_execute_fixture <- function(config_path, output) {
+    list(route = "b_t04", config_path = config_path, output = output)
+  }
+  original <- function(config_path, output) {
+    list(route = "original", config_path = config_path, output = output)
+  }
+  dispatch <- triomics_b04_dispatch_stage_b(original, parent)
+
+  fixture <- dispatch("triomics_b_t04_fixture", "fixture-output")
+  delegated <- dispatch("another_study", "ordinary-output")
+  testthat::expect_identical(attr(dispatch, "b_t04_stage"), TRUE)
+  testthat::expect_identical(fixture$route, "b_t04")
+  testthat::expect_identical(delegated$route, "original")
+  testthat::expect_identical(delegated$config_path, "another_study")
+  testthat::expect_identical(delegated$output, "ordinary-output")
+})
+
 testthat::test_that("B-T04 CLI fixture fits the qualified linear trajectory", {
-  root <- testthat::test_path("..", "..")
-  output <- file.path(tempdir(), paste0("b-t04-", Sys.getpid()))
-  unlink(output, recursive = TRUE)
-  old_wd <- getwd()
-  setwd(root)
+  cli <- triomics_test_resource("exec", "triomics")
+  config <- triomics_test_resource("examples", "tickets", "B-T04.yaml")
+  metadata <- triomics_test_resource("examples", "data", "paired", "metadata.tsv")
+  proteomics <- triomics_test_resource("examples", "data", "paired", "proteomics.tsv")
+  testthat::expect_true(file.exists(cli))
+  testthat::expect_true(file.exists(config))
+  config_lines <- readLines(config, warn = FALSE)
+  config_lines <- gsub(
+    "../../../discovery/spec-v2/examples/paired/metadata.tsv",
+    paste0("\"", metadata, "\""), config_lines, fixed = TRUE
+  )
+  config_lines <- gsub(
+    "../../../discovery/spec-v2/examples/paired/proteomics.tsv",
+    paste0("\"", proteomics, "\""), config_lines, fixed = TRUE
+  )
+  runnable_config <- tempfile(pattern = "b-t04-config-", fileext = ".yaml")
+  writeLines(config_lines, runnable_config)
+  on.exit(unlink(runnable_config), add = TRUE)
+  output <- tempfile(pattern = "b-t04-")
+  old_wd <- setwd(dirname(cli))
   on.exit(setwd(old_wd), add = TRUE)
+  on.exit(unlink(output, recursive = TRUE), add = TRUE)
   lines <- system2(
-    "Rscript",
+    file.path(R.home("bin"), "Rscript"),
     c(
-      "--vanilla", "inst/exec/triomics",
-      "--config", "inst/examples/tickets/B-T04.yaml",
+      "--vanilla", shQuote(basename(cli)),
+      "--config", shQuote(runnable_config),
       "--stage", "B",
-      "--output", output
+      "--output", shQuote(output)
     ),
     stdout = TRUE,
     stderr = TRUE
   )
   status_code <- attr(lines, "status")
   if (is.null(status_code)) status_code <- 0L
-  if (!identical(status_code, 0L)) cat(paste(lines, collapse = "\n"), "\n")
+  if (!identical(status_code, 0L)) {
+    cat(paste(lines, collapse = "\n"), "\n")
+    testthat::expect_identical(status_code, 0L)
+    return(invisible(NULL))
+  }
   testthat::expect_identical(status_code, 0L)
   payload <- jsonlite::fromJSON(file.path(output, "B", "block-results.json"), simplifyVector = FALSE)
   row <- payload$blocks$block_1$contrasts$per_synthetic_step$rows[[1L]]
