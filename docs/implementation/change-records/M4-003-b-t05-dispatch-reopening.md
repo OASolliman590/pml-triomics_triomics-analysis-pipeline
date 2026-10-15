@@ -7,6 +7,7 @@
 - Evidence: `docs/implementation/investigations/B-T05-dispatch-reopening.md`
 - Independent audit:
   `docs/implementation/reviews/B-T05-reopening-astra-audit.md`
+- Focused rereview: **PASS** on corrected snapshot `0dfe88d`
 
 ## Proposed decision
 

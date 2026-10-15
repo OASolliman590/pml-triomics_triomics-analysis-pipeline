@@ -33,43 +33,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/bt05_reopen_audit",
-      "role": "astra_read_only_focused_rereview",
-      "packet": "B-T05",
-      "snapshot_commit": "0dfe88d",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low"
-    },
-    {
-      "agent_name": "/root/bt06_reopen_audit",
-      "role": "astra_read_only_focused_rereview",
-      "packet": "B-T06",
-      "snapshot_commit": "0dfe88d",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_b_t05_b_t06_reopening_records_under_focused_rereview",
+    "status": "m4_b_t05_b_t06_audited_reopening_records_awaiting_user_acceptance",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/bt05_reopen_audit",
-        "packet": "B-T05",
-        "allowed_next_transition": "reconcile final focused verdict; if pass request Omar acceptance; if fail keep packet blocked"
-      },
-      {
-        "agent_name": "/root/bt06_reopen_audit",
-        "packet": "B-T06",
-        "allowed_next_transition": "reconcile final focused verdict; if pass request Omar acceptance; if fail keep packet blocked"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Both initial Astra audits returned pass with required changes. Sol applied only the requested corrections at 0dfe88d, and both original auditors are performing their single focused rereviews. M4-003 and M4-004 remain proposed and not accepted; no implementation worker is active and B-T07 remains blocked."
+    "disposition": "M4-003 and M4-004 passed their single focused Astra rereviews at corrected snapshot 0dfe88d. Both records remain proposed and not accepted; Omar's explicit acceptance is required before either final Luna repair. No run-owned agent is active and B-T07 remains blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t05_b_t06_reopening_focused_rereviews_passed_awaiting_user",
+      "date": "2026-10-15",
+      "snapshot_commit": "0dfe88d91ab98d2dd0045f6bab5ea78ce4270065",
+      "verdicts": {"B-T05": "pass", "B-T06": "pass"},
+      "review_refs": [
+        "docs/implementation/reviews/B-T05-reopening-astra-audit.md",
+        "docs/implementation/reviews/B-T06-reopening-astra-audit.md"
+      ],
+      "allowed_next_transition": "request Omar's explicit acceptance of M4-003 and M4-004; if accepted, dispatch one final isolated Luna max repair per record followed by its single authorized Sol 6.1 high review",
+      "disposition": "All run-owned audit agents completed and were reconciled. No implementation is authorized yet; B-T07 and G4 remain blocked."
+    },
     {
       "event": "b_t05_b_t06_reopening_focused_rereviews_dispatched",
       "date": "2026-10-15",

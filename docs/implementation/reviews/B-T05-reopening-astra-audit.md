@@ -5,6 +5,7 @@
 - Requested role: Astra low, read-only
 - Snapshot: `1acef834aeed4090dae7cc9e28416587c388a5ad`
 - Verdict: **PASS WITH REQUIRED CHANGES**
+- Focused rereview: **PASS** on `0dfe88d91ab98d2dd0045f6bab5ea78ce4270065`
 
 The audit found the candidate code demonstrates the dispatch defect and that
 routing supported DEqMS lanes independently of count validity implements AC4
@@ -24,4 +25,6 @@ Required before acceptance:
 
 Private study data were not needed. The audit does not authorize implementation
 or accept M4-003 on Omar's behalf. The required wording was applied for one
-focused re-review.
+focused re-review. That rereview confirmed all three required changes resolved:
+the adversarial matrix, four-file restoration with two-file repair scope, and
+the bounded repair/review authorization. M4-003 still needs Omar's acceptance.

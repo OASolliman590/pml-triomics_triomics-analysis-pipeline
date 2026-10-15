@@ -5,6 +5,7 @@
 - Requested role: Astra low, read-only
 - Snapshot: `1acef834aeed4090dae7cc9e28416587c388a5ad`
 - Verdict: **PASS WITH REQUIRED CHANGES**
+- Focused rereview: **PASS** on `0dfe88d91ab98d2dd0045f6bab5ea78ce4270065`
 
 The audit independently reproduced completed Wilcoxon sensitivity for the
 incompatible `(0, 1e-9)` contrast. It found that finite, nonzero, exact-opposite
@@ -24,4 +25,7 @@ Required before acceptance:
 
 Private study data were not needed or accessed. The audit does not authorize
 implementation or accept M4-004 on Omar's behalf. The required wording was
-applied for one focused re-review.
+applied for one focused re-review. That rereview confirmed all three required
+changes resolved: overflow-safe eligibility/tests, six-file restoration with
+two-file repair scope, and bounded one-time review authorization. M4-004 still
+needs Omar's acceptance.

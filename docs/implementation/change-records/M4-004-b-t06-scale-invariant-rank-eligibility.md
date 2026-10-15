@@ -8,6 +8,7 @@
   `docs/implementation/investigations/B-T06-scale-invariant-rank-eligibility.md`
 - Independent audit:
   `docs/implementation/reviews/B-T06-reopening-astra-audit.md`
+- Focused rereview: **PASS** on corrected snapshot `0dfe88d`
 
 ## Proposed decision
 

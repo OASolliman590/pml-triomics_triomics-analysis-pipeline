@@ -39,10 +39,14 @@ scientifically validated.
   moderated route passes all five declared cells. Candidate `bb0181b` and
   targeted installed-package repair `9e5f08e` were independently accepted and
   integrated as `753ae47` and `af69a9e`. Review: `reviews/B-T04-review.md`.
-- B-T05 is blocked after its focused review: missing counts still bypass the
-  method-specific unavailable/fallback path. Its candidates are unintegrated.
-- B-T06 is blocked after its focused review: the Wilcoxon contrast check remains
-  scale-dependent for weights 0 and 1e-9. Its candidates are unintegrated.
+- B-T05 remains blocked, but M4-003 now has an Astra PASS after its focused
+  rereview. The record authorizes repair 2 to route missing/invalid counts into
+  named DEqMS unavailability or explicit limma fallback. It still needs Omar's
+  explicit acceptance; the candidates remain unintegrated.
+- B-T06 remains blocked, but M4-004 now has an Astra PASS after its focused
+  rereview. The record authorizes repair 2 to replace the scale-dependent
+  Wilcoxon contrast gate with the finite exact-opposite structural invariant.
+  It still needs Omar's explicit acceptance; the candidates remain unintegrated.
 - B-T09 is accepted and integrated. It passed 83 packet assertions, 139 B-T08
   regression assertions, 13 cross-cutting CLI probes, source/installed fixture
   execution, schema checks and package check. Unsupported real-study
@@ -55,11 +59,12 @@ scientifically validated.
 Read root `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `execution-ledger.json`, this handover, `reviews/M2-astra-review.md`,
 `reviews/M3-astra-review.md`, `milestones/M4.md`, `reviews/B-T04-review.md`, and
-`reviews/B-T09-review.md`.
+`reviews/B-T09-review.md`, then M4-003/M4-004 and their reopening audit receipts.
 Verify HEAD and dirty state. Do not repeat accepted G2/G3/B-T09 work or any
-accepted B-T04 work, or any exhausted B-T05/B-T06 attempt or review. There is no
-legal downstream packet until explicit accepted records reopen the remaining
-blockers. Preserve B-T04's seeds, generator and 0.08 bound.
+accepted B-T04 work, or any exhausted B-T05/B-T06 attempt or review. Do not
+dispatch either repair unless Omar explicitly accepts its audited record. There
+is no legal downstream packet until the reopened repairs are accepted and
+integrated. Preserve B-T04's seeds, generator and 0.08 bound.
 
 ## Orchestration correction
 

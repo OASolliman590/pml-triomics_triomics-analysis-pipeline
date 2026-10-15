@@ -5,23 +5,25 @@ metabolomics and lipidomics while keeping the fasting, diabetic-treatment and
 organophosphate studies scientifically separate.
 
 **Works now:** G3 and five Stage B analysis packets are accepted on synthetic
-fixtures. B-T04 now supports qualified fixed-subject multivisit and trajectory
+fixtures. B-T04 supports qualified fixed-subject multivisit and trajectory
 analysis; the integrated branch passed 2,706 assertions and package check.
 
-**Changed:** B-T04's qualification now tests the same limma-moderated statistic
-that the pipeline publishes. The failed ordinary diagnostic remains visible:
-23 discoveries in 400 simulations, upper bound 0.08048. No seed, generator or
-0.08 limit was loosened. The moderated route passed all five declared layouts.
+**Changed:** The remaining B-T05 and B-T06 blockers were reproduced. Two bounded
+repair records now passed focused Astra review: preserve DEqMS identity/fallback
+when counts are missing, and make Wilcoxon eligibility scale-invariant. No code
+from either blocked candidate is integrated yet.
 
 **Not established:** This is fixture-based software/calibration evidence, not
 biological validation. None of the fasting, diabetic-treatment or
-organophosphate studies has been fitted. Additional covariance, missingness and
-robust-moderation routes remain unavailable. B-T05 and B-T06 remain blocked.
+organophosphate studies has been fitted. B-T04's ordinary 23/400 diagnostic
+remains failed even though its qualified moderated route passed. B-T05 and B-T06
+remain blocked until their audited records are explicitly accepted and repaired.
 
 **Next milestone:** Resolve B-T05 and B-T06, then implement B-T07 and submit the
 complete M4 snapshot to G4 review.
 
-**Needs Omar:** Nothing now.
+**Needs Omar:** Accept or reject M4-003 and M4-004. Acceptance permits
+one final repair and one additional review per packet; it does not pre-accept code.
 
 **Sync:** Local repository documentation updated. No Notion sync or external
 publication was attempted.
@@ -37,7 +39,7 @@ Software evidence: B-T04 302/0/0/0; full suite 2,706/0/0/0; package check
 required test was skipped.
 
 Restart: read `docs/implementation/HANDOVER.md`, verify Git state, and do not
-repeat accepted B-T04. No downstream packet is legal until B-T05 and B-T06 are
-reopened by accepted records. Do not loosen B-T04's seeds, generator or bound.
+repeat accepted B-T04. M4-003/M4-004 passed focused audit but remain unaccepted.
+No downstream packet is legal. Do not loosen B-T04's frozen controls.
 
 </details>
