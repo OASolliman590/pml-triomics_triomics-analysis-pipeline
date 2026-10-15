@@ -55,6 +55,9 @@ scientifically validated.
   longitudinal objectives fail closed until eligible inputs exist.
 - B-T07 is unstarted because B-T05 and B-T06 remain blocked. G4, all C and all
   D remain unreleased.
+- The final blocked-cycle Astra audit passed after correcting B-T07's stale
+  dependency reason. Review: `reviews/M4-final-cycle-astra-audit.md`. Neither
+  blocked candidate is integrated and no run-owned agent remains active.
 
 ## Literal resume instruction
 
@@ -65,7 +68,8 @@ Read root `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 Verify HEAD and dirty state. Do not repeat accepted G2/G3/B-T09 work or any
 accepted B-T04 work, or any exhausted B-T05/B-T06 attempt or review. M4-003 and
 M4-004 final cycles are exhausted and blocked; do not integrate or repair either
-candidate. There is no legal downstream packet. Preserve B-T04's frozen controls.
+candidate. A future reopening requires a new explicit audited shared-integration
+record. There is no legal downstream packet. Preserve B-T04's frozen controls.
 
 ## Orchestration correction
 

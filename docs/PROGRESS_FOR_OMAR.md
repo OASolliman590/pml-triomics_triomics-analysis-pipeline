@@ -18,13 +18,13 @@ exhausted.
 biological validation. None of the fasting, diabetic-treatment or
 organophosphate studies has been fitted. B-T04's ordinary 23/400 diagnostic
 remains failed even though its qualified moderated route passed. B-T05 and B-T06
-remain blocked until their repairs pass and integrate.
+remain blocked with no authorized repair remaining.
 
 **Next milestone:** M4 cannot reach G4. Preserve both blocked candidates and
 decide later whether a new audited shared-integration record is warranted.
 
-**Needs Omar:** Nothing now; the coordinator is closing this bounded cycle with
-an independent read-only audit of the recorded disposition.
+**Needs Omar:** Nothing now. Reopening later would require a new explicit,
+independently audited shared-integration record.
 
 **Sync:** Local repository documentation updated. No Notion sync or external
 publication was attempted.
@@ -39,8 +39,8 @@ Software evidence: B-T04 302/0/0/0; full suite 2,706/0/0/0; package check
 `Status: OK`; CLI AC1–AC4 pass. Real-data scientific evidence: not run. No
 required test was skipped.
 
-Restart: read `docs/implementation/HANDOVER.md`, verify Git state, and do not
-repeat accepted B-T04. M4-003/M4-004 are accepted for bounded repair/review.
-No downstream packet is legal until both integrate. Preserve B-T04 controls.
+Restart: read `docs/implementation/HANDOVER.md` and verify Git state. The
+M4-003/M4-004 cycles are exhausted; do not integrate either candidate. No
+downstream packet is legal. Preserve B-T04 controls.
 
 </details>

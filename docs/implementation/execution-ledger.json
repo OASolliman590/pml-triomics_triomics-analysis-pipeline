@@ -33,30 +33,24 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_final_cycle_audit",
-      "role": "astra_low_read_only_focused_rereview",
-      "scope": "corrected B-T07 blocker only",
-      "snapshot_commit": "8eee849",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_final_cycle_audit_correction_under_focused_rereview",
+    "status": "m4_b_t05_b_t06_final_cycles_closed_blocked_no_legal_downstream",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_final_cycle_audit",
-        "scope": "corrected B-T07 blocker only",
-        "allowed_next_transition": "reconcile final focused verdict and close the bounded cycle without implementation"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The final-cycle Astra audit passed all substantive checks and required one stale B-T07 blocker correction. That documentation-only correction is under its single focused Astra rereview at 8eee849. No implementation or downstream packet is legal."
+    "disposition": "The final-cycle Astra disposition audit passed after focused rereview of the corrected B-T07 dependency reason. B-T05 and B-T06 remain exhausted, blocked and unintegrated; no run-owned agent or handoff remains active, and no downstream packet is legal."
   },
   "orchestration_events": [
+    {
+      "event": "m4_final_cycle_astra_focused_rereview_passed_cycle_closed_blocked",
+      "date": "2026-10-15",
+      "agent_name": "/root/m4_final_cycle_audit",
+      "snapshot_commit": "8eee849",
+      "verdict": "pass",
+      "review_ref": "docs/implementation/reviews/M4-final-cycle-astra-audit.md",
+      "disposition": "The stale B-T07 dependency reason is corrected. Both blocked candidates remain unintegrated, attempt/review caps are exhausted, and no implementation or downstream work is authorized."
+    },
     {
       "event": "m4_final_cycle_astra_focused_rereview_dispatched",
       "date": "2026-10-15",

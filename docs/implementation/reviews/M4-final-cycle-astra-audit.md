@@ -5,6 +5,7 @@
 - Requested role: Astra low, read-only
 - Snapshot: `4fa8c02`
 - Verdict: **PASS WITH REQUIRED CHANGES**
+- Focused rereview: **PASS** on corrected snapshot `8eee849`
 
 The audit confirmed that B-T05 and B-T06 each record one initial attempt, two
 repairs, exhausted historical reviews and the single additional user-authorized
@@ -16,5 +17,6 @@ scientific validation.
 
 One required correction remained: `packets.B-T07.blockers` still named B-T04,
 although B-T04 is accepted. The ledger was corrected to name blocked B-T05 and
-B-T06. Private study data were not needed or accessed. This is a disposition
-audit, not G4 acceptance or authorization for further implementation.
+B-T06. The focused rereview confirmed that correction. Private study data were
+not needed or accessed. This is a disposition audit, not G4 acceptance or
+authorization for further implementation.
