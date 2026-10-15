@@ -35,11 +35,11 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/bt04_sol_review",
+      "agent_name": "/root/bt04_repair",
       "packet": "B-T04",
-      "role": "reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
+      "role": "implementer_repair_1",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
       "worktree": ".worktrees/b-t04-calibration-repair",
       "branch": "codex/b-t04-calibration-repair",
       "base_commit": "fc4872a",
@@ -48,19 +48,55 @@
     }
   ],
   "orchestration_control": {
-    "status": "b_t04_candidate_under_sol_review",
+    "status": "b_t04_integrated_package_gate_failed_repair_1_active",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [
       {
-        "agent_name": "/root/bt04_sol_review",
+        "agent_name": "/root/bt04_repair",
         "packet": "B-T04",
-        "allowed_next_transition": "reconcile the fresh Sol 6.1 high verdict; integrate only if accepted, otherwise return only accepted targeted findings within the remaining repair budget"
+        "allowed_next_transition": "receive targeted repair 1 for the installed-package CLI test and closure lookup NOTE; reconcile and send only that diff to the same Sol reviewer for the one permitted focused re-review"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Luna's immutable B-T04 candidate is under fresh Sol 6.1 high review. The five-file allowlist and candidate evidence were reconciled; integration remains prohibited until acceptance."
+    "disposition": "The initial Sol review accepted the packet and Sol integrated it as 753ae47, but fresh R CMD check exposed an installed-package CLI test failure and an undefined-global NOTE. Targeted repair 1 is active; B-T04 is not accepted."
   },
   "orchestration_events": [
+    {
+      "event": "b_t04_integrated_package_gate_failed_repair_1_dispatched",
+      "date": "2026-10-15",
+      "worker_agent_name": "/root/bt04_repair",
+      "packet": "B-T04",
+      "integrated_candidate_commit": "753ae47",
+      "source_candidate_commit": "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "failure_evidence": {
+        "package_check_exit": 1,
+        "check_log_sha256": "52b5eb5b5adc5fac71fdc045bcabdb0839a4102276cad6cfaa7b6ea3383c9188",
+        "test_failure": "installed-package test cannot open source-only inst/exec/triomics, causing status 2 and JSON parse error",
+        "check_note": "triomics_b04_dispatch_fit has no visible global definition for b_t04_original"
+      },
+      "allowed_next_transition": "receive minimal two-file repair; reconcile; dispatch one focused re-review to the original Sol reviewer",
+      "disposition": "Full integrated behavioral suite passed 2699/2699, but package check is mandatory and failed. B-T04 remains unaccepted."
+    },
+    {
+      "event": "b_t04_initial_sol_review_accepted_integrated_verification_started",
+      "date": "2026-10-15",
+      "review_agent_name": "/root/bt04_sol_review",
+      "verdict": "accept",
+      "candidate_commit": "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
+      "integration_commit": "753ae47",
+      "review_ref": ".superpowers/sdd/M4-002-b-t04-production-statistic-calibration/task-1-sol-review.md",
+      "independent_tests": {
+        "test_cases": 11,
+        "expectations_passed": 295,
+        "failures": 0,
+        "warnings": 0,
+        "skips": 0,
+        "cli_exit_on_fresh_output": 0
+      },
+      "disposition": "Initial review accepted with one nonblocking hardening suggestion; integration remained subject to fresh package verification."
+    },
     {
       "event": "b_t04_candidate_reconciled_sol_review_dispatched",
       "date": "2026-10-15",
@@ -797,8 +833,8 @@
       "integration_commit": "9cd36fe"
     },
     "B-T04": {
-      "status": "in_review",
-      "attempts": 2,
+      "status": "repair_1_in_progress",
+      "attempts": 3,
       "commit": "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
       "acceptance_refs": [],
       "change_record_ref": "docs/implementation/change-records/M4-002-b-t04-production-statistic-calibration.md",
