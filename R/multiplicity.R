@@ -156,7 +156,6 @@ triomics_b06_process_family <- function(resolved_analysis, statistics_spec, resu
     rows[[index]]["q"] <- list(
       if (!failed && isTRUE(family$q_published)) family$internal_q[[index]] else NULL
     )
-    if (!isTRUE(validation$eligible)) rows[[index]]$inferential_status <- "withheld"
   }
   result$rows <- rows
   result$family <- family
