@@ -329,6 +329,40 @@ testthat::test_that("B-T08-AC2 unsupported responses, unknown codes, censoring a
   testthat::expect_false(isTRUE(associate_endpoints(constant$bundle, constant$view, constant$spec)$fallback_applied))
 })
 
+testthat::test_that("B-T08-AC2 a constant continuous response fails closed without family q-values", {
+  constant <- b08_cohort(score = rep(9, 8), fallback = "pearson")
+  fit <- associate_endpoints(constant$bundle, constant$view, constant$spec)
+  row <- b08_one(fit)
+
+  testthat::expect_identical(row$estimation_status, "failed")
+  testthat::expect_identical(row$estimation_reason, "constant_response")
+  testthat::expect_null(row$effect)
+  testthat::expect_null(row$ordinary_se)
+  testthat::expect_null(row$moderated_se)
+  testthat::expect_null(row$p)
+  testthat::expect_null(row$q)
+  testthat::expect_false(isTRUE(fit$family$q_published))
+  testthat::expect_identical(unname(fit$family$internal_p), 1)
+  testthat::expect_false(isTRUE(fit$fallback_applied))
+  testthat::expect_false(identical(fit$method, "pearson"))
+})
+
+testthat::test_that("B-T08-AC3 duplicate fixed-family members abort before fitting", {
+  cohort <- b08_cohort()
+  cohort$spec$family$member_ids <- c("synthetic_score", "synthetic_score")
+  fit_called <- FALSE
+  testthat::local_mocked_bindings(
+    triomics_b08_fit_endpoint = function(...) {
+      fit_called <<- TRUE
+      stop("endpoint fit reached before duplicate-family validation")
+    },
+    .package = "triomics"
+  )
+
+  expect_code(associate_endpoints(cohort$bundle, cohort$view, cohort$spec), "B_FAMILY_UNDECLARED")
+  testthat::expect_false(fit_called)
+})
+
 testthat::test_that("B-T08-AC3 fixed endpoint families and training ancestry are enforced on synthetic scores", {
   e1 <- b08_cohort()
   e2 <- e1
@@ -392,6 +426,53 @@ testthat::test_that("B-T08-AC3 fixed endpoint families and training ancestry are
   testthat::expect_identical(within_row$mode, "within_person")
   testthat::expect_null(within_row$effect)
   testthat::expect_identical(within_row$estimation_reason, "mode_not_executable")
+})
+
+testthat::test_that("B-T08-AC3 failed constant members stay in mixed-family adjustment without publishing their q", {
+  first <- b08_cohort()
+  second <- b08_cohort(score = first$score + c(0.2, -0.1, 0.4, -0.3, 0.1, -0.2, 0.3, -0.4))
+  constant <- b08_cohort(score = rep(12, 8))
+
+  endpoint_ids <- c("synthetic_score", "held_score", "constant_score")
+  second$bundle$endpoints[[1L]]$endpoint_id <- endpoint_ids[[2L]]
+  constant$bundle$endpoints[[1L]]$endpoint_id <- endpoint_ids[[3L]]
+  bundle <- first$bundle
+  bundle$endpoints <- c(first$bundle$endpoints,
+                        second$bundle$endpoints,
+                        constant$bundle$endpoints)
+
+  spec <- first$spec
+  spec$family$member_ids <- endpoint_ids
+  second_objective <- spec$objectives[[1L]]
+  second_objective$objective_id <- "held_between"
+  second_objective$response_ref <- endpoint_ids[[2L]]
+  second_objective$endpoint_ref <- endpoint_ids[[2L]]
+  constant_objective <- spec$objectives[[1L]]
+  constant_objective$objective_id <- "constant_between"
+  constant_objective$response_ref <- endpoint_ids[[3L]]
+  constant_objective$endpoint_ref <- endpoint_ids[[3L]]
+  spec$objectives <- c(spec$objectives, list(second_objective, constant_objective))
+
+  fit <- associate_endpoints(bundle, first$view, spec)
+  rows <- lapply(endpoint_ids, function(id) b08_one(fit, id))
+  internal_p <- c(rows[[1L]]$p, rows[[2L]]$p, 1)
+  expected_q <- unname(stats::p.adjust(internal_p, method = "BH"))
+
+  testthat::expect_identical(fit$family$n_declared, 3L)
+  testthat::expect_identical(fit$family$n_estimated, 2L)
+  testthat::expect_identical(fit$family$n_failed, 1L)
+  testthat::expect_identical(unname(fit$family$internal_p), internal_p)
+  testthat::expect_true(isTRUE(fit$family$q_published))
+  expect_close(rows[[1L]]$q, expected_q[[1L]])
+  expect_close(rows[[2L]]$q, expected_q[[2L]])
+  testthat::expect_identical(rows[[3L]]$estimation_status, "failed")
+  testthat::expect_identical(rows[[3L]]$estimation_reason, "constant_response")
+  testthat::expect_null(rows[[3L]]$effect)
+  testthat::expect_null(rows[[3L]]$ordinary_se)
+  testthat::expect_null(rows[[3L]]$moderated_se)
+  testthat::expect_null(rows[[3L]]$p)
+  testthat::expect_null(rows[[3L]]$q)
+  testthat::expect_false(isTRUE(fit$fallback_applied))
 })
 
 testthat::test_that("B-T08-AC4 ordinary exports omit private identities and separate clinical exclusions from endpoint missingness", {
