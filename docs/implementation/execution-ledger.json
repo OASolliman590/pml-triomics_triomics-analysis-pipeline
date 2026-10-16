@@ -33,15 +33,42 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_009_bt08_luna",
+      "role": "luna_bounded_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "snapshot_commit": "c876059",
+      "worktree": "/Users/megastore/.codex/worktrees/m4-009-bt08-repair/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["R/clinical_association.R", "tests/testthat/test-B-T08.R"]
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_009_astra_approved_ready_for_repair_1",
+    "status": "m4_009_b_t08_repair_1_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_009_bt08_luna",
+        "expected_receipt": "RED/GREEN evidence and local commits for the two-file B-T08 scientific repair"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The single focused Astra rereview passed the corrected M4-009 plan with no findings. One fresh isolated Luna-max worker may now perform bounded B-T08 repair 1; Sol then owns shared registration and all review/verification gates. B-T08 and B-T07 remain blocked until acceptance."
+    "disposition": "A fresh isolated Luna-max worker is executing B-T08 targeted repair 1 on two packet-owned files. Sol retains shared registration and integration ownership. B-T08 and B-T07 remain blocked until every gate passes."
   },
   "orchestration_events": [
+    {
+      "event": "m4_009_b_t08_repair_1_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_009_bt08_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "snapshot_commit": "c876059",
+      "worktree": "/Users/megastore/.codex/worktrees/m4-009-bt08-repair/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["R/clinical_association.R", "tests/testthat/test-B-T08.R"],
+      "allowed_next_transition": "inspect RED/GREEN evidence and candidate commits, then Sol applies only the audited shared registration changes before fresh complete-diff review",
+      "disposition": "This consumes B-T08 targeted repair 1. Any later implementation correction is repair 2 and exhausts the packet allowance."
+    },
     {
       "event": "m4_009_focused_astra_rereview_passed",
       "date": "2026-10-16",
@@ -1761,9 +1788,9 @@
       "blockers": []
     },
     "B-T08": {
-      "status": "blocked_pending_m4_009_repair_1",
+      "status": "repair_1_active",
       "attempts": 1,
-      "repair_attempts": 0,
+      "repair_attempts": 1,
       "commit": "bded42a",
       "acceptance_refs": [
         "docs/implementation/reviews/B-T08-acceptance-review.md",
