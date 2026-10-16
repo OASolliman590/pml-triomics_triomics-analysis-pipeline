@@ -33,33 +33,29 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_008_sol_review",
-      "role": "sol_read_only_reviewer",
-      "packet": "M4-008",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "worktree": ".worktrees/m4-005b-stage-b-composition",
-      "branch": "codex/m4-005b-stage-b-composition",
-      "base_commit": "0c844281b68e0f7c9b81bfcc975f6c30f7316a92",
-      "candidate_commit": "f59abdf467cca274a1174c13be8daacb50e01a01"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_008_fresh_sol_review_active",
+    "status": "m4_008_coordinator_full_verification_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_008_sol_review",
-        "unit": "M4-008 complete-diff review",
-        "expected_return": "read-only verdict on commits a658c1e and f59abdf, exact two-file scope, non-skipped source/installed behavior and independent focused verification"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-008 targeted repair f59abdf mirrors function-valued namespace entries, requires all seven central helpers, asserts six composition markers and preserves local R-file sourcing. Coordinator focused GREEN passed 62 with no failures/warnings/skips. Fresh Sol-high complete-diff review is active."
+    "disposition": "Fresh Sol-high review passed M4-008 with no findings, independently reproduced 62 clean assertions and confirmed preserved package Status: OK. Coordinator full-suite, fresh package and parity verification is active; integration remains conditional."
   },
   "orchestration_events": [
+    {
+      "event": "m4_008_fresh_sol_review_passed_coordinator_full_verification_started",
+      "date": "2026-10-16",
+      "review_agent_name": "/root/m4_008_sol_review",
+      "candidate_base": "0c844281b68e0f7c9b81bfcc975f6c30f7316a92",
+      "candidate_commit": "f59abdf467cca274a1174c13be8daacb50e01a01",
+      "verdict": "pass",
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "verification": {"passed": 62, "failed": 0, "warned": 0, "skipped": 0},
+      "preserved_package_check": "Status: OK; 0 errors, warnings or notes",
+      "review_ref": "docs/implementation/reviews/M4-008-sol-review.md",
+      "allowed_next_transition": "run fresh complete suite, package check and source/installed parity probes; only all-green results permit serial integration",
+      "disposition": "Review acceptance is bounded to M4-008 and does not accept B-T05/B-T06 or replace the later M4-005 shared Astra audit."
+    },
     {
       "event": "m4_008_targeted_repair_completed_fresh_sol_review_dispatched",
       "date": "2026-10-16",
