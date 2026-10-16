@@ -35,30 +35,55 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/m4_005b_luna_tests",
-      "role": "luna_tests_only_repair_worker",
-      "packet": "M4-005B Task 2 repair 1",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent_name": "/root/m4_005b_sol_review",
+      "role": "sol_complete_diff_reviewer",
+      "packet": "M4-005B Task 4",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "worktree": ".worktrees/m4-005b-stage-b-composition",
       "branch": "codex/m4-005b-stage-b-composition",
-      "base_commit": "573811c"
+      "base_commit": "11757c0e8dd272a87700e873eccdc7dc8bc50e8a",
+      "candidate_commit": "ada3a17"
     }
   ],
   "orchestration_control": {
-    "status": "m4_005b_luna_test_repair_active",
+    "status": "m4_005b_fresh_sol_review_active",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [
       {
-        "agent_name": "/root/m4_005b_luna_tests",
-        "unit": "M4-005B Task 2 repair 1",
-        "expected_return": "one-line source-helper cleanup correction, tests-only commit and composition GREEN/remaining-failure evidence"
+        "agent_name": "/root/m4_005b_sol_review",
+        "unit": "M4-005B Task 4",
+        "expected_return": "PASS or graded findings on complete 11757c0..ada3a17 diff with source/installed and statistical-freeze evidence"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-005B RED evidence is recorded in 573811c: 38 pass and four intended failures. The first Sol GREEN run exposed a test-helper lifetime defect: its source helper deletes successful output before the caller reads it. The same Luna-max worker is performing the one authorized tests-only targeted repair while Sol retains the two shared registration files."
+    "disposition": "M4-005B candidate ada3a17 is immutable. The targeted/adjacent gate passed 732 assertions with zero failures, warnings or skips; B-T04/B-T05/B-T06 source fixtures exited 0 with their required evidence. A fresh Sol 6.1 high reviewer is reviewing the complete Unit A checkpoint through Unit B candidate diff."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005b_candidate_completed_fresh_sol_review_dispatched",
+      "date": "2026-10-16",
+      "worker_agent_name": "/root/m4_005b_luna_tests",
+      "review_agent_name": "/root/m4_005b_sol_review",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "candidate_commit": "ada3a17",
+      "integration_base": "11757c0e8dd272a87700e873eccdc7dc8bc50e8a",
+      "candidate_commits": ["de21436", "573811c", "265edf9", "ada3a17"],
+      "verification": {
+        "target_and_adjacent_passed": 732,
+        "failed": 0,
+        "warned": 0,
+        "skipped": 0,
+        "source_cli_exits": {"B-T04": 0, "B-T05": 0, "B-T06": 0},
+        "b_t04_calibration": "pass",
+        "b_t05_status": "unavailable_count_metadata_missing",
+        "b_t06_family_and_rank": "complete"
+      },
+      "review_scope": "complete restoration, cross-packet RED/GREEN tests, central source/namespace composition, idempotence, context propagation, B-T04 frozen controls, B-T05 provenance, B-T06 statistical-tree identity, source/installed parity and privacy",
+      "allowed_next_transition": "PASS permits full coordinator verification and serial integration; one Important/Critical finding permits the single bounded repair and focused rereview; further unresolved work blocks Unit B",
+      "disposition": "The source CLI must use inst/exec/triomics in source layout; an initial root/exec invocation resolved the wrong source root and was discarded as an invocation error. No private study data were used."
+    },
     {
       "event": "m4_005b_test_helper_repair_dispatched",
       "date": "2026-10-16",
