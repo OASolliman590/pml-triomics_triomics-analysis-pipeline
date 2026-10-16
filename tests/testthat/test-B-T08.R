@@ -773,12 +773,35 @@ testthat::test_that("B-T08 source CLI dispatches the declared fixture exactly on
     artifacts,
     c("B/clinical-associations.envelope.json", "B/clinical-associations.json")
   )
-  records <- list.files(output_path, pattern = "^acceptance-record\\.json$",
-                        recursive = TRUE, full.names = TRUE)
-  testthat::expect_length(records, 1L)
-  record <- jsonlite::fromJSON(records[[1L]], simplifyVector = FALSE)
-  testthat::expect_identical(record$packet_id, "B-T08")
-  testthat::expect_identical(record$status, "complete")
+  clinical_payload <- jsonlite::read_json(
+    file.path(output_path, "B", "clinical-associations.json"), simplifyVector = FALSE
+  )
+  testthat::expect_identical(clinical_payload$schema_version, "2.0")
+  testthat::expect_true(isTRUE(triomics_validate_envelope(
+    file.path(output_path, "B", "clinical-associations.envelope.json")
+  )))
+
+  root_record_path <- file.path(output_path, "acceptance-record.json")
+  testthat::expect_true(file.exists(root_record_path))
+  if (file.exists(root_record_path)) {
+    root_record <- jsonlite::fromJSON(root_record_path, simplifyVector = FALSE)
+    testthat::expect_identical(root_record$packet_id, "B-T08")
+    testthat::expect_identical(root_record$status, "complete")
+  }
+
+  b07_receipts <- list.files(
+    file.path(output_path, "B", "handoffs"), pattern = "^acceptance-record\\.json$",
+    recursive = TRUE, full.names = TRUE
+  )
+  testthat::expect_length(b07_receipts, 1L)
+  if (length(b07_receipts) == 1L) {
+    b07_receipt <- jsonlite::fromJSON(b07_receipts[[1L]], simplifyVector = FALSE)
+    testthat::expect_identical(b07_receipt$packet_id, "B-T07")
+    testthat::expect_true(b07_receipt$status %in% c("complete", "partial"))
+    testthat::expect_true(isTRUE(triomics_validate_envelope(
+      sub("\\.json$", ".envelope.json", b07_receipts[[1L]])
+    )))
+  }
 })
 
 testthat::test_that("B-T09 source CLI keeps its longitudinal route without B-T08 fixture dispatch", {
@@ -797,12 +820,36 @@ testthat::test_that("B-T09 source CLI keeps its longitudinal route without B-T08
   testthat::expect_length(b08_clinical_association_artifacts(output_path), 0L)
   testthat::expect_true(any(grepl("longitudinal", files, ignore.case = TRUE)))
   testthat::expect_false("B/clinical-associations.json" %in% files)
-  records <- list.files(output_path, pattern = "^acceptance-record\\.json$",
-                        recursive = TRUE, full.names = TRUE)
-  testthat::expect_length(records, 1L)
-  record <- jsonlite::fromJSON(records[[1L]], simplifyVector = FALSE)
-  testthat::expect_identical(record$packet_id, "B-T09")
-  testthat::expect_identical(record$status, "software_fixture_pass")
+  clinical_payload <- jsonlite::read_json(
+    file.path(output_path, "B", "clinical-longitudinal-associations.json"),
+    simplifyVector = FALSE
+  )
+  testthat::expect_identical(clinical_payload$schema_version, "2.0")
+  testthat::expect_true(isTRUE(triomics_validate_envelope(
+    file.path(output_path, "B", "clinical-longitudinal-associations.envelope.json")
+  )))
+
+  root_record_path <- file.path(output_path, "acceptance-record.json")
+  testthat::expect_true(file.exists(root_record_path))
+  if (file.exists(root_record_path)) {
+    root_record <- jsonlite::fromJSON(root_record_path, simplifyVector = FALSE)
+    testthat::expect_identical(root_record$packet_id, "B-T09")
+    testthat::expect_identical(root_record$status, "software_fixture_pass")
+  }
+
+  b07_receipts <- list.files(
+    file.path(output_path, "B", "handoffs"), pattern = "^acceptance-record\\.json$",
+    recursive = TRUE, full.names = TRUE
+  )
+  testthat::expect_length(b07_receipts, 1L)
+  if (length(b07_receipts) == 1L) {
+    b07_receipt <- jsonlite::fromJSON(b07_receipts[[1L]], simplifyVector = FALSE)
+    testthat::expect_identical(b07_receipt$packet_id, "B-T07")
+    testthat::expect_true(b07_receipt$status %in% c("complete", "partial"))
+    testthat::expect_true(isTRUE(triomics_validate_envelope(
+      sub("\\.json$", ".envelope.json", b07_receipts[[1L]])
+    )))
+  }
 })
 
 testthat::test_that("nonfixture clinical requests refuse without B-T08 synthetic outputs", {

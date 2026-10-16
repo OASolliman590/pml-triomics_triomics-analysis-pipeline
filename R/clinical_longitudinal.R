@@ -900,7 +900,7 @@ triomics_b09_execute_longitudinal_associations <- function(config_path, output) 
   clinical <- triomics_ingest_clinical(config, config_path, ingested$sample_registry)
   bundle <- triomics_b09_fixture_bundle(clinical)
   fit <- triomics_associate_longitudinal_endpoints(bundle, clinical, triomics_b09_cli_spec(config))
-  exported <- triomics_clinical_association_export(fit)
+  exported <- c(list(schema_version = "2.0"), triomics_clinical_association_export(fit))
   payload <- file.path(output, "B", "clinical-longitudinal-associations.json")
   triomics_write_json_atomic(exported, payload)
   envelope <- triomics_artifact_envelope(

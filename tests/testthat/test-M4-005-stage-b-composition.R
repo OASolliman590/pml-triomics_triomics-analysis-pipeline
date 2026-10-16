@@ -2,6 +2,25 @@ m4_005b_read_json <- function(path) {
   jsonlite::read_json(path, simplifyVector = FALSE)
 }
 
+m4_005b_expected_b04_matrix <- function() {
+  subjects <- sprintf("sub%04d", 1:4)
+  out <- rbind(
+    F1 = c(5.2, 6.1, 8.2, 7.2, 8.1, 10.2, 9.2, 10.1, 12.2, 11.2, 12.1, 14.2),
+    F2 = c(5.2, 4.35, 4.7, 7.2, 6.35, 6.7, 9.2, 8.35, 8.7, 11.2, 10.35, 10.7)
+  )
+  colnames(out) <- unlist(lapply(subjects, function(subject) {
+    paste0(subject, "_t", 0:2)
+  }), use.names = FALSE)
+  out
+}
+
+m4_005b_json_names <- function(value) {
+  if (!is.list(value)) return(character())
+  value_names <- names(value)
+  if (is.null(value_names)) value_names <- character()
+  c(value_names, unlist(lapply(value, m4_005b_json_names), use.names = FALSE))
+}
+
 m4_005b_run_b04 <- function(execute_stage_b) {
   config <- m4_005b_rewrite_b04_config()
   on.exit(unlink(config), add = TRUE)
@@ -31,11 +50,24 @@ m4_005b_assert_b04_result <- function(run) {
   testthat::expect_true(file.exists(run$result$payload_path))
   payload <- m4_005b_read_json(run$result$payload_path)
   row <- payload$blocks$block_1$contrasts$per_synthetic_step$rows[[1L]]
+  resolved_matrices <- run$result$resolved_matrices
+  expected_matrix <- m4_005b_expected_b04_matrix()
+  assay_hash <- triomics_b_assay_hash("block_1", resolved_matrices$block_1)
   testthat::expect_identical(payload$representation_id, "subject_centered")
   testthat::expect_equal(row$effect, 1.5, tolerance = 1e-8)
   testthat::expect_identical(row$ordinary_df, 7L)
   testthat::expect_identical(row$design_rank, 5L)
   testthat::expect_identical(row$duplicate_correlation_applied, FALSE)
+  testthat::expect_identical(names(resolved_matrices), "block_1")
+  testthat::expect_identical(resolved_matrices$block_1, expected_matrix)
+  testthat::expect_identical(row$source_hash, assay_hash)
+  testthat::expect_false(any(c(
+    "resolved_matrices", "assay", "assays", "fit", "native_model", "model_object",
+    "lmFit", "MArrayLM"
+  ) %in% m4_005b_json_names(payload)))
+  testthat::expect_true(isTRUE(triomics_validate_envelope(
+    file.path(run$output, "B", "block-results.envelope.json")
+  )))
 
   calibration <- m4_005b_read_json(file.path(run$output, "calibration.json"))
   testthat::expect_identical(calibration$status, "pass")
@@ -253,11 +285,66 @@ testthat::test_that("M4-005B source composition preserves B-T04 stage execution"
 
   payload <- m4_005b_read_json(file.path(run$output, "B", "block-results.json"))
   row <- payload$blocks$block_1$contrasts$per_synthetic_step$rows[[1L]]
+  expected_matrix <- m4_005b_expected_b04_matrix()
+  assay_hash <- triomics_b_assay_hash("block_1", expected_matrix)
   testthat::expect_identical(payload$status, "complete")
   testthat::expect_identical(payload$representation_id, "subject_centered")
   testthat::expect_equal(row$effect, 1.5, tolerance = 1e-8)
   testthat::expect_identical(row$ordinary_df, 7L)
   testthat::expect_identical(row$design_rank, 5L)
+  testthat::expect_identical(row$source_hash, assay_hash)
+  testthat::expect_false(any(c(
+    "resolved_matrices", "assay", "assays", "fit", "native_model", "model_object",
+    "lmFit", "MArrayLM"
+  ) %in% m4_005b_json_names(payload)))
+  testthat::expect_true(isTRUE(triomics_validate_envelope(
+    file.path(run$output, "B", "block-results.envelope.json")
+  )))
+
+  handoff_root <- file.path(run$output, "B", "handoffs")
+  handoff_dirs <- if (dir.exists(handoff_root)) {
+    list.dirs(handoff_root, recursive = FALSE, full.names = TRUE)
+  } else {
+    character()
+  }
+  testthat::expect_length(handoff_dirs, 1L)
+  if (length(handoff_dirs) != 1L) return(invisible(NULL))
+
+  handoff_dir <- handoff_dirs[[1L]]
+  bundle_path <- file.path(handoff_dir, "bundle.json")
+  bundle_envelope_path <- file.path(handoff_dir, "bundle.envelope.json")
+  matrix_manifest_path <- file.path(handoff_dir, "stage-c-matrices.json")
+  matrix_manifest_envelope_path <- file.path(handoff_dir, "stage-c-matrices.envelope.json")
+  matrix_values_path <- file.path(handoff_dir, "stage-c-matrix-values.rds")
+  matrix_values_envelope_path <- file.path(handoff_dir, "stage-c-matrix-values.envelope.json")
+  receipt_path <- file.path(handoff_dir, "acceptance-record.json")
+  receipt_envelope_path <- file.path(handoff_dir, "acceptance-record.envelope.json")
+  testthat::expect_true(all(file.exists(c(
+    bundle_path, matrix_manifest_path, matrix_values_path, receipt_path
+  ))))
+  if (!all(file.exists(c(bundle_path, matrix_manifest_path, matrix_values_path, receipt_path)))) {
+    return(invisible(NULL))
+  }
+
+  bundle <- m4_005b_read_json(bundle_path)
+  matrix_manifest <- m4_005b_read_json(matrix_manifest_path)
+  handoff_matrices <- readRDS(matrix_values_path)
+  receipt <- m4_005b_read_json(receipt_path)
+  testthat::expect_identical(bundle$matrix_handoff$status, "complete")
+  testthat::expect_identical(bundle$matrix_handoff$source, "stage_b_resolved_blocks")
+  testthat::expect_identical(matrix_manifest$matrix_source, "stage_b_resolved_blocks")
+  testthat::expect_identical(names(handoff_matrices), "block_1")
+  testthat::expect_identical(handoff_matrices$block_1, expected_matrix)
+  testthat::expect_identical(
+    triomics_b_assay_hash("block_1", handoff_matrices$block_1), row$source_hash
+  )
+  ac3 <- Filter(function(item) identical(as.character(item$id), "AC3"), receipt$acceptance)
+  testthat::expect_length(ac3, 1L)
+  testthat::expect_identical(ac3[[1L]]$verdict, "pass")
+  testthat::expect_true(isTRUE(triomics_validate_envelope(bundle_envelope_path)))
+  testthat::expect_true(isTRUE(triomics_validate_envelope(matrix_manifest_envelope_path)))
+  testthat::expect_true(isTRUE(triomics_validate_envelope(matrix_values_envelope_path)))
+  testthat::expect_true(isTRUE(triomics_validate_envelope(receipt_envelope_path)))
 
   calibration <- m4_005b_read_json(file.path(run$output, "calibration.json"))
   acceptance <- m4_005b_read_json(file.path(run$output, "acceptance-record.json"))

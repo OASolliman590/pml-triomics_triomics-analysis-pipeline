@@ -641,7 +641,7 @@ triomics_execute_clinical_associations <- function(config_path, output) {
   clinical <- triomics_ingest_clinical(config, config_path, ingested$sample_registry)
   bundle <- triomics_b08_fixture_bundle(clinical)
   fit <- triomics_associate_endpoints(bundle, clinical, triomics_b08_cli_spec(config))
-  exported <- triomics_clinical_association_export(fit)
+  exported <- c(list(schema_version = "2.0"), triomics_clinical_association_export(fit))
   payload <- file.path(output, "B", "clinical-associations.json")
   triomics_write_json_atomic(exported, payload)
   inputs <- list(

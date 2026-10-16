@@ -1174,7 +1174,12 @@ triomics_b04_execute_fixture <- function(config_path, output) {
       key = "design"
     )
   }
-  list(status = fit$status, payload_path = payload_path, limma_version = fit$limma_version)
+  list(
+    status = fit$status,
+    payload_path = payload_path,
+    limma_version = fit$limma_version,
+    resolved_matrices = list(block_1 = resolved$blocks$block_1$assay)
+  )
 }
 
 triomics_b04_dispatch_fit <- function(original, parent) {
