@@ -33,15 +33,41 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_009_sol_review",
+      "role": "fresh_sol_complete_diff_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "snapshot_commit": "5df2043",
+      "base_commit": "c876059"
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_009_candidate_ready_for_fresh_sol_review",
+    "status": "m4_009_fresh_sol_review_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_009_sol_review",
+        "expected_receipt": "PASS/FAIL complete-diff review with focused verification"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
     "disposition": "B-T08 scientific repair, registration regressions and Sol-owned package registration are integrated. Focused B-T08, B-T09 and Stage B composition tests pass; installed exports and B-T08/B-T09/nonfixture probes pass. Both permitted repair attempts are consumed. A fresh Sol-high complete-diff review is the next gate; B-T08 and B-T07 remain blocked."
   },
   "orchestration_events": [
+    {
+      "event": "m4_009_fresh_sol_review_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_009_sol_review",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "snapshot_commit": "5df2043",
+      "base_commit": "c876059",
+      "scope": "complete scientific, family, registration, source-installed parity, B-T09 coexistence, privacy and counter diff",
+      "allowed_next_transition": "PASS permits complete suite and fresh package check; any P0/P1 blocks B-T08 because both repair attempts are consumed",
+      "disposition": "Reviewer is read-only and cannot accept B-T08 or release B-T07."
+    },
     {
       "event": "m4_009_candidate_green_ready_for_sol_review",
       "date": "2026-10-16",
