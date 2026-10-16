@@ -33,30 +33,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_011_unit_a_sol_review",
-      "role": "sol_high_read_only_unit_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "snapshot_commit": "814964b5f525f2104153777a5580f0a84f917ea4",
-      "candidate_worktree": "/Users/megastore/.codex/worktrees/m4-011-bt07-matrix/PML MultiOmics Analysis Pipeline",
-      "allowlist": []
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_011_unit_a_sol_review_active",
+    "status": "m4_011_unit_a_review_passed_unit_b_pending",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_011_unit_a_sol_review",
-        "expected_receipt": "M4-011 Unit A read-only PASS/FAIL review of candidate 814964b"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Luna completed M4-011 Unit A as candidate 814964b with 103 focused B-T07 expectations passing. Fresh Sol-high read-only review is active; Sol-owned CLI/namespace registration remains pending."
+    "disposition": "Fresh Sol-high review passed Unit A candidate 814964b with no P0/P1/P2 findings. Serial integration and the authorized Sol-owned Unit B registration are the next transition; B-T07 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "m4_011_unit_a_sol_review_passed",
+      "date": "2026-10-16",
+      "reviewer": "/root/m4_011_unit_a_sol_review",
+      "candidate_commit": "814964b5f525f2104153777a5580f0a84f917ea4",
+      "verdict": "pass",
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "tests": {"b_t07_expectations": 103, "failed": 0, "skipped": 0},
+      "review_ref": "docs/implementation/reviews/M4-011-unit-a-sol-review.md",
+      "allowed_next_transition": "serially integrate Unit A and perform the frozen three-file Unit B registration",
+      "disposition": "Same-run identity, public-hash binding, mutation rejection, serialization boundary and exact allowlist all passed; B-T07 remains unaccepted."
+    },
     {
       "event": "m4_011_unit_a_completed_sol_review_dispatched",
       "date": "2026-10-16",
@@ -2032,12 +2029,13 @@
       "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
-      "status": "shared_integration_unit_a_review",
+      "status": "shared_integration_unit_a_review_passed",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
       "repair_candidate_commit": "25415fbe4d88a684133267696024d43683e33f64",
       "shared_unit_a_candidate_commit": "814964b5f525f2104153777a5580f0a84f917ea4",
+      "shared_unit_a_review_ref": "docs/implementation/reviews/M4-011-unit-a-sol-review.md",
       "integration_commits": ["8cf2d38", "4a33f01"],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T07-initial-review.md",
