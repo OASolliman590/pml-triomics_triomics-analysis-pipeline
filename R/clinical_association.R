@@ -213,6 +213,12 @@ triomics_b08_fit_endpoint <- function(endpoint, objective, clinical_view, robust
   result$exclusions <- exclusions
   result$selection <- endpoint$selection
   if (!length(response_values)) return(result)
+  if (length(unique(response_values)) < 2L) {
+    result$estimation_reason <- "constant_response"
+    result$n_subjects <- as.integer(length(response_values))
+    result$n_samples <- result$n_subjects
+    return(result)
+  }
   design <- cbind(intercept = 1, predictor_values)
   names_design <- c("intercept", objective$predictor_ref)
   if (length(covariates)) {
@@ -359,6 +365,14 @@ triomics_associate_endpoints <- function(endpoint_bundle, clinical_view, objecti
   }
   member_ids <- if (family_declared) as.character(unlist(family$member_ids, use.names = FALSE)) else character()
   if (family_declared) {
+    if (anyDuplicated(member_ids)) {
+      triomics_b_abort(
+        "B_FAMILY_UNDECLARED",
+        "Declared family member ids must be unique.",
+        key = "family_ref",
+        remediation = "List each endpoint once in the fixed family."
+      )
+    }
     for (objective in objectives) {
       if (!objective$endpoint_ref %in% member_ids) {
         triomics_b_abort(
