@@ -3,7 +3,7 @@
 - Date: 2026-10-16
 - Trigger: fresh acceptance review of integrated B-T08 found three P1 defects
 - Review: `docs/implementation/reviews/B-T08-acceptance-review.md`
-- Status: corrected after independent Astra-low audit; pending one focused rereview
+- Status: blocked at final package check after both permitted repairs were consumed
 - Counter: B-T08 initial implementation 1; the Luna implementation below consumes
   targeted repair 1 of the packet's existing maximum of 2. Any later
   implementation correction consumes targeted repair 2; there is no uncounted

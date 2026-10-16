@@ -4,8 +4,9 @@ Run `triomics-20260920-sol-01` is active on branch
 `spec/harden-v2-20260920`. G3 is accepted. M4-005 Units A and B plus the bounded
 M4-007/M4-008 reconciliations are integrated and coordinator-verified. The
 required immutable shared M4-005 Astra audit accepted the shared implementation.
-B-T05 and B-T06 are accepted. Fresh B-T08 review exposed three P1 defects;
-M4-009 targeted repair 1 is the next transition. M4 is not yet eligible for G4.
+B-T04, B-T05, B-T06 and B-T09 are accepted. M4-009 repaired B-T08's three P1
+defects and passed focused review, but its final installed-package test gate
+failed after both permitted repairs were consumed. M4 is not eligible for G4.
 
 G0 and G1 remain accepted. G2 is accepted on immutable milestone snapshot
 `8b0754c1ea581ba18c4bb2e7eb862c26eeb625a7` after its one permitted focused
@@ -62,11 +63,20 @@ Fresh M4-005B/M4-007/M4-008 evidence on 2026-10-16:
   regression assertions, 13 cross-cutting CLI probes, source/installed fixture
   execution, schema checks and package check. Unsupported real-study
   longitudinal objectives fail closed until eligible inputs exist.
-- B-T08 remains blocked despite 139 passing legacy assertions: constant response
-  and duplicate-family negative cases fail, and installed exports/CLI dispatch
-  are missing. M4-009 defines targeted repair 1.
+- B-T08's scientific and registration defects are repaired: constant responses
+  fail closed, duplicate families abort, valid mixed-family members retain q,
+  six APIs are exported, B-T08 dispatch is fixture-restricted, B-T09 stays
+  separate and nonfixture requests refuse. Fresh Sol review passed with no
+  findings; the complete local suite passed 3,298 assertions.
+- B-T08 remains blocked because clean-archive `R CMD check` returned
+  `Status: 1 ERROR`: three new CLI tests assume a source-tree
+  `inst/examples/tickets` path that is absent in installed-package tests. The
+  installed suite reached 3,204 passing assertions before those three setup
+  errors. Both permitted B-T08 repairs are consumed, so no further code change
+  or Astra rereview is authorized in this run. Gate receipt:
+  `reviews/M4-009-package-check-gate.md`.
 - B-T07 is unstarted because B-T08 is not accepted. G4, all C and all D remain
-  unreleased.
+  unreleased. No run-owned agent is active.
 - The final blocked-cycle Astra audit passed after correcting B-T07's stale
   dependency reason. Review: `reviews/M4-final-cycle-astra-audit.md`. Neither
   blocked candidate is integrated.
@@ -85,11 +95,15 @@ Read root `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `reviews/M3-astra-review.md`, `milestones/M4.md`, `reviews/B-T04-review.md`, and
 `reviews/B-T09-review.md`, then M4-003/M4-004, M4-005 and their audit receipts.
 Verify HEAD and dirty state. Do not repeat accepted G2/G3/B-T04/B-T09 work or
-the completed M4-005/M4-006/M4-007/M4-008 implementation/review cycles. Resume
-by auditing `change-records/M4-009-b-t08-acceptance-repair.md` with fresh Astra
-low. On PASS, execute its Luna/Sol bounded repair, fresh Sol review, complete
-verification and focused M4-005 Astra rereview. Dispatch B-T07 only after B-T08
-is accepted. Preserve B-T04 controls and keep private inputs outside agents/Git.
+the completed M4-005/M4-006/M4-007/M4-008 cycles, and do not rerun M4-009's
+completed scientific repair or Sol review. Read
+`reviews/M4-009-package-check-gate.md`. **Resume only after Omar explicitly
+decides whether to amend the two-repair ceiling for the single installed-test
+path/context defect.** If he authorizes that exception, first write and audit a
+bounded change record before modifying `tests/testthat/test-B-T08.R`; then run
+the complete suite, a clean-archive package check and the focused M4-005 Astra
+rereview. Dispatch B-T07 only after B-T08 is accepted. Preserve B-T04 controls
+and keep private inputs outside agents/Git.
 
 ## Orchestration correction
 

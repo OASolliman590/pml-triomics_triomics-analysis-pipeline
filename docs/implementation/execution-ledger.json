@@ -35,13 +35,25 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m4_009_sol_review_passed_full_verification_active",
+    "status": "blocked_m4_009_package_check_repair_exhausted",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The fresh Sol-high complete-diff review passed with no findings after 407 focused assertions and source/installed route probes. Complete-suite and fresh package-check verification is active. B-T08 and B-T07 remain blocked pending that gate and the focused M4-005 Astra rereview."
+    "disposition": "The complete local suite passed 3,298 assertions, but the clean-archive package check failed with three installed-context errors in the new B-T08 CLI test helper. Both B-T08 repairs are consumed, so no further code change or Astra rereview is authorized. B-T08, B-T07 and all C/D work are blocked."
   },
   "orchestration_events": [
+    {
+      "event": "m4_009_package_check_failed_repair_allowance_exhausted",
+      "date": "2026-10-16",
+      "candidate_tip": "ed94035",
+      "full_suite": {"passed": 3298, "failed": 0, "warned": 0, "skipped": 0},
+      "clean_archive_package_check": {"status": "1 ERROR", "installed_passed": 3204, "installed_errors": 3, "installed_warnings": 3, "installed_skipped": 0},
+      "failure_class": "tests/testthat/test-B-T08.R assumes a source-tree inst/examples/tickets path during installed-package tests",
+      "review_ref": "docs/implementation/reviews/M4-009-package-check-gate.md",
+      "repairs_consumed": 2,
+      "allowed_next_transition": "none in this run; resume only after explicit user authority changes the repair ceiling for this installed-test harness defect",
+      "disposition": "Production-focused and direct source/installed probes passed, but the mandatory package gate did not. B-T08 is blocked; B-T07 and all C/D work remain dependency-illegal."
+    },
     {
       "event": "m4_009_fresh_sol_review_passed_full_verification_started",
       "date": "2026-10-16",
@@ -1811,7 +1823,7 @@
       "blockers": []
     },
     "B-T08": {
-      "status": "sol_review_pending",
+      "status": "blocked_package_check_repair_exhausted",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "bded42a",
@@ -1822,12 +1834,11 @@
         "docs/implementation/reviews/M4-009-sol-review.md"
       ],
       "blockers": [
-        "AC2: a constant continuous response is labelled estimated with zero uncertainty and non-finite p rather than failed constant_response.",
-        "AC3: duplicate fixed-family member ids are fitted twice and inflate family counts rather than fail closed.",
-        "Registration: all six requested exports and explicit installed Stage B clinical-association dispatch are absent."
+        "Mandatory clean-archive package check fails in three installed-context B-T08 CLI tests because b08_copy_ticket_examples assumes a source-tree inst/examples/tickets path; both permitted repairs are consumed."
       ],
       "integration_commit": "9cd36fe",
-      "change_record_ref": "docs/implementation/change-records/M4-009-b-t08-acceptance-repair.md"
+      "change_record_ref": "docs/implementation/change-records/M4-009-b-t08-acceptance-repair.md",
+      "package_gate_ref": "docs/implementation/reviews/M4-009-package-check-gate.md"
     },
     "B-T09": {
       "status": "accepted",
@@ -1848,7 +1859,7 @@
       "commit": null,
       "acceptance_refs": [],
       "blockers": [
-        "B-T08 is merged and fixture-tested but lacks an accepted disposition and acceptance reference; B-T07 remains dependency-illegal until that evidence reconciliation passes."
+        "B-T08 is blocked at its mandatory installed-package test gate after both repairs were consumed; B-T07 remains dependency-illegal."
       ]
     },
     "C-01": {
