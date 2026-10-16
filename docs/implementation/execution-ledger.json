@@ -35,30 +35,41 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/m4_010_bt08_luna",
-      "role": "luna_bounded_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "snapshot_commit": "f1e9f00",
+      "agent_name": "/root/m4_010_sol_review",
+      "role": "sol_high_task_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "snapshot_commit": "91d7d3b83f57684e2a01b3f548e01fee4cfcb97b",
       "worktree": "/Users/megastore/.codex/worktrees/m4-010-bt08-test-path/PML MultiOmics Analysis Pipeline",
       "allowlist": [
-        "tests/testthat/test-B-T08.R"
+        "read_only_review"
       ]
     }
   ],
   "orchestration_control": {
-    "status": "m4_010_b_t08_test_exception_active",
+    "status": "m4_010_b_t08_sol_review_active",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [
       {
-        "agent_name": "/root/m4_010_bt08_luna",
-        "expected_receipt": "installed-context RED, bounded one-file commit, focused source/installed GREEN evidence and self-review report"
+        "agent_name": "/root/m4_010_sol_review",
+        "expected_receipt": "spec-compliance and code-quality verdict on candidate 91d7d3b with P0/P1/P2 counts and next transition"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Luna-max worker /root/m4_010_bt08_luna is active in a managed isolated worktree on the approved one-file test-harness exception. No scientific, production or shared registration change is authorized."
+    "disposition": "Luna candidate 91d7d3b changed only tests/testthat/test-B-T08.R and reports installed RED plus source/installed GREEN. Fresh Sol 6.1 high review is active before any integration."
   },
   "orchestration_events": [
+    {
+      "event": "m4_010_luna_candidate_completed_sol_review_dispatched",
+      "date": "2026-10-16",
+      "implementer": "/root/m4_010_bt08_luna",
+      "reviewer": "/root/m4_010_sol_review",
+      "candidate_commit": "91d7d3b83f57684e2a01b3f548e01fee4cfcb97b",
+      "changed_files": ["tests/testthat/test-B-T08.R"],
+      "worker_evidence": {"red": "3 errors and 3 file-open warnings in installed context", "green": "source and installed B-T08 tests completed with no failure, warning or skip"},
+      "allowed_next_transition": "integrate serially only if the fresh Sol-high review passes; otherwise no further correction is automatically authorized",
+      "disposition": "Coordinator inspected the clean one-file commit and report, confirmed the allowlist, and dispatched the mandatory fresh review."
+    },
     {
       "event": "m4_010_luna_worker_dispatched",
       "date": "2026-10-16",
