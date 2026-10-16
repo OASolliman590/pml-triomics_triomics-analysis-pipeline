@@ -225,7 +225,7 @@ b08_one <- function(fit, endpoint_id = "synthetic_score") {
 
 b08_copy_ticket_examples <- function(destination) {
   package_root <- normalizePath(testthat::test_path("..", ".."), winslash = "/", mustWork = TRUE)
-  source_root <- file.path(package_root, "inst", "examples", "tickets")
+  source_root <- triomics_test_resource("examples", "tickets")
   paths <- list.files(source_root, recursive = TRUE, all.files = TRUE,
                       full.names = FALSE, include.dirs = FALSE)
   for (path in paths) {
@@ -244,8 +244,14 @@ b08_copy_ticket_examples <- function(destination) {
       if (is.null(reference) || !nzchar(reference) || grepl("^/", reference)) next
       input <- normalizePath(file.path(dirname(config_path), reference),
                              winslash = "/", mustWork = FALSE)
-      if (!file.exists(input) || !startsWith(input, paste0(package_root, "/"))) next
-      relative <- substring(input, nchar(package_root) + 2L)
+      if (file.exists(input) && startsWith(input, paste0(package_root, "/"))) {
+        relative <- substring(input, nchar(package_root) + 2L)
+      } else if (grepl("^\\.\\./\\.\\./\\.\\./discovery/spec-v2/examples/independent/[^/]+$", reference)) {
+        input <- triomics_test_resource("examples", "data", "independent", basename(reference))
+        relative <- file.path("discovery", "spec-v2", "examples", "independent", basename(reference))
+      } else {
+        next
+      }
       target <- file.path(destination, relative)
       dir.create(dirname(target), recursive = TRUE, showWarnings = FALSE)
       testthat::expect_true(file.copy(input, target, overwrite = TRUE))
@@ -279,24 +285,40 @@ b08_rebase_clinical_inputs <- function(config_path, destination) {
 
 b08_run_source_cli <- function(config_path, output_path) {
   root <- normalizePath(testthat::test_path("..", ".."), winslash = "/", mustWork = TRUE)
-  previous_wd <- getwd()
-  setwd(root)
-  on.exit(setwd(previous_wd), add = TRUE)
-  profile <- file.path(dirname(config_path), "b08-source-profile.R")
-  writeLines(c(
-    "pkgload::load_all(Sys.getenv('B08_TEST_ROOT'), quiet = TRUE)",
-    "setwd(Sys.getenv('B08_TEST_ROOT'))"
-  ), profile)
-  script_path <- file.path("inst", "exec", "triomics")
-  output <- suppressWarnings(system2(
-    file.path(R.home("bin"), "Rscript"),
-    args = c("--no-site-file", "--no-environ", "--no-restore", "--no-save", shQuote(script_path),
-             "--config", shQuote(config_path), "--stage", "B", "--output", shQuote(output_path)),
-    env = c(paste0("B08_TEST_ROOT=", shQuote(root)),
-            paste0("R_PROFILE_USER=", shQuote(profile))),
-    stdout = TRUE,
-    stderr = TRUE
-  ))
+  cli_args <- c("--config", shQuote(config_path), "--stage", "B", "--output", shQuote(output_path))
+  if (dir.exists(file.path(root, "R")) && file.exists(file.path(root, "inst", "exec", "triomics"))) {
+    previous_wd <- getwd()
+    setwd(root)
+    on.exit(setwd(previous_wd), add = TRUE)
+    profile <- file.path(dirname(config_path), "b08-source-profile.R")
+    writeLines(c(
+      "pkgload::load_all(Sys.getenv('B08_TEST_ROOT'), quiet = TRUE)",
+      "setwd(Sys.getenv('B08_TEST_ROOT'))"
+    ), profile)
+    output <- suppressWarnings(system2(
+      file.path(R.home("bin"), "Rscript"),
+      args = c("--no-site-file", "--no-environ", "--no-restore", "--no-save",
+               shQuote(file.path("inst", "exec", "triomics")), cli_args),
+      env = c(paste0("B08_TEST_ROOT=", shQuote(root)),
+              paste0("R_PROFILE_USER=", shQuote(profile))),
+      stdout = TRUE,
+      stderr = TRUE
+    ))
+  } else {
+    runner <- file.path(dirname(config_path), "b08-installed-cli.R")
+    writeLines(c(
+      "status <- triomics:::triomics_main(commandArgs(trailingOnly = TRUE))",
+      "quit(save = \"no\", status = as.integer(status))"
+    ), runner)
+    output <- suppressWarnings(system2(
+      file.path(R.home("bin"), "Rscript"),
+      args = c("--no-site-file", "--no-environ", "--no-init-file", "--no-restore", "--no-save",
+               shQuote(runner), cli_args),
+      env = paste0("R_LIBS=", shQuote(paste(.libPaths(), collapse = .Platform$path.sep))),
+      stdout = TRUE,
+      stderr = TRUE
+    ))
+  }
   status <- attr(output, "status")
   if (is.null(status)) status <- 0L
   list(status = as.integer(status), output = output)
