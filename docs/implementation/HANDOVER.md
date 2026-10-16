@@ -52,10 +52,11 @@ Fresh Sol-6.1 high review passed with P0/P1/P2 zero, and the candidate was
 serially integrated as `01c5e49`. Fresh source verification then exposed a
 path-with-spaces defect in the newly changed source CLI helper: Rscript receives
 the absolute script argument with spaces transformed to `~+~`, so four source
-CLI smokes fail before dispatch. The same Luna worker is active on one test-only
-targeted correction. Its next transition is one focused Sol-high re-review if
-source and installed parity pass. Older completed managed worktrees remain
-archived.
+CLI smokes failed before dispatch. Luna repair `74335d1` changed only the test
+helper and passed 124 expectations from a spaced checkout, the integration
+snapshot and an installed package, with zero failures or skips. Fresh reviewer
+`/root/m4_014_repair1_sol_rereview` is active for the one allowed focused
+re-review. Older completed managed worktrees remain archived.
 The user-owned `.gitignore`, AppleDouble files and `.superpowers/`
 remain untouched.
 

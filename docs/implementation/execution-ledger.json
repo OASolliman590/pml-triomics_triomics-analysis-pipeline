@@ -35,28 +35,40 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/m4_014_bt07_luna",
-      "role": "luna_m4_014_targeted_source_path_repair",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent_name": "/root/m4_014_repair1_sol_rereview",
+      "role": "sol_high_m4_014_focused_rereviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "candidate_base": "4acbd71f9def1dc7d0310477b133fc670530f74d",
       "worktree": "/Users/megastore/.codex/worktrees/m4-014-bt07-package/PML MultiOmics Analysis Pipeline",
-      "allowlist": ["tests/testthat/test-B-T07.R"]
+      "repair_commit": "74335d16e732dcaa840ed077f619fb8261d613cc",
+      "mode": "read_only"
     }
   ],
   "orchestration_control": {
-    "status": "m4_014_targeted_source_path_repair_active",
+    "status": "m4_014_targeted_source_path_rereview_active",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [
       {
-        "agent_name": "/root/m4_014_bt07_luna",
-        "expected_receipt": "single-file source path-with-spaces RED/GREEN repair commit and source/installed parity evidence"
+        "agent_name": "/root/m4_014_repair1_sol_rereview",
+        "expected_receipt": "focused ADDRESSED/NOT ADDRESSED verdict over the one-file path-with-spaces repair"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh integrated verification found that the new source CLI helper fails when the checkout path contains spaces because Rscript receives a transformed absolute script path. The same Luna worker is applying one exact-scope, test-only correction; scientific assertions and exporter code are frozen."
+    "disposition": "Luna repair 74335d1 passed the B-T07 suite from a spaced checkout, the integration snapshot and an installed package: 124 expectations each, zero failures or skips. One fresh Sol-6.1 high focused re-review is active before integration."
   },
   "orchestration_events": [
+    {
+      "event": "m4_014_source_path_repair_completed_focused_rereview_dispatched",
+      "date": "2026-10-16",
+      "implementer": "/root/m4_014_bt07_luna",
+      "reviewer": "/root/m4_014_repair1_sol_rereview",
+      "repair_commit": "74335d16e732dcaa840ed077f619fb8261d613cc",
+      "changed_files": ["tests/testthat/test-B-T07.R"],
+      "tests": {"spaced_source_expectations": 124, "integration_snapshot_expectations": 124, "installed_expectations": 124, "failed": 0, "skipped": 0, "known_git_metadata_warnings_per_run": 8},
+      "allowed_next_transition": "serially integrate 74335d1 only if the focused Sol-high re-review marks the finding ADDRESSED with no new P0/P1; otherwise block M4-014",
+      "disposition": "Repair restores the prior basename-from-executable-directory source invocation pattern; production and scientific code remain unchanged."
+    },
     {
       "event": "m4_014_integrated_source_red_targeted_repair_dispatched",
       "date": "2026-10-16",
