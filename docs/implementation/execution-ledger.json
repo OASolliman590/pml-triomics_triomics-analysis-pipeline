@@ -33,15 +33,42 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_010_bt08_luna",
+      "role": "luna_bounded_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "snapshot_commit": "f1e9f00",
+      "worktree": "/Users/megastore/.codex/worktrees/m4-010-bt08-test-path/PML MultiOmics Analysis Pipeline",
+      "allowlist": [
+        "tests/testthat/test-B-T08.R"
+      ]
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_010_exception_scope_approved_worker_dispatch_next",
+    "status": "m4_010_b_t08_test_exception_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_010_bt08_luna",
+        "expected_receipt": "installed-context RED, bounded one-file commit, focused source/installed GREEN evidence and self-review report"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-010's one focused Astra rereview passed with P0/P1/P2 zero. One fresh Luna-max worker may now implement the approved test-only exception in an isolated worktree; no scientific or production change is authorized."
+    "disposition": "Fresh Luna-max worker /root/m4_010_bt08_luna is active in a managed isolated worktree on the approved one-file test-harness exception. No scientific, production or shared registration change is authorized."
   },
   "orchestration_events": [
+    {
+      "event": "m4_010_luna_worker_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_010_bt08_luna",
+      "snapshot_commit": "f1e9f00",
+      "worktree": "/Users/megastore/.codex/worktrees/m4-010-bt08-test-path/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["tests/testthat/test-B-T08.R"],
+      "allowed_next_transition": "inspect the worker commit and dispatch a fresh Sol-high task review if the allowlist and evidence are complete",
+      "disposition": "One fresh Luna-max worker owns the single bounded exception; Sol retains integration, ledger and acceptance authority."
+    },
     {
       "event": "m4_010_focused_astra_rereview_passed",
       "date": "2026-10-16",
