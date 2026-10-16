@@ -33,15 +33,38 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_014_package_gate_astra",
+      "role": "astra_low_read_only_package_gate_adjudicator",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "snapshot_commit": "bd7da66ba58bbce571e90ab1ca76017c8e269d78",
+      "allowlist": []
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_013_review_passed_integration_pending",
+    "status": "m4_013_package_gate_failed_astra_adjudication_pending",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_014_package_gate_astra",
+        "expected_receipt": "read-only classification of the B-T07 exhausted-budget package-gate defects and required authority"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Sol-high review passed M4-013 candidate 57474e7 with no P0/P1/P2 findings. Serial integration and full-suite/package gates are next; B-T07 remains unaccepted."
+    "disposition": "M4-013 is integrated and the complete local suite is green. Clean-archive package check failed on B-T07 installed paths plus ASCII/namespace/manual hygiene. Astra-low adjudication is pending because B-T07 repair budget is exhausted."
   },
   "orchestration_events": [
+    {
+      "event": "m4_013_integrated_package_gate_failed_astra_dispatched",
+      "date": "2026-10-16",
+      "integration_commit": "bd7da66ba58bbce571e90ab1ca76017c8e269d78",
+      "package_gate_ref": "docs/implementation/reviews/M4-013-package-check-gate.md",
+      "package_status": {"errors": 1, "warnings": 2, "notes": 1, "installed_test_failures": 15, "installed_test_passes": 3403},
+      "allowed_next_transition": "record Astra authority classification; do not edit B-T07 beyond exhausted budget without a valid exception",
+      "disposition": "Local suite passed. Package gate remains mandatory and failed on installed-path plus package-hygiene defects."
+    },
     {
       "event": "m4_013_shared_composition_sol_review_passed",
       "date": "2026-10-16",
