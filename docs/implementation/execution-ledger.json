@@ -46,19 +46,29 @@
     }
   ],
   "orchestration_control": {
-    "status": "m4_008_luna_repair_active",
+    "status": "m4_008_targeted_repair_1_active",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [
       {
         "agent_name": "/root/m4_008_luna_repair",
         "unit": "M4-008 package-context test repair",
-        "expected_return": "one-file commit preserving local source idempotence and adding non-skipped built-package execution support"
+        "expected_return": "one-file targeted repair that makes the installed branch execute every Stage B global helper and assert B-T02 through B-T06 plus the B-T04 stage hook before the second-call identity check"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Astra-low audit passed M4-008. Luna-max is repairing only the composition test harness; Sol committed the audited one-line .Rbuildignore exclusion as a658c1e. Full-suite, package, parity, review and shared-Astra gates remain mandatory."
+    "disposition": "Initial Luna commit bf11f1a made package check green but its installed idempotence branch copied only the top-level installer and targets, leaving helper lookups absent and testing a no-op. M4-008 targeted repair 1 is active to mirror actual helpers and assert every Stage B marker; this consumes the sole repair allowance."
   },
   "orchestration_events": [
+    {
+      "event": "m4_008_targeted_repair_1_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_008_luna_repair",
+      "initial_commit": "bf11f1aa9a65bf62155b2f6b7432d5ca0a756753",
+      "finding": "the installed branch copied only the central installer and two target functions, so every helper lookup returned absent and the test proved no-op idempotence",
+      "repair_scope": "tests/testthat/test-M4-005-stage-b-composition.R only; mirror function-valued namespace objects and assert all B-T02 through B-T06 dispatch markers plus the B-T04 stage hook before repeat-call identity",
+      "allowed_next_transition": "inspect the targeted repair, rerun focused local and built-package GREEN, then dispatch the sole fresh Sol-high complete-diff review if clean",
+      "disposition": "This consumes M4-008's one targeted repair. No further unresolved implementation change is authorized under M4-008."
+    },
     {
       "event": "m4_008_luna_repair_dispatched_sol_build_exclusion_committed",
       "date": "2026-10-16",
