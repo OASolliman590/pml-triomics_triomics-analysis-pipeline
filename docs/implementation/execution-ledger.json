@@ -35,13 +35,24 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m4_010_integrated_full_verification_active",
+    "status": "m4_010_verification_green_astra_rereview_next",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Sol 6.1 high review passed candidate 91d7d3b with no findings. The one-file test-harness correction is integrated as 92760cb; Sol is running the complete suite and clean-archive package gate before Astra rereview."
+    "disposition": "Integrated M4-010 passed the complete local suite and a clean-archive package check with Status: OK. The required focused immutable M4-005 Astra rereview is the final gate before B-T08 acceptance and B-T07 release."
   },
   "orchestration_events": [
+    {
+      "event": "m4_010_full_suite_and_clean_package_check_passed",
+      "date": "2026-10-16",
+      "integration_commit": "92760cb",
+      "full_suite": {"status": "pass", "failed": 0, "warned": 0, "skipped": 0, "acceptance_assertions_unchanged": 3298},
+      "clean_archive_package_check": {"status": "OK", "exit_code": 0, "required_skips": 0, "root": "/private/tmp/triomics-m4-010-archive-check.pF5pJH"},
+      "log_hashes": {"build_log_sha256": "db9433898016400b9a61f29d1bced54429ba53f3ad80f820674b6af6a87aa5d9", "check_log_sha256": "cb44e185db191cc73ec7185d2aa7bf99280192488aa25261cfc1fe5e6045f2f9"},
+      "review_ref": "docs/implementation/reviews/M4-010-integration-verification.md",
+      "allowed_next_transition": "dispatch the required focused M4-005 Astra rereview on an immutable integrated snapshot",
+      "disposition": "The formerly failing installed context is green; B-T08 and B-T07 remain gated until Astra reviews the immutable integrated snapshot."
+    },
     {
       "event": "m4_010_sol_review_passed_candidate_integrated",
       "date": "2026-10-16",
