@@ -19,8 +19,9 @@ biological validation. None of the three private studies was read or fitted.
 B-T04’s ordinary 23/400 diagnostic remains failed; only its frozen
 production-aligned route passed calibration.
 
-**Next:** One fresh Astra audit must accept the immutable combined M4-005
-snapshot. Then B-T05/B-T06 can be accepted and B-T07 can start automatically.
+**Next:** The shared Astra audit accepted B-T05/B-T06 but found that B-T08 was
+never given a formal acceptance receipt. A fresh evidence-only review must close
+that ledger gap before B-T07 starts.
 
 **Needs Omar:** Nothing now.
 
@@ -34,7 +35,7 @@ Integrated tip before documentation receipt: `f83aeda`. Verification:
 `docs/implementation/reviews/M4-005B-integration-verification.md`.
 
 Literal restart: read `AGENTS.md`, the spec-v2 README, execution ledger and
-handover; verify HEAD/dirty state; dispatch the shared M4-005 Astra audit. Keep
+handover; verify HEAD/dirty state; obtain the fresh B-T08 acceptance review. Keep
 the existing user `.gitignore` modification untouched.
 
 </details>

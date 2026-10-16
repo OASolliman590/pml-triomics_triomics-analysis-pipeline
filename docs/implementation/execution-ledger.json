@@ -33,30 +33,28 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_005_shared_astra_audit",
-      "role": "astra_read_only_auditor",
-      "packet": "M4-005-shared-integration",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "snapshot_commit": "98a8c8c"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_005_shared_integration_astra_audit_active",
+    "status": "b_t08_acceptance_reconciliation_required",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_005_shared_astra_audit",
-        "unit": "M4-005 immutable shared-integration audit",
-        "expected_return": "read-only verdict on result-boundary semantics, ordered dispatch, frozen B-T04 controls, B-T05/B-T06 acceptance and B-T07 dependency release"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-005B, M4-007 and M4-008 are serially integrated and fully verified. The single fresh Astra-low shared-integration audit is active on immutable snapshot 98a8c8c. B-T05/B-T06 and B-T07 remain blocked until Sol accepts its verdict."
+    "disposition": "Astra passed the shared M4-005 implementation with no production finding and authorized B-T05/B-T06 acceptance. Its P1 found B-T08 still only Sol-verified with no acceptance receipt; B-T07 remains blocked until a fresh evidence-backed B-T08 acceptance review is reconciled."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005_shared_astra_audit_disposition_b_t05_b_t06_accepted_b_t08_reconciliation_required",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_005_shared_astra_audit",
+      "snapshot_commit": "98a8c8c",
+      "shared_implementation_verdict": "pass",
+      "findings": {"p0": 0, "p1": 1, "p2": 0},
+      "p1": "B-T08 remained sol_verified with no acceptance references and a stale blocker, so B-T07 was not dependency-legal",
+      "review_ref": "docs/implementation/reviews/M4-005-shared-astra-audit.md",
+      "accepted_packets": ["B-T05", "B-T06"],
+      "allowed_next_transition": "obtain a fresh evidence-only Sol-high B-T08 review; release B-T07 only after B-T08 has an accepted disposition",
+      "disposition": "The shared implementation is accepted and no focused M4-005 rereview is required unless the B-T08 reconciliation changes shared code. This is not G4."
+    },
     {
       "event": "m4_005_shared_integration_astra_audit_dispatched",
       "date": "2026-10-16",
@@ -1656,28 +1654,38 @@
       "blockers": []
     },
     "B-T05": {
-      "status": "blocked",
+      "status": "accepted",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
       "repair_candidate_commit": "efd830884b894d79441af5a948fa3b600ff8e4db",
       "final_repair_candidate_commit": "b6d397072db09b67b765e9e6cf0e2454798f2d12",
-      "acceptance_refs": [],
-      "blockers": [
-        "AC4 remains unmet after final repair 2 and its one-time review: shared Stage B serialization drops requested/actual method, named DEqMS unavailability and explicit fallback provenance, while the artifact contract rejects fallback_complete/fallback_partial. No further repair or review is authorized under M4-003."
-      ]
+      "acceptance_refs": [
+        "docs/implementation/reviews/M4-005A-sol-review.md",
+        "docs/implementation/reviews/M4-005A-focused-rereview.md",
+        "docs/implementation/reviews/M4-005A-registration-review.md",
+        "docs/implementation/reviews/M4-005B-integration-verification.md",
+        "docs/implementation/reviews/M4-005-shared-astra-audit.md"
+      ],
+      "integration_commits": ["09d33f6", "03b9ab0", "45eb7e5", "cc21eb5", "d76e564", "053d8ae"],
+      "blockers": []
     },
     "B-T06": {
-      "status": "blocked",
+      "status": "accepted",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
       "repair_candidate_commit": "9b85bbd616a797c03f133fb43a5f0cce1260bb7d",
       "final_repair_candidate_commit": "086d604de8ba481e437d3c9109a1780839104810",
-      "acceptance_refs": [],
-      "blockers": [
-        "The M4-004 scale repair passes, but final repair 2 cannot integrate because the restored B-T06 startup wrapper removes B-T04's integrated fit dispatch and stage hook. No further repair or review is authorized under M4-004."
-      ]
+      "acceptance_refs": [
+        "docs/implementation/reviews/B-T06-final-repair-review.md",
+        "docs/implementation/reviews/M4-005B-integration-verification.md",
+        "docs/implementation/reviews/M4-007-astra-audit.md",
+        "docs/implementation/reviews/M4-007-sol-review.md",
+        "docs/implementation/reviews/M4-005-shared-astra-audit.md"
+      ],
+      "integration_commits": ["f486232", "053d8ae", "d76bc1e", "8ef8c9b"],
+      "blockers": []
     },
     "B-T08": {
       "status": "sol_verified",
@@ -1708,7 +1716,7 @@
       "commit": null,
       "acceptance_refs": [],
       "blockers": [
-        "B-T05 and B-T06 are blocked and unintegrated, so B-T07 is not dependency-legal."
+        "B-T08 is merged and fixture-tested but lacks an accepted disposition and acceptance reference; B-T07 remains dependency-illegal until that evidence reconciliation passes."
       ]
     },
     "C-01": {
@@ -1903,7 +1911,7 @@
       "review_ref": null,
       "commit": "af69a9e",
       "milestone_ref": "docs/implementation/milestones/M4.md",
-      "blocking_packets": ["B-T05", "B-T06"]
+      "blocking_packets": ["B-T08", "B-T07"]
     },
     "M5": {
       "status": "not_started",
