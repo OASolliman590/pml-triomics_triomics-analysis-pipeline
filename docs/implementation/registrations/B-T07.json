@@ -1,0 +1,122 @@
+{
+  "packet_id": "B-T07",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": [
+      "triomics_b07_export_handoff",
+      "triomics_b07_cli_after_stage_b"
+    ]
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml",
+      "limma"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ],
+    "changes_requested": false
+  },
+  "stage_registry": {
+    "A": {
+      "validation_only": true,
+      "execution": true
+    },
+    "B": {
+      "validation_only": false,
+      "execution": true
+    },
+    "C": {
+      "validation_only": false,
+      "execution": false
+    },
+    "D": {
+      "validation_only": false,
+      "execution": false
+    },
+    "report": {
+      "validation_only": false,
+      "execution": false
+    },
+    "all": {
+      "validation_only": false,
+      "execution": false
+    }
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "owned_functions": [
+    "triomics_b07_export_handoff",
+    "triomics_b07_cli_after_stage_b",
+    "triomics_b07_claim_entries",
+    "triomics_b07_family_ledger",
+    "triomics_b07_nominations",
+    "triomics_b07_matrix_hash",
+    "triomics_b07_matrix_bindings",
+    "triomics_b07_cache_key",
+    "triomics_b07_resume_candidate",
+    "triomics_b07_resume_decision",
+    "triomics_b07_reproduction_text"
+  ],
+  "namespace_edits": false,
+  "post_b_hook": {
+    "owner": "Sol",
+    "file": "R/cli.R",
+    "entrypoint": "triomics_b07_cli_after_stage_b(args, stage_b_result)",
+    "ordering": "After a successful non-validation Stage B run and after the registered B-T09 and B-T08 output hooks, so the B-T07 bundle can verify all requested clinical artifacts.",
+    "current_blocker": "R/cli.R currently discards the return value of triomics_execute_stage_b() and has no B-T07 post-B hook. The Stage B return object does not expose the resolved matrices. Consequently the exact B-T07 --stage B CLI command currently writes block-results.json only and cannot create a verified matrix handoff or reproduction record."
+  },
+  "matrix_provenance": {
+    "required_in_memory_field": "stage_b_result$resolved_matrices",
+    "source_object": "The exact numeric keyed assay matrices in resolved$blocks[[block_id]]$assay inside triomics_execute_stage_b(), after triomics_resolve_analysis() and from the same fit run.",
+    "hash_function": "triomics_b_assay_hash(block_id, assay) in R/design_core.R",
+    "result_hashes": "Preserve model_hash and representation_hash from the public Stage B result rows; do not inspect limma or other private/native fit objects.",
+    "forbidden_substitutes": [
+      "Re-ingesting or re-resolving input files after Stage B",
+      "Reconstructing a matrix from result rows or a config file",
+      "Inventing or synthesizing missing representation matrices",
+      "Hashing an unkeyed matrix or dropping failed/unavailable feature rows"
+    ]
+  },
+  "integration_changes_requested": [
+    "In R/results_b.R, retain the same-run resolved matrices in the in-memory result as a named resolved_matrices list, without serializing native model objects or changing the public Stage B result artifact.",
+    "In R/cli.R, assign the return value of triomics_execute_stage_b(), run the accepted B-T09 and B-T08 hooks, then call triomics_b07_cli_after_stage_b(args, stage_b_result).",
+    "Export the two packet-owned entrypoints from NAMESPACE. Keep R/stage_registry.R, DESCRIPTION, the configuration schema, and renv.lock unchanged; no new dependency or stage is requested."
+  ],
+  "fixture": {
+    "path": "inst/examples/tickets/B-T07.yaml",
+    "data_class": "synthetic",
+    "enabled_request": "One supported independent Stage B analysis on public synthetic inputs only.",
+    "clinical": false,
+    "target_investigation": false,
+    "disabled_stages": [
+      "C",
+      "D",
+      "report",
+      "all"
+    ]
+  },
+  "acceptance_blockers": [
+    {
+      "criterion": "B-T07-AC3",
+      "status": "blocked_pending_Sol_hook",
+      "evidence": "The packet cannot prove that a matrix passed to Stage C is the same resolved object used by the B fit until the runner returns that object through the shared post-B hook. Packet tests validate the handoff/hash API and changed-hash refusal using public synthetic inputs only."
+    },
+    {
+      "criterion": "B-T07-CLI",
+      "status": "blocked_pending_Sol_hook",
+      "evidence": "The exact B-T07 CLI command has no registered call to triomics_b07_cli_after_stage_b(). The current CLI only writes the Stage B block-results artifact (plus registered predecessor outputs where applicable)."
+    }
+  ],
+  "request": "Sol owns NAMESPACE, R/cli.R, R/results_b.R, R/stage_registry.R, DESCRIPTION, shared schemas, manuals and renv.lock. After a successful non-validation Stage B execution and the accepted B-T09/B-T08 output hooks, call triomics_b07_cli_after_stage_b(args, stage_b_result) using the unchanged config/output arguments. Pass resolved_matrices only from resolved$blocks[[block_id]]$assay retained by that same triomics_execute_stage_b() fit run. Its exact public hash is triomics_b_assay_hash(block_id, assay); retain model_hash and representation_hash from public Stage B result rows. Do not re-ingest, refit, reconstruct or synthesize matrices, and do not inspect private/native model objects. The current CLI discards the Stage B return and supplies no resolved matrices, so AC3 and the packet CLI handoff remain blocked until this integration lands and the exact command is rerun. Do not enable stages C, D, report or all; no new dependency or stage registration is requested."
+}
