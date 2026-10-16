@@ -35,13 +35,22 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m4_012_adjudicated_integration_verification_pending",
+    "status": "m4_013_shared_composition_dispatch_pending",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Astra overruled the repair-2 P1 on frozen-contract grounds and classified the stripped optional metadata as a P2 traceability ambiguity at most. Both reviews are retained; candidate integration and complete M4-011 verification are next. B-T07 remains unaccepted."
+    "disposition": "Integrated B-T07 is focused-green, but adjacent gates exposed missing clinical schema versions, a B-T04 fixture return seam and stale receipt-count assumptions. M4-013 authorizes one exclusive shared composition unit; B-T07 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "m4_013_shared_composition_opened",
+      "date": "2026-10-16",
+      "snapshot_commit": "1146b5a",
+      "change_ref": "docs/implementation/change-records/M4-013-stage-b-handoff-composition.md",
+      "red_evidence": {"adjacent_failures": 6, "b_t07_focused_status": "pass", "b_t07_exact_cli_exit": 0},
+      "allowed_next_transition": "dispatch one fresh isolated Luna-max shared-integration worker, then fresh Sol-high review before integration",
+      "disposition": "No numerical or scientific contract change; correct producer artifact versioning, same-run B-T04 return and stale composition assertions only."
+    },
     {
       "event": "m4_012_b_t07_p1_astra_adjudicated",
       "date": "2026-10-16",
