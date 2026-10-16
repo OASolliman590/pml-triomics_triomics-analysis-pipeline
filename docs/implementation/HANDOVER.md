@@ -56,8 +56,12 @@ CLI smokes failed before dispatch. Luna repair `74335d1` changed only the test
 helper and passed 124 expectations from a spaced checkout, the integration
 snapshot and an installed package, with zero failures or skips. Fresh focused
 Sol-6.1 high re-review marked the finding ADDRESSED with no new P0/P1, and the
-repair was integrated as `cbe5400`. No worker is active. Fresh integrated gates
-are next. Older completed managed worktrees remain archived.
+repair was integrated as `cbe5400`. Fresh integrated evidence at `d2a2231` is:
+source B-T07 124/124 with no warnings/skips; installed B-T07 124/124 with no
+failures/skips; full suite 3,462/3,462 with no warnings/skips; clean archive
+package check `Status: OK` with no ERROR/WARNING/NOTE. No worker is active. The
+next transition is one fresh immutable M4 Astra-low review. Older completed
+managed worktrees remain archived.
 The user-owned `.gitignore`, AppleDouble files and `.superpowers/`
 remain untouched.
 

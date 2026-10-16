@@ -35,13 +35,25 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m4_014_integrated_verification_pending",
+    "status": "m4_software_gates_passed_pending_astra",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh focused Sol-6.1 high re-review marked the path-with-spaces finding ADDRESSED with no new P0/P1. Repair 74335d1 was serially integrated as cbe5400. Fresh integrated gates are pending."
+    "disposition": "At d2a2231 source B-T07 passed 124/124 without warnings/skips, installed parity passed 124/124 without failures/skips, the full suite passed 3,462/3,462 without warnings/skips, and clean archive R CMD check ended Status: OK. Immutable M4 Astra review is the next gate."
   },
   "orchestration_events": [
+    {
+      "event": "m4_014_integrated_software_and_package_gates_passed",
+      "date": "2026-10-16",
+      "snapshot_commit": "d2a2231f9299fd2f529aa8a66f2f5c0872d8e908",
+      "source_b_t07": {"expectations": 124, "failed": 0, "warnings": 0, "skipped": 0},
+      "installed_b_t07": {"expectations": 124, "failed": 0, "skipped": 0, "disclosed_absent_git_warnings": 8},
+      "full_suite": {"expectations": 3462, "failed": 0, "warnings": 0, "skipped": 0},
+      "package_check": {"status": "OK", "errors": 0, "warnings": 0, "notes": 0},
+      "evidence_ref": "docs/implementation/reviews/M4-014-integration-package-gate.md",
+      "allowed_next_transition": "commit the immutable M4 evidence snapshot and dispatch one fresh Astra-low milestone review",
+      "disposition": "Software/package gates passed on public synthetic fixtures only. B-T07, G4 and Stage C remain unreleased pending Astra and Sol acceptance."
+    },
     {
       "event": "m4_014_source_path_rereview_passed_repair_integrated",
       "date": "2026-10-16",
@@ -2236,7 +2248,7 @@
       "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
-      "status": "m4_014_integrated_verification_pending",
+      "status": "software_gates_passed_pending_m4_astra",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
@@ -2256,6 +2268,7 @@
       "package_exception_repair_candidate": "74335d16e732dcaa840ed077f619fb8261d613cc",
       "package_exception_repair_integration_commit": "cbe5400",
       "package_exception_repair_review_ref": "docs/implementation/reviews/M4-014-source-path-focused-rereview.md",
+      "package_exception_gate_ref": "docs/implementation/reviews/M4-014-integration-package-gate.md",
       "integration_commits": ["8cf2d38", "4a33f01"],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T07-initial-review.md",
