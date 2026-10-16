@@ -35,28 +35,45 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/b_t07_sol_review",
-      "role": "sol_high_task_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
+      "agent_name": "/root/b_t07_luna",
+      "role": "luna_bounded_repair_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
       "snapshot_commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
       "worktree": "/Users/megastore/.codex/worktrees/b-t07-export-handoff/PML MultiOmics Analysis Pipeline",
-      "allowlist": ["read_only_review"]
+      "allowlist": [
+        "R/export_b.R",
+        "tests/testthat/test-B-T07.R",
+        "inst/examples/tickets/B-T07.yaml",
+        "docs/implementation/registrations/B-T07.json"
+      ]
     }
   ],
   "orchestration_control": {
-    "status": "b_t07_initial_candidate_sol_review_active",
+    "status": "b_t07_repair_1_active",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [
       {
-        "agent_name": "/root/b_t07_sol_review",
-        "expected_receipt": "B-T07 spec and quality verdict, AC1-AC4/CLI classification, findings and exact Sol integration transition"
+        "agent_name": "/root/b_t07_luna",
+        "expected_receipt": "B-T07 repair-1 commit, RED/GREEN evidence for all four findings, exact suite and updated report"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T07 Luna candidate b7a9455 changed only the four allowed files and passed 8 tests/27 expectations. Fresh Sol-high review is active; CLI AC3/AC4 remains unproven pending the requested shared same-run matrix/post-B hook."
+    "disposition": "Fresh Sol-high review failed candidate b7a9455 with three P1 and one P2 finding. Same Luna-max worker is authorized for targeted repair 1 inside the existing four-file write set; shared integration remains deferred."
   },
   "orchestration_events": [
+    {
+      "event": "b_t07_initial_review_failed_repair_1_dispatched",
+      "date": "2026-10-16",
+      "implementer": "/root/b_t07_luna",
+      "reviewer": "/root/b_t07_sol_review",
+      "candidate_commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
+      "verdict": "fail",
+      "findings": {"p0": 0, "p1": 3, "p2": 1},
+      "review_ref": "docs/implementation/reviews/B-T07-initial-review.md",
+      "allowed_next_transition": "same Luna-max implementer performs bounded repair 1, followed by one focused Sol-high rereview",
+      "disposition": "False-green success tests, absent source/matrix hash comparison, incomplete restart members and unconditional synthetic claims require packet repair before shared integration."
+    },
     {
       "event": "b_t07_initial_candidate_completed_sol_review_dispatched",
       "date": "2026-10-16",
@@ -1978,11 +1995,14 @@
       "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
-      "status": "initial_candidate_review_active",
+      "status": "repair_1_active",
       "attempts": 1,
+      "repair_attempts": 1,
       "commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
-      "acceptance_refs": [],
-      "blockers": []
+      "acceptance_refs": ["docs/implementation/reviews/B-T07-initial-review.md"],
+      "blockers": [
+        "Initial Sol review found three P1 and one P2 candidate defect; bounded repair 1 is active. Shared same-run matrix and post-B CLI registration remains a later Sol-owned integration step."
+      ]
     },
     "C-01": {
       "status": "not_started",
