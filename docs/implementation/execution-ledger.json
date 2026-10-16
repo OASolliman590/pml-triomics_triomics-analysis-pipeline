@@ -33,29 +33,25 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_014_package_gate_astra",
-      "role": "astra_low_read_only_package_gate_adjudicator",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "snapshot_commit": "bd7da66ba58bbce571e90ab1ca76017c8e269d78",
-      "allowlist": []
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_013_package_gate_failed_astra_adjudication_pending",
+    "status": "blocked_awaiting_m4_014_user_authorization",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_014_package_gate_astra",
-        "expected_receipt": "read-only classification of the B-T07 exhausted-budget package-gate defects and required authority"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-013 is integrated and the complete local suite is green. Clean-archive package check failed on B-T07 installed paths plus ASCII/namespace/manual hygiene. Astra-low adjudication is pending because B-T07 repair budget is exhausted."
+    "disposition": "Astra classified the M4 package failure as packaging-only but confirmed that B-T07-owned source/test edits exceed its exhausted repair budget. M4-014 is a proposal only and awaits explicit Omar authorization. No worker or poll is active."
   },
   "orchestration_events": [
+    {
+      "event": "m4_014_package_gate_astra_blocked_pending_user_authority",
+      "date": "2026-10-16",
+      "adjudicator": "/root/m4_014_package_gate_astra",
+      "snapshot_commit": "bd7da66ba58bbce571e90ab1ca76017c8e269d78",
+      "proposal_ref": "docs/implementation/change-records/M4-014-b-t07-package-gate-exception-proposal.md",
+      "review_ref": "docs/implementation/reviews/M4-014-package-gate-astra-adjudication.md",
+      "allowed_next_transition": "only after explicit Omar authorization, dispatch one fresh isolated Luna-max worker for the exact M4-014 scope",
+      "disposition": "No gate waived; B-T07, G4 and Stage C remain unreleased."
+    },
     {
       "event": "m4_013_integrated_package_gate_failed_astra_dispatched",
       "date": "2026-10-16",
@@ -2137,7 +2133,7 @@
       "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
-      "status": "repair_2_adjudicated_integration_pending",
+      "status": "blocked_awaiting_package_exception_authorization",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
@@ -2150,6 +2146,7 @@
       "repair_2_candidate_commit": "a893475",
       "repair_2_review_ref": "docs/implementation/reviews/M4-012-b-t07-repair2-sol-review.md",
       "repair_2_adjudication_ref": "docs/implementation/reviews/M4-012-b-t07-p1-astra-adjudication.md",
+      "package_exception_proposal_ref": "docs/implementation/change-records/M4-014-b-t07-package-gate-exception-proposal.md",
       "integration_commits": ["8cf2d38", "4a33f01"],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T07-initial-review.md",
