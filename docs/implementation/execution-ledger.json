@@ -33,15 +33,45 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/b_t07_luna",
+      "role": "luna_bounded_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "snapshot_commit": "b204b53",
+      "worktree": "/Users/megastore/.codex/worktrees/b-t07-export-handoff/PML MultiOmics Analysis Pipeline",
+      "allowlist": [
+        "R/export_b.R",
+        "tests/testthat/test-B-T07.R",
+        "inst/examples/tickets/B-T07.yaml",
+        "docs/implementation/registrations/B-T07.json"
+      ]
+    }
+  ],
   "orchestration_control": {
-    "status": "b_t08_accepted_b_t07_dispatch_next",
+    "status": "b_t07_initial_attempt_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/b_t07_luna",
+        "expected_receipt": "B-T07 RED/GREEN evidence, four-file allowlisted commit, acceptance artifacts and <=10-line receipt"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Focused Astra-low M4-005 rereview passed immutable snapshot f96be49 with no findings. Sol accepted B-T08 and released B-T07; a fresh isolated Luna-max B-T07 initial attempt is the next transition."
+    "disposition": "B-T08 is accepted. Fresh Luna-max worker /root/b_t07_luna is executing B-T07's initial attempt in a managed isolated worktree; G4 and Stage C/D remain gated."
   },
   "orchestration_events": [
+    {
+      "event": "b_t07_initial_luna_worker_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/b_t07_luna",
+      "snapshot_commit": "b204b53",
+      "worktree": "/Users/megastore/.codex/worktrees/b-t07-export-handoff/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["R/export_b.R", "tests/testthat/test-B-T07.R", "inst/examples/tickets/B-T07.yaml", "docs/implementation/registrations/B-T07.json"],
+      "allowed_next_transition": "inspect candidate and dispatch fresh Sol-high review if the packet evidence and allowlist are complete",
+      "disposition": "One fresh Luna-max worker owns the B-T07 initial attempt; Sol retains shared integration, ledger, acceptance and milestone authority."
+    },
     {
       "event": "m4_010_astra_gate_passed_b_t08_accepted_b_t07_released",
       "date": "2026-10-16",
@@ -1941,8 +1971,8 @@
       "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
-      "status": "ready_to_dispatch",
-      "attempts": 0,
+      "status": "initial_attempt_active",
+      "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": []
