@@ -304,7 +304,12 @@ triomics_b07_method_dispositions <- function(block_results) {
              identical(as.character(block_results$method_status), "unavailable")) {
     add("deqms", "unavailable", block_results$unavailable_reason)
   }
-  for (entry in triomics_b07_claim_entries(block_results)) {
+  claims <- if (is.list(block_results$blocks) && length(block_results$blocks)) {
+    triomics_b07_claim_entries(block_results)
+  } else {
+    list()
+  }
+  for (entry in claims) {
     block <- block_results$blocks[[entry$block_id]]
     claim <- block$contrasts[[entry$claim_id]]
     if (is.null(claim)) claim <- block$joint_claims[[entry$claim_id]]
@@ -402,6 +407,14 @@ triomics_b07_matrix_bindings <- function(block_results, matrices) {
       bindings <- lapply(rows, function(row) {
         model_hash <- as.character(row$model_hash)
         representation_hash <- as.character(row$representation_hash)
+        source_hash <- as.character(row$source_hash)
+        if (!triomics_sha256_text(source_hash) || !identical(source_hash, matrix_hash)) {
+          triomics_b07_abort(
+            "B_EXPORT_MATRIX", "A public result source hash does not match the keyed matrix handed to Stage C.",
+            paste(block_id, feature_key, sep = "."),
+            "Pass the exact resolved B matrix fitted by the producer; do not mutate or reconstruct it."
+          )
+        }
         if (!triomics_sha256_text(model_hash) || !triomics_sha256_text(representation_hash)) {
           triomics_b07_abort(
             "B_EXPORT_MATRIX", "A fitted row lacks model or representation hash provenance.",
@@ -412,6 +425,7 @@ triomics_b07_matrix_bindings <- function(block_results, matrices) {
         list(
           claim_id = as.character(if (!is.null(row$contrast_id)) row$contrast_id else
                                     if (!is.null(row$claim_id)) row$claim_id else "unknown"),
+          source_hash = source_hash,
           model_hash = model_hash,
           representation_hash = representation_hash
         )
@@ -508,6 +522,9 @@ triomics_b07_resume_candidate <- function(bundle_path) {
                                             error = function(error) NULL) else NULL
   member_ok <- is.list(payload) && isTRUE(triomics_b07_validate_bundle_members(payload, bundle_path))
   if (!member_ok) envelope_ok <- FALSE
+  if (isTRUE(envelope_ok)) {
+    envelope_ok <- isTRUE(triomics_b07_validate_late_artifacts(payload, bundle_path, envelope_path))
+  }
   manifest_payload_sha <- if (envelope_ok) {
     envelope <- triomics_b07_read_json(envelope_path, "bundle.envelope.json")
     as.character(envelope$payload_sha256)
@@ -520,6 +537,77 @@ triomics_b07_resume_candidate <- function(bundle_path) {
     payload_present = payload_present,
     envelope_present = envelope_ok
   )
+}
+
+triomics_b07_validate_late_artifacts <- function(bundle, bundle_path, bundle_envelope_path) {
+  handoff_dir <- dirname(bundle_path)
+  reproduction_path <- file.path(handoff_dir, "reproduction.md")
+  reproduction_envelope_path <- file.path(handoff_dir, "reproduction.envelope.json")
+  record_path <- file.path(handoff_dir, "acceptance-record.json")
+  record_envelope_path <- file.path(handoff_dir, "acceptance-record.envelope.json")
+  paths <- c(reproduction_path, reproduction_envelope_path, record_path, record_envelope_path)
+  if (any(!file.exists(paths) | dir.exists(paths) | vapply(paths, triomics_is_symlink, logical(1)))) {
+    return(FALSE)
+  }
+  if (!isTRUE(triomics_validate_envelope(reproduction_envelope_path)) ||
+      !isTRUE(triomics_validate_envelope(record_envelope_path))) {
+    return(FALSE)
+  }
+  reproduction_envelope <- tryCatch(
+    jsonlite::read_json(reproduction_envelope_path, simplifyVector = FALSE),
+    error = function(error) NULL
+  )
+  record_envelope <- tryCatch(
+    jsonlite::read_json(record_envelope_path, simplifyVector = FALSE),
+    error = function(error) NULL
+  )
+  record <- tryCatch(jsonlite::read_json(record_path, simplifyVector = FALSE),
+                     error = function(error) NULL)
+  if (!is.list(reproduction_envelope) || !is.list(record_envelope) || !is.list(record) ||
+      !identical(as.character(reproduction_envelope$artifact_type), "b_t07_reproduction_record") ||
+      !identical(as.character(reproduction_envelope$artifact_id), "b-t07-reproduction-record") ||
+      !identical(as.character(record_envelope$artifact_type), "b_t07_acceptance_record") ||
+      !identical(as.character(record_envelope$artifact_id), "b-t07-acceptance-record") ||
+      !identical(as.character(record$packet_id), "B-T07") ||
+      !identical(as.character(record$cache_key), as.character(bundle$cache_key)) ||
+      !identical(as.character(record$study_id), as.character(bundle$study_id)) ||
+      !identical(as.character(record$config_sha256), as.character(bundle$config_sha256)) ||
+      !identical(as.character(record_envelope$status), as.character(record$status)) ||
+      !identical(as.character(record_envelope$config_sha256), as.character(bundle$config_sha256)) ||
+      !identical(as.character(reproduction_envelope$config_sha256), as.character(bundle$config_sha256))) {
+    return(FALSE)
+  }
+  root <- tryCatch(
+    normalizePath(file.path(handoff_dir, "..", "..", ".."), winslash = "/", mustWork = TRUE),
+    error = function(error) NULL
+  )
+  if (is.null(root)) return(FALSE)
+  expected_reproduction_path <- tryCatch(triomics_b07_relative(root, reproduction_path),
+                                         error = function(error) NULL)
+  if (is.null(expected_reproduction_path) ||
+      !identical(as.character(record$reproduction_path), expected_reproduction_path)) {
+    return(FALSE)
+  }
+  hashes <- record$payload_and_manifest_hashes
+  if (!is.list(hashes) ||
+      !identical(as.character(hashes$bundle_sha256), triomics_sha256(bundle_path)) ||
+      !identical(as.character(hashes$bundle_envelope_sha256), triomics_sha256(bundle_envelope_path)) ||
+      !identical(as.character(hashes$reproduction_sha256), triomics_sha256(reproduction_path)) ||
+      !identical(as.character(hashes$reproduction_envelope_sha256), triomics_sha256(reproduction_envelope_path))) {
+    return(FALSE)
+  }
+  has_input <- function(envelope, artifact_id, sha256) {
+    any(vapply(envelope$inputs, function(input) {
+      identical(as.character(input$artifact_id), artifact_id) &&
+        identical(as.character(input$sha256), sha256)
+    }, logical(1)))
+  }
+  has_input(record_envelope, as.character(bundle$artifact_id), triomics_sha256(bundle_path)) &&
+    has_input(record_envelope, "b-t07-reproduction-record", triomics_sha256(reproduction_path)) &&
+    any(readLines(reproduction_path, warn = FALSE) == "# B-T07 reproduction record") &&
+    any(vapply(record$acceptance, function(item) {
+      identical(as.character(item$id), "AC4") && identical(as.character(item$verdict), "pass")
+    }, logical(1)))
 }
 
 triomics_b07_validate_bundle_members <- function(bundle, bundle_path) {
@@ -658,6 +746,27 @@ triomics_b07_smoke_receipt <- function(label, output) {
   payload <- artifact$payload
   expected <- switch(label, independent = "levels", paired = "delta", NULL)
   representation_id <- as.character(payload$representation_id)
+  if (identical(label, "unavailable_method") &&
+      (!is.list(payload$blocks) || !length(payload$blocks))) {
+    method_dispositions <- triomics_b07_method_dispositions(payload)
+    unavailable_method <- any(vapply(method_dispositions, function(item) {
+      identical(as.character(item$status), "unavailable")
+    }, logical(1)))
+    if (!unavailable_method) {
+      triomics_b07_abort("B_EXPORT_SMOKE", "The unavailable-method smoke has no visible unavailable disposition.", label,
+                         "Pass a real Stage B result that records the requested method and its unavailable reason.")
+    }
+    return(list(
+      label = label,
+      representation_id = if (!length(representation_id)) "unavailable" else representation_id,
+      status = artifact$status,
+      artifact_sha256 = artifact$payload_sha256,
+      finite_effect_count = 0L,
+      unavailable_method = TRUE,
+      method_dispositions = method_dispositions,
+      run_id = as.character(artifact$envelope$run_id)
+    ))
+  }
   entries <- triomics_b07_claim_entries(payload)
   rows <- unlist(lapply(entries, `[[`, "rows"), recursive = FALSE)
   finite_effects <- vapply(rows, function(row) {
@@ -707,8 +816,8 @@ triomics_b07_write_text_atomic <- function(text, path) {
 }
 
 triomics_b07_reproduction_text <- function(command, working_ref, runtime, environment_sha256,
-                                           config_sha256, bundle, matrix_bindings,
-                                           acceptance, qualifications) {
+                                           config_sha256, data_class, privacy_class,
+                                           bundle, matrix_bindings, acceptance, qualifications) {
   artifact_lines <- vapply(bundle$members, function(member) {
     paste0("- ", member$artifact_id, ": status `", member$status, "`; path `",
            if (is.null(member$path)) "not written" else member$path,
@@ -729,10 +838,28 @@ triomics_b07_reproduction_text <- function(command, working_ref, runtime, enviro
   }
   runtime_lines <- paste0("- ", names(runtime), ": `", unlist(runtime, use.names = FALSE), "`.")
   qualification_lines <- paste0("- ", qualifications)
+  synthetic_context <- identical(as.character(data_class), "synthetic") &&
+    identical(as.character(privacy_class), "synthetic")
+  data_context <- paste0(
+    "Verified data context: configuration data class `", as.character(data_class),
+    "`; Stage B source privacy class `", as.character(privacy_class), "`."
+  )
+  context_scope <- if (synthetic_context) {
+    "This is software handoff evidence for declared public synthetic inputs."
+  } else {
+    "This record does not assert that the underlying inputs are synthetic, de-identified, public, or non-private."
+  }
+  data_limitation <- if (synthetic_context) {
+    "The declared synthetic fixture validates software flow only; it does not establish method performance or biological validity."
+  } else {
+    paste0("The `", as.character(privacy_class), "` source privacy classification governs this handoff; this record does not attest to data release or de-identification.")
+  }
   paste(c(
     "# B-T07 reproduction record",
     "",
-    "This is a software handoff record for public synthetic inputs. It is not biological validation, a study result, a final HTML report, or a vignette.",
+    data_context,
+    context_scope,
+    "This is not biological validation, a study result, a final HTML report, or a vignette.",
     "",
     "## Commands and execution",
     "",
@@ -764,8 +891,7 @@ triomics_b07_reproduction_text <- function(command, working_ref, runtime, enviro
     "",
     "## Limitations",
     "",
-    "- The synthetic fixture validates software flow only; it does not establish method performance or biological validity.",
-    "- No real study inputs, clinical identifiers, or private results were used in this record.",
+    paste0("- ", data_limitation),
     "- This is not final HTML and does not claim a vignette, integration report, or evidence about Omar's studies."
   ), collapse = "\n")
 }
@@ -881,7 +1007,8 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
                           AC3 = list(verdict = "pass"), AC4 = list(verdict = "pass"))
       ))
     }
-    if (identical(decision$reason, "partial") || identical(decision$reason, "hash_mismatch")) {
+    if (identical(decision$reason, "partial") || identical(decision$reason, "incomplete") ||
+        identical(decision$reason, "hash_mismatch")) {
       triomics_b07_abort(
         "B_EXPORT_INCOMPLETE", "An interrupted or hash-mismatched B handoff is not a restart candidate.",
         "resume",
@@ -1011,7 +1138,7 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
     )
   }
   missing_requested_clinical <- clinical_enabled && any(vapply(clinical_dispositions, function(item) {
-    identical(item$status, "unavailable")
+    identical(item$status, "unavailable") && identical(item$reason, "requested_artifact_missing")
   }, logical(1)))
   bundle_status <- if (is.null(matrix_artifact) || !matrix_source_verified || missing_requested_clinical) {
     "partial"
@@ -1094,7 +1221,7 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
     list(id = "AC1", verdict = if (!missing_requested_clinical) "pass" else "blocked",
          detail = if (!missing_requested_clinical) "Public block rows, full family membership, nomination lineage and clinical dispositions are indexed." else "A requested clinical artifact has no verified payload/envelope."),
     list(id = "AC2", verdict = if (ac2_pass) "pass" else "blocked",
-         detail = if (ac2_pass) "Independent, paired and unavailable-method synthetic CLI outputs were verified." else "Both independent and paired CLI outputs plus a visible unavailable-method output are required."),
+         detail = if (ac2_pass) "Independent, paired and unavailable-method Stage B smoke outputs were verified." else "Both independent and paired CLI outputs plus a visible unavailable-method output are required."),
     list(id = "AC3", verdict = if (!is.null(matrix_artifact) && matrix_source_verified) "pass" else "blocked",
          detail = if (!is.null(matrix_artifact) && matrix_source_verified) "Model and representation hashes are bound to the same-run resolved keyed matrices; the complete envelope was reverified." else if (!is.null(matrix_artifact)) "Hashes were computed for the supplied keyed matrix, but its same-run Stage B resolved-matrix provenance is unverified." else "The Stage B caller did not provide resolved matrices, so no Stage C handoff was written."),
     list(id = "AC4", verdict = "pass",
@@ -1103,7 +1230,7 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
   record <- list(
     packet_id = "B-T07",
     study_id = as.character(block_results$study_id),
-    status = if (all(vapply(acceptance, function(item) identical(item$verdict, "pass"), logical(1)))) "software_fixture_evidence_complete" else "partial",
+    status = if (all(vapply(acceptance, function(item) identical(item$verdict, "pass"), logical(1)))) "software_handoff_evidence_complete" else "partial",
     command = if (is.null(command)) "not recorded" else as.character(command),
     working_ref = if (is.null(working_ref)) triomics_b07_git_ref(root) else as.character(working_ref),
     cli_exit_code = if (is.null(cli_exit_code)) NULL else as.integer(cli_exit_code),
@@ -1141,6 +1268,8 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
     runtime = runtime,
     environment_sha256 = environment_sha256,
     config_sha256 = config_sha256,
+    data_class = as.character(config$data_class),
+    privacy_class = as.character(artifact$envelope$privacy_class),
     bundle = bundle,
     matrix_bindings = matrix_bindings,
     acceptance = acceptance,
@@ -1176,7 +1305,13 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
   } else {
     "partial"
   }
-  record$evidence_scope <- "software_fixture_only"
+  record$evidence_scope <- if (identical(as.character(config$data_class), "synthetic") &&
+                               identical(as.character(artifact$envelope$privacy_class), "synthetic")) {
+    "public_synthetic_software_fixture"
+  } else {
+    paste0("software_handoff_data_class_", as.character(config$data_class),
+           "_privacy_class_", as.character(artifact$envelope$privacy_class))
+  }
   triomics_write_json_atomic(record, record_path)
   record_envelope_path <- sub("\\.json$", ".envelope.json", record_path)
   record_inputs <- c(
@@ -1199,9 +1334,11 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
   )
   triomics_write_envelope(record_envelope, record_envelope_path)
   candidate_after_write <- triomics_b07_resume_candidate(bundle_path)
-  if (!isTRUE(triomics_b07_resume_decision(candidate_after_write, cache_key)$reuse)) {
+  if (!isTRUE(candidate_after_write$envelope_present) ||
+      !identical(candidate_after_write$cache_key, cache_key) ||
+      !identical(candidate_after_write$payload_sha256, candidate_after_write$manifest_payload_sha256)) {
     triomics_b07_abort("B_EXPORT_INCOMPLETE", "The finalized B handoff failed its restart verification.", "bundle",
-                       "Do not publish a bundle whose manifest or member hashes fail read-back verification.")
+                       "Do not publish a bundle whose manifest, late artifacts or member hashes fail read-back verification.")
   }
   list(
     status = bundle_status,

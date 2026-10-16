@@ -12,7 +12,8 @@ t07_ticket <- function(name = "B-T06.yaml") {
 }
 
 t07_write_artifact <- function(payload, path, artifact_type, artifact_id,
-                               config_sha256, status = "partial", inputs = NULL) {
+                               config_sha256, status = "partial", inputs = NULL,
+                               privacy_class = "synthetic") {
   triomics_write_json_atomic(payload, path)
   envelope <- triomics_artifact_envelope(
     artifact_type = artifact_type,
@@ -25,13 +26,14 @@ t07_write_artifact <- function(payload, path, artifact_type, artifact_id,
     producer_commit = "synthetic-fixture",
     inputs = if (is.null(inputs)) list() else inputs,
     reason_codes = if (identical(status, "partial")) "synthetic_member_unavailable" else character(),
-    privacy_class = "synthetic"
+    privacy_class = privacy_class
   )
   triomics_write_envelope(envelope, sub("\\.json$", ".envelope.json", path))
   envelope
 }
 
-t07_public_bundle_fixture <- function(root, include_clinical = TRUE, ticket = "B-T08.yaml") {
+t07_public_bundle_fixture <- function(root, include_clinical = TRUE, ticket = "B-T08.yaml",
+                                      privacy_class = "synthetic") {
   config_path <- t07_ticket(ticket)
   config <- triomics_read_config(config_path)
   config_sha256 <- attr(config, "config_sha256")
@@ -147,7 +149,7 @@ t07_public_bundle_fixture <- function(root, include_clinical = TRUE, ticket = "B
   )
   block_path <- file.path(root, "B", "block-results.json")
   t07_write_artifact(block_results, block_path, "block_results", "stage-b-block-results",
-                     config_sha256, "partial", inputs)
+                     config_sha256, "partial", inputs, privacy_class)
 
   clinical_paths <- character()
   if (include_clinical) {
@@ -173,10 +175,11 @@ t07_public_bundle_fixture <- function(root, include_clinical = TRUE, ticket = "B
       file.path(root, "B", "clinical-longitudinal-associations.json")
     )
     t07_write_artifact(association, clinical_paths[[1L]], "clinical_association_results",
-                       "b-t08-clinical-associations", config_sha256, "partial", inputs)
+                       "b-t08-clinical-associations", config_sha256, "partial", inputs,
+                       privacy_class)
     t07_write_artifact(longitudinal, clinical_paths[[2L]], "clinical_association_results",
                        "b-t09-longitudinal-clinical-associations", config_sha256,
-                       "unavailable", inputs)
+                       "unavailable", inputs, privacy_class)
   }
   list(config_path = config_path, config_sha256 = config_sha256,
        block_results_path = block_path, clinical_paths = clinical_paths)
@@ -190,24 +193,30 @@ t07_attempt_resume <- function(...) {
   tryCatch(triomics_b07_resume_decision(...), error = function(error) error)
 }
 
-t07_resolve_matrices <- function(config_path) {
-  config <- triomics_read_config(config_path)
-  ingested <- triomics_ingest_configured_study(config, config_path)
-  analysis <- config$analyses[[1L]]
-  block_ids <- as.character(unlist(analysis$block_ids, use.names = FALSE))
-  study <- list(
-    study_id = ingested$study_id,
-    preparation_context_id = analysis$preparation_context_id,
-    sample_metadata = ingested$sample_metadata,
-    sample_registry = ingested$sample_registry,
-    declared_factor_levels = ingested$declared_factor_levels,
-    feature_registry = ingested$feature_registry,
-    assays = ingested$assays[block_ids],
-    assay_hashes = NULL,
-    analysis_unit_map = NULL
-  )
-  resolved <- triomics_resolve_analysis(study, analysis)
-  lapply(resolved$blocks, function(block) block$assay)
+t07_expect_export_success <- function(value, label) {
+  is_triomics_error <- inherits(value, "triomics_error")
+  detail <- if (is_triomics_error) {
+    paste(label, value$code, conditionMessage(value), sep = ": ")
+  } else {
+    paste(label, "export returned without a typed error")
+  }
+  testthat::expect_false(is_triomics_error, info = detail)
+  if (is_triomics_error) list() else value
+}
+
+t07_read_json_safe <- function(path) {
+  if (!is.character(path) || length(path) != 1L || is.na(path) || !file.exists(path)) return(list())
+  tryCatch(jsonlite::read_json(path, simplifyVector = FALSE), error = function(error) list())
+}
+
+t07_item <- function(value, index = 1L) {
+  if (is.list(value) && length(value) >= index) value[[index]] else list()
+}
+
+t07_acceptance_verdict <- function(record, acceptance_id) {
+  acceptance <- record$acceptance
+  item <- Filter(function(value) identical(as.character(value$id), acceptance_id), acceptance)
+  if (!length(item)) NA_character_ else as.character(item[[1L]]$verdict)
 }
 
 t07_cli_smoke <- function(config_path, output) {
@@ -228,28 +237,30 @@ t07_cli_smoke <- function(config_path, output) {
 testthat::test_that("B-T07 AC1 exports full public bundles without dropping failures or lineage", {
   root <- t07_test_root("ac1")
   fixture <- t07_public_bundle_fixture(root, include_clinical = TRUE)
-  exported <- t07_attempt_export(
+  exported <- t07_expect_export_success(t07_attempt_export(
     output = root, config_path = fixture$config_path,
     command = "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/B-T07.yaml --stage B --output artifacts/acceptance/B-T07"
-  )
-  testthat::expect_type(exported, "list")
-  if (inherits(exported, "error")) return(invisible(NULL))
+  ), "AC1")
 
-  bundle <- jsonlite::read_json(exported$bundle_path, simplifyVector = FALSE)
-  family <- jsonlite::read_json(exported$family_ledger_path, simplifyVector = FALSE)
-  nominations <- jsonlite::read_json(exported$nominations_path, simplifyVector = FALSE)
+  bundle <- t07_read_json_safe(exported$bundle_path)
+  family <- t07_read_json_safe(exported$family_ledger_path)
+  nominations <- t07_read_json_safe(exported$nominations_path)
+  receipt <- t07_read_json_safe(exported$acceptance_record_path)
   members <- vapply(bundle$members, function(member) member$artifact_id, character(1))
+  family_payload <- t07_item(family$families)$family
+  dispositions <- unlist(family_payload$dispositions, use.names = TRUE)
   testthat::expect_true(all(c("block_results", "family_ledger", "candidate_nominations",
                               "clinical_associations", "clinical_longitudinal_associations",
                               "stage_c_matrices") %in% members))
-  testthat::expect_identical(unlist(family$families[[1L]]$member_ids, use.names = FALSE),
+  testthat::expect_identical(unlist(family_payload$member_ids, use.names = FALSE),
                              c("SYN-FEATURE-NEG", "SYN-FEATURE-UNAVAILABLE"))
-  testthat::expect_identical(sum(unlist(family$families[[1L]]$dispositions)), 2L)
-  testthat::expect_identical(nominations$nominations[[1L]]$selection_rule,
+  testthat::expect_identical(sum(as.integer(dispositions)), 2L)
+  testthat::expect_identical(t07_item(nominations$nominations)$selection_rule,
                              "valid_q_and_reporting_effect_threshold")
   testthat::expect_identical(bundle$clinical_associations$status, "partial")
   testthat::expect_identical(bundle$clinical_longitudinal_associations$status, "unavailable")
-  testthat::expect_identical(bundle$method_dispositions[[1L]]$status, "unavailable")
+  testthat::expect_identical(t07_item(bundle$method_dispositions)$status, "unavailable")
+  testthat::expect_identical(t07_acceptance_verdict(receipt, "AC1"), "pass")
 })
 
 testthat::test_that("B-T07 AC2 independent and paired CLI smokes retain signed effects and unavailable methods", {
@@ -265,62 +276,59 @@ testthat::test_that("B-T07 AC2 independent and paired CLI smokes retain signed e
   testthat::expect_identical(independent_run$status, 0L)
   testthat::expect_identical(paired_run$status, 0L)
   testthat::expect_identical(unavailable_run$status, 0L)
-  if (any(c(independent_run$status, paired_run$status, unavailable_run$status) != 0L)) {
-    return(invisible(NULL))
-  }
-  independent_matrices <- t07_resolve_matrices(independent_config)
-  exported <- t07_attempt_export(
+  exported <- t07_expect_export_success(t07_attempt_export(
     output = independent_root, config_path = independent_config,
-    matrices = independent_matrices,
     smoke_runs = list(independent = independent_root, paired = paired_root,
                       unavailable_method = unavailable_root),
     command = "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/B-T07.yaml --stage B --output artifacts/acceptance/B-T07"
-  )
-  testthat::expect_type(exported, "list")
-  if (inherits(exported, "error")) return(invisible(NULL))
-  bundle <- jsonlite::read_json(exported$bundle_path, simplifyVector = FALSE)
-  independent <- jsonlite::read_json(file.path(independent_root, "B", "block-results.json"), simplifyVector = FALSE)
-  paired <- jsonlite::read_json(file.path(paired_root, "B", "block-results.json"), simplifyVector = FALSE)
-  unavailable <- jsonlite::read_json(file.path(unavailable_root, "B", "block-results.json"), simplifyVector = FALSE)
-  independent_row <- independent$blocks$block_1$contrasts[[1L]]$rows[[1L]]
-  paired_row <- paired$blocks$block_1$contrasts[[1L]]$rows[[1L]]
-  testthat::expect_identical(bundle$acceptance$AC2$verdict, "pass")
+  ), "AC2")
+  independent <- t07_read_json_safe(file.path(independent_root, "B", "block-results.json"))
+  paired <- t07_read_json_safe(file.path(paired_root, "B", "block-results.json"))
+  unavailable <- t07_read_json_safe(file.path(unavailable_root, "B", "block-results.json"))
+  independent_claim <- t07_item(independent$blocks$block_1$contrasts)
+  paired_claim <- t07_item(paired$blocks$block_1$contrasts)
+  independent_row <- t07_item(independent_claim$rows)
+  paired_row <- t07_item(paired_claim$rows)
+  receipt <- t07_read_json_safe(exported$acceptance_record_path)
+  testthat::expect_identical(t07_acceptance_verdict(receipt, "AC2"), "pass")
   testthat::expect_true(is.finite(independent_row$effect) && independent_row$effect != 0)
   testthat::expect_true(is.finite(paired_row$effect) && paired_row$effect != 0)
   testthat::expect_identical(paired$representation_id, "delta")
-  testthat::expect_true(any(vapply(unavailable$blocks$block_1$contrasts[[1L]]$rows,
-                                   function(row) identical(row$estimation_status, "unavailable"), logical(1))))
-  receipt <- jsonlite::read_json(exported$acceptance_record_path, simplifyVector = FALSE)
+  testthat::expect_identical(unavailable$deqms_status$status, "unavailable")
+  testthat::expect_identical(unavailable$deqms_status$reason, "count_metadata_missing")
   unavailable_methods <- receipt$smoke_runs$unavailable_method$method_dispositions
   testthat::expect_true(any(vapply(unavailable_methods,
                                    function(item) identical(item$status, "unavailable"), logical(1))))
 })
 
-testthat::test_that("B-T07 AC3 binds cache identity to the actual matrix and every dependency hash", {
+testthat::test_that("B-T07 AC3 validates the matrix hash and blocks unverified provenance", {
   root <- t07_test_root("ac3")
   config_path <- t07_ticket("B-T06.yaml")
+  config <- triomics_read_config(config_path)
+  # Use only the public source assay to exercise the hash boundary; this is not
+  # the runner's same-run resolved object and must not prove AC3 integration.
+  ingested <- tryCatch(triomics_ingest_configured_study(config, config_path), error = function(error) NULL)
+  matrices <- if (is.null(ingested)) NULL else ingested$assays
   run <- t07_cli_smoke(config_path, root)
   testthat::expect_identical(run$status, 0L)
-  if (run$status != 0L) return(invisible(NULL))
-  matrices <- t07_resolve_matrices(config_path)
-  config <- triomics_read_config(config_path)
-  exported <- tryCatch(
-    triomics_b07_cli_after_stage_b(
-      args = c("--config", config_path, "--stage", "B", "--output", root),
-      stage_b_result = list(resolved_matrices = matrices)
-    ),
-    error = function(error) error
+  exported <- t07_expect_export_success(
+    t07_attempt_export(output = root, config_path = config_path, matrices = matrices),
+    "AC3 public matrix hash binding"
   )
-  testthat::expect_type(exported, "list")
-  if (inherits(exported, "error")) return(invisible(NULL))
-  metadata <- jsonlite::read_json(exported$matrix_manifest_path, simplifyVector = FALSE)
+  metadata <- t07_read_json_safe(exported$matrix_manifest_path)
   testthat::expect_identical(metadata$blocks$block_1$matrix_hash,
-                             triomics_b07_matrix_hash("block_1", matrices$block_1))
-  candidate <- triomics_b07_resume_candidate(exported$bundle_path)
-  same <- triomics_b07_resume_decision(candidate, exported$cache_key)
-  receipt <- jsonlite::read_json(exported$acceptance_record_path, simplifyVector = FALSE)
+                             if (is.null(matrices)) NA_character_ else
+                               triomics_b07_matrix_hash("block_1", matrices$block_1))
+  candidate <- if (length(exported)) triomics_b07_resume_candidate(exported$bundle_path) else list()
+  same <- t07_attempt_resume(candidate, exported$cache_key)
+  receipt <- t07_read_json_safe(exported$acceptance_record_path)
+  block_results <- t07_read_json_safe(file.path(root, "B", "block-results.json"))
+  result_rows <- unlist(lapply(block_results$blocks$block_1$contrasts, `[[`, "rows"), recursive = FALSE)
+  source_hashes <- vapply(result_rows, function(row) {
+    if (is.null(row$source_hash)) NA_character_ else as.character(row$source_hash)
+  }, character(1))
   changed_matrix <- matrices
-  changed_matrix$block_1[1L, 1L] <- changed_matrix$block_1[1L, 1L] + 1
+  if (!is.null(changed_matrix)) changed_matrix$block_1[1L, 1L] <- changed_matrix$block_1[1L, 1L] + 1000
   original_matrix_key <- triomics_b07_cache_key(
     config_sha256 = attr(config, "config_sha256"),
     dependency_hashes = list(source = triomics_hash_text("public B source")),
@@ -331,25 +339,35 @@ testthat::test_that("B-T07 AC3 binds cache identity to the actual matrix and eve
     dependency_hashes = list(source = triomics_hash_text("public B source")),
     matrices = changed_matrix
   )
-  changed_dependency <- triomics_b07_resume_decision(
-    candidate,
-    triomics_b07_cache_key(config_sha256 = attr(config, "config_sha256"),
-                           dependency_hashes = c(fixture_source = triomics_hash_text("changed source")),
-                           matrices = matrices,
-                           model_hashes = list(block_1 = triomics_b_hash(list(model = "synthetic independent model"))),
-                           representation_hashes = list(block_1 = triomics_b_hash(list(representation = "levels"))))
+  changed_dependency_key <- triomics_b07_cache_key(
+    config_sha256 = attr(config, "config_sha256"),
+    dependency_hashes = list(source = triomics_hash_text("changed public B source")),
+    matrices = matrices
   )
-  testthat::expect_true(isTRUE(same$reuse))
-  testthat::expect_identical(receipt$acceptance[[3L]]$verdict, "pass")
-  testthat::expect_false(isTRUE(changed_dependency$reuse))
-  testthat::expect_identical(changed_dependency$reason, "invalidated")
+  testthat::expect_false(isTRUE(same$reuse))
+  testthat::expect_identical(same$reason, "incomplete")
+  testthat::expect_identical(t07_acceptance_verdict(receipt, "AC3"), "blocked")
+  testthat::expect_identical(metadata$matrix_source, "caller_matrix_unverified")
+  testthat::expect_true(length(source_hashes) > 0L && !is.null(matrices) &&
+                          all(source_hashes == triomics_b07_matrix_hash("block_1", matrices$block_1)))
   testthat::expect_false(identical(original_matrix_key, changed_matrix_key))
-  testthat::expect_false(identical(triomics_b07_matrix_hash("block_1", matrices$block_1),
-                                   triomics_b07_matrix_hash("block_1", changed_matrix$block_1)))
+  testthat::expect_false(identical(original_matrix_key, changed_dependency_key))
+  testthat::expect_false(is.null(matrices) || identical(
+    triomics_b07_matrix_hash("block_1", matrices$block_1),
+    triomics_b07_matrix_hash("block_1", changed_matrix$block_1)
+  ))
+  changed_export <- t07_attempt_export(
+    output = root, config_path = config_path, matrices = changed_matrix
+  )
+  testthat::expect_s3_class(changed_export, "triomics_error")
+  testthat::expect_identical(changed_export$code, "B_EXPORT_MATRIX")
 })
 
 testthat::test_that("B-T07 AC3 rejects partial or hash-mismatched restart candidates", {
   expected <- triomics_hash_text("complete cache key")
+  complete <- list(payload_present = TRUE, envelope_present = TRUE,
+                   status = "complete", cache_key = expected,
+                   payload_sha256 = expected, manifest_payload_sha256 = expected)
   partial <- list(payload_present = TRUE, envelope_present = FALSE,
                   status = "complete", cache_key = expected,
                   payload_sha256 = expected, manifest_payload_sha256 = expected)
@@ -359,8 +377,12 @@ testthat::test_that("B-T07 AC3 rejects partial or hash-mismatched restart candid
                    manifest_payload_sha256 = triomics_hash_text("manifest"))
   partial_decision <- t07_attempt_resume(partial, expected)
   mismatch_decision <- t07_attempt_resume(mismatch, expected)
+  same_decision <- t07_attempt_resume(complete, expected)
+  changed_dependency_decision <- t07_attempt_resume(complete, triomics_hash_text("changed dependency key"))
   testthat::expect_false(inherits(partial_decision, "error"))
   testthat::expect_false(inherits(mismatch_decision, "error"))
+  testthat::expect_true(isTRUE(same_decision$reuse))
+  testthat::expect_identical(changed_dependency_decision$reason, "invalidated")
   if (!inherits(partial_decision, "error")) {
     testthat::expect_identical(partial_decision, list(reuse = FALSE, reason = "partial"))
   }
@@ -373,25 +395,82 @@ testthat::test_that("B-T07 AC4 records reproduction evidence and explicit limits
   root <- t07_test_root("ac4")
   fixture <- t07_public_bundle_fixture(root, include_clinical = TRUE)
   command <- "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/B-T07.yaml --stage B --output artifacts/acceptance/B-T07"
-  exported <- t07_attempt_export(output = root, config_path = fixture$config_path,
-                                 command = command,
-                                 working_ref = "b204b536962f8fab65df34fa49e88bd88aae7298")
-  testthat::expect_type(exported, "list")
-  if (inherits(exported, "error")) return(invisible(NULL))
-  record <- paste(readLines(exported$reproduction_path, warn = FALSE), collapse = "\n")
+  exported <- t07_expect_export_success(
+    t07_attempt_export(output = root, config_path = fixture$config_path,
+                       command = command,
+                       working_ref = "b204b536962f8fab65df34fa49e88bd88aae7298"),
+    "AC4"
+  )
+  reproduction_path <- exported$reproduction_path
+  record <- if (is.character(reproduction_path) && length(reproduction_path) == 1L &&
+                file.exists(reproduction_path)) {
+    paste(readLines(reproduction_path, warn = FALSE), collapse = "\n")
+  } else {
+    ""
+  }
   testthat::expect_true(grepl(command, record, fixed = TRUE))
-  testthat::expect_true(grepl("environment SHA256", record, fixed = TRUE))
+  testthat::expect_true(grepl("environment SHA256", record, ignore.case = TRUE))
   testthat::expect_true(grepl("payload SHA256", record, fixed = TRUE))
   testthat::expect_true(grepl("unrun qualifications", record, ignore.case = TRUE))
   testthat::expect_true(grepl("not final HTML", record, ignore.case = TRUE))
   testthat::expect_true(grepl("not biological validation", record, ignore.case = TRUE))
-  receipt <- jsonlite::read_json(exported$acceptance_record_path, simplifyVector = FALSE)
+  receipt <- t07_read_json_safe(exported$acceptance_record_path)
   testthat::expect_true(all(c("AC1", "AC2", "AC3", "AC4") %in%
                               vapply(receipt$acceptance, function(item) item$id, character(1))))
-  testthat::expect_identical(receipt$acceptance[[4L]]$verdict, "pass")
-  testthat::expect_true(triomics_validate_envelope(exported$acceptance_record_envelope_path))
-  testthat::expect_true(triomics_validate_envelope(sub("\\.md$", ".envelope.json", exported$reproduction_path)))
+  testthat::expect_identical(t07_acceptance_verdict(receipt, "AC4"), "pass")
+  testthat::expect_true(isTRUE(triomics_validate_envelope(exported$acceptance_record_envelope_path)))
+  reproduction_envelope_path <- if (is.character(reproduction_path) && length(reproduction_path) == 1L) {
+    sub("\\.md$", ".envelope.json", reproduction_path)
+  } else {
+    ""
+  }
+  testthat::expect_true(isTRUE(triomics_validate_envelope(reproduction_envelope_path)))
   testthat::expect_identical(receipt$status, "partial")
+})
+
+testthat::test_that("B-T07 AC4 refuses reuse if any reproduction or acceptance artifact is absent", {
+  artifact_names <- c("reproduction.md", "reproduction.envelope.json",
+                      "acceptance-record.json", "acceptance-record.envelope.json")
+  for (artifact_name in artifact_names) {
+    root <- t07_test_root(paste0("ac4-missing-", gsub("[^a-z]", "", artifact_name)))
+    fixture <- t07_public_bundle_fixture(root, include_clinical = TRUE)
+    exported <- t07_expect_export_success(
+      t07_attempt_export(output = root, config_path = fixture$config_path),
+      paste("AC4 artifact", artifact_name)
+    )
+    late_path <- file.path(dirname(exported$bundle_path), artifact_name)
+    testthat::expect_true(file.exists(late_path))
+    if (file.exists(late_path)) file.remove(late_path)
+    candidate <- triomics_b07_resume_candidate(exported$bundle_path)
+    decision <- t07_attempt_resume(candidate, exported$cache_key)
+    testthat::expect_false(inherits(decision, "error"))
+    testthat::expect_false(isTRUE(decision$reuse))
+    attempted <- t07_attempt_export(output = root, config_path = fixture$config_path, resume = TRUE)
+    testthat::expect_s3_class(attempted, "triomics_error")
+    testthat::expect_identical(attempted$code, "B_EXPORT_INCOMPLETE")
+  }
+})
+
+testthat::test_that("B-T07 reproduction wording follows the verified privacy classification", {
+  root <- t07_test_root("ac4-privacy-context")
+  fixture <- t07_public_bundle_fixture(root, include_clinical = TRUE,
+                                       privacy_class = "private_study")
+  exported <- t07_expect_export_success(
+    t07_attempt_export(output = root, config_path = fixture$config_path),
+    "AC4 privacy context"
+  )
+  reproduction_path <- exported$reproduction_path
+  record <- if (is.character(reproduction_path) && length(reproduction_path) == 1L &&
+                file.exists(reproduction_path)) {
+    paste(readLines(reproduction_path, warn = FALSE), collapse = "\n")
+  } else {
+    ""
+  }
+  testthat::expect_true(grepl("private_study", record, fixed = TRUE))
+  testthat::expect_false(grepl("public synthetic inputs", record, fixed = TRUE))
+  testthat::expect_false(grepl("No real study inputs", record, fixed = TRUE))
+  testthat::expect_false(grepl("No real study inputs, clinical identifiers, or private results were used",
+                               record, fixed = TRUE))
 })
 
 testthat::test_that("B-T07 rejects orphaned clinical payloads instead of silently omitting them", {
