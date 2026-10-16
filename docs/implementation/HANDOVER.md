@@ -62,10 +62,11 @@ failures/skips; full suite 3,462/3,462 with no warnings/skips; clean archive
 package check `Status: OK` with no ERROR/WARNING/NOTE. The immutable Astra review
 returned `changes_required` only because B-T01/B-T02/B-T03 lacked explicit
 acceptance records. Sol applied record-only M4-015 after a fresh 749-expectation
-combined pass; all three are accepted now, not retroactively. No worker is
-active. The next transition is the single focused Astra rereview of M4-G4-001.
-Sol may accept B-T07/G4 and release Stage C only after PASS. Older completed
-managed worktrees remain archived.
+combined pass; all three are accepted now, not retroactively. Fresh read-only
+reviewer `/root/m4_g4_focused_astra` is active on record-only correction
+snapshot `0f4be24` for the single focused rereview of M4-G4-001. Sol may accept
+B-T07/G4 and release Stage C only after PASS. Older completed managed worktrees
+remain archived.
 The user-owned `.gitignore`, AppleDouble files and `.superpowers/`
 remain untouched.
 

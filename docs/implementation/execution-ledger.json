@@ -33,15 +33,39 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_g4_focused_astra",
+      "role": "astra_low_m4_g4_focused_rereviewer",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "snapshot_commit": "0f4be24",
+      "finding": "M4-G4-001",
+      "mode": "read_only"
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_g4_focused_astra_rereview_pending",
+    "status": "m4_g4_focused_astra_rereview_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_g4_focused_astra",
+        "expected_receipt": "focused M4-G4-001 ADDRESSED/NOT ADDRESSED verdict and pass|changes_required|blocked disposition"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Initial M4 Astra review returned changes_required only for M4-G4-001 acceptance accounting. Sol applied record-only M4-015: B-T01/B-T02/B-T03 are accepted now on fresh 749-pass and existing integrated/package evidence. One focused Astra rereview is pending; B-T07/G4/Stage C remain unreleased."
+    "disposition": "Initial M4 Astra review returned changes_required only for M4-G4-001. Record-only correction snapshot 0f4be24 is under the single fresh Astra-low focused rereview. B-T07/G4/Stage C remain unreleased."
   },
   "orchestration_events": [
+    {
+      "event": "m4_g4_001_focused_astra_rereview_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_g4_focused_astra",
+      "snapshot_commit": "0f4be24",
+      "finding": "M4-G4-001",
+      "allowed_next_transition": "on pass, Sol records the focused receipt, accepts B-T07/G4 and releases Stage C; otherwise M4 remains blocked because the single focused rereview is consumed",
+      "disposition": "Review is record-only and read-only. No code/scientific change or private data are in scope."
+    },
     {
       "event": "m4_g4_initial_astra_changes_required_m4_015_reconciled",
       "date": "2026-10-16",
