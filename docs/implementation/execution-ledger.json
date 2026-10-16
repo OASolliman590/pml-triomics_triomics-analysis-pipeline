@@ -35,13 +35,27 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m4_008_coordinator_full_verification_active",
+    "status": "m4_005_shared_integration_ready_for_astra_audit",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Sol-high review passed M4-008 with no findings, independently reproduced 62 clean assertions and confirmed preserved package Status: OK. Coordinator full-suite, fresh package and parity verification is active; integration remains conditional."
+    "disposition": "M4-005B, M4-007 and M4-008 are serially integrated and candidate-path blobs are byte-identical. The fresh complete suite passed 3,169 assertions, package check is Status: OK, and eight source/installed probes passed. B-T05/B-T06 and B-T07 remain blocked until the required immutable shared M4-005 Astra audit is accepted."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005b_m4_007_m4_008_integrated_ready_for_shared_astra_audit",
+      "date": "2026-10-16",
+      "candidate_commit": "f59abdf467cca274a1174c13be8daacb50e01a01",
+      "integrated_tip_before_receipt": "f83aeda",
+      "integration_commits": ["f486232", "df6b4fd", "053d8ae", "d76bc1e", "b3e7c95", "8ef8c9b", "595bac5", "f83aeda"],
+      "full_suite": {"passed": 3169, "failed": 0, "warned": 0, "skipped": 0},
+      "package_check": "Status: OK; 0 errors, warnings or notes",
+      "parity_probes": {"source_exits_zero": 4, "installed_exits_zero": 4},
+      "candidate_path_identity": "byte_identical",
+      "verification_ref": "docs/implementation/reviews/M4-005B-integration-verification.md",
+      "allowed_next_transition": "create the immutable documentation snapshot and dispatch the single fresh Astra-low M4-005 shared-integration audit",
+      "disposition": "The initial multi-commit sequencer twice encountered transient clean-file overwrite guards and would have omitted 265edf9 and 0c84428; Sol quit the sequencer, applied every missing/remaining commit individually, and verified byte identity. User .gitignore changes remain untouched."
+    },
     {
       "event": "m4_008_fresh_sol_review_passed_coordinator_full_verification_started",
       "date": "2026-10-16",

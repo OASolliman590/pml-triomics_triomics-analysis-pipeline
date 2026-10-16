@@ -1,9 +1,10 @@
 # Implementation handover
 
 Run `triomics-20260920-sol-01` is active on branch
-`spec/harden-v2-20260920`. G3 is accepted. M4-005 execution is active: Unit A
-is integrated and verified, and Unit B is the next dependency-legal packet.
-M4 is not yet eligible for G4 review.
+`spec/harden-v2-20260920`. G3 is accepted. M4-005 Units A and B plus the bounded
+M4-007/M4-008 reconciliations are integrated and coordinator-verified. The
+required immutable shared M4-005 Astra audit is the next transition. M4 is not
+yet eligible for G4 review.
 
 G0 and G1 remain accepted. G2 is accepted on immutable milestone snapshot
 `8b0754c1ea581ba18c4bb2e7eb862c26eeb625a7` after its one permitted focused
@@ -24,6 +25,14 @@ This is synthetic software evidence only. None of Omar's fasting,
 diabetic-treatment, or organophosphate study data was read, fitted, uploaded, or
 scientifically validated.
 
+Fresh M4-005B/M4-007/M4-008 evidence on 2026-10-16:
+
+- complete local suite: 3,169 passed, 0 failed, 0 warned, 0 skipped;
+- fresh package build/check: `Status: OK`, with no package error, warning or note;
+- eight fresh source/installed B-T04/B-T05/B-T06 CLI probes exited 0;
+- integrated candidate paths are byte-identical to accepted candidate `f59abdf`;
+- review receipt: `reviews/M4-005B-integration-verification.md`.
+
 ## Current programme state
 
 - M2/G2: accepted; review is in `reviews/M2-astra-review.md`.
@@ -40,33 +49,29 @@ scientifically validated.
   moderated route passes all five declared cells. Candidate `bb0181b` and
   targeted installed-package repair `9e5f08e` were independently accepted and
   integrated as `753ae47` and `af69a9e`. Review: `reviews/B-T04-review.md`.
-- B-T05's M4-003 cycle remains historically exhausted, but accepted change
-  record M4-005 authorized a bounded shared-integration reopening. Unit A is now
-  integrated through `d76e564`: method/unavailability/fallback provenance is
-  retained, false DEqMS claims are excluded, its exact optional dependency
-  closure is locked, targeted/adjacent tests pass, and package check is
-  `Status: OK`. B-T05 is still not accepted pending Unit B and the shared Astra
-  M4-005 audit.
-- B-T06 is blocked after its final M4-004 repair/review cycle. Candidate
-  `086d604` fixed scale-invariant Wilcoxon eligibility and passed 66 assertions,
-  but its restored startup wrapper removes the integrated B-T04 dispatch/stage
-  chain. M4-004 permits no further repair/review; the candidate remains
-  unintegrated. Review: `reviews/B-T06-final-repair-review.md`.
+- B-T05's original M4-003 cycle remains historically exhausted. M4-005 Units A
+  and B are now integrated: method/unavailability/fallback provenance is retained
+  and centralized dispatch preserves B-T04 through B-T06. B-T05 remains blocked
+  only until the shared M4-005 Astra audit is accepted.
+- B-T06's original M4-004 cycle remains historically exhausted. Its accepted
+  statistical candidate and centralized-dispatch reconciliation are integrated,
+  including fixed-family/rank behavior and preserved B-T04 routing. B-T06
+  remains blocked only until the shared M4-005 Astra audit is accepted.
 - B-T09 is accepted and integrated. It passed 83 packet assertions, 139 B-T08
   regression assertions, 13 cross-cutting CLI probes, source/installed fixture
   execution, schema checks and package check. Unsupported real-study
   longitudinal objectives fail closed until eligible inputs exist.
-- B-T07 is unstarted because B-T05 and B-T06 remain blocked. G4, all C and all
-  D remain unreleased.
+- B-T07 is unstarted because the shared M4-005 Astra audit has not yet accepted
+  B-T05/B-T06. G4, all C and all D remain unreleased.
 - The final blocked-cycle Astra audit passed after correcting B-T07's stale
   dependency reason. Review: `reviews/M4-final-cycle-astra-audit.md`. Neither
   blocked candidate is integrated.
 - M4-005 defines the bounded reopening: the completed B-T05 result-boundary Unit
   A followed by centralized B-T02-through-B-T06 dispatch composition Unit B.
-  Omar accepted the record and plans. Unit A passed focused Sol review,
-  registration review and coordinator verification; M4-006's independent Astra
-  audit accepted the one-value stale-test reconciliation. Unit B now starts from
-  the integrated Unit A tree. No run-owned agent is active at this checkpoint.
+  Omar accepted the record and plans. Units A and B passed fresh Sol reviews and
+  coordinator verification. M4-006, M4-007 and M4-008 passed independent Astra
+  audits for their bounded reconciliations. The combined immutable shared M4-005
+  Astra audit is now required. No run-owned agent is active at this checkpoint.
 
 ## Literal resume instruction
 
@@ -74,14 +79,12 @@ Read root `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `execution-ledger.json`, this handover, `reviews/M2-astra-review.md`,
 `reviews/M3-astra-review.md`, `milestones/M4.md`, `reviews/B-T04-review.md`, and
 `reviews/B-T09-review.md`, then M4-003/M4-004, M4-005 and their audit receipts.
-Verify HEAD and dirty state. Do not repeat accepted G2/G3/B-T09 work or any
-accepted B-T04 work, or any exhausted B-T05/B-T06 attempt or review. M4-003 and
-M4-004 final cycles are exhausted and blocked; do not repair either candidate
-under those old records. M4-005 is independently audited and accepted for
-execution. Unit A is already integrated; resume at
-`plans/M4-005B-stage-b-dispatch-composition.md`, restoring the six B-T06 files
-only inside its fresh worktree. B-T07 remains illegal until Unit B and the
-bounded M4-005 shared-integration audit pass. Preserve B-T04's frozen controls.
+Verify HEAD and dirty state. Do not repeat accepted G2/G3/B-T04/B-T09 work or
+the completed M4-005/M4-006/M4-007/M4-008 implementation/review cycles. Resume
+by dispatching the one fresh Astra-low shared M4-005 integration audit on the
+immutable current snapshot. If Sol accepts PASS, update B-T05/B-T06 to accepted
+and immediately dispatch B-T07 in a fresh isolated Luna-max worktree. Preserve
+B-T04's frozen controls and keep all private study inputs outside agents/Git.
 
 ## Orchestration correction
 
