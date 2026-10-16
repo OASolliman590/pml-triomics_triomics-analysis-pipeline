@@ -33,30 +33,28 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_g4_astra_review",
-      "role": "astra_low_m4_g4_immutable_reviewer",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "snapshot_commit": "20e2a35",
-      "spec_hash": "f0d482db62f16c8e4c802c99c1fd88e501f29959bc475d67f934b40c6f6ae5d2",
-      "mode": "read_only"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_g4_astra_review_active",
+    "status": "m4_g4_focused_astra_rereview_pending",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_g4_astra_review",
-        "expected_receipt": "immutable M4/G4 pass|changes_required|blocked verdict with exact blocking findings and missing qualifications"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Immutable M4/G4 snapshot 20e2a35 is under one fresh Astra-low read-only review. All software/package gates passed on tested code commit d2a2231; Sol has not yet accepted B-T07 or released G4/Stage C."
+    "disposition": "Initial M4 Astra review returned changes_required only for M4-G4-001 acceptance accounting. Sol applied record-only M4-015: B-T01/B-T02/B-T03 are accepted now on fresh 749-pass and existing integrated/package evidence. One focused Astra rereview is pending; B-T07/G4/Stage C remain unreleased."
   },
   "orchestration_events": [
+    {
+      "event": "m4_g4_initial_astra_changes_required_m4_015_reconciled",
+      "date": "2026-10-16",
+      "reviewer": "/root/m4_g4_astra_review",
+      "reviewed_commit": "20e2a35fc442c877874ecf797a2073970955e157",
+      "verdict": "changes_required",
+      "finding": "M4-G4-001: B-T01/B-T02/B-T03 lacked explicit acceptance records despite implementation and integrated evidence",
+      "correction_ref": "docs/implementation/change-records/M4-015-b-t01-b-t03-acceptance-reconciliation.md",
+      "acceptance_ref": "docs/implementation/reviews/M4-015-b-t01-b-t03-sol-acceptance.md",
+      "fresh_tests": {"b_t01_b_t02_b_t03_expectations": 749, "failed": 0, "warnings": 0, "skipped": 0},
+      "allowed_next_transition": "commit the record-only correction and dispatch the single focused Astra-low rereview of M4-G4-001",
+      "disposition": "No code/scientific correction was requested. B-T07, G4 and Stage C remain unreleased."
+    },
     {
       "event": "m4_g4_immutable_astra_review_dispatched",
       "date": "2026-10-16",
@@ -2155,33 +2153,41 @@
       "integration_commit": "610a732"
     },
     "B-T01": {
-      "status": "sol_verified",
+      "status": "accepted",
       "attempts": 1,
       "commit": "ddc0ae5",
-      "acceptance_refs": [],
-      "blockers": [
-        "milestone review not yet run"
+      "acceptance_refs": [
+        "docs/implementation/reviews/M4-015-b-t01-b-t03-sol-acceptance.md",
+        "docs/implementation/reviews/M4-007-sol-review.md",
+        "docs/implementation/reviews/M4-G4-astra-review.md",
+        "docs/implementation/reviews/M4-014-integration-package-gate.md"
       ],
+      "blockers": [],
       "integration_commit": "2e4971e"
     },
     "B-T02": {
-      "status": "sol_verified",
+      "status": "accepted",
       "attempts": 1,
       "commit": "bded42a",
-      "acceptance_refs": [],
-      "blockers": [
-        "208 passed without B-T04 loaded"
+      "acceptance_refs": [
+        "docs/implementation/reviews/M4-015-b-t01-b-t03-sol-acceptance.md",
+        "docs/implementation/reviews/M4-G4-astra-review.md",
+        "docs/implementation/reviews/M4-014-integration-package-gate.md"
       ],
+      "blockers": [],
       "integration_commit": "9cd36fe"
     },
     "B-T03": {
-      "status": "sol_verified",
+      "status": "accepted",
       "attempts": 1,
       "commit": "bded42a",
-      "acceptance_refs": [],
-      "blockers": [
-        "275 passed without B-T04 loaded"
+      "acceptance_refs": [
+        "docs/implementation/reviews/M4-015-b-t01-b-t03-sol-acceptance.md",
+        "docs/implementation/reviews/M4-007-sol-review.md",
+        "docs/implementation/reviews/M4-G4-astra-review.md",
+        "docs/implementation/reviews/M4-014-integration-package-gate.md"
       ],
+      "blockers": [],
       "integration_commit": "9cd36fe"
     },
     "B-T04": {
