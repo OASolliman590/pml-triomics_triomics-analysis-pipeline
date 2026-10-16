@@ -114,7 +114,7 @@ triomics_execute_longitudinal_associations(config_path, output)
   \item{shared_factor_strength}{Finite strength of the shared latent factor.}
   \item{request}{A validated synthetic stage A export request.}
   \item{output}{Local output directory.}
-  \item{resume}{Whether a complete matching export may be reused.}
+  \item{resume}{Whether a complete matching export or B-T07 handoff may be reused.}
   \item{interrupt}{Optional test hook for an interrupted export.}
   \item{components}{Uniquely named list used to derive a cache key.}
   \item{candidate}{Candidate cached-export metadata.}
@@ -130,7 +130,6 @@ triomics_execute_longitudinal_associations(config_path, output)
   \item{command}{Exact command recorded for reproduction.}
   \item{working_ref}{Recorded source-control reference for reproduction.}
   \item{cli_exit_code}{Recorded exit code for the completed Stage B command.}
-  \item{resume}{Whether a complete matching B-T07 handoff may be reused.}
   \item{qualifications}{Explicit unrun scientific qualifications recorded in
   the acceptance and reproduction evidence.}
   \item{matrix_source}{Declared provenance label for the handed-off matrices.}
