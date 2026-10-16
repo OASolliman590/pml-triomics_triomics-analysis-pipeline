@@ -826,7 +826,7 @@ triomics_b07_reproduction_text <- function(command, working_ref, runtime, enviro
            "`.")
   }, character(1))
   ac_lines <- vapply(acceptance, function(item) {
-    paste0("- ", item$id, ": `", item$verdict, "` — ", item$detail)
+    paste0("- ", item$id, ": `", item$verdict, "` \u2014 ", item$detail)
   }, character(1))
   matrix_lines <- if (length(matrix_bindings)) {
     unlist(lapply(matrix_bindings, function(block) {
@@ -962,7 +962,7 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
   dependency_pairs <- c(dependency_pairs, unlist(lapply(clinical_artifacts, function(item) {
     item$envelope$inputs
   }), recursive = FALSE))
-  dependency_hashes <- setNames(
+  dependency_hashes <- stats::setNames(
     lapply(seq_along(dependency_pairs), function(index) as.character(dependency_pairs[[index]]$sha256)),
     vapply(seq_along(dependency_pairs), function(index) {
       paste0(as.character(dependency_pairs[[index]]$artifact_id), "#", index)

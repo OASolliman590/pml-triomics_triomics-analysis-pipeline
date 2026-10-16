@@ -7,8 +7,68 @@ t07_test_root <- function(label) {
   normalizePath(path, winslash = "/", mustWork = TRUE)
 }
 
+t07_package_context <- function() {
+  source_root <- normalizePath(testthat::test_path("..", ".."), winslash = "/", mustWork = TRUE)
+  namespace_root <- tryCatch(
+    normalizePath(getNamespaceInfo(asNamespace("triomics"), "path"),
+                  winslash = "/", mustWork = TRUE),
+    error = function(error) ""
+  )
+  list(
+    source_root = source_root,
+    source_checkout = identical(namespace_root, source_root) &&
+      dir.exists(file.path(source_root, "R")) &&
+      file.exists(file.path(source_root, "inst", "exec", "triomics"))
+  )
+}
+
+t07_package_resource <- function(...) {
+  components <- as.character(c(...))
+  context <- t07_package_context()
+  if (context$source_checkout) return(triomics_test_resource(...))
+  installed_path <- do.call(
+    system.file,
+    c(as.list(components), list(package = "triomics"))
+  )
+  if (!nzchar(installed_path) || !file.exists(installed_path)) {
+    stop("Installed triomics resource not found: ", paste(components, collapse = "/"),
+         call. = FALSE)
+  }
+  normalizePath(installed_path, winslash = "/", mustWork = TRUE)
+}
+
 t07_ticket <- function(name = "B-T06.yaml") {
-  triomics_test_resource("examples", "tickets", name)
+  paired_ticket <- name %in% c("B-T03.yaml", "B-T05.yaml")
+  data_group <- if (paired_ticket) "paired" else "independent"
+  source_prefix <- if (paired_ticket) "../data/paired/" else {
+    "../../../discovery/spec-v2/examples/independent/"
+  }
+  fixture_root <- tempfile(pattern = "b-t07-ticket-")
+  ticket_dir <- file.path(fixture_root, "tickets")
+  input_dir <- file.path(fixture_root, "inputs")
+  dir.create(ticket_dir, recursive = TRUE, showWarnings = FALSE)
+  dir.create(input_dir, recursive = TRUE, showWarnings = FALSE)
+
+  source_ticket <- t07_package_resource("examples", "tickets", name)
+  ticket_path <- file.path(ticket_dir, name)
+  if (!file.copy(source_ticket, ticket_path, overwrite = TRUE)) {
+    stop("Could not copy packaged B-T07 ticket fixture: ", name, call. = FALSE)
+  }
+  lines <- readLines(ticket_path, warn = FALSE)
+  for (data_name in c("metadata.tsv", "proteomics.tsv")) {
+    source_data <- t07_package_resource("examples", "data", data_group, data_name)
+    if (!file.copy(source_data, file.path(input_dir, data_name), overwrite = TRUE)) {
+      stop("Could not copy packaged B-T07 assay fixture: ", data_name, call. = FALSE)
+    }
+    source_ref <- paste0(source_prefix, data_name)
+    if (!any(grepl(source_ref, lines, fixed = TRUE))) {
+      stop("Packaged ticket fixture does not contain expected input path: ", source_ref,
+           call. = FALSE)
+    }
+    lines <- gsub(source_ref, paste0("../inputs/", data_name), lines, fixed = TRUE)
+  }
+  writeLines(lines, ticket_path, useBytes = TRUE)
+  normalizePath(ticket_path, winslash = "/", mustWork = TRUE)
 }
 
 t07_write_artifact <- function(payload, path, artifact_type, artifact_id,
@@ -220,15 +280,30 @@ t07_acceptance_verdict <- function(record, acceptance_id) {
 }
 
 t07_cli_smoke <- function(config_path, output) {
-  cli <- triomics_test_resource("exec", "triomics")
-  old_wd <- setwd(dirname(cli))
-  on.exit(setwd(old_wd), add = TRUE)
-  lines <- system2(
-    file.path(R.home("bin"), "Rscript"),
-    c("--vanilla", shQuote(basename(cli)), "--config", shQuote(config_path),
-      "--stage", "B", "--output", shQuote(output)),
-    stdout = TRUE, stderr = TRUE
-  )
+  context <- t07_package_context()
+  rscript <- file.path(R.home("bin"), "Rscript")
+  cli_args <- c("--config", shQuote(config_path), "--stage", "B", "--output", shQuote(output))
+
+  if (context$source_checkout) {
+    lines <- system2(
+      rscript,
+      c("--vanilla", shQuote(file.path(context$source_root, "inst", "exec", "triomics")), cli_args),
+      stdout = TRUE, stderr = TRUE
+    )
+  } else {
+    runner <- tempfile(pattern = "b-t07-installed-cli-", fileext = ".R")
+    on.exit(unlink(runner), add = TRUE)
+    writeLines(c(
+      "status <- triomics:::triomics_main(commandArgs(trailingOnly = TRUE))",
+      "quit(save = \"no\", status = as.integer(status))"
+    ), runner, useBytes = TRUE)
+    lines <- system2(
+      rscript,
+      c("--vanilla", shQuote(runner), cli_args),
+      env = paste0("R_LIBS=", shQuote(paste(.libPaths(), collapse = .Platform$path.sep))),
+      stdout = TRUE, stderr = TRUE
+    )
+  }
   status <- attr(lines, "status")
   if (is.null(status)) status <- 0L
   list(status = as.integer(status), output = lines)
