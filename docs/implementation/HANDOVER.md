@@ -59,9 +59,10 @@ Sol-6.1 high re-review marked the finding ADDRESSED with no new P0/P1, and the
 repair was integrated as `cbe5400`. Fresh integrated evidence at `d2a2231` is:
 source B-T07 124/124 with no warnings/skips; installed B-T07 124/124 with no
 failures/skips; full suite 3,462/3,462 with no warnings/skips; clean archive
-package check `Status: OK` with no ERROR/WARNING/NOTE. No worker is active. The
-next transition is one fresh immutable M4 Astra-low review. Older completed
-managed worktrees remain archived.
+package check `Status: OK` with no ERROR/WARNING/NOTE. Fresh read-only reviewer
+`/root/m4_g4_astra_review` (Astra low) is active on immutable snapshot
+`20e2a35`. Sol may accept B-T07/G4 and release Stage C only if that review
+passes. Older completed managed worktrees remain archived.
 The user-owned `.gitignore`, AppleDouble files and `.superpowers/`
 remain untouched.
 

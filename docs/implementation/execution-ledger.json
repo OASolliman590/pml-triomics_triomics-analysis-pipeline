@@ -33,15 +33,39 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_g4_astra_review",
+      "role": "astra_low_m4_g4_immutable_reviewer",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "snapshot_commit": "20e2a35",
+      "spec_hash": "f0d482db62f16c8e4c802c99c1fd88e501f29959bc475d67f934b40c6f6ae5d2",
+      "mode": "read_only"
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_software_gates_passed_pending_astra",
+    "status": "m4_g4_astra_review_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_g4_astra_review",
+        "expected_receipt": "immutable M4/G4 pass|changes_required|blocked verdict with exact blocking findings and missing qualifications"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "At d2a2231 source B-T07 passed 124/124 without warnings/skips, installed parity passed 124/124 without failures/skips, the full suite passed 3,462/3,462 without warnings/skips, and clean archive R CMD check ended Status: OK. Immutable M4 Astra review is the next gate."
+    "disposition": "Immutable M4/G4 snapshot 20e2a35 is under one fresh Astra-low read-only review. All software/package gates passed on tested code commit d2a2231; Sol has not yet accepted B-T07 or released G4/Stage C."
   },
   "orchestration_events": [
+    {
+      "event": "m4_g4_immutable_astra_review_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_g4_astra_review",
+      "snapshot_commit": "20e2a35",
+      "spec_hash": "f0d482db62f16c8e4c802c99c1fd88e501f29959bc475d67f934b40c6f6ae5d2",
+      "allowed_next_transition": "Sol records the Astra verdict; accept B-T07/G4 and release Stage C only on pass, otherwise follow the single focused-review allowance or block honestly",
+      "disposition": "Astra is read-only and cannot implement, accept, merge, dispatch or release. No private study data are in scope."
+    },
     {
       "event": "m4_014_integrated_software_and_package_gates_passed",
       "date": "2026-10-16",
