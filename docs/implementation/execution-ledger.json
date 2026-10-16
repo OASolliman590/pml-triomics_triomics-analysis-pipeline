@@ -35,33 +35,40 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/b_t07_luna",
-      "role": "luna_bounded_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "snapshot_commit": "b204b53",
+      "agent_name": "/root/b_t07_sol_review",
+      "role": "sol_high_task_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "snapshot_commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
       "worktree": "/Users/megastore/.codex/worktrees/b-t07-export-handoff/PML MultiOmics Analysis Pipeline",
-      "allowlist": [
-        "R/export_b.R",
-        "tests/testthat/test-B-T07.R",
-        "inst/examples/tickets/B-T07.yaml",
-        "docs/implementation/registrations/B-T07.json"
-      ]
+      "allowlist": ["read_only_review"]
     }
   ],
   "orchestration_control": {
-    "status": "b_t07_initial_attempt_active",
+    "status": "b_t07_initial_candidate_sol_review_active",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [
       {
-        "agent_name": "/root/b_t07_luna",
-        "expected_receipt": "B-T07 RED/GREEN evidence, four-file allowlisted commit, acceptance artifacts and <=10-line receipt"
+        "agent_name": "/root/b_t07_sol_review",
+        "expected_receipt": "B-T07 spec and quality verdict, AC1-AC4/CLI classification, findings and exact Sol integration transition"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T08 is accepted. Fresh Luna-max worker /root/b_t07_luna is executing B-T07's initial attempt in a managed isolated worktree; G4 and Stage C/D remain gated."
+    "disposition": "B-T07 Luna candidate b7a9455 changed only the four allowed files and passed 8 tests/27 expectations. Fresh Sol-high review is active; CLI AC3/AC4 remains unproven pending the requested shared same-run matrix/post-B hook."
   },
   "orchestration_events": [
+    {
+      "event": "b_t07_initial_candidate_completed_sol_review_dispatched",
+      "date": "2026-10-16",
+      "implementer": "/root/b_t07_luna",
+      "reviewer": "/root/b_t07_sol_review",
+      "candidate_commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
+      "changed_files": ["R/export_b.R", "tests/testthat/test-B-T07.R", "inst/examples/tickets/B-T07.yaml", "docs/implementation/registrations/B-T07.json"],
+      "worker_tests": {"cases": 8, "expectations": 27, "failed": 0, "warned": 0, "skipped": 0},
+      "cli_evidence": "exit 0 but no B-T07 handoff or reproduction record because the shared post-B hook and same-run resolved matrix exposure are absent",
+      "allowed_next_transition": "follow the fresh Sol-high review: integrate packet-owned candidate and perform scoped shared registration only if approved, otherwise use bounded repair 1",
+      "disposition": "Coordinator confirmed the clean four-file commit and complete worker report before dispatching the mandatory review."
+    },
     {
       "event": "b_t07_initial_luna_worker_dispatched",
       "date": "2026-10-16",
@@ -1971,9 +1978,9 @@
       "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
-      "status": "initial_attempt_active",
+      "status": "initial_candidate_review_active",
       "attempts": 1,
-      "commit": null,
+      "commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
       "acceptance_refs": [],
       "blockers": []
     },
