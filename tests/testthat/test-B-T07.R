@@ -363,6 +363,76 @@ testthat::test_that("B-T07 AC3 validates the matrix hash and blocks unverified p
   testthat::expect_identical(changed_export$code, "B_EXPORT_MATRIX")
 })
 
+testthat::test_that("B-T07 Stage B returns the same-run keyed matrices without serializing them", {
+  root <- tempfile("b-t07-same-run-matrices-")
+  dir.create(root)
+  on.exit(unlink(root, recursive = TRUE), add = TRUE)
+  config_path <- t07_ticket("B-T07.yaml")
+  config <- triomics_read_config(config_path)
+  block_ids <- as.character(config$analyses[[1L]]$block_ids)
+  stage_b_result <- triomics_execute_stage_b(config_path, root)
+  payload_path <- file.path(root, "B", "block-results.json")
+  envelope_path <- file.path(root, "B", "block-results.envelope.json")
+  payload <- t07_read_json_safe(payload_path)
+  envelope <- t07_read_json_safe(envelope_path)
+
+  testthat::expect_identical(names(payload), c(
+    "schema_version", "study_id", "analysis_id", "preparation_context_id",
+    "representation_id", "status", "limma_version", "config_sha256",
+    "preparation_refit", "matrix_origin", "filter_applied", "runtime",
+    "blocks", "method_status"
+  ))
+  testthat::expect_identical(names(envelope), c(
+    "schema_version", "artifact_type", "artifact_id", "study_id", "run_id",
+    "status", "created_utc", "config_sha256", "inputs", "payload_file",
+    "payload_sha256", "producer", "reason_codes", "privacy_class"
+  ))
+  forbidden_fields <- c(
+    "resolved_matrices", "assay", "fit", "native_model", "model_object",
+    "lmFit", "MArrayLM"
+  )
+  has_forbidden_field <- function(value) {
+    if (!is.list(value)) return(FALSE)
+    any(names(value) %in% forbidden_fields) ||
+      any(vapply(value, has_forbidden_field, logical(1)))
+  }
+  testthat::expect_false(has_forbidden_field(payload))
+  testthat::expect_false(has_forbidden_field(envelope))
+
+  resolved_matrices <- stage_b_result$resolved_matrices
+  testthat::expect_identical(names(resolved_matrices), block_ids)
+  if (is.list(resolved_matrices) && identical(names(resolved_matrices), block_ids)) {
+    for (block_id in block_ids) {
+      matrix <- resolved_matrices[[block_id]]
+      testthat::expect_true(is.matrix(matrix) && is.numeric(matrix))
+      testthat::expect_true(!is.null(rownames(matrix)) && !is.null(colnames(matrix)))
+      testthat::expect_true(all(nzchar(rownames(matrix))) && all(nzchar(colnames(matrix))))
+      testthat::expect_identical(anyDuplicated(rownames(matrix)), 0L)
+      testthat::expect_identical(anyDuplicated(colnames(matrix)), 0L)
+
+      block_result <- payload$blocks[[block_id]]
+      rows <- unlist(lapply(block_result$contrasts, `[[`, "rows"), recursive = FALSE)
+      source_hashes <- vapply(rows, function(row) as.character(row$source_hash), character(1))
+      matrix_hash <- triomics_b_assay_hash(block_id, matrix)
+      testthat::expect_true(length(source_hashes) > 0L)
+      testthat::expect_true(all(source_hashes == matrix_hash))
+
+      changed_matrices <- resolved_matrices
+      changed_matrices[[block_id]][1L, 1L] <- changed_matrices[[block_id]][1L, 1L] + 1000
+      changed_hash <- triomics_b_assay_hash(block_id, changed_matrices[[block_id]])
+      testthat::expect_false(identical(matrix_hash, changed_hash))
+      changed_binding <- tryCatch(
+        triomics_b07_matrix_bindings(payload, changed_matrices),
+        error = function(error) error
+      )
+      testthat::expect_s3_class(changed_binding, "triomics_error")
+      if (inherits(changed_binding, "triomics_error")) {
+        testthat::expect_identical(changed_binding$code, "B_EXPORT_MATRIX")
+      }
+    }
+  }
+})
+
 testthat::test_that("B-T07 AC3 rejects partial or hash-mismatched restart candidates", {
   expected <- triomics_hash_text("complete cache key")
   complete <- list(payload_present = TRUE, envelope_present = TRUE,

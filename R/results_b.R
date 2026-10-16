@@ -231,5 +231,8 @@ triomics_execute_stage_b <- function(config_path, output) {
     status = artifact_status
   ), file.path(output, "registries", "run.json"))
   list(status = artifact_status, method_status = fit$status,
-       payload_path = payload_path, limma_version = fit$limma_version)
+       payload_path = payload_path, limma_version = fit$limma_version,
+       resolved_matrices = stats::setNames(lapply(block_ids, function(block_id) {
+         resolved$blocks[[block_id]]$assay
+       }), block_ids))
 }
