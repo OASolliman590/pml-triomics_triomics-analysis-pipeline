@@ -33,33 +33,28 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_007_sol_review",
-      "role": "sol_read_only_reviewer",
-      "packet": "M4-007",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "worktree": ".worktrees/m4-005b-stage-b-composition",
-      "branch": "codex/m4-005b-stage-b-composition",
-      "base_commit": "ada3a17",
-      "candidate_commit": "0c84428"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_007_fresh_sol_review_active",
+    "status": "m4_007_coordinator_full_verification_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_007_sol_review",
-        "unit": "M4-007 complete-diff review",
-        "expected_return": "read-only verdict on test commit 325f0c5 plus one-line product correction 0c84428, including independent focused-test counts and exact scope"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Luna's tests-only RED isolated seven row-status failures while all family-q safeguards passed. Sol removed only the blanket status overwrite; the focused GREEN gate passed 677 with zero failures, warnings or skips. Fresh Sol-high review is active before any full-suite or integration transition."
+    "disposition": "Fresh Sol-high review passed M4-007 with no findings and independently reproduced 677 clean assertions. Coordinator full-suite verification is active; package/parity checks and integration remain conditional on a clean suite."
   },
   "orchestration_events": [
+    {
+      "event": "m4_007_fresh_sol_review_passed_coordinator_full_verification_started",
+      "date": "2026-10-16",
+      "review_agent_name": "/root/m4_007_sol_review",
+      "candidate_base": "ada3a17adebc388850321190bfdbcc9fb64b1152",
+      "candidate_commit": "0c84428",
+      "verdict": "pass",
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "verification": {"passed": 677, "failed": 0, "warned": 0, "skipped": 0},
+      "review_ref": "docs/implementation/reviews/M4-007-sol-review.md",
+      "allowed_next_transition": "run the complete local suite; only a clean result permits package and source/installed parity gates followed by serial integration",
+      "disposition": "Review accepted the bounded reconciliation only. It does not accept B-T05/B-T06 or replace the M4-005 shared Astra audit."
+    },
     {
       "event": "m4_007_green_fresh_sol_review_dispatched",
       "date": "2026-10-16",
