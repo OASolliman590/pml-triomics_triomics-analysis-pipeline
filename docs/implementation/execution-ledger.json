@@ -33,30 +33,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/b_t07_repair1_rereview",
-      "role": "sol_high_focused_rereviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "snapshot_commit": "25415fbe4d88a684133267696024d43683e33f64",
-      "worktree": "/Users/megastore/.codex/worktrees/b-t07-export-handoff/PML MultiOmics Analysis Pipeline",
-      "allowlist": ["read_only_review"]
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "b_t07_repair_1_focused_rereview_active",
+    "status": "b_t07_repair_1_passed_serial_integration_next",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/b_t07_repair1_rereview",
-        "expected_receipt": "focused disposition of four B-T07 repair-1 findings, new-breakage review and exact next transition"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T07 repair 1 candidate 25415fb reports 10 cases/88 assertions green and fixes all four review findings. Fresh focused Sol-high rereview is active; shared integration remains deferred."
+    "disposition": "Focused Sol-high rereview passed B-T07 repair 1 with no new findings. Sol may integrate b7a9455 then 25415fb serially and proceed to the scoped shared same-run matrix/post-B hook; B-T07 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "b_t07_repair_1_focused_rereview_passed",
+      "date": "2026-10-16",
+      "agent_name": "/root/b_t07_repair1_rereview",
+      "repair_candidate_commit": "25415fbe4d88a684133267696024d43683e33f64",
+      "verdict": "pass",
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "tests": {"cases": 10, "expectations": 88, "failed": 0, "warned": 0, "skipped": 0},
+      "review_ref": "docs/implementation/reviews/B-T07-repair1-rereview.md",
+      "allowed_next_transition": "integrate b7a9455 then 25415fb serially and apply the scoped Sol-owned shared registration/hook before integrated acceptance",
+      "disposition": "All four initial findings are addressed; AC3 same-run and CLI generation remain gated on shared integration."
+    },
     {
       "event": "b_t07_repair_1_completed_focused_rereview_dispatched",
       "date": "2026-10-16",
@@ -2000,14 +1997,17 @@
       "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
-      "status": "repair_1_active",
+      "status": "repair_1_passed_pending_shared_integration",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
       "repair_candidate_commit": "25415fbe4d88a684133267696024d43683e33f64",
-      "acceptance_refs": ["docs/implementation/reviews/B-T07-initial-review.md"],
+      "acceptance_refs": [
+        "docs/implementation/reviews/B-T07-initial-review.md",
+        "docs/implementation/reviews/B-T07-repair1-rereview.md"
+      ],
       "blockers": [
-        "Initial Sol review found three P1 and one P2 candidate defect; bounded repair 1 is active. Shared same-run matrix and post-B CLI registration remains a later Sol-owned integration step."
+        "Packet code passed repair-1 rereview; integrated same-run matrix provenance and CLI reproduction remain blocked on the registered shared Sol-owned hook."
       ]
     },
     "C-01": {
