@@ -2,12 +2,13 @@
   "schema_version": "1.0",
   "run_id": "triomics-20260920-sol-01",
   "items": [
-    {"id":"HOST-R-PACKAGES","status":"resolved_for_current_checks","evidence":"On 2026-10-15 the integrated suite ran 2,706 assertions with zero failures/warnings/skips and the package wrapper completed R CMD build/check with Status: OK. This does not certify every future optional adapter."},
+    {"id":"HOST-R-PACKAGES","status":"pending_package_gate","evidence":"On 2026-10-16 the complete local suite passed, but the clean-archive package check at bd7da66 reported 1 ERROR, 2 WARNINGs and 1 NOTE. M4 acceptance requires a new clean package result after the proposed M4-014 correction."},
     {"id":"HOST-QUARTO","status":"pending","evidence":"No Quarto executable found on PATH or standard checked locations."},
     {"id":"GITHUB-AUTH","status":"not_rechecked","evidence":"No push or PR was attempted during the 2026-10-14 G2 repair and pause cycle."},
     {"id":"REAL-DATA","status":"not_run","evidence":"No participant assay matrices or clinical workbook are in this public repository; no real-data validation claimed."},
     {"id":"NOTION","status":"not_synced","evidence":"Local progress documentation was updated on 2026-10-15. No Notion write or read-back verification was attempted in this cycle."},
-    {"id":"B-T04-CALIBRATION","status":"resolved_for_declared_synthetic_cells","evidence":"M4-002 aligned qualification with the published limma-moderated statistic without changing seeds, generator or thresholds. The ordinary one-cell diagnostic remains failed at 23/400 and upper bound 0.08048; all five production-aligned moderated cells passed. This is synthetic evidence, not real-study validation."}
+    {"id":"B-T04-CALIBRATION","status":"resolved_for_declared_synthetic_cells","evidence":"M4-002 aligned qualification with the published limma-moderated statistic without changing seeds, generator or thresholds. The ordinary one-cell diagnostic remains failed at 23/400 and upper bound 0.08048; all five production-aligned moderated cells passed. This is synthetic evidence, not real-study validation."},
+    {"id":"B-T07-PACKAGE-GATE","status":"blocked_awaiting_user_authorization","evidence":"B-T07 source behavior and local tests are green, but installed tests need a bounded source/installed fixture and CLI-runner correction; exporter ASCII/namespace hygiene and duplicate Rd documentation also remain. B-T07 exhausted its normal repair budget, so M4-014 awaits explicit Omar authorization."}
   ]
 }
 

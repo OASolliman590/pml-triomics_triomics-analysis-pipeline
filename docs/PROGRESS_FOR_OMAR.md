@@ -5,43 +5,25 @@ and lipidomics while keeping the fasting, diabetic-treatment and
 organophosphate studies scientifically separate.
 
 **Works now:** Stage B’s independent, paired, repeated-visit, DEqMS/fallback,
-multiplicity, rank-sensitivity and clinical-association lanes coexist in one
-dispatch path. B-T04’s qualified repeated route remains connected; B-T05 reports
-what method actually ran; B-T06 preserves fixed-family accounting.
+multiplicity, clinical and export lanes run together on public synthetic data.
+B-T07 now hands Stage C the exact matrices used by the Stage B fit, with hashes,
+family accounting, reproduction records and fail-closed unavailable methods.
 
-**Changed:** B-T08 now handles constant outcomes and duplicate testing-family
-entries safely, exports its six public interfaces, runs only for its declared
-fixture, leaves B-T09 separate, and refuses unsupported nonfixture clinical
-execution. Fresh Sol review found no defect. The complete local suite passed
-3,298 assertions with no failures, warnings or skips.
+**Changed:** Cross-packet CLI composition was repaired without changing effects,
+standard errors, q-values, B-T04 calibration or privacy behavior. Focused review
+passed 870 expectations; four public CLI fixtures exited 0 and 34 envelopes
+validated. The complete local suite passed with no failure, warning or skip.
 
-**Not established:** This is tested on public synthetic fixtures only—not
-biological validation. None of the three private studies was read or fitted.
-B-T04’s ordinary 23/400 diagnostic remains failed; only its frozen
-production-aligned route passed calibration.
+**Not established:** This is software evidence, not biological validation. None
+of the three private studies was read or fitted. B-T04’s ordinary 23/400
+diagnostic remains failed; only its frozen production-aligned route passed.
 
-**Next:** B-T08 is not accepted yet. Its clean installed-package check stopped
-on three test-setup errors because the new CLI test helper looks for ticket files
-using a source-tree path that does not exist after installation. This is a test
-harness defect, not a failed metabolomics statistic, but the mandatory gate still
-failed. B-T07 therefore cannot start.
+**Next:** The installed-package gate found B-T07 fixture-path/runner defects and
+three package-hygiene issues. They are not statistical failures, but the gate
+cannot be waived and Stage C remains unreleased.
 
-**Needs Omar:** Decide whether to permit one explicit exception to the frozen
-two-repair ceiling for this single installed-test path correction. No change is
-authorized until that decision is recorded.
+**Needs Omar:** Explicitly authorize the bounded M4-014 exception; B-T07 has used
+both normal repairs. Scope is limited to its installed-test helper, two mechanical
+exporter fixes, and one manual cleanup.
 
-**Sync:** Local repository documentation updated; no Notion sync or publication
-was attempted.
-
-<details>
-<summary>Technical checkpoint</summary>
-
-Candidate tip before the blocked-gate receipt: `ed94035`. Verification:
-`docs/implementation/reviews/M4-009-package-check-gate.md`.
-
-Literal restart: read `AGENTS.md`, the spec-v2 README, execution ledger and
-handover; verify HEAD/dirty state; do not change B-T08 until Omar decides the
-repair-ceiling exception. Keep the existing user `.gitignore` modification
-untouched.
-
-</details>
+**Sync:** Local documentation updated; no Notion sync or publication attempted.

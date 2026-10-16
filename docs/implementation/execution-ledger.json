@@ -43,6 +43,17 @@
   },
   "orchestration_events": [
     {
+      "event": "m4_completed_worktrees_archived_for_authorization_pause",
+      "date": "2026-10-16",
+      "worktrees": [
+        "m4-010-bt08-test-path",
+        "b-t07-export-handoff",
+        "m4-011-bt07-matrix",
+        "m4-013-stage-b-composition"
+      ],
+      "disposition": "All four completed managed worktrees were archived recoverably. No run-owned worker or polling loop remains active."
+    },
+    {
       "event": "m4_014_package_gate_astra_blocked_pending_user_authority",
       "date": "2026-10-16",
       "adjudicator": "/root/m4_014_package_gate_astra",
