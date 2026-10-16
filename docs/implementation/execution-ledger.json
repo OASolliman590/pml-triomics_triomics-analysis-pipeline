@@ -35,35 +35,38 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/m4_013_composition_luna",
-      "role": "luna_exclusive_shared_composition_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "snapshot_commit": "35e7b02",
-      "worktree": "/Users/megastore/.codex/worktrees/m4-013-stage-b-composition/PML MultiOmics Analysis Pipeline",
-      "allowlist": [
-        "R/design_repeated.R",
-        "R/clinical_association.R",
-        "R/clinical_longitudinal.R",
-        "tests/testthat/test-B-T08.R",
-        "tests/testthat/test-B-T09.R",
-        "tests/testthat/test-M4-005-stage-b-composition.R"
-      ]
+      "agent_name": "/root/m4_013_sol_review",
+      "role": "sol_high_read_only_shared_composition_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "snapshot_commit": "57474e754aa3657a45e1db644f8cad3a10840ad6",
+      "candidate_worktree": "/Users/megastore/.codex/worktrees/m4-013-stage-b-composition/PML MultiOmics Analysis Pipeline",
+      "allowlist": []
     }
   ],
   "orchestration_control": {
-    "status": "m4_013_shared_composition_active",
+    "status": "m4_013_shared_composition_review_active",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [
       {
-        "agent_name": "/root/m4_013_composition_luna",
-        "expected_receipt": "M4-013 RED/GREEN evidence and exact-allowlist shared composition candidate"
+        "agent_name": "/root/m4_013_sol_review",
+        "expected_receipt": "fresh Sol-high PASS/FAIL review of M4-013 candidate 57474e7"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh isolated Luna-max worker is implementing M4-013 against 35e7b02 with a six-file maximum allowlist. B-T07 remains unaccepted."
+    "disposition": "M4-013 candidate 57474e7 is focused-green and changes five allowlisted files. Fresh Sol-high review is active; B-T07 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "m4_013_shared_composition_completed_review_dispatched",
+      "date": "2026-10-16",
+      "implementer": "/root/m4_013_composition_luna",
+      "reviewer": "/root/m4_013_sol_review",
+      "candidate_commit": "57474e754aa3657a45e1db644f8cad3a10840ad6",
+      "tests": {"focused_expectations": 870, "adjacent_expectations": 746, "failed": 0, "warned": 0, "skipped": 0},
+      "allowed_next_transition": "serial integration only after fresh Sol-high PASS",
+      "disposition": "Fresh-root B04/B08/B09 CLI slices passed; exact five-file diff and worktree are clean."
+    },
     {
       "event": "m4_013_shared_composition_worker_dispatched",
       "date": "2026-10-16",
