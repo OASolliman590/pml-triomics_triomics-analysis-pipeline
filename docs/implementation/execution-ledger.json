@@ -35,13 +35,22 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "blocked_awaiting_m4_014_user_authorization",
+    "status": "m4_014_authorized_pending_worker_dispatch",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Astra classified the M4 package failure as packaging-only but confirmed that B-T07-owned source/test edits exceed its exhausted repair budget. M4-014 is a proposal only and awaits explicit Omar authorization. No worker or poll is active."
+    "disposition": "Omar explicitly authorized the bounded M4-014 package-gate exception on 2026-10-16. The exception does not reset B-T07 attempts and does not waive source, installed, full-suite, package or Astra gates. A fresh isolated Luna-max worker is the next transition."
   },
   "orchestration_events": [
+    {
+      "event": "m4_014_package_gate_exception_authorized",
+      "date": "2026-10-16",
+      "authorization": "Omar: perfect go ahead, continue",
+      "proposal_ref": "docs/implementation/change-records/M4-014-b-t07-package-gate-exception-proposal.md",
+      "scope": ["tests/testthat/test-B-T07.R", "R/export_b.R", "man/triomics-api.Rd (Sol-owned mechanical correction)"],
+      "allowed_next_transition": "dispatch one fresh isolated Luna-max worker for tests/testthat/test-B-T07.R and R/export_b.R; Sol applies only the duplicate Rd consolidation serially",
+      "disposition": "Authorization is limited to the recorded package-gate correction. Attempt counters remain consumed and every mandatory gate remains in force."
+    },
     {
       "event": "m4_completed_worktrees_archived_for_authorization_pause",
       "date": "2026-10-16",
@@ -2144,7 +2153,7 @@
       "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
-      "status": "blocked_awaiting_package_exception_authorization",
+      "status": "m4_014_exception_authorized_pending_worker_dispatch",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
@@ -2164,7 +2173,7 @@
         "docs/implementation/reviews/B-T07-repair1-rereview.md"
       ],
       "blockers": [
-        "Local B-T07 and cross-packet verification pass, but the clean installed-package gate fails on B-T07 fixture/CLI test context plus package hygiene. M4-014 requires explicit Omar authorization because the packet's two normal repairs are consumed."
+        "M4-014 is authorized, but B-T07 remains unaccepted until the bounded correction passes fresh Sol review, source/installed parity, the full local suite, a clean archive package check and immutable M4 Astra review."
       ]
     },
     "C-01": {

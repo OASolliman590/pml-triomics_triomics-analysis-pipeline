@@ -35,17 +35,18 @@ demonstrated. They still cannot be waived. No private study data under the
 authorized external data folder was read, fitted, copied, uploaded or committed.
 All evidence remains public synthetic software evidence only.
 
-## Authorization blocker
+## M4-014 authorization recorded
 
-B-T07 consumed its initial attempt and two repairs. Fresh Astra-low adjudication
-confirmed that the B-T07-owned source/test correction needs explicit Omar
-authorization; the earlier B-T08 exception is not transferable. The exact
-proposal is `change-records/M4-014-b-t07-package-gate-exception-proposal.md`.
-It permits only `tests/testthat/test-B-T07.R`, the two mechanical
-`R/export_b.R` corrections, and the Sol-owned duplicate Rd consolidation. It
-does not reset counters or authorize any scientific change.
+B-T07 consumed its initial attempt and two repairs. Omar explicitly authorized
+the bounded M4-014 exception on 2026-10-16 after Sol restated the exact scope.
+The exact record is
+`change-records/M4-014-b-t07-package-gate-exception-proposal.md`. It permits only
+`tests/testthat/test-B-T07.R`, the two mechanical `R/export_b.R` corrections,
+and the Sol-owned duplicate Rd consolidation. It does not reset counters,
+authorize a scientific change, or waive any verification gate.
 
-No run-owned agent or poll is active. Completed managed worktrees were archived.
+No run-owned agent or poll was active when this authorization was recorded.
+Completed managed worktrees were archived.
 The user-owned `.gitignore`, AppleDouble files and `.superpowers/`
 remain untouched.
 
@@ -53,11 +54,10 @@ remain untouched.
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `execution-ledger.json`, this handover, M4-011 through M4-014, and the M4-013
-package-gate/Astra receipts. Verify HEAD and dirty state. **Resume only after
-Omar explicitly authorizes the bounded M4-014 exception.** Then record that
-authorization, dispatch one fresh isolated Luna-max worker for the exact B-T07
-source/test scope, have Sol apply the manual-only edit, obtain fresh Sol-high
-review, run source/installed B-T07 parity, the complete local suite and a clean
-archive package check with no ERROR/WARNING/NOTE/required skip, then request the
+package-gate/Astra receipts. Verify HEAD and dirty state. M4-014 is authorized:
+dispatch one fresh isolated Luna-max worker for the exact B-T07 source/test
+scope, have Sol apply the manual-only edit, obtain fresh Sol-high review, run
+source/installed B-T07 parity, the complete local suite and a clean archive
+package check with no ERROR/WARNING/NOTE/required skip, then request the
 immutable M4 Astra review. Accept B-T07 and G4 and release Stage C only if every
 gate passes.

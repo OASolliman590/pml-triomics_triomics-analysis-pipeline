@@ -1,7 +1,11 @@
 # M4-014 — proposed B-T07 package-gate exception
 
 - Date: 2026-10-16
-- Status: **awaiting explicit Omar authorization; no edits authorized**
+- Status: **authorized by Omar on 2026-10-16; execution gates remain mandatory**
+- Authorization: Omar's instruction, "perfect go ahead, continue", was given
+  immediately after the coordinator stated the exact bounded M4-014 exception
+  phrase and scope. Sol records this as explicit authorization for this exception
+  only.
 - Trigger: `docs/implementation/reviews/M4-013-package-check-gate.md`
 - Astra classification: package/test infrastructure only; no demonstrated
   scientific regression; no mandatory gate may be waived
