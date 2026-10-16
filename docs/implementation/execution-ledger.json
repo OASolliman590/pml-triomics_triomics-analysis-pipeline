@@ -33,30 +33,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_013_sol_review",
-      "role": "sol_high_read_only_shared_composition_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "snapshot_commit": "57474e754aa3657a45e1db644f8cad3a10840ad6",
-      "candidate_worktree": "/Users/megastore/.codex/worktrees/m4-013-stage-b-composition/PML MultiOmics Analysis Pipeline",
-      "allowlist": []
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_013_shared_composition_review_active",
+    "status": "m4_013_review_passed_integration_pending",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_013_sol_review",
-        "expected_receipt": "fresh Sol-high PASS/FAIL review of M4-013 candidate 57474e7"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-013 candidate 57474e7 is focused-green and changes five allowlisted files. Fresh Sol-high review is active; B-T07 remains unaccepted."
+    "disposition": "Fresh Sol-high review passed M4-013 candidate 57474e7 with no P0/P1/P2 findings. Serial integration and full-suite/package gates are next; B-T07 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "m4_013_shared_composition_sol_review_passed",
+      "date": "2026-10-16",
+      "reviewer": "/root/m4_013_sol_review",
+      "candidate_commit": "57474e754aa3657a45e1db644f8cad3a10840ad6",
+      "verdict": "pass",
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "tests": {"cases": 54, "expectations": 870, "failed": 0, "skipped": 0, "archive_git_warnings": 8},
+      "review_ref": "docs/implementation/reviews/M4-013-sol-review.md",
+      "allowed_next_transition": "serial integration followed by full local suite and clean-archive package check",
+      "disposition": "Numerics, calibration and privacy are unchanged; exact CLIs exited 0 and 34 envelopes validated."
+    },
     {
       "event": "m4_013_shared_composition_completed_review_dispatched",
       "date": "2026-10-16",
