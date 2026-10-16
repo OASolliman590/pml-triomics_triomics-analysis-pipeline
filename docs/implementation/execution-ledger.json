@@ -33,15 +33,40 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/b_t07_luna",
+      "role": "luna_b_t07_targeted_repair_2",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "snapshot_commit": "c5f868f",
+      "worktree": "/Users/megastore/.codex/worktrees/b-t07-export-handoff/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["R/export_b.R", "tests/testthat/test-B-T07.R"]
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_011_unit_a_review_passed_unit_b_pending",
+    "status": "m4_012_b_t07_repair_2_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/b_t07_luna",
+        "expected_receipt": "B-T07 repair 2 typed-unavailable guard and integrated AC2/AC3 test evidence"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Sol-high review passed Unit A candidate 814964b with no P0/P1/P2 findings. Serial integration and the authorized Sol-owned Unit B registration are the next transition; B-T07 remains unaccepted."
+    "disposition": "M4-011 Units A and B are integrated. The first integrated suite exposed the bounded typed-unavailable and duplicate-export seam; B-T07 repair 2 of 2 is active under M4-012. B-T07 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "m4_012_b_t07_repair_2_dispatched",
+      "date": "2026-10-16",
+      "implementer": "/root/b_t07_luna",
+      "snapshot_commit": "c5f868f",
+      "allowlist": ["R/export_b.R", "tests/testthat/test-B-T07.R"],
+      "review_ref": "docs/implementation/change-records/M4-012-b-t07-final-compatibility-repair.md",
+      "allowed_next_transition": "fresh Sol-high focused review if the exact B-T07 suite and CLI pass; otherwise block B-T07 because its repair budget is exhausted",
+      "disposition": "Repair preserves typed unavailable Stage B evidence without inventing an empty C handoff and updates tests for the registered CLI lifecycle."
+    },
     {
       "event": "m4_011_unit_a_sol_review_passed",
       "date": "2026-10-16",
@@ -2029,20 +2054,23 @@
       "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
-      "status": "shared_integration_unit_a_review_passed",
+      "status": "repair_2_active",
       "attempts": 1,
-      "repair_attempts": 1,
+      "repair_attempts": 2,
       "commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
       "repair_candidate_commit": "25415fbe4d88a684133267696024d43683e33f64",
       "shared_unit_a_candidate_commit": "814964b5f525f2104153777a5580f0a84f917ea4",
       "shared_unit_a_review_ref": "docs/implementation/reviews/M4-011-unit-a-sol-review.md",
+      "shared_unit_a_integration_commit": "f1ed853",
+      "shared_unit_b_integration_commit": "c5f868f",
+      "repair_2_change_ref": "docs/implementation/change-records/M4-012-b-t07-final-compatibility-repair.md",
       "integration_commits": ["8cf2d38", "4a33f01"],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T07-initial-review.md",
         "docs/implementation/reviews/B-T07-repair1-rereview.md"
       ],
       "blockers": [
-        "Packet code passed repair-1 rereview; integrated same-run matrix provenance and CLI reproduction remain blocked on the registered shared Sol-owned hook."
+        "Integrated M4-011 exact CLI passes AC3, but repair 2 must preserve the typed unavailable B-T05 smoke and remove duplicate-export assumptions from AC2/AC3 tests."
       ]
     },
     "C-01": {
