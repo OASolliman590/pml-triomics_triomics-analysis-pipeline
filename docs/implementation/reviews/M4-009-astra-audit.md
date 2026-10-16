@@ -38,3 +38,15 @@ Sol must correct M4-009 and obtain the one focused Astra rereview before
 dispatching repair 1. B-T08 remains blocked, and B-T07 remains dependency-illegal.
 No private data, external upload, threshold change or biological claim is
 authorized.
+
+## Focused rereview
+
+- Corrected immutable snapshot: `659d499`
+- Verdict: **PASS**; P0 0, P1 0, P2 0
+
+The corrected record adequately restricts B-T08 to its declared fixture route,
+keeps B-T09 separate, requires nonfixture refusal, documents all six exports,
+tests mixed-family failed-member publication, and counts both possible repairs
+inside the existing ceiling. No further record correction or literature review
+is required. This approves repair dispatch only; B-T08 acceptance and B-T07
+release remain gated.

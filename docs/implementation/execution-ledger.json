@@ -33,29 +33,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_009_astra_audit",
-      "role": "astra_read_only_focused_rereviewer",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "snapshot_commit": "659d499",
-      "scope": "single focused rereview of corrected M4-009 record"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_009_focused_astra_rereview_active",
+    "status": "m4_009_astra_approved_ready_for_repair_1",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_009_astra_audit",
-        "expected_receipt": "focused PASS or exact remaining blocker on corrected M4-009"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The initial M4-009 Astra audit confirmed the B-T08 defects but failed the dispatch plan on unsafe clinical.enabled routing and missing API documentation scope. Sol corrected the record for fixture-only dispatch, nonfixture refusal, B-T09 isolation, documentation and exact repair counting. One focused Astra rereview is required before repair 1; B-T07 remains blocked."
+    "disposition": "The single focused Astra rereview passed the corrected M4-009 plan with no findings. One fresh isolated Luna-max worker may now perform bounded B-T08 repair 1; Sol then owns shared registration and all review/verification gates. B-T08 and B-T07 remain blocked until acceptance."
   },
   "orchestration_events": [
+    {
+      "event": "m4_009_focused_astra_rereview_passed",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_009_astra_audit",
+      "snapshot_commit": "659d499",
+      "verdict": "pass",
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "review_ref": "docs/implementation/reviews/M4-009-astra-audit.md",
+      "literature_review": "not_required",
+      "allowed_next_transition": "dispatch one fresh isolated Luna-max worker for bounded B-T08 repair 1, then apply only the audited Sol-owned registration changes",
+      "disposition": "This approves the repair plan only. B-T08 acceptance and B-T07 dispatch remain blocked until every code, review and verification gate passes."
+    },
     {
       "event": "m4_009_focused_astra_rereview_dispatched",
       "date": "2026-10-16",
