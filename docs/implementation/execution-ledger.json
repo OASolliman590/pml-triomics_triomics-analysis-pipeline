@@ -35,13 +35,24 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m4_010_exception_record_focused_rereview_pending",
+    "status": "m4_010_exception_scope_approved_worker_dispatch_next",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar authorized one narrow exception for the installed-test path defect. M4-010 initial Astra audit found one P1: the same test file's checkout-only CLI runner also requires bounded context-aware correction. The record is corrected and awaits its one focused rereview; no implementation has been dispatched."
+    "disposition": "M4-010's one focused Astra rereview passed with P0/P1/P2 zero. One fresh Luna-max worker may now implement the approved test-only exception in an isolated worktree; no scientific or production change is authorized."
   },
   "orchestration_events": [
+    {
+      "event": "m4_010_focused_astra_rereview_passed",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_010_astra_rereview",
+      "candidate_commit": "e9094886e69fb524355323e26dc6a521df445171",
+      "verdict": "pass",
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "review_ref": "docs/implementation/reviews/M4-010-astra-rereview.md",
+      "allowed_next_transition": "dispatch one fresh Luna-max worker in one isolated worktree for the approved test-only correction",
+      "disposition": "Prior P1 is resolved; the record now covers both installed resource resolution and context-aware CLI harness execution while forbidding simulation, bypass, weakened assertions and scientific changes."
+    },
     {
       "event": "m4_010_initial_astra_audit_failed_record_corrected",
       "date": "2026-10-16",

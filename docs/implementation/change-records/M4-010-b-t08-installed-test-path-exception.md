@@ -6,7 +6,8 @@
   installed-test-only fixture-path defect.
 - Prior gate: `docs/implementation/reviews/M4-009-package-check-gate.md`
 - Initial audit: `docs/implementation/reviews/M4-010-astra-audit.md`
-- Status: corrected after initial Astra P1; pending the one focused rereview
+- Focused rereview: `docs/implementation/reviews/M4-010-astra-rereview.md`
+- Status: scope approved; bounded Luna implementation authorized
 - Counter disposition: this is one exceptional test-harness correction. It does
   not reset, erase or renumber B-T08's initial attempt or two consumed targeted
   repairs, and it authorizes no further correction automatically.
