@@ -33,15 +33,41 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_007_astra_audit",
+      "role": "astra_read_only_change_record_auditor",
+      "packet": "M4-007",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "snapshot_commit": "50b2dfa"
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_007_record_ready_for_astra_audit",
+    "status": "m4_007_astra_audit_active",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_007_astra_audit",
+        "unit": "M4-007 change-record audit",
+        "expected_return": "PASS/PASS WITH REQUIRED CHANGES/FAIL on row-status versus q-publication reconciliation, scope, counters and dependency safety"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-005B candidate ada3a17 remains unintegrated. Its complete suite passed 3,130 assertions and failed six B-T01/B-T03 assertions: three stale q-publication expectations conflict with B-T06-AC3, and B-T06's blanket row-status overwrite erases three established predecessor statuses. M4-007 records a bounded four-file reconciliation and now requires fresh Astra-low audit before coding."
+    "disposition": "M4-005B candidate ada3a17 remains unintegrated. Its complete suite passed 3,130 assertions and failed six B-T01/B-T03 assertions. M4-007 records the bounded four-file reconciliation; a fresh Astra-low auditor is reviewing immutable snapshot 50b2dfa before any correction is coded."
   },
   "orchestration_events": [
+    {
+      "event": "m4_007_change_record_astra_audit_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_007_astra_audit",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "snapshot_commit": "50b2dfa",
+      "scope": "B-T06 family-level q withholding versus predecessor row inferential statuses, stale q expectations, four-file authority, attempt/review counters, dependency legality and privacy",
+      "allowed_next_transition": "PASS permits only the bounded M4-007 tests-first correction and fresh Sol review; required record changes receive at most one focused Astra rereview; FAIL preserves the M4-005 block",
+      "disposition": "Astra is read-only and cannot implement, integrate, accept B-T05/B-T06, release B-T07 or replace the future M4-005 shared-integration audit."
+    },
     {
       "event": "m4_005b_full_suite_blocked_m4_007_record_written",
       "date": "2026-10-16",
