@@ -9,8 +9,8 @@
 - Focused rereview: `docs/implementation/reviews/M4-010-astra-rereview.md`
 - Sol review: `docs/implementation/reviews/M4-010-sol-review.md`
 - Integration verification: `docs/implementation/reviews/M4-010-integration-verification.md`
-- Status: reviewed candidate integrated as `92760cb`; complete suite and clean
-  package gate passed; focused immutable M4-005 Astra rereview pending
+- Astra gate: `docs/implementation/reviews/M4-010-m4-005-astra-rereview.md`
+- Status: accepted; B-T08 package gate closed and B-T07 dependency released
 - Counter disposition: this is one exceptional test-harness correction. It does
   not reset, erase or renumber B-T08's initial attempt or two consumed targeted
   repairs, and it authorizes no further correction automatically.

@@ -33,30 +33,26 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_010_m4_005_astra_gate",
-      "role": "astra_focused_milestone_rereviewer",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "snapshot_commit": "f96be49",
-      "worktree": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline",
-      "allowlist": ["read_only_review"]
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_010_focused_m4_005_astra_rereview_active",
+    "status": "b_t08_accepted_b_t07_dispatch_next",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_010_m4_005_astra_gate",
-        "expected_receipt": "focused immutable M4-005 verdict on B-T08 acceptance and B-T07 dependency release"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Integrated M4-010 passed the complete local suite and clean-archive package check. Fresh Astra-low focused M4-005 rereview is active on immutable snapshot f96be49; B-T08 and B-T07 remain gated pending its advisory verdict and Sol disposition."
+    "disposition": "Focused Astra-low M4-005 rereview passed immutable snapshot f96be49 with no findings. Sol accepted B-T08 and released B-T07; a fresh isolated Luna-max B-T07 initial attempt is the next transition."
   },
   "orchestration_events": [
+    {
+      "event": "m4_010_astra_gate_passed_b_t08_accepted_b_t07_released",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_010_m4_005_astra_gate",
+      "snapshot_commit": "f96be49",
+      "verdict": "pass",
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "review_ref": "docs/implementation/reviews/M4-010-m4-005-astra-rereview.md",
+      "allowed_next_transition": "dispatch one fresh Luna-max B-T07 initial attempt in an isolated worktree",
+      "disposition": "Sol accepted B-T08, cleared its blocker and released B-T07. M4/G4 remains open until B-T07 completes and the milestone gate passes."
+    },
     {
       "event": "m4_010_focused_m4_005_astra_rereview_dispatched",
       "date": "2026-10-16",
@@ -1912,7 +1908,7 @@
       "blockers": []
     },
     "B-T08": {
-      "status": "blocked_package_check_repair_exhausted",
+      "status": "accepted",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "bded42a",
@@ -1920,14 +1916,16 @@
       "acceptance_refs": [
         "docs/implementation/reviews/B-T08-acceptance-review.md",
         "docs/implementation/reviews/M4-009-astra-audit.md",
-        "docs/implementation/reviews/M4-009-sol-review.md"
+        "docs/implementation/reviews/M4-009-sol-review.md",
+        "docs/implementation/reviews/M4-010-sol-review.md",
+        "docs/implementation/reviews/M4-010-integration-verification.md",
+        "docs/implementation/reviews/M4-010-m4-005-astra-rereview.md"
       ],
-      "blockers": [
-        "Mandatory clean-archive package check fails in three installed-context B-T08 CLI tests because b08_copy_ticket_examples assumes a source-tree inst/examples/tickets path; both permitted repairs are consumed."
-      ],
-      "integration_commit": "9cd36fe",
+      "blockers": [],
+      "integration_commit": "92760cb",
       "change_record_ref": "docs/implementation/change-records/M4-009-b-t08-acceptance-repair.md",
-      "package_gate_ref": "docs/implementation/reviews/M4-009-package-check-gate.md"
+      "exception_change_record_ref": "docs/implementation/change-records/M4-010-b-t08-installed-test-path-exception.md",
+      "package_gate_ref": "docs/implementation/reviews/M4-010-integration-verification.md"
     },
     "B-T09": {
       "status": "accepted",
@@ -1943,13 +1941,11 @@
       "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
-      "status": "not_started_blocked_by_dependency",
+      "status": "ready_to_dispatch",
       "attempts": 0,
       "commit": null,
       "acceptance_refs": [],
-      "blockers": [
-        "B-T08 is blocked at its mandatory installed-package test gate after both repairs were consumed; B-T07 remains dependency-illegal."
-      ]
+      "blockers": []
     },
     "C-01": {
       "status": "not_started",
@@ -2139,11 +2135,11 @@
       ]
     },
     "M4": {
-      "status": "blocked_not_ready_for_g4",
+      "status": "active_b_t07_remaining",
       "review_ref": null,
       "commit": "af69a9e",
       "milestone_ref": "docs/implementation/milestones/M4.md",
-      "blocking_packets": ["B-T08", "B-T07"]
+      "blocking_packets": ["B-T07"]
     },
     "M5": {
       "status": "not_started",
@@ -2183,5 +2179,5 @@
     "pr": null,
     "notion_synced": false
   },
-  "close_state": "open_blocked"
+  "close_state": "open_active"
 }
