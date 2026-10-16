@@ -33,15 +33,45 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_008_luna_repair",
+      "role": "luna_test_harness_worker",
+      "packet": "M4-008",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "worktree": ".worktrees/m4-005b-stage-b-composition",
+      "branch": "codex/m4-005b-stage-b-composition",
+      "base_commit": "0c844281b68e0f7c9b81bfcc975f6c30f7316a92"
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_008_astra_audit_passed_ready_for_luna",
+    "status": "m4_008_luna_repair_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_008_luna_repair",
+        "unit": "M4-008 package-context test repair",
+        "expected_return": "one-file commit preserving local source idempotence and adding non-skipped built-package execution support"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Astra-low audit passed M4-008 with no findings. One Luna-max test-harness repair and Sol's one-line .Rbuildignore update are authorized; all full-suite, package, parity, review and shared-Astra gates remain mandatory."
+    "disposition": "Fresh Astra-low audit passed M4-008. Luna-max is repairing only the composition test harness; Sol committed the audited one-line .Rbuildignore exclusion as a658c1e. Full-suite, package, parity, review and shared-Astra gates remain mandatory."
   },
   "orchestration_events": [
+    {
+      "event": "m4_008_luna_repair_dispatched_sol_build_exclusion_committed",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_008_luna_repair",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "candidate_base": "0c844281b68e0f7c9b81bfcc975f6c30f7316a92",
+      "luna_allowlist": ["tests/testthat/test-M4-005-stage-b-composition.R"],
+      "sol_commit": "a658c1e",
+      "sol_scope": [".Rbuildignore"],
+      "allowed_next_transition": "inspect Luna's one-file commit, run focused GREEN, then dispatch one fresh Sol-high complete-diff review if clean",
+      "disposition": "No production R, statistics, fixtures, thresholds, private data or downstream release are authorized."
+    },
     {
       "event": "m4_008_astra_audit_passed",
       "date": "2026-10-16",
