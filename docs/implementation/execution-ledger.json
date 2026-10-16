@@ -33,30 +33,29 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_009_bt08_luna",
-      "role": "luna_bounded_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "snapshot_commit": "c876059",
-      "worktree": "/Users/megastore/.codex/worktrees/m4-009-bt08-repair/PML MultiOmics Analysis Pipeline",
-      "allowlist": ["R/clinical_association.R", "tests/testthat/test-B-T08.R"]
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_009_b_t08_repair_1_active",
+    "status": "m4_009_candidate_ready_for_fresh_sol_review",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_009_bt08_luna",
-        "expected_receipt": "RED/GREEN evidence and local commits for the two-file B-T08 scientific repair"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "A fresh isolated Luna-max worker is executing B-T08 targeted repair 1 on two packet-owned files. Sol retains shared registration and integration ownership. B-T08 and B-T07 remain blocked until every gate passes."
+    "disposition": "B-T08 scientific repair, registration regressions and Sol-owned package registration are integrated. Focused B-T08, B-T09 and Stage B composition tests pass; installed exports and B-T08/B-T09/nonfixture probes pass. Both permitted repair attempts are consumed. A fresh Sol-high complete-diff review is the next gate; B-T08 and B-T07 remain blocked."
   },
   "orchestration_events": [
+    {
+      "event": "m4_009_candidate_green_ready_for_sol_review",
+      "date": "2026-10-16",
+      "worker_agent_name": "/root/m4_009_bt08_luna",
+      "worker_base": "c876059",
+      "worker_commits": ["a6860c8", "f8f0f73", "47439b5", "cdaaf5d"],
+      "integrated_commits": ["61f4c96", "1718ed3", "01a19e3", "d862547", "8e392a2", "44a0f0d"],
+      "repairs_consumed": 2,
+      "scientific_red": {"failed": 22},
+      "focused_green": {"b_t08_passed": 268, "b_t09_and_composition_passed": 145, "failed": 0, "warned": 0, "skipped": 0},
+      "installed_probe": {"exports": "6/6", "b_t08": "exit_0_complete", "b_t09": "exit_0_own_route", "nonfixture": "refused_no_outputs"},
+      "allowed_next_transition": "commit this immutable candidate snapshot and dispatch one fresh Sol-high complete-diff review; no further implementation repair is available if a blocking finding remains",
+      "disposition": "Repair 1 fixed constant-response and duplicate-family behavior. Repair 2 corrected only the registration evidence harness; Sol completed one dangling removed-trace environment reference before review and applied the audited shared registration."
+    },
     {
       "event": "m4_009_b_t08_repair_1_dispatched",
       "date": "2026-10-16",
@@ -1788,10 +1787,11 @@
       "blockers": []
     },
     "B-T08": {
-      "status": "repair_1_active",
+      "status": "sol_review_pending",
       "attempts": 1,
-      "repair_attempts": 1,
+      "repair_attempts": 2,
       "commit": "bded42a",
+      "repair_candidate_commits": ["1718ed3", "44a0f0d"],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T08-acceptance-review.md",
         "docs/implementation/reviews/M4-009-astra-audit.md"
