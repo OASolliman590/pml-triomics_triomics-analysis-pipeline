@@ -285,9 +285,13 @@ t07_cli_smoke <- function(config_path, output) {
   cli_args <- c("--config", shQuote(config_path), "--stage", "B", "--output", shQuote(output))
 
   if (context$source_checkout) {
+    cli <- file.path(context$source_root, "inst", "exec", "triomics")
+    original_wd <- getwd()
+    setwd(dirname(cli))
+    on.exit(setwd(original_wd), add = TRUE)
     lines <- system2(
       rscript,
-      c("--vanilla", shQuote(file.path(context$source_root, "inst", "exec", "triomics")), cli_args),
+      c("--vanilla", shQuote(basename(cli)), cli_args),
       stdout = TRUE, stderr = TRUE
     )
   } else {
