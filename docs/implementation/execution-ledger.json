@@ -33,30 +33,29 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/b_t07_p1_astra_adjudication",
-      "role": "astra_low_read_only_contract_adjudicator",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "snapshot_commit": "a893475",
-      "candidate_worktree": "/Users/megastore/.codex/worktrees/b-t07-export-handoff/PML MultiOmics Analysis Pipeline",
-      "allowlist": []
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_012_b_t07_p1_adjudication_active",
+    "status": "m4_012_adjudicated_integration_verification_pending",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/b_t07_p1_astra_adjudication",
-        "expected_receipt": "read-only Astra contract disposition on the repair-2 Sol P1"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Sol-high review found one P1: stripped method identity/reason can still take the unavailable no-handoff path. Repair budget is exhausted; Astra-low is adjudicating whether the frozen contract requires those fields or whether verified aggregate method_status is sufficient. B-T07 remains unaccepted."
+    "disposition": "Astra overruled the repair-2 P1 on frozen-contract grounds and classified the stripped optional metadata as a P2 traceability ambiguity at most. Both reviews are retained; candidate integration and complete M4-011 verification are next. B-T07 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "m4_012_b_t07_p1_astra_adjudicated",
+      "date": "2026-10-16",
+      "adjudicator": "/root/b_t07_p1_astra_adjudication",
+      "candidate_commit": "a893475",
+      "verdict": "overrule_p1",
+      "residual_severity": "p2_traceability_ambiguity",
+      "review_refs": [
+        "docs/implementation/reviews/M4-012-b-t07-repair2-sol-review.md",
+        "docs/implementation/reviews/M4-012-b-t07-p1-astra-adjudication.md"
+      ],
+      "allowed_next_transition": "integrate a893475 and run the complete M4-011 verification and fresh shared-diff review",
+      "disposition": "The non-release guard is bound to verified aggregate unavailable status and empty claims; optional method identity/reason are not a frozen precondition. No third repair is opened."
+    },
     {
       "event": "m4_012_b_t07_repair_2_review_failed_astra_adjudication_dispatched",
       "date": "2026-10-16",
@@ -2075,7 +2074,7 @@
       "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
-      "status": "repair_2_active",
+      "status": "repair_2_adjudicated_integration_pending",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
@@ -2086,6 +2085,8 @@
       "shared_unit_b_integration_commit": "c5f868f",
       "repair_2_change_ref": "docs/implementation/change-records/M4-012-b-t07-final-compatibility-repair.md",
       "repair_2_candidate_commit": "a893475",
+      "repair_2_review_ref": "docs/implementation/reviews/M4-012-b-t07-repair2-sol-review.md",
+      "repair_2_adjudication_ref": "docs/implementation/reviews/M4-012-b-t07-p1-astra-adjudication.md",
       "integration_commits": ["8cf2d38", "4a33f01"],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T07-initial-review.md",
