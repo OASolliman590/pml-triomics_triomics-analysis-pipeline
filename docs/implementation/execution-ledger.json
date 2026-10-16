@@ -35,28 +35,42 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/m4_014_bt07_luna",
-      "role": "luna_b_t07_package_gate_exception_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent_name": "/root/m4_014_sol_review",
+      "role": "sol_high_m4_014_candidate_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "snapshot_commit": "fe9e870",
       "worktree": "/Users/megastore/.codex/worktrees/m4-014-bt07-package/PML MultiOmics Analysis Pipeline",
-      "allowlist": ["tests/testthat/test-B-T07.R", "R/export_b.R"]
+      "candidate_commit": "4acbd71f9def1dc7d0310477b133fc670530f74d",
+      "sol_manual_commit": "7194b23",
+      "mode": "read_only"
     }
   ],
   "orchestration_control": {
-    "status": "m4_014_luna_worker_active",
+    "status": "m4_014_sol_review_active",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [
       {
-        "agent_name": "/root/m4_014_bt07_luna",
-        "expected_receipt": "M4-014 RED/GREEN source and installed B-T07 parity evidence plus exact two-file candidate commit"
+        "agent_name": "/root/m4_014_sol_review",
+        "expected_receipt": "M4-014 spec-compliance and code-quality verdict over the two-file Luna candidate plus Sol-owned manual correction"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The authorized M4-014 correction is active in one fresh isolated Luna-max worktree at snapshot fe9e870. Sol will inspect the candidate and dispatch a fresh Sol-high review before any integration."
+    "disposition": "Luna candidate 4acbd71 passed 124 source and 124 installed B-T07 expectations with no failures or skips. Fresh Sol-6.1 high read-only review is active over that candidate and Sol manual commit 7194b23; no candidate integration has occurred."
   },
   "orchestration_events": [
+    {
+      "event": "m4_014_candidate_completed_sol_review_dispatched",
+      "date": "2026-10-16",
+      "implementer": "/root/m4_014_bt07_luna",
+      "reviewer": "/root/m4_014_sol_review",
+      "candidate_commit": "4acbd71f9def1dc7d0310477b133fc670530f74d",
+      "sol_manual_commit": "7194b23",
+      "tests": {"source_expectations": 124, "installed_expectations": 124, "failed": 0, "skipped": 0, "archive_git_metadata_warnings_per_run": 8},
+      "changed_files": ["R/export_b.R", "tests/testthat/test-B-T07.R", "man/triomics-api.Rd"],
+      "allowed_next_transition": "serially integrate 4acbd71 only if the fresh Sol-high review passes; then run source/installed parity, full local suite and clean archive package check",
+      "disposition": "Worker diff is exactly allowlisted and clean. The archive-only warnings are retained for reviewer assessment and do not satisfy or waive the final package gate."
+    },
     {
       "event": "m4_014_red_package_failure_reproduced",
       "date": "2026-10-16",

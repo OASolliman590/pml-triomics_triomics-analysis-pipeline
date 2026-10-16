@@ -45,11 +45,12 @@ The exact record is
 and the Sol-owned duplicate Rd consolidation. It does not reset counters,
 authorize a scientific change, or waive any verification gate.
 
-The fresh Luna-max worker `/root/m4_014_bt07_luna` is active in the isolated
-`m4-014-bt07-package` worktree against snapshot `fe9e870`, with only
-`tests/testthat/test-B-T07.R` and `R/export_b.R` allowlisted. Its next legal
-transition is candidate inspection and fresh Sol-high review. Older completed
-managed worktrees remain archived.
+Luna candidate `4acbd71` changed exactly `tests/testthat/test-B-T07.R` and
+`R/export_b.R`; source and installed focused runs each passed 124 expectations
+with zero failures or skips. Sol-owned manual cleanup is commit `7194b23`. Fresh
+read-only reviewer `/root/m4_014_sol_review` (Sol 6.1 high) is active over the
+complete three-file correction. The next legal transition is serial candidate
+integration only after PASS. Older completed managed worktrees remain archived.
 The user-owned `.gitignore`, AppleDouble files and `.superpowers/`
 remain untouched.
 
