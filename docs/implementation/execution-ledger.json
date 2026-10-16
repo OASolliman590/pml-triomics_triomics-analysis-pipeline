@@ -33,15 +33,42 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_008_astra_audit",
+      "role": "astra_read_only_auditor",
+      "packet": "M4-008",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "snapshot_commit": "6934e488c9739175aef2b0b73508b9ab7696e536",
+      "candidate_commit": "0c844281b68e0f7c9b81bfcc975f6c30f7316a92"
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_008_change_record_ready_for_astra_audit",
+    "status": "m4_008_astra_audit_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_008_astra_audit",
+        "unit": "M4-008 package-check reconciliation audit",
+        "expected_return": "read-only verdict on the two-surface repair authority, scientific invariance, package-context test design and unchanged downstream blocks"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-007 and the complete 3,169-assertion suite passed. Required package check exposed three packaging-context test failures and a .superpowers build NOTE. M4-008 records a bounded two-surface reconciliation; no candidate change or integration is authorized before its fresh Astra-low audit."
+    "disposition": "M4-007 and the complete 3,169-assertion suite passed. Required package check exposed three packaging-context test failures and a .superpowers build NOTE. Fresh Astra-low audit of the immutable M4-008 record is active; no candidate change or integration is authorized before PASS."
   },
   "orchestration_events": [
+    {
+      "event": "m4_008_astra_audit_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_008_astra_audit",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "snapshot_commit": "6934e488c9739175aef2b0b73508b9ab7696e536",
+      "candidate_commit": "0c844281b68e0f7c9b81bfcc975f6c30f7316a92",
+      "allowed_next_transition": "PASS permits one fresh Luna-max test-harness repair plus Sol's one-line .Rbuildignore update; findings require a bounded record correction and at most one focused Astra rereview",
+      "disposition": "Astra is read-only. It cannot implement, integrate, accept B-T05/B-T06, release B-T07 or replace the later M4-005 shared-integration audit."
+    },
     {
       "event": "m4_005b_package_check_blocked_m4_008_record_written",
       "date": "2026-10-16",
