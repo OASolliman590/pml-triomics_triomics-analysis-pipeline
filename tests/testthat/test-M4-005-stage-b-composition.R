@@ -3,10 +3,11 @@ m4_005b_read_json <- function(path) {
 }
 
 m4_005b_run_b04 <- function(execute_stage_b) {
-  fixture <- triomics_test_resource("examples", "tickets", "B-T04.yaml")
+  config <- m4_005b_rewrite_b04_config()
+  on.exit(unlink(config), add = TRUE)
   output <- tempfile("m4-005b-b-t04-")
   value <- tryCatch(
-    execute_stage_b(fixture, output),
+    execute_stage_b(config, output),
     error = identity
   )
   list(
@@ -379,18 +380,50 @@ testthat::test_that("M4-005B installers are idempotent", {
   on.exit(unlink(script), add = TRUE)
   script_lines <- c(
     paste0("source_root <- ", encodeString(root, quote = "\"")),
-    "options(triomics.source_root = source_root)",
-    "sources <- sort(list.files(file.path(source_root, 'R'), pattern = '\\\\.R$', full.names = TRUE))",
-    "for (file in sources) sys.source(file, envir = .GlobalEnv)",
+    "if (dir.exists(file.path(source_root, 'R'))) {",
+    "  options(triomics.source_root = source_root)",
+    "  sources <- sort(list.files(file.path(source_root, 'R'), pattern = '\\\\.R$', full.names = TRUE))",
+    "  for (file in sources) sys.source(file, envir = .GlobalEnv)",
+    "} else {",
+    "  library(triomics)",
+    "  namespace <- asNamespace('triomics')",
+    "  namespace_names <- ls(namespace, all.names = TRUE)",
+    "  for (name in namespace_names) {",
+    "    value <- get(name, envir = namespace, inherits = FALSE)",
+    "    if (is.function(value)) assign(name, value, envir = .GlobalEnv)",
+    "  }",
     paste0(
-      "installer <- get0('triomics_install_stage_b_global_dispatch', ",
-      "envir = .GlobalEnv, inherits = FALSE)"
+      "  required <- c(",
+      "'triomics_b02_install_global_dispatch', ",
+      "'triomics_b03_install_global_dispatch', ",
+      "'triomics_b04_install_global_dispatch', ",
+      "'triomics_b04_install_stage_hook', ",
+      "'triomics_b05_install_global_dispatch', ",
+      "'triomics_b06_install_global_dispatch', ",
+      "'triomics_b06_install_source_context')"
     ),
-    "if (!is.function(installer)) stop('missing triomics_install_stage_b_global_dispatch')",
-    "installer()",
+    paste0(
+      "  stopifnot(all(vapply(required, function(name) ",
+      "is.function(get0(name, envir = .GlobalEnv, inherits = FALSE)), logical(1))))"
+    ),
+    "}",
+    paste0(
+      "if (!is.function(get0('triomics_install_stage_b_global_dispatch', ",
+      "envir = .GlobalEnv, inherits = FALSE))) stop('missing triomics_install_stage_b_global_dispatch')"
+    ),
+    "triomics_install_stage_b_global_dispatch()",
+    paste0(
+      "stopifnot(",
+      "identical(attr(triomics_fit_block_models, 'b_t02_dispatch'), TRUE), ",
+      "identical(attr(triomics_fit_block_models, 'b_t03_dispatch'), TRUE), ",
+      "identical(attr(triomics_fit_block_models, 'b_t04_dispatch'), TRUE), ",
+      "identical(attr(triomics_fit_block_models, 'b_t05_dispatch'), TRUE), ",
+      "identical(attr(triomics_fit_block_models, 'b_t06_dispatch'), TRUE), ",
+      "identical(attr(triomics_execute_stage_b, 'b_t04_stage'), TRUE))"
+    ),
     "fit_after_first <- triomics_fit_block_models",
     "stage_after_first <- triomics_execute_stage_b",
-    "installer()",
+    "triomics_install_stage_b_global_dispatch()",
     "stopifnot(identical(triomics_fit_block_models, fit_after_first))",
     "stopifnot(identical(triomics_execute_stage_b, stage_after_first))"
   )
