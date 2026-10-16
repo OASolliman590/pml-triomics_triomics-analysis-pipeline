@@ -58,6 +58,16 @@
   },
   "orchestration_events": [
     {
+      "event": "m4_014_red_package_failure_reproduced",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_014_bt07_luna",
+      "snapshot_commit": "fe9e870",
+      "package_status": {"errors": 1, "warnings": 2, "notes": 1, "b_t07_failures": 15, "installed_passes": 3403, "skips": 0},
+      "root_cause": "Installed B-T07 tickets retain checkout-relative discovery paths excluded from the package, while the CLI smoke helper assumes the checkout executable rather than the installed triomics_main dispatcher.",
+      "allowed_next_transition": "complete the exact M4-014 two-file correction, record GREEN source/installed evidence and return a clean candidate commit for fresh Sol-high review",
+      "disposition": "RED matches M4-013. No threshold, model, fixture content, assertion or scientific behavior was changed."
+    },
+    {
       "event": "m4_014_luna_worker_dispatched",
       "date": "2026-10-16",
       "agent_name": "/root/m4_014_bt07_luna",
