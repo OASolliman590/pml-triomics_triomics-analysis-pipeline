@@ -49,9 +49,13 @@ Luna candidate `4acbd71` changed exactly `tests/testthat/test-B-T07.R` and
 `R/export_b.R`; source and installed focused runs each passed 124 expectations
 with zero failures or skips. Sol-owned manual cleanup is commit `7194b23`.
 Fresh Sol-6.1 high review passed with P0/P1/P2 zero, and the candidate was
-serially integrated as `01c5e49`. No worker is active. The next transition is
-fresh integrated source/installed parity, the full local suite and clean archive
-package gate. Older completed managed worktrees remain archived.
+serially integrated as `01c5e49`. Fresh source verification then exposed a
+path-with-spaces defect in the newly changed source CLI helper: Rscript receives
+the absolute script argument with spaces transformed to `~+~`, so four source
+CLI smokes fail before dispatch. The same Luna worker is active on one test-only
+targeted correction. Its next transition is one focused Sol-high re-review if
+source and installed parity pass. Older completed managed worktrees remain
+archived.
 The user-owned `.gitignore`, AppleDouble files and `.superpowers/`
 remain untouched.
 

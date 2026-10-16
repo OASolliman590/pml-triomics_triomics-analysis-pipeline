@@ -33,15 +33,41 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_014_bt07_luna",
+      "role": "luna_m4_014_targeted_source_path_repair",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "candidate_base": "4acbd71f9def1dc7d0310477b133fc670530f74d",
+      "worktree": "/Users/megastore/.codex/worktrees/m4-014-bt07-package/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["tests/testthat/test-B-T07.R"]
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_014_integrated_verification_pending",
+    "status": "m4_014_targeted_source_path_repair_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_014_bt07_luna",
+        "expected_receipt": "single-file source path-with-spaces RED/GREEN repair commit and source/installed parity evidence"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Sol-6.1 high review passed with P0/P1/P2 zero. Candidate 4acbd71 was serially integrated as 01c5e49 after the Sol manual commit 7194b23. Fresh integrated source/installed parity, full suite and clean archive package check are pending."
+    "disposition": "Fresh integrated verification found that the new source CLI helper fails when the checkout path contains spaces because Rscript receives a transformed absolute script path. The same Luna worker is applying one exact-scope, test-only correction; scientific assertions and exporter code are frozen."
   },
   "orchestration_events": [
+    {
+      "event": "m4_014_integrated_source_red_targeted_repair_dispatched",
+      "date": "2026-10-16",
+      "implementer": "/root/m4_014_bt07_luna",
+      "integrated_candidate": "01c5e49",
+      "red_status": {"cli_smokes_failed": 4, "test_failures_before_stop": 10, "skips": 0},
+      "root_cause": "Passing the checkout executable as an absolute Rscript argument from a path containing spaces transforms spaces to ~+~ before inst/exec/triomics normalizes --file, so the CLI never starts.",
+      "allowlist": ["tests/testthat/test-B-T07.R"],
+      "allowed_next_transition": "one focused Sol-high re-review if source path-with-spaces and installed parity pass; otherwise block M4-014",
+      "disposition": "This is a test-runner environment defect within the already authorized M4-014 source/installed CLI scope. No assertion, scientific code or package threshold may change."
+    },
     {
       "event": "m4_014_sol_review_passed_candidate_integrated",
       "date": "2026-10-16",
