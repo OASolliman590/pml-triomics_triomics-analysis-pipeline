@@ -291,19 +291,19 @@ triomics_b06_install_source_context <- function(envir, namespace = FALSE) {
 }
 
 .onLoad <- function(libname, pkgname) {
-  triomics_b02_install_namespace_dispatch(pkgname)
-  triomics_b03_install_namespace_dispatch(pkgname)
-  triomics_b06_install_namespace_dispatch(pkgname)
-  triomics_b06_install_source_context(asNamespace(pkgname), namespace = TRUE)
+  envir <- asNamespace(pkgname)
+  if (exists("triomics_install_stage_b_namespace_dispatch", envir = envir, inherits = FALSE)) {
+    get("triomics_install_stage_b_namespace_dispatch", envir = envir, inherits = FALSE)(pkgname)
+  }
 }
 
-if (!isNamespace(topenv()) && exists("triomics_main_b_t01", envir = .GlobalEnv, inherits = FALSE)) {
-  triomics_main_b_t06 <- get("triomics_main_b_t01", envir = .GlobalEnv, inherits = FALSE)
+if (!isNamespace(topenv()) && exists("triomics_main", envir = .GlobalEnv, inherits = FALSE)) {
+  triomics_main_before_b06 <- get("triomics_main", envir = .GlobalEnv, inherits = FALSE)
+  assign("triomics_main_before_b06", triomics_main_before_b06, envir = .GlobalEnv)
   assign("triomics_main", function(args) {
-    triomics_b02_install_global_dispatch()
-    triomics_b03_install_global_dispatch()
-    triomics_b06_install_global_dispatch()
-    triomics_b06_install_source_context(.GlobalEnv, namespace = FALSE)
-    triomics_main_b_t06(args)
+    if (exists("triomics_install_stage_b_global_dispatch", envir = .GlobalEnv, inherits = FALSE)) {
+      triomics_install_stage_b_global_dispatch()
+    }
+    triomics_main_before_b06(args)
   }, envir = .GlobalEnv)
 }
