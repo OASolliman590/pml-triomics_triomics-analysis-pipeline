@@ -223,6 +223,90 @@ b08_one <- function(fit, endpoint_id = "synthetic_score") {
   hits[[1L]]
 }
 
+b08_copy_ticket_examples <- function(destination) {
+  package_root <- normalizePath(testthat::test_path("..", ".."), winslash = "/", mustWork = TRUE)
+  source_root <- file.path(package_root, "inst", "examples", "tickets")
+  paths <- list.files(source_root, recursive = TRUE, all.files = TRUE,
+                      full.names = FALSE, include.dirs = FALSE)
+  for (path in paths) {
+    source <- file.path(source_root, path)
+    target <- file.path(destination, "inst", "examples", "tickets", path)
+    dir.create(dirname(target), recursive = TRUE, showWarnings = FALSE)
+    testthat::expect_true(file.copy(source, target, overwrite = TRUE))
+  }
+  for (ticket in c("B-T08", "B-T09")) {
+    config_path <- file.path(source_root, paste0(ticket, ".yaml"))
+    config <- yaml::read_yaml(config_path)
+    sources <- config$sources
+    if (is.null(sources)) next
+    for (source in sources) {
+      reference <- source$file
+      if (is.null(reference) || !nzchar(reference) || grepl("^/", reference)) next
+      input <- normalizePath(file.path(dirname(config_path), reference),
+                             winslash = "/", mustWork = FALSE)
+      if (!file.exists(input) || !startsWith(input, paste0(package_root, "/"))) next
+      relative <- substring(input, nchar(package_root) + 2L)
+      target <- file.path(destination, relative)
+      dir.create(dirname(target), recursive = TRUE, showWarnings = FALSE)
+      testthat::expect_true(file.copy(input, target, overwrite = TRUE))
+    }
+  }
+  invisible(destination)
+}
+
+b08_replace_yaml_scalar <- function(config_path, key, value) {
+  lines <- readLines(config_path, warn = FALSE)
+  pattern <- paste0("^([[:space:]]*", key, ":[[:space:]]*).*$")
+  hits <- which(grepl(pattern, lines))
+  if (length(hits) != 1L) stop("Expected one YAML field named ", key, ".")
+  prefix <- sub(pattern, "\\1", lines[[hits]])
+  lines[[hits]] <- paste0(prefix, "\"", value, "\"")
+  writeLines(lines, config_path, useBytes = TRUE)
+  invisible(config_path)
+}
+
+b08_rebase_clinical_inputs <- function(config_path, destination) {
+  for (field in c("dictionary_file", "observations_file", "links_file")) {
+    b08_replace_yaml_scalar(config_path, field, file.path(destination, "inputs", switch(
+      field,
+      dictionary_file = "dictionary.tsv",
+      observations_file = "observations.tsv",
+      links_file = "links.tsv"
+    )))
+  }
+  yaml::read_yaml(config_path)
+}
+
+b08_run_source_cli <- function(config_path, output_path, dispatch_log) {
+  root <- normalizePath(testthat::test_path("..", ".."), winslash = "/", mustWork = TRUE)
+  previous_wd <- getwd()
+  setwd(root)
+  on.exit(setwd(previous_wd), add = TRUE)
+  profile <- file.path(dirname(config_path), "b08-trace-profile.R")
+  writeLines(c(
+    "pkgload::load_all(Sys.getenv('B08_TEST_ROOT'), quiet = TRUE)",
+    paste0("trace('triomics_execute_clinical_associations', ",
+           "tracer = quote(cat('dispatch\\n', file = Sys.getenv('B08_DISPATCH_LOG'), ",
+           "append = TRUE)), print = FALSE, where = asNamespace('triomics'))"),
+    "setwd(Sys.getenv('B08_TEST_ROOT'))"
+  ), profile)
+  script_path <- file.path("inst", "exec", "triomics")
+  output <- suppressWarnings(system2(
+    file.path(R.home("bin"), "Rscript"),
+    args = c("--no-site-file", "--no-environ", "--no-restore", "--no-save", shQuote(script_path),
+             "--config", shQuote(config_path), "--stage", "B", "--output", shQuote(output_path)),
+    env = c(paste0("B08_TEST_ROOT=", shQuote(root)),
+            paste0("B08_DISPATCH_LOG=", shQuote(dispatch_log)),
+            paste0("R_PROFILE_USER=", shQuote(profile))),
+    stdout = TRUE,
+    stderr = TRUE
+  ))
+  status <- attr(output, "status")
+  if (is.null(status)) status <- 0L
+  calls <- if (file.exists(dispatch_log)) length(readLines(dispatch_log, warn = FALSE)) else 0L
+  list(status = as.integer(status), output = output, dispatches = as.integer(calls))
+}
+
 testthat::test_that("B-T08-AC1 adjusted continuous association reports units, effect, uncertainty and patients", {
   cohort <- b08_cohort()
   fit <- associate_endpoints(cohort$bundle, cohort$view, cohort$spec)
@@ -648,4 +732,74 @@ testthat::test_that("B-T08 consumes an A-T09 clinical bundle without a second sc
   testthat::expect_identical(row$predictor_units, "mmol/L")
   exported <- as.character(jsonlite::toJSON(triomics_clinical_association_export(fit), auto_unbox = TRUE))
   testthat::expect_false(grepl("S01", exported, fixed = TRUE))
+})
+
+testthat::test_that("B-T08 source CLI dispatches the declared fixture exactly once", {
+  fixture_root <- tempfile("b-t08-source-fixture-")
+  dir.create(fixture_root)
+  b08_copy_ticket_examples(fixture_root)
+
+  config_path <- file.path(fixture_root, "inst", "examples", "tickets", "B-T08.yaml")
+  testthat::expect_true(file.exists(config_path))
+  b08_rebase_clinical_inputs(config_path, fixture_root)
+  output_path <- file.path(fixture_root, "out-b08")
+  dispatch_log <- file.path(fixture_root, "b08-dispatch.log")
+  run <- b08_run_source_cli(config_path, output_path, dispatch_log)
+
+  testthat::expect_identical(run$status, 0L, info = paste(run$output, collapse = "\n"))
+  testthat::expect_identical(run$dispatches, 1L)
+  testthat::expect_true(file.exists(file.path(output_path, "B", "clinical-associations.json")))
+  records <- list.files(output_path, pattern = "^acceptance-record\\.json$",
+                        recursive = TRUE, full.names = TRUE)
+  testthat::expect_length(records, 1L)
+  record <- jsonlite::fromJSON(records[[1L]], simplifyVector = FALSE)
+  testthat::expect_identical(record$packet_id, "B-T08")
+  testthat::expect_identical(record$status, "complete")
+})
+
+testthat::test_that("B-T09 source CLI keeps its longitudinal route without B-T08 fixture dispatch", {
+  fixture_root <- tempfile("b-t09-source-fixture-")
+  dir.create(fixture_root)
+  b08_copy_ticket_examples(fixture_root)
+
+  config_path <- file.path(fixture_root, "inst", "examples", "tickets", "B-T09.yaml")
+  testthat::expect_true(file.exists(config_path))
+  b08_rebase_clinical_inputs(config_path, fixture_root)
+  output_path <- file.path(fixture_root, "out-b09")
+  dispatch_log <- file.path(fixture_root, "b08-dispatch.log")
+  run <- b08_run_source_cli(config_path, output_path, dispatch_log)
+  files <- list.files(output_path, recursive = TRUE, full.names = FALSE)
+
+  testthat::expect_identical(run$status, 0L, info = paste(run$output, collapse = "\n"))
+  testthat::expect_identical(run$dispatches, 0L)
+  testthat::expect_true(any(grepl("longitudinal", files, ignore.case = TRUE)))
+  testthat::expect_false("B/clinical-associations.json" %in% files)
+  records <- list.files(output_path, pattern = "^acceptance-record\\.json$",
+                        recursive = TRUE, full.names = TRUE)
+  testthat::expect_length(records, 1L)
+  record <- jsonlite::fromJSON(records[[1L]], simplifyVector = FALSE)
+  testthat::expect_identical(record$packet_id, "B-T09")
+  testthat::expect_identical(record$status, "software_fixture_pass")
+})
+
+testthat::test_that("nonfixture clinical requests refuse without B-T08 synthetic outputs", {
+  fixture_root <- tempfile("b-t08-nonfixture-")
+  dir.create(fixture_root)
+  b08_copy_ticket_examples(fixture_root)
+
+  original_config <- file.path(fixture_root, "inst", "examples", "tickets", "B-T08.yaml")
+  testthat::expect_true(file.exists(original_config))
+  config <- b08_rebase_clinical_inputs(original_config, fixture_root)
+  triomics_b08_write_fixture_tables(config, original_config)
+  b08_replace_yaml_scalar(original_config, "study_id", "triomics_b_t08_nonfixture")
+  config_path <- file.path(fixture_root, "inst", "examples", "tickets", "B-T08-nonfixture.yaml")
+  testthat::expect_true(file.copy(original_config, config_path))
+  output_path <- file.path(fixture_root, "out-nonfixture")
+  dispatch_log <- file.path(fixture_root, "b08-dispatch.log")
+  run <- b08_run_source_cli(config_path, output_path, dispatch_log)
+
+  testthat::expect_gt(run$status, 0L)
+  testthat::expect_identical(run$dispatches, 0L)
+  testthat::expect_false(file.exists(file.path(output_path, "B", "clinical-associations.json")))
+  testthat::expect_false(file.exists(file.path(output_path, "acceptance-record.json")))
 })
