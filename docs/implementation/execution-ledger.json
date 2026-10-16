@@ -35,28 +35,39 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/b_t07_repair2_sol_review",
-      "role": "sol_high_read_only_repair_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
+      "agent_name": "/root/b_t07_p1_astra_adjudication",
+      "role": "astra_low_read_only_contract_adjudicator",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
       "snapshot_commit": "a893475",
       "candidate_worktree": "/Users/megastore/.codex/worktrees/b-t07-export-handoff/PML MultiOmics Analysis Pipeline",
       "allowlist": []
     }
   ],
   "orchestration_control": {
-    "status": "m4_012_b_t07_repair_2_review_active",
+    "status": "m4_012_b_t07_p1_adjudication_active",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [
       {
-        "agent_name": "/root/b_t07_repair2_sol_review",
-        "expected_receipt": "fresh Sol-high PASS/FAIL review of B-T07 repair 2 candidate a893475"
+        "agent_name": "/root/b_t07_p1_astra_adjudication",
+        "expected_receipt": "read-only Astra contract disposition on the repair-2 Sol P1"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T07 repair 2 candidate a893475 passes 124 focused expectations and the exact CLI; a fresh Sol-high review is active. B-T07 remains unaccepted."
+    "disposition": "Fresh Sol-high review found one P1: stripped method identity/reason can still take the unavailable no-handoff path. Repair budget is exhausted; Astra-low is adjudicating whether the frozen contract requires those fields or whether verified aggregate method_status is sufficient. B-T07 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "m4_012_b_t07_repair_2_review_failed_astra_adjudication_dispatched",
+      "date": "2026-10-16",
+      "reviewer": "/root/b_t07_repair2_sol_review",
+      "adjudicator": "/root/b_t07_p1_astra_adjudication",
+      "candidate_commit": "a893475",
+      "verdict": "fail",
+      "findings": {"p0": 0, "p1": 1, "p2": 0},
+      "allowed_next_transition": "if P1 is upheld, block B-T07 with exhausted repair budget; if overruled on frozen-contract grounds, Sol may record the reasoned disposition and continue integration gates without code change",
+      "disposition": "Sol confirmed 124 focused expectations and exact CLI behavior but challenged fail-closed handling of stripped unavailable-method metadata."
+    },
     {
       "event": "m4_012_b_t07_repair_2_completed_review_dispatched",
       "date": "2026-10-16",
