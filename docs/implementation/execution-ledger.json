@@ -36,29 +36,41 @@
   "active_workers": [
     {
       "agent_name": "/root/m4_005b_luna_tests",
-      "role": "luna_tests_only_worker",
-      "packet": "M4-005B Task 2",
+      "role": "luna_tests_only_repair_worker",
+      "packet": "M4-005B Task 2 repair 1",
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "worktree": ".worktrees/m4-005b-stage-b-composition",
       "branch": "codex/m4-005b-stage-b-composition",
-      "base_commit": "de21436"
+      "base_commit": "573811c"
     }
   ],
   "orchestration_control": {
-    "status": "m4_005b_luna_red_tests_active",
+    "status": "m4_005b_luna_test_repair_active",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [
       {
         "agent_name": "/root/m4_005b_luna_tests",
-        "unit": "M4-005B Task 2",
-        "expected_return": "tests-only commit and intended RED evidence for the missing centralized Stage B composer"
+        "unit": "M4-005B Task 2 repair 1",
+        "expected_return": "one-line source-helper cleanup correction, tests-only commit and composition GREEN/remaining-failure evidence"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-005B restored all six B-T06 candidate files byte-identically in de21436. On the integrated Unit A base, the packet baseline exposes the expected startup-composition defect: 62 pass and two paired-sensitivity failures because B-T06 dispatch is not installed. A fresh Luna-max worker is writing only the cross-packet RED tests."
+    "disposition": "M4-005B RED evidence is recorded in 573811c: 38 pass and four intended failures. The first Sol GREEN run exposed a test-helper lifetime defect: its source helper deletes successful output before the caller reads it. The same Luna-max worker is performing the one authorized tests-only targeted repair while Sol retains the two shared registration files."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005b_test_helper_repair_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_005b_luna_tests",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "red_test_commit": "573811ce9eee530b001244f518194d68fff2653f",
+      "finding": "m4_005b_source_cli_b04 unlinks its successful output on helper return before the calling test can inspect it",
+      "repair_scope": "tests/testthat/test-M4-005-stage-b-composition.R only; remove output from the helper-owned cleanup because the calling test already cleans it",
+      "allowed_next_transition": "inspect the tests-only repair, finish the Sol-owned two-file registration GREEN cycle, then commit and dispatch the fresh Sol-high complete-diff review",
+      "disposition": "This is M4-005B's one targeted test repair. No production, statistical, scientific or private-data change is authorized."
+    },
     {
       "event": "m4_005b_b_t06_restored_luna_red_tests_dispatched",
       "date": "2026-10-15",
