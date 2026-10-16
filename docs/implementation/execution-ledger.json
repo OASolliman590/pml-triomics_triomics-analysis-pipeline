@@ -2164,7 +2164,7 @@
         "docs/implementation/reviews/B-T07-repair1-rereview.md"
       ],
       "blockers": [
-        "Integrated M4-011 exact CLI passes AC3, but repair 2 must preserve the typed unavailable B-T05 smoke and remove duplicate-export assumptions from AC2/AC3 tests."
+        "Local B-T07 and cross-packet verification pass, but the clean installed-package gate fails on B-T07 fixture/CLI test context plus package hygiene. M4-014 requires explicit Omar authorization because the packet's two normal repairs are consumed."
       ]
     },
     "C-01": {
