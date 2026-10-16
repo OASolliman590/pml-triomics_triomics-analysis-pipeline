@@ -33,33 +33,35 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_005b_sol_review",
-      "role": "sol_complete_diff_reviewer",
-      "packet": "M4-005B Task 4",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "worktree": ".worktrees/m4-005b-stage-b-composition",
-      "branch": "codex/m4-005b-stage-b-composition",
-      "base_commit": "11757c0e8dd272a87700e873eccdc7dc8bc50e8a",
-      "candidate_commit": "ada3a17"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_005b_fresh_sol_review_active",
+    "status": "m4_005b_coordinator_full_verification_active",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_005b_sol_review",
-        "unit": "M4-005B Task 4",
-        "expected_return": "PASS or graded findings on complete 11757c0..ada3a17 diff with source/installed and statistical-freeze evidence"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-005B candidate ada3a17 is immutable. The targeted/adjacent gate passed 732 assertions with zero failures, warnings or skips; B-T04/B-T05/B-T06 source fixtures exited 0 with their required evidence. A fresh Sol 6.1 high reviewer is reviewing the complete Unit A checkpoint through Unit B candidate diff."
+    "disposition": "Fresh Sol-high review of immutable M4-005B candidate ada3a17 passed with zero findings. Independent evidence includes 732 passing assertions, clean temporary install, eight source/installed CLI probes, exact frozen-file checks and idempotence. Sol is running the required full suite, package check and fresh installed probes before serial integration."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005b_fresh_sol_review_passed_coordinator_verification_started",
+      "date": "2026-10-16",
+      "review_agent_name": "/root/m4_005b_sol_review",
+      "candidate_commit": "ada3a17adebc388850321190bfdbcc9fb64b1152",
+      "verdict": "pass",
+      "findings": {"critical": 0, "important": 0, "minor": 0},
+      "review_receipt": ".superpowers/sdd/M4-005B-stage-b-dispatch-composition/task-4-sol-review.md",
+      "review_verification": {
+        "passed": 732,
+        "failed": 0,
+        "warned": 0,
+        "skipped": 0,
+        "clean_install_exit": 0,
+        "source_installed_cli_probes_passed": 8,
+        "frozen_statistical_files_verified": true
+      },
+      "allowed_next_transition": "run full coordinator suite, package build/check and fresh installed probes; integrate serially only if all required checks pass",
+      "disposition": "Review accepts bounded software composition only. It does not accept B-T05/B-T06, replace the shared Astra audit or establish biological validity."
+    },
     {
       "event": "m4_005b_candidate_completed_fresh_sol_review_dispatched",
       "date": "2026-10-16",
