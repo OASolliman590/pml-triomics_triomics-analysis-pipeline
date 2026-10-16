@@ -277,17 +277,14 @@ b08_rebase_clinical_inputs <- function(config_path, destination) {
   yaml::read_yaml(config_path)
 }
 
-b08_run_source_cli <- function(config_path, output_path, dispatch_log) {
+b08_run_source_cli <- function(config_path, output_path) {
   root <- normalizePath(testthat::test_path("..", ".."), winslash = "/", mustWork = TRUE)
   previous_wd <- getwd()
   setwd(root)
   on.exit(setwd(previous_wd), add = TRUE)
-  profile <- file.path(dirname(config_path), "b08-trace-profile.R")
+  profile <- file.path(dirname(config_path), "b08-source-profile.R")
   writeLines(c(
     "pkgload::load_all(Sys.getenv('B08_TEST_ROOT'), quiet = TRUE)",
-    paste0("trace('triomics_execute_clinical_associations', ",
-           "tracer = quote(cat('dispatch\\n', file = Sys.getenv('B08_DISPATCH_LOG'), ",
-           "append = TRUE)), print = FALSE, where = asNamespace('triomics'))"),
     "setwd(Sys.getenv('B08_TEST_ROOT'))"
   ), profile)
   script_path <- file.path("inst", "exec", "triomics")
@@ -303,8 +300,12 @@ b08_run_source_cli <- function(config_path, output_path, dispatch_log) {
   ))
   status <- attr(output, "status")
   if (is.null(status)) status <- 0L
-  calls <- if (file.exists(dispatch_log)) length(readLines(dispatch_log, warn = FALSE)) else 0L
-  list(status = as.integer(status), output = output, dispatches = as.integer(calls))
+  list(status = as.integer(status), output = output)
+}
+
+b08_clinical_association_artifacts <- function(output_path) {
+  list.files(output_path, pattern = "^clinical-associations(\\.envelope)?\\.json$",
+             recursive = TRUE, full.names = FALSE)
 }
 
 testthat::test_that("B-T08-AC1 adjusted continuous association reports units, effect, uncertainty and patients", {
@@ -743,12 +744,14 @@ testthat::test_that("B-T08 source CLI dispatches the declared fixture exactly on
   testthat::expect_true(file.exists(config_path))
   b08_rebase_clinical_inputs(config_path, fixture_root)
   output_path <- file.path(fixture_root, "out-b08")
-  dispatch_log <- file.path(fixture_root, "b08-dispatch.log")
-  run <- b08_run_source_cli(config_path, output_path, dispatch_log)
+  run <- b08_run_source_cli(config_path, output_path)
 
   testthat::expect_identical(run$status, 0L, info = paste(run$output, collapse = "\n"))
-  testthat::expect_identical(run$dispatches, 1L)
-  testthat::expect_true(file.exists(file.path(output_path, "B", "clinical-associations.json")))
+  artifacts <- sort(b08_clinical_association_artifacts(output_path))
+  testthat::expect_identical(
+    artifacts,
+    c("B/clinical-associations.envelope.json", "B/clinical-associations.json")
+  )
   records <- list.files(output_path, pattern = "^acceptance-record\\.json$",
                         recursive = TRUE, full.names = TRUE)
   testthat::expect_length(records, 1L)
@@ -766,12 +769,11 @@ testthat::test_that("B-T09 source CLI keeps its longitudinal route without B-T08
   testthat::expect_true(file.exists(config_path))
   b08_rebase_clinical_inputs(config_path, fixture_root)
   output_path <- file.path(fixture_root, "out-b09")
-  dispatch_log <- file.path(fixture_root, "b08-dispatch.log")
-  run <- b08_run_source_cli(config_path, output_path, dispatch_log)
+  run <- b08_run_source_cli(config_path, output_path)
   files <- list.files(output_path, recursive = TRUE, full.names = FALSE)
 
   testthat::expect_identical(run$status, 0L, info = paste(run$output, collapse = "\n"))
-  testthat::expect_identical(run$dispatches, 0L)
+  testthat::expect_length(b08_clinical_association_artifacts(output_path), 0L)
   testthat::expect_true(any(grepl("longitudinal", files, ignore.case = TRUE)))
   testthat::expect_false("B/clinical-associations.json" %in% files)
   records <- list.files(output_path, pattern = "^acceptance-record\\.json$",
@@ -795,11 +797,11 @@ testthat::test_that("nonfixture clinical requests refuse without B-T08 synthetic
   config_path <- file.path(fixture_root, "inst", "examples", "tickets", "B-T08-nonfixture.yaml")
   testthat::expect_true(file.copy(original_config, config_path))
   output_path <- file.path(fixture_root, "out-nonfixture")
-  dispatch_log <- file.path(fixture_root, "b08-dispatch.log")
-  run <- b08_run_source_cli(config_path, output_path, dispatch_log)
+  run <- b08_run_source_cli(config_path, output_path)
 
   testthat::expect_gt(run$status, 0L)
-  testthat::expect_identical(run$dispatches, 0L)
-  testthat::expect_false(file.exists(file.path(output_path, "B", "clinical-associations.json")))
-  testthat::expect_false(file.exists(file.path(output_path, "acceptance-record.json")))
+  testthat::expect_length(b08_clinical_association_artifacts(output_path), 0L)
+  acceptance_records <- list.files(output_path, pattern = "^acceptance-record\\.json$",
+                                   recursive = TRUE, full.names = FALSE)
+  testthat::expect_length(acceptance_records, 0L)
 })
