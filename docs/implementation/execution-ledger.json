@@ -33,15 +33,41 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_005_shared_astra_audit",
+      "role": "astra_read_only_auditor",
+      "packet": "M4-005-shared-integration",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "snapshot_commit": "98a8c8c"
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_005_shared_integration_ready_for_astra_audit",
+    "status": "m4_005_shared_integration_astra_audit_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_005_shared_astra_audit",
+        "unit": "M4-005 immutable shared-integration audit",
+        "expected_return": "read-only verdict on result-boundary semantics, ordered dispatch, frozen B-T04 controls, B-T05/B-T06 acceptance and B-T07 dependency release"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-005B, M4-007 and M4-008 are serially integrated and candidate-path blobs are byte-identical. The fresh complete suite passed 3,169 assertions, package check is Status: OK, and eight source/installed probes passed. B-T05/B-T06 and B-T07 remain blocked until the required immutable shared M4-005 Astra audit is accepted."
+    "disposition": "M4-005B, M4-007 and M4-008 are serially integrated and fully verified. The single fresh Astra-low shared-integration audit is active on immutable snapshot 98a8c8c. B-T05/B-T06 and B-T07 remain blocked until Sol accepts its verdict."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005_shared_integration_astra_audit_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_005_shared_astra_audit",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "snapshot_commit": "98a8c8c",
+      "scope": "M4-005 result boundary, B-T02-through-B-T06 composition, preserved B-T04 controls, B-T05 provenance, B-T06 family/rank semantics, parity, privacy and B-T07 dependency legality",
+      "allowed_next_transition": "PASS permits Sol to accept B-T05/B-T06 and immediately dispatch B-T07; findings permit at most one focused M4-005 Astra rereview after an authorized correction",
+      "disposition": "This is the single initial shared M4-005 audit and is not G4. Astra cannot implement, update states, dispatch B-T07 or close M4."
+    },
     {
       "event": "m4_005b_m4_007_m4_008_integrated_ready_for_shared_astra_audit",
       "date": "2026-10-16",
