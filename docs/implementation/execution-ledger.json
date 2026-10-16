@@ -33,31 +33,28 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_014_repair1_sol_rereview",
-      "role": "sol_high_m4_014_focused_rereviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "candidate_base": "4acbd71f9def1dc7d0310477b133fc670530f74d",
-      "worktree": "/Users/megastore/.codex/worktrees/m4-014-bt07-package/PML MultiOmics Analysis Pipeline",
-      "repair_commit": "74335d16e732dcaa840ed077f619fb8261d613cc",
-      "mode": "read_only"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_014_targeted_source_path_rereview_active",
+    "status": "m4_014_integrated_verification_pending",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_014_repair1_sol_rereview",
-        "expected_receipt": "focused ADDRESSED/NOT ADDRESSED verdict over the one-file path-with-spaces repair"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Luna repair 74335d1 passed the B-T07 suite from a spaced checkout, the integration snapshot and an installed package: 124 expectations each, zero failures or skips. One fresh Sol-6.1 high focused re-review is active before integration."
+    "disposition": "Fresh focused Sol-6.1 high re-review marked the path-with-spaces finding ADDRESSED with no new P0/P1. Repair 74335d1 was serially integrated as cbe5400. Fresh integrated gates are pending."
   },
   "orchestration_events": [
+    {
+      "event": "m4_014_source_path_rereview_passed_repair_integrated",
+      "date": "2026-10-16",
+      "reviewer": "/root/m4_014_repair1_sol_rereview",
+      "repair_candidate": "74335d16e732dcaa840ed077f619fb8261d613cc",
+      "integration_commit": "cbe5400",
+      "verdict": "addressed",
+      "new_findings": {"p0": 0, "p1": 0},
+      "tests": {"spaced_source_expectations": 124, "installed_expectations": 124, "failed": 0, "skipped": 0, "known_git_metadata_warnings_per_run": 8},
+      "review_ref": "docs/implementation/reviews/M4-014-source-path-focused-rereview.md",
+      "allowed_next_transition": "run fresh integrated source/installed parity, full local suite and clean archive package check; dispatch immutable M4 Astra review only if all gates pass",
+      "disposition": "The correction is test-helper-only. B-T07, G4 and Stage C remain unreleased."
+    },
     {
       "event": "m4_014_source_path_repair_completed_focused_rereview_dispatched",
       "date": "2026-10-16",
@@ -2256,6 +2253,9 @@
       "package_exception_candidate_commit": "4acbd71f9def1dc7d0310477b133fc670530f74d",
       "package_exception_integration_commit": "01c5e49",
       "package_exception_review_ref": "docs/implementation/reviews/M4-014-sol-review.md",
+      "package_exception_repair_candidate": "74335d16e732dcaa840ed077f619fb8261d613cc",
+      "package_exception_repair_integration_commit": "cbe5400",
+      "package_exception_repair_review_ref": "docs/implementation/reviews/M4-014-source-path-focused-rereview.md",
       "integration_commits": ["8cf2d38", "4a33f01"],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T07-initial-review.md",

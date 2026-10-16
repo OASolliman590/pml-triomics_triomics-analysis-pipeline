@@ -54,9 +54,10 @@ path-with-spaces defect in the newly changed source CLI helper: Rscript receives
 the absolute script argument with spaces transformed to `~+~`, so four source
 CLI smokes failed before dispatch. Luna repair `74335d1` changed only the test
 helper and passed 124 expectations from a spaced checkout, the integration
-snapshot and an installed package, with zero failures or skips. Fresh reviewer
-`/root/m4_014_repair1_sol_rereview` is active for the one allowed focused
-re-review. Older completed managed worktrees remain archived.
+snapshot and an installed package, with zero failures or skips. Fresh focused
+Sol-6.1 high re-review marked the finding ADDRESSED with no new P0/P1, and the
+repair was integrated as `cbe5400`. No worker is active. Fresh integrated gates
+are next. Older completed managed worktrees remain archived.
 The user-owned `.gitignore`, AppleDouble files and `.superpowers/`
 remain untouched.
 
