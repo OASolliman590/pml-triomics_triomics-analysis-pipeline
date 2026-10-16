@@ -33,30 +33,29 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/b_t08_acceptance_review",
-      "role": "sol_read_only_reviewer",
-      "packet": "B-T08",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "snapshot_commit": "542a7b4"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "b_t08_acceptance_review_active",
+    "status": "m4_009_change_record_ready_for_astra_audit",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/b_t08_acceptance_review",
-        "unit": "B-T08 evidence-only acceptance review",
-        "expected_return": "fresh AC1–AC4 verdict with independent 139-assertion and synthetic CLI evidence, registration/privacy assessment and B-T07 release disposition"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Astra passed the shared M4-005 implementation and B-T05/B-T06 are accepted. Fresh Sol-high evidence-only review of integrated B-T08 is active on snapshot 542a7b4; B-T07 remains blocked until its verdict is reconciled."
+    "disposition": "Fresh B-T08 review failed AC2, AC3 and installed registration with three P1 findings despite 139 passing legacy assertions. M4-009 records targeted repair 1 and is ready for independent Astra-low audit; B-T07 remains blocked."
   },
   "orchestration_events": [
+    {
+      "event": "b_t08_acceptance_review_failed_m4_009_record_written",
+      "date": "2026-10-16",
+      "agent_name": "/root/b_t08_acceptance_review",
+      "snapshot_commit": "542a7b4",
+      "verdict": "fail",
+      "findings": {"p0": 0, "p1": 3, "p2": 0},
+      "tests": {"tests": 7, "passed": 139, "failed": 0, "warned": 0, "skipped": 0},
+      "review_ref": "docs/implementation/reviews/B-T08-acceptance-review.md",
+      "change_record_ref": "docs/implementation/change-records/M4-009-b-t08-acceptance-repair.md",
+      "failure_classes": ["constant continuous response labelled estimated with non-finite inference", "duplicate fixed-family member ids fitted twice", "six exports and installed CLI dispatch missing"],
+      "allowed_next_transition": "commit the immutable M4-009 record and dispatch one fresh Astra-low audit before repair 1",
+      "disposition": "B-T08 remains blocked and B-T07 dependency-illegal. No private data or biological claims were involved."
+    },
     {
       "event": "b_t08_fresh_acceptance_review_dispatched",
       "date": "2026-10-16",
@@ -1716,14 +1715,20 @@
       "blockers": []
     },
     "B-T08": {
-      "status": "sol_verified",
+      "status": "blocked_pending_m4_009_repair_1",
       "attempts": 1,
+      "repair_attempts": 0,
       "commit": "bded42a",
-      "acceptance_refs": [],
-      "blockers": [
-        "139 passed without B-T04 loaded"
+      "acceptance_refs": [
+        "docs/implementation/reviews/B-T08-acceptance-review.md"
       ],
-      "integration_commit": "9cd36fe"
+      "blockers": [
+        "AC2: a constant continuous response is labelled estimated with zero uncertainty and non-finite p rather than failed constant_response.",
+        "AC3: duplicate fixed-family member ids are fitted twice and inflate family counts rather than fail closed.",
+        "Registration: all six requested exports and explicit installed Stage B clinical-association dispatch are absent."
+      ],
+      "integration_commit": "9cd36fe",
+      "change_record_ref": "docs/implementation/change-records/M4-009-b-t08-acceptance-repair.md"
     },
     "B-T09": {
       "status": "accepted",

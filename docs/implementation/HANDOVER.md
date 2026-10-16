@@ -4,8 +4,8 @@ Run `triomics-20260920-sol-01` is active on branch
 `spec/harden-v2-20260920`. G3 is accepted. M4-005 Units A and B plus the bounded
 M4-007/M4-008 reconciliations are integrated and coordinator-verified. The
 required immutable shared M4-005 Astra audit accepted the shared implementation.
-B-T05 and B-T06 are accepted. A missing B-T08 acceptance receipt is the next
-transition; M4 is not yet eligible for G4 review.
+B-T05 and B-T06 are accepted. Fresh B-T08 review exposed three P1 defects;
+M4-009 targeted repair 1 is the next transition. M4 is not yet eligible for G4.
 
 G0 and G1 remain accepted. G2 is accepted on immutable milestone snapshot
 `8b0754c1ea581ba18c4bb2e7eb862c26eeb625a7` after its one permitted focused
@@ -62,8 +62,11 @@ Fresh M4-005B/M4-007/M4-008 evidence on 2026-10-16:
   regression assertions, 13 cross-cutting CLI probes, source/installed fixture
   execution, schema checks and package check. Unsupported real-study
   longitudinal objectives fail closed until eligible inputs exist.
-- B-T07 is unstarted because B-T08 is only recorded as Sol-verified, with no
-  acceptance receipt. G4, all C and all D remain unreleased.
+- B-T08 remains blocked despite 139 passing legacy assertions: constant response
+  and duplicate-family negative cases fail, and installed exports/CLI dispatch
+  are missing. M4-009 defines targeted repair 1.
+- B-T07 is unstarted because B-T08 is not accepted. G4, all C and all D remain
+  unreleased.
 - The final blocked-cycle Astra audit passed after correcting B-T07's stale
   dependency reason. Review: `reviews/M4-final-cycle-astra-audit.md`. Neither
   blocked candidate is integrated.
@@ -83,11 +86,10 @@ Read root `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `reviews/B-T09-review.md`, then M4-003/M4-004, M4-005 and their audit receipts.
 Verify HEAD and dirty state. Do not repeat accepted G2/G3/B-T04/B-T09 work or
 the completed M4-005/M4-006/M4-007/M4-008 implementation/review cycles. Resume
-by obtaining one fresh Sol-high evidence-only review of integrated B-T08 against
-AC1–AC4, its CLI fixture, registration and privacy constraints. If it passes,
-record B-T08 accepted and immediately dispatch B-T07 in a fresh isolated
-Luna-max worktree. Preserve B-T04's frozen controls and keep all private study
-inputs outside agents/Git.
+by auditing `change-records/M4-009-b-t08-acceptance-repair.md` with fresh Astra
+low. On PASS, execute its Luna/Sol bounded repair, fresh Sol review, complete
+verification and focused M4-005 Astra rereview. Dispatch B-T07 only after B-T08
+is accepted. Preserve B-T04 controls and keep private inputs outside agents/Git.
 
 ## Orchestration correction
 
