@@ -33,32 +33,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_010_sol_review",
-      "role": "sol_high_task_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "snapshot_commit": "91d7d3b83f57684e2a01b3f548e01fee4cfcb97b",
-      "worktree": "/Users/megastore/.codex/worktrees/m4-010-bt08-test-path/PML MultiOmics Analysis Pipeline",
-      "allowlist": [
-        "read_only_review"
-      ]
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_010_b_t08_sol_review_active",
+    "status": "m4_010_integrated_full_verification_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_010_sol_review",
-        "expected_receipt": "spec-compliance and code-quality verdict on candidate 91d7d3b with P0/P1/P2 counts and next transition"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Luna candidate 91d7d3b changed only tests/testthat/test-B-T08.R and reports installed RED plus source/installed GREEN. Fresh Sol 6.1 high review is active before any integration."
+    "disposition": "Fresh Sol 6.1 high review passed candidate 91d7d3b with no findings. The one-file test-harness correction is integrated as 92760cb; Sol is running the complete suite and clean-archive package gate before Astra rereview."
   },
   "orchestration_events": [
+    {
+      "event": "m4_010_sol_review_passed_candidate_integrated",
+      "date": "2026-10-16",
+      "reviewer": "/root/m4_010_sol_review",
+      "candidate_commit": "91d7d3b83f57684e2a01b3f548e01fee4cfcb97b",
+      "integration_commit": "92760cb",
+      "verdict": "pass",
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "review_ref": "docs/implementation/reviews/M4-010-sol-review.md",
+      "allowed_next_transition": "complete local suite and fresh clean-archive package check, then immutable focused M4-005 Astra rereview if green",
+      "disposition": "The reviewed one-file exception was integrated serially; no production or scientific file changed."
+    },
     {
       "event": "m4_010_luna_candidate_completed_sol_review_dispatched",
       "date": "2026-10-16",

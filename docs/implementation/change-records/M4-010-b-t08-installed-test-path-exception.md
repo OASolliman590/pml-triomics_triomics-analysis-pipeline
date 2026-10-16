@@ -7,7 +7,9 @@
 - Prior gate: `docs/implementation/reviews/M4-009-package-check-gate.md`
 - Initial audit: `docs/implementation/reviews/M4-010-astra-audit.md`
 - Focused rereview: `docs/implementation/reviews/M4-010-astra-rereview.md`
-- Status: scope approved; bounded Luna implementation authorized
+- Sol review: `docs/implementation/reviews/M4-010-sol-review.md`
+- Status: reviewed candidate integrated as `92760cb`; full-suite and clean-package
+  gates pending
 - Counter disposition: this is one exceptional test-harness correction. It does
   not reset, erase or renumber B-T08's initial attempt or two consumed targeted
   repairs, and it authorizes no further correction automatically.
