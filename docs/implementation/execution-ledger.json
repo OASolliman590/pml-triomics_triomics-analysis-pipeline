@@ -35,30 +35,57 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/m4_007_luna_tests",
-      "role": "luna_tests_only_worker",
+      "agent_name": "/root/m4_007_sol_review",
+      "role": "sol_read_only_reviewer",
       "packet": "M4-007",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "worktree": ".worktrees/m4-005b-stage-b-composition",
       "branch": "codex/m4-005b-stage-b-composition",
-      "base_commit": "ada3a17"
+      "base_commit": "ada3a17",
+      "candidate_commit": "0c84428"
     }
   ],
   "orchestration_control": {
-    "status": "m4_007_luna_tests_active",
-    "last_reconciled": "2026-10-15",
+    "status": "m4_007_fresh_sol_review_active",
+    "last_reconciled": "2026-10-16",
     "active_handoffs": [
       {
-        "agent_name": "/root/m4_007_luna_tests",
-        "unit": "M4-007 tests-first correction",
-        "expected_return": "three-test-file commit with stale q expectations reconciled and intended RED isolated to the blanket row-status overwrite"
+        "agent_name": "/root/m4_007_sol_review",
+        "unit": "M4-007 complete-diff review",
+        "expected_return": "read-only verdict on test commit 325f0c5 plus one-line product correction 0c84428, including independent focused-test counts and exact scope"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Astra-low audit passed M4-007 with no findings. A fresh Luna-max worker is modifying only B-T01/B-T03/B-T06 tests to reconcile stale q expectations and isolate the established row-status overwrite before Sol's one-line production correction."
+    "disposition": "Luna's tests-only RED isolated seven row-status failures while all family-q safeguards passed. Sol removed only the blanket status overwrite; the focused GREEN gate passed 677 with zero failures, warnings or skips. Fresh Sol-high review is active before any full-suite or integration transition."
   },
   "orchestration_events": [
+    {
+      "event": "m4_007_green_fresh_sol_review_dispatched",
+      "date": "2026-10-16",
+      "worker_agent_name": "/root/m4_007_luna_tests",
+      "review_agent_name": "/root/m4_007_sol_review",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "candidate_base": "ada3a17adebc388850321190bfdbcc9fb64b1152",
+      "test_commit": "325f0c548ec9098762d70270f43522ff9cf13771",
+      "product_commit": "0c84428",
+      "red": {"passed": 670, "failed": 7, "warned": 0, "skipped": 0},
+      "green": {"passed": 677, "failed": 0, "warned": 0, "skipped": 0},
+      "allowed_next_transition": "PASS permits fresh coordinator full-suite, package and CLI verification; findings permit at most one focused repair and rereview under M4-007",
+      "disposition": "The product correction deletes one blanket inferential-status overwrite. Family invalidity still withholds published q-values, retains internal BH accounting and independently blocks nominations. No private data were used."
+    },
+    {
+      "event": "m4_007_luna_tests_completed_sol_green",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_007_luna_tests",
+      "test_commit": "325f0c548ec9098762d70270f43522ff9cf13771",
+      "red": {"passed": 670, "failed": 7, "warned": 0, "skipped": 0},
+      "product_commit": "0c84428",
+      "green": {"passed": 677, "failed": 0, "warned": 0, "skipped": 0},
+      "allowed_next_transition": "dispatch the one authorized fresh Sol-high complete-diff review",
+      "disposition": "All seven RED failures were the audited blanket row-status overwrite; q-withholding, internal-q, missing-inventory reason and block-invariance assertions were already green."
+    },
     {
       "event": "m4_007_luna_tests_dispatched",
       "date": "2026-10-16",
