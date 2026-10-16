@@ -276,8 +276,35 @@ testthat::test_that("B-T07 AC2 independent and paired CLI smokes retain signed e
   testthat::expect_identical(independent_run$status, 0L)
   testthat::expect_identical(paired_run$status, 0L)
   testthat::expect_identical(unavailable_run$status, 0L)
+  testthat::expect_false(dir.exists(file.path(unavailable_root, "B", "handoffs")))
+
+  unavailable_disposition_root <- t07_test_root("ac2-unavailable-disposition")
+  unavailable_stage_result <- triomics_execute_stage_b(unavailable_config, unavailable_disposition_root)
+  testthat::expect_identical(unavailable_stage_result$status, "unavailable")
+  testthat::expect_identical(unavailable_stage_result$method_status, "unavailable")
+  unavailable_disposition <- tryCatch(
+    triomics_b07_cli_after_stage_b(
+      args = c("--config", unavailable_config, "--stage", "B", "--output", unavailable_disposition_root),
+      stage_b_result = unavailable_stage_result
+    ),
+    error = function(error) error
+  )
+  testthat::expect_false(inherits(unavailable_disposition, "triomics_error"),
+                         info = if (inherits(unavailable_disposition, "triomics_error")) {
+                           paste(unavailable_disposition$code, conditionMessage(unavailable_disposition))
+                         } else "typed unavailable Stage B result has no exportable claims")
+  disposition <- if (inherits(unavailable_disposition, "triomics_error")) list() else unavailable_disposition
+  testthat::expect_identical(disposition$status, "unavailable")
+  testthat::expect_identical(disposition$reason, "no_exportable_public_claims")
+  testthat::expect_true(file.exists(unavailable_stage_result$payload_path))
+  testthat::expect_false(dir.exists(file.path(unavailable_disposition_root, "B", "handoffs")))
+
+  consolidated_root <- t07_test_root("ac2-consolidated")
+  same_run_stage_result <- triomics_execute_stage_b(independent_config, consolidated_root)
   exported <- t07_expect_export_success(t07_attempt_export(
-    output = independent_root, config_path = independent_config,
+    output = consolidated_root, config_path = independent_config,
+    matrices = same_run_stage_result$resolved_matrices,
+    matrix_source = "stage_b_resolved_blocks",
     smoke_runs = list(independent = independent_root, paired = paired_root,
                       unavailable_method = unavailable_root),
     command = "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/B-T07.yaml --stage B --output artifacts/acceptance/B-T07"
@@ -291,6 +318,7 @@ testthat::test_that("B-T07 AC2 independent and paired CLI smokes retain signed e
   paired_row <- t07_item(paired_claim$rows)
   receipt <- t07_read_json_safe(exported$acceptance_record_path)
   testthat::expect_identical(t07_acceptance_verdict(receipt, "AC2"), "pass")
+  testthat::expect_identical(t07_acceptance_verdict(receipt, "AC3"), "pass")
   testthat::expect_true(is.finite(independent_row$effect) && independent_row$effect != 0)
   testthat::expect_true(is.finite(paired_row$effect) && paired_row$effect != 0)
   testthat::expect_identical(paired$representation_id, "delta")
@@ -302,15 +330,16 @@ testthat::test_that("B-T07 AC2 independent and paired CLI smokes retain signed e
 })
 
 testthat::test_that("B-T07 AC3 validates the matrix hash and blocks unverified provenance", {
-  root <- t07_test_root("ac3")
+  root <- t07_test_root("ac3-unverified")
   config_path <- t07_ticket("B-T06.yaml")
   config <- triomics_read_config(config_path)
   # Use only the public source assay to exercise the hash boundary; this is not
   # the runner's same-run resolved object and must not prove AC3 integration.
   ingested <- tryCatch(triomics_ingest_configured_study(config, config_path), error = function(error) NULL)
   matrices <- if (is.null(ingested)) NULL else ingested$assays
-  run <- t07_cli_smoke(config_path, root)
-  testthat::expect_identical(run$status, 0L)
+  stage_b_result <- triomics_execute_stage_b(config_path, root)
+  testthat::expect_identical(stage_b_result$status, "complete")
+  testthat::expect_false(dir.exists(file.path(root, "B", "handoffs")))
   exported <- t07_expect_export_success(
     t07_attempt_export(output = root, config_path = config_path, matrices = matrices),
     "AC3 public matrix hash binding"
@@ -361,6 +390,44 @@ testthat::test_that("B-T07 AC3 validates the matrix hash and blocks unverified p
   )
   testthat::expect_s3_class(changed_export, "triomics_error")
   testthat::expect_identical(changed_export$code, "B_EXPORT_MATRIX")
+})
+
+testthat::test_that("B-T07 integrated CLI writes a verified same-run matrix handoff", {
+  root <- t07_test_root("integrated-cli")
+  run <- t07_cli_smoke(t07_ticket("B-T07.yaml"), root)
+  testthat::expect_identical(run$status, 0L, info = paste(run$output, collapse = "\n"))
+
+  handoff_root <- file.path(root, "B", "handoffs")
+  handoff_dirs <- if (dir.exists(handoff_root)) {
+    list.dirs(handoff_root, recursive = FALSE, full.names = TRUE)
+  } else {
+    character()
+  }
+  testthat::expect_length(handoff_dirs, 1L)
+  handoff_dir <- if (length(handoff_dirs) == 1L) handoff_dirs[[1L]] else file.path(handoff_root, "missing")
+  bundle_path <- file.path(handoff_dir, "bundle.json")
+  bundle_envelope_path <- file.path(handoff_dir, "bundle.envelope.json")
+  matrix_manifest_path <- file.path(handoff_dir, "stage-c-matrices.json")
+  matrix_manifest_envelope_path <- file.path(handoff_dir, "stage-c-matrices.envelope.json")
+  matrix_values_path <- file.path(handoff_dir, "stage-c-matrix-values.rds")
+  matrix_values_envelope_path <- file.path(handoff_dir, "stage-c-matrix-values.envelope.json")
+  acceptance_record_path <- file.path(handoff_dir, "acceptance-record.json")
+  acceptance_envelope_path <- file.path(handoff_dir, "acceptance-record.envelope.json")
+  bundle <- t07_read_json_safe(bundle_path)
+  matrix_manifest <- t07_read_json_safe(matrix_manifest_path)
+  acceptance_record <- t07_read_json_safe(acceptance_record_path)
+
+  testthat::expect_true(all(file.exists(c(
+    bundle_path, matrix_manifest_path, matrix_values_path, acceptance_record_path
+  ))))
+  testthat::expect_identical(bundle$matrix_handoff$status, "complete")
+  testthat::expect_identical(bundle$matrix_handoff$source, "stage_b_resolved_blocks")
+  testthat::expect_identical(matrix_manifest$matrix_source, "stage_b_resolved_blocks")
+  testthat::expect_identical(t07_acceptance_verdict(acceptance_record, "AC3"), "pass")
+  testthat::expect_true(isTRUE(triomics_validate_envelope(bundle_envelope_path)))
+  testthat::expect_true(isTRUE(triomics_validate_envelope(matrix_manifest_envelope_path)))
+  testthat::expect_true(isTRUE(triomics_validate_envelope(matrix_values_envelope_path)))
+  testthat::expect_true(isTRUE(triomics_validate_envelope(acceptance_envelope_path)))
 })
 
 testthat::test_that("B-T07 Stage B returns the same-run keyed matrices without serializing them", {

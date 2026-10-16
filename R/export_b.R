@@ -1368,6 +1368,44 @@ triomics_b07_cli_after_stage_b <- function(args, stage_b_result, smoke_runs = NU
       "Invoke the hook only after a successful `--stage B` execution with its original config and output paths."
     )
   }
+  if (is.list(stage_b_result) &&
+      identical(as.character(stage_b_result$status), "unavailable") &&
+      identical(as.character(stage_b_result$method_status), "unavailable")) {
+    root <- triomics_b07_output_root(options$output, create = FALSE)
+    config <- triomics_read_config(options$config)
+    artifact <- triomics_b07_verified_artifact(
+      root, "B/block-results.json", "block_results",
+      config_sha256 = as.character(attr(config, "config_sha256"))
+    )
+    result_payload <- artifact$payload
+    stage_result_path_matches <- is.character(stage_b_result$payload_path) &&
+      length(stage_b_result$payload_path) == 1L && !is.na(stage_b_result$payload_path) &&
+      nzchar(stage_b_result$payload_path) && tryCatch(
+        identical(
+          normalizePath(stage_b_result$payload_path, winslash = "/", mustWork = TRUE),
+          artifact$payload_path
+        ),
+        error = function(error) FALSE
+      )
+    method_dispositions <- triomics_b07_method_dispositions(result_payload)
+    has_unavailable_disposition <- any(vapply(method_dispositions, function(item) {
+      identical(as.character(item$status), "unavailable")
+    }, logical(1)))
+    if (isTRUE(stage_result_path_matches) &&
+        identical(as.character(result_payload$status), "unavailable") &&
+        identical(as.character(result_payload$method_status), "unavailable") &&
+        is.list(result_payload$blocks) && !length(result_payload$blocks) &&
+        has_unavailable_disposition) {
+      return(list(
+        status = "unavailable",
+        reason = "no_exportable_public_claims",
+        method_status = "unavailable",
+        method_dispositions = method_dispositions,
+        block_results_path = artifact$payload_path,
+        handoff_path = NULL
+      ))
+    }
+  }
   matrices <- if (is.list(stage_b_result)) stage_b_result$resolved_matrices else NULL
   if (!is.list(matrices) || !length(matrices) || is.null(names(matrices)) ||
       any(!nzchar(names(matrices))) || anyDuplicated(names(matrices))) {
