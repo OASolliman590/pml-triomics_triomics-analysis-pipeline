@@ -33,30 +33,26 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_007_astra_audit",
-      "role": "astra_read_only_change_record_auditor",
-      "packet": "M4-007",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "snapshot_commit": "50b2dfa"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_007_astra_audit_active",
+    "status": "m4_007_astra_audit_passed_luna_dispatch_pending",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_007_astra_audit",
-        "unit": "M4-007 change-record audit",
-        "expected_return": "PASS/PASS WITH REQUIRED CHANGES/FAIL on row-status versus q-publication reconciliation, scope, counters and dependency safety"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-005B candidate ada3a17 remains unintegrated. Its complete suite passed 3,130 assertions and failed six B-T01/B-T03 assertions. M4-007 records the bounded four-file reconciliation; a fresh Astra-low auditor is reviewing immutable snapshot 50b2dfa before any correction is coded."
+    "disposition": "Fresh Astra-low audit passed M4-007 on immutable snapshot 50b2dfa with no findings. Internal authority confirms family q publication and row inferential status are separate. The next legal transition is one fresh Luna-max tests-only correction followed by Sol's one-line multiplicity change."
   },
   "orchestration_events": [
+    {
+      "event": "m4_007_astra_audit_passed",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_007_astra_audit",
+      "snapshot_commit": "50b2dfa",
+      "verdict": "pass",
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "review_ref": "docs/implementation/reviews/M4-007-astra-audit.md",
+      "allowed_next_transition": "dispatch one fresh Luna-max worker to the three test files, then Sol removes only the blanket row-status overwrite in R/multiplicity.R and runs the prescribed gates",
+      "disposition": "No literature search was needed because the frozen internal contracts fully resolve the issue. This does not authorize integration or downstream release."
+    },
     {
       "event": "m4_007_change_record_astra_audit_dispatched",
       "date": "2026-10-16",
