@@ -293,7 +293,6 @@ b08_run_source_cli <- function(config_path, output_path) {
     args = c("--no-site-file", "--no-environ", "--no-restore", "--no-save", shQuote(script_path),
              "--config", shQuote(config_path), "--stage", "B", "--output", shQuote(output_path)),
     env = c(paste0("B08_TEST_ROOT=", shQuote(root)),
-            paste0("B08_DISPATCH_LOG=", shQuote(dispatch_log)),
             paste0("R_PROFILE_USER=", shQuote(profile))),
     stdout = TRUE,
     stderr = TRUE
