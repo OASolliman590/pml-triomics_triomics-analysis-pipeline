@@ -5,7 +5,8 @@
   two-repair ceiling after the M4-009 clean-archive package check exposed an
   installed-test-only fixture-path defect.
 - Prior gate: `docs/implementation/reviews/M4-009-package-check-gate.md`
-- Status: pending independent Astra audit
+- Initial audit: `docs/implementation/reviews/M4-010-astra-audit.md`
+- Status: corrected after initial Astra P1; pending the one focused rereview
 - Counter disposition: this is one exceptional test-harness correction. It does
   not reset, erase or renumber B-T08's initial attempt or two consumed targeted
   repairs, and it authorizes no further correction automatically.
@@ -32,12 +33,22 @@ One fresh Luna-max worker in one fresh isolated worktree may modify only:
 - `tests/testthat/test-B-T08.R`.
 
 The worker must reproduce the installed-context failure before editing. It may
-change only `b08_copy_ticket_examples()` and, if strictly necessary for that
-helper's test-path behavior, assertions in the three B-T08 CLI regression tests
-that call it. The helper must resolve packaged ticket examples in both source and
-installed test contexts using the existing installed-aware resource mechanism,
-copy only public synthetic fixtures, and preserve the temporary fixture layout
-expected by the source and installed CLI probes.
+change only `b08_copy_ticket_examples()`, `b08_run_source_cli()` (renaming it to
+describe context-aware behavior is allowed), and, if strictly necessary for
+those helpers' test-path behavior, assertions or labels in the three B-T08 CLI
+regression tests that call them. The fixture helper must resolve packaged ticket
+examples in both source and installed test contexts using the existing
+installed-aware resource mechanism, copy only public synthetic fixtures, and
+preserve the temporary fixture layout expected by the CLI probes.
+
+The CLI helper must retain the existing checkout runner when the source checkout
+and `inst/exec/triomics` are present. In installed-test context, where
+`.Rbuildignore` intentionally excludes `inst/exec`, it may invoke only the same
+installed package's internal `triomics_main()` in a clean child R process using
+the package library paths supplied by the test environment. Both paths must pass
+the same CLI arguments and return the actual exit status and output. The helper
+may not simulate outputs, call the association function directly, or bypass CLI
+dispatch and error mapping.
 
 No file under `R/`, `NAMESPACE`, `man/`, `inst/`, `discovery/`, package metadata,
 dependency lock, configuration contract, acceptance threshold or private-data
@@ -47,7 +58,9 @@ bypass any required assertion. No private study data may be read or copied.
 ## Required evidence and gates
 
 1. RED: the existing clean installed-package context deterministically produces
-   the three documented fixture-open errors before the correction.
+   the three documented fixture-open errors before the correction. The initial
+   Astra audit additionally established that fixing only those paths would expose
+   the checkout-only `pkgload::load_all()` / `inst/exec/triomics` assumption.
 2. GREEN: the B-T08 focused suite passes locally and in installed-package context
    with no failure, warning or skip; the B-T09 coexistence and nonfixture refusal
    checks remain intact.

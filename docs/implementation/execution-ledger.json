@@ -35,13 +35,24 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "blocked_m4_009_package_check_repair_exhausted",
+    "status": "m4_010_exception_record_focused_rereview_pending",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The complete local suite passed 3,298 assertions, but the clean-archive package check failed with three installed-context errors in the new B-T08 CLI test helper. Both B-T08 repairs are consumed, so no further code change or Astra rereview is authorized. B-T08, B-T07 and all C/D work are blocked."
+    "disposition": "Omar authorized one narrow exception for the installed-test path defect. M4-010 initial Astra audit found one P1: the same test file's checkout-only CLI runner also requires bounded context-aware correction. The record is corrected and awaits its one focused rereview; no implementation has been dispatched."
   },
   "orchestration_events": [
+    {
+      "event": "m4_010_initial_astra_audit_failed_record_corrected",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_010_astra_audit",
+      "candidate_commit": "133fe646fd3bc458ea9970f06a79909f28f9d722",
+      "verdict": "fail",
+      "findings": {"p0": 0, "p1": 1, "p2": 0},
+      "review_ref": "docs/implementation/reviews/M4-010-astra-audit.md",
+      "allowed_next_transition": "one focused Astra rereview of the corrected record before worker dispatch",
+      "disposition": "The exception remains test-only and scientifically non-semantic, but must cover both installed resource resolution and source-versus-installed CLI harness selection in tests/testthat/test-B-T08.R."
+    },
     {
       "event": "m4_009_package_check_failed_repair_allowance_exhausted",
       "date": "2026-10-16",
