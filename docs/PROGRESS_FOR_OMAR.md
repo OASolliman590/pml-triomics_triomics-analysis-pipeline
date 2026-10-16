@@ -5,25 +5,24 @@ and lipidomics while keeping the fasting, diabetic-treatment and
 organophosphate studies scientifically separate.
 
 **Works now:** Stage B’s independent, paired, repeated-visit, DEqMS/fallback,
-multiplicity, clinical and export lanes run together on public synthetic data.
-B-T07 now hands Stage C the exact matrices used by the Stage B fit, with hashes,
-family accounting, reproduction records and fail-closed unavailable methods.
+multiplicity, clinical and export lanes run together on synthetic data.
+All nine required Stage B packets and G4 are accepted. The handoff gives Stage C
+the exact fitted matrices with hashes, family accounting and reproduction data.
 
-**Changed:** Cross-packet CLI composition was repaired without changing effects,
-standard errors, q-values, B-T04 calibration or privacy behavior. Focused review
-passed 870 expectations; four public CLI fixtures exited 0 and 34 envelopes
-validated. The complete local suite passed with no failure, warning or skip.
+**Changed:** The installed-package defect was repaired without changing models,
+effects, thresholds or seeds. Source and installed B-T07 each passed 124 checks;
+the full suite passed 3,462 with no failure, warning or skip; package check was
+clean. Independent Astra review passed after acceptance records were reconciled.
 
 **Not established:** This is software evidence, not biological validation. None
 of the three private studies was read or fitted. B-T04’s ordinary 23/400
 diagnostic remains failed; only its frozen production-aligned route passed.
 
-**Next:** The installed-package gate found B-T07 fixture-path/runner defects and
-three package-hygiene issues. They are not statistical failures, but the gate
-cannot be waived and Stage C remains unreleased.
+**Next:** Begin C-01: the common integration contract, eligibility rules,
+concatenation PCA baseline and consensus interface. C-02 waits for C-01; advanced
+DIABLO, block.spls and MOFA routes remain behind G5.
 
-**Needs Omar:** Explicitly authorize the bounded M4-014 exception; B-T07 has used
-both normal repairs. Scope is limited to its installed-test helper, two mechanical
-exporter fixes, and one manual cleanup.
+**Needs Omar:** Nothing now. Private studies remain untouched
+until the pipeline and real-data onboarding gates are ready.
 
 **Sync:** Local documentation updated; no Notion sync or publication attempted.

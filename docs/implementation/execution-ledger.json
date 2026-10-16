@@ -33,30 +33,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_g4_focused_astra",
-      "role": "astra_low_m4_g4_focused_rereviewer",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "snapshot_commit": "0f4be24",
-      "finding": "M4-G4-001",
-      "mode": "read_only"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_g4_focused_astra_rereview_active",
+    "status": "g4_accepted_c01_release_ready",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_g4_focused_astra",
-        "expected_receipt": "focused M4-G4-001 ADDRESSED/NOT ADDRESSED verdict and pass|changes_required|blocked disposition"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Initial M4 Astra review returned changes_required only for M4-G4-001. Record-only correction snapshot 0f4be24 is under the single fresh Astra-low focused rereview. B-T07/G4/Stage C remain unreleased."
+    "disposition": "Focused Astra rereview passed and marked M4-G4-001 addressed. Sol accepts B-T07 and G4 on the recorded software/package evidence and releases Stage C dependency gates. C-01 is the only immediately legal packet."
   },
   "orchestration_events": [
+    {
+      "event": "m4_g4_focused_astra_passed_sol_accepted_g4",
+      "date": "2026-10-16",
+      "reviewer": "/root/m4_g4_focused_astra",
+      "correction_snapshot": "0f4be24f913269657bf7f85f5985643cf3dc5c5d",
+      "verdict": "pass",
+      "finding": "M4-G4-001 addressed",
+      "review_ref": "docs/implementation/reviews/M4-G4-focused-astra-rereview.md",
+      "sol_disposition": "B-T07 accepted; G4 accepted; Stage C dependency gates released",
+      "allowed_next_transition": "dispatch one fresh isolated Luna-max C-01 worker; C-02 waits on accepted C-01 and C-03/C-04/C-05 wait on G5",
+      "disposition": "Acceptance is synthetic software/package evidence only. The ordinary B-T04 23/400 diagnostic and M4-012 P2 qualification remain disclosed."
+    },
     {
       "event": "m4_g4_001_focused_astra_rereview_dispatched",
       "date": "2026-10-16",
@@ -2302,7 +2299,7 @@
       "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
-      "status": "software_gates_passed_pending_m4_astra",
+      "status": "accepted",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
@@ -2326,11 +2323,14 @@
       "integration_commits": ["8cf2d38", "4a33f01"],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T07-initial-review.md",
-        "docs/implementation/reviews/B-T07-repair1-rereview.md"
+        "docs/implementation/reviews/B-T07-repair1-rereview.md",
+        "docs/implementation/reviews/M4-014-sol-review.md",
+        "docs/implementation/reviews/M4-014-source-path-focused-rereview.md",
+        "docs/implementation/reviews/M4-014-integration-package-gate.md",
+        "docs/implementation/reviews/M4-G4-astra-review.md",
+        "docs/implementation/reviews/M4-G4-focused-astra-rereview.md"
       ],
-      "blockers": [
-        "M4-014 is authorized, but B-T07 remains unaccepted until the bounded correction passes fresh Sol review, source/installed parity, the full local suite, a clean archive package check and immutable M4 Astra review."
-      ]
+      "blockers": []
     },
     "C-01": {
       "status": "not_started",
@@ -2520,11 +2520,11 @@
       ]
     },
     "M4": {
-      "status": "active_b_t07_remaining",
-      "review_ref": null,
-      "commit": "af69a9e",
+      "status": "accepted",
+      "review_ref": "docs/implementation/reviews/M4-G4-focused-astra-rereview.md",
+      "commit": "0f4be24f913269657bf7f85f5985643cf3dc5c5d",
       "milestone_ref": "docs/implementation/milestones/M4.md",
-      "blocking_packets": ["B-T07"]
+      "blocking_packets": []
     },
     "M5": {
       "status": "not_started",

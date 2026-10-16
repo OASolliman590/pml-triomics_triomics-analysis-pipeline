@@ -1,11 +1,10 @@
 # Implementation handover
 
-Run `triomics-20260920-sol-01` is paused on branch
-`spec/harden-v2-20260920` at `11b288c`. G0 through G3 remain accepted. Stage B
-packets B-T01 through B-T06, B-T08 and B-T09 are accepted. B-T07 is implemented
-and integrated through M4-011, M4-012 and M4-013, but remains unaccepted because
-the mandatory installed-package gate failed. Therefore G4 and Stage C remain
-unreleased.
+Run `triomics-20260920-sol-01` continues on branch
+`spec/harden-v2-20260920`. G0 through G4 are accepted. All nine required Stage B
+packets are accepted. Stage C dependency gates are released; C-01 is the only
+immediately legal packet, while C-02 waits on C-01 and C-03/C-04/C-05 remain
+behind G5.
 
 ## Current evidence
 
@@ -64,20 +63,18 @@ returned `changes_required` only because B-T01/B-T02/B-T03 lacked explicit
 acceptance records. Sol applied record-only M4-015 after a fresh 749-expectation
 combined pass; all three are accepted now, not retroactively. Fresh read-only
 reviewer `/root/m4_g4_focused_astra` is active on record-only correction
-snapshot `0f4be24` for the single focused rereview of M4-G4-001. Sol may accept
-B-T07/G4 and release Stage C only after PASS. Older completed managed worktrees
-remain archived.
-The user-owned `.gitignore`, AppleDouble files and `.superpowers/`
-remain untouched.
+snapshot `0f4be24` for the single focused rereview of M4-G4-001. That rereview
+passed, and Sol accepted B-T07/G4 and released Stage C. No worker is active at
+this exact handover point. Older completed managed worktrees remain archived.
+The user-owned `.gitignore` and AppleDouble files remain untouched. The
+git-ignored `.superpowers/` contains review packages only and remains untracked.
 
 ## Literal resume instruction
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
-`execution-ledger.json`, this handover, M4-011 through M4-014, and the M4-013
-package-gate/Astra receipts. Verify HEAD and dirty state. M4-014 is authorized:
-dispatch one fresh isolated Luna-max worker for the exact B-T07 source/test
-scope, have Sol apply the manual-only edit, obtain fresh Sol-high review, run
-source/installed B-T07 parity, the complete local suite and a clean archive
-package check with no ERROR/WARNING/NOTE/required skip, then request the
-immutable M4 Astra review. Accept B-T07 and G4 and release Stage C only if every
-gate passes.
+`execution-ledger.json`, this handover, the M4 milestone and M4-G4 review
+receipts. Verify HEAD and dirty state. G4 is accepted. Dispatch one fresh
+isolated Luna-max worker for C-01 only, using its packet card and relevant C
+contracts. Inspect the candidate, obtain fresh Sol-high review, integrate and
+run the named gates. Do not dispatch C-02 before C-01 acceptance, and do not
+dispatch C-03/C-04/C-05 before G5.
