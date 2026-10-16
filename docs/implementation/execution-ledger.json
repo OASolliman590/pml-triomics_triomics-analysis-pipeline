@@ -33,31 +33,28 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_008_astra_audit",
-      "role": "astra_read_only_auditor",
-      "packet": "M4-008",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "snapshot_commit": "6934e488c9739175aef2b0b73508b9ab7696e536",
-      "candidate_commit": "0c844281b68e0f7c9b81bfcc975f6c30f7316a92"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_008_astra_audit_active",
+    "status": "m4_008_astra_audit_passed_ready_for_luna",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_008_astra_audit",
-        "unit": "M4-008 package-check reconciliation audit",
-        "expected_return": "read-only verdict on the two-surface repair authority, scientific invariance, package-context test design and unchanged downstream blocks"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-007 and the complete 3,169-assertion suite passed. Required package check exposed three packaging-context test failures and a .superpowers build NOTE. Fresh Astra-low audit of the immutable M4-008 record is active; no candidate change or integration is authorized before PASS."
+    "disposition": "Fresh Astra-low audit passed M4-008 with no findings. One Luna-max test-harness repair and Sol's one-line .Rbuildignore update are authorized; all full-suite, package, parity, review and shared-Astra gates remain mandatory."
   },
   "orchestration_events": [
+    {
+      "event": "m4_008_astra_audit_passed",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_008_astra_audit",
+      "snapshot_commit": "6934e488c9739175aef2b0b73508b9ab7696e536",
+      "candidate_commit": "0c844281b68e0f7c9b81bfcc975f6c30f7316a92",
+      "verdict": "pass",
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "review_ref": "docs/implementation/reviews/M4-008-astra-audit.md",
+      "literature_review": "not_required",
+      "allowed_next_transition": "dispatch one fresh Luna-max worker on the single test file and apply only the audited Sol-owned .Rbuildignore exclusion",
+      "disposition": "This authorizes only the two-surface M4-008 repair. M4-005/B-T05/B-T06 counters remain unchanged and downstream release remains blocked."
+    },
     {
       "event": "m4_008_astra_audit_dispatched",
       "date": "2026-10-16",
