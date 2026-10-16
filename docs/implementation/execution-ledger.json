@@ -33,32 +33,29 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_014_sol_review",
-      "role": "sol_high_m4_014_candidate_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "snapshot_commit": "fe9e870",
-      "worktree": "/Users/megastore/.codex/worktrees/m4-014-bt07-package/PML MultiOmics Analysis Pipeline",
-      "candidate_commit": "4acbd71f9def1dc7d0310477b133fc670530f74d",
-      "sol_manual_commit": "7194b23",
-      "mode": "read_only"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_014_sol_review_active",
+    "status": "m4_014_integrated_verification_pending",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_014_sol_review",
-        "expected_receipt": "M4-014 spec-compliance and code-quality verdict over the two-file Luna candidate plus Sol-owned manual correction"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Luna candidate 4acbd71 passed 124 source and 124 installed B-T07 expectations with no failures or skips. Fresh Sol-6.1 high read-only review is active over that candidate and Sol manual commit 7194b23; no candidate integration has occurred."
+    "disposition": "Fresh Sol-6.1 high review passed with P0/P1/P2 zero. Candidate 4acbd71 was serially integrated as 01c5e49 after the Sol manual commit 7194b23. Fresh integrated source/installed parity, full suite and clean archive package check are pending."
   },
   "orchestration_events": [
+    {
+      "event": "m4_014_sol_review_passed_candidate_integrated",
+      "date": "2026-10-16",
+      "reviewer": "/root/m4_014_sol_review",
+      "candidate_commit": "4acbd71f9def1dc7d0310477b133fc670530f74d",
+      "integration_commit": "01c5e49",
+      "sol_manual_commit": "7194b23",
+      "verdict": "pass",
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "tests": {"source_expectations": 124, "installed_expectations": 124, "failed": 0, "skipped": 0, "archive_git_metadata_warnings_per_run": 8},
+      "review_ref": "docs/implementation/reviews/M4-014-sol-review.md",
+      "allowed_next_transition": "run fresh integrated source/installed B-T07 parity, full local suite and clean archive package check; dispatch immutable M4 Astra review only if all gates pass",
+      "disposition": "Review acceptance applies only to the bounded correction. B-T07, G4 and Stage C remain unreleased."
+    },
     {
       "event": "m4_014_candidate_completed_sol_review_dispatched",
       "date": "2026-10-16",
@@ -2204,7 +2201,7 @@
       "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
-      "status": "m4_014_exception_authorized_pending_worker_dispatch",
+      "status": "m4_014_integrated_verification_pending",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
@@ -2218,6 +2215,9 @@
       "repair_2_review_ref": "docs/implementation/reviews/M4-012-b-t07-repair2-sol-review.md",
       "repair_2_adjudication_ref": "docs/implementation/reviews/M4-012-b-t07-p1-astra-adjudication.md",
       "package_exception_proposal_ref": "docs/implementation/change-records/M4-014-b-t07-package-gate-exception-proposal.md",
+      "package_exception_candidate_commit": "4acbd71f9def1dc7d0310477b133fc670530f74d",
+      "package_exception_integration_commit": "01c5e49",
+      "package_exception_review_ref": "docs/implementation/reviews/M4-014-sol-review.md",
       "integration_commits": ["8cf2d38", "4a33f01"],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T07-initial-review.md",
