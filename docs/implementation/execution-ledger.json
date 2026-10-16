@@ -35,28 +35,38 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/b_t07_luna",
-      "role": "luna_b_t07_targeted_repair_2",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "snapshot_commit": "c5f868f",
-      "worktree": "/Users/megastore/.codex/worktrees/b-t07-export-handoff/PML MultiOmics Analysis Pipeline",
-      "allowlist": ["R/export_b.R", "tests/testthat/test-B-T07.R"]
+      "agent_name": "/root/b_t07_repair2_sol_review",
+      "role": "sol_high_read_only_repair_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "snapshot_commit": "a893475",
+      "candidate_worktree": "/Users/megastore/.codex/worktrees/b-t07-export-handoff/PML MultiOmics Analysis Pipeline",
+      "allowlist": []
     }
   ],
   "orchestration_control": {
-    "status": "m4_012_b_t07_repair_2_active",
+    "status": "m4_012_b_t07_repair_2_review_active",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [
       {
-        "agent_name": "/root/b_t07_luna",
-        "expected_receipt": "B-T07 repair 2 typed-unavailable guard and integrated AC2/AC3 test evidence"
+        "agent_name": "/root/b_t07_repair2_sol_review",
+        "expected_receipt": "fresh Sol-high PASS/FAIL review of B-T07 repair 2 candidate a893475"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M4-011 Units A and B are integrated. The first integrated suite exposed the bounded typed-unavailable and duplicate-export seam; B-T07 repair 2 of 2 is active under M4-012. B-T07 remains unaccepted."
+    "disposition": "B-T07 repair 2 candidate a893475 passes 124 focused expectations and the exact CLI; a fresh Sol-high review is active. B-T07 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "m4_012_b_t07_repair_2_completed_review_dispatched",
+      "date": "2026-10-16",
+      "implementer": "/root/b_t07_luna",
+      "reviewer": "/root/b_t07_repair2_sol_review",
+      "candidate_commit": "a893475",
+      "tests": {"cases": 12, "expectations": 124, "failed": 0, "warned": 0, "skipped": 0},
+      "allowed_next_transition": "serial integration and complete shared-diff review only if the focused repair review passes; otherwise block B-T07 because its repair budget is exhausted",
+      "disposition": "Exact B-T07 CLI exited 0 with verified same-run matrix handoff; AC2 remains independently proven by the focused suite rather than the standalone CLI receipt."
+    },
     {
       "event": "m4_012_b_t07_repair_2_dispatched",
       "date": "2026-10-16",
@@ -2064,6 +2074,7 @@
       "shared_unit_a_integration_commit": "f1ed853",
       "shared_unit_b_integration_commit": "c5f868f",
       "repair_2_change_ref": "docs/implementation/change-records/M4-012-b-t07-final-compatibility-repair.md",
+      "repair_2_candidate_commit": "a893475",
       "integration_commits": ["8cf2d38", "4a33f01"],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T07-initial-review.md",
