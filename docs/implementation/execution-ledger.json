@@ -33,15 +33,42 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_014_bt07_luna",
+      "role": "luna_b_t07_package_gate_exception_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "snapshot_commit": "fe9e870",
+      "worktree": "/Users/megastore/.codex/worktrees/m4-014-bt07-package/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["tests/testthat/test-B-T07.R", "R/export_b.R"]
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_014_authorized_pending_worker_dispatch",
+    "status": "m4_014_luna_worker_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_014_bt07_luna",
+        "expected_receipt": "M4-014 RED/GREEN source and installed B-T07 parity evidence plus exact two-file candidate commit"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar explicitly authorized the bounded M4-014 package-gate exception on 2026-10-16. The exception does not reset B-T07 attempts and does not waive source, installed, full-suite, package or Astra gates. A fresh isolated Luna-max worker is the next transition."
+    "disposition": "The authorized M4-014 correction is active in one fresh isolated Luna-max worktree at snapshot fe9e870. Sol will inspect the candidate and dispatch a fresh Sol-high review before any integration."
   },
   "orchestration_events": [
+    {
+      "event": "m4_014_luna_worker_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_014_bt07_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "snapshot_commit": "fe9e870",
+      "worktree": "/Users/megastore/.codex/worktrees/m4-014-bt07-package/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["tests/testthat/test-B-T07.R", "R/export_b.R"],
+      "allowed_next_transition": "inspect the candidate and dispatch a fresh Sol-high review; do not integrate before review",
+      "disposition": "No scientific change, private-data access, attempt reset or gate waiver is authorized."
+    },
     {
       "event": "m4_014_package_gate_exception_authorized",
       "date": "2026-10-16",

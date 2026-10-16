@@ -45,8 +45,11 @@ The exact record is
 and the Sol-owned duplicate Rd consolidation. It does not reset counters,
 authorize a scientific change, or waive any verification gate.
 
-No run-owned agent or poll was active when this authorization was recorded.
-Completed managed worktrees were archived.
+The fresh Luna-max worker `/root/m4_014_bt07_luna` is active in the isolated
+`m4-014-bt07-package` worktree against snapshot `fe9e870`, with only
+`tests/testthat/test-B-T07.R` and `R/export_b.R` allowlisted. Its next legal
+transition is candidate inspection and fresh Sol-high review. Older completed
+managed worktrees remain archived.
 The user-owned `.gitignore`, AppleDouble files and `.superpowers/`
 remain untouched.
 
