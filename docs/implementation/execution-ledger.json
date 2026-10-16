@@ -33,15 +33,43 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_007_luna_tests",
+      "role": "luna_tests_only_worker",
+      "packet": "M4-007",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "worktree": ".worktrees/m4-005b-stage-b-composition",
+      "branch": "codex/m4-005b-stage-b-composition",
+      "base_commit": "ada3a17"
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_007_astra_audit_passed_luna_dispatch_pending",
+    "status": "m4_007_luna_tests_active",
     "last_reconciled": "2026-10-15",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_007_luna_tests",
+        "unit": "M4-007 tests-first correction",
+        "expected_return": "three-test-file commit with stale q expectations reconciled and intended RED isolated to the blanket row-status overwrite"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Astra-low audit passed M4-007 on immutable snapshot 50b2dfa with no findings. Internal authority confirms family q publication and row inferential status are separate. The next legal transition is one fresh Luna-max tests-only correction followed by Sol's one-line multiplicity change."
+    "disposition": "Fresh Astra-low audit passed M4-007 with no findings. A fresh Luna-max worker is modifying only B-T01/B-T03/B-T06 tests to reconcile stale q expectations and isolate the established row-status overwrite before Sol's one-line production correction."
   },
   "orchestration_events": [
+    {
+      "event": "m4_007_luna_tests_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_007_luna_tests",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "candidate_base": "ada3a17adebc388850321190bfdbcc9fb64b1152",
+      "allowed_files": ["tests/testthat/test-B-T01.R", "tests/testthat/test-B-T03.R", "tests/testthat/test-B-T06.R"],
+      "allowed_next_transition": "inspect the tests-only RED commit, then Sol removes only the blanket row inferential_status overwrite in R/multiplicity.R and runs GREEN",
+      "disposition": "No production, statistical method, threshold, fixture, private-data or canonical-document change is authorized to Luna."
+    },
     {
       "event": "m4_007_astra_audit_passed",
       "date": "2026-10-16",
