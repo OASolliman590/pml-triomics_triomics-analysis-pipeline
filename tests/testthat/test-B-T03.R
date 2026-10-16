@@ -657,11 +657,18 @@ testthat::test_that("B-T03 effect units, failed-family members, and DEqMS stay e
   testthat::expect_null(bad$p)
   testthat::expect_null(bad$q)
   testthat::expect_identical(bad$estimation_status, "failed")
+  testthat::expect_identical(bad$inferential_status, "not_estimable")
   family <- failed$fit$blocks$block_1$contrasts$target_minus_reference$family
   testthat::expect_identical(family$n_declared, 2L)
   testthat::expect_identical(family$n_failed, 1L)
   testthat::expect_identical(family$internal_p[[which(family$member_ids == "bad")]], 1)
-  expect_close(good$q, stats::p.adjust(c(good$p, 1), method = "BH")[[1L]])
+  testthat::expect_identical(good$inferential_status, "unverified")
+  testthat::expect_identical(family$validation$status, "withheld")
+  testthat::expect_false(family$q_published)
+  testthat::expect_true("selection_inventory_missing" %in% family$validation$reasons)
+  expect_close(family$internal_q[[which(family$member_ids == "good")]],
+               stats::p.adjust(c(good$p, 1), method = "BH")[[1L]])
+  testthat::expect_null(good$q)
 
   alone <- b03_run(b03_change_study())
   both <- b03_change_study()
@@ -674,10 +681,14 @@ testthat::test_that("B-T03 effect units, failed-family members, and DEqMS stay e
   analysis <- b03_analysis()
   analysis$block_ids <- c("block_1", "block_2")
   widened <- b03_run(both, analysis)
-  testthat::expect_equal(
-    alone$fit$blocks$block_1$contrasts$target_minus_reference$family$internal_q,
-    widened$fit$blocks$block_1$contrasts$target_minus_reference$family$internal_q
-  )
+  alone_result <- alone$fit$blocks$block_1$contrasts$target_minus_reference
+  widened_result <- widened$fit$blocks$block_1$contrasts$target_minus_reference
+  testthat::expect_equal(alone_result$family$internal_q, widened_result$family$internal_q)
+  testthat::expect_identical(alone_result$family$validation$status, "withheld")
+  testthat::expect_false(alone_result$family$q_published)
+  testthat::expect_true("selection_inventory_missing" %in% alone_result$family$validation$reasons)
+  testthat::expect_true(all(vapply(alone_result$rows, function(row) is.null(row$q), logical(1))))
+  testthat::expect_true(all(vapply(widened_result$rows, function(row) is.null(row$q), logical(1))))
 
   resolved <- triomics_resolve_analysis(b03_change_study(), b03_analysis())
   deqms <- triomics_fit_block_models(resolved, b03_statistics(method = "deqms"))

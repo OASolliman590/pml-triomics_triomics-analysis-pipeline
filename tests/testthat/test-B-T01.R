@@ -330,6 +330,7 @@ testthat::test_that("missing rows, rank, and zero residual support are accounted
   testthat::expect_null(zero_df$moderated_se)
   testthat::expect_null(zero_df$p)
   testthat::expect_null(zero_df$q)
+  testthat::expect_identical(zero_df$inferential_status, "not_estimable")
   testthat::expect_identical(zero_df$estimation_reason, "zero_residual_support")
   borrowed_design <- stats::model.matrix(~ 0 + factor(groups, levels = c("control", "treatment")))
   colnames(borrowed_design) <- c("condition.control", "condition.treatment")
@@ -359,6 +360,9 @@ testthat::test_that("missing rows, rank, and zero residual support are accounted
   testthat::expect_identical(family$n_failed, 2L)
   testthat::expect_identical(family$internal_p[match(c("missing_group", "zero_df"), family$member_ids)], c(1, 1))
   testthat::expect_identical(sum(family$dispositions), family$n_declared)
+  testthat::expect_identical(family$validation$status, "withheld")
+  testthat::expect_false(family$q_published)
+  testthat::expect_true("selection_inventory_missing" %in% family$validation$reasons)
 })
 
 testthat::test_that("failed members enter BH at internal p=1 and another block cannot change q", {
@@ -368,8 +372,16 @@ testthat::test_that("failed members enter BH at internal p=1 and another block c
   p_value <- b_row(alone$fit, "block_1_F1")$p
   expect_close(b_row(mixed$fit, "block_1_F1")$p, p_value)
   expected_q <- stats::p.adjust(c(p_value, 1), method = "BH")
-  expect_close(b_row(alone$fit, "block_1_F1")$q, p_value)
-  expect_close(b_row(mixed$fit, "block_1_F1")$q, expected_q[[1L]])
+  alone_result <- alone$fit$blocks$block_1$contrasts$target_minus_reference
+  mixed_result <- mixed$fit$blocks$block_1$contrasts$target_minus_reference
+  expect_close(alone_result$family$internal_q[[1L]], p_value)
+  expect_close(mixed_result$family$internal_q[[1L]], expected_q[[1L]])
+  testthat::expect_false(alone_result$family$q_published)
+  testthat::expect_false(mixed_result$family$q_published)
+  testthat::expect_true("selection_inventory_missing" %in% alone_result$family$validation$reasons)
+  testthat::expect_true("selection_inventory_missing" %in% mixed_result$family$validation$reasons)
+  testthat::expect_null(b_row(alone$fit, "block_1_F1")$q)
+  testthat::expect_null(b_row(mixed$fit, "block_1_F1")$q)
   testthat::expect_null(b_row(mixed$fit, "block_1_F2")$q)
   testthat::expect_identical(
     mixed$fit$blocks$block_1$contrasts$target_minus_reference$family$internal_p[[2L]],
@@ -378,10 +390,10 @@ testthat::test_that("failed members enter BH at internal p=1 and another block c
 
   block_2 <- matrix(c(0, 0, 0, 8, 8, 8, 1, 1, 1, 1, 1.2, 1.4), nrow = 2L, byrow = TRUE)
   both <- b_fit(list(block_1 = matrix(c(1, 2, 3, 3, 4, 5), nrow = 1L), block_2 = block_2))
-  expect_close(
-    b_row(both$fit, "block_1_F1", block = "block_1")$q,
-    b_row(alone$fit, "block_1_F1")$q
-  )
+  both_result <- both$fit$blocks$block_1$contrasts$target_minus_reference
+  expect_close(both_result$family$internal_q, alone_result$family$internal_q)
+  testthat::expect_null(b_row(both$fit, "block_1_F1", block = "block_1")$q)
+  testthat::expect_true("selection_inventory_missing" %in% both_result$family$validation$reasons)
   testthat::expect_false(identical(
     both$fit$blocks$block_1$contrasts$target_minus_reference$family$family_id,
     both$fit$blocks$block_2$contrasts$target_minus_reference$family$family_id
@@ -392,6 +404,10 @@ testthat::test_that("failed members enter BH at internal p=1 and another block c
   testthat::expect_false(is.null(descriptive_row$p))
   testthat::expect_null(descriptive_row$q)
   testthat::expect_identical(descriptive_row$inferential_status, "descriptive_only")
+  descriptive_family <- descriptive$fit$blocks$block_1$contrasts$target_minus_reference$family
+  testthat::expect_identical(descriptive_family$validation$status, "withheld")
+  testthat::expect_false(descriptive_family$q_published)
+  testthat::expect_true("selection_inventory_missing" %in% descriptive_family$validation$reasons)
   testthat::expect_false(is.null(
     descriptive$fit$blocks$block_1$contrasts$target_minus_reference$family$internal_q
   ))

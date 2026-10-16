@@ -299,6 +299,10 @@ testthat::test_that("B-T06-AC3 invalid inventory, scope, or dependence withholds
   invalid_selection <- b06_fit(
     statistics = b06_statistics(selection_validity = "unverified")
   )$fit$blocks$block_1$contrasts$treatment_minus_control
+  descriptive <- b06_fit(
+    study = missing_inventory_study,
+    statistics = b06_statistics(selection_validity = "descriptive_only")
+  )$fit$blocks$block_1$contrasts$treatment_minus_control
   invalid_model <- b06_statistics()
   invalid_model$method <- "unsupported_model"
   model_error <- testthat::capture_error(b06_fit(statistics = invalid_model))
@@ -306,8 +310,18 @@ testthat::test_that("B-T06-AC3 invalid inventory, scope, or dependence withholds
   testthat::expect_false(withheld$family$validation$eligible)
   testthat::expect_true(all(vapply(withheld$rows, function(row) is.null(row$q), logical(1))))
   testthat::expect_false(missing_inventory$family$validation$eligible)
+  testthat::expect_identical(missing_inventory$family$validation$status, "withheld")
   testthat::expect_true("selection_inventory_missing" %in% missing_inventory$family$validation$reasons)
   testthat::expect_true(all(vapply(missing_inventory$rows, function(row) is.null(row$q), logical(1))))
+  testthat::expect_false(missing_inventory$family$q_published)
+  failed_row <- Filter(function(row) identical(row$feature_key, "failed"), missing_inventory$rows)[[1L]]
+  testthat::expect_identical(failed_row$inferential_status, "not_estimable")
+  testthat::expect_null(failed_row$q)
+  descriptive_row <- Filter(function(row) identical(row$feature_key, "strong"), descriptive$rows)[[1L]]
+  testthat::expect_identical(descriptive$family$validation$status, "withheld")
+  testthat::expect_true("selection_inventory_missing" %in% descriptive$family$validation$reasons)
+  testthat::expect_identical(descriptive_row$inferential_status, "descriptive_only")
+  testthat::expect_null(descriptive_row$q)
   testthat::expect_false(invalid_scope$family$validation$eligible)
   testthat::expect_true(all(vapply(invalid_scope$rows, function(row) is.null(row$q), logical(1))))
   testthat::expect_false(invalid_dependence$family$validation$eligible)
