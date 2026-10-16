@@ -2,6 +2,7 @@
 (^|/)\.github($|/)
 (^|/)\.agents($|/)
 (^|/)\.codex($|/)
+(^|/)\.superpowers($|/)
 (^|/)\.worktrees($|/)
 (^|/)artifacts($|/)
 (^|/)docs($|/)
