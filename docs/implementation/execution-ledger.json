@@ -34,37 +34,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/c_01_luna",
-      "packet": "C-01",
-      "role": "implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "effective_settings_exposed": false,
-      "snapshot_commit": "945ef8c",
-      "worktree": "/Users/megastore/.codex/worktrees/c-01-integration-foundation/PML MultiOmics Analysis Pipeline",
-      "allowlist": [
-        "R/integration_contract.R",
-        "R/integration_eligibility.R",
-        "R/integration_pca.R",
-        "R/integration_consensus.R",
-        "tests/testthat/test-C-01.R",
-        "inst/examples/tickets/C-01.yaml",
-        "docs/implementation/registrations/C-01.json"
-      ]
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "c01_luna_initial_attempt_active",
+    "status": "paused_by_user_c01_initial_attempt_preserved",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      "C-01 Luna candidate -> fresh Sol-6.1-high review"
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-01 initial implementation attempt is active in one isolated Luna-max worktree at accepted G4 snapshot 945ef8c. No other Stage C packet is released: C-02 waits on accepted C-01 and C-03/C-04/C-05 wait on G5."
+    "disposition": "Omar explicitly paused the run while moving out of the office. The C-01 Luna worker was interrupted. Its isolated worktree is preserved with one uncommitted allowlisted RED test file and no implementation or integration commit. No worker or polling remains active."
   },
   "orchestration_events": [
+    {
+      "event": "user_paused_c01_initial_attempt_worker_interrupted",
+      "date": "2026-10-16",
+      "agent_name": "/root/c_01_luna",
+      "worktree": "/Users/megastore/.codex/worktrees/c-01-integration-foundation/PML MultiOmics Analysis Pipeline",
+      "preserved_uncommitted_file": "tests/testthat/test-C-01.R",
+      "preserved_sha256": "6eb0aca4f9a6c974d68b1a46f6e17aa0e7509f3dde749d702b51ed63fef881da",
+      "implementation_files_written": 0,
+      "tests_run_by_coordinator_after_interrupt": false,
+      "allowed_next_transition": "on Omar's explicit resume, inspect the preserved test file and continue the same C-01 initial attempt with Luna-max; obtain fresh Sol-6.1-high review only after a committed candidate",
+      "disposition": "No candidate was committed, reviewed, integrated or accepted. C-02 remains blocked on accepted C-01; C-03/C-04/C-05 remain blocked on G5."
+    },
     {
       "event": "c01_luna_initial_attempt_dispatched",
       "date": "2026-10-16",
@@ -2368,7 +2358,7 @@
       "blockers": []
     },
     "C-01": {
-      "status": "initial_attempt_active",
+      "status": "initial_attempt_paused_by_user",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
@@ -2562,7 +2552,7 @@
       "blocking_packets": []
     },
     "M5": {
-      "status": "active_c01",
+      "status": "paused_by_user_c01_initial_attempt",
       "review_ref": null,
       "commit": null
     },
