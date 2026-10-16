@@ -35,13 +35,27 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m4_005b_coordinator_full_verification_active",
+    "status": "m4_007_record_ready_for_astra_audit",
     "last_reconciled": "2026-10-15",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Sol-high review of immutable M4-005B candidate ada3a17 passed with zero findings. Independent evidence includes 732 passing assertions, clean temporary install, eight source/installed CLI probes, exact frozen-file checks and idempotence. Sol is running the required full suite, package check and fresh installed probes before serial integration."
+    "disposition": "M4-005B candidate ada3a17 remains unintegrated. Its complete suite passed 3,130 assertions and failed six B-T01/B-T03 assertions: three stale q-publication expectations conflict with B-T06-AC3, and B-T06's blanket row-status overwrite erases three established predecessor statuses. M4-007 records a bounded four-file reconciliation and now requires fresh Astra-low audit before coding."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005b_full_suite_blocked_m4_007_record_written",
+      "date": "2026-10-16",
+      "candidate_commit": "ada3a17adebc388850321190bfdbcc9fb64b1152",
+      "coordinator_gate_ref": "docs/implementation/reviews/M4-005B-coordinator-gate.md",
+      "change_record_ref": "docs/implementation/change-records/M4-007-b-t01-b-t03-family-gate-reconciliation.md",
+      "full_suite": {"passed": 3130, "failed": 6, "warned": 0, "skipped": 0},
+      "failure_classes": [
+        "three predecessor q-publication expectations conflict with B-T06-AC3 when selection inventory is missing",
+        "three predecessor row-status expectations are erased by B-T06's blanket family-withheld overwrite"
+      ],
+      "allowed_next_transition": "commit the record and coordinator receipt, then dispatch one fresh Astra-low audit; no M4-007 code before an audit pass",
+      "disposition": "Package check and integration were correctly not run after the failed full suite. M4-005B remains isolated and downstream work remains blocked."
+    },
     {
       "event": "m4_005b_fresh_sol_review_passed_coordinator_verification_started",
       "date": "2026-10-16",
