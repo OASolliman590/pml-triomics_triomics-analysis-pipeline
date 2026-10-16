@@ -163,9 +163,10 @@ triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
     } else if (identical(options$stage, "B")) {
       registered_b09 <- triomics_cli_prepare_registered_b09(options, args)
       registered_b08 <- triomics_cli_prepare_registered_b08(options, args)
-      triomics_execute_stage_b(options$config, options$output)
+      stage_b_result <- triomics_execute_stage_b(options$config, options$output)
       if (isTRUE(registered_b09)) triomics_b09_cli_after_stage_b(args)
       if (isTRUE(registered_b08)) triomics_b08_cli_after_stage_b(args)
+      triomics_b07_cli_after_stage_b(args, stage_b_result)
     } else {
       triomics_abort("A_STAGE_UNAVAILABLE",
                      paste0("Execution is not implemented for stage '", options$stage, "'."),

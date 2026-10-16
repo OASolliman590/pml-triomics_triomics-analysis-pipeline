@@ -7,6 +7,8 @@
 \alias{triomics_resolve_analysis}
 \alias{triomics_fit_block_models}
 \alias{triomics_execute_stage_b}
+\alias{triomics_b07_export_handoff}
+\alias{triomics_b07_cli_after_stage_b}
 \alias{resolve_analysis}
 \alias{fit_block_models}
 \alias{associate_endpoints}
@@ -23,6 +25,8 @@
 Public entry points for generating synthetic studies, exporting a validated
 stage A handoff, resolving a declared stage B analysis, and fitting or
 executing the corresponding block models.
+The B-T07 export entry points create a verified Stage B handoff for Stage C and
+bind it to the exact keyed matrices retained from the same Stage B execution.
 The clinical-association entry points resolve and fit declared between-person
 endpoint objectives, export privacy-scrubbed results, and expose reproducible
 endpoint hashes.
@@ -58,6 +62,21 @@ triomics_fit_block_models(resolved_analysis, statistics_spec)
 fit_block_models(resolved_analysis, statistics_spec)
 
 triomics_execute_stage_b(config_path, output)
+
+triomics_b07_export_handoff(
+  output,
+  config_path,
+  matrices = NULL,
+  smoke_runs = NULL,
+  command = NULL,
+  working_ref = NULL,
+  cli_exit_code = NULL,
+  resume = FALSE,
+  qualifications = NULL,
+  matrix_source = NULL
+)
+
+triomics_b07_cli_after_stage_b(args, stage_b_result, smoke_runs = NULL)
 
 triomics_associate_endpoints(endpoint_bundle, clinical_view, objective_spec)
 
@@ -105,6 +124,19 @@ triomics_execute_longitudinal_associations(config_path, output)
   \item{resolved_analysis}{Resolved stage B design and block data.}
   \item{statistics_spec}{Declared statistical fitting specification.}
   \item{config_path}{Path to a strict triomics configuration file.}
+  \item{matrices}{Named block matrices retained from the same Stage B fit.}
+  \item{smoke_runs}{Optional named synthetic qualification runs used by the
+  B-T07 acceptance record.}
+  \item{command}{Exact command recorded for reproduction.}
+  \item{working_ref}{Recorded source-control reference for reproduction.}
+  \item{cli_exit_code}{Recorded exit code for the completed Stage B command.}
+  \item{resume}{Whether a complete matching B-T07 handoff may be reused.}
+  \item{qualifications}{Explicit unrun scientific qualifications recorded in
+  the acceptance and reproduction evidence.}
+  \item{matrix_source}{Declared provenance label for the handed-off matrices.}
+  \item{args}{Original Stage B CLI argument vector.}
+  \item{stage_b_result}{In-memory result returned by the same
+  \code{triomics_execute_stage_b()} execution.}
   \item{endpoint_bundle}{Eligible endpoint values with subject, visit, time,
   unit, selection, and training-lineage metadata.}
   \item{clinical_view}{Validated clinical dictionary, observations, and sample
@@ -119,7 +151,8 @@ triomics_execute_longitudinal_associations(config_path, output)
 \value{
 The return value depends on the entry point: a synthetic study, export or
 resume record, handoff limitations, resolved analysis, fitted model result, or
-stage B execution summary, resolved clinical objectives, privacy-scrubbed
+stage B execution summary, verified Stage B handoff, resolved clinical
+objectives, privacy-scrubbed
 clinical results, or an endpoint hash. Clinical and longitudinal association
 functions return typed objective, family, audit, and result records; unsupported
 inputs return a named unavailable status or a typed CLI error rather than
