@@ -9,6 +9,12 @@
 \alias{triomics_execute_stage_b}
 \alias{resolve_analysis}
 \alias{fit_block_models}
+\alias{associate_endpoints}
+\alias{triomics_associate_endpoints}
+\alias{triomics_resolve_clinical_objectives}
+\alias{triomics_clinical_association_export}
+\alias{triomics_execute_clinical_associations}
+\alias{triomics_b08_endpoint_hash}
 \alias{associate_longitudinal_endpoints}
 \alias{triomics_associate_longitudinal_endpoints}
 \alias{triomics_execute_longitudinal_associations}
@@ -17,6 +23,9 @@
 Public entry points for generating synthetic studies, exporting a validated
 stage A handoff, resolving a declared stage B analysis, and fitting or
 executing the corresponding block models.
+The clinical-association entry points resolve and fit declared between-person
+endpoint objectives, export privacy-scrubbed results, and expose reproducible
+endpoint hashes.
 The longitudinal entry points fit declared between-person, within-person,
 baseline-to-later, or effect-modification clinical objectives when their
 mode-specific requirements and eligible inputs are available.
@@ -49,6 +58,18 @@ triomics_fit_block_models(resolved_analysis, statistics_spec)
 fit_block_models(resolved_analysis, statistics_spec)
 
 triomics_execute_stage_b(config_path, output)
+
+triomics_associate_endpoints(endpoint_bundle, clinical_view, objective_spec)
+
+associate_endpoints(endpoint_bundle, clinical_view, objective_spec)
+
+triomics_resolve_clinical_objectives(clinical_view, objective_spec)
+
+triomics_clinical_association_export(result)
+
+triomics_execute_clinical_associations(config_path, output)
+
+triomics_b08_endpoint_hash(endpoint)
 
 triomics_associate_longitudinal_endpoints(
   endpoint_bundle,
@@ -88,15 +109,21 @@ triomics_execute_longitudinal_associations(config_path, output)
   unit, selection, and training-lineage metadata.}
   \item{clinical_view}{Validated clinical dictionary, observations, and sample
   links for the same study.}
-  \item{objective_spec}{Declared longitudinal objectives, fixed testing family,
-  and model options.}
+  \item{objective_spec}{Declared between-person or longitudinal clinical
+  objectives, fixed testing family, and model options.}
+  \item{result}{Clinical-association result to export after removing private
+  identifier fields.}
+  \item{endpoint}{One endpoint record whose declared values and sample keys are
+  hashed for lineage verification.}
 }
 \value{
 The return value depends on the entry point: a synthetic study, export or
 resume record, handoff limitations, resolved analysis, fitted model result, or
-stage B execution summary. Longitudinal association functions return typed
-objective, family, audit, and result records; unsupported inputs return a named
-unavailable status or a typed CLI error rather than substituting an analysis.
+stage B execution summary, resolved clinical objectives, privacy-scrubbed
+clinical results, or an endpoint hash. Clinical and longitudinal association
+functions return typed objective, family, audit, and result records; unsupported
+inputs return a named unavailable status or a typed CLI error rather than
+substituting an analysis.
 }
 \details{
 \code{resolve_analysis} and \code{fit_block_models} are aliases for their

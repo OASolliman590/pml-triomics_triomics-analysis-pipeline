@@ -189,38 +189,3 @@ triomics_b08_blank_result <- function(objective, endpoint_id, status, reason, re
     selection = NULL
   )
 }
-
-if (!isNamespace(topenv()) && exists("triomics_main", envir = .GlobalEnv, inherits = FALSE)) {
-  triomics_b08_current_main <- get("triomics_main", envir = .GlobalEnv, inherits = FALSE)
-  if (!isTRUE(attr(triomics_b08_current_main, "b_t08_hook"))) {
-    triomics_main_before_b08 <- triomics_b08_current_main
-    assign("triomics_main_before_b08", triomics_main_before_b08, envir = .GlobalEnv)
-    triomics_b08_hooked_main <- function(args) {
-      prepared <- tryCatch(triomics_b08_prepare_cli(args), triomics_error = function(error) error,
-                           error = function(error) error)
-      if (inherits(prepared, "triomics_error")) {
-        cat(paste0("triomics ", prepared$code, ": ", conditionMessage(prepared), "\n"), file = stderr())
-        return(triomics_cli_exit(prepared))
-      }
-      if (inherits(prepared, "error")) {
-        cat(paste0("triomics A_INTERNAL: ", conditionMessage(prepared), "\n"), file = stderr())
-        return(1L)
-      }
-      status <- triomics_main_before_b08(args)
-      if (length(status) != 1L || is.na(status) || !identical(as.integer(status), 0L)) return(status)
-      ran <- tryCatch(triomics_b08_cli_after_stage_b(args), triomics_error = function(error) error,
-                      error = function(error) error)
-      if (inherits(ran, "triomics_error")) {
-        cat(paste0("triomics ", ran$code, ": ", conditionMessage(ran), "\n"), file = stderr())
-        return(triomics_cli_exit(ran))
-      }
-      if (inherits(ran, "error")) {
-        cat(paste0("triomics A_INTERNAL: ", conditionMessage(ran), "\n"), file = stderr())
-        return(1L)
-      }
-      status
-    }
-    attr(triomics_b08_hooked_main, "b_t08_hook") <- TRUE
-    assign("triomics_main", triomics_b08_hooked_main, envir = .GlobalEnv)
-  }
-}

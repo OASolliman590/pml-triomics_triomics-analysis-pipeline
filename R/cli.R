@@ -111,6 +111,32 @@ triomics_cli_prepare_registered_b09 <- function(options, args) {
   FALSE
 }
 
+triomics_cli_prepare_registered_b08 <- function(options, args) {
+  if (!identical(options$stage, "B") || isTRUE(options$validate_only) ||
+      is.null(options$config)) {
+    return(FALSE)
+  }
+  config <- triomics_read_config(options$config)
+  if (!isTRUE(config$clinical$enabled)) return(FALSE)
+  if (identical(config$study_id, "triomics_b_t08_fixture")) {
+    return(isTRUE(triomics_b08_prepare_cli(args)))
+  }
+  if (identical(config$study_id, "triomics_b_t09_fixture")) return(FALSE)
+  objectives <- config$clinical$objectives
+  if (is.list(objectives) && length(objectives)) {
+    triomics_b_abort(
+      "B_DESIGN_UNSUPPORTED",
+      "Clinical objective execution requires a registered eligible endpoint bundle and clinical view.",
+      key = "clinical.objectives",
+      remediation = paste(
+        "Keep the declared objective unchanged and provide the accepted endpoint bundle and clinical view;",
+        "the CLI must not substitute the public B-T08 synthetic fixture."
+      )
+    )
+  }
+  FALSE
+}
+
 triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
   tryCatch({
     options <- triomics_parse_cli(args)
@@ -136,8 +162,10 @@ triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
       triomics_execute_stage_a(options$config, options$output)
     } else if (identical(options$stage, "B")) {
       registered_b09 <- triomics_cli_prepare_registered_b09(options, args)
+      registered_b08 <- triomics_cli_prepare_registered_b08(options, args)
       triomics_execute_stage_b(options$config, options$output)
       if (isTRUE(registered_b09)) triomics_b09_cli_after_stage_b(args)
+      if (isTRUE(registered_b08)) triomics_b08_cli_after_stage_b(args)
     } else {
       triomics_abort("A_STAGE_UNAVAILABLE",
                      paste0("Execution is not implemented for stage '", options$stage, "'."),
