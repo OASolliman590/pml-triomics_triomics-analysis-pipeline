@@ -33,29 +33,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_009_sol_review",
-      "role": "fresh_sol_complete_diff_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "snapshot_commit": "5df2043",
-      "base_commit": "c876059"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_009_fresh_sol_review_active",
+    "status": "m4_009_sol_review_passed_full_verification_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_009_sol_review",
-        "expected_receipt": "PASS/FAIL complete-diff review with focused verification"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "B-T08 scientific repair, registration regressions and Sol-owned package registration are integrated. Focused B-T08, B-T09 and Stage B composition tests pass; installed exports and B-T08/B-T09/nonfixture probes pass. Both permitted repair attempts are consumed. A fresh Sol-high complete-diff review is the next gate; B-T08 and B-T07 remain blocked."
+    "disposition": "The fresh Sol-high complete-diff review passed with no findings after 407 focused assertions and source/installed route probes. Complete-suite and fresh package-check verification is active. B-T08 and B-T07 remain blocked pending that gate and the focused M4-005 Astra rereview."
   },
   "orchestration_events": [
+    {
+      "event": "m4_009_fresh_sol_review_passed_full_verification_started",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_009_sol_review",
+      "snapshot_commit": "5df2043",
+      "verdict": "pass",
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "verification": {"tests": 30, "passed": 407, "failed": 0, "warned": 0, "skipped": 0},
+      "review_ref": "docs/implementation/reviews/M4-009-sol-review.md",
+      "allowed_next_transition": "run the complete suite and fresh package check; only all-green evidence permits the focused M4-005 Astra rereview",
+      "disposition": "Both repairs are consumed. B-T08 is not accepted and B-T07 is not released by this review alone."
+    },
     {
       "event": "m4_009_fresh_sol_review_dispatched",
       "date": "2026-10-16",
@@ -1820,7 +1818,8 @@
       "repair_candidate_commits": ["1718ed3", "44a0f0d"],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T08-acceptance-review.md",
-        "docs/implementation/reviews/M4-009-astra-audit.md"
+        "docs/implementation/reviews/M4-009-astra-audit.md",
+        "docs/implementation/reviews/M4-009-sol-review.md"
       ],
       "blockers": [
         "AC2: a constant continuous response is labelled estimated with zero uncertainty and non-finite p rather than failed constant_response.",
