@@ -33,29 +33,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_name": "/root/m4_009_astra_audit",
-      "role": "astra_read_only_auditor",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "snapshot_commit": "c774737",
-      "scope": "M4-009 B-T08 acceptance-repair change-record audit"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m4_009_astra_audit_active",
+    "status": "m4_009_record_corrected_pending_focused_astra_rereview",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [
-      {
-        "agent_name": "/root/m4_009_astra_audit",
-        "expected_receipt": "PASS or bounded corrections for the M4-009 repair plan"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh B-T08 review failed AC2, AC3 and installed registration with three P1 findings despite 139 passing legacy assertions. The immutable M4-009 record is under independent Astra-low audit; B-T07 remains blocked."
+    "disposition": "The initial M4-009 Astra audit confirmed the B-T08 defects but failed the dispatch plan on unsafe clinical.enabled routing and missing API documentation scope. Sol corrected the record for fixture-only dispatch, nonfixture refusal, B-T09 isolation, documentation and exact repair counting. One focused Astra rereview is required before repair 1; B-T07 remains blocked."
   },
   "orchestration_events": [
+    {
+      "event": "m4_009_astra_audit_failed_record_corrected",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_009_astra_audit",
+      "snapshot_commit": "c774737",
+      "verdict": "fail",
+      "findings": {"p0": 0, "p1": 2, "p2": 1},
+      "review_ref": "docs/implementation/reviews/M4-009-astra-audit.md",
+      "corrections": ["fixture-restricted exactly-once B-T08 dispatch", "B-T09 exclusion and nonfixture refusal", "man/triomics-api.Rd in Sol allowlist", "repair 1 and repair 2 counted within the existing ceiling", "mixed-family publication regression"],
+      "allowed_next_transition": "commit the corrected immutable snapshot and obtain the single focused Astra rereview before any implementation dispatch",
+      "disposition": "The original three acceptance diagnoses remain supported and need no literature review. B-T08 and B-T07 remain blocked."
+    },
     {
       "event": "m4_009_astra_audit_dispatched",
       "date": "2026-10-16",
@@ -1745,7 +1743,8 @@
       "repair_attempts": 0,
       "commit": "bded42a",
       "acceptance_refs": [
-        "docs/implementation/reviews/B-T08-acceptance-review.md"
+        "docs/implementation/reviews/B-T08-acceptance-review.md",
+        "docs/implementation/reviews/M4-009-astra-audit.md"
       ],
       "blockers": [
         "AC2: a constant continuous response is labelled estimated with zero uncertainty and non-finite p rather than failed constant_response.",
