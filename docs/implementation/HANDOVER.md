@@ -2,9 +2,9 @@
 
 Run `triomics-20260920-sol-01` continues on branch
 `spec/harden-v2-20260920`. G0 through G4 are accepted. All nine required Stage B
-packets are accepted. Stage C dependency gates are released; C-01 is the only
-immediately legal packet, while C-02 waits on C-01 and C-03/C-04/C-05 remain
-behind G5.
+packets are accepted. Stage C dependency gates are released and the C-01 initial
+attempt is active; C-02 waits on accepted C-01 and C-03/C-04/C-05 remain behind
+G5.
 
 ## Current evidence
 
@@ -65,16 +65,28 @@ combined pass; all three are accepted now, not retroactively. Fresh read-only
 reviewer `/root/m4_g4_focused_astra` is active on record-only correction
 snapshot `0f4be24` for the single focused rereview of M4-G4-001. That rereview
 passed, and Sol accepted B-T07/G4 and released Stage C. No worker is active at
-this exact handover point. Older completed managed worktrees remain archived.
+that G4 acceptance boundary; the current C-01 worker is recorded below. Older
+completed managed worktrees remain archived.
 The user-owned `.gitignore` and AppleDouble files remain untouched. The
 git-ignored `.superpowers/` contains review packages only and remains untracked.
+
+## Active C-01 handoff
+
+Fresh Luna-max implementer `/root/c_01_luna` is active in the isolated managed
+worktree `/Users/megastore/.codex/worktrees/c-01-integration-foundation/PML
+MultiOmics Analysis Pipeline` at immutable base `945ef8c`. Its exact write set is
+the four C-01 integration R files, `test-C-01.R`, the C-01 ticket fixture and its
+packet-owned registration request. It may not write shared registration, the
+ledger, frozen spec or private data. The next authorized transition is candidate
+inspection followed by one fresh Sol-6.1-high review; nothing may be integrated
+or released before that review and Sol disposition.
 
 ## Literal resume instruction
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `execution-ledger.json`, this handover, the M4 milestone and M4-G4 review
-receipts. Verify HEAD and dirty state. G4 is accepted. Dispatch one fresh
-isolated Luna-max worker for C-01 only, using its packet card and relevant C
-contracts. Inspect the candidate, obtain fresh Sol-high review, integrate and
-run the named gates. Do not dispatch C-02 before C-01 acceptance, and do not
+receipts. Verify HEAD and dirty state. G4 is accepted. Reconcile
+`/root/c_01_luna`; inspect its candidate and obtain one fresh Sol-6.1-high
+review. Integrate only after a passing review, then run the named C-01 gates and
+record Sol acceptance. Do not dispatch C-02 before C-01 acceptance, and do not
 dispatch C-03/C-04/C-05 before G5.
