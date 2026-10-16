@@ -33,15 +33,46 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_013_composition_luna",
+      "role": "luna_exclusive_shared_composition_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "snapshot_commit": "35e7b02",
+      "worktree": "/Users/megastore/.codex/worktrees/m4-013-stage-b-composition/PML MultiOmics Analysis Pipeline",
+      "allowlist": [
+        "R/design_repeated.R",
+        "R/clinical_association.R",
+        "R/clinical_longitudinal.R",
+        "tests/testthat/test-B-T08.R",
+        "tests/testthat/test-B-T09.R",
+        "tests/testthat/test-M4-005-stage-b-composition.R"
+      ]
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_013_shared_composition_dispatch_pending",
+    "status": "m4_013_shared_composition_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_013_composition_luna",
+        "expected_receipt": "M4-013 RED/GREEN evidence and exact-allowlist shared composition candidate"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Integrated B-T07 is focused-green, but adjacent gates exposed missing clinical schema versions, a B-T04 fixture return seam and stale receipt-count assumptions. M4-013 authorizes one exclusive shared composition unit; B-T07 remains unaccepted."
+    "disposition": "Fresh isolated Luna-max worker is implementing M4-013 against 35e7b02 with a six-file maximum allowlist. B-T07 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "m4_013_shared_composition_worker_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_013_composition_luna",
+      "snapshot_commit": "35e7b02",
+      "worktree": "/Users/megastore/.codex/worktrees/m4-013-stage-b-composition/PML MultiOmics Analysis Pipeline",
+      "allowed_next_transition": "inspect candidate and dispatch fresh Sol-high review; do not integrate before review",
+      "disposition": "One exclusive shared-integration unit; no numerical-method or private-data changes authorized."
+    },
     {
       "event": "m4_013_shared_composition_opened",
       "date": "2026-10-16",
