@@ -35,13 +35,25 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m4_007_coordinator_full_verification_active",
+    "status": "m4_008_change_record_ready_for_astra_audit",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Sol-high review passed M4-007 with no findings and independently reproduced 677 clean assertions. Coordinator full-suite verification is active; package/parity checks and integration remain conditional on a clean suite."
+    "disposition": "M4-007 and the complete 3,169-assertion suite passed. Required package check exposed three packaging-context test failures and a .superpowers build NOTE. M4-008 records a bounded two-surface reconciliation; no candidate change or integration is authorized before its fresh Astra-low audit."
   },
   "orchestration_events": [
+    {
+      "event": "m4_005b_package_check_blocked_m4_008_record_written",
+      "date": "2026-10-16",
+      "candidate_commit": "0c84428",
+      "full_suite": {"passed": 3169, "failed": 0, "warned": 0, "skipped": 0},
+      "package_build": "passed",
+      "package_check": {"passed": 3156, "failed": 3, "status": "1 ERROR, 1 NOTE"},
+      "coordinator_gate_ref": "docs/implementation/reviews/M4-005B-package-check-gate.md",
+      "change_record_ref": "docs/implementation/change-records/M4-008-stage-b-package-check-reconciliation.md",
+      "allowed_next_transition": "commit an immutable record snapshot and dispatch one fresh Astra-low audit; no M4-008 file change before PASS",
+      "disposition": "Integration remains blocked. The failures are installed-test path/context defects plus an unignored local review directory; no statistical source or private data were implicated."
+    },
     {
       "event": "m4_007_fresh_sol_review_passed_coordinator_full_verification_started",
       "date": "2026-10-16",
