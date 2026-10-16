@@ -35,30 +35,45 @@
   },
   "active_workers": [
     {
-      "agent_name": "/root/m4_008_luna_repair",
-      "role": "luna_test_harness_worker",
+      "agent_name": "/root/m4_008_sol_review",
+      "role": "sol_read_only_reviewer",
       "packet": "M4-008",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "worktree": ".worktrees/m4-005b-stage-b-composition",
       "branch": "codex/m4-005b-stage-b-composition",
-      "base_commit": "0c844281b68e0f7c9b81bfcc975f6c30f7316a92"
+      "base_commit": "0c844281b68e0f7c9b81bfcc975f6c30f7316a92",
+      "candidate_commit": "f59abdf467cca274a1174c13be8daacb50e01a01"
     }
   ],
   "orchestration_control": {
-    "status": "m4_008_targeted_repair_1_active",
+    "status": "m4_008_fresh_sol_review_active",
     "last_reconciled": "2026-10-16",
     "active_handoffs": [
       {
-        "agent_name": "/root/m4_008_luna_repair",
-        "unit": "M4-008 package-context test repair",
-        "expected_return": "one-file targeted repair that makes the installed branch execute every Stage B global helper and assert B-T02 through B-T06 plus the B-T04 stage hook before the second-call identity check"
+        "agent_name": "/root/m4_008_sol_review",
+        "unit": "M4-008 complete-diff review",
+        "expected_return": "read-only verdict on commits a658c1e and f59abdf, exact two-file scope, non-skipped source/installed behavior and independent focused verification"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Initial Luna commit bf11f1a made package check green but its installed idempotence branch copied only the top-level installer and targets, leaving helper lookups absent and testing a no-op. M4-008 targeted repair 1 is active to mirror actual helpers and assert every Stage B marker; this consumes the sole repair allowance."
+    "disposition": "M4-008 targeted repair f59abdf mirrors function-valued namespace entries, requires all seven central helpers, asserts six composition markers and preserves local R-file sourcing. Coordinator focused GREEN passed 62 with no failures/warnings/skips. Fresh Sol-high complete-diff review is active."
   },
   "orchestration_events": [
+    {
+      "event": "m4_008_targeted_repair_completed_fresh_sol_review_dispatched",
+      "date": "2026-10-16",
+      "worker_agent_name": "/root/m4_008_luna_repair",
+      "review_agent_name": "/root/m4_008_sol_review",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "candidate_base": "0c844281b68e0f7c9b81bfcc975f6c30f7316a92",
+      "candidate_commits": ["a658c1e", "f59abdf467cca274a1174c13be8daacb50e01a01"],
+      "scope": [".Rbuildignore", "tests/testthat/test-M4-005-stage-b-composition.R"],
+      "focused_green": {"passed": 62, "failed": 0, "warned": 0, "skipped": 0},
+      "allowed_next_transition": "PASS permits coordinator full-suite, package and parity gates; any unresolved review finding blocks M4-008 because its targeted repair allowance is exhausted",
+      "disposition": "No production R, scientific contract, threshold, fixture values or private data changed."
+    },
     {
       "event": "m4_008_targeted_repair_1_dispatched",
       "date": "2026-10-16",
