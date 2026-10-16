@@ -74,7 +74,7 @@ m4_005b_source_cli_b04 <- function() {
   output <- tempfile("m4-005b-source-b-t04-")
   old_wd <- setwd(dirname(cli))
   on.exit(setwd(old_wd), add = TRUE)
-  on.exit(unlink(c(config, output), recursive = TRUE), add = TRUE)
+  on.exit(unlink(config), add = TRUE)
 
   lines <- suppressWarnings(system2(
     file.path(R.home("bin"), "Rscript"),
