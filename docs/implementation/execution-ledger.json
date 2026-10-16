@@ -33,15 +33,40 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_011_matrix_luna",
+      "role": "luna_exclusive_shared_behavior_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "snapshot_commit": "f5c4b58",
+      "worktree": "/Users/megastore/.codex/worktrees/m4-011-bt07-matrix/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["R/results_b.R", "tests/testthat/test-B-T07.R"]
+    }
+  ],
   "orchestration_control": {
-    "status": "b_t07_repair_1_passed_serial_integration_next",
+    "status": "m4_011_b_t07_matrix_unit_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_011_matrix_luna",
+        "expected_receipt": "M4-011 Unit A RED/GREEN evidence and two-file exact same-run matrix-return commit"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Focused Sol-high rereview passed B-T07 repair 1 with no new findings. Sol may integrate b7a9455 then 25415fb serially and proceed to the scoped shared same-run matrix/post-B hook; B-T07 remains unaccepted."
+    "disposition": "Reviewed B-T07 packet commits are integrated as 8cf2d38 and 4a33f01. Fresh exclusive Luna-max worker is implementing M4-011 Unit A same-run in-memory matrix retention; Sol-owned CLI/namespace registration remains pending."
   },
   "orchestration_events": [
+    {
+      "event": "m4_011_unit_a_matrix_worker_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_011_matrix_luna",
+      "snapshot_commit": "f5c4b58",
+      "worktree": "/Users/megastore/.codex/worktrees/m4-011-bt07-matrix/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["R/results_b.R", "tests/testthat/test-B-T07.R"],
+      "allowed_next_transition": "inspect the candidate and dispatch fresh Sol-high review before serial integration and Sol-owned Unit B",
+      "disposition": "Unit A is an exclusive shared-behavior implementation and does not consume B-T07 repair 2 unless packet-owned semantics must change."
+    },
     {
       "event": "b_t07_repair_1_focused_rereview_passed",
       "date": "2026-10-16",
@@ -1997,11 +2022,12 @@
       "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
-      "status": "repair_1_passed_pending_shared_integration",
+      "status": "shared_integration_unit_a_active",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
       "repair_candidate_commit": "25415fbe4d88a684133267696024d43683e33f64",
+      "integration_commits": ["8cf2d38", "4a33f01"],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T07-initial-review.md",
         "docs/implementation/reviews/B-T07-repair1-rereview.md"
