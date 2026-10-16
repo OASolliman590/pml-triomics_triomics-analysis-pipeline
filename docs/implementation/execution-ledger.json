@@ -33,15 +33,38 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_name": "/root/m4_010_m4_005_astra_gate",
+      "role": "astra_focused_milestone_rereviewer",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "snapshot_commit": "f96be49",
+      "worktree": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["read_only_review"]
+    }
+  ],
   "orchestration_control": {
-    "status": "m4_010_verification_green_astra_rereview_next",
+    "status": "m4_010_focused_m4_005_astra_rereview_active",
     "last_reconciled": "2026-10-16",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_name": "/root/m4_010_m4_005_astra_gate",
+        "expected_receipt": "focused immutable M4-005 verdict on B-T08 acceptance and B-T07 dependency release"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Integrated M4-010 passed the complete local suite and a clean-archive package check with Status: OK. The required focused immutable M4-005 Astra rereview is the final gate before B-T08 acceptance and B-T07 release."
+    "disposition": "Integrated M4-010 passed the complete local suite and clean-archive package check. Fresh Astra-low focused M4-005 rereview is active on immutable snapshot f96be49; B-T08 and B-T07 remain gated pending its advisory verdict and Sol disposition."
   },
   "orchestration_events": [
+    {
+      "event": "m4_010_focused_m4_005_astra_rereview_dispatched",
+      "date": "2026-10-16",
+      "agent_name": "/root/m4_010_m4_005_astra_gate",
+      "snapshot_commit": "f96be49",
+      "allowed_next_transition": "Sol records the Astra verdict and, only on PASS, marks B-T08 accepted and releases B-T07",
+      "disposition": "The final B-T08/M4-005 acceptance gate is reviewing the immutable verified snapshot; no implementation worker is active."
+    },
     {
       "event": "m4_010_full_suite_and_clean_package_check_passed",
       "date": "2026-10-16",
