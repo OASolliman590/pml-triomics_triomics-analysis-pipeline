@@ -24,14 +24,16 @@ c02_feature_rows <- function(study_id, block_id, keys) {
   )
 }
 
-c02_study <- function(ids, outcome, blocks) {
+c02_study <- function(ids, outcome, blocks, subject_ids = ids) {
   block_ids <- names(blocks)
   registry <- data.frame(
-    sample_id = ids, subject_id = ids, outcome = outcome,
+    sample_id = ids, subject_id = subject_ids, outcome = outcome,
     sample_role = rep("undeclared", length(ids)), stringsAsFactors = FALSE
   )
   masks <- lapply(blocks, function(x) {
-    matrix("known_observed", nrow(x), ncol(x), dimnames = dimnames(x))
+    mask <- matrix("known_observed", nrow(x), ncol(x), dimnames = dimnames(x))
+    mask[is.na(x)] <- "known_missing"
+    mask
   })
   raw <- list(
     study_id = "study-c02-synthetic",
@@ -112,9 +114,10 @@ c02_eval_fixture <- function(mode = "categorical", state_dir = tempfile("c02-sta
   )
   colnames(x_alpha) <- colnames(x_beta) <- ids
   blocks <- list(alpha = x_alpha, beta = x_beta)
-  study <- c02_study(ids, outcome, blocks)
+  subject_ids <- rep(sprintf("subject-%02d", seq_len(12L)), each = 2L)
+  study <- c02_study(ids, outcome, blocks, subject_ids)
   plan <- triomics_nested_split_plan(
-    ids, subject_ids = ids, n_outer = 2L, n_inner = 2L, seed = 19L,
+    ids, subject_ids = subject_ids, n_outer = 2L, n_inner = 2L, seed = 19L,
     stratification = stratification, target = "outcome"
   )
   operations <- c02_noop_operations()
@@ -300,12 +303,36 @@ testthat::test_that("nested evaluation tunes inside outer training and ignores h
   testthat::expect_identical(first$feature_support, changed$feature_support)
   testthat::expect_identical(first$inner_results, changed$inner_results)
   testthat::expect_true(all(vapply(first$inner_results, function(x) {
-    length(intersect(x$training_subject_ids, x$test_subject_ids)) == 0L
+    length(x$training_subject_ids) > 0L && length(x$test_subject_ids) > 0L &&
+      identical(x$training_subject_ids, unique(fixture$plan$unit_subject$subject_id[
+        match(x$training_unit_ids, fixture$plan$unit_subject$unit_id)])) &&
+      identical(x$test_subject_ids, unique(fixture$plan$unit_subject$subject_id[
+        match(x$test_unit_ids, fixture$plan$unit_subject$unit_id)])) &&
+      length(intersect(x$training_subject_ids, x$test_subject_ids)) == 0L
   }, logical(1))))
   testthat::expect_equal(result$n_eligible,
                          result$n_predicted + result$failed_prediction_count)
   testthat::expect_equal(result$total_denominator,
                          result$n_eligible + result$n_ineligible)
+  testthat::expect_equal(result$metrics$model$n_predicted,
+                         result$metrics$baseline$n_predicted)
+  testthat::expect_equal(result$metrics$model$total_denominator,
+                         result$total_denominator)
+  testthat::expect_identical(result$baseline_comparison$coverage, "all_eligible_units")
+  testthat::expect_equal(result$baseline_comparison$n_matched, result$n_eligible)
+  testthat::expect_true(all(result$requested_folds$status %in% c("eligible", "failed")))
+  testthat::expect_true(all(vapply(result$outer_folds, function(x) {
+    x$total_denominator == length(x$test_unit_ids) &&
+      x$n_eligible + x$n_ineligible == x$total_denominator
+  }, logical(1))))
+  for (fold_id in names(result$outer_folds)) {
+    outer <- result$outer_folds[[fold_id]]
+    fold_plan <- fixture$plan$folds[[match(fold_id, vapply(fixture$plan$folds, `[[`, character(1), "fold_id"))]]
+    testthat::expect_identical(outer$training_subject_ids, fold_plan$training_subject_ids)
+    testthat::expect_identical(outer$test_subject_ids, fold_plan$test_subject_ids)
+    testthat::expect_equal(outer$n_predicted + outer$failed_prediction_count +
+                             outer$n_ineligible, outer$total_denominator)
+  }
 })
 
 testthat::test_that("infeasible native rank, missing class support, and fit budgets fail explicitly", {
@@ -323,11 +350,11 @@ testthat::test_that("infeasible native rank, missing class support, and fit budg
 
   fixture <- c02_eval_fixture("categorical")
   fixture$integration_spec$max_fits <- 1L
-  budget_error <- c02_error(
+  budget_error <- suppressWarnings(c02_error(
     evaluate_pipeline(fixture$study, fixture$analysis_spec,
                       fixture$integration_spec, fixture$plan),
     "C_EVAL_BUDGET"
-  )
+  ))
   testthat::expect_match(conditionMessage(budget_error), "1 attempted native fit")
 })
 
@@ -343,4 +370,216 @@ testthat::test_that("evaluation rejects a tampered subject-overlapping SplitPlan
     "A_STATE_SPLIT"
   )
   testthat::expect_match(conditionMessage(err), "shares a subject")
+})
+
+testthat::test_that("continuous model and baseline metrics share the same successful prediction set", {
+  comparison <- triomics_evaluation_compare_metrics(
+    mode = "continuous", truth = c(2, 100),
+    model_prediction = c(2, NA_real_), baseline_prediction = c(0, 0),
+    status = c("predicted", "failed"), training_intercept = 0,
+    unit_ids = c("unit-01", "unit-02")
+  )
+
+  testthat::expect_identical(comparison$coverage, "successful_predictions_only")
+  testthat::expect_identical(comparison$n_matched, 1L)
+  testthat::expect_equal(comparison$model$rmse, 0)
+  testthat::expect_equal(comparison$baseline$rmse, 2)
+  testthat::expect_equal(comparison$model$failed_prediction_count, 1L)
+  testthat::expect_equal(comparison$baseline$failed_prediction_count, 1L)
+  testthat::expect_identical(comparison$failed_unit_ids, "unit-02")
+})
+
+testthat::test_that("candidate adapter parameters survive evaluation candidate expansion", {
+  integration <- list(method = "mixomics_diablo", block_ids = c("alpha", "beta"),
+                      scale_features = TRUE, prediction_rule = "centroids.dist")
+  candidate <- list(id = "sparse", ncomp = 2L,
+                    keepX = list(alpha = c(3L, 2L), beta = c(2L)),
+                    backend_parameters = list(tolerance = 1e-7))
+  params <- triomics_evaluation_candidate_params(integration, candidate, NULL)
+
+  testthat::expect_identical(params$keepX, candidate$keepX)
+  testthat::expect_identical(params$backend_parameters, candidate$backend_parameters)
+  testthat::expect_identical(params$candidate_id, "sparse")
+})
+
+testthat::test_that("evaluation selects registered capability-aware adapters and types unavailable methods", {
+  c02_error(triomics_evaluation_backend("concat_pca", "categorical"),
+            "C_EVAL_CAPABILITY_UNAVAILABLE")
+  adapter <- triomics_evaluation_backend("concat_plsda", "categorical")
+  testthat::expect_s3_class(adapter, "BackendAdapter")
+  testthat::expect_identical(adapter$evaluation_modes, "categorical")
+  c02_error(triomics_evaluation_backend("mixomics_diablo", "categorical"),
+            "C_EVAL_BACKEND_UNAVAILABLE")
+})
+
+testthat::test_that("native predictions retain per-unit failure dispositions", {
+  ids <- paste0("train-", seq_len(8L))
+  y <- c(200, 400, 300, 500, 800, 1000, 900, 1100)
+  alpha <- rbind(a = y + c(-20, 10, 20, -10, 10, -20, 20, -10), b = seq_along(ids))
+  colnames(alpha) <- ids
+  training <- c02_resolved(list(alpha = alpha), y, ids, "continuous")
+  spec <- c02_backend_spec("concat_pls", "alpha", 1L)
+  adapter <- triomics_supervised_backend(spec$method)
+  fit <- adapter$fit(training, spec)
+  new_x <- rbind(a = c(3, 1e308), b = c(2, 1e308))
+  colnames(new_x) <- c("ordinary", "overflow")
+  prediction <- adapter$predict(
+    fit, c02_resolved(list(alpha = new_x), NULL, colnames(new_x), "continuous"), spec
+  )
+
+  testthat::expect_identical(prediction$status[c("ordinary", "overflow")],
+                             c(ordinary = "predicted", overflow = "failed"))
+  testthat::expect_true(is.finite(prediction$predictions[["ordinary"]]))
+  testthat::expect_true(is.na(prediction$predictions[["overflow"]]))
+  testthat::expect_identical(prediction$reason_code[["overflow"]],
+                             "nonfinite_native_prediction")
+  categorical <- triomics_supervised_prediction_disposition(
+    c(control = "control", missing = NA_character_, unknown = "other"),
+    "categorical", c("control", "case")
+  )
+  testthat::expect_identical(categorical$status,
+                             c(control = "predicted", missing = "failed", unknown = "failed"))
+  testthat::expect_identical(categorical$reason_code[["unknown"]],
+                             "invalid_native_class_prediction")
+})
+
+testthat::test_that("a fold-local preparation failure remains in the evaluation ledger", {
+  fixture <- c02_eval_fixture("continuous")
+  first_inner <- fixture$plan$folds[[1L]]$inner[[1L]]
+  selected <- first_inner$training_unit_ids
+  alpha <- fixture$blocks$alpha
+  alpha <- rbind(alpha, fold_failure = rep(12, length(fixture$ids)))
+  alpha["fold_failure", selected] <- NA_real_
+  colnames(alpha) <- fixture$ids
+  blocks <- fixture$blocks
+  blocks$alpha <- alpha
+  fixture$study <- c02_study(fixture$ids, fixture$outcome, blocks,
+                             fixture$plan$unit_subject$subject_id)
+  operations <- c02_noop_operations()
+  operations[[6L]]$method <- "training_median"
+  fixture$analysis_spec$predictive_spec$blocks[[1L]]$operations <- operations
+  descriptive_operations <- c02_noop_operations()
+  fixture$analysis_spec$descriptive_spec$blocks[[1L]]$operations <- descriptive_operations
+
+  result <- suppressWarnings(evaluate_pipeline(
+    fixture$study, fixture$analysis_spec,
+    fixture$integration_spec, fixture$plan
+  ))
+
+  failed <- result$outer_folds[["outer_01"]]$inner_results[
+    vapply(result$outer_folds[["outer_01"]]$inner_results, function(x) {
+      identical(x$fold_id, first_inner$fold_id)
+    }, logical(1))
+  ]
+  testthat::expect_length(result$outer_folds, 2L)
+  testthat::expect_true(length(failed) > 0L)
+  testthat::expect_true(all(vapply(failed, function(x) {
+    identical(x$status, "preparation_failed") &&
+      identical(x$failure$code, "A_SCALE_ALL_MISSING")
+  }, logical(1))))
+  testthat::expect_equal(result$total_denominator, nrow(result$predictions))
+  testthat::expect_true(all(result$requested_folds$status %in% c("eligible", "failed")))
+})
+
+testthat::test_that("evaluation records uncertainty disposition and subject dependence limits", {
+  fixture <- c02_eval_fixture("categorical")
+  result <- suppressWarnings(evaluate_pipeline(
+    fixture$study, fixture$analysis_spec,
+    fixture$integration_spec, fixture$plan
+  ))
+
+  testthat::expect_identical(result$uncertainty$method, "not_estimated")
+  testthat::expect_identical(result$uncertainty$disposition, "not_estimated")
+  testthat::expect_identical(result$uncertainty$resampling_unit, "subject")
+  testthat::expect_match(result$uncertainty$dependence_limitations, "not independent")
+})
+
+testthat::test_that("a failed native fit consumes the fit budget", {
+  ids <- paste0("native-failure-", seq_len(8L))
+  x <- rbind(signal = c(1, 2, 4, 3, 5, 8, 7, 9), trend = seq_along(ids))
+  colnames(x) <- ids
+  resolved <- c02_resolved(list(alpha = x), rep(4, length(ids)), ids, "continuous")
+  spec <- c02_backend_spec("concat_pls", "alpha", 1L)
+  adapter <- triomics_supervised_backend(spec$method)
+  budget <- new.env(parent = emptyenv())
+  budget$count <- 0L
+  budget$maximum <- 1L
+
+  first <- suppressWarnings(c02_error(
+    triomics_evaluation_budget_fit(adapter, resolved, spec, budget), "C_EVAL_NATIVE_FIT"
+  ))
+  next_fit <- c02_error(
+    triomics_evaluation_budget_fit(adapter, resolved, spec, budget), "C_EVAL_BUDGET"
+  )
+
+  testthat::expect_match(conditionMessage(first), "constant|variance|native", ignore.case = TRUE)
+  testthat::expect_equal(budget$count, 1L)
+  testthat::expect_match(conditionMessage(next_fit), "1 attempted native fit")
+  testthat::expect_equal(budget$count, 1L)
+})
+
+testthat::test_that("inner-held-out mutation leaves learned preparation state and support frozen", {
+  fixture <- c02_eval_fixture("continuous")
+  outer_plan <- fixture$plan$folds[[1L]]
+  inner_plan <- outer_plan$inner[[1L]]
+  blocks <- lapply(fixture$blocks, function(x) x + 20)
+  alpha <- blocks$alpha
+  alpha <- rbind(alpha, gap = rep(24, length(fixture$ids)),
+                 heldout_only = rep(NA_real_, length(fixture$ids)))
+  gap_missing <- inner_plan$training_unit_ids[[1L]]
+  heldout_only_units <- inner_plan$test_unit_ids
+  alpha["gap", gap_missing] <- NA_real_
+  alpha["heldout_only", heldout_only_units] <- 25
+  colnames(alpha) <- fixture$ids
+  blocks$alpha <- alpha
+  study <- c02_study(fixture$ids, fixture$outcome, blocks,
+                     fixture$plan$unit_subject$subject_id)
+  triomics_register_metabolomics_profile()
+  operations <- triomics_metabolomics_operations(
+    filter_method = "prevalence", min_observed = 1L, prevalence = 0.5,
+    transform = "log2", normalise = "pqn", reference = "training_median",
+    impute = "training_median", scope = "global"
+  )
+  descriptive_operations <- lapply(operations, function(op) {
+    if (identical(op$stage, "impute")) op$method <- "none"
+    op
+  })
+  predictive_spec <- list(
+    preparation_context_id = "C02-leakage-predictive", seed = 19L,
+    state_dir = tempfile("c02-leakage-before-"),
+    blocks = lapply(names(blocks), function(block_id) {
+      list(block_id = block_id, profile_id = "metabolomics", operations = operations)
+    })
+  )
+  descriptive_spec <- list(
+    preparation_context_id = "C02-leakage-descriptive",
+    training_unit_ids = fixture$ids, seed = 19L,
+    state_dir = tempfile("c02-leakage-descriptive-before-"),
+    blocks = lapply(names(blocks), function(block_id) {
+      list(block_id = block_id, profile_id = "metabolomics", operations = descriptive_operations)
+    })
+  )
+  original <- triomics_fold_prepare(study, predictive_spec, fixture$plan, descriptive_spec)
+  mutated_blocks <- blocks
+  mutated_blocks$alpha["heldout_only", heldout_only_units] <- 250
+  mutated_study <- c02_study(fixture$ids, fixture$outcome, mutated_blocks,
+                             fixture$plan$unit_subject$subject_id)
+  triomics_register_metabolomics_profile()
+  mutated_predictive <- predictive_spec
+  mutated_predictive$state_dir <- tempfile("c02-leakage-after-")
+  mutated_descriptive <- descriptive_spec
+  mutated_descriptive$state_dir <- tempfile("c02-leakage-descriptive-after-")
+  changed <- triomics_fold_prepare(mutated_study, mutated_predictive,
+                                   fixture$plan, mutated_descriptive)
+  original_inner <- original$folds[[1L]]$inner[[1L]]$blocks$alpha
+  changed_inner <- changed$folds[[1L]]$inner[[1L]]$blocks$alpha
+
+  testthat::expect_identical(original_inner$state_hash, changed_inner$state_hash)
+  testthat::expect_identical(original_inner$feature_keys, changed_inner$feature_keys)
+  testthat::expect_false("heldout_only" %in% original_inner$feature_keys)
+  testthat::expect_true("gap" %in% original_inner$feature_keys)
+  testthat::expect_true(is.finite(original_inner$medians[["gap"]]))
+  testthat::expect_identical(original_inner$output_scale, "log2")
+  testthat::expect_identical(original_inner$pqn_reference_scale,
+                             changed_inner$pqn_reference_scale)
 })

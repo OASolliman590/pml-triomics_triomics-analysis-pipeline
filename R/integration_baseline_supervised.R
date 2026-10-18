@@ -445,6 +445,29 @@ triomics_supervised_fit <- function(resolved_analysis, params) {
   )
 }
 
+triomics_supervised_prediction_disposition <- function(predictions, mode, class_levels = NULL) {
+  unit_names <- names(predictions)
+  if (identical(mode, "categorical")) {
+    predictions <- as.character(predictions)
+    invalid <- is.na(predictions) | !predictions %in% class_levels
+  } else {
+    predictions <- as.numeric(predictions)
+    names(predictions) <- unit_names
+    invalid <- !is.finite(predictions)
+  }
+  if (is.null(names(predictions))) names(predictions) <- unit_names
+  status <- stats::setNames(rep("predicted", length(predictions)), names(predictions))
+  reason_code <- stats::setNames(rep(NA_character_, length(predictions)), names(predictions))
+  status[invalid] <- "failed"
+  reason_code[invalid] <- if (identical(mode, "categorical")) {
+    "invalid_native_class_prediction"
+  } else {
+    "nonfinite_native_prediction"
+  }
+  predictions[invalid] <- if (identical(mode, "categorical")) NA_character_ else NA_real_
+  list(predictions = predictions, status = status, reason_code = reason_code)
+}
+
 triomics_supervised_predict <- function(backend_fit, new_resolved_analysis, params) {
   if (!inherits(backend_fit, "BackendFit") || is.null(backend_fit$native_state$model)) {
     triomics_supervised_abort("C_EVAL_PREDICTION_UNSUPPORTED", "Prediction requires a fitted BackendFit.", key = "backend_fit")
@@ -527,9 +550,13 @@ triomics_supervised_predict <- function(backend_fit, new_resolved_analysis, para
     }
     predictions <- as.character(class_values[, state$requested_ncomp])
     names(predictions) <- units
+    disposition <- triomics_supervised_prediction_disposition(
+      predictions, "categorical", state$class_levels
+    )
     structure(
       list(
-        unit_ids = unname(units), predictions = predictions,
+        unit_ids = unname(units), predictions = disposition$predictions,
+        status = disposition$status, reason_code = disposition$reason_code,
         prediction_rule = rule, prediction_kind = "categorical_label",
         native_method = backend_fit$metadata$native_method,
         native_version = backend_fit$metadata$native_version,
@@ -558,9 +585,11 @@ triomics_supervised_predict <- function(backend_fit, new_resolved_analysis, para
     }
     predictions <- as.numeric(values[, 1L, state$requested_ncomp])
     names(predictions) <- units
+    disposition <- triomics_supervised_prediction_disposition(predictions, "continuous")
     structure(
       list(
-        unit_ids = unname(units), predictions = predictions,
+        unit_ids = unname(units), predictions = disposition$predictions,
+        status = disposition$status, reason_code = disposition$reason_code,
         prediction_rule = "native_response_extraction",
         prediction_kind = "continuous_response",
         native_method = backend_fit$metadata$native_method,
@@ -603,6 +632,7 @@ triomics_supervised_backend <- function(method) {
   triomics_supervised_method_mode(method)
   structure(
     list(
+      evaluation_modes = triomics_supervised_method_mode(method),
       validate = function(resolved_analysis, params) {
         params$method <- method
         triomics_supervised_validate(resolved_analysis, params)
