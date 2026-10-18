@@ -137,6 +137,167 @@ triomics_cli_prepare_registered_b08 <- function(options, args) {
   FALSE
 }
 
+triomics_c01_matrix_payload <- function(value, row_key, column_key) {
+  list(
+    rows = stats::setNames(list(rownames(value)), row_key),
+    columns = stats::setNames(list(colnames(value)), column_key),
+    values = unname(lapply(seq_len(nrow(value)), function(i) {
+      unname(as.list(as.numeric(value[i, , drop = TRUE])))
+    }))
+  )
+}
+
+triomics_c01_result_payload <- function(result) {
+  result <- triomics_validate_integration_result(result)
+  loadings <- lapply(names(result$loadings), function(block_id) {
+    c(
+      list(block_id = block_id),
+      triomics_c01_matrix_payload(
+        result$loadings[[block_id]], "feature_keys", "component_ids"
+      )
+    )
+  })
+  variance <- c(
+    triomics_c01_matrix_payload(result$variance, "block_ids", "component_ids"),
+    list(
+      metric = attr(result$variance, "metric"),
+      assay_space = attr(result$variance, "assay_space"),
+      denominator = attr(result$variance, "denominator"),
+      semantics = attr(result$variance, "semantics")
+    )
+  )
+  list(
+    scores = triomics_c01_matrix_payload(result$scores, "unit_ids", "component_ids"),
+    loadings = loadings,
+    variance = variance,
+    selected = result$selected,
+    backend = result$backend,
+    params = result$params
+  )
+}
+
+triomics_execute_stage_c <- function(config_path, output) {
+  if (!is.character(output) || length(output) != 1L || is.na(output) || !nzchar(output)) {
+    triomics_abort(
+      "A_OUTPUT_INVALID", "Stage C output must be a directory path.",
+      key = "output", module = "integration", stage = "C",
+      remediation = "Choose a new local output directory."
+    )
+  }
+  if (file.exists(output) && !dir.exists(output)) {
+    triomics_abort(
+      "A_OUTPUT_INVALID", "Stage C output exists and is not a directory.",
+      key = "output", module = "integration", stage = "C",
+      remediation = "Choose a new local output directory."
+    )
+  }
+
+  config <- triomics_read_config(config_path)
+  if (length(config$analyses) != 1L) {
+    triomics_integration_abort(
+      "C_ELIGIBILITY_INPUT_INVALID",
+      "The registered C-01 CLI lane requires exactly one declared analysis.",
+      key = "analyses"
+    )
+  }
+  analysis <- config$analyses[[1L]]
+  requests <- analysis$integration
+  if (!is.list(requests) || !length(requests)) {
+    triomics_integration_abort(
+      "C_SCORE_BACKEND_UNAVAILABLE",
+      "Stage C needs at least one explicit integration request.",
+      key = "analyses.integration"
+    )
+  }
+  requested_methods <- vapply(requests, function(request) {
+    method <- request$method
+    if (!is.character(method) || length(method) != 1L || is.na(method)) "" else method
+  }, character(1))
+  unsupported <- which(!requested_methods %in% triomics_integration_backend_names())
+  if (length(unsupported)) {
+    triomics_integration_backend(requested_methods[[unsupported[[1L]]]])
+  }
+
+  ingested <- triomics_ingest_configured_study(config, config_path)
+  unit_ids <- as.character(ingested$sample_metadata$sample_id)
+  representation <- analysis$design$representation
+  block_ids <- as.character(unlist(analysis$block_ids, use.names = FALSE))
+  study <- list(
+    study_id = ingested$study_id,
+    preparation_context_id = analysis$preparation_context_id,
+    sample_metadata = ingested$sample_metadata,
+    sample_registry = ingested$sample_registry,
+    declared_factor_levels = ingested$declared_factor_levels,
+    feature_registry = ingested$feature_registry,
+    assays = ingested$assays[block_ids],
+    assay_hashes = NULL,
+    analysis_unit_map = data.frame(
+      unit_id = unit_ids,
+      representation_id = rep(representation, length(unit_ids)),
+      stringsAsFactors = FALSE
+    )
+  )
+  resolved <- triomics_resolve_analysis(study, analysis)
+
+  integration_results <- lapply(requests, function(request) {
+    spec <- request
+    spec$block_ids <- block_ids
+    spec$unit_ids <- unit_ids
+    spec$training_unit_ids <- unit_ids
+    spec$target_unit_ids <- unit_ids
+    spec$required_views <- block_ids
+    spec$task_mode <- request$evaluation$mode
+    result <- integrate_blocks(resolved, spec)
+    list(
+      integration_id = request$integration_id,
+      method = request$method,
+      required = isTRUE(request$required),
+      status = "complete",
+      result = triomics_c01_result_payload(result)
+    )
+  })
+
+  payload <- list(
+    schema_version = "2.0",
+    study_id = ingested$study_id,
+    analysis_id = analysis$analysis_id,
+    preparation_context_id = analysis$preparation_context_id,
+    representation_id = representation,
+    status = "complete",
+    integrations = integration_results
+  )
+  payload_path <- file.path(output, "C", "integration-results.json")
+  triomics_write_json_atomic(payload, payload_path)
+  inputs <- unname(lapply(ingested$source_manifests, function(source) {
+    list(artifact_id = source$source_id, sha256 = source$sha256)
+  }))
+  envelope <- triomics_artifact_envelope(
+    artifact_type = "integration_results",
+    artifact_id = "stage-c-integration-results",
+    study_id = ingested$study_id,
+    run_id = "c-01",
+    status = "complete",
+    config_sha256 = attr(config, "config_sha256"),
+    payload = payload_path,
+    producer_commit = "not-recorded",
+    inputs = inputs,
+    reason_codes = character(),
+    privacy_class = if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive"
+  )
+  envelope$analysis_id <- analysis$analysis_id
+  envelope$preparation_context_id <- analysis$preparation_context_id
+  envelope$representation_id <- representation
+  triomics_write_envelope(envelope, file.path(output, "C", "integration-results.envelope.json"))
+  triomics_write_json_atomic(list(
+    schema_version = "2.0",
+    run_id = "c-01",
+    study_id = ingested$study_id,
+    stage = "C",
+    status = "complete"
+  ), file.path(output, "registries", "run.json"))
+  invisible(list(status = "complete", payload_path = payload_path, results = integration_results))
+}
+
 triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
   tryCatch({
     options <- triomics_parse_cli(args)
@@ -167,6 +328,8 @@ triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
       if (isTRUE(registered_b09)) triomics_b09_cli_after_stage_b(args)
       if (isTRUE(registered_b08)) triomics_b08_cli_after_stage_b(args)
       triomics_b07_cli_after_stage_b(args, stage_b_result)
+    } else if (identical(options$stage, "C")) {
+      triomics_execute_stage_c(options$config, options$output)
     } else {
       triomics_abort("A_STAGE_UNAVAILABLE",
                      paste0("Execution is not implemented for stage '", options$stage, "'."),

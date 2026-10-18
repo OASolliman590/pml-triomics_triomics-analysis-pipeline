@@ -3,6 +3,7 @@
 (^|/)\.agents($|/)
 (^|/)\.codex($|/)
 (^|/)\.superpowers($|/)
+(^|/)\.audit($|/)
 (^|/)\.worktrees($|/)
 (^|/)artifacts($|/)
 (^|/)docs($|/)

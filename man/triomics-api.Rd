@@ -17,10 +17,13 @@
 \alias{triomics_clinical_association_export}
 \alias{triomics_execute_clinical_associations}
 \alias{triomics_b08_endpoint_hash}
+\alias{integrate_blocks}
+\alias{make_consensus_state}
+\alias{apply_consensus_state}
 \alias{associate_longitudinal_endpoints}
 \alias{triomics_associate_longitudinal_endpoints}
 \alias{triomics_execute_longitudinal_associations}
-\title{Triomics simulation, export, and stage B analysis entry points}
+\title{Triomics simulation, analysis, and integration entry points}
 \description{
 Public entry points for generating synthetic studies, exporting a validated
 stage A handoff, resolving a declared stage B analysis, and fitting or
@@ -33,6 +36,8 @@ endpoint hashes.
 The longitudinal entry points fit declared between-person, within-person,
 baseline-to-later, or effect-modification clinical objectives when their
 mode-specific requirements and eligible inputs are available.
+The integration entry points fit the registered concatenation-PCA adapter and
+apply the frozen multiblock consensus-score convention.
 }
 \usage{
 simulate_study(
@@ -90,6 +95,12 @@ triomics_execute_clinical_associations(config_path, output)
 
 triomics_b08_endpoint_hash(endpoint)
 
+integrate_blocks(resolved_analysis, integration_spec)
+
+make_consensus_state(native_scores, native_loadings, training_units, params)
+
+apply_consensus_state(native_scores, state)
+
 triomics_associate_longitudinal_endpoints(
   endpoint_bundle,
   clinical_view,
@@ -123,6 +134,17 @@ triomics_execute_longitudinal_associations(config_path, output)
   \item{analysis_spec}{Declared analysis specification.}
   \item{resolved_analysis}{Resolved stage B design and block data.}
   \item{statistics_spec}{Declared statistical fitting specification.}
+  \item{integration_spec}{Declared integration method, block, unit, scaling,
+  selection, and evaluation settings.}
+  \item{native_scores}{Named list of block-native score matrices with stable
+  unit and component identities.}
+  \item{native_loadings}{Named list of block-native loading matrices used to
+  freeze deterministic component orientation.}
+  \item{training_units}{Declared unit identifiers used to fit consensus
+  orientation and standardization.}
+  \item{params}{Declared consensus required views and numerical tolerance.}
+  \item{state}{Frozen consensus orientation, training transforms, weights,
+  units, and required views returned by \code{make_consensus_state()}.}
   \item{config_path}{Path to a strict triomics configuration file.}
   \item{matrices}{Named block matrices retained from the same Stage B fit.}
   \item{smoke_runs}{Optional named synthetic qualification runs used by the
@@ -153,7 +175,10 @@ resume record, handoff limitations, resolved analysis, fitted model result, or
 stage B execution summary, verified Stage B handoff, resolved clinical
 objectives, privacy-scrubbed
 clinical results, or an endpoint hash. Clinical and longitudinal association
-functions return typed objective, family, audit, and result records; unsupported
+functions return typed objective, family, audit, and result records.
+\code{integrate_blocks()} returns the protected six-field
+\code{IntegrationResult}; the consensus functions return a frozen state or a
+unit-by-component score matrix. Unsupported
 inputs return a named unavailable status or a typed CLI error rather than
 substituting an analysis.
 }
