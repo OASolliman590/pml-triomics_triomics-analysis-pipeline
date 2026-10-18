@@ -1,0 +1,28 @@
+schema_version: "2.0.0"
+ticket_id: C-02
+stage: C
+enabled: true
+
+# Synthetic acceptance request. The execution ledger supplies predecessor artifacts.
+study_id: synthetic-c02
+analysis_spec:
+  outcome:
+    column: outcome
+    type: categorical
+    levels: [control, case]
+  split:
+    grouping_unit: subject
+    outer_folds: 2
+    inner_folds: 2
+    seed: 19
+integration_spec:
+  method: concat_plsda
+  block_ids: [alpha, beta]
+  scale_features: true
+  prediction_rule: centroids.dist
+  candidates:
+    - id: one-component
+      ncomp: 1
+    - id: two-components
+      ncomp: 2
+  max_fits: 20

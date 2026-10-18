@@ -1,0 +1,48 @@
+{
+  "packet_id": "C-02",
+  "request_type": "shared_registration",
+  "implementation_base": "38bc7dcecf121b9cf2f80efd9adbd19a1171cb6f",
+  "dependencies": [
+    {
+      "package": "mixOmics",
+      "observed_version": "6.36.0",
+      "required_for": ["concat_plsda", "concat_pls"]
+    }
+  ],
+  "exports": ["evaluate_pipeline"],
+  "integration_backends": [
+    {
+      "method": "concat_plsda",
+      "adapter_factory": "triomics_supervised_backend",
+      "task_mode": "categorical",
+      "native_fit": "mixOmics::plsda",
+      "native_prediction": "stats::predict with a declared native distance rule"
+    },
+    {
+      "method": "concat_pls",
+      "adapter_factory": "triomics_supervised_backend",
+      "task_mode": "continuous",
+      "native_fit": "mixOmics::pls(mode = 'regression')",
+      "native_prediction": "stats::predict with native original-scale response extraction"
+    }
+  ],
+  "cli_registration": {
+    "stage": "C",
+    "service": "evaluate_pipeline",
+    "enabled": true
+  },
+  "coordinator_owned_files_to_update": [
+    "DESCRIPTION",
+    "NAMESPACE",
+    "R/integration_contract.R",
+    "R/cli.R",
+    "R/stage_registry.R",
+    "renv.lock"
+  ],
+  "registration_notes": [
+    "Only Sol applies shared dependency, namespace, backend, CLI, stage, and lockfile changes.",
+    "Keep the registered method ids and adapter interface aligned with C-01 BackendAdapter and BackendFit.",
+    "Do not enable methods or routes that are unavailable in the accepted milestone snapshot."
+  ],
+  "applied_to_shared_files": false
+}
