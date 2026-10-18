@@ -5,6 +5,11 @@ c02_error <- function(expr, code) {
   err
 }
 
+c02_evaluate_pipeline <- function(study, analysis_spec, integration_spec, split_plan) {
+  adapter <- triomics_supervised_backend(integration_spec$method)
+  triomics_evaluation_core(study, analysis_spec, integration_spec, split_plan, adapter)
+}
+
 c02_noop_operations <- function() {
   lapply(c("validate", "filter", "derive", "transform", "normalise", "impute"), function(stage) {
     list(stage = stage, method = "none")
@@ -87,15 +92,15 @@ c02_backend_spec <- function(method, block_ids, ncomp = 1L) {
 
 c02_eval_fixture <- function(mode = "categorical", state_dir = tempfile("c02-state-")) {
   dir.create(state_dir, recursive = TRUE, showWarnings = FALSE)
-  ids <- sprintf("unit-%02d", seq_len(24L))
+  ids <- sprintf("unit-%02d", seq_len(32L))
   if (identical(mode, "categorical")) {
-    outcome <- factor(rep(c("control", "case"), each = 12L), levels = c("control", "case"))
-    x_signal <- c(rep(-2.5, 12L), rep(2.5, 12L))
+    outcome <- factor(rep(c("control", "case"), each = 16L), levels = c("control", "case"))
+    x_signal <- c(rep(-2.5, 16L), rep(2.5, 16L))
     stratification <- as.character(outcome)
     outcome_spec <- list(column = "outcome", type = "categorical", levels = levels(outcome))
     method <- "concat_plsda"
   } else {
-    outcome <- seq(2, 48, by = 2)
+    outcome <- seq(2, 64, by = 2)
     x_signal <- outcome / 5
     stratification <- NULL
     outcome_spec <- list(column = "outcome", type = "continuous")
@@ -114,7 +119,7 @@ c02_eval_fixture <- function(mode = "categorical", state_dir = tempfile("c02-sta
   )
   colnames(x_alpha) <- colnames(x_beta) <- ids
   blocks <- list(alpha = x_alpha, beta = x_beta)
-  subject_ids <- rep(sprintf("subject-%02d", seq_len(12L)), each = 2L)
+  subject_ids <- rep(sprintf("subject-%02d", seq_len(16L)), each = 2L)
   study <- c02_study(ids, outcome, blocks, subject_ids)
   plan <- triomics_nested_split_plan(
     ids, subject_ids = subject_ids, n_outer = 2L, n_inner = 2L, seed = 19L,
@@ -274,8 +279,8 @@ testthat::test_that("continuous R-squared uses the training intercept, not the h
 
 testthat::test_that("nested evaluation tunes inside outer training and ignores held-out mutations", {
   fixture <- c02_eval_fixture("continuous")
-  result <- evaluate_pipeline(fixture$study, fixture$analysis_spec,
-                              fixture$integration_spec, fixture$plan)
+  result <- c02_evaluate_pipeline(fixture$study, fixture$analysis_spec,
+                                 fixture$integration_spec, fixture$plan)
   first <- result$outer_folds[[1L]]
   test_units <- fixture$plan$folds[[1L]]$test_unit_ids
   mutated <- fixture$study
@@ -287,8 +292,8 @@ testthat::test_that("nested evaluation tunes inside outer training and ignores h
     mutated$experiments[[block_id]] <- se
   }
   mutated$sample_registry$outcome[match(test_units, mutated$sample_registry$sample_id)] <- 1e15
-  changed <- evaluate_pipeline(mutated, fixture$analysis_spec,
-                               fixture$integration_spec, fixture$plan)$outer_folds[[1L]]
+  changed <- c02_evaluate_pipeline(mutated, fixture$analysis_spec,
+                                  fixture$integration_spec, fixture$plan)$outer_folds[[1L]]
 
   testthat::expect_s3_class(result, "EvaluationResult")
   testthat::expect_length(result$outer_folds, 2L)
@@ -350,11 +355,11 @@ testthat::test_that("infeasible native rank, missing class support, and fit budg
 
   fixture <- c02_eval_fixture("categorical")
   fixture$integration_spec$max_fits <- 1L
-  budget_error <- suppressWarnings(c02_error(
-    evaluate_pipeline(fixture$study, fixture$analysis_spec,
-                      fixture$integration_spec, fixture$plan),
+  budget_error <- c02_error(
+    c02_evaluate_pipeline(fixture$study, fixture$analysis_spec,
+                          fixture$integration_spec, fixture$plan),
     "C_EVAL_BUDGET"
-  ))
+  )
   testthat::expect_match(conditionMessage(budget_error), "1 attempted native fit")
 })
 
@@ -365,8 +370,8 @@ testthat::test_that("evaluation rejects a tampered subject-overlapping SplitPlan
   bad$creation_hash <- NULL
   bad$creation_hash <- triomics_hash_text(triomics_canonical_json(bad))
   err <- c02_error(
-    evaluate_pipeline(fixture$study, fixture$analysis_spec,
-                      fixture$integration_spec, bad),
+    c02_evaluate_pipeline(fixture$study, fixture$analysis_spec,
+                          fixture$integration_spec, bad),
     "A_STATE_SPLIT"
   )
   testthat::expect_match(conditionMessage(err), "shares a subject")
@@ -389,6 +394,24 @@ testthat::test_that("continuous model and baseline metrics share the same succes
   testthat::expect_identical(comparison$failed_unit_ids, "unit-02")
 })
 
+testthat::test_that("categorical baseline uses its own valid predictions with the eligible denominator", {
+  comparison <- triomics_evaluation_compare_metrics(
+    mode = "categorical", truth = c("A", "B"),
+    model_prediction = c("A", NA_character_), baseline_prediction = c("B", "B"),
+    status = c("predicted", "failed"), declared_levels = c("A", "B"),
+    unit_ids = c("unit-01", "unit-02")
+  )
+
+  testthat::expect_equal(comparison$model$accuracy, 0.5)
+  testthat::expect_equal(comparison$baseline$accuracy, 0.5)
+  testthat::expect_equal(comparison$model$n_eligible, 2L)
+  testthat::expect_equal(comparison$baseline$n_eligible, 2L)
+  testthat::expect_equal(comparison$model$failed_prediction_count, 1L)
+  testthat::expect_equal(comparison$baseline$failed_prediction_count, 0L)
+  testthat::expect_equal(comparison$baseline$n_predicted, 2L)
+  testthat::expect_identical(comparison$baseline_failed_unit_ids, character())
+})
+
 testthat::test_that("candidate adapter parameters survive evaluation candidate expansion", {
   integration <- list(method = "mixomics_diablo", block_ids = c("alpha", "beta"),
                       scale_features = TRUE, prediction_rule = "centroids.dist")
@@ -402,14 +425,18 @@ testthat::test_that("candidate adapter parameters survive evaluation candidate e
   testthat::expect_identical(params$candidate_id, "sparse")
 })
 
-testthat::test_that("evaluation selects registered capability-aware adapters and types unavailable methods", {
+testthat::test_that("public evaluation enforces registration while packet adapters remain directly testable", {
   c02_error(triomics_evaluation_backend("concat_pca", "categorical"),
             "C_EVAL_CAPABILITY_UNAVAILABLE")
-  adapter <- triomics_evaluation_backend("concat_plsda", "categorical")
+  c02_error(triomics_evaluation_backend("concat_plsda", "categorical"),
+            "C_SCORE_BACKEND_UNAVAILABLE")
+  c02_error(evaluate_pipeline(NULL, NULL, list(method = "concat_plsda"), NULL),
+            "C_SCORE_BACKEND_UNAVAILABLE")
+  adapter <- triomics_supervised_backend("concat_plsda")
   testthat::expect_s3_class(adapter, "BackendAdapter")
   testthat::expect_identical(adapter$evaluation_modes, "categorical")
   c02_error(triomics_evaluation_backend("mixomics_diablo", "categorical"),
-            "C_EVAL_BACKEND_UNAVAILABLE")
+            "C_SCORE_BACKEND_UNAVAILABLE")
 })
 
 testthat::test_that("native predictions retain per-unit failure dispositions", {
@@ -461,10 +488,10 @@ testthat::test_that("a fold-local preparation failure remains in the evaluation 
   descriptive_operations <- c02_noop_operations()
   fixture$analysis_spec$descriptive_spec$blocks[[1L]]$operations <- descriptive_operations
 
-  result <- suppressWarnings(evaluate_pipeline(
+  result <- c02_evaluate_pipeline(
     fixture$study, fixture$analysis_spec,
     fixture$integration_spec, fixture$plan
-  ))
+  )
 
   failed <- result$outer_folds[["outer_01"]]$inner_results[
     vapply(result$outer_folds[["outer_01"]]$inner_results, function(x) {
@@ -483,10 +510,10 @@ testthat::test_that("a fold-local preparation failure remains in the evaluation 
 
 testthat::test_that("evaluation records uncertainty disposition and subject dependence limits", {
   fixture <- c02_eval_fixture("categorical")
-  result <- suppressWarnings(evaluate_pipeline(
+  result <- c02_evaluate_pipeline(
     fixture$study, fixture$analysis_spec,
     fixture$integration_spec, fixture$plan
-  ))
+  )
 
   testthat::expect_identical(result$uncertainty$method, "not_estimated")
   testthat::expect_identical(result$uncertainty$disposition, "not_estimated")
@@ -505,9 +532,9 @@ testthat::test_that("a failed native fit consumes the fit budget", {
   budget$count <- 0L
   budget$maximum <- 1L
 
-  first <- suppressWarnings(c02_error(
+  first <- c02_error(
     triomics_evaluation_budget_fit(adapter, resolved, spec, budget), "C_EVAL_NATIVE_FIT"
-  ))
+  )
   next_fit <- c02_error(
     triomics_evaluation_budget_fit(adapter, resolved, spec, budget), "C_EVAL_BUDGET"
   )

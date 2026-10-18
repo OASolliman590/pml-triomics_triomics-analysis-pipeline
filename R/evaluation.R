@@ -101,11 +101,19 @@ triomics_evaluation_compare_metrics <- function(mode, truth, model_prediction,
   model <- triomics_evaluation_metrics(
     mode, truth, model_prediction, status, declared_levels, training_intercept
   )
+  baseline_status <- status
+  if (identical(mode, "categorical")) {
+    baseline_values <- as.character(baseline_prediction)
+    invalid_baseline <- is.na(baseline_values) | !baseline_values %in% declared_levels
+    eligible <- status %in% c("predicted", "failed")
+    baseline_status[eligible] <- ifelse(invalid_baseline[eligible], "failed", "predicted")
+  }
   baseline <- triomics_evaluation_metrics(
-    mode, truth, baseline_prediction, status, declared_levels, training_intercept
+    mode, truth, baseline_prediction, baseline_status, declared_levels, training_intercept
   )
   eligible <- status %in% c("predicted", "failed")
   failed <- status == "failed" & eligible
+  baseline_failed <- baseline_status == "failed" & eligible
   matched <- if (identical(mode, "continuous")) status == "predicted" else eligible
   coverage <- if (identical(mode, "continuous") && any(failed)) {
     "successful_predictions_only"
@@ -114,9 +122,14 @@ triomics_evaluation_compare_metrics <- function(mode, truth, model_prediction,
   }
   list(
     model = model, baseline = baseline, coverage = coverage,
-    disposition = if (any(failed)) "failures_retained_and_matched" else "complete_eligible_set",
+    disposition = if (any(failed) || any(baseline_failed)) {
+      "failures_retained_with_independent_dispositions"
+    } else {
+      "complete_eligible_set"
+    },
     n_matched = as.integer(sum(matched)),
-    failed_unit_ids = unname(as.character(unit_ids[failed]))
+    failed_unit_ids = unname(as.character(unit_ids[failed])),
+    baseline_failed_unit_ids = unname(as.character(unit_ids[baseline_failed]))
   )
 }
 
@@ -180,43 +193,24 @@ triomics_evaluation_validate_descriptive <- function(study, predictive_spec,
   invisible(TRUE)
 }
 
-triomics_evaluation_backend <- function(method, mode) {
-  registry_error <- NULL
-  adapter <- tryCatch(triomics_integration_backend(method), error = function(error) {
-    registry_error <<- error
-    NULL
-  })
-  if (inherits(adapter, "BackendAdapter")) {
-    supported_modes <- adapter$evaluation_modes
-    if (!is.character(supported_modes) || !mode %in% supported_modes ||
-        !all(c("validate", "fit", "predict", "extract") %in% names(adapter))) {
-      triomics_evaluation_abort(
-        "C_EVAL_CAPABILITY_UNAVAILABLE",
-        paste0("Registered backend '", method, "' does not declare the required supervised evaluation capability."),
-        key = "integration.method",
-        remediation = "Register the backend's supervised task modes and validate/fit/predict/extract methods before evaluation."
-      )
-    }
-    return(adapter)
-  }
-  if (method %in% c("concat_plsda", "concat_pls")) {
-    expected_mode <- if (identical(method, "concat_plsda")) "categorical" else "continuous"
-    if (!identical(mode, expected_mode)) {
-      triomics_evaluation_abort("C_EVAL_CAPABILITY_UNAVAILABLE", "The supervised backend does not support the declared response mode.", key = "mode")
-    }
-    return(triomics_supervised_backend(method))
-  }
-  if (inherits(registry_error, "triomics_error") &&
-      identical(registry_error$code, "C_SCORE_BACKEND_UNAVAILABLE")) {
+triomics_evaluation_require_adapter <- function(adapter, method, mode) {
+  supported_modes <- adapter$evaluation_modes
+  if (!inherits(adapter, "BackendAdapter") || !is.character(supported_modes) ||
+      !mode %in% supported_modes ||
+      !all(c("validate", "fit", "predict", "extract") %in% names(adapter))) {
     triomics_evaluation_abort(
-      "C_EVAL_BACKEND_UNAVAILABLE",
-      paste0("Integration backend '", method, "' is not registered for evaluation."),
+      "C_EVAL_CAPABILITY_UNAVAILABLE",
+      paste0("Registered backend '", method, "' does not declare the required supervised evaluation capability."),
       key = "integration.method",
-      remediation = "Wait for the backend packet and accepted shared registration before requesting evaluation."
+      remediation = "Register the backend's supervised task modes and validate/fit/predict/extract methods before evaluation."
     )
   }
-  if (!is.null(registry_error)) stop(registry_error)
-  triomics_evaluation_abort("C_EVAL_BACKEND_UNAVAILABLE", "No evaluation backend is available.", key = "integration.method")
+  adapter
+}
+
+triomics_evaluation_backend <- function(method, mode) {
+  adapter <- triomics_integration_backend(method)
+  triomics_evaluation_require_adapter(adapter, method, mode)
 }
 
 triomics_evaluation_response <- function(study, outcome_spec, unit_ids) {
@@ -626,7 +620,8 @@ triomics_evaluation_candidate <- function(outer_fold, candidate, candidate_param
   )
 }
 
-evaluate_pipeline <- function(study, analysis_spec, integration_spec, split_plan) {
+triomics_evaluation_core <- function(study, analysis_spec, integration_spec,
+                                     split_plan, adapter) {
   triomics_validate_split_plan(split_plan, TRUE)
   if (!is.list(study) || !is.data.frame(study$sample_registry) ||
       !is.character(study$study_id) || length(study$study_id) != 1L ||
@@ -682,7 +677,7 @@ evaluate_pipeline <- function(study, analysis_spec, integration_spec, split_plan
       is.na(integration_spec$method) || !nzchar(integration_spec$method)) {
     triomics_evaluation_abort("C_EVAL_BACKEND_UNAVAILABLE", "One integration method id is required.", key = "integration.method")
   }
-  adapter <- triomics_evaluation_backend(integration_spec$method, mode)
+  triomics_evaluation_require_adapter(adapter, integration_spec$method, mode)
   request_ledger <- expand.grid(
     fold_id = vapply(split_plan$folds, `[[`, character(1), "fold_id"),
     candidate_id = candidate_ids, stringsAsFactors = FALSE
@@ -960,4 +955,20 @@ evaluate_pipeline <- function(study, analysis_spec, integration_spec, split_plan
     ),
     class = "EvaluationResult"
   )
+}
+
+evaluate_pipeline <- function(study, analysis_spec, integration_spec, split_plan) {
+  if (!is.list(integration_spec) || !is.character(integration_spec$method) ||
+      length(integration_spec$method) != 1L || is.na(integration_spec$method) ||
+      !nzchar(integration_spec$method)) {
+    triomics_evaluation_abort(
+      "C_EVAL_BACKEND_UNAVAILABLE", "One integration method id is required.",
+      key = "integration.method"
+    )
+  }
+  # Public evaluation only uses adapters registered through the shared integration
+  # contract. Packet-local adapters are tested through the evaluation core until
+  # their shared registration is accepted.
+  adapter <- triomics_integration_backend(integration_spec$method)
+  triomics_evaluation_core(study, analysis_spec, integration_spec, split_plan, adapter)
 }
