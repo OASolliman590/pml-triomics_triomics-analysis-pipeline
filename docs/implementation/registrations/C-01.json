@@ -1,0 +1,74 @@
+{
+  "packet_id": "C-01",
+  "status": "registration_requested",
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "source_root": ".",
+    "cli": "inst/exec/triomics",
+    "configuration_schema": "inst/schema/config.schema.json",
+    "namespace_exports": [
+      "integrate_blocks",
+      "make_consensus_state",
+      "apply_consensus_state"
+    ]
+  },
+  "dependencies": {
+    "imports": [
+      "digest",
+      "jsonlite",
+      "jsonvalidate",
+      "yaml",
+      "limma"
+    ],
+    "suggests": [
+      "BiocManager",
+      "renv",
+      "testthat"
+    ],
+    "new_dependencies": []
+  },
+  "stage_registry": {
+    "A": {
+      "validation_only": true,
+      "execution": true
+    },
+    "B": {
+      "validation_only": false,
+      "execution": true
+    },
+    "C": {
+      "validation_only": false,
+      "execution": false
+    },
+    "D": {
+      "validation_only": false,
+      "execution": false
+    },
+    "report": {
+      "validation_only": false,
+      "execution": false
+    },
+    "all": {
+      "validation_only": false,
+      "execution": false
+    }
+  },
+  "lockfile": "renv.lock",
+  "integration_owner": "Sol",
+  "owned_functions": [
+    "integrate_blocks",
+    "triomics_integration_eligibility",
+    "triomics_validate_integration_result",
+    "triomics_integration_backend",
+    "triomics_integration_backend_names",
+    "triomics_integration_pca_fit",
+    "triomics_integration_pca_apply",
+    "make_consensus_state",
+    "apply_consensus_state"
+  ],
+  "namespace_edits": false,
+  "schema_edits": false,
+  "dependency_edits": false,
+  "request": "Sol owns NAMESPACE, R/cli.R, R/stage_registry.R, DESCRIPTION, inst/schema/config.schema.json, and renv.lock. Export integrate_blocks, make_consensus_state, and apply_consensus_state. Register execution for stage C and wire the source and installed-package CLI to obtain the keyed ResolvedAnalysis values from the accepted B predecessor, add the enclosing analysis block_ids to each declared integration request, and call integrate_blocks(resolved_analysis, integration_spec). Enable only concat_pca; keep concat_plsda, concat_pls, mixomics_diablo, mixomics_block_spls, and mofa2 unavailable with typed C_SCORE_BACKEND_UNAVAILABLE. Preserve required/optional status and report each target unit's eligibility disposition; never construct intersections from matrix columns or summaries. The C-01 fixture uses two synthetic B input blocks and one required exploratory concat_pca request. No new package, schema, or lockfile change is requested. Re-run the exact C-01 test command and synthetic stage-C CLI command on the integrated snapshot; the current CLI attempt exits 3 before parsing the config with A_STAGE_UNAVAILABLE because C execution is not yet registered. The YAML itself loads and its declared method is concat_pca."
+}
