@@ -21,6 +21,29 @@ triomics_c01_pick_ids <- function(primary, fallback) {
   if (!is.null(primary)) primary else fallback
 }
 
+triomics_c01_optional_identity <- function(block, fields, code, block_id) {
+  present_fields <- fields[fields %in% names(block)]
+  if (!length(present_fields)) return(NA_character_)
+  values <- lapply(present_fields, function(field) block[[field]])
+  valid_values <- vapply(values, function(value) {
+    is.character(value) && length(value) == 1L && !is.na(value) && nzchar(value)
+  }, logical(1))
+  if (!all(valid_values)) {
+    triomics_integration_abort(
+      code, "Block identity evidence must be one non-blank character value when supplied.",
+      key = block_id
+    )
+  }
+  values <- unlist(values, use.names = FALSE)
+  if (any(values != values[[1L]])) {
+    triomics_integration_abort(
+      code, "Block identity evidence conflicts across supplied identity fields.",
+      key = block_id
+    )
+  }
+  values[[1L]]
+}
+
 triomics_integration_eligibility <- function(resolved_analysis, integration_spec) {
   if (!is.list(resolved_analysis) || !is.list(integration_spec)) {
     triomics_integration_abort(
@@ -42,6 +65,13 @@ triomics_integration_eligibility <- function(resolved_analysis, integration_spec
   requested_block_ids <- triomics_c01_ids(
     requested_block_ids, "block_ids", "C_ELIGIBILITY_BLOCK_MAP"
   )
+  if (length(requested_block_ids) < 2L) {
+    triomics_integration_abort(
+      "C_ELIGIBILITY_BLOCK_COUNT",
+      "C-01 integration requires at least two requested predictor blocks.",
+      key = "block_ids"
+    )
+  }
   missing_blocks <- setdiff(requested_block_ids, available_block_ids)
   if (length(missing_blocks)) {
     triomics_integration_abort(
@@ -127,32 +157,16 @@ triomics_integration_eligibility <- function(resolved_analysis, integration_spec
 
     block_sample_sets[[block_id]] <- sample_ids
     block_features[[block_id]] <- feature_keys
-    block_studies[[block_id]] <- if (is.character(block$study_id) &&
-                                      length(block$study_id) == 1L &&
-                                      !is.na(block$study_id) && nzchar(block$study_id)) {
-      block$study_id
-    } else {
-      NA_character_
-    }
-    block_context <- block$preparation_context_id
-    block_contexts[[block_id]] <- if (is.character(block_context) &&
-                                       length(block_context) == 1L &&
-                                       !is.na(block_context) && nzchar(block_context)) {
-      block_context
-    } else {
-      NA_character_
-    }
-    block_representation <- triomics_c01_pick_ids(
-      block$representation_id, block$representation
+    block_studies[[block_id]] <- triomics_c01_optional_identity(
+      block, "study_id", "C_ELIGIBILITY_STUDY_MISMATCH", block_id
     )
-    block_representations[[block_id]] <- if (is.character(block_representation) &&
-                                              length(block_representation) == 1L &&
-                                              !is.na(block_representation) &&
-                                              nzchar(block_representation)) {
-      block_representation
-    } else {
-      NA_character_
-    }
+    block_contexts[[block_id]] <- triomics_c01_optional_identity(
+      block, "preparation_context_id", "C_ELIGIBILITY_CONTEXT_MISMATCH", block_id
+    )
+    block_representations[[block_id]] <- triomics_c01_optional_identity(
+      block, c("representation_id", "representation"),
+      "C_ELIGIBILITY_REPRESENTATION_MISMATCH", block_id
+    )
   }
 
   if (is.null(explicit_unit_ids)) {
@@ -192,24 +206,29 @@ triomics_integration_eligibility <- function(resolved_analysis, integration_spec
   if (!is.character(study_id) || length(study_id) != 1L || is.na(study_id) || !nzchar(study_id)) {
     triomics_integration_abort("C_ELIGIBILITY_STUDY_MISMATCH", "Resolved analysis needs one study id.")
   }
-  if (anyNA(block_studies) || any(block_studies != study_id)) {
+  if (any(!is.na(block_studies) & block_studies != study_id)) {
     triomics_integration_abort(
       "C_ELIGIBILITY_STUDY_MISMATCH", "All integration blocks must belong to the resolved study.",
       key = "study_id"
     )
   }
   if (!is.character(root_context) || length(root_context) != 1L || is.na(root_context) ||
-      !nzchar(root_context) ||
-      anyNA(block_contexts) || any(block_contexts != root_context)) {
+      !nzchar(root_context)) {
     triomics_integration_abort(
       "C_ELIGIBILITY_CONTEXT_MISMATCH",
-      "All integration blocks must use the resolved preparation context.", key = "preparation_context_id"
+      "Resolved analysis needs one preparation context id.", key = "preparation_context_id"
+    )
+  }
+  if (any(!is.na(block_contexts) & block_contexts != root_context)) {
+    triomics_integration_abort(
+      "C_ELIGIBILITY_CONTEXT_MISMATCH",
+      "A supplied block preparation context conflicts with the resolved context.",
+      key = "preparation_context_id"
     )
   }
   if (!is.character(root_representation) || length(root_representation) != 1L ||
       is.na(root_representation) || !nzchar(root_representation) ||
-      anyNA(block_representations) ||
-      any(block_representations != root_representation)) {
+      any(!is.na(block_representations) & block_representations != root_representation)) {
     triomics_integration_abort(
       "C_ELIGIBILITY_REPRESENTATION_MISMATCH",
       "All integration blocks must use the same declared representation.", key = "representation"
@@ -273,12 +292,14 @@ triomics_integration_eligibility <- function(resolved_analysis, integration_spec
   rownames(unit_status) <- NULL
 
   training_missing <- vapply(training_unit_ids, function(unit_id) {
-    !all(vapply(required_availability, function(view) isTRUE(view[[unit_id]]), logical(1)))
+    !all(vapply(block_availability[requested_block_ids], function(view) {
+      isTRUE(view[[unit_id]])
+    }, logical(1)))
   }, logical(1))
   if (any(training_missing)) {
     triomics_integration_abort(
       "C_ELIGIBILITY_TRAINING_MISSING",
-      "Every training unit must have every required view; the integration stage does not intersect rows.",
+      "Every PCA training unit must have every requested predictor block; the integration stage does not intersect rows.",
       key = "training_unit_ids"
     )
   }

@@ -139,6 +139,12 @@ triomics_integration_backend <- function(method) {
 }
 
 integrate_blocks <- function(resolved_analysis, integration_spec) {
+  if (!is.list(resolved_analysis) || !is.list(integration_spec)) {
+    triomics_integration_abort(
+      "C_ELIGIBILITY_INPUT_INVALID",
+      "Resolved analysis and integration specification must be lists."
+    )
+  }
   if (is.list(integration_spec$block_ids) && length(integration_spec$block_ids) &&
       all(vapply(integration_spec$block_ids, function(block_id) {
         is.character(block_id) && length(block_id) == 1L && !is.na(block_id)

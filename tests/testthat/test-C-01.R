@@ -457,3 +457,105 @@ testthat::test_that("C-01 public integration seam dispatches only the registered
     "C_SCORE_BACKEND_UNAVAILABLE"
   )
 })
+
+c01_b_resolved_fixture <- function(fixture) {
+  units <- fixture$units
+  prepared_study <- list(
+    study_id = fixture$resolved$study_id,
+    sample_metadata = data.frame(
+      sample_id = units,
+      group = c(rep("control", length(units) / 2L), rep("treatment", length(units) / 2L)),
+      stringsAsFactors = FALSE
+    ),
+    declared_factor_levels = list(group = c("control", "treatment")),
+    assays = fixture$blocks,
+    feature_registry = NULL,
+    assay_hashes = NULL,
+    analysis_unit_map = data.frame(
+      unit_id = units,
+      representation_id = rep("levels", length(units)),
+      stringsAsFactors = FALSE
+    ),
+    sample_registry = NULL
+  )
+  analysis_spec <- list(
+    analysis_id = fixture$resolved$analysis_id,
+    block_ids = names(fixture$blocks),
+    preparation_context_id = fixture$resolved$preparation_context_id,
+    design = list(
+      kind = "independent",
+      condition = "group",
+      condition_type = "factor",
+      repeated = FALSE,
+      representation = "levels",
+      reference_level = "control",
+      target_level = "treatment",
+      subject_id = NULL,
+      covariates = list()
+    )
+  )
+  triomics_resolve_analysis(prepared_study, analysis_spec)
+}
+
+testthat::test_that("C-01 consumes the actual B resolver result through the public seam", {
+  fixture <- c01_fixture()
+  resolved <- c01_b_resolved_fixture(fixture)
+  testthat::expect_identical(resolved$study_id, fixture$resolved$study_id)
+  testthat::expect_identical(resolved$preparation_context_id, fixture$resolved$preparation_context_id)
+  testthat::expect_identical(resolved$representation, "levels")
+  testthat::expect_false(any(c("study_id", "preparation_context_id", "representation_id") %in%
+                             names(resolved$blocks$plasma_renamed)))
+
+  spec <- fixture$spec
+  spec$method <- "concat_pca"
+  result <- integrate_blocks(resolved, spec)
+  testthat::expect_s3_class(result, "IntegrationResult")
+  testthat::expect_identical(result$params$provenance$study_id, resolved$study_id)
+  testthat::expect_identical(result$params$provenance$preparation_context_id,
+                             resolved$preparation_context_id)
+  testthat::expect_identical(result$params$provenance$representation_id, resolved$representation)
+})
+
+testthat::test_that("C-01 refuses fewer than two requested predictor blocks", {
+  fixture <- c01_fixture()
+  spec <- fixture$spec
+  spec$method <- "concat_pca"
+  spec$block_ids <- fixture$spec$block_ids[1L]
+  c01_error_code(
+    integrate_blocks(fixture$resolved, spec),
+    "C_ELIGIBILITY_BLOCK_COUNT"
+  )
+})
+
+testthat::test_that("C-01 rejects missing training coverage in every requested PCA block", {
+  fixture <- c01_fixture()
+  resolved <- fixture$resolved
+  missing_training_unit <- fixture$units[[4L]]
+  resolved$blocks$metabolite_set$assay <- resolved$blocks$metabolite_set$assay[
+    , setdiff(colnames(resolved$blocks$metabolite_set$assay), missing_training_unit), drop = FALSE
+  ]
+  resolved$blocks$metabolite_set$sample_ids <- colnames(resolved$blocks$metabolite_set$assay)
+  spec <- fixture$spec
+  spec$method <- "concat_pca"
+  spec$training_unit_ids <- fixture$units[1:4]
+  spec$target_unit_ids <- fixture$units
+  spec$required_views <- "plasma_renamed"
+  c01_error_code(
+    integrate_blocks(resolved, spec),
+    "C_ELIGIBILITY_TRAINING_MISSING"
+  )
+})
+
+testthat::test_that("C-01 public integration seam types malformed arguments", {
+  fixture <- c01_fixture()
+  spec <- fixture$spec
+  spec$method <- "concat_pca"
+  c01_error_code(
+    integrate_blocks(fixture$resolved, 1),
+    "C_ELIGIBILITY_INPUT_INVALID"
+  )
+  c01_error_code(
+    integrate_blocks(1, spec),
+    "C_ELIGIBILITY_INPUT_INVALID"
+  )
+})
