@@ -521,9 +521,17 @@ testthat::test_that("variance qualification failure keeps the native BackendFit"
     },
     where = asNamespace("triomics"), print = FALSE
   )
-  on.exit(untrace("triomics_block_spls_variance", where = asNamespace("triomics")), add = TRUE)
+  # A second untrace of an unexported installed binding fails closed.
+  # Remove the trace once, whether fit returns or throws.
+  c04_untrace_variance <- function() {
+    fn <- get("triomics_block_spls_variance", envir = asNamespace("triomics"), inherits = FALSE)
+    if (methods::is(fn, "traceable")) {
+      untrace("triomics_block_spls_variance", where = asNamespace("triomics"))
+    }
+  }
+  on.exit(c04_untrace_variance(), add = TRUE)
   fit <- adapter$fit(training, spec)
-  untrace("triomics_block_spls_variance", where = asNamespace("triomics"))
+  c04_untrace_variance()
   testthat::expect_s3_class(fit, "BackendFit")
   testthat::expect_s3_class(fit$native_state$model, "block.spls")
   testthat::expect_false(is.null(fit$native_state$response_diagnostics))
@@ -567,4 +575,7 @@ testthat::test_that("C-04 registration request records the applied shared contra
     testthat::expect_identical(registration$integration_backends$method, "mixomics_block_spls")
     testthat::expect_identical(registration$shared_changes_for_sol$file, "R/integration_contract.R")
   }
+  adapter <- triomics_integration_backend("mixomics_block_spls")
+  testthat::expect_s3_class(adapter, "BackendAdapter")
+  testthat::expect_identical(adapter$evaluation_modes, "continuous")
 })
