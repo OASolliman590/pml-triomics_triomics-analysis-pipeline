@@ -36,13 +36,23 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "c03_review_changes_required",
+    "status": "c03_repair1_landed_awaiting_rereview",
     "last_reconciled": "2026-10-19",
-    "active_handoffs": ["C-03-repair-1", "C-04"],
+    "active_handoffs": ["C-04"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Astra returned changes_required on C-03 commit 9758b4a. C-03 is not accepted and mixomics_diablo is not registered. Repair 1 is limited to the four C-03 files. C-04 remains in progress. C-05 stays closed until MOFA2 and mofapy2 exist."
+    "disposition": "C-03 repair 1 is landed at 826725f and is not accepted. mixomics_diablo is not registered. A focused rereview of the four Important findings is required. C-04 remains in progress. C-05 stays closed until MOFA2 and mofapy2 exist."
   },
   "orchestration_events": [
+    {
+      "event": "c03_repair1_landed_not_accepted",
+      "date": "2026-10-19",
+      "commit": "826725f",
+      "tests": "test_local filter C-03: 77 passed, 0 failed, 0 warnings, 0 skips, 4.8s",
+      "shared_registration": false,
+      "acceptance": [],
+      "allowed_next_transition": "One focused Astra rereview of the four Important findings on 826725f. Do not accept C-03 or register mixomics_diablo before that review. C-08 and every D packet stay closed.",
+      "disposition": "Sol reran the repaired suite before the commit. The repair does not accept C-03."
+    },
     {
       "event": "c03_astra_changes_required",
       "date": "2026-10-19",

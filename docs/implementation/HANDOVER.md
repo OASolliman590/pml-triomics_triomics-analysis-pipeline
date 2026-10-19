@@ -165,10 +165,10 @@ the first predictor block only; native component mismatch still fails closed.
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `execution-ledger.json`, and this handover. C-01 and C-02 are accepted on synthetic software evidence. G5 is released.
-C-03 adapter commit `9758b4a` received Astra verdict `changes_required`
-(thread `01a15375-51b5-7940-880d-e90c14552e73`). Repair 1 is in progress on
-the four allowlisted files. Do not register `mixomics_diablo` and do not
-accept C-03 in that repair. C-04 may finish on its allowlist. C-05 stays
+C-03 repair 1 is commit `826725f`. Sol reran the suite: 77 passed, 0
+failed, 0 warnings, 0 skips. It is not accepted. Do not register
+`mixomics_diablo` before the focused rereview of the four Important
+findings. C-04 may finish on its allowlist. C-05 stays
 closed until MOFA2 and mofapy2 exist. Do not start
 C-08 or any D packet. Do not loosen
 the B-T04 0.08 bound or reroll seeds 1001:1400. Do not edit frozen
