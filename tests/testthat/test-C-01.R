@@ -364,10 +364,12 @@ testthat::test_that("C-01 consensus refuses absent views, undefined alignment, a
   c01_error_code(apply_consensus_state(list(alpha = one), state), "C_SCORE_REQUIRED_VIEW_MISSING")
 })
 
-testthat::test_that("C-01 adapter registry exposes only the implemented concatenation PCA route", {
+testthat::test_that("the adapter registry exposes only accepted integration routes", {
   adapter <- triomics_integration_backend("concat_pca")
   testthat::expect_true(all(c("validate", "fit", "predict", "extract") %in% names(adapter)))
-  testthat::expect_setequal(triomics_integration_backend_names(), "concat_pca")
+  testthat::expect_setequal(
+    triomics_integration_backend_names(), c("concat_pca", "concat_plsda", "concat_pls")
+  )
   c01_error_code(triomics_integration_backend("mixomics_diablo"), "C_SCORE_BACKEND_UNAVAILABLE")
 })
 

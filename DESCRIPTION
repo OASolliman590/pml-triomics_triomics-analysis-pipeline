@@ -12,6 +12,7 @@ Imports:
     jsonvalidate,
     limma,
     methods,
+    mixOmics,
     MultiAssayExperiment,
     S4Vectors,
     SummarizedExperiment,

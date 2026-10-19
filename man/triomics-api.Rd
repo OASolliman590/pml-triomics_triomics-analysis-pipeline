@@ -18,6 +18,7 @@
 \alias{triomics_execute_clinical_associations}
 \alias{triomics_b08_endpoint_hash}
 \alias{integrate_blocks}
+\alias{evaluate_pipeline}
 \alias{make_consensus_state}
 \alias{apply_consensus_state}
 \alias{associate_longitudinal_endpoints}
@@ -36,8 +37,9 @@ endpoint hashes.
 The longitudinal entry points fit declared between-person, within-person,
 baseline-to-later, or effect-modification clinical objectives when their
 mode-specific requirements and eligible inputs are available.
-The integration entry points fit the registered concatenation-PCA adapter and
-apply the frozen multiblock consensus-score convention.
+The integration entry points fit registered concatenation adapters, apply the
+frozen multiblock consensus-score convention, and run leakage-safe nested
+supervised evaluation.
 }
 \usage{
 simulate_study(
@@ -97,6 +99,8 @@ triomics_b08_endpoint_hash(endpoint)
 
 integrate_blocks(resolved_analysis, integration_spec)
 
+evaluate_pipeline(study, analysis_spec, integration_spec, split_plan)
+
 make_consensus_state(native_scores, native_loadings, training_units, params)
 
 apply_consensus_state(native_scores, state)
@@ -136,6 +140,8 @@ triomics_execute_longitudinal_associations(config_path, output)
   \item{statistics_spec}{Declared statistical fitting specification.}
   \item{integration_spec}{Declared integration method, block, unit, scaling,
   selection, and evaluation settings.}
+  \item{study}{Assembled study containing the registered sample and assay maps.}
+  \item{split_plan}{Validated subject- or sample-disjoint nested split plan.}
   \item{native_scores}{Named list of block-native score matrices with stable
   unit and component identities.}
   \item{native_loadings}{Named list of block-native loading matrices used to
@@ -177,7 +183,9 @@ objectives, privacy-scrubbed
 clinical results, or an endpoint hash. Clinical and longitudinal association
 functions return typed objective, family, audit, and result records.
 \code{integrate_blocks()} returns the protected six-field
-\code{IntegrationResult}; the consensus functions return a frozen state or a
+\code{IntegrationResult}; \code{evaluate_pipeline()} returns fold-level
+predictions, metrics, failure dispositions, and fit-budget evidence; the
+consensus functions return a frozen state or a
 unit-by-component score matrix. Unsupported
 inputs return a named unavailable status or a typed CLI error rather than
 substituting an analysis.

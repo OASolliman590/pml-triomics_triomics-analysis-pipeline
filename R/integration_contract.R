@@ -106,7 +106,7 @@ triomics_new_integration_result <- function(scores, loadings, variance, selected
 }
 
 triomics_integration_backend_names <- function() {
-  "concat_pca"
+  c("concat_pca", "concat_plsda", "concat_pls")
 }
 
 triomics_integration_backend <- function(method) {
@@ -118,6 +118,9 @@ triomics_integration_backend <- function(method) {
       key = "integration.method",
       remediation = "Select the registered concat_pca route or wait for the backend packet and acceptance review."
     )
+  }
+  if (method %in% c("concat_plsda", "concat_pls")) {
+    return(triomics_supervised_backend(method))
   }
   structure(
     list(
@@ -132,7 +135,8 @@ triomics_integration_backend <- function(method) {
       },
       extract = function(backend_fit, context, params) {
         triomics_integration_pca_backend_extract(backend_fit, context, params)
-      }
+      },
+      evaluation_modes = character()
     ),
     class = "BackendAdapter"
   )

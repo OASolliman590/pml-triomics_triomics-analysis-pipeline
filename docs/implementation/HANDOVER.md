@@ -70,27 +70,95 @@ completed managed worktrees remain archived.
 The user-owned `.gitignore` and AppleDouble files remain untouched. The
 git-ignored `.superpowers/` contains review packages only and remains untracked.
 
-## Paused C-01 handoff
+## 18 October specification re-evaluation
 
-Fresh Luna-max implementer `/root/c_01_luna` was interrupted at Omar's explicit
-pause request. Its isolated managed
-worktree `/Users/megastore/.codex/worktrees/c-01-integration-foundation/PML
-MultiOmics Analysis Pipeline` remains at immutable base `945ef8c`. It contains
-one uncommitted allowlisted file, `tests/testthat/test-C-01.R` (SHA-256
-`6eb0aca4f9a6c974d68b1a46f6e17aa0e7509f3dde749d702b51ed63fef881da`), with
-367 lines of initial behavioral tests. No implementation file, candidate commit,
-review, integration or acceptance exists yet. The coordinator did not run the
-partial suite after interruption. No worker or polling is active. Private study
-data were not accessed.
+The documentation-only review in
+`reviews/2026-10-18-spec-kit-reevaluation.md` compared all 29 frozen
+requirements with the accepted A and B implementation. It found 7 requirements
+verified on synthetic software evidence, 15 partially implemented, and 7 with
+no accepted implementation. It made no scientific-contract or product-code
+change. The separate 17 October local workbook inventory is now recorded as
+inventory only. It is not a pipeline fit or biological validation. The two
+Notion sync receipts record successful read-back, while GitHub publication
+remains unverified and the current CLI token is invalid. Initial Astra review
+confirmed all 29 requirement classifications and found one P2 lifecycle-record
+issue. The focused rereview passed after correction, with no new P0 or P1.
+
+## Accepted C-01 handoff
+
+Omar explicitly resumed implementation on 2026-10-18. Fresh Luna-max chat
+`01a14fdb-c11f-7e13-836e-e87635a89f23` continued the same C-01 initial
+attempt in the preserved isolated worktree
+`/Users/megastore/.codex/worktrees/c-01-integration-foundation/PML MultiOmics
+Analysis Pipeline` at base `945ef8c`. The attempt counter remains 1. Before
+dispatch, the worktree contained only the preserved allowlisted file
+`tests/testthat/test-C-01.R` (SHA-256
+`6eb0aca4f9a6c974d68b1a46f6e17aa0e7509f3dde749d702b51ed63fef881da`). The
+worker produced clean allowlisted candidate
+`5e43391155643732289a2cfc3d2a27fdbcd3b416`. Fresh Sol-6.1-high review
+returned changes required: P0 0, P1 2, P2 2. Luna repair 1 fixed actual
+B-resolver identity compatibility, the two-block minimum, complete-view typed
+refusal and malformed public-input typing. The single focused rereview passed
+with P0/P1/P2 all zero. Sol integrated the candidate as `b5527ef`, repair as
+`1cf1632`, and shared registration as `40caa9f`. The exact C-01 suite passed 109
+expectations, the exact stage-C CLI exited 0 with a valid complete envelope, and
+clean archive package check ended `Status: OK`. C-01-AC1 through AC4 are
+accepted on synthetic software evidence. Private study data remain untouched.
+Acceptance receipts are commit `38bc7dc`. The three run-owned chats are archived
+and the C-01 worktree is archived with a recoverable snapshot. C-02 is released;
+C-03/C-04/C-05 remain behind G5.
+
+## Active C-02 handoff
+
+Fresh Luna-max chat `01a15056-fa00-79b3-867c-538f1a004894` completed C-02
+candidate `809190e` in isolated worktree
+`/Users/megastore/.codex/worktrees/c-02-supervised-evaluation/PML MultiOmics
+Analysis Pipeline` at base `38bc7dc`. The worktree was clean and the C-01
+baseline passed 109 expectations before dispatch. `mixOmics 6.36.0` is installed
+and the C-02 suite passed 61 expectations with no failure, warning or skip. The
+worker reported an invalid `ticket_id` CLI key, partial AC3/AC4 evidence, an
+interrupted package check and pending shared registration, so acceptance was not
+claimed. Fresh read-only Sol-6.1-high review chat
+`01a1506e-9b59-7241-8c33-6a1a6da05423` returned `changes_required`: zero
+Critical, eight Important and two Minor findings. The review is
+`/private/tmp/triomics-c-02-sol-review-2026-10-18.md` and the review chat is
+archived. Targeted repair 1 is active in the original Luna chat. It is confined
+to matched metrics, fold counts/subject provenance, generic adapter dispatch,
+native-output failure handling, a valid CLI fixture, preparation-failure ledger,
+uncertainty disposition and the missing leakage/budget tests. No integration or
+G5 release is authorized yet.
+
+## 19 October C-02 registration
+
+Commits `a3a1cfd`, `249e2d0` and `2f4e8e4` closed review findings F01–F08.
+Luna high rechecked that tree, changed no files, and reported 17 cases and 131
+assertions passing. Astra low had already returned a code-only pass on the same
+range and did not rerun tests. Sol then applied the shared registration:
+`mixOmics` in DESCRIPTION and `renv.lock`, `evaluate_pipeline` exported,
+`concat_plsda` and `concat_pls` registered, and stage C dispatching nested
+evaluation. The allowlisted splits helper is commit `028f7c8`.
+
+The integrated C-02 suite passed 165 expectations with no failures, warnings
+or skips. A-T05, including the empty-filter guard, passed 127. The command
+
+`Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-02.yaml --stage C --output artifacts/acceptance/C-02`
+
+was run against a fresh temporary directory and exited 0. The synthetic
+`concat_plsda` result predicted 12/12 eligible units, with balanced error 0 and
+8 inspected fits. One inner fold requested `ncomp=2` at training rank 1 and
+failed closed as `C_EVAL_COMPONENT_RANK`. The fixture `min_observed` is 1
+because an inner training side can contain two samples. That accuracy is a
+property of the tiny synthetic fixture, not a biological result.
+
+C-02 is not accepted. G5 is not released. The clean package check and one
+immutable M5 Astra review are still required.
 
 ## Literal resume instruction
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
-`execution-ledger.json`, this handover, the M4 milestone and M4-G4 review
-receipts. Verify HEAD and dirty state. G4 is accepted. After Omar explicitly says
-to resume, inspect the preserved C-01 test file and continue the same initial
-attempt in the preserved worktree with Luna-max; do not increment its attempt
-counter. Obtain one fresh Sol-6.1-high review only after a committed candidate.
-Integrate only after a passing review, then run the named C-01 gates and record
-Sol acceptance. Do not dispatch C-02 before C-01 acceptance, and do not dispatch
-C-03/C-04/C-05 before G5.
+`execution-ledger.json`, and this handover. C-01 is accepted. C-02 code and
+shared registration are verified and not accepted. Run a clean package check,
+then one immutable M5 Astra review. Do not dispatch C-03, C-04, C-05, or any D
+packet before C-02 acceptance and the M5 review that releases G5. Do not loosen
+the B-T04 0.08 bound or reroll seeds 1001:1400. Do not edit frozen
+`discovery/spec-v2` content. Leave private study data unread.

@@ -142,6 +142,13 @@ triomics_shared_filter_prevalence <- function(se, params) {
       stringsAsFactors = FALSE
     )
   }
+  if (!any(keep)) {
+    triomics_abort(
+      "A_STATE_PARTIAL", "Prevalence filtering removed every feature.",
+      key = "filter", module = "preparation", stage = "A",
+      remediation = "Declare a minimum the training samples can meet, and keep at least one observed feature."
+    )
+  }
   se <- se[keep, , drop = FALSE]
   triomics <- triomics_meta(se)
   triomics$feature_flow <- do.call(rbind, flow)

@@ -44,5 +44,5 @@
     "Keep the registered method ids and adapter interface aligned with C-01 BackendAdapter and BackendFit.",
     "Do not enable methods or routes that are unavailable in the accepted milestone snapshot."
   ],
-  "applied_to_shared_files": false
+  "applied_to_shared_files": true
 }

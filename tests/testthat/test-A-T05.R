@@ -576,6 +576,19 @@ testthat::test_that("A-T05-AC4 zeros, reference mismatch, all-missing features a
   testthat::expect_false(isTRUE(flow_row(filtered, "gone")$retained[[1L]]))
   testthat::expect_identical(as.character(flow_row(filtered, "gone")$reason[[1L]]), "below_min_observed")
   testthat::expect_equal(vector_at(filtered, "keep", "s1"), log2(6), tolerance = 1e-8)
+  expect_code(
+    prepare_fit(
+      assemble_block(empty, mask = empty_mask),
+      fit_spec(
+        new_dir("a-t05-all-dropped-"), c("s1", "s2"),
+        triomics_metabolomics_operations(
+          filter_method = "prevalence", min_observed = 3L, transform = "none"
+        ),
+        "all-dropped"
+      )
+    ),
+    "A_STATE_PARTIAL"
+  )
 
   ids <- c("s1", "s2", "s3", "s4", "s5")
   groups <- c("control", "control", "treatment", "treatment", "treatment")

@@ -428,10 +428,11 @@ testthat::test_that("candidate adapter parameters survive evaluation candidate e
 testthat::test_that("public evaluation enforces registration while packet adapters remain directly testable", {
   c02_error(triomics_evaluation_backend("concat_pca", "categorical"),
             "C_EVAL_CAPABILITY_UNAVAILABLE")
-  c02_error(triomics_evaluation_backend("concat_plsda", "categorical"),
-            "C_SCORE_BACKEND_UNAVAILABLE")
+  registered <- triomics_evaluation_backend("concat_plsda", "categorical")
+  testthat::expect_s3_class(registered, "BackendAdapter")
+  testthat::expect_identical(registered$evaluation_modes, "categorical")
   c02_error(evaluate_pipeline(NULL, NULL, list(method = "concat_plsda"), NULL),
-            "C_SCORE_BACKEND_UNAVAILABLE")
+            "A_STATE_SPLIT")
   adapter <- triomics_supervised_backend("concat_plsda")
   testthat::expect_s3_class(adapter, "BackendAdapter")
   testthat::expect_identical(adapter$evaluation_modes, "categorical")
@@ -609,4 +610,64 @@ testthat::test_that("inner-held-out mutation leaves learned preparation state an
   testthat::expect_identical(original_inner$output_scale, "log2")
   testthat::expect_identical(original_inner$pqn_reference_scale,
                              changed_inner$pqn_reference_scale)
+})
+
+# C02-SPLITS
+
+c02_split_plan <- function() {
+  ids <- sprintf("unit-%02d", seq_len(16L))
+  subject_ids <- rep(sprintf("subject-%02d", seq_len(8L)), each = 2L)
+  triomics_nested_split_plan(
+    ids, subject_ids = subject_ids, n_outer = 2L, n_inner = 2L, seed = 19L, target = "outcome"
+  )
+}
+
+testthat::test_that("C02 split provenance returns nonempty disjoint subjects from the validated plan", {
+  plan <- c02_split_plan()
+  for (fold in plan$folds) {
+    sides <- triomics_c02_subjects_from_split(plan, fold$fold_id)
+    testthat::expect_named(sides, c("train", "test"))
+    testthat::expect_type(sides$train, "character")
+    testthat::expect_type(sides$test, "character")
+    testthat::expect_true(length(sides$train) > 0L && length(sides$test) > 0L)
+    testthat::expect_length(intersect(sides$train, sides$test), 0L)
+    testthat::expect_setequal(sides$train, fold$training_subject_ids)
+    testthat::expect_setequal(sides$test, fold$test_subject_ids)
+  }
+  inner <- plan$folds[[1L]]$inner[[1L]]
+  inner_sides <- triomics_c02_subjects_from_split(plan, inner$fold_id)
+  testthat::expect_setequal(inner_sides$train, inner$training_subject_ids)
+  testthat::expect_setequal(inner_sides$test, inner$test_subject_ids)
+  testthat::expect_length(intersect(inner_sides$train, inner_sides$test), 0L)
+})
+
+testthat::test_that("C02 split provenance collapses a subject repeated within one side only", {
+  plan <- c02_split_plan()
+  fold <- plan$folds[[1L]]
+  sides <- triomics_c02_subjects_from_split(plan, fold$fold_id)
+  units <- plan$unit_subject
+  repeated_train <- units$subject_id[units$unit_id %in% fold$training_unit_ids]
+  repeated_test <- units$subject_id[units$unit_id %in% fold$test_unit_ids]
+
+  testthat::expect_true(anyDuplicated(repeated_train) > 0L)
+  testthat::expect_true(anyDuplicated(repeated_test) > 0L)
+  testthat::expect_identical(anyDuplicated(sides$train), 0L)
+  testthat::expect_identical(anyDuplicated(sides$test), 0L)
+  testthat::expect_setequal(sides$train, unique(repeated_train))
+  testthat::expect_setequal(sides$test, unique(repeated_test))
+  testthat::expect_length(sides$train, length(fold$training_unit_ids) / 2L)
+  testthat::expect_length(intersect(sides$train, sides$test), 0L)
+})
+
+testthat::test_that("C02 split provenance fails explicitly for a missing fold and an empty side", {
+  plan <- c02_split_plan()
+  err <- c02_error(triomics_c02_subjects_from_split(plan, "outer_99"), "C02_SPLIT_PROVENANCE")
+  testthat::expect_match(conditionMessage(err), "outer_99")
+  c02_error(triomics_c02_subjects_from_split(plan, NA_character_), "C02_SPLIT_PROVENANCE")
+
+  for (side in c("training_unit_ids", "test_unit_ids")) {
+    empty <- plan
+    empty$folds[[1L]][[side]] <- character()
+    c02_error(triomics_c02_subjects_from_split(empty, "outer_01"), "C02_SPLIT_PROVENANCE")
+  }
 })

@@ -36,13 +36,211 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "paused_by_user_c01_initial_attempt_preserved",
-    "last_reconciled": "2026-10-16",
+    "status": "c02_registration_verified_pending_package_check_and_m5",
+    "last_reconciled": "2026-10-19",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar explicitly paused the run while moving out of the office. The C-01 Luna worker was interrupted. Its isolated worktree is preserved with one uncommitted allowlisted RED test file and no implementation or integration commit. No worker or polling remains active."
+    "disposition": "C-02 findings F01-F08 are closed in 2f4e8e4. Shared registration is applied and the synthetic stage C command exits 0 with 12/12 nested predictions. C-02 is not accepted. G5 is not released. Package check and the immutable M5 Astra review remain before any C-03 dispatch."
   },
   "orchestration_events": [
+    {
+      "event": "c02_shared_registration_verified_not_accepted",
+      "date": "2026-10-19",
+      "code_commits": ["a3a1cfd", "249e2d0", "2f4e8e4"],
+      "splits_commit": "028f7c8",
+      "luna_recheck": "F01-F08 closed; 17 cases and 131 assertions on the pre-registration tree; no files changed",
+      "astra_recheck": "read-only pass on a3a1cfd..2f4e8e4; tests were not rerun by that reviewer",
+      "sol_c02_suite": "165 expectations, 0 failures, 0 warnings, 0 skips",
+      "sol_a_t05_suite": "127 expectations, 0 failures, 0 warnings, 0 skips",
+      "cli": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-02.yaml --stage C exited 0. Synthetic concat_plsda nested CV predicted 12/12 eligible units, balanced error 0, 8 inspected fits. ncomp=2 on a rank-1 inner fold failed closed as C_EVAL_COMPONENT_RANK.",
+      "fixture_change": "C-02.yaml min_observed moved from 3 to 1 so a two-sample inner training fold can retain observed features. This is a synthetic fixture choice.",
+      "allowed_next_transition": "run a clean package check, then one immutable M5 Astra review. Do not accept C-02 or release G5 before both. Do not start C-03, C-04, C-05, or any D packet.",
+      "disposition": "Software evidence only. The perfect synthetic accuracy is not a biological result. Private study data were not read or fitted."
+    },
+    {
+      "event": "c02_repair1_focused_rereview_findings_remain_repair2_dispatched",
+      "date": "2026-10-18",
+      "rereview_thread_id": "01a15090-d307-7b60-be3e-c0a8bc8a8b0c",
+      "implementer_thread_id": "01a15056-fa00-79b3-867c-538f1a004894",
+      "repair1_commit": "6535bea961bad463fd403504f7c9e45a481cd4b0",
+      "verdict": "findings_remain",
+      "finding_status": {"addressed": 7, "not_addressed": 1, "new_critical": 0, "new_important": 1},
+      "rereview_ref": "/private/tmp/triomics-c-02-repair1-sol-rereview-2026-10-18.md",
+      "repair": 2,
+      "allowed_next_transition": "after final repair, Sol inspects F04/N01 diff and applies shared registration plus fresh integrated tests; no further packet repair or focused rereview is authorized",
+      "disposition": "Final repair is limited to removing the pre-registration adapter bypass and separating categorical baseline prediction status from model failures."
+    },
+    {
+      "event": "c02_repair1_focused_sol_rereview_dispatched",
+      "date": "2026-10-18",
+      "thread_id": "01a15090-d307-7b60-be3e-c0a8bc8a8b0c",
+      "implementer_thread_id": "01a15056-fa00-79b3-867c-538f1a004894",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "fix_base": "809190e62589b3e7d26c656fbdc3e8c21a37810c",
+      "repair_commit": "6535bea961bad463fd403504f7c9e45a481cd4b0",
+      "repair_files": 4,
+      "focused_evidence": "16 cases; 119 expectations; 0 failures, warnings or skips; CLI schema/path validation reaches C_SCORE_BACKEND_UNAVAILABLE",
+      "allowed_next_transition": "if F01-F08 are all addressed with no new Critical/Important breakage, integrate serially and apply Sol-owned registration; otherwise use final repair only for remaining load-bearing findings",
+      "disposition": "This is the one allowed focused rereview of the initial C-02 review findings."
+    },
+    {
+      "event": "c02_fresh_sol_review_changes_required_repair1_dispatched",
+      "date": "2026-10-18",
+      "review_thread_id": "01a1506e-9b59-7241-8c33-6a1a6da05423",
+      "implementer_thread_id": "01a15056-fa00-79b3-867c-538f1a004894",
+      "candidate_commit": "809190e62589b3e7d26c656fbdc3e8c21a37810c",
+      "verdict": "changes_required",
+      "findings": {"critical": 0, "important": 8, "minor": 2},
+      "review_ref": "/private/tmp/triomics-c-02-sol-review-2026-10-18.md",
+      "repair": 1,
+      "allowed_next_transition": "wait for repair 1, then one focused fresh Sol-6.1-high rereview of F01-F08 and new repair breakage",
+      "disposition": "Repair is limited to matched metrics, ledger counts/provenance/failures, generic adapter dispatch, native-output validation, valid CLI fixture, uncertainty disposition and specified leakage evidence."
+    },
+    {
+      "event": "c02_candidate_fresh_sol_review_dispatched",
+      "date": "2026-10-18",
+      "thread_id": "01a1506e-9b59-7241-8c33-6a1a6da05423",
+      "implementer_thread_id": "01a15056-fa00-79b3-867c-538f1a004894",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "base_commit": "38bc7dcecf121b9cf2f80efd9adbd19a1171cb6f",
+      "candidate_commit": "809190e62589b3e7d26c656fbdc3e8c21a37810c",
+      "candidate_files": 5,
+      "focused_evidence": "8 cases; 61 expectations; 0 failures, warnings or skips; mixOmics 6.36.0",
+      "reported_gaps": "CLI exits 2 on unknown ticket_id; AC3 and AC4 partial; package check stopped after tarball creation; shared registration pending",
+      "allowed_next_transition": "if changes_required, send targeted repair 1 to the original Luna; if pass, integrate serially and perform Sol-owned registration",
+      "disposition": "Reviewer is read-only and may not implement, merge, accept, dispatch or access private data."
+    },
+    {
+      "event": "c02_initial_attempt_luna_dispatched",
+      "date": "2026-10-18",
+      "thread_id": "01a15056-fa00-79b3-867c-538f1a004894",
+      "host_id": "local",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "attempt": 1,
+      "worktree": "/Users/megastore/.codex/worktrees/c-02-supervised-evaluation/PML MultiOmics Analysis Pipeline",
+      "base_commit": "38bc7dcecf121b9cf2f80efd9adbd19a1171cb6f",
+      "runtime": "mixOmics 6.36.0",
+      "baseline": "C-01: 109 expectations; 0 failures, warnings or skips",
+      "allowed_next_transition": "wait for a committed allowlisted candidate, inspect it, then obtain one fresh Sol-6.1-high review before integration",
+      "disposition": "Worker is confined to the six C-02 allowlisted paths and public synthetic data; no private study input is in scope."
+    },
+    {
+      "event": "c01_accepted_after_integrated_verification",
+      "date": "2026-10-18",
+      "initial_integration_commit": "b5527ef",
+      "repair_integration_commit": "1cf1632",
+      "shared_registration_commit": "40caa9f",
+      "acceptance_receipt_commit": "38bc7dc",
+      "review_ref": "docs/implementation/reviews/C-01-sol-review.md",
+      "verification_ref": "docs/implementation/reviews/C-01-integration-verification.md",
+      "focused_evidence": "109 expectations; 0 failures, warnings or skips",
+      "cli": "exact C-01 stage-C command exited 0; complete concat_pca payload and valid envelope",
+      "package_check": "Status: OK; 0 ERROR, 0 WARNING, 0 NOTE",
+      "acceptance": ["C-01-AC1", "C-01-AC2", "C-01-AC3", "C-01-AC4"],
+      "allowed_next_transition": "dispatch C-02 in a fresh isolated Luna-max worktree; do not release G5-dependent packets until C-02 acceptance and M5 Astra review",
+      "disposition": "C-01 accepted on public synthetic software evidence only. No real-study or biological validation is claimed."
+    },
+    {
+      "event": "c01_repair1_focused_sol_rereview_dispatched",
+      "date": "2026-10-18",
+      "thread_id": "01a14ffa-2dab-7cd2-8919-413d9c2c159e",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "initial_candidate": "5e43391155643732289a2cfc3d2a27fdbcd3b416",
+      "repair_commit": "e47715d6f3df20fd4fb2063d3d95e4139b3dce9d",
+      "repair_files": 4,
+      "focused_evidence": "109 expectations; 0 failures, warnings or skips; synthetic B-resolver-to-C seam passed",
+      "allowed_next_transition": "if pass with no new P0/P1, serially integrate candidate and perform Sol-owned registration; otherwise apply the packet's final targeted repair or block honestly",
+      "disposition": "This is the one allowed focused rereview of the initial review findings."
+    },
+    {
+      "event": "c01_fresh_sol_review_changes_required_repair1_dispatched",
+      "date": "2026-10-18",
+      "review_thread_id": "01a14fee-1976-7881-b4a4-183981d8e182",
+      "implementer_thread_id": "01a14fdb-c11f-7e13-836e-e87635a89f23",
+      "candidate_commit": "5e43391155643732289a2cfc3d2a27fdbcd3b416",
+      "verdict": "changes_required",
+      "findings": {"p0": 0, "p1": 2, "p2": 2},
+      "review_ref": "/private/tmp/triomics-c-01-sol-review-2026-10-18.md",
+      "repair": 1,
+      "allowed_next_transition": "wait for the repair commit, then run one focused fresh Sol-6.1-high rereview of the four findings",
+      "disposition": "Integration is prohibited. Repair is limited to actual B handoff compatibility, two-block minimum, complete-view typed refusal, and malformed public-spec typed validation."
+    },
+    {
+      "event": "c01_candidate_fresh_sol_review_dispatched",
+      "date": "2026-10-18",
+      "thread_id": "01a14fee-1976-7881-b4a4-183981d8e182",
+      "host_id": "local",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "base_commit": "945ef8c0c62cc5515a231494bc111327b6ae4f84",
+      "candidate_commit": "5e43391155643732289a2cfc3d2a27fdbcd3b416",
+      "candidate_files": 7,
+      "focused_evidence": "13 cases; 93 expectations; 0 failures, warnings or skips",
+      "cli_state": "expected A_STAGE_UNAVAILABLE pending Sol-owned registration",
+      "allowed_next_transition": "if pass, inspect and serially integrate candidate plus bounded shared registration; if changes_required, send one targeted repair to the same Luna attempt",
+      "disposition": "The reviewer is read-only and may not implement, merge, accept, dispatch or access private data."
+    },
+    {
+      "event": "c01_initial_attempt_resumed_luna_dispatched",
+      "date": "2026-10-18",
+      "thread_id": "01a14fdb-c11f-7e13-836e-e87635a89f23",
+      "host_id": "local",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "attempt": 1,
+      "worktree": "/Users/megastore/.codex/worktrees/c-01-integration-foundation/PML MultiOmics Analysis Pipeline",
+      "base_commit": "945ef8c",
+      "preserved_test_sha256": "6eb0aca4f9a6c974d68b1a46f6e17aa0e7509f3dde749d702b51ed63fef881da",
+      "allowed_next_transition": "wait for a committed allowlisted candidate, then obtain one fresh Sol-6.1-high review before integration",
+      "disposition": "This resumes the same initial attempt. The worker may not write shared registration, ledger, canonical spec, private data or non-allowlisted files."
+    },
+    {
+      "event": "spec_kit_reevaluation_focused_astra_rereview_passed",
+      "date": "2026-10-18",
+      "reviewer": "/root/spec_reevaluation_astra",
+      "review_ref": "docs/implementation/reviews/2026-10-18-spec-kit-reevaluation-focused-astra-rereview.md",
+      "verdict": "pass",
+      "finding": "initial P2 lifecycle bookkeeping issue addressed",
+      "new_findings": {"p0": 0, "p1": 0},
+      "allowed_next_transition": "remain paused; after Omar explicitly resumes, continue the same C-01 initial attempt and obtain fresh Sol-6.1-high review only after a committed candidate",
+      "disposition": "The requirement matrix and evidence boundaries are reviewed. No scientific-contract change, implementation, packet acceptance or publication occurred."
+    },
+    {
+      "event": "spec_kit_reevaluation_initial_astra_changes_required_p2_corrected",
+      "date": "2026-10-18",
+      "reviewer": "/root/spec_reevaluation_astra",
+      "review_ref": "docs/implementation/reviews/2026-10-18-spec-kit-reevaluation-astra-review.md",
+      "verdict": "changes_required",
+      "findings": {"p0": 0, "p1": 0, "p2": 1},
+      "correction": "The orchestration disposition now distinguishes the active read-only reviewer from implementation workers. C-01 remains paused at attempt 1.",
+      "allowed_next_transition": "run one focused read-only Astra rereview of the bookkeeping correction, then restore the paused C-01 state with no active worker",
+      "disposition": "The reviewer confirmed all 29 requirement classifications and evidence boundaries. No scientific-contract change is required."
+    },
+    {
+      "event": "spec_kit_reevaluation_astra_review_dispatched",
+      "date": "2026-10-18",
+      "agent_name": "/root/spec_reevaluation_astra",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "effective_settings_exposed": false,
+      "reviewer_brief_ref": "docs/implementation/reviews/2026-10-18-spec-kit-reevaluation-review-brief.md",
+      "allowed_next_transition": "record the read-only verdict, apply documentation-only corrections if required, then restore the explicit C-01 pause with no active worker",
+      "disposition": "The reviewer cannot edit, accept packets, change the scientific contract, publish, or start implementation."
+    },
+    {
+      "event": "spec_kit_reevaluation_documentation_only",
+      "date": "2026-10-18",
+      "base_commit": "605244fe377ff2db8b145f1628274ab791b455a6",
+      "review_ref": "docs/implementation/reviews/2026-10-18-spec-kit-reevaluation.md",
+      "reviewer_brief_ref": "docs/implementation/reviews/2026-10-18-spec-kit-reevaluation-review-brief.md",
+      "requirements": {"verified": 7, "partial": 15, "missing": 7, "total": 29},
+      "allowed_next_transition": "keep C-01 paused; after Omar explicitly resumes, continue the same initial attempt and obtain fresh Sol-6.1-high review only after a committed candidate",
+      "disposition": "No scientific contract, packet identity, product code, private input, acceptance, publication, threshold or seed changed. Live evidence files were reconciled to the 17 October inventory and Notion read-back receipts."
+    },
     {
       "event": "user_paused_c01_initial_attempt_worker_interrupted",
       "date": "2026-10-16",
@@ -2358,15 +2556,18 @@
       "blockers": []
     },
     "C-01": {
-      "status": "initial_attempt_paused_by_user",
+      "status": "accepted",
       "attempts": 1,
-      "commit": null,
-      "acceptance_refs": [],
+      "commit": "40caa9f",
+      "acceptance_refs": [
+        "docs/implementation/reviews/C-01-sol-review.md",
+        "docs/implementation/reviews/C-01-integration-verification.md"
+      ],
       "blockers": []
     },
     "C-02": {
-      "status": "not_started",
-      "attempts": 0,
+      "status": "final_repair2_active",
+      "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": []
@@ -2552,7 +2753,7 @@
       "blocking_packets": []
     },
     "M5": {
-      "status": "paused_by_user_c01_initial_attempt",
+      "status": "c02_initial_attempt_active",
       "review_ref": null,
       "commit": null
     },
@@ -2587,7 +2788,12 @@
     "branch": "spec/harden-v2-20260920",
     "push_verified": false,
     "pr": null,
-    "notion_synced": false
+    "notion_synced": true,
+    "notion_sync_date": "2026-10-17",
+    "notion_sync_refs": [
+      "docs/implementation/notion-sync/2026-10-17-pipeline-development-github-report.md",
+      "docs/implementation/notion-sync/2026-10-17-three-study-dataset-handover.md"
+    ]
   },
   "close_state": "open_active"
 }

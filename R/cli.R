@@ -176,6 +176,209 @@ triomics_c01_result_payload <- function(result) {
   )
 }
 
+triomics_c02_block_operations <- function(block) {
+  preprocessing <- block$preprocessing
+  filter_method <- if (!is.null(preprocessing$filter$prevalence) ||
+                       !is.null(preprocessing$filter$min_observed)) "prevalence" else "none"
+  derive <- if (length(preprocessing$derive)) preprocessing$derive else "none"
+  profile <- block$profile
+  if (identical(profile, "proteomics")) {
+    return(triomics_proteomics_operations(
+      filter_method = filter_method,
+      transform = preprocessing$transform$method,
+      normalise = preprocessing$normalisation$method,
+      impute = preprocessing$imputation$method,
+      min_observed = preprocessing$filter$min_observed,
+      prevalence = preprocessing$filter$prevalence,
+      zero_policy = preprocessing$transform$zero_policy,
+      zero_value = preprocessing$transform$zero_value,
+      reference = preprocessing$normalisation$reference,
+      scope = preprocessing$filter$scope,
+      stratum = preprocessing$filter$stratum,
+      selection_justification = preprocessing$filter$selection_justification,
+      derive = derive,
+      tail_probability = preprocessing$imputation$tail_probability,
+      scale_multiplier = preprocessing$imputation$scale_multiplier
+    ))
+  }
+  if (identical(profile, "metabolomics")) {
+    return(triomics_metabolomics_operations(
+      filter_method = filter_method,
+      transform = preprocessing$transform$method,
+      normalise = preprocessing$normalisation$method,
+      impute = preprocessing$imputation$method,
+      min_observed = preprocessing$filter$min_observed,
+      prevalence = preprocessing$filter$prevalence,
+      zero_policy = preprocessing$transform$zero_policy,
+      zero_value = preprocessing$transform$zero_value,
+      reference = preprocessing$normalisation$reference,
+      reference_file = preprocessing$normalisation$reference_file,
+      scope = preprocessing$filter$scope,
+      stratum = preprocessing$filter$stratum,
+      selection_justification = preprocessing$filter$selection_justification,
+      k = preprocessing$imputation$k,
+      trees = preprocessing$imputation$trees,
+      derive = derive
+    ))
+  }
+  if (identical(profile, "lipidomics")) {
+    return(triomics_lipidomics_operations(
+      filter_method = filter_method,
+      transform = preprocessing$transform$method,
+      normalise = preprocessing$normalisation$method,
+      impute = preprocessing$imputation$method,
+      min_observed = preprocessing$filter$min_observed,
+      prevalence = preprocessing$filter$prevalence,
+      zero_policy = preprocessing$transform$zero_policy,
+      zero_value = preprocessing$transform$zero_value,
+      reference_set = preprocessing$transform$reference_set,
+      log_base = preprocessing$transform$log_base,
+      scope = preprocessing$filter$scope,
+      metadata_column = preprocessing$normalisation$metadata_column,
+      standards_map = preprocessing$normalisation$standards_map,
+      derive = derive
+    ))
+  }
+  triomics_integration_abort(
+    "C_EVAL_PREPARATION_INVALID",
+    paste0("Block profile '", profile, "' has no registered fold-preparation route."),
+    key = block$block_id
+  )
+}
+
+triomics_c02_json_safe <- function(value) {
+  if (inherits(value, "table")) {
+    matrix_value <- unclass(value)
+    return(list(
+      rows = rownames(matrix_value),
+      columns = colnames(matrix_value),
+      values = unname(lapply(seq_len(nrow(matrix_value)), function(i) {
+        unname(as.list(as.integer(matrix_value[i, , drop = TRUE])))
+      }))
+    ))
+  }
+  if (is.list(value) && !is.data.frame(value)) {
+    return(lapply(value, triomics_c02_json_safe))
+  }
+  value
+}
+
+triomics_c02_evaluation_payload <- function(result) {
+  fold_summaries <- lapply(result$outer_folds, function(fold) {
+    fold[setdiff(names(fold), c("backend_fit", "common_result", "training_transforms"))]
+  })
+  payload <- list(
+    mode = result$mode,
+    method = result$method,
+    native_version = result$native_version,
+    split_plan_hash = result$split_plan_hash,
+    outer_folds = fold_summaries,
+    predictions = result$predictions,
+    metrics = triomics_c02_json_safe(result$metrics),
+    baseline_comparison = triomics_c02_json_safe(result$baseline_comparison),
+    uncertainty = result$uncertainty,
+    failures = result$failures,
+    requested_folds = result$requested_folds,
+    n_eligible = result$n_eligible,
+    n_predicted = result$n_predicted,
+    failed_prediction_count = result$failed_prediction_count,
+    n_ineligible = result$n_ineligible,
+    total_denominator = result$total_denominator,
+    inspected_fit_count = result$inspected_fit_count,
+    max_fits = result$max_fits
+  )
+  triomics_c02_json_safe(payload)
+}
+
+triomics_c02_evaluate_request <- function(config, ingested, analysis, request,
+                                           block_ids, unit_ids, output) {
+  block_config <- stats::setNames(config$blocks, vapply(config$blocks, `[[`, character(1), "block_id"))
+  block_specs <- lapply(block_ids, function(block_id) {
+    block <- block_config[[block_id]]
+    triomics_export_ensure_profile(block$profile)
+    list(
+      block_id = block_id,
+      profile_id = block$profile,
+      operations = triomics_c02_block_operations(block)
+    )
+  })
+  descriptive_blocks <- lapply(block_specs, function(block) {
+    block$operations <- lapply(block$operations, function(operation) {
+      if (identical(operation$stage, "impute")) {
+        operation$method <- "none"
+        operation$apply <- NULL
+      }
+      operation
+    })
+    block
+  })
+  display_names <- stats::setNames(vapply(block_ids, function(block_id) {
+    as.character(block_config[[block_id]]$name)
+  }, character(1)), block_ids)
+  outcome <- request$outcome
+  assembled_input <- ingested
+  assembled_input$sample_registry[[outcome]] <- ingested$sample_metadata[[outcome]]
+  assembled <- triomics_assemble_study(
+    assembled_input, alignment = "strict", display_names = display_names
+  )
+  evaluation <- request$evaluation
+  subject_column <- analysis$design$subject_id
+  subject_ids <- if (identical(evaluation$generalization_unit, "subject") &&
+                     is.character(subject_column) && length(subject_column) == 1L &&
+                     nzchar(subject_column)) {
+    as.character(ingested$sample_metadata[[subject_column]])
+  } else unit_ids
+  stratification <- if (is.character(evaluation$stratification) &&
+                        length(evaluation$stratification) == 1L &&
+                        nzchar(evaluation$stratification)) {
+    as.character(ingested$sample_metadata[[evaluation$stratification]])
+  } else NULL
+  split_plan <- triomics_nested_split_plan(
+    unit_ids,
+    subject_ids = subject_ids,
+    n_outer = evaluation$outer_folds,
+    n_inner = evaluation$inner_folds,
+    seed = config$execution$seed,
+    stratification = stratification,
+    target = outcome
+  )
+  levels <- ingested$declared_factor_levels[[outcome]]
+  outcome_spec <- if (!is.null(levels)) {
+    list(column = outcome, type = "categorical", levels = as.character(levels))
+  } else list(column = outcome, type = "continuous")
+  state_root <- file.path(output, "C", "state", request$integration_id)
+  analysis_spec <- list(
+    analysis_id = analysis$analysis_id,
+    outcome = outcome_spec,
+    predictive_spec = list(
+      preparation_context_id = paste0(analysis$preparation_context_id, "__predictive"),
+      seed = config$execution$seed,
+      state_dir = file.path(state_root, "predictive"),
+      blocks = block_specs
+    ),
+    descriptive_spec = list(
+      preparation_context_id = paste0(analysis$preparation_context_id, "__descriptive"),
+      training_unit_ids = unit_ids,
+      seed = config$execution$seed,
+      state_dir = file.path(state_root, "descriptive"),
+      blocks = descriptive_blocks
+    )
+  )
+  n_components <- as.integer(request$n_components)
+  integration_spec <- request
+  integration_spec$block_ids <- block_ids
+  integration_spec$candidates <- lapply(seq_len(n_components), function(component) {
+    list(id = paste0("ncomp-", component), ncomp = component)
+  })
+  integration_spec$max_fits <- evaluation$max_fits
+  integration_spec$ncomp <- n_components
+  integration_spec$task_mode <- outcome_spec$type
+  integration_spec$required_views <- block_ids
+  triomics_c02_evaluation_payload(
+    evaluate_pipeline(assembled, analysis_spec, integration_spec, split_plan)
+  )
+}
+
 triomics_execute_stage_c <- function(config_path, output) {
   if (!is.character(output) || length(output) != 1L || is.na(output) || !nzchar(output)) {
     triomics_abort(
@@ -240,6 +443,18 @@ triomics_execute_stage_c <- function(config_path, output) {
   resolved <- triomics_resolve_analysis(study, analysis)
 
   integration_results <- lapply(requests, function(request) {
+    if (identical(request$evaluation$mode, "nested_cv")) {
+      evaluation <- triomics_c02_evaluate_request(
+        config, ingested, analysis, request, block_ids, unit_ids, output
+      )
+      return(list(
+        integration_id = request$integration_id,
+        method = request$method,
+        required = isTRUE(request$required),
+        status = "complete",
+        evaluation = evaluation
+      ))
+    }
     spec <- request
     spec$block_ids <- block_ids
     spec$unit_ids <- unit_ids
