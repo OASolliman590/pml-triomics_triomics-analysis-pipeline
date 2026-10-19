@@ -511,17 +511,19 @@ testthat::test_that("variance qualification failure keeps the native BackendFit"
   spec <- c04_spec(ncomp = 2L)
   box <- new.env(parent = emptyenv())
   box$n <- 0L
+  # The variance helper is not exported. R CMD check cannot resolve the bare
+  # symbol, so the installed suite traces it by name inside the namespace.
   trace(
-    triomics_block_spls_variance,
+    "triomics_block_spls_variance",
     tracer = function() {
       box$n <- box$n + 1L
       if (identical(box$n, 1L)) stop(simpleError("forced variance failure"))
     },
     where = asNamespace("triomics"), print = FALSE
   )
-  on.exit(untrace(triomics_block_spls_variance, where = asNamespace("triomics")), add = TRUE)
+  on.exit(untrace("triomics_block_spls_variance", where = asNamespace("triomics")), add = TRUE)
   fit <- adapter$fit(training, spec)
-  untrace(triomics_block_spls_variance, where = asNamespace("triomics"))
+  untrace("triomics_block_spls_variance", where = asNamespace("triomics"))
   testthat::expect_s3_class(fit, "BackendFit")
   testthat::expect_s3_class(fit$native_state$model, "block.spls")
   testthat::expect_false(is.null(fit$native_state$response_diagnostics))
