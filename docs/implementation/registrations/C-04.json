@@ -1,0 +1,60 @@
+{
+  "packet_id": "C-04",
+  "request_type": "shared_registration",
+  "implementation_base": "4384b29526d900a2c4de939718497202a5e4fba6",
+  "dependencies": [
+    {
+      "package": "mixOmics",
+      "observed_version": "6.36.0",
+      "required_for": ["mixomics_block_spls"],
+      "already_declared_by": "C-02 registration"
+    }
+  ],
+  "exports": [],
+  "integration_backends": [
+    {
+      "method": "mixomics_block_spls",
+      "adapter_factory": "triomics_block_spls_backend",
+      "task_mode": "continuous",
+      "evaluation_modes": ["continuous"],
+      "classification": false,
+      "native_fit": "mixOmics::block.spls(mode = 'regression', Y = n x 1 response, design explicit, keepX per predictor block, keepY = 1)",
+      "native_prediction": "stats::predict AveragedPredict on the original response scale",
+      "common_result": "consensus_mean over predictor-block native variates; common loadings, variance and selected contain predictor blocks only"
+    }
+  ],
+  "cli_registration": {
+    "stage": "C",
+    "service": "evaluate_pipeline",
+    "enabled": false,
+    "requested_enabled": true,
+    "note": "Sol enables this only after the shared integration contract change below is applied."
+  },
+  "shared_changes_for_sol": [
+    {
+      "file": "R/integration_contract.R",
+      "change": "Add 'mixomics_block_spls' to triomics_integration_backend_names() and add a dispatch branch in triomics_integration_backend(method) that returns triomics_block_spls_backend().",
+      "reason": "Without it the public evaluate_pipeline and the stage C CLI refuse the method with C_SCORE_BACKEND_UNAVAILABLE."
+    }
+  ],
+  "no_change_required_in": [
+    "R/cli.R: the request fields are consumed through schema names (outcome -> response block, design_matrix -> design, n_components -> ncomp); keepX may be one count per block, recycled across candidates.",
+    "R/evaluation.R: triomics_evaluation_core is called with the packet adapter directly by the tests.",
+    "DESCRIPTION, NAMESPACE, renv.lock: no new export or dependency."
+  ],
+  "tests_that_change_when_registered": [
+    "tests/testthat/test-C-04.R 'C-04 registration boundary' asserts the public registry refuses mixomics_block_spls until this registration is applied; update that expectation when applying the change."
+  ],
+  "known_gaps": [
+    "inst/examples/tickets/C-04.yaml names a numeric outcome column 'score'. The existing synthetic metadata at inst/examples/data/independent/metadata.tsv has only sample_id and a categorical group column, so the stage C run cannot ingest a continuous response from the current example data."
+  ],
+  "coordinator_owned_files_to_update": [
+    "R/integration_contract.R",
+    "R/cli.R",
+    "R/stage_registry.R",
+    "DESCRIPTION",
+    "NAMESPACE",
+    "renv.lock"
+  ],
+  "applied_to_shared_files": false
+}
