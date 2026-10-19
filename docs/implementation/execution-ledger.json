@@ -36,13 +36,24 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "c02_accepted_g5_released",
+    "status": "c03_adapter_landed_not_accepted",
     "last_reconciled": "2026-10-19",
-    "active_handoffs": [],
+    "active_handoffs": ["C-04"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-02 is accepted on synthetic software evidence at 1a8cbe4 after the immutable M5 review. G5 is released for C-03, C-04, and C-05 only. No biological validation is claimed."
+    "disposition": "C-03 adapter is landed at 9758b4a on synthetic software evidence and is not accepted. mixomics_diablo is not registered. C-04 is in progress. C-05 stays closed until MOFA2 and mofapy2 exist. No biological validation is claimed."
   },
   "orchestration_events": [
+    {
+      "event": "c03_adapter_landed_not_accepted",
+      "date": "2026-10-19",
+      "commit": "9758b4a",
+      "tests": "test_local filter C-03: 57 passed, 0 failed, 0 warnings, 0 skips, 7.8s",
+      "cli": "stage C fixture exited 2 with C_SCORE_BACKEND_UNAVAILABLE before ingest",
+      "shared_registration": false,
+      "acceptance": [],
+      "allowed_next_transition": "One Astra low read-only review of 9758b4a before any C-03 acceptance or mixomics_diablo registration. C-04 may finish on its allowlist. C-05 stays closed until MOFA2 and mofapy2 exist. C-08 and every D packet stay closed.",
+      "disposition": "Sol reran the C-03 suite and the CLI probe. The adapter commit does not accept C-03 and does not put DIABLO on the public CLI."
+    },
     {
       "event": "c02_accepted_g5_released",
       "date": "2026-10-19",

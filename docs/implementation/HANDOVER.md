@@ -155,11 +155,19 @@ C-02 is accepted on synthetic software evidence. The M5 review thread
 Important findings and did not rerun tests. G5 is released for C-03, C-04,
 and C-05. C-08 and every D packet remain closed.
 
+C-03 code is commit `9758b4a`. Sol reran `test_local(filter='C-03')`: 57
+passed, 0 failed, 0 warnings, 0 skips, 7.8 seconds. The stage C fixture
+exited 2 with `C_SCORE_BACKEND_UNAVAILABLE` before ingest. Shared registration
+is not applied, and C-03 is not accepted. The rank guard currently measures
+the first predictor block only; native component mismatch still fails closed.
+
 ## Literal resume instruction
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `execution-ledger.json`, and this handover. C-01 and C-02 are accepted on synthetic software evidence. G5 is released.
-C-03, C-04, and C-05 may proceed on their own allowlists. Do not start C-08
-or any D packet. Do not loosen
+C-03 adapter is landed at `9758b4a` and is not accepted. Do not register
+`mixomics_diablo` before the Astra review of that commit. C-04 may finish on
+its allowlist. C-05 stays closed until MOFA2 and mofapy2 exist. Do not start
+C-08 or any D packet. Do not loosen
 the B-T04 0.08 bound or reroll seeds 1001:1400. Do not edit frozen
 `discovery/spec-v2` content. Leave private study data unread.

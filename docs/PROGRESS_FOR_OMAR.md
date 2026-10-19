@@ -15,16 +15,19 @@ The C-02 suite passed 165 checks. The synthetic stage C command exited 0 and
 predicted all 12 fixture samples with nested concatenation PLS-DA. A two-sample
 inner fold that asked for more components than its rank failed explicitly.
 C-02 is accepted as synthetic software evidence. The M5 review found no
-blocking defect, so DIABLO, block.spls, and MOFA may start. Later Stage C and
-all Stage D packets stay closed.
+blocking defect, so DIABLO, block.spls, and MOFA may start. The DIABLO adapter
+is now in the local branch as software code only. It is not accepted, and the
+command-line route still refuses `mixomics_diablo`. Later Stage C and all
+Stage D packets stay closed.
 
 **Not established:** Accepted evidence remains synthetic software evidence, not
 biological validation. A separate local inventory reviewed the three private
 study workbooks, but the accepted pipeline has not fitted them. B-T04’s ordinary
 23/400 diagnostic remains failed; only its frozen production route passed.
 
-**Next:** C-03, C-04, and C-05 are the next legal packets. C-08 and every D
-packet still wait on their own dependencies.
+**Next:** C-03 needs an independent review before it can be accepted. C-04 is
+the other open block.spls packet. C-05 waits on a MOFA2 and mofapy2
+environment. C-08 and every D packet still wait on their own dependencies.
 
 **Needs Omar:** Decide when the clean, reviewed local history may be published.
 No private study data may enter GitHub or Notion.
