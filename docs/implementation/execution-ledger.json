@@ -44,6 +44,18 @@
   },
   "orchestration_events": [
     {
+      "event": "c05_fail_closed_draft_not_accepted",
+      "date": "2026-10-19",
+      "tests": "test_local filter C-05 on the integration tree: 46 passed, 0 failed, 0 warnings, 0 skips, 2.1s",
+      "method": "mofa2",
+      "shared_registration": false,
+      "ac1_training": "absent",
+      "install": "MOFA2 and mofapy2 are not installed. The isolated install was not run.",
+      "acceptance": [],
+      "allowed_next_transition": "Do not accept C-05 or register mofa2 until a real MOFA2+mofapy2 train, save and reload passes. C-08 and every D packet stay closed.",
+      "disposition": "The draft returns an unavailable state when either runtime is missing and aborts C_SCORE_BACKEND_UNAVAILABLE when both load, because training is not implemented. No factors, weights or variance are produced."
+    },
+    {
       "event": "c03_package_check_failed_c04_registered_not_accepted",
       "date": "2026-10-19",
       "head": "6ea8d20",

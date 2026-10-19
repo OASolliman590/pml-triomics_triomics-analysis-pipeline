@@ -186,6 +186,9 @@ rereview of `6ea8d20` passed with the three Important findings closed
 and no new Critical or Important defect. See
 `reviews/2026-10-19-c04-repair-rereview.md`. That pass does not accept
 C-04. MOFA2 and mofapy2 are not installed, so C-05 AC1
-cannot be claimed. Do not start C-08 or any D packet. Do not loosen the
+cannot be claimed. A fail-closed `mofa2` draft is on the tree and is not
+registered or accepted. Its suite passed 46 expectations. A missing
+runtime returns an unavailable state and does not claim a trained model.
+Do not start C-08 or any D packet. Do not loosen the
 B-T04 0.08 bound or reroll seeds 1001:1400. Do not edit frozen
 `discovery/spec-v2` content. Leave private study data unread.
