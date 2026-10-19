@@ -184,17 +184,22 @@ triomics_diablo_validate <- function(resolved_analysis, params) {
       "C_SCORE_PARAMETER", "DIABLO requires a supported native distance prediction rule.", key = "prediction_rule"
     )
   }
-  centered_rank <- min(nrow(assays[[block_ids[[1L]]]]) - 1L,
-                       qr(scale(assays[[block_ids[[1L]]]], center = TRUE, scale = FALSE), tol = 1e-10)$rank)
-  if (ncomp > centered_rank) {
+  centered_ranks <- vapply(assays, function(value) {
+    min(nrow(value) - 1L,
+        qr(scale(value, center = TRUE, scale = FALSE), tol = 1e-10)$rank)
+  }, integer(1L))
+  available_rank <- min(centered_ranks)
+  if (ncomp > available_rank) {
     triomics_diablo_abort(
-      "C_SCORE_COMPONENT_RANK", "DIABLO components exceed the available training rank.", key = "n_components"
+      "C_SCORE_COMPONENT_RANK",
+      paste0("DIABLO components exceed the minimum predictor-block training rank ", available_rank, "."),
+      key = "n_components"
     )
   }
   list(
     block_ids = block_ids, units = units, assays = assays, outcome = factor(outcome, levels = declared_levels),
     class_levels = declared_levels, design = design, ncomp = ncomp, keepX = keepX,
-    prediction_rule = params$prediction_rule
+    prediction_rule = params$prediction_rule, available_rank = as.integer(available_rank)
   )
 }
 
@@ -214,10 +219,13 @@ triomics_diablo_native_matrix <- function(value, block_id, label, units = NULL, 
 
 triomics_diablo_native_variance <- function(model, block_ids, components) {
   values <- model$prop_expl_var
-  if (!is.list(values) || is.null(names(values)) || any(!block_ids %in% names(values))) {
+  if (!is.list(model$X) || is.null(names(model$X)) || !is.list(model$variates) ||
+      is.null(names(model$variates)) || !is.list(values) || is.null(names(values)) ||
+      any(!block_ids %in% names(model$X)) || any(!block_ids %in% names(model$variates)) ||
+      any(!block_ids %in% names(values))) {
     triomics_diablo_abort(
       "C_SCORE_VARIANCE_UNAVAILABLE",
-      "Native DIABLO predictor-block variance is absent or not keyed by predictor block.", key = "prop_expl_var"
+      "Native DIABLO predictor-block variance inputs are absent or not keyed by predictor block.", key = "prop_expl_var"
     )
   }
   output <- matrix(NA_real_, nrow = length(block_ids), ncol = length(components),
@@ -230,12 +238,48 @@ triomics_diablo_native_variance <- function(model, block_ids, components) {
         paste0("Native DIABLO variance for predictor block '", block_id, "' is not component-keyed."), key = block_id
       )
     }
-    output[block_id, ] <- as.numeric(current[components])
-  }
-  if (any(!is.finite(output)) || any(output < 0 | output > 1)) {
-    triomics_diablo_abort(
-      "C_SCORE_VARIANCE_UNAVAILABLE", "Native DIABLO predictor-block variance is non-finite or outside [0, 1].", key = "prop_expl_var"
-    )
+    native_values <- as.numeric(current[components])
+    if (any(!is.finite(native_values)) || any(native_values < 0 | native_values > 1)) {
+      triomics_diablo_abort(
+        "C_SCORE_VARIANCE_UNAVAILABLE",
+        paste0("Native DIABLO variance for predictor block '", block_id, "' is non-finite or outside [0, 1]."),
+        key = block_id
+      )
+    }
+    x <- model$X[[block_id]]
+    scores <- model$variates[[block_id]]
+    if (!is.matrix(x) || !is.numeric(x) || is.complex(x) ||
+        !is.matrix(scores) || !is.numeric(scores) || is.complex(scores) ||
+        is.null(colnames(scores)) || any(!components %in% colnames(scores)) ||
+        nrow(x) != nrow(scores) || any(!is.finite(x)) || any(!is.finite(scores))) {
+      triomics_diablo_abort(
+        "C_SCORE_VARIANCE_UNAVAILABLE",
+        paste0("Native DIABLO variance cannot be recomputed for predictor block '", block_id, "'."),
+        key = block_id
+      )
+    }
+    block_denominator <- sum(x^2)
+    if (!is.finite(block_denominator) || block_denominator <= 0) {
+      triomics_diablo_abort(
+        "C_SCORE_VARIANCE_UNAVAILABLE",
+        paste0("Predictor block '", block_id, "' has no positive fitted Frobenius denominator."), key = block_id
+      )
+    }
+    recomputed <- vapply(components, function(component) {
+      t <- scores[, component]
+      score_denominator <- sum(t^2)
+      if (!is.finite(score_denominator) || score_denominator <= 0) return(NA_real_)
+      sum(crossprod(x, t)^2) / (score_denominator * block_denominator)
+    }, numeric(1L))
+    if (any(!is.finite(recomputed)) || any(recomputed < 0 | recomputed > 1) ||
+        any(abs(recomputed - native_values) > 1e-8 * pmax(1, abs(recomputed), abs(native_values)))) {
+      triomics_diablo_abort(
+        "C_SCORE_VARIANCE_UNAVAILABLE",
+        paste0("Native DIABLO variance disagrees with the verified predictor-block formula for '", block_id, "'."),
+        key = block_id
+      )
+    }
+    output[block_id, ] <- native_values
   }
   attr(output, "metric") <- "native_block_splsda_proportion"
   attr(output, "units") <- "proportion"
@@ -260,6 +304,17 @@ triomics_diablo_support <- function(native_loadings, block_ids, components) {
     loadings[[block_id]] <- value
   }
   list(loadings = loadings, selected = selected)
+}
+
+triomics_diablo_oriented_loadings <- function(native_loadings, consensus_state, block_ids, components) {
+  oriented <- stats::setNames(vector("list", length(block_ids)), block_ids)
+  for (block_id in block_ids) {
+    current <- native_loadings[[block_id]][, components, drop = FALSE]
+    oriented[[block_id]] <- sweep(
+      current, 2L, consensus_state$signs[block_id, components], "*"
+    )
+  }
+  oriented
 }
 
 triomics_diablo_validate_state <- function(state) {
@@ -308,9 +363,11 @@ triomics_diablo_fit <- function(resolved_analysis, params) {
     native_scores, native_loadings, eligibility$units,
     list(required_views = eligibility$block_ids, score_definition = "consensus_mean")
   )
-  consensus_scores <- apply_consensus_state(native_scores, consensus_state)
   variance <- triomics_diablo_native_variance(native_fit, eligibility$block_ids, components)
-  support <- triomics_diablo_support(native_loadings, eligibility$block_ids, components)
+  oriented_loadings <- triomics_diablo_oriented_loadings(
+    native_loadings, consensus_state, eligibility$block_ids, components
+  )
+  support <- triomics_diablo_support(oriented_loadings, eligibility$block_ids, components)
   training_transforms <- lapply(eligibility$block_ids, function(block_id) {
     x <- native_fit$X[[block_id]]
     list(
@@ -338,7 +395,8 @@ triomics_diablo_fit <- function(resolved_analysis, params) {
       native_state = list(
         model = native_fit, block_ids = eligibility$block_ids, training_unit_ids = eligibility$units,
         class_levels = eligibility$class_levels, components = components, native_scores = native_scores,
-        native_loadings = native_loadings, consensus_state = consensus_state,
+        native_loadings = native_loadings, oriented_loadings = oriented_loadings,
+        consensus_state = consensus_state,
         training_transform = training_transforms, prediction_state = list(uses_outcome = FALSE),
         requested_ncomp = eligibility$ncomp, keepX = eligibility$keepX,
         prediction_rule = eligibility$prediction_rule
@@ -349,13 +407,18 @@ triomics_diablo_fit <- function(resolved_analysis, params) {
         native_version = as.character(utils::packageVersion("mixOmics")),
         tuning = "wrapper_controlled_grid", tuning_state = "candidate_params_are_fit_once_per_evaluation_fold",
         requested_n_components = eligibility$ncomp, retained_n_components = length(components),
+        available_training_rank = eligibility$available_rank,
         keepX = eligibility$keepX, score_definition = "consensus_mean",
+        loading_orientation = "frozen_consensus_state_signs",
         design = eligibility$design, native_design = native_design,
         native_design_expansion = "mixOmics_added_Y_with_unit_link_for_categorical_response",
         na_capability = "complete_predictor_blocks",
         prediction_rule = eligibility$prediction_rule,
         variance = list(metric = "native_block_splsda_proportion", units = "proportion",
-                        semantics = "predictor_block_native", source = "native_fit$prop_expl_var"),
+                        semantics = "predictor_block_native", source = "native_fit$prop_expl_var",
+                        assay_space = "mixomics_fitted_block_after_declared_scaling",
+                        denominator = "squared_frobenius_norm_of_fitted_block",
+                        accumulation = "per_component_against_original_block_not_cumulative"),
         training_unit_ids = eligibility$units, training_state_hash = state_hash,
         consensus_state_version = consensus_state$state_version,
         sparse_selection = "union_of_nonzero_native_predictor_loadings"
@@ -406,6 +469,21 @@ triomics_diablo_predict <- function(backend_fit, new_resolved_analysis, params) 
       triomics_diablo_abort("C_EVAL_PREDICTION_UNSUPPORTED", paste0("mixOmics native DIABLO prediction failed: ", conditionMessage(error)), key = "prediction")
     }
   )
+  native_scores <- stats::setNames(vector("list", length(state$block_ids)), state$block_ids)
+  for (block_id in state$block_ids) {
+    value <- triomics_diablo_native_matrix(
+      native$variates[[block_id]], block_id, "held-out scores", units, NULL
+    )
+    if (ncol(value) < state$requested_ncomp) {
+      triomics_diablo_abort(
+        "C_EVAL_PREDICTION_UNSUPPORTED", "Native DIABLO prediction omitted the requested score component.", key = "prediction"
+      )
+    }
+    value <- value[units, seq_len(state$requested_ncomp), drop = FALSE]
+    colnames(value) <- state$components
+    native_scores[[block_id]] <- value
+  }
+  common_scores <- apply_consensus_state(native_scores, state$consensus_state)
   classes <- native$MajorityVote[[state$prediction_rule]]
   if (!is.matrix(classes) || nrow(classes) != length(units) || ncol(classes) < state$requested_ncomp) {
     triomics_diablo_abort("C_EVAL_PREDICTION_UNSUPPORTED", "Native DIABLO prediction omitted the requested component.", key = "prediction")
@@ -421,6 +499,7 @@ triomics_diablo_predict <- function(backend_fit, new_resolved_analysis, params) 
   structure(
     list(
       unit_ids = units, predictions = predictions, status = status, reason_code = reason,
+      scores = common_scores, native_scores = native_scores,
       prediction_rule = state$prediction_rule, prediction_kind = "categorical_label",
       prediction_aggregation = "native_MajorityVote", native_method = backend_fit$metadata$native_method,
       native_version = backend_fit$metadata$native_version, training_state_hash = backend_fit$metadata$state_hash,
@@ -438,7 +517,10 @@ triomics_diablo_extract <- function(backend_fit, context, params) {
   triomics_diablo_validate_state(state)
   components <- state$components
   variance <- triomics_diablo_native_variance(state$model, state$block_ids, components)
-  support <- triomics_diablo_support(state$native_loadings, state$block_ids, components)
+  oriented_loadings <- triomics_diablo_oriented_loadings(
+    state$native_loadings, state$consensus_state, state$block_ids, components
+  )
+  support <- triomics_diablo_support(oriented_loadings, state$block_ids, components)
   scores <- apply_consensus_state(state$native_scores, state$consensus_state)
   if (!is.matrix(scores) || !identical(colnames(scores), components) || any(!is.finite(scores))) {
     triomics_diablo_abort("C_SCORE_RESULT_INVALID", "DIABLO common scores are missing or non-finite.", key = "scores")

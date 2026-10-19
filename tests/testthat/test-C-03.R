@@ -99,6 +99,22 @@ testthat::test_that("categorical DIABLO fits native named design with sparse sup
   testthat::expect_identical(fit$native_state$model$keepX, fixture$params$keepX)
   testthat::expect_identical(fit$result_params$tuning, "wrapper_controlled_grid")
   testthat::expect_identical(fit$result_params$na_capability, "complete_predictor_blocks")
+  anchor_features <- fit$native_state$consensus_state$anchor_features
+  testthat::expect_true(all(vapply(seq_along(anchor_features), function(j) {
+    result$loadings$alpha[anchor_features[[j]], names(anchor_features)[[j]]] >= 0
+  }, logical(1))))
+  oriented_expected <- lapply(names(fit$native_state$native_loadings), function(block_id) {
+    value <- fit$native_state$native_loadings[[block_id]]
+    sweep(value, 2L, fit$native_state$consensus_state$signs[block_id, colnames(value)], "*")
+  })
+  names(oriented_expected) <- names(result$loadings)
+  testthat::expect_equal(
+    lapply(result$loadings, function(value) value),
+    stats::setNames(lapply(names(result$loadings), function(block_id) {
+      oriented_expected[[block_id]][result$selected[[block_id]], , drop = FALSE]
+    }), names(result$loadings)),
+    tolerance = 1e-12
+  )
   testthat::expect_true(all(vapply(result$selected, length, integer(1)) > 0L))
   testthat::expect_true(all(vapply(seq_along(result$selected), function(i) {
     all(result$selected[[i]] %in% rownames(result$loadings[[i]]))
@@ -125,6 +141,10 @@ testthat::test_that("DIABLO rejects non-categorical or unpinned inputs at the ad
   numeric_outcome <- fixture$resolved
   numeric_outcome$outcome <- seq_along(numeric_outcome$unit_ids)
   c03_error(adapter$validate(numeric_outcome, fixture$params), "C_EVAL_RESPONSE_INVALID")
+
+  low_rank <- fixture$resolved
+  low_rank$blocks$beta$assay[2L, ] <- low_rank$blocks$beta$assay[1L, ]
+  c03_error(adapter$validate(low_rank, fixture$params), "C_SCORE_COMPONENT_RANK")
 })
 
 testthat::test_that("consensus uses the frozen anchor/sign/standardization convention", {
@@ -152,6 +172,13 @@ testthat::test_that("consensus uses the frozen anchor/sign/standardization conve
                                     list(required_views = c("alpha", "beta")))
   testthat::expect_equal(apply_consensus_state(perturbed_scores, perturbed),
                          expected, tolerance = 1e-10)
+  orient <- function(loadings, state) {
+    stats::setNames(lapply(names(loadings), function(block_id) {
+      sweep(loadings[[block_id]], 2L, state$signs[block_id, colnames(loadings[[block_id]])], "*")
+    }), names(loadings))
+  }
+  testthat::expect_equal(orient(native_loadings, state), orient(perturbed_loadings, perturbed),
+                         tolerance = 1e-12)
   testthat::expect_identical(state$weights, c(alpha = 0.5, beta = 0.5))
 
   degenerate <- native_scores
@@ -175,14 +202,32 @@ testthat::test_that("held-out prediction and scores use native APIs and stored t
     dist = fixture$params$prediction_rule
   )
   expected_native <- as.character(native$MajorityVote[[fixture$params$prediction_rule]][, fixture$params$ncomp])
+  expected_scores <- lapply(native$variates, function(value) {
+    value <- value[, seq_len(fixture$params$ncomp), drop = FALSE]
+    colnames(value) <- fit$native_state$components
+    value
+  })
+  names(expected_scores) <- names(fit$native_state$native_scores)
+  expected_scores <- apply_consensus_state(expected_scores, fit$native_state$consensus_state)
 
   testthat::expect_identical(prediction$prediction_kind, "categorical_label")
   testthat::expect_identical(unname(prediction$predictions), expected_native)
+  testthat::expect_equal(prediction$scores, expected_scores, tolerance = 1e-10)
+  testthat::expect_equal(prediction$native_scores, lapply(native$variates, function(value) {
+    value <- value[, seq_len(fixture$params$ncomp), drop = FALSE]
+    colnames(value) <- fit$native_state$components
+    value
+  }), tolerance = 1e-10)
   testthat::expect_identical(prediction$unit_ids, c("held-control", "held-case"))
   testthat::expect_identical(prediction$training_state_hash, fit$metadata$state_hash)
   testthat::expect_true(all(vapply(fit$native_state$training_transform,
                                    function(x) identical(x$scale_features, TRUE), logical(1))))
   testthat::expect_identical(fit$native_state$prediction_state$uses_outcome, FALSE)
+
+  changed_outcome <- c03_resolved(new_blocks, factor(c("case", "control"), levels = c("control", "case")))
+  changed_prediction <- adapter$predict(fit, changed_outcome, fixture$params)
+  testthat::expect_identical(changed_prediction$predictions, prediction$predictions)
+  testthat::expect_equal(changed_prediction$scores, prediction$scores, tolerance = 0)
 
   common <- adapter$extract(fit, list(), fixture$params)$result
   expected_common <- apply_consensus_state(fit$native_state$native_scores,
@@ -201,11 +246,19 @@ testthat::test_that("native predictor variance is verified and common degeneracy
   result <- adapter$extract(fit, list(), fixture$params)$result
 
   expected <- vapply(c("alpha", "beta"), function(block_id) {
-    fit$native_state$model$prop_expl_var[[block_id]][["comp1"]]
+    x <- fit$native_state$model$X[[block_id]]
+    t <- fit$native_state$model$variates[[block_id]][, "comp1"]
+    sum(crossprod(x, t)^2) / (sum(t^2) * sum(x^2))
   }, numeric(1))
   testthat::expect_equal(unname(result$variance[, "comp1"]), unname(expected), tolerance = 1e-12)
   testthat::expect_identical(attr(result$variance, "metric"), "native_block_splsda_proportion")
   testthat::expect_identical(attr(result$variance, "semantics"), "predictor_block_native")
+  testthat::expect_identical(fit$result_params$variance$assay_space,
+                             "mixomics_fitted_block_after_declared_scaling")
+  testthat::expect_identical(fit$result_params$variance$denominator,
+                             "squared_frobenius_norm_of_fitted_block")
+  testthat::expect_identical(fit$result_params$variance$accumulation,
+                             "per_component_against_original_block_not_cumulative")
   testthat::expect_false("Y" %in% rownames(result$variance))
   testthat::expect_false("Y" %in% names(result$loadings))
   testthat::expect_true(all(vapply(result$selected, function(keys) length(keys) > 0L, logical(1))))
@@ -214,9 +267,33 @@ testthat::test_that("native predictor variance is verified and common degeneracy
   no_variance$native_state$model$prop_expl_var <- NULL
   c03_error(adapter$extract(no_variance, list(), fixture$params), "C_SCORE_VARIANCE_UNAVAILABLE")
 
+  mismatched_variance <- fit
+  mismatched_variance$native_state$model$prop_expl_var$alpha[["comp1"]] <-
+    mismatched_variance$native_state$model$prop_expl_var$alpha[["comp1"]] + 0.01
+  c03_error(adapter$extract(mismatched_variance, list(), fixture$params), "C_SCORE_VARIANCE_UNAVAILABLE")
+
   no_common <- fit
   no_common$native_state$native_scores$alpha[, 1L] <- 0
   c03_error(adapter$extract(no_common, list(), fixture$params), "C_SCORE_RANK_ZERO")
+})
+
+testthat::test_that("DIABLO fits supplied candidates once without native tuning", {
+  fixture <- c03_training()
+  adapter <- triomics_diablo_backend("mixomics_diablo")
+  trace("tune.block.splsda", tracer = quote(stop("native tuner must not be called")),
+        where = asNamespace("mixOmics"))
+  on.exit(untrace("tune.block.splsda", where = asNamespace("mixOmics")), add = TRUE)
+
+  candidates <- list(
+    utils::modifyList(c03_spec(), list(keepX = list(alpha = c(1L, 1L), beta = c(1L, 1L)))),
+    utils::modifyList(c03_spec(), list(keepX = list(alpha = c(3L, 2L), beta = c(2L, 1L))))
+  )
+  fits <- lapply(candidates, function(params) adapter$fit(fixture$resolved, params))
+  for (i in seq_along(fits)) {
+    testthat::expect_identical(fits[[i]]$native_state$model$keepX, candidates[[i]]$keepX)
+    testthat::expect_identical(unname(fits[[i]]$native_state$model$ncomp[c("alpha", "beta")]), c(2, 2))
+    testthat::expect_identical(fits[[i]]$result_params$requested_n_components, 2L)
+  }
 })
 
 testthat::test_that("C-03 fixture is schema-valid and shared registration remains coordinator-owned", {
