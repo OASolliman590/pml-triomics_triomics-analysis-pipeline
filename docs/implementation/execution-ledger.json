@@ -36,13 +36,37 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "c03_registered_c04_landed_neither_accepted",
+    "status": "c03_c04_registered_package_check_failed",
     "last_reconciled": "2026-10-19",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-03 is registered at d5037ec and is not accepted. The synthetic stage C command predicted 12/12 units; balanced error 0 is a fixture result. Package check of that commit is still running. C-04 adapter is landed at a3b9713, unregistered, and not accepted. C-05 stays closed until MOFA2 and mofapy2 exist."
+    "disposition": "Head is 6ea8d20. C-03 is registered at d5037ec and is not accepted. The package check of that archive failed: Status 1 ERROR, FAIL 7, WARN 8, PASS 3803. C-04 is registered at 6ea8d20 and is not accepted. The synthetic block.spls CLI predicted 12/12; rmse about 0.509 is a fixture result. MOFA2 and mofapy2 are absent, so C-05 AC1 cannot be claimed. C-08 and every D packet stay closed."
   },
   "orchestration_events": [
+    {
+      "event": "c03_package_check_failed_c04_registered_not_accepted",
+      "date": "2026-10-19",
+      "head": "6ea8d20",
+      "package_check_commit": "d5037ec",
+      "package_check": "Status: 1 ERROR; FAIL 7; WARN 8; SKIP 0; PASS 3803",
+      "known_causes": [
+        "test-C-01.R still expects only the three concatenation backend names and expects mixomics_diablo to abort C_SCORE_BACKEND_UNAVAILABLE. The call now returns a categorical BackendAdapter, and integrate_blocks on a C-01 spec aborts C_SCORE_PARAMETER.",
+        "test-C-02.R:439 expects categorical DIABLO evaluation to abort C_SCORE_BACKEND_UNAVAILABLE. The call now returns a BackendAdapter.",
+        "test-C-03.R:302 normalizePath of discovery/spec-v2/schemas/config.schema.json fails in the installed package because .Rbuildignore excludes discovery/ and docs/."
+      ],
+      "c04": {
+        "commit": "6ea8d20",
+        "registered": true,
+        "accepted": false,
+        "tests": "test_local filter C-04: 129 passed, 0 failed, 0 warnings, 0 skips, 137.6s. The 122-pass was the pre-registration worktree only.",
+        "cli": "stage C exit 0; mixomics_block_spls; 12 predicted; rmse 0.509475267053804; mae 0.464356559121847; r_squared 0.11316976653239; 15 fits; no failure codes. Fixture result.",
+        "prior_review": "a3b9713 changes_required, thread 01a15392-6993-7d03-84ec-4dc939a917b0. No rereview of 6ea8d20 has landed."
+      },
+      "acceptance": [],
+      "allowed_next_transition": "Repair the installed-package tests without loosening them. Rerun the package check on the repaired tree before any C-03 or C-04 acceptance. C-08 and every D packet stay closed.",
+      "disposition": "The d5037ec check does not cover 6ea8d20. Sol has not accepted either packet.",
+      "review_ref": "docs/implementation/reviews/2026-10-19-c03-package-check.md"
+    },
     {
       "event": "c04_adapter_landed_not_accepted",
       "date": "2026-10-19",

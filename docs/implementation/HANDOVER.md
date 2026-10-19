@@ -1,10 +1,11 @@
 # Implementation handover
 
 Run `triomics-20260920-sol-01` continues on branch
-`spec/harden-v2-20260920`. G0 through G4 are accepted. All nine required Stage B
-packets are accepted. Stage C dependency gates are released. Omar explicitly
-paused the C-01 initial attempt while leaving the office; C-02 waits on accepted
-C-01 and C-03/C-04/C-05 remain behind G5.
+`spec/harden-v2-20260920`. G0 through G5 are released. Stages A and B, C-01,
+and C-02 are accepted on synthetic evidence. C-03 is registered at `d5037ec`
+and is not accepted. C-04 is registered at `6ea8d20` and is not accepted.
+The package check of archive `d5037ec` failed. C-08 and every D packet stay
+closed. The historical sections below keep their original wording.
 
 ## Current evidence
 
@@ -164,18 +165,24 @@ the first predictor block only; native component mismatch still fails closed.
 ## Literal resume instruction
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
-`execution-ledger.json`, and this handover. C-01 and C-02 are accepted on synthetic software evidence. G5 is released.
-C-03 repair 1 is `826725f`. The focused rereview
-`01a15383-3d65-7320-b462-e5c7b03b7c66` passed with the four Important
-findings closed and no new Critical or Important defect. Registration
-is `d5037ec`. Sol reran the suite: 79 passed. The synthetic stage C
-command exited 0, method `mixomics_diablo`, 12/12 predicted, 15
-inspected fits. Balanced error 0 is a fixture result. C-03 is not
-accepted while the package check of `d5037ec` is open. C-04 adapter is
-`a3b9713`: 122 passed, `mixomics_block_spls` is not registered, and the
-stage C slice was not run because the shared synthetic metadata has no
-continuous outcome column. C-05 stays
-closed until MOFA2 and mofapy2 exist. Do not start
-C-08 or any D packet. Do not loosen
-the B-T04 0.08 bound or reroll seeds 1001:1400. Do not edit frozen
+`execution-ledger.json`, and this handover. Head is `6ea8d20`.
+C-01 and C-02 are accepted on synthetic software evidence. G5 is released.
+C-03 is registered at `d5037ec` and is not accepted. The focused rereview
+`01a15383-3d65-7320-b462-e5c7b03b7c66` passed. The synthetic stage C command
+exited 0 for `mixomics_diablo`, 12/12 predicted, 15 inspected fits.
+Balanced error 0 is a fixture result. The package check of archive
+`d5037ec` failed: Status 1 ERROR, FAIL 7, WARN 8, PASS 3803. The known
+causes are the C-01 and C-02 tests that still treat DIABLO as unregistered,
+and the C-03 schema path that is absent from the installed package.
+See `reviews/2026-10-19-c03-package-check.md`. That check does not cover
+`6ea8d20`.
+
+C-04 is registered at `6ea8d20` and is not accepted. Astra's review of
+`a3b9713` was changes_required. Sol repaired variance preservation, the
+DIABLO continuous expectation, and the synthetic `score` fixture, then
+reran filter C-04 (129 passed) and the stage C CLI (12/12 predicted,
+rmse about 0.509). Those numbers are fixture results. No rereview of
+`6ea8d20` has landed. MOFA2 and mofapy2 are not installed, so C-05 AC1
+cannot be claimed. Do not start C-08 or any D packet. Do not loosen the
+B-T04 0.08 bound or reroll seeds 1001:1400. Do not edit frozen
 `discovery/spec-v2` content. Leave private study data unread.
