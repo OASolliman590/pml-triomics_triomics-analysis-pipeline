@@ -108,6 +108,17 @@ main <- function(args = commandArgs(trailingOnly = TRUE)) {
   )
   check_dir <- file.path(work, paste0(package, ".Rcheck"))
   check_log <- file.path(check_dir, "00check.log")
+  # The work directory is removed on exit. Keep the test transcript where the
+  # status line is not enough to name a warning.
+  if (dir.exists(check_dir)) {
+    rout <- list.files(check_dir, pattern = "testthat\\.Rout", recursive = TRUE, full.names = TRUE)
+    for (path in rout) {
+      file.copy(path, file.path(options$output, basename(path)), overwrite = TRUE)
+    }
+    if (file.exists(check_log)) {
+      file.copy(check_log, file.path(options$output, "00check.log"), overwrite = TRUE)
+    }
+  }
   summary <- if (file.exists(check_log)) readLines(check_log, warn = FALSE) else character()
   status_line <- grep("^Status:", summary, value = TRUE)
   check_warning <- length(status_line) > 0L && !identical(trimws(status_line[[length(status_line)]]), "Status: OK")

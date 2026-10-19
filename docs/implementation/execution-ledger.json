@@ -36,13 +36,36 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "c04_untrace_guard_landed_package_check_running",
+    "status": "fda190f_package_check_status_ok_warnings_unnamed",
     "last_reconciled": "2026-10-19",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Head is fda190f. C-03 and C-04 are registered and not accepted. The ed2f579 installed check was Status 1 ERROR, FAIL 1, WARN 8, SKIP 1, PASS 3983. The remaining failure was a second untrace of triomics_block_spls_variance. fda190f guards that untrace. Its source C-04 suite passed 132. A package check of that commit is running and is not a result yet. C-05 is not accepted. C-08 and every D packet stay closed."
+    "disposition": "The package check of fda190f is Status OK, with testthat FAIL 0, WARN 8, SKIP 0, PASS 3985. The eight warnings are not named to tests, so C-03 and C-04 stay unaccepted. C-05 has an unregistered train/save/reload path and one Sol synthetic smoke. It is not accepted and mofa2 is not registered. C-08 and every D packet stay closed."
   },
   "orchestration_events": [
+    {
+      "event": "fda190f_package_check_status_ok_warnings_unnamed",
+      "date": "2026-10-19",
+      "commit": "fda190f",
+      "package_check": "Status: OK. testthat.Rout: FAIL 0, WARN 8, SKIP 0, PASS 3985. Elapsed 632s.",
+      "prior_check": "ed2f579 was Status 1 ERROR, FAIL 1, WARN 8, SKIP 1, PASS 3983.",
+      "warning_note": "The eight testthat warnings are still inside the installed suite. testthat.Rout does not name their tests. R CMD check still printed Status OK. No suppression was added.",
+      "acceptance": [],
+      "allowed_next_transition": "Name the eight warnings before accepting C-03 or C-04. Do not accept C-05 or register mofa2 on the synthetic smoke alone. C-08 and every D packet stay closed.",
+      "disposition": "The installed untrace failure and the empty-test skip are gone. Status OK with eight unnamed testthat warnings is not C-03 or C-04 acceptance.",
+      "review_ref": "docs/implementation/reviews/2026-10-19-c04-package-check.md"
+    },
+    {
+      "event": "c05_train_save_reload_smoke_not_accepted",
+      "date": "2026-10-19",
+      "tests": "test_local filter C-05 with the default library: 46 passed, 0 failed, 0 warnings, 0 skips, 3.5s. The same filter with /tmp/triomics-mofa-lib and TRIOMICS_MOFA_PYTHON: 46 passed, 0 failed, 0 warnings, 0 skips, 9.5s.",
+      "smoke": "Sol reran triomics_mofa_fit on the synthetic C-05 matrices. trained=TRUE, class BackendFit, factors 12x1 after one inactive factor was removed, save/reload agreement TRUE for factors weights and variance, variance proportions 0.3074117 and 0.3663132, uses_outcome FALSE, model file /tmp/triomics-c05-sol-smoke.hdf5. MOFA2 1.22.1 and mofapy2 0.7.5 from the isolated prefixes. Public registry still returns C_SCORE_BACKEND_UNAVAILABLE.",
+      "review": "Astra low pass on the training path. Thread 01a153ec-c752-7a13-8a52-6f91b1541345. Static review. Not acceptance.",
+      "shared_registration": false,
+      "acceptance": [],
+      "allowed_next_transition": "Do not register mofa2. AC2-AC4 remain open. C-08 and every D packet stay closed.",
+      "disposition": "The adapter trains only after a nonempty HDF5 save, a reload, and output agreement. A missing runtime still returns trained=FALSE. This smoke does not accept C-05."
+    },
     {
       "event": "c04_installed_untrace_guard_landed_not_accepted",
       "date": "2026-10-19",

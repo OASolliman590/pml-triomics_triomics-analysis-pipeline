@@ -2,13 +2,13 @@
 
 Run `triomics-20260920-sol-01` continues on branch
 `spec/harden-v2-20260920`. G0 through G5 are released. Stages A and B, C-01,
-and C-02 are accepted on synthetic evidence. Head is `fda190f`. C-03 is
-registered at `d5037ec` and is not accepted. C-04 is registered at `6ea8d20`
-and is not accepted. The installed check of `ed2f579` was Status 1 ERROR,
-FAIL 1, WARN 8, SKIP 1, PASS 3983. `fda190f` guards the second untrace.
-Its source C-04 suite passed 132. A package check of that commit is running
-and is not a result. C-05 is not accepted. C-08 and every D packet stay
-closed. The historical sections below keep their original wording.
+and C-02 are accepted on synthetic evidence. The package check of `fda190f`
+is `Status: OK`, with testthat FAIL 0, WARN 8, SKIP 0, PASS 3985. The eight
+warnings are not named to tests, so C-03 and C-04 stay unaccepted. C-05 has
+an unregistered train/save/reload path. Sol reproduced one synthetic smoke
+and Astra passed that path. C-05 is not accepted and `mofa2` is not
+registered. C-08 and every D packet stay closed. The historical sections
+below keep their original wording.
 
 ## Current evidence
 
@@ -186,9 +186,10 @@ one second untrace of `triomics_block_spls_variance`, eight warnings,
 and one empty-test skip. `fda190f` untraces only while that binding is
 traceable. Sol reran filter C-04: 132 passed, 0 failed, 0 warnings,
 0 skips, 155.9 seconds. Astra's read-only review of that guard passed
-and did not rerun tests. The acceptance gate is the package check of
-`fda190f`, which is running. Do not accept C-03 or C-04 on any earlier
-result.
+and did not rerun tests. The package check of `fda190f` is `Status: OK`. Its testthat line is
+FAIL 0, WARN 8, SKIP 0, PASS 3985. See
+`reviews/2026-10-19-c04-package-check.md`. Do not accept C-03 or C-04
+until those eight warnings are named.
 
 C-04 is registered at `6ea8d20` and is not accepted. Astra's review of
 `a3b9713` was changes_required. Sol repaired variance preservation, the
@@ -199,9 +200,12 @@ rereview of `6ea8d20` passed with the three Important findings closed
 and no new Critical or Important defect. See
 `reviews/2026-10-19-c04-repair-rereview.md`. That pass does not accept
 C-04. MOFA2 and mofapy2 are not installed, so C-05 AC1
-cannot be claimed. A fail-closed `mofa2` draft is on the tree and is not
-registered or accepted. Its suite passed 46 expectations. A missing
-runtime returns an unavailable state and does not claim a trained model.
+cannot be claimed from a missing runtime. The unregistered adapter now
+trains only after a nonempty HDF5 save, a reload, and output agreement.
+Sol's synthetic smoke returned trained=TRUE, a 12 by 1 factor matrix,
+and agreement on factors, weights, and variance. The public registry
+still refuses `mofa2`. Both C-05 suites passed 46 expectations. That
+smoke does not accept C-05. AC2 through AC4 remain open.
 Do not start C-08 or any D packet. Do not loosen the
 B-T04 0.08 bound or reroll seeds 1001:1400. Do not edit frozen
 `discovery/spec-v2` content. Leave private study data unread.
