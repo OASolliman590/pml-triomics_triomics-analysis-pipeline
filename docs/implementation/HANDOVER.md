@@ -165,10 +165,16 @@ the first predictor block only; native component mismatch still fails closed.
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `execution-ledger.json`, and this handover. C-01 and C-02 are accepted on synthetic software evidence. G5 is released.
-C-03 repair 1 is commit `826725f`. Sol reran the suite: 77 passed, 0
-failed, 0 warnings, 0 skips. It is not accepted. Do not register
-`mixomics_diablo` before the focused rereview of the four Important
-findings. C-04 may finish on its allowlist. C-05 stays
+C-03 repair 1 is `826725f`. The focused rereview
+`01a15383-3d65-7320-b462-e5c7b03b7c66` passed with the four Important
+findings closed and no new Critical or Important defect. Registration
+is `d5037ec`. Sol reran the suite: 79 passed. The synthetic stage C
+command exited 0, method `mixomics_diablo`, 12/12 predicted, 15
+inspected fits. Balanced error 0 is a fixture result. C-03 is not
+accepted while the package check of `d5037ec` is open. C-04 adapter is
+`a3b9713`: 122 passed, `mixomics_block_spls` is not registered, and the
+stage C slice was not run because the shared synthetic metadata has no
+continuous outcome column. C-05 stays
 closed until MOFA2 and mofapy2 exist. Do not start
 C-08 or any D packet. Do not loosen
 the B-T04 0.08 bound or reroll seeds 1001:1400. Do not edit frozen

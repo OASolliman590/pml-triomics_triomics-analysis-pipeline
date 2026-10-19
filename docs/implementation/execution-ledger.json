@@ -36,13 +36,37 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "c03_repair1_landed_awaiting_rereview",
+    "status": "c03_registered_c04_landed_neither_accepted",
     "last_reconciled": "2026-10-19",
-    "active_handoffs": ["C-04"],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-03 repair 1 is landed at 826725f and is not accepted. mixomics_diablo is not registered. A focused rereview of the four Important findings is required. C-04 remains in progress. C-05 stays closed until MOFA2 and mofapy2 exist."
+    "disposition": "C-03 is registered at d5037ec and is not accepted. The synthetic stage C command predicted 12/12 units; balanced error 0 is a fixture result. Package check of that commit is still running. C-04 adapter is landed at a3b9713, unregistered, and not accepted. C-05 stays closed until MOFA2 and mofapy2 exist."
   },
   "orchestration_events": [
+    {
+      "event": "c04_adapter_landed_not_accepted",
+      "date": "2026-10-19",
+      "commit": "a3b9713",
+      "tests": "test_local filter C-04: 122 passed, 0 failed, 0 warnings, 0 skips, 158.3s",
+      "shared_registration": false,
+      "cli": "not run; inst/examples/data/independent/metadata.tsv has no continuous outcome column",
+      "acceptance": [],
+      "allowed_next_transition": "One Astra low read-only review of a3b9713. Do not accept C-04 or register mixomics_block_spls before that review. Do not add a continuous column to shared example metadata inside the packet commit.",
+      "disposition": "Sol reran the C-04 suite in the Haiku worktree before copying the four allowlisted files onto the integration branch."
+    },
+    {
+      "event": "c03_registered_not_accepted",
+      "date": "2026-10-19",
+      "commit": "d5037ec",
+      "rereview_thread": "01a15383-3d65-7320-b462-e5c7b03b7c66",
+      "rereview_verdict": "pass",
+      "tests": "test_local filter C-03: 79 passed, 0 failed, 0 warnings, 0 skips, 4.1s",
+      "cli": "stage C exited 0; mixomics_diablo; 12 eligible; 12 predicted; 0 failed; 15 inspected fits; max_fits 40; balanced_error 0; accuracy 1",
+      "shared_registration": true,
+      "acceptance": [],
+      "allowed_next_transition": "Package check of d5037ec before C-03 acceptance. The balanced error of 0 is not a biological result.",
+      "disposition": "Focused rereview closed the four Important findings and found no new Critical or Important defect. Sol then registered mixomics_diablo and reran the suite and the synthetic CLI."
+    },
     {
       "event": "c03_repair1_landed_not_accepted",
       "date": "2026-10-19",
