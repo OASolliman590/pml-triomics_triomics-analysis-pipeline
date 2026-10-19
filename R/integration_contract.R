@@ -106,7 +106,7 @@ triomics_new_integration_result <- function(scores, loadings, variance, selected
 }
 
 triomics_integration_backend_names <- function() {
-  c("concat_pca", "concat_plsda", "concat_pls")
+  c("concat_pca", "concat_plsda", "concat_pls", "mixomics_diablo")
 }
 
 triomics_integration_backend <- function(method) {
@@ -121,6 +121,9 @@ triomics_integration_backend <- function(method) {
   }
   if (method %in% c("concat_plsda", "concat_pls")) {
     return(triomics_supervised_backend(method))
+  }
+  if (identical(method, "mixomics_diablo")) {
+    return(triomics_diablo_backend(method))
   }
   structure(
     list(

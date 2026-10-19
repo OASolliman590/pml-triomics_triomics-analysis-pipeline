@@ -57,7 +57,7 @@ blocks:
       context_id: c03_fixture
       filter:
         prevalence: 0.7
-        min_observed: 3
+        min_observed: 1
         scope: global
         stratum: null
         selection_justification: Synthetic fixture choice only.
@@ -108,7 +108,7 @@ blocks:
       context_id: c03_fixture
       filter:
         prevalence: 0.7
-        min_observed: 3
+        min_observed: 1
         scope: global
         stratum: null
         selection_justification: Synthetic fixture choice only.
@@ -210,13 +210,13 @@ analyses:
         evaluation:
           mode: nested_cv
           generalization_unit: sample
-          outer_folds: 2
+          outer_folds: 3
           inner_folds: 2
           repeats: 1
           stratification: group
           temporal_rule_ref: null
           primary_metric: balanced_error
-          max_fits: 20
+          max_fits: 40
           uncertainty_protocol_ref: null
     completeness: strict
 clinical:

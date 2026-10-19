@@ -299,7 +299,10 @@ testthat::test_that("DIABLO fits supplied candidates once without native tuning"
 testthat::test_that("C-03 fixture is schema-valid and shared registration remains coordinator-owned", {
   fixture_path <- triomics_test_resource("examples", "tickets", "C-03.yaml")
   config <- yaml::read_yaml(fixture_path)
-  schema_path <- triomics_test_resource("..", "..", "discovery", "spec-v2", "schemas", "config.schema.json")
+  schema_path <- normalizePath(
+    testthat::test_path("..", "..", "discovery", "spec-v2", "schemas", "config.schema.json"),
+    winslash = "/", mustWork = TRUE
+  )
   testthat::expect_true(jsonvalidate::json_validate(
     jsonlite::toJSON(config, auto_unbox = TRUE, null = "null"),
     schema_path, engine = "ajv", verbose = TRUE
@@ -308,11 +311,14 @@ testthat::test_that("C-03 fixture is schema-valid and shared registration remain
     testthat::test_path("..", "..", "docs", "implementation", "registrations", "C-03.json"),
     simplifyVector = FALSE
   )
-  testthat::expect_identical(registration$applied_to_shared_files, FALSE)
+  testthat::expect_identical(registration$applied_to_shared_files, TRUE)
   testthat::expect_true(length(registration$coordinator_owned_files_to_update) > 0L)
   testthat::expect_true("R/cli.R" %in% unlist(registration$coordinator_owned_files_to_update))
+  adapter <- triomics_integration_backend("mixomics_diablo")
+  testthat::expect_s3_class(adapter, "BackendAdapter")
+  testthat::expect_identical(adapter$evaluation_modes, "categorical")
   c03_error(
-    evaluate_pipeline(NULL, NULL, list(method = "mixomics_diablo"), NULL),
+    evaluate_pipeline(NULL, NULL, list(method = "mixomics_diablo_unregistered"), NULL),
     "C_SCORE_BACKEND_UNAVAILABLE"
   )
 })

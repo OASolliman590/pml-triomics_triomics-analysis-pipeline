@@ -1,7 +1,7 @@
 {
   "packet_id": "C-03",
   "request_type": "shared_registration",
-  "implementation_base": "4384b29c6e3c27c5137ca3ea6d9bbce5fc51b0ea",
+  "implementation_base": "826725f",
   "dependencies": [
     {
       "package": "mixOmics",
@@ -33,8 +33,12 @@
   "registration_notes": [
     "Sol must add mixomics_diablo to the registered backend ids and dispatch it to triomics_diablo_backend.",
     "Sol must preserve C-02 evaluate_pipeline and BackendAdapter seams; nested evaluation remains C-02-owned.",
-    "Sol must keep the public CLI route disabled until this registration and the C-03 review gate are accepted.",
-    "The adapter is qualified only for complete predictor blocks; missingness is fail-closed with C_NA_CAPABILITY."
+    "The adapter is qualified only for complete predictor blocks; missingness is fail-closed with C_NA_CAPABILITY.",
+    "Sol registered mixomics_diablo in R/integration_contract.R after the focused rereview passed.",
+    "The stage C candidate builder slices a declared keepX vector to the candidate component count. Empty keepX is left unchanged.",
+    "The frozen config schema has no na_capability field. The registered DIABLO CLI route sets complete_predictor_blocks. The adapter still rejects any other declaration and any missing predictor value.",
+    "NAMESPACE, DESCRIPTION, renv.lock, and R/stage_registry.R needed no new symbol, dependency, or stage flag.",
+    "The factory remains internal. Stage C execution was already enabled for C-02."
   ],
-  "applied_to_shared_files": false
+  "applied_to_shared_files": true
 }

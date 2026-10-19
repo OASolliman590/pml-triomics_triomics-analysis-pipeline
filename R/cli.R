@@ -368,12 +368,31 @@ triomics_c02_evaluate_request <- function(config, ingested, analysis, request,
   integration_spec <- request
   integration_spec$block_ids <- block_ids
   integration_spec$candidates <- lapply(seq_len(n_components), function(component) {
-    list(id = paste0("ncomp-", component), ncomp = component)
+    candidate <- list(id = paste0("ncomp-", component), ncomp = component)
+    if (identical(request$method, "mixomics_diablo")) candidate$n_components <- component
+    keep_x <- request$keepX
+    if (is.list(keep_x) && length(keep_x) && !is.null(names(keep_x))) {
+      sliced <- lapply(keep_x, function(values) {
+        values <- suppressWarnings(as.numeric(unlist(values, use.names = FALSE)))
+        if (!length(values) || any(!is.finite(values)) || length(values) < component) {
+          return(NULL)
+        }
+        as.integer(values[seq_len(component)])
+      })
+      if (!any(vapply(sliced, is.null, logical(1L)))) candidate$keepX <- sliced
+    }
+    candidate
   })
   integration_spec$max_fits <- evaluation$max_fits
   integration_spec$ncomp <- n_components
   integration_spec$task_mode <- outcome_spec$type
   integration_spec$required_views <- block_ids
+  if (identical(request$method, "mixomics_diablo")) {
+    # The frozen config schema has no NA-capability field. The registered
+    # DIABLO route is pinned to complete predictor blocks and still fails
+    # closed when a block contains missing values.
+    integration_spec$na_capability <- "complete_predictor_blocks"
+  }
   triomics_c02_evaluation_payload(
     evaluate_pipeline(assembled, analysis_spec, integration_spec, split_plan)
   )
