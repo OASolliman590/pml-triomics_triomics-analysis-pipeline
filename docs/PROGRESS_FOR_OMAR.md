@@ -14,8 +14,8 @@ supervised route can run leakage-safe nested PLS-DA on the synthetic fixture.
 The C-02 suite passed 165 checks. The synthetic stage C command exited 0 and
 predicted all 12 fixture samples with nested concatenation PLS-DA. A two-sample
 inner fold that asked for more components than its rank failed explicitly.
-C-02 is not accepted yet: the clean package check and the M5 review are still
-open. DIABLO, MOFA and the later Stage C and D packets stay closed.
+C-02 is not accepted yet: the clean package check is `Status: OK`, and the
+M5 review is still open. DIABLO, MOFA and the later Stage C and D packets stay closed.
 
 **Not established:** Accepted evidence remains synthetic software evidence, not
 biological validation. A separate local inventory reviewed the three private

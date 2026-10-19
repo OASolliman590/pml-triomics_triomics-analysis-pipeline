@@ -18,9 +18,12 @@ Software evidence only. No private study data were read or fitted.
 - An inner fold with training rank 1 rejected `ncomp=2` as `C_EVAL_COMPONENT_RANK` and did not reduce the component count silently.
 - `min_observed` in the synthetic fixture is 1. The previous value, 3, removed every feature from a two-sample inner training fold and surfaced as `A_SOURCE_CONTRACT` dimname drift. Empty prevalence filters now abort as `A_STATE_PARTIAL`.
 
+## Package check
+
+Clean archive `R CMD build` and `R CMD check --no-manual` on commit `85922cf` ended `Status: OK`. Logs: `/tmp/triomics-c02-pkgcheck/build.log` and `check.log`.
+
 ## Not done
 
-- Clean package check.
-- Immutable M5 Astra review.
-- C-02 acceptance and G5 release.
+- Immutable M5 Astra review that can release G5.
+- C-02 acceptance.
 - C-03, C-04, C-05, and every D packet.

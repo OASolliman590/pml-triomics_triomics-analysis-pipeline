@@ -36,13 +36,22 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "c02_registration_verified_pending_package_check_and_m5",
+    "status": "c02_verified_pending_m5_review",
     "last_reconciled": "2026-10-19",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-02 findings F01-F08 are closed in 2f4e8e4. Shared registration is applied and the synthetic stage C command exits 0 with 12/12 nested predictions. C-02 is not accepted. G5 is not released. Package check and the immutable M5 Astra review remain before any C-03 dispatch."
+    "disposition": "C-02 registration commit 85922cf passed the C-02 suite, the synthetic stage C command, and a clean package check with Status OK. Astra low found no Critical or Important defect in that commit. C-02 is not accepted. G5 is not released. The immutable M5 review remains before any C-03 dispatch."
   },
   "orchestration_events": [
+    {
+      "event": "c02_package_check_ok_m5_still_closed",
+      "date": "2026-10-19",
+      "commit": "85922cf",
+      "package_check": "Status: OK",
+      "astra_registration_review": "pass, no Critical or Important findings, thread 01a1534d-262d-7a30-a994-ce9592eb3963",
+      "allowed_next_transition": "one immutable M5 Astra review before C-02 acceptance or G5 release",
+      "disposition": "The package check does not accept C-02 and does not release G5."
+    },
     {
       "event": "c02_shared_registration_verified_not_accepted",
       "date": "2026-10-19",

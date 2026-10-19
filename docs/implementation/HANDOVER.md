@@ -150,15 +150,15 @@ failed closed as `C_EVAL_COMPONENT_RANK`. The fixture `min_observed` is 1
 because an inner training side can contain two samples. That accuracy is a
 property of the tiny synthetic fixture, not a biological result.
 
-C-02 is not accepted. G5 is not released. The clean package check and one
-immutable M5 Astra review are still required.
+C-02 is not accepted. G5 is not released. The clean package check on
+`85922cf` ended `Status: OK`. One immutable M5 Astra review is still required.
 
 ## Literal resume instruction
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
-`execution-ledger.json`, and this handover. C-01 is accepted. C-02 code and
-shared registration are verified and not accepted. Run a clean package check,
-then one immutable M5 Astra review. Do not dispatch C-03, C-04, C-05, or any D
+`execution-ledger.json`, and this handover. C-01 is accepted. C-02 code, shared registration, and the clean package
+check are verified and C-02 is not accepted. Obtain one immutable M5 Astra
+review before acceptance. Do not dispatch C-03, C-04, C-05, or any D
 packet before C-02 acceptance and the M5 review that releases G5. Do not loosen
 the B-T04 0.08 bound or reroll seeds 1001:1400. Do not edit frozen
 `discovery/spec-v2` content. Leave private study data unread.
