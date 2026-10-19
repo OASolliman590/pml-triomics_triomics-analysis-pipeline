@@ -3,7 +3,7 @@ study_id: triomics_c_04_fixture
 data_class: synthetic
 sources:
   - source_id: sample_metadata
-    file: ../data/independent/metadata.tsv
+    file: ../data/c04/metadata.tsv
     format: tsv
     role: sample_metadata
     selection_history: full_unselected
@@ -21,7 +21,7 @@ sources:
     selection_history: full_unselected
     selection_evidence: Synthetic software fixture; no outcome-based selection.
 metadata:
-  file: ../data/independent/metadata.tsv
+  file: ../data/c04/metadata.tsv
   sample_id: sample_id
   subject_id: null
   column_types:
@@ -206,10 +206,8 @@ analyses:
             block_2: 1
             score: 0
         keepX:
-          block_1:
-            - 2
-          block_2:
-            - 2
+          block_1: [2, 2]
+          block_2: [2, 2]
         keepY: 1
         tuning_grid_ref: null
         prediction_rule: AveragedPredict
@@ -222,13 +220,13 @@ analyses:
         evaluation:
           mode: nested_cv
           generalization_unit: subject
-          outer_folds: 2
+          outer_folds: 3
           inner_folds: 2
           repeats: 1
           stratification: null
           temporal_rule_ref: null
           primary_metric: rmse
-          max_fits: 20
+          max_fits: 40
           uncertainty_protocol_ref: null
     completeness: strict
 clinical:

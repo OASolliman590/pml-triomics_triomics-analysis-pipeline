@@ -403,7 +403,21 @@ triomics_block_spls_fit <- function(resolved_analysis, params) {
     colnames(value) <- component_ids
     value
   }), block_ids)
-  variance <- triomics_block_spls_variance(native_fit, block_ids, ncomp)
+  variance_call <- tryCatch(
+    list(ok = TRUE, value = triomics_block_spls_variance(native_fit, block_ids, ncomp)),
+    error = function(error) list(ok = FALSE, error = error)
+  )
+  if (isTRUE(variance_call$ok)) {
+    variance <- variance_call$value
+    variance_failure <- NULL
+  } else {
+    error <- variance_call$error
+    variance <- NULL
+    variance_failure <- list(
+      code = if (inherits(error, "triomics_error")) error$code else "C_VARIANCE_UNAVAILABLE",
+      message = conditionMessage(error)
+    )
+  }
   consensus_state <- make_consensus_state(
     variates, loadings, units, params = list(required_views = block_ids)
   )
@@ -445,7 +459,8 @@ triomics_block_spls_fit <- function(resolved_analysis, params) {
       input_keys = eligibility$input_keys, retained = eligibility$retained,
       training_transform = training_transform, keepX = eligibility$keepX,
       keepY = eligibility$keepY, design = eligibility$design, ncomp = ncomp,
-      variates = variates, loadings = loadings, variance = variance,
+      variates = variates, loadings = loadings,
+      variance = if (is.null(variance_failure)) variance else variance_failure,
       signs = consensus_state$signs, preprocessing_state_hashes = eligibility$preparation_state_hashes
     ),
     algo = "sha256", serialize = TRUE
@@ -480,11 +495,15 @@ triomics_block_spls_fit <- function(resolved_analysis, params) {
     feature_flow = feature_flow,
     requested_n_components = ncomp,
     retained_n_components = ncomp,
-    variance = list(
-      metric = "native_block_projection_on_variate", units = "proportion",
-      denominator = "scaled_training_block_frobenius_sum_of_squares",
-      semantics = "per_component_projection_not_nested"
-    ),
+    variance = if (is.null(variance_failure)) {
+      list(
+        metric = "native_block_projection_on_variate", units = "proportion",
+        denominator = "scaled_training_block_frobenius_sum_of_squares",
+        semantics = "per_component_projection_not_nested", status = "verified"
+      )
+    } else {
+      list(status = "unavailable", code = variance_failure$code)
+    },
     response_diagnostics = list(
       block = eligibility$response_block,
       status = "native_retained_outside_common_object"
@@ -510,6 +529,7 @@ triomics_block_spls_fit <- function(resolved_analysis, params) {
         selected = selected,
         consensus_state = consensus_state,
         response_diagnostics = response_diagnostics,
+        variance_failure = variance_failure,
         training_transform = training_transform,
         keepX = eligibility$keepX,
         keepY = eligibility$keepY,
@@ -627,6 +647,11 @@ triomics_block_spls_extract <- function(backend_fit, context, params) {
     triomics_block_spls_abort("C_EVAL_NATIVE_FIT", "Extraction requires a BackendFit.", key = "backend_fit")
   }
   state <- backend_fit$native_state
+  if (is.list(state$variance_failure)) {
+    triomics_block_spls_abort(
+      state$variance_failure$code, state$variance_failure$message, key = "prop_expl_var"
+    )
+  }
   variance <- triomics_block_spls_variance(state$model, state$block_ids, state$ncomp)
   scores <- apply_consensus_state(state$training_scores, state$consensus_state)
   loadings <- stats::setNames(lapply(state$block_ids, function(block_id) {

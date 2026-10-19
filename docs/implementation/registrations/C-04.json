@@ -26,9 +26,9 @@
   "cli_registration": {
     "stage": "C",
     "service": "evaluate_pipeline",
-    "enabled": false,
+    "enabled": true,
     "requested_enabled": true,
-    "note": "Sol enables this only after the shared integration contract change below is applied."
+    "note": "Sol registered mixomics_block_spls after the repair. The factory stays internal."
   },
   "shared_changes_for_sol": [
     {
@@ -46,7 +46,7 @@
     "tests/testthat/test-C-04.R 'C-04 registration boundary' asserts the public registry refuses mixomics_block_spls until this registration is applied; update that expectation when applying the change."
   ],
   "known_gaps": [
-    "inst/examples/tickets/C-04.yaml names a numeric outcome column 'score'. The existing synthetic metadata at inst/examples/data/independent/metadata.tsv has only sample_id and a categorical group column, so the stage C run cannot ingest a continuous response from the current example data."
+    "The continuous outcome is the synthetic column score in inst/examples/data/c04/metadata.tsv. The shared independent metadata was not given a response column."
   ],
   "coordinator_owned_files_to_update": [
     "R/integration_contract.R",
@@ -56,5 +56,5 @@
     "NAMESPACE",
     "renv.lock"
   ],
-  "applied_to_shared_files": false
+  "applied_to_shared_files": true
 }

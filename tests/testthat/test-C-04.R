@@ -498,10 +498,36 @@ testthat::test_that("C-04-AC4 negative: categorical responses, missing predictor
 
 testthat::test_that("C-04 registration boundary: the public registry does not enable block.spls before shared registration", {
   # Sol's shared registration changes this expectation; until then the public path must refuse the method.
-  c04_error(triomics_evaluation_backend("mixomics_block_spls", "continuous"),
-            "C_SCORE_BACKEND_UNAVAILABLE")
+  adapter <- triomics_integration_backend("mixomics_block_spls")
+  testthat::expect_s3_class(adapter, "BackendAdapter")
+  testthat::expect_identical(adapter$evaluation_modes, "continuous")
   c04_error(triomics_evaluation_backend("mixomics_diablo", "continuous"),
-            "C_SCORE_BACKEND_UNAVAILABLE")
+            "C_EVAL_CAPABILITY_UNAVAILABLE")
+})
+
+testthat::test_that("variance qualification failure keeps the native BackendFit", {
+  adapter <- triomics_block_spls_backend()
+  training <- c04_training()
+  spec <- c04_spec(ncomp = 2L)
+  box <- new.env(parent = emptyenv())
+  box$n <- 0L
+  trace(
+    triomics_block_spls_variance,
+    tracer = function() {
+      box$n <- box$n + 1L
+      if (identical(box$n, 1L)) stop(simpleError("forced variance failure"))
+    },
+    where = asNamespace("triomics"), print = FALSE
+  )
+  on.exit(untrace(triomics_block_spls_variance, where = asNamespace("triomics")), add = TRUE)
+  fit <- adapter$fit(training, spec)
+  untrace(triomics_block_spls_variance, where = asNamespace("triomics"))
+  testthat::expect_s3_class(fit, "BackendFit")
+  testthat::expect_s3_class(fit$native_state$model, "block.spls")
+  testthat::expect_false(is.null(fit$native_state$response_diagnostics))
+  testthat::expect_identical(fit$native_state$variance_failure$code, "C_VARIANCE_UNAVAILABLE")
+  testthat::expect_identical(fit$result_params$variance$status, "unavailable")
+  c04_error(adapter$extract(fit, list(), spec), "C_VARIANCE_UNAVAILABLE")
 })
 
 testthat::test_that("C-04 YAML fixture validates against the existing config schema with a supported block.spls request", {
@@ -520,14 +546,14 @@ testthat::test_that("C-04 YAML fixture validates against the existing config sch
   testthat::expect_identical(names(request$design_matrix), c("block_1", "block_2", request$outcome))
 })
 
-testthat::test_that("C-04 registration request is submitted for Sol and does not claim shared-file application", {
+testthat::test_that("C-04 registration request records the applied shared contract change", {
   registration <- jsonlite::read_json(
     testthat::test_path("..", "..", "docs", "implementation", "registrations", "C-04.json"),
     simplifyVector = TRUE
   )
 
   testthat::expect_identical(registration$packet_id, "C-04")
-  testthat::expect_false(registration$applied_to_shared_files)
+  testthat::expect_true(registration$applied_to_shared_files)
   testthat::expect_identical(registration$integration_backends$method, "mixomics_block_spls")
   testthat::expect_identical(registration$shared_changes_for_sol$file, "R/integration_contract.R")
 })
