@@ -3,27 +3,28 @@
   "request_type": "registration_request",
   "implementation_base": "6ea8d20f0b654e8e544f9f8d6cf8517ab0fcae29",
   "accepted": false,
-  "implementation_status": "partial: environment check, unavailable-state gate and registry-boundary tests only. AC1 training, save and reload did not run. AC2-AC4 are not implemented in this revision.",
+  "implementation_status": "partial: unregistered MOFA2 train, save and reload path. Sol reproduced one synthetic smoke. The packet is not accepted. AC2-AC4 remain open.",
   "dependencies": [
     {
       "package": "MOFA2",
-      "observed_version": null,
+      "observed_version": "1.22.1",
       "required_for": ["mofa2"],
-      "install_status": "not_installed",
-      "install_error": "Isolated install into the worktree .r-lib was not run: the install command required approval, and the sandbox denied network-outbound bioconductor.org:443 (user denied). MOFA2 is distributed only through Bioconductor."
+      "install_status": "isolated_prefix_only",
+      "install_error": null
     },
     {
       "package": "mofapy2",
-      "observed_version": null,
+      "observed_version": "0.7.5",
       "required_for": ["mofa2"],
-      "install_status": "not_installed",
-      "install_error": "Isolated install was not run: the sandbox denied network-outbound pypi.org:443 (user denied). mofapy2 is distributed through PyPI and is required by MOFA2 through reticulate."
+      "install_status": "isolated_prefix_only",
+      "install_error": null
     }
   ],
   "isolated_environment": {
-    "library": ".r-lib inside the C-05 worktree (R_LIBS_USER)",
-    "attempted": "probed only",
-    "result": "blocked by the sandbox network policy before any package was installed",
+    "library": "/tmp/triomics-mofa-lib",
+    "python": "/tmp/triomics-mofa-py/bin/python",
+    "attempted": "isolated prefixes only",
+    "result": "MOFA2 1.22.1 and mofapy2 0.7.5 load from those prefixes. The user library was not modified.",
     "default_library_changed": false,
     "pinned_versions_observed_unchanged": {
       "mixOmics": "6.36.0",
@@ -38,7 +39,7 @@
       "status": "unavailable_gate_only",
       "task_mode": "exploratory",
       "classification": false,
-      "native_fit": "not implemented; training requires MOFA2 with mofapy2 for Gaussian views",
+      "native_fit": "MOFA2::run_mofa writes the HDF5 outfile; MOFA2::load_model reloads it. Gaussian views, observed-value scaling, and save/reload agreement are required before trained=TRUE.",
       "native_prediction": "not supported; core MOFA makes no new-subject prediction claim",
       "common_result": "not produced; the unavailable state carries no factors, weights or variance"
     }
@@ -62,7 +63,7 @@
     "tests/testthat/test-C-05.R 'C-05 public registry refuses the unregistered mofa2 name' must change when the shared registration is applied."
   ],
   "known_gaps": [
-    "AC1 training, save and reload evidence is absent. MOFA2 and mofapy2 are not installed and the isolated install was blocked, so no real model was trained, saved or reloaded.",
+    "AC1 training, save and reload evidence is absent from the accepted record. Sol reproduced one synthetic train, save and reload on 2026-10-19; this request stays unaccepted until review.",
     "AC2 is not implemented: Gaussian view fitting, native factor/weight/variance extraction and per-view missingness handling.",
     "AC3 is not implemented: seed sensitivity and sign/permutation alignment across declared seeds.",
     "AC4 is not implemented: native enrichment sidecar hashes. No predictive or new-subject claim is made.",

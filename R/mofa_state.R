@@ -35,6 +35,13 @@ triomics_mofa_python_status <- function(python = Sys.getenv("TRIOMICS_MOFA_PYTHO
   list(package = "mofapy2", loaded = TRUE, version = trimws(output[[length(output)]]), reason = NULL)
 }
 
+triomics_mofa_real_runtime_status <- function(python = Sys.getenv("TRIOMICS_MOFA_PYTHON", unset = "")) {
+  list(
+    MOFA2 = triomics_mofa_r_package_status("MOFA2"),
+    mofapy2 = triomics_mofa_python_status(python)
+  )
+}
+
 triomics_mofa_default_probe <- function(package) {
   if (identical(package, "mofapy2")) triomics_mofa_python_status() else triomics_mofa_r_package_status(package)
 }

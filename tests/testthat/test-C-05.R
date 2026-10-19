@@ -60,11 +60,20 @@ testthat::test_that("C-05 missing-package path refuses when only one runtime is 
 
 testthat::test_that("C-05 does not report training when both runtimes load but the training path is absent", {
   status <- triomics_mofa_backend_status(probe = c05_probe(c(MOFA2 = TRUE, mofapy2 = TRUE)))
-  err <- c05_error(
-    triomics_mofa_fit(list(), list(method = "mofa2"), status = status),
-    "C_SCORE_BACKEND_UNAVAILABLE"
-  )
-  testthat::expect_match(conditionMessage(err), "no factors, weights or variance were produced")
+  real <- triomics_mofa_real_runtime_status()
+  if (!isTRUE(real$MOFA2$loaded) || !isTRUE(real$mofapy2$loaded)) {
+    err <- c05_error(
+      triomics_mofa_fit(list(), list(method = "mofa2"), status = status),
+      "C_SCORE_BACKEND_UNAVAILABLE"
+    )
+    testthat::expect_match(conditionMessage(err), "no factors, weights or variance were produced")
+  } else {
+    err <- c05_error(
+      triomics_mofa_fit(list(), list(method = "mofa2"), status = status),
+      "C_ELIGIBILITY_BLOCK_MAP"
+    )
+    testthat::expect_false(isTRUE(err$trained))
+  }
 })
 
 testthat::test_that("C-05 python status refuses an unconfigured or unlaunchable mofapy2 runtime", {
@@ -96,10 +105,11 @@ testthat::test_that("C-05 environment check reports both runtimes as not loaded 
     # tools/ is excluded from the built package. The runtime probe remains the installed check.
     live <- triomics_mofa_backend_status()
     if (isTRUE(live$available)) {
-      c05_error(
+      err <- c05_error(
         triomics_mofa_fit(list(), list(method = "mofa2"), status = live),
-        "C_SCORE_BACKEND_UNAVAILABLE"
+        "C_ELIGIBILITY_BLOCK_MAP"
       )
+      testthat::expect_false(isTRUE(err$trained))
     } else {
       state <- triomics_mofa_fit(list(), list(method = "mofa2"), status = live)
       testthat::expect_identical(state$status, "unavailable")
@@ -110,9 +120,16 @@ testthat::test_that("C-05 environment check reports both runtimes as not loaded 
   testthat::expect_true(file.exists(script))
   library <- tempfile("c05-empty-library-")
   dir.create(library)
+  # An ambient TRIOMICS_MOFA_PYTHON must not make the empty-library probe look loaded.
+  # Pass only the variables the child needs. A full Sys.getenv() dump can
+  # contain newlines that make system2 reject the env vector.
+  keep <- c("PATH", "HOME", "TMPDIR", "LANG", "LC_ALL", "R_HOME")
+  env <- Sys.getenv(keep, unset = NA_character_)
+  env <- env[!is.na(env) & !grepl("[\r\n]", env)]
   output <- suppressWarnings(system2(
     "Rscript", c("--vanilla", script, "--library", library),
-    stdout = TRUE, stderr = TRUE
+    stdout = TRUE, stderr = TRUE,
+    env = c(paste0(names(env), "=", env), "TRIOMICS_MOFA_PYTHON=")
   ))
 
   testthat::expect_identical(attr(output, "status"), 1L)
