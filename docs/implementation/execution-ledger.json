@@ -36,13 +36,24 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "c03_adapter_landed_not_accepted",
+    "status": "c03_review_changes_required",
     "last_reconciled": "2026-10-19",
-    "active_handoffs": ["C-04"],
+    "active_handoffs": ["C-03-repair-1", "C-04"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-03 adapter is landed at 9758b4a on synthetic software evidence and is not accepted. mixomics_diablo is not registered. C-04 is in progress. C-05 stays closed until MOFA2 and mofapy2 exist. No biological validation is claimed."
+    "disposition": "Astra returned changes_required on C-03 commit 9758b4a. C-03 is not accepted and mixomics_diablo is not registered. Repair 1 is limited to the four C-03 files. C-04 remains in progress. C-05 stays closed until MOFA2 and mofapy2 exist."
   },
   "orchestration_events": [
+    {
+      "event": "c03_astra_changes_required",
+      "date": "2026-10-19",
+      "commit": "9758b4a",
+      "review_thread": "01a15375-51b5-7940-880d-e90c14552e73",
+      "verdict": "changes_required",
+      "findings": {"critical": 0, "important": 4, "note": 1},
+      "review_ref": "docs/implementation/reviews/2026-10-19-c03-astra-review.md",
+      "allowed_next_transition": "One C-03 repair on the four allowlisted files. Do not register mixomics_diablo. Do not accept C-03. C-08 and every D packet stay closed.",
+      "disposition": "Repair must orient common loadings with the frozen consensus signs, return held-out scores from native predict variates plus the stored consensus transform, recompute native block variance against the installed explained_variance formula, and prove the adapter fits a supplied candidate without calling tune.block.splsda. Nested CV stays in C-02."
+    },
     {
       "event": "c03_adapter_landed_not_accepted",
       "date": "2026-10-19",
