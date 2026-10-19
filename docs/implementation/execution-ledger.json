@@ -36,13 +36,25 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "c02_verified_pending_m5_review",
+    "status": "c02_accepted_g5_released",
     "last_reconciled": "2026-10-19",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-02 registration commit 85922cf passed the C-02 suite, the synthetic stage C command, and a clean package check with Status OK. Astra low found no Critical or Important defect in that commit. C-02 is not accepted. G5 is not released. The immutable M5 review remains before any C-03 dispatch."
+    "disposition": "C-02 is accepted on synthetic software evidence at 1a8cbe4 after the immutable M5 review. G5 is released for C-03, C-04, and C-05 only. No biological validation is claimed."
   },
   "orchestration_events": [
+    {
+      "event": "c02_accepted_g5_released",
+      "date": "2026-10-19",
+      "snapshot": "1a8cbe4",
+      "code_commit": "85922cf",
+      "m5_review_thread": "01a15362-3c23-7432-8e22-d52aa222658f",
+      "m5_verdict": "pass",
+      "findings": {"critical": 0, "important": 0},
+      "acceptance": ["C-02-AC1", "C-02-AC2", "C-02-AC3", "C-02-AC4"],
+      "allowed_next_transition": "C-03, C-04, and C-05 may start on disjoint write sets. C-08 and every D packet stay closed.",
+      "disposition": "Sol acceptance on public synthetic evidence. The M5 reviewer did not rerun tests. Sol had already rerun the C-02 suite, the stage C command, and the package check."
+    },
     {
       "event": "c02_package_check_ok_m5_still_closed",
       "date": "2026-10-19",

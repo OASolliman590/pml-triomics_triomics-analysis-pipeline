@@ -14,16 +14,17 @@ supervised route can run leakage-safe nested PLS-DA on the synthetic fixture.
 The C-02 suite passed 165 checks. The synthetic stage C command exited 0 and
 predicted all 12 fixture samples with nested concatenation PLS-DA. A two-sample
 inner fold that asked for more components than its rank failed explicitly.
-C-02 is not accepted yet: the clean package check is `Status: OK`, and the
-M5 review is still open. DIABLO, MOFA and the later Stage C and D packets stay closed.
+C-02 is accepted as synthetic software evidence. The M5 review found no
+blocking defect, so DIABLO, block.spls, and MOFA may start. Later Stage C and
+all Stage D packets stay closed.
 
 **Not established:** Accepted evidence remains synthetic software evidence, not
 biological validation. A separate local inventory reviewed the three private
 study workbooks, but the accepted pipeline has not fitted them. B-T04’s ordinary
 23/400 diagnostic remains failed; only its frozen production route passed.
 
-**Next:** Finish the C-02 package check and the M5 review before accepting
-C-02. C-03/C-04/C-05 still wait for that gate.
+**Next:** C-03, C-04, and C-05 are the next legal packets. C-08 and every D
+packet still wait on their own dependencies.
 
 **Needs Omar:** Decide when the clean, reviewed local history may be published.
 No private study data may enter GitHub or Notion.
