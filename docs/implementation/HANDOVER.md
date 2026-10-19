@@ -175,7 +175,10 @@ Balanced error 0 is a fixture result. The package check of archive
 causes are the C-01 and C-02 tests that still treat DIABLO as unregistered,
 and the C-03 schema path that is absent from the installed package.
 See `reviews/2026-10-19-c03-package-check.md`. That check does not cover
-`6ea8d20`.
+`6ea8d20`. The registry assertions and the installed schema path are
+repaired on the current tree. Sol reran C-01 (109 passed) and C-03
+(82 passed). Luna reran C-02 (165 passed) and C-04 (130 passed) on the
+repair worktree. A new package check of this tree is the acceptance gate.
 
 C-04 is registered at `6ea8d20` and is not accepted. Astra's review of
 `a3b9713` was changes_required. Sol repaired variance preservation, the

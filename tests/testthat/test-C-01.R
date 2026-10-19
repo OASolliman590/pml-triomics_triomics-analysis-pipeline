@@ -364,13 +364,14 @@ testthat::test_that("C-01 consensus refuses absent views, undefined alignment, a
   c01_error_code(apply_consensus_state(list(alpha = one), state), "C_SCORE_REQUIRED_VIEW_MISSING")
 })
 
-testthat::test_that("the adapter registry exposes only accepted integration routes", {
+testthat::test_that("the adapter registry exposes only the registered integration routes", {
   adapter <- triomics_integration_backend("concat_pca")
   testthat::expect_true(all(c("validate", "fit", "predict", "extract") %in% names(adapter)))
   testthat::expect_setequal(
-    triomics_integration_backend_names(), c("concat_pca", "concat_plsda", "concat_pls")
+    triomics_integration_backend_names(),
+    c("concat_pca", "concat_plsda", "concat_pls", "mixomics_diablo", "mixomics_block_spls")
   )
-  c01_error_code(triomics_integration_backend("mixomics_diablo"), "C_SCORE_BACKEND_UNAVAILABLE")
+  c01_error_code(triomics_integration_backend("mixomics_unregistered"), "C_SCORE_BACKEND_UNAVAILABLE")
 })
 
 testthat::test_that("C-01 rejects mismatched sample maps and non-finite assay values", {
@@ -453,7 +454,7 @@ testthat::test_that("C-01 public integration seam dispatches only the registered
   testthat::expect_s3_class(result, "IntegrationResult")
   testthat::expect_identical(result$backend, "concat_pca")
 
-  spec$method <- "mixomics_diablo"
+  spec$method <- "mixomics_unregistered"
   c01_error_code(
     integrate_blocks(fixture$resolved, spec),
     "C_SCORE_BACKEND_UNAVAILABLE"

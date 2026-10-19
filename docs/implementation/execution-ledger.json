@@ -44,6 +44,20 @@
   },
   "orchestration_events": [
     {
+      "event": "installed_package_test_repair_landed_not_accepted",
+      "date": "2026-10-19",
+      "tests": {
+        "C-01": "Sol rerun on the integrated tree: 109 passed, 0 failed, 0 warnings, 0 skips, 2.3s",
+        "C-02": "Luna rerun on the repair worktree before copy: 165 passed, 0 failed, 0 warnings, 0 skips, 214.55s",
+        "C-03": "Sol rerun on the integrated tree: 82 passed, 0 failed, 0 warnings, 0 skips, 3.7s",
+        "C-04": "Luna rerun on the repair worktree before copy: 130 passed, 0 failed, 0 warnings, 0 skips, 141.74s"
+      },
+      "schema_sha256": "25277ed4a9d8d2a519b81c9e6699fbfc1edaaa1c6b6c44524de56072f95ee3b1",
+      "acceptance": [],
+      "allowed_next_transition": "Package check of this repaired tree before any C-03 or C-04 acceptance. C-08 and every D packet stay closed.",
+      "disposition": "The C-01 and C-02 registry assertions now use an unregistered method name. The C-03 fixture validates against the frozen schema, and the packaged copy matches that file byte for byte. This repair does not accept C-03 or C-04."
+    },
+    {
       "event": "c05_fail_closed_draft_not_accepted",
       "date": "2026-10-19",
       "tests": "test_local filter C-05 on the integration tree: 46 passed, 0 failed, 0 warnings, 0 skips, 2.1s",

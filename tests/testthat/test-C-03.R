@@ -299,21 +299,51 @@ testthat::test_that("DIABLO fits supplied candidates once without native tuning"
 testthat::test_that("C-03 fixture is schema-valid and shared registration remains coordinator-owned", {
   fixture_path <- triomics_test_resource("examples", "tickets", "C-03.yaml")
   config <- yaml::read_yaml(fixture_path)
-  schema_path <- normalizePath(
-    testthat::test_path("..", "..", "discovery", "spec-v2", "schemas", "config.schema.json"),
-    winslash = "/", mustWork = TRUE
+  discovery_schema_path <- testthat::test_path(
+    "..", "..", "discovery", "spec-v2", "schemas", "config.schema.json"
   )
+  source_checkout <- file.exists(discovery_schema_path)
+  if (source_checkout) {
+    schema_path <- normalizePath(discovery_schema_path, winslash = "/", mustWork = TRUE)
+    packaged_schema_path <- testthat::test_path(
+      "..", "..", "inst", "frozen-spec", "config.schema.json"
+    )
+    packaged_schema_exists <- file.exists(packaged_schema_path)
+    testthat::expect_true(
+      packaged_schema_exists,
+      info = "The packaged frozen configuration schema is missing."
+    )
+    if (packaged_schema_exists) {
+      packaged_schema_path <- normalizePath(packaged_schema_path, winslash = "/", mustWork = TRUE)
+      testthat::expect_identical(
+        digest::digest(schema_path, file = TRUE, algo = "sha256", serialize = FALSE),
+        digest::digest(packaged_schema_path, file = TRUE, algo = "sha256", serialize = FALSE)
+      )
+    }
+  } else {
+    schema_path <- system.file("frozen-spec", "config.schema.json", package = "triomics")
+    testthat::expect_true(
+      nzchar(schema_path) && file.exists(schema_path),
+      info = "The installed frozen configuration schema is missing."
+    )
+  }
   testthat::expect_true(jsonvalidate::json_validate(
     jsonlite::toJSON(config, auto_unbox = TRUE, null = "null"),
     schema_path, engine = "ajv", verbose = TRUE
   ))
-  registration <- jsonlite::read_json(
-    testthat::test_path("..", "..", "docs", "implementation", "registrations", "C-03.json"),
-    simplifyVector = FALSE
-  )
-  testthat::expect_identical(registration$applied_to_shared_files, TRUE)
-  testthat::expect_true(length(registration$coordinator_owned_files_to_update) > 0L)
-  testthat::expect_true("R/cli.R" %in% unlist(registration$coordinator_owned_files_to_update))
+  if (source_checkout) {
+    registration_path <- testthat::test_path(
+      "..", "..", "docs", "implementation", "registrations", "C-03.json"
+    )
+    testthat::expect_true(
+      file.exists(registration_path),
+      info = "The source registration record for C-03 is missing."
+    )
+    registration <- jsonlite::read_json(registration_path, simplifyVector = FALSE)
+    testthat::expect_identical(registration$applied_to_shared_files, TRUE)
+    testthat::expect_true(length(registration$coordinator_owned_files_to_update) > 0L)
+    testthat::expect_true("R/cli.R" %in% unlist(registration$coordinator_owned_files_to_update))
+  }
   adapter <- triomics_integration_backend("mixomics_diablo")
   testthat::expect_s3_class(adapter, "BackendAdapter")
   testthat::expect_identical(adapter$evaluation_modes, "categorical")

@@ -436,7 +436,7 @@ testthat::test_that("public evaluation enforces registration while packet adapte
   adapter <- triomics_supervised_backend("concat_plsda")
   testthat::expect_s3_class(adapter, "BackendAdapter")
   testthat::expect_identical(adapter$evaluation_modes, "categorical")
-  c02_error(triomics_evaluation_backend("mixomics_diablo", "categorical"),
+  c02_error(triomics_evaluation_backend("mixomics_unregistered", "categorical"),
             "C_SCORE_BACKEND_UNAVAILABLE")
 })
 
