@@ -2,9 +2,12 @@
 
 Run `triomics-20260920-sol-01` continues on branch
 `spec/harden-v2-20260920`. G0 through G5 are released. Stages A and B, C-01,
-and C-02 are accepted on synthetic evidence. C-03 is registered at `d5037ec`
-and is not accepted. C-04 is registered at `6ea8d20` and is not accepted.
-The package check of archive `d5037ec` failed. C-08 and every D packet stay
+and C-02 are accepted on synthetic evidence. Head is `fda190f`. C-03 is
+registered at `d5037ec` and is not accepted. C-04 is registered at `6ea8d20`
+and is not accepted. The installed check of `ed2f579` was Status 1 ERROR,
+FAIL 1, WARN 8, SKIP 1, PASS 3983. `fda190f` guards the second untrace.
+Its source C-04 suite passed 132. A package check of that commit is running
+and is not a result. C-05 is not accepted. C-08 and every D packet stay
 closed. The historical sections below keep their original wording.
 
 ## Current evidence
@@ -165,7 +168,7 @@ the first predictor block only; native component mismatch still fails closed.
 ## Literal resume instruction
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
-`execution-ledger.json`, and this handover. Head is `6ea8d20`.
+`execution-ledger.json`, and this handover. Head is `fda190f`.
 C-01 and C-02 are accepted on synthetic software evidence. G5 is released.
 C-03 is registered at `d5037ec` and is not accepted. The focused rereview
 `01a15383-3d65-7320-b462-e5c7b03b7c66` passed. The synthetic stage C command
@@ -178,7 +181,14 @@ See `reviews/2026-10-19-c03-package-check.md`. That check does not cover
 `6ea8d20`. The registry assertions and the installed schema path are
 repaired on the current tree. Sol reran C-01 (109 passed) and C-03
 (82 passed). Luna reran C-02 (165 passed) and C-04 (130 passed) on the
-repair worktree. A new package check of this tree is the acceptance gate.
+repair worktree. The later installed check of `ed2f579` still failed:
+one second untrace of `triomics_block_spls_variance`, eight warnings,
+and one empty-test skip. `fda190f` untraces only while that binding is
+traceable. Sol reran filter C-04: 132 passed, 0 failed, 0 warnings,
+0 skips, 155.9 seconds. Astra's read-only review of that guard passed
+and did not rerun tests. The acceptance gate is the package check of
+`fda190f`, which is running. Do not accept C-03 or C-04 on any earlier
+result.
 
 C-04 is registered at `6ea8d20` and is not accepted. Astra's review of
 `a3b9713` was changes_required. Sol repaired variance preservation, the

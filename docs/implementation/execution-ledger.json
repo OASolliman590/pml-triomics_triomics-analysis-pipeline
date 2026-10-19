@@ -36,13 +36,28 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "c03_c04_registered_package_check_failed",
+    "status": "c04_untrace_guard_landed_package_check_running",
     "last_reconciled": "2026-10-19",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Head is 6ea8d20. C-03 is registered at d5037ec and is not accepted. The package check of that archive failed: Status 1 ERROR, FAIL 7, WARN 8, PASS 3803. C-04 is registered at 6ea8d20 and is not accepted. The synthetic block.spls CLI predicted 12/12; rmse about 0.509 is a fixture result. MOFA2 and mofapy2 are absent, so C-05 AC1 cannot be claimed. C-08 and every D packet stay closed."
+    "disposition": "Head is fda190f. C-03 and C-04 are registered and not accepted. The ed2f579 installed check was Status 1 ERROR, FAIL 1, WARN 8, SKIP 1, PASS 3983. The remaining failure was a second untrace of triomics_block_spls_variance. fda190f guards that untrace. Its source C-04 suite passed 132. A package check of that commit is running and is not a result yet. C-05 is not accepted. C-08 and every D packet stay closed."
   },
   "orchestration_events": [
+    {
+      "event": "c04_installed_untrace_guard_landed_not_accepted",
+      "date": "2026-10-19",
+      "commit": "fda190f",
+      "prior_check": {
+        "commit": "ed2f579",
+        "result": "Status: 1 ERROR; FAIL 1; WARN 8; SKIP 1; PASS 3983",
+        "failure": "on.exit second untrace of unexported triomics_block_spls_variance on the installed namespace"
+      },
+      "tests": "test_local filter C-04 on the integration tree: 132 passed, 0 failed, 0 warnings, 0 skips, 155.9s. One trace and one untrace were printed.",
+      "review": "Astra low read-only pass on the guard and on the C-05 fail-closed draft. Thread 01a153dd-2836-7a52-a703-b02b953b7e7f. No tests rerun. Not acceptance.",
+      "acceptance": [],
+      "allowed_next_transition": "Read the package check of fda190f. Accept neither C-03 nor C-04 unless the status line is exactly Status: OK. If WARN 8 remains, name the warnings from the preserved testthat.Rout before another code change. Do not accept C-05 or register mofa2. C-08 and every D packet stay closed.",
+      "disposition": "The guard untraces only while the binding is traceable. The installed registration test now expects a continuous BackendAdapter. This commit does not accept C-03 or C-04."
+    },
     {
       "event": "installed_package_test_repair_landed_not_accepted",
       "date": "2026-10-19",
