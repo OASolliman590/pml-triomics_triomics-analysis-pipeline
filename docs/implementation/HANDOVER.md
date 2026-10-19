@@ -181,8 +181,11 @@ C-04 is registered at `6ea8d20` and is not accepted. Astra's review of
 `a3b9713` was changes_required. Sol repaired variance preservation, the
 DIABLO continuous expectation, and the synthetic `score` fixture, then
 reran filter C-04 (129 passed) and the stage C CLI (12/12 predicted,
-rmse about 0.509). Those numbers are fixture results. No rereview of
-`6ea8d20` has landed. MOFA2 and mofapy2 are not installed, so C-05 AC1
+rmse about 0.509). Those numbers are fixture results. The focused
+rereview of `6ea8d20` passed with the three Important findings closed
+and no new Critical or Important defect. See
+`reviews/2026-10-19-c04-repair-rereview.md`. That pass does not accept
+C-04. MOFA2 and mofapy2 are not installed, so C-05 AC1
 cannot be claimed. Do not start C-08 or any D packet. Do not loosen the
 B-T04 0.08 bound or reroll seeds 1001:1400. Do not edit frozen
 `discovery/spec-v2` content. Leave private study data unread.

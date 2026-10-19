@@ -68,6 +68,18 @@
       "review_ref": "docs/implementation/reviews/2026-10-19-c03-package-check.md"
     },
     {
+      "event": "c04_repair_rereview_pass_not_accepted",
+      "date": "2026-10-19",
+      "commit": "6ea8d20",
+      "verdict": "pass",
+      "findings": {"critical": 0, "important": 0},
+      "prior_findings": "The three Important findings on a3b9713 are closed.",
+      "review_ref": "docs/implementation/reviews/2026-10-19-c04-repair-rereview.md",
+      "acceptance": [],
+      "allowed_next_transition": "Package check of the repaired tree before C-04 acceptance. The rereview does not accept C-04.",
+      "disposition": "Astra did not rerun tests. Sol checked the cited variance, DIABLO-code, and synthetic-score lines. Fixture CLI metrics remain fixture results."
+    },
+    {
       "event": "c04_adapter_landed_not_accepted",
       "date": "2026-10-19",
       "commit": "a3b9713",
