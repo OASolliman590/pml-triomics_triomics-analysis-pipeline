@@ -1,0 +1,40 @@
+{
+  "packet_id": "C-03",
+  "request_type": "shared_registration",
+  "implementation_base": "4384b29c6e3c27c5137ca3ea6d9bbce5fc51b0ea",
+  "dependencies": [
+    {
+      "package": "mixOmics",
+      "observed_version": "6.36.0",
+      "required_for": ["mixomics_diablo"]
+    }
+  ],
+  "exports": [],
+  "integration_backends": [
+    {
+      "method": "mixomics_diablo",
+      "adapter_factory": "triomics_diablo_backend",
+      "task_mode": "categorical",
+      "native_fit": "mixOmics::block.splsda",
+      "native_prediction": "stats::predict.block.spls with native MajorityVote for the declared distance rule"
+    }
+  ],
+  "cli_registration": {
+    "stage": "C",
+    "service": "evaluate_pipeline",
+    "enabled": true
+  },
+  "coordinator_owned_files_to_update": [
+    "R/integration_contract.R",
+    "R/cli.R",
+    "R/stage_registry.R",
+    "NAMESPACE"
+  ],
+  "registration_notes": [
+    "Sol must add mixomics_diablo to the registered backend ids and dispatch it to triomics_diablo_backend.",
+    "Sol must preserve C-02 evaluate_pipeline and BackendAdapter seams; nested evaluation remains C-02-owned.",
+    "Sol must keep the public CLI route disabled until this registration and the C-03 review gate are accepted.",
+    "The adapter is qualified only for complete predictor blocks; missingness is fail-closed with C_NA_CAPABILITY."
+  ],
+  "applied_to_shared_files": false
+}

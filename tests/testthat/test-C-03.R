@@ -1,0 +1,241 @@
+c03_error <- function(expr, code) {
+  err <- testthat::capture_error(force(expr))
+  testthat::expect_s3_class(err, "triomics_error")
+  testthat::expect_identical(err$code, code)
+  err
+}
+
+c03_resolved <- function(blocks, outcome = NULL, units = colnames(blocks[[1L]])) {
+  if (!is.null(outcome)) names(outcome) <- units
+  list(
+    study_id = "study-c03-synthetic",
+    analysis_id = "analysis-c03-synthetic",
+    preparation_context_id = "fold-c03-synthetic",
+    representation_id = "fold_prepared",
+    unit_ids = unname(units),
+    outcome = outcome,
+    task_mode = "categorical",
+    blocks = stats::setNames(lapply(names(blocks), function(block_id) {
+      assay <- blocks[[block_id]]
+      list(
+        block_id = block_id,
+        study_id = "study-c03-synthetic",
+        preparation_context_id = "fold-c03-synthetic",
+        representation_id = "fold_prepared",
+        assay = assay,
+        sample_ids = colnames(assay),
+        feature_keys = rownames(assay)
+      )
+    }), names(blocks))
+  )
+}
+
+c03_blocks <- function() {
+  units <- paste0("unit-", seq_len(12L))
+  alpha <- rbind(
+    alpha_signal = c(rep(-2, 6L), rep(2, 6L)) + c(-.1, .1, -.2, .2, 0, .1, -.1, .2, 0, -.2, .1, 0),
+    alpha_trend = seq(-1, 1, length.out = 12L),
+    alpha_noise = c(.2, -.4, .3, -.1, .5, -.2, -.3, .1, -.5, .4, -.2, .3)
+  )
+  beta <- rbind(
+    beta_signal = c(rep(-1.5, 6L), rep(1.5, 6L)) + c(.1, -.1, .2, -.2, 0, .1, -.1, 0, .2, -.2, .1, 0),
+    beta_trend = cos(seq_len(12L) / 2)
+  )
+  colnames(alpha) <- colnames(beta) <- units
+  list(alpha = alpha, beta = beta)
+}
+
+c03_spec <- function(block_ids = c("alpha", "beta")) {
+  design <- matrix(
+    c(0, .5, .5, 0), nrow = 2L, ncol = 2L,
+    dimnames = list(block_ids, block_ids)
+  )
+  list(
+    method = "mixomics_diablo",
+    block_ids = block_ids,
+    ncomp = 2L,
+    scale_features = TRUE,
+    score_definition = "consensus_mean",
+    design_matrix = design,
+    keepX = stats::setNames(list(c(2L, 2L), c(2L, 2L)), block_ids),
+    tuning_grid_ref = "c03_test_grid",
+    prediction_rule = "centroids.dist",
+    na_capability = "complete_predictor_blocks",
+    class_levels = c("control", "case")
+  )
+}
+
+c03_training <- function(block_order = c("alpha", "beta")) {
+  blocks <- c03_blocks()[block_order]
+  y <- factor(rep(c("control", "case"), each = 6L), levels = c("control", "case"))
+  list(
+    resolved = c03_resolved(blocks, y),
+    params = c03_spec(block_order),
+    blocks = blocks,
+    outcome = y
+  )
+}
+
+testthat::test_that("categorical DIABLO fits native named design with sparse support", {
+  fixture <- c03_training()
+  adapter <- triomics_diablo_backend("mixomics_diablo")
+  fit <- adapter$fit(fixture$resolved, fixture$params)
+  extracted <- adapter$extract(fit, list(study_id = fixture$resolved$study_id), fixture$params)
+  result <- extracted$result
+
+  testthat::expect_s3_class(adapter, "BackendAdapter")
+  testthat::expect_identical(adapter$evaluation_modes, "categorical")
+  testthat::expect_s3_class(fit, "BackendFit")
+  testthat::expect_identical(fit$metadata$native_method, "mixOmics::block.splsda")
+  testthat::expect_identical(fit$metadata$native_version, "6.36.0")
+  testthat::expect_s3_class(result, "IntegrationResult")
+  testthat::expect_identical(result$backend, "mixomics_diablo")
+  testthat::expect_identical(names(result$loadings), c("alpha", "beta"))
+  testthat::expect_identical(rownames(fit$native_state$model$design), c("alpha", "beta", "Y"))
+  testthat::expect_identical(colnames(fit$native_state$model$design), c("alpha", "beta", "Y"))
+  testthat::expect_equal(fit$native_state$model$design[c("alpha", "beta"), c("alpha", "beta")],
+                         fixture$params$design_matrix, tolerance = 0)
+  testthat::expect_identical(unname(fit$native_state$model$ncomp[c("alpha", "beta")]), c(2, 2))
+  testthat::expect_identical(fit$native_state$model$keepX, fixture$params$keepX)
+  testthat::expect_identical(fit$result_params$tuning, "wrapper_controlled_grid")
+  testthat::expect_identical(fit$result_params$na_capability, "complete_predictor_blocks")
+  testthat::expect_true(all(vapply(result$selected, length, integer(1)) > 0L))
+  testthat::expect_true(all(vapply(seq_along(result$selected), function(i) {
+    all(result$selected[[i]] %in% rownames(result$loadings[[i]]))
+  }, logical(1))))
+  testthat::expect_true(all(vapply(result$loadings, function(x) any(abs(x) > 0), logical(1))))
+})
+
+testthat::test_that("DIABLO rejects non-categorical or unpinned inputs at the adapter boundary", {
+  fixture <- c03_training()
+  adapter <- triomics_diablo_backend("mixomics_diablo")
+
+  bad_design <- fixture$params
+  bad_design$design_matrix <- matrix(c(0, .5, .2, 0), 2L, dimnames = list(c("alpha", "beta"), c("alpha", "beta")))
+  c03_error(adapter$validate(fixture$resolved, bad_design), "C_SCORE_DESIGN_INVALID")
+
+  missing_pin <- fixture$params
+  missing_pin$na_capability <- NULL
+  c03_error(adapter$validate(fixture$resolved, missing_pin), "C_NA_CAPABILITY")
+
+  missing_values <- fixture$resolved
+  missing_values$blocks$alpha$assay[1L, 1L] <- NA_real_
+  c03_error(adapter$validate(missing_values, fixture$params), "C_NA_CAPABILITY")
+
+  numeric_outcome <- fixture$resolved
+  numeric_outcome$outcome <- seq_along(numeric_outcome$unit_ids)
+  c03_error(adapter$validate(numeric_outcome, fixture$params), "C_EVAL_RESPONSE_INVALID")
+})
+
+testthat::test_that("consensus uses the frozen anchor/sign/standardization convention", {
+  fixture <- c03_training()
+  fit <- triomics_diablo_backend("mixomics_diablo")$fit(fixture$resolved, fixture$params)
+  native_scores <- fit$native_state$native_scores
+  native_loadings <- fit$native_state$native_loadings
+  training_units <- fixture$resolved$unit_ids
+  state <- make_consensus_state(native_scores, native_loadings, training_units,
+                                list(required_views = c("alpha", "beta")))
+  expected <- apply_consensus_state(native_scores, state)
+
+  reordered <- make_consensus_state(
+    native_scores[c("beta", "alpha")], native_loadings[c("beta", "alpha")],
+    training_units, list(required_views = c("beta", "alpha"))
+  )
+  testthat::expect_identical(reordered$anchor_view, "alpha")
+  testthat::expect_equal(apply_consensus_state(native_scores[c("beta", "alpha")], reordered),
+                         expected, tolerance = 1e-10)
+
+  signs <- c(alpha = -1, beta = 1)
+  perturbed_scores <- Map(function(x, sign) x * sign, native_scores, signs[names(native_scores)])
+  perturbed_loadings <- Map(function(x, sign) x * sign, native_loadings, signs[names(native_loadings)])
+  perturbed <- make_consensus_state(perturbed_scores, perturbed_loadings, training_units,
+                                    list(required_views = c("alpha", "beta")))
+  testthat::expect_equal(apply_consensus_state(perturbed_scores, perturbed),
+                         expected, tolerance = 1e-10)
+  testthat::expect_identical(state$weights, c(alpha = 0.5, beta = 0.5))
+
+  degenerate <- native_scores
+  degenerate$beta[, 1L] <- 1
+  c03_error(make_consensus_state(degenerate, native_loadings, training_units,
+                                 list(required_views = c("alpha", "beta"))),
+            "C_SCORE_RANK_ZERO")
+})
+
+testthat::test_that("held-out prediction and scores use native APIs and stored transforms", {
+  fixture <- c03_training()
+  adapter <- triomics_diablo_backend("mixomics_diablo")
+  fit <- adapter$fit(fixture$resolved, fixture$params)
+  new_blocks <- lapply(fixture$blocks, function(x) x[, c(1L, 7L), drop = FALSE])
+  colnames(new_blocks$alpha) <- colnames(new_blocks$beta) <- c("held-control", "held-case")
+  new_resolved <- c03_resolved(new_blocks, outcome = NULL)
+  prediction <- adapter$predict(fit, new_resolved, fixture$params)
+  native <- stats::predict(
+    fit$native_state$model,
+    newdata = lapply(new_blocks, function(x) t(x)),
+    dist = fixture$params$prediction_rule
+  )
+  expected_native <- as.character(native$MajorityVote[[fixture$params$prediction_rule]][, fixture$params$ncomp])
+
+  testthat::expect_identical(prediction$prediction_kind, "categorical_label")
+  testthat::expect_identical(unname(prediction$predictions), expected_native)
+  testthat::expect_identical(prediction$unit_ids, c("held-control", "held-case"))
+  testthat::expect_identical(prediction$training_state_hash, fit$metadata$state_hash)
+  testthat::expect_true(all(vapply(fit$native_state$training_transform,
+                                   function(x) identical(x$scale_features, TRUE), logical(1))))
+  testthat::expect_identical(fit$native_state$prediction_state$uses_outcome, FALSE)
+
+  common <- adapter$extract(fit, list(), fixture$params)$result
+  expected_common <- apply_consensus_state(fit$native_state$native_scores,
+                                           fit$native_state$consensus_state)
+  testthat::expect_equal(common$scores, expected_common, tolerance = 1e-10)
+
+  missing_block <- new_resolved
+  missing_block$blocks$beta <- NULL
+  c03_error(adapter$predict(fit, missing_block, fixture$params), "C_EVAL_REQUIRED_VIEW_MISSING")
+})
+
+testthat::test_that("native predictor variance is verified and common degeneracy fails closed", {
+  fixture <- c03_training()
+  adapter <- triomics_diablo_backend("mixomics_diablo")
+  fit <- adapter$fit(fixture$resolved, fixture$params)
+  result <- adapter$extract(fit, list(), fixture$params)$result
+
+  expected <- vapply(c("alpha", "beta"), function(block_id) {
+    fit$native_state$model$prop_expl_var[[block_id]][["comp1"]]
+  }, numeric(1))
+  testthat::expect_equal(unname(result$variance[, "comp1"]), unname(expected), tolerance = 1e-12)
+  testthat::expect_identical(attr(result$variance, "metric"), "native_block_splsda_proportion")
+  testthat::expect_identical(attr(result$variance, "semantics"), "predictor_block_native")
+  testthat::expect_false("Y" %in% rownames(result$variance))
+  testthat::expect_false("Y" %in% names(result$loadings))
+  testthat::expect_true(all(vapply(result$selected, function(keys) length(keys) > 0L, logical(1))))
+
+  no_variance <- fit
+  no_variance$native_state$model$prop_expl_var <- NULL
+  c03_error(adapter$extract(no_variance, list(), fixture$params), "C_SCORE_VARIANCE_UNAVAILABLE")
+
+  no_common <- fit
+  no_common$native_state$native_scores$alpha[, 1L] <- 0
+  c03_error(adapter$extract(no_common, list(), fixture$params), "C_SCORE_RANK_ZERO")
+})
+
+testthat::test_that("C-03 fixture is schema-valid and shared registration remains coordinator-owned", {
+  fixture_path <- triomics_test_resource("examples", "tickets", "C-03.yaml")
+  config <- yaml::read_yaml(fixture_path)
+  schema_path <- triomics_test_resource("..", "..", "discovery", "spec-v2", "schemas", "config.schema.json")
+  testthat::expect_true(jsonvalidate::json_validate(
+    jsonlite::toJSON(config, auto_unbox = TRUE, null = "null"),
+    schema_path, engine = "ajv", verbose = TRUE
+  ))
+  registration <- jsonlite::read_json(
+    testthat::test_path("..", "..", "docs", "implementation", "registrations", "C-03.json"),
+    simplifyVector = FALSE
+  )
+  testthat::expect_identical(registration$applied_to_shared_files, FALSE)
+  testthat::expect_true(length(registration$coordinator_owned_files_to_update) > 0L)
+  testthat::expect_true("R/cli.R" %in% unlist(registration$coordinator_owned_files_to_update))
+  c03_error(
+    evaluate_pipeline(NULL, NULL, list(method = "mixomics_diablo"), NULL),
+    "C_SCORE_BACKEND_UNAVAILABLE"
+  )
+})
