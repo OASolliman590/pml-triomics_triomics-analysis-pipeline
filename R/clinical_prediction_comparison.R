@@ -291,7 +291,6 @@ triomics_c09_validate_candidate_results <- function(evaluations, split_plan, pro
     data.frame(fold_id = fold$fold_id, unit_id = as.character(fold$test_unit_ids), stringsAsFactors = FALSE)
   }))
   reference_truth <- NULL
-  reference_status <- NULL
   for (candidate_name in required_names) {
     evaluation <- evaluations[[candidate_name]]
     if (!inherits(evaluation, "EvaluationResult") ||
@@ -323,11 +322,10 @@ triomics_c09_validate_candidate_results <- function(evaluations, split_plan, pro
     truth <- as.numeric(ledger$truth)
     status <- as.character(ledger$status)
     if (any(!status %in% c("predicted", "failed", "ineligible")) ||
-        (!is.null(reference_truth) && !identical(truth, reference_truth)) ||
-        (!is.null(reference_status) && !identical(status, reference_status))) {
+        (!is.null(reference_truth) && !identical(truth, reference_truth))) {
       triomics_c09_abort(
         "C_C09_CANDIDATE_MISMATCH",
-        "Matched incremental metrics require identical outcomes and failure/ineligibility dispositions for every held-out patient.",
+        "Candidates must preserve identical truth values and valid per-candidate prediction dispositions for every held-out patient.",
         paste0(candidate_name, ".predictions")
       )
     }
@@ -411,7 +409,6 @@ triomics_c09_validate_candidate_results <- function(evaluations, split_plan, pro
       }
     }
     if (is.null(reference_truth)) reference_truth <- truth
-    if (is.null(reference_status)) reference_status <- status
   }
   invisible(TRUE)
 }
@@ -443,35 +440,62 @@ triomics_c09_metric_value <- function(name, truth, prediction, intercept) {
 triomics_c09_bootstrap_delta <- function(metric, combined, reference, split_plan, protocol) {
   combined_ledger <- combined$predictions
   reference_ledger <- reference$predictions
-  predicted <- combined_ledger$status == "predicted"
-  if (!any(predicted)) {
+  paired_success <- as.character(combined_ledger$status) == "predicted" &
+    as.character(reference_ledger$status) == "predicted" &
+    is.finite(as.numeric(combined_ledger$truth)) &
+    is.finite(as.numeric(combined_ledger$prediction)) &
+    is.finite(as.numeric(reference_ledger$prediction)) &
+    is.finite(as.numeric(combined_ledger$training_intercept)) &
+    is.finite(as.numeric(reference_ledger$training_intercept))
+  rows <- which(paired_success)
+  coverage_denominator <- as.integer(nrow(combined_ledger))
+  matched_success_n <- as.integer(length(rows))
+  matched_success_coverage <- if (coverage_denominator > 0L) {
+    matched_success_n / coverage_denominator
+  } else {
+    NA_real_
+  }
+  coverage <- list(
+    matched_success_n = matched_success_n,
+    coverage_denominator_n = coverage_denominator,
+    matched_success_coverage = unname(matched_success_coverage)
+  )
+  if (!length(rows)) {
     return(list(
       estimate = NA_real_, interval = c(NA_real_, NA_real_),
       uncertainty_method = "not_estimable", resampling_unit = "subject",
       confidence_level = protocol$uncertainty$confidence_level,
       requested_replicates = as.integer(protocol$uncertainty$replicates),
-      completed_replicates = 0L, failed_replicates = as.integer(protocol$uncertainty$replicates)
+      completed_replicates = 0L, failed_replicates = as.integer(protocol$uncertainty$replicates),
+      estimate_status = "unavailable_no_matched_successes",
+      matched_success_coverage = coverage$matched_success_coverage,
+      matched_success_n = coverage$matched_success_n,
+      coverage_denominator_n = coverage$coverage_denominator_n
     ))
   }
-  rows <- which(predicted)
   truth <- as.numeric(combined_ledger$truth[rows])
   left <- as.numeric(combined_ledger$prediction[rows])
   right <- as.numeric(reference_ledger$prediction[rows])
-  intercept <- as.numeric(combined_ledger$training_intercept[rows])
+  left_intercept <- as.numeric(combined_ledger$training_intercept[rows])
+  right_intercept <- as.numeric(reference_ledger$training_intercept[rows])
   unit_ids <- as.character(combined_ledger$unit_id[rows])
   subject_ids <- as.character(split_plan$unit_subject$subject_id[
     match(unit_ids, as.character(split_plan$unit_subject$unit_id))
   ])
   subject_clusters <- unique(subject_ids)
-  point <- triomics_c09_metric_value(metric, truth, left, intercept) -
-    triomics_c09_metric_value(metric, truth, right, intercept)
+  point <- triomics_c09_metric_value(metric, truth, left, left_intercept) -
+    triomics_c09_metric_value(metric, truth, right, right_intercept)
   if (length(subject_clusters) < 2L || !is.finite(point)) {
     return(list(
-      estimate = unname(point), interval = c(NA_real_, NA_real_),
+      estimate = NA_real_, interval = c(NA_real_, NA_real_),
       uncertainty_method = "not_estimable", resampling_unit = "subject",
       confidence_level = protocol$uncertainty$confidence_level,
       requested_replicates = as.integer(protocol$uncertainty$replicates),
-      completed_replicates = 0L, failed_replicates = as.integer(protocol$uncertainty$replicates)
+      completed_replicates = 0L, failed_replicates = as.integer(protocol$uncertainty$replicates),
+      estimate_status = "unavailable_insufficient_matched_subjects",
+      matched_success_coverage = coverage$matched_success_coverage,
+      matched_success_n = coverage$matched_success_n,
+      coverage_denominator_n = coverage$coverage_denominator_n
     ))
   }
   had_seed <- exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
@@ -492,8 +516,11 @@ triomics_c09_bootstrap_delta <- function(metric, combined, reference, split_plan
     sampled_rows <- unlist(lapply(selected_clusters, function(subject_id) {
       which(subject_ids == subject_id)
     }), use.names = FALSE)
-    triomics_c09_metric_value(metric, truth[sampled_rows], left[sampled_rows], intercept[sampled_rows]) -
-      triomics_c09_metric_value(metric, truth[sampled_rows], right[sampled_rows], intercept[sampled_rows])
+    triomics_c09_metric_value(
+      metric, truth[sampled_rows], left[sampled_rows], left_intercept[sampled_rows]
+    ) - triomics_c09_metric_value(
+      metric, truth[sampled_rows], right[sampled_rows], right_intercept[sampled_rows]
+    )
   }, simplify = TRUE)
   finite <- samples[is.finite(samples)]
   confidence <- protocol$uncertainty$confidence_level
@@ -511,16 +538,34 @@ triomics_c09_bootstrap_delta <- function(metric, combined, reference, split_plan
     resampling_unit = "subject", confidence_level = confidence,
     requested_replicates = replicates, completed_replicates = as.integer(length(finite)),
     failed_replicates = as.integer(replicates - length(finite)),
+    estimate_status = "estimable_on_matched_successes",
+    matched_success_coverage = coverage$matched_success_coverage,
+    matched_success_n = coverage$matched_success_n,
+    coverage_denominator_n = coverage$coverage_denominator_n,
     dependence_limitation = "Conditional on the fixed nested SplitPlan; resampling subjects does not remove overlap among training sets."
   )
 }
 
 triomics_c09_candidate_history <- function(evaluation) {
   lapply(evaluation$outer_folds, function(fold) {
+    rows <- evaluation$predictions[
+      as.character(evaluation$predictions$fold_id) == as.character(fold$fold_id),
+      , drop = FALSE
+    ]
     list(
       fold_id = fold$fold_id,
       training_unit_ids = fold$training_unit_ids,
       test_unit_ids = fold$test_unit_ids,
+      prediction_dispositions = lapply(seq_len(nrow(rows)), function(index) {
+        list(
+          unit_id = as.character(rows$unit_id[[index]]),
+          status = as.character(rows$status[[index]]),
+          failure_reason = if (is.null(rows$reason_code) || is.na(rows$reason_code[[index]]) ||
+                               !nzchar(as.character(rows$reason_code[[index]]))) NULL else {
+            as.character(rows$reason_code[[index]])
+          }
+        )
+      }),
       chosen_candidate_id = if (is.null(fold$chosen_candidate)) NULL else fold$chosen_candidate$id,
       candidate_tuning = fold$tuning_history,
       inner_selection = lapply(fold$inner_results, function(inner) {
@@ -538,18 +583,253 @@ triomics_c09_candidate_history <- function(evaluation) {
 triomics_c09_candidate_denominator <- function(evaluation) {
   ledger <- evaluation$predictions
   status <- as.character(ledger$status)
-  failure_reasons <- table(factor(
-    as.character(ledger$reason_code[status == "failed"]),
-    levels = sort(unique(as.character(ledger$reason_code[status == "failed"])))
-  ))
+  reason <- if ("reason_code" %in% names(ledger)) as.character(ledger$reason_code) else rep(NA_character_, nrow(ledger))
+  failed_reasons <- reason[status == "failed"]
+  failed_reasons <- failed_reasons[!is.na(failed_reasons) & nzchar(failed_reasons)]
+  failure_reasons <- table(factor(failed_reasons, levels = sort(unique(failed_reasons))))
+  fold_ids <- vapply(evaluation$outer_folds, `[[`, character(1), "fold_id")
+  outer_fold_dispositions <- stats::setNames(lapply(fold_ids, function(fold_id) {
+    rows <- which(as.character(ledger$fold_id) == fold_id)
+    fold_status <- status[rows]
+    fold_reasons <- reason[rows][fold_status == "failed"]
+    fold_reasons <- fold_reasons[!is.na(fold_reasons) & nzchar(fold_reasons)]
+    unit_dispositions <- stats::setNames(fold_status, as.character(ledger$unit_id[rows]))
+    list(
+      total = as.integer(length(rows)),
+      predicted = as.integer(sum(fold_status == "predicted")),
+      failed = as.integer(sum(fold_status == "failed")),
+      ineligible = as.integer(sum(fold_status == "ineligible")),
+      failure_reasons = as.list(table(factor(fold_reasons, levels = sort(unique(fold_reasons))))),
+      unit_dispositions = unit_dispositions
+    )
+  }), fold_ids)
   list(
     total = as.integer(nrow(ledger)),
     eligible = as.integer(sum(status %in% c("predicted", "failed"))),
     predicted = as.integer(sum(status == "predicted")),
     failed = as.integer(sum(status == "failed")),
     ineligible = as.integer(sum(status == "ineligible")),
-    failure_reasons = as.list(as.integer(failure_reasons))
+    failure_reasons = as.list(failure_reasons),
+    outer_fold_dispositions = outer_fold_dispositions
   )
+}
+
+triomics_c09_synthetic_feature_rows <- function(study_id, block_id, keys) {
+  data.frame(
+    study_id = study_id, block_id = block_id, feature_key = keys,
+    original_id = keys, id_namespace = "synthetic", source_id = block_id,
+    source_row = as.character(seq_along(keys)), measured_or_derived = "measured",
+    quantity = "intensity", scale = "linear", units = "synthetic_arbitrary_units",
+    structural_resolution = "unknown", alias_refs = "", parent_refs = "",
+    annotation_route = "none", stringsAsFactors = FALSE
+  )
+}
+
+triomics_c09_synthetic_study <- function(blocks, outcome, state_dir) {
+  ids <- names(outcome)
+  block_ids <- names(blocks)
+  study_id <- "study-c09-synthetic"
+  registry <- data.frame(
+    sample_id = ids, subject_id = ids, synthetic_response_30d = unname(outcome),
+    sample_role = "undeclared", stringsAsFactors = FALSE
+  )
+  raw <- list(
+    study_id = study_id,
+    sample_registry = registry,
+    feature_registry = do.call(rbind, lapply(block_ids, function(block_id) {
+      triomics_c09_synthetic_feature_rows(study_id, block_id, rownames(blocks[[block_id]]))
+    })),
+    sample_maps = stats::setNames(lapply(block_ids, function(block_id) {
+      data.frame(block_id = block_id, assay_column = ids, sample_id = ids,
+                 source_column = ids, stringsAsFactors = FALSE)
+    }), block_ids),
+    assays = blocks,
+    original_masks = lapply(blocks, function(x) {
+      mask <- matrix("known_observed", nrow(x), ncol(x), dimnames = dimnames(x))
+      mask[is.na(x)] <- "known_missing"
+      mask
+    }),
+    availability = do.call(rbind, lapply(block_ids, function(block_id) {
+      data.frame(
+        study_id = study_id, block_id = block_id, sample_id = ids,
+        presence = "present", cell_imputation_eligible = TRUE,
+        stringsAsFactors = FALSE
+      )
+    })),
+    source_manifests = list(), selection = data.frame(), column_accounting = data.frame(),
+    clinical_observations = list(),
+    upstream_steps = stats::setNames(replicate(length(block_ids), character(), FALSE), block_ids)
+  )
+  triomics_reset_profiles()
+  triomics_register_profile("baseline", triomics_baseline_profile())
+  study <- triomics_assemble_study(raw, alignment = "strict")
+  operations <- lapply(c("validate", "filter", "derive", "transform", "normalise", "impute"), function(stage) {
+    list(stage = stage, method = "none")
+  })
+  block_specs <- lapply(block_ids, function(block_id) {
+    list(block_id = block_id, profile_id = "baseline", operations = operations)
+  })
+  list(
+    study = study,
+    analysis_spec = list(
+      outcome = list(column = "synthetic_response_30d", type = "continuous"),
+      predictive_spec = list(
+        preparation_context_id = paste0("C09-predictive-", paste(block_ids, collapse = "-")),
+        seed = 19L, state_dir = state_dir, blocks = block_specs
+      ),
+      descriptive_spec = list(
+        preparation_context_id = paste0("C09-descriptive-", paste(block_ids, collapse = "-")),
+        training_unit_ids = ids, seed = 19L, state_dir = state_dir, blocks = block_specs
+      )
+    ),
+    integration_spec = list(
+      method = "concat_pls", block_ids = block_ids, scale_features = TRUE,
+      candidates = list(list(id = "one_component", ncomp = 1L),
+                       list(id = "two_components", ncomp = 2L)),
+      max_fits = 20L
+    )
+  )
+}
+
+triomics_c09_synthetic_endpoint_request <- function(unit_ids, method) {
+  endpoint_id <- "score_c09_synthetic_pc1"
+  samples <- lapply(seq_along(unit_ids), function(i) {
+    list(
+      sample_id = unit_ids[[i]], unit_id = unit_ids[[i]], unit_type = "visit_level",
+      source_sample_ids = paste0("source-", unit_ids[[i]]),
+      subject_id = unit_ids[[i]], subject_key = unit_ids[[i]],
+      representation_id = "levels", value = as.numeric(i)
+    )
+  })
+  endpoint <- list(
+    artifact_type = "integration_score_endpoint", endpoint_id = endpoint_id,
+    study_id = "study-c09-synthetic", analysis_id = "analysis-c09-synthetic",
+    integration_id = "integration-c09-synthetic", component_id = "component_1",
+    component_index = 1L, response_type = "continuous", unit = "score_unit",
+    units = "score_unit", scale = "native_pca_score", orientation = "native_component_sign",
+    samples = samples,
+    producing_fit = list(native_method = method, training_unit_ids = unit_ids),
+    training_unit_ids = unit_ids, training_ids = unit_ids,
+    training_y = list(used_by_fit = FALSE), training_outcome = NULL,
+    selection = list(ancestry = "prespecified", validity = "qualified", inspected_outcome = NULL),
+    inference_status = if (identical(method, "MOFA2::run_mofa")) "exploratory" else "qualified",
+    available_at_time = "V0", dependency_group = "synthetic-c09",
+    preparation_context_id = "ctx-c09", representation_id = "levels",
+    input_hashes = list(), source_hash = paste(rep("a", 64L), collapse = "")
+  )
+  endpoint$matrix_hash <- triomics_c08_matrix_hash(endpoint)
+  endpoint$endpoint_sha256 <- triomics_c08_endpoint_hash(endpoint)
+  bundle <- structure(
+    list(
+      artifact_type = "integration_score_endpoint_bundle",
+      study_id = endpoint$study_id, analysis_id = endpoint$analysis_id,
+      integration_id = endpoint$integration_id,
+      unit_map_hash = paste(rep("b", 64L), collapse = ""),
+      source_hash = endpoint$source_hash,
+      endpoints = stats::setNames(list(endpoint), "component_1")
+    ),
+    class = c("IntegrationScoreEndpointBundle", "list")
+  )
+  bundle$payload_sha256 <- triomics_c08_bundle_hash(bundle)
+  links <- lapply(unit_ids, function(unit_id) list(
+    link_id = paste0("link-", unit_id), sample_id = paste0("source-", unit_id),
+    subject_key = unit_id, visit_id = "V0", status = "approved",
+    cardinality = "one_to_one", reference_time = "2026-01-01"
+  ))
+  objective <- list(objectives = list(list(
+    objective_id = "c09-synthetic-score-request", analysis_id = bundle$analysis_id,
+    mode = "prediction", response_ref = endpoint_id, endpoint_ref = endpoint_id,
+    predictor_ref = "synthetic_response_30d", time_window_ref = "V0"
+  )))
+  request <- triomics_schedule_clinical_score_request(
+    bundle, objective, list(study_id = bundle$study_id, links = links)
+  )
+  list(bundle = bundle, request = request)
+}
+
+triomics_c09_synthetic_protocol <- function(bundle_hash) {
+  list(
+    protocol_id = "C-09-SYNTH-30D-v1", approval_scope = "synthetic_fixture_only",
+    endpoint_id = "synthetic_response_30d",
+    response_model = list(
+      type = "continuous", algorithm = "concat_pls", baseline = "training_intercept",
+      metric_names = c("rmse", "mae", "r_squared")
+    ),
+    horizon = list(anchor = "V0", outcome_visit = "V30", value = 30L, unit = "day"),
+    information_set = list(
+      prediction_time = "V0",
+      clinical_feature_ids = c("baseline_clinical_signal", "baseline_clinical_trend", "baseline_clinical_noise"),
+      molecular_feature_ids = c("baseline_molecular_signal", "baseline_molecular_trend", "baseline_molecular_noise"),
+      availability_rule = "available_by_prediction_time", excludes_future = TRUE,
+      c08_endpoint_bundle_sha256 = bundle_hash,
+      candidate_block_ids = list(
+        clinical_only = "clinical", molecular_only = "molecular",
+        combined = c("clinical", "molecular")
+      )
+    ),
+    deployment = list(scope = "synthetic_research_comparison", real_deployment_status = "not_qualified"),
+    uncertainty = list(
+      method = "paired_subject_cluster_bootstrap", resampling_unit = "subject",
+      replicates = 200L, confidence_level = 0.95, seed = 90210L
+    )
+  )
+}
+
+#' Build public, deterministic C-09 synthetic runtime inputs.
+#'
+#' The result is software-only fixture input for exercising the C-02/C-08
+#' seams. It does not specify a real endpoint, clinical deployment, or validation.
+triomics_c09_synthetic_inputs <- function(seed = 90210L, n_subjects = 32L,
+                                          endpoint_method = "stats::prcomp",
+                                          missing_outcome = FALSE) {
+  if (!is.numeric(seed) || length(seed) != 1L || is.na(seed) || seed < 0 ||
+      seed != as.integer(seed) || !is.numeric(n_subjects) || length(n_subjects) != 1L ||
+      is.na(n_subjects) || n_subjects < 16 || n_subjects != as.integer(n_subjects) ||
+      !triomics_c09_scalar_text(endpoint_method) || !is.logical(missing_outcome) ||
+      length(missing_outcome) != 1L || is.na(missing_outcome)) {
+    triomics_c09_abort(
+      "C_C09_SYNTHETIC_INPUT_INVALID",
+      "Synthetic inputs require an integer seed, at least 16 subjects, a method label, and a scalar missing-outcome flag.",
+      "synthetic_fixture"
+    )
+  }
+  unit_ids <- sprintf("unit-%02d", seq_len(as.integer(n_subjects)))
+  index <- seq_along(unit_ids)
+  outcome <- 1.5 + index / 4 + sin(index / 3)
+  names(outcome) <- unit_ids
+  if (missing_outcome) outcome[[unit_ids[[1L]]]] <- NA_real_
+  clinical <- rbind(
+    baseline_clinical_signal = outcome + cos(index / 2),
+    baseline_clinical_trend = index / 9,
+    baseline_clinical_noise = sin(index)
+  )
+  molecular <- rbind(
+    baseline_molecular_signal = outcome + sin(index / 2),
+    baseline_molecular_trend = cos(index / 3),
+    baseline_molecular_noise = sin(index / 4)
+  )
+  colnames(clinical) <- colnames(molecular) <- unit_ids
+  split_plan <- triomics_nested_split_plan(
+    unit_ids, subject_ids = unit_ids, n_outer = 2L, n_inner = 2L,
+    seed = as.integer(seed), target = "synthetic_response_30d"
+  )
+  c08 <- triomics_c09_synthetic_endpoint_request(unit_ids, endpoint_method)
+  common <- list(
+    clinical = triomics_c09_synthetic_study(list(clinical = clinical), outcome, tempfile("c09-state-clinical-")),
+    molecular = triomics_c09_synthetic_study(list(molecular = molecular), outcome, tempfile("c09-state-molecular-")),
+    combined = triomics_c09_synthetic_study(
+      list(clinical = clinical, molecular = molecular), outcome, tempfile("c09-state-combined-")
+    )
+  )
+  structure(list(
+    protocol = triomics_c09_synthetic_protocol(c08$bundle$payload_sha256),
+    endpoint_bundle = c08$bundle, clinical_score_request = c08$request,
+    split_plan = split_plan,
+    candidates = stats::setNames(
+      lapply(names(common), function(name) common[[name]]),
+      c("clinical_only", "molecular_only", "combined")
+    )
+  ), class = c("C09SyntheticInputs", "list"))
 }
 
 run_clinical_prediction_comparison <- function(protocol, endpoint_bundle,

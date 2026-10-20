@@ -15,6 +15,7 @@
   "dependency_seams": {
     "C-02": "Uses public SplitPlan validation and evaluate_pipeline() results. Candidate comparisons share the same immutable split plan; no private/native model object is consumed.",
     "C-08": "Validates the immutable IntegrationScoreEndpointBundle and scheduled ClinicalScoreAssociationRequest through C-08 public validators and checksums.",
+    "synthetic_inputs": "The packet-owned triomics_c09_synthetic_inputs() runtime generator creates deterministic synthetic C-02/C-08 inputs without sourcing tests; exposing this function as a public namespace symbol remains a coordinator-owned registration request.",
     "MOFA": "Rejects MOFA2::run_mofa (or a public mofa2 backend/id) before evaluate_pipeline() unless qualified fold-local new-subject inference is present and held-out units were not used to fit the representation. The current C-08 MOFA handoff does not qualify that route."
   },
   "conditional_gate": {
@@ -44,15 +45,26 @@
       }
     ],
     "final_command": "Rscript --vanilla -e \"testthat::test_local(filter='C-09', stop_on_failure=TRUE)\"",
+    "repair_red": {
+      "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-09', stop_on_failure=TRUE)\"",
+      "exit": 1,
+      "result": "[ FAIL 7 | WARN 0 | SKIP 0 | PASS 26 ]",
+      "duration_seconds": 173.7,
+      "findings": [
+        "Candidate-specific dispositions were rejected despite identical cohort/fold/truth identities.",
+        "Failure reason names and outer-fold dispositions were absent from denominators/history.",
+        "No packet-owned runtime synthetic generator existed outside the test file."
+      ]
+    },
     "final_exit": 0,
     "final_evidence": "artifacts/acceptance/C-09/green-summary.txt",
-    "test_blocks": 4,
-    "assertions_passed": 24,
+    "test_blocks": 7,
+    "assertions_passed": 47,
     "failures": 0,
     "warnings": 0,
     "skips": 0,
-    "duration_seconds": 136.3,
-    "final_result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 24 ]"
+    "duration_seconds": 146.6,
+    "final_result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 47 ]"
   },
   "cli": {
     "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-09.yaml --stage C --output artifacts/acceptance/C-09",
@@ -86,9 +98,9 @@
     "environment_fingerprint_inputs": "R.version.string, R.version[[platform]], testthat, mixOmics, and digest versions joined with newline and SHA-256 hashed without serialization."
   },
   "file_sha256": {
-    "R/clinical_prediction_comparison.R": "7f61b0043531f7cff622ef94e0214e17736ec4f821b82928b94c92b341c00129",
-    "tests/testthat/test-C-09.R": "f59380d2229ab7a7226076fec83e3016cef4a0e9a399e28ab0349ac8510b9acb",
-    "inst/examples/tickets/C-09.yaml": "6aa84e47e0770aeebaa3a865a81305376d7c4aac6024672a9410ac3bdcd8f171"
+    "R/clinical_prediction_comparison.R": "b1b9187bd1f6204db40bc7d3b843c67dabc70b1f76523e1a6b3bbfac29c67dd2",
+    "tests/testthat/test-C-09.R": "1324ceffda36aa7d2d9b40e605e73d851f610ff8e562fc277b58d19982d2a33e",
+    "inst/examples/tickets/C-09.yaml": "3bc396e4077c4698d3d9d89058f87fb9a733351e226370f061acc81277e5657e"
   },
   "registration_sha256_evidence": "artifacts/acceptance/C-09/registration-sha256.txt",
   "acceptance": {
@@ -98,7 +110,7 @@
     },
     "AC2": {
       "status": "synthetic_software_behavior_pass",
-      "evidence": "All three candidate information sets are validated against identical units, subjects, response values, declared nested candidate grid, C-02 SplitPlan hash, held-out patient/fold ledger, truth, and failure dispositions; the same metric definitions and nested selection are required."
+      "evidence": "All three candidate information sets are validated against identical units, subjects, response values, declared nested candidate grid, C-02 SplitPlan hash, held-out patient/fold ledger, and truth. Candidate-specific prediction, failure, and ineligibility dispositions are retained; paired deltas use only explicitly reported matched-success coverage."
     },
     "AC3": {
       "status": "synthetic_guard_pass",
@@ -106,24 +118,28 @@
     },
     "AC4": {
       "status": "synthetic_software_behavior_pass",
-      "evidence": "The result reports paired subject-cluster bootstrap intervals for combined-minus-comparator metrics, requested/completed/failed replicate counts, denominators and failure reasons, candidate tuning and inner-fold history, limitations, and explicit not-qualified real deployment/independent-validation status; benefit_guaranteed is false. Intervals remain conditional on the fixed split plan."
+      "evidence": "The result reports paired subject-cluster uncertainty only on matched-success rows and records matched-success coverage, candidate-specific denominators, named failure-reason counts, per-unit outer-fold dispositions, tested-candidate/inner-fold history, remaining real endpoint/deployment/uncertainty qualification gaps, and no guaranteed benefit. Intervals remain conditional on the fixed split plan."
     }
   },
   "shared_registration_request": {
     "required": true,
     "request_kind": "coordinator_owned_config_and_cli_registration",
     "coordinator_owned_files_to_update": [
+      "NAMESPACE",
       "inst/schema/config.schema.json",
       "R/cli.R"
     ],
-    "request": "Add a closed, typed clinical_prediction config section for the packet's declared protocol and predecessor references, then wire the existing Stage-C CLI path to obtain validated public C-02 SplitPlan/evaluation inputs and the persisted C-08 endpoint bundle plus scheduled B request, call run_clinical_prediction_comparison(), and persist its result. Preserve the current no-native-object and no-recursion boundaries. The exact CLI currently exits 2 at A_CONFIG_UNKNOWN_KEY before Stage C. No new stage is requested; add no real-endpoint default and leave the route conditional until a separately approved real protocol exists.",
-    "exports": [],
+    "request": "Export triomics_c09_synthetic_inputs() and add a closed, typed clinical_prediction config section for the packet's declared protocol, public synthetic generator, and predecessor references; then wire the existing Stage-C CLI path to obtain validated public C-02 SplitPlan/evaluation inputs and the persisted C-08 endpoint bundle plus scheduled B request, call run_clinical_prediction_comparison(), and persist its result. Preserve the current no-native-object and no-recursion boundaries. The exact CLI currently exits 2 at A_CONFIG_UNKNOWN_KEY before Stage C. No new stage is requested; add no real-endpoint default and leave the route conditional until a separately approved real protocol exists.",
+    "exports": [
+      "triomics_c09_synthetic_inputs"
+    ],
     "dependency_changes": [],
     "applied_by_worker": false,
     "applied_by_coordinator": false
   },
   "gaps": [
     "The exact planned CLI could not invoke the C-09 runner because the coordinator-owned schema/CLI registration does not yet recognize the packet-owned config section.",
+    "The packet-owned synthetic generator is implemented in R runtime code, but its NAMESPACE export is coordinator-owned and remains pending; the YAML's triomics:: reference becomes externally runnable after that registration.",
     "The public fixture and test inputs are deterministic synthetic software fixtures only; no private study data or clinical identifiers were read or written.",
     "No acceptance, clinical validity, deployment qualification, independent validation, or guaranteed gain is claimed."
   ]

@@ -167,26 +167,45 @@ c09_protocol <- function(bundle_hash) {
   )
 }
 
-c09_minimal_evaluations <- function(split_plan, protocol) {
+c09_minimal_evaluations <- function(split_plan, protocol, status_by_candidate = NULL,
+                                    reason_by_candidate = NULL) {
   fold_ids <- vapply(split_plan$folds, `[[`, character(1), "fold_id")
-  predictions <- do.call(rbind, lapply(split_plan$folds, function(fold) {
-    data.frame(
-      fold_id = fold$fold_id, unit_id = as.character(fold$test_unit_ids),
-      truth = seq_along(fold$test_unit_ids), prediction = seq_along(fold$test_unit_ids),
-      status = "predicted", training_intercept = 0, stringsAsFactors = FALSE
-    )
-  }))
   stats::setNames(lapply(c("clinical_only", "molecular_only", "combined"), function(candidate_name) {
+    predictions <- do.call(rbind, lapply(split_plan$folds, function(fold) {
+      units <- as.character(fold$test_unit_ids)
+      status <- if (is.null(status_by_candidate)) rep("predicted", length(units)) else {
+        status_by_candidate[[candidate_name]][match(units, names(status_by_candidate[[candidate_name]]))]
+      }
+      reason <- if (is.null(reason_by_candidate)) rep(NA_character_, length(units)) else {
+        reason_by_candidate[[candidate_name]][match(units, names(reason_by_candidate[[candidate_name]]))]
+      }
+      data.frame(
+        fold_id = fold$fold_id, unit_id = units,
+        truth = seq_along(units), prediction = seq_along(units),
+        status = status, reason_code = reason, training_intercept = 0,
+        stringsAsFactors = FALSE
+      )
+    }))
     outer_folds <- stats::setNames(lapply(seq_along(split_plan$folds), function(i) {
       fold <- split_plan$folds[[i]]
+      candidate_ids <- c("one_component", "two_components")
+      dispositions <- stats::setNames(lapply(candidate_ids, function(candidate_id) {
+        list(id = candidate_id, status = "eligible")
+      }), candidate_ids)
       inner <- lapply(fold$inner, function(inner_fold) {
-        list(candidate_id = "one_component", fold_id = inner_fold$fold_id, status = "complete")
+        lapply(candidate_ids, function(candidate_id) {
+          list(candidate_id = candidate_id, fold_id = inner_fold$fold_id, status = "complete")
+        })
       })
+      inner <- unlist(inner, recursive = FALSE)
       list(
         fold_id = fold$fold_id, training_unit_ids = fold$training_unit_ids,
         test_unit_ids = fold$test_unit_ids,
+        candidate_dispositions = dispositions,
         inner_results = inner,
-        tuning_history = list(list(candidate_id = "one_component", status = "eligible")),
+        tuning_history = lapply(candidate_ids, function(candidate_id) {
+          list(candidate_id = candidate_id, inner_fold_ids = vapply(fold$inner, `[[`, character(1), "fold_id"), status = "eligible")
+        }),
         chosen_candidate = list(id = "one_component")
       )
     }), fold_ids)
@@ -202,39 +221,9 @@ c09_minimal_evaluations <- function(split_plan, protocol) {
 }
 
 c09_fixture <- function(endpoint_method = "stats::prcomp", missing_outcome = FALSE) {
-  unit_ids <- sprintf("unit-%02d", seq_len(32L))
-  index <- seq_along(unit_ids)
-  outcome <- 1.5 + index / 4 + sin(index / 3)
-  names(outcome) <- unit_ids
-  if (missing_outcome) outcome[[unit_ids[[1L]]]] <- NA_real_
-  clinical <- rbind(
-    baseline_clinical_signal = outcome + cos(index / 2),
-    baseline_clinical_trend = index / 9,
-    baseline_clinical_noise = sin(index)
-  )
-  molecular <- rbind(
-    baseline_molecular_signal = outcome + sin(index / 2),
-    baseline_molecular_trend = cos(index / 3),
-    baseline_molecular_noise = sin(index / 4)
-  )
-  colnames(clinical) <- colnames(molecular) <- unit_ids
-  split_plan <- triomics_nested_split_plan(
-    unit_ids, subject_ids = unit_ids, n_outer = 2L, n_inner = 2L,
-    seed = 90210L, target = "synthetic_response_30d"
-  )
-  c08 <- c09_endpoint_request(unit_ids, method = endpoint_method)
-  common <- list(
-    clinical = c09_study(list(clinical = clinical), outcome, tempfile("c09-state-clinical-")),
-    molecular = c09_study(list(molecular = molecular), outcome, tempfile("c09-state-molecular-")),
-    combined = c09_study(list(clinical = clinical, molecular = molecular), outcome,
-                         tempfile("c09-state-combined-"))
-  )
-  list(
-    protocol = c09_protocol(c08$bundle$payload_sha256), endpoint_bundle = c08$bundle,
-    clinical_score_request = c08$request, split_plan = split_plan,
-    candidates = stats::setNames(lapply(names(common), function(name) common[[name]]),
-                                 c("clinical_only", "molecular_only", "combined")),
-    unit_ids = unit_ids
+  triomics_c09_synthetic_inputs(
+    seed = 90210L, n_subjects = 32L,
+    endpoint_method = endpoint_method, missing_outcome = missing_outcome
   )
 }
 
@@ -313,4 +302,84 @@ testthat::test_that("C-09 rejects corrupted C-08 requests and incomplete nested 
   c09_error(triomics_c09_validate_candidate_results(
     evaluations, fixture$split_plan, fixture$protocol
   ), "C_C09_NESTED_SELECTION_INVALID")
+})
+
+testthat::test_that("C-09 keeps the matched cohort while reporting candidate-specific outcomes", {
+  fixture <- c09_fixture()
+  split_plan <- fixture$split_plan
+  units <- as.character(split_plan$unit_subject$unit_id)
+  statuses <- stats::setNames(lapply(c("clinical_only", "molecular_only", "combined"), function(candidate) {
+    stats::setNames(rep("predicted", length(units)), units)
+  }), c("clinical_only", "molecular_only", "combined"))
+  statuses$clinical_only[[units[[1L]]]] <- "failed"
+  evaluations <- c09_minimal_evaluations(split_plan, fixture$protocol, statuses)
+
+  testthat::expect_invisible(triomics_c09_validate_candidate_results(
+    evaluations, split_plan, fixture$protocol
+  ))
+  denominator <- triomics_c09_candidate_denominator(evaluations$clinical_only)
+  testthat::expect_identical(denominator$total, 32L)
+  testthat::expect_identical(denominator$failed, 1L)
+  testthat::expect_identical(denominator$predicted + denominator$failed + denominator$ineligible, 32L)
+
+  delta <- triomics_c09_bootstrap_delta(
+    "rmse", evaluations$combined, evaluations$clinical_only, split_plan, fixture$protocol
+  )
+  testthat::expect_identical(delta$matched_success_n, 31L)
+  testthat::expect_identical(delta$coverage_denominator_n, 32L)
+  testthat::expect_equal(delta$matched_success_coverage, 31 / 32)
+  testthat::expect_identical(delta$estimate_status, "estimable_on_matched_successes")
+  testthat::expect_true(is.finite(delta$estimate))
+
+  statuses$clinical_only[] <- "failed"
+  all_failed <- c09_minimal_evaluations(split_plan, fixture$protocol, statuses)
+  unavailable <- triomics_c09_bootstrap_delta(
+    "rmse", all_failed$combined, all_failed$clinical_only, split_plan, fixture$protocol
+  )
+  testthat::expect_identical(unavailable$matched_success_n, 0L)
+  testthat::expect_true(is.na(unavailable$estimate))
+  testthat::expect_identical(unavailable$estimate_status, "unavailable_no_matched_successes")
+})
+
+testthat::test_that("C-09 preserves named failure reasons and outer-fold prediction dispositions", {
+  fixture <- c09_fixture()
+  split_plan <- fixture$split_plan
+  units <- as.character(split_plan$unit_subject$unit_id)
+  statuses <- stats::setNames(lapply(c("clinical_only", "molecular_only", "combined"), function(candidate) {
+    stats::setNames(rep("predicted", length(units)), units)
+  }), c("clinical_only", "molecular_only", "combined"))
+  reasons <- stats::setNames(lapply(names(statuses), function(candidate) {
+    stats::setNames(rep(NA_character_, length(units)), units)
+  }), names(statuses))
+  statuses$clinical_only[units[[1L]]] <- "failed"
+  statuses$clinical_only[units[[2L]]] <- "failed"
+  reasons$clinical_only[units[[1L]]] <- "model_fit_failed"
+  reasons$clinical_only[units[[2L]]] <- "prediction_nonfinite"
+  evaluation <- c09_minimal_evaluations(split_plan, fixture$protocol, statuses, reasons)$clinical_only
+
+  denominator <- triomics_c09_candidate_denominator(evaluation)
+  testthat::expect_named(denominator$failure_reasons, c("model_fit_failed", "prediction_nonfinite"))
+  testthat::expect_identical(denominator$failure_reasons$model_fit_failed, 1L)
+  testthat::expect_identical(denominator$failure_reasons$prediction_nonfinite, 1L)
+  testthat::expect_named(denominator$outer_fold_dispositions, vapply(split_plan$folds, `[[`, character(1), "fold_id"))
+  testthat::expect_true(all(vapply(denominator$outer_fold_dispositions, function(fold) {
+    fold$total == length(fold$unit_dispositions) && sum(unlist(fold$failure_reasons)) <= fold$failed
+  }, logical(1))))
+  history <- triomics_c09_candidate_history(evaluation)
+  testthat::expect_named(history, vapply(split_plan$folds, `[[`, character(1), "fold_id"))
+  testthat::expect_true(all(vapply(history, function(fold) {
+    length(fold$prediction_dispositions) > 0L &&
+      any(vapply(fold$prediction_dispositions, function(row) row$status == "failed", logical(1)))
+  }, logical(1))))
+})
+
+testthat::test_that("C-09 provides a packet-owned runtime synthetic generator without sourcing tests", {
+  generator <- getFromNamespace("triomics_c09_synthetic_inputs", "triomics")
+  inputs <- generator(seed = 90210L, n_subjects = 32L)
+  testthat::expect_named(inputs, c(
+    "protocol", "endpoint_bundle", "clinical_score_request", "split_plan", "candidates"
+  ))
+  testthat::expect_identical(inputs$protocol$approval_scope, "synthetic_fixture_only")
+  testthat::expect_identical(inputs$protocol$deployment$real_deployment_status, "not_qualified")
+  testthat::expect_identical(inputs$protocol$uncertainty$method, "paired_subject_cluster_bootstrap")
 })

@@ -65,11 +65,19 @@ clinical_prediction:
       clinical_score_request_execution: not_started
       clinical_score_request_recurses_to_stage_c: false
   synthetic_fixture:
-    generator: tests/testthat/test-C-09.R::c09_fixture
+    generator: triomics::triomics_c09_synthetic_inputs
+    generator_arguments:
+      seed: 90210
+      n_subjects: 32
+      endpoint_method: stats::prcomp
+      missing_outcome: false
+    output_artifact: C09SyntheticInputs
     evidence_scope: software_behavior_only
     clinical_only_candidate: clinical
     molecular_only_candidate: molecular
     combined_candidate: [clinical, molecular]
     real_endpoint_protocol: not_supplied
+    real_deployment_status: not_qualified
+    uncertainty_protocol_approval: open
     independent_validation: not_performed
     benefit_guaranteed: false
