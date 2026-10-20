@@ -36,26 +36,39 @@
   },
   "active_workers": [
     {
-      "agent": "/root/c05_repair1_luna",
-      "role": "luna",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/c05_repair1_sol_rereview",
+      "role": "sol_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "packet": "C-05",
-      "attempt": "repair1",
+      "attempt": "focused_rereview",
       "base_commit": "8dcd78d",
+      "candidate_commit": "9eb420702c854b7e7e6de7a8303d21b9a6393c8b",
       "worktree": "/Users/megastore/.codex/worktrees/c05-repair1/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Inspect the committed allowlisted candidate, rerun focused evidence, then one focused Sol-high rereview. Do not register mofa2 before that rereview and fresh Sol verification.",
+      "allowed_next_transition": "If the focused rereview passes, integrate serially and apply coordinator-owned shared registration before exact CLI and package gates. If changes are required, return only bounded repair 2 findings to Luna.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c05_repair1_active",
+    "status": "c05_repair1_rereview_active",
     "last_reconciled": "2026-10-20",
-    "active_handoffs": ["/root/c05_repair1_luna"],
+    "active_handoffs": ["/root/c05_repair1_sol_rereview"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-02 through C-04 are accepted on synthetic software evidence. One bounded C-05 repair-1 Luna-max worker is active in a fresh isolated worktree. Public mofa2 registration remains disabled. C-08, C-09, C-06, G6 and every D packet remain closed."
+    "disposition": "C-02 through C-04 are accepted on synthetic software evidence. C-05 repair-1 candidate 9eb4207 is under its one focused Sol-high rereview. The exact isolated suite passed 110 assertions with 14 named native MOFA diagnostics, zero failures and zero skips. Public mofa2 registration remains disabled."
   },
   "orchestration_events": [
+    {
+      "event": "c05_repair1_candidate_under_focused_rereview",
+      "date": "2026-10-20",
+      "worker": "/root/c05_repair1_luna",
+      "candidate_commit": "9eb420702c854b7e7e6de7a8303d21b9a6393c8b",
+      "changed_files": ["R/integration_mofa.R", "tests/testthat/test-C-05.R", "docs/implementation/registrations/C-05.json"],
+      "sol_tests": "Isolated MOFA2 1.22.1/mofapy2 0.7.5 C-05 suite: 110 successes, 0 failures, 14 warnings, 0 skips; four native fits.",
+      "warning_inventory": "Tiny-fixture native diagnostics: four less-than-15-features warnings, four factor/average-expression cautions, three no-non-missing-arguments max warnings, and three inactive-factor notices.",
+      "reviewer": "/root/c05_repair1_sol_rereview",
+      "allowed_next_transition": "Pass: serial integration and coordinator-owned registration. Changes required: bounded repair 2 only. No public registration before verdict.",
+      "disposition": "Candidate stays isolated and unaccepted during the focused rereview."
+    },
     {
       "event": "c05_repair1_dispatched",
       "date": "2026-10-20",
@@ -2845,7 +2858,7 @@
       "blockers": []
     },
     "C-05": {
-      "status": "repair1_active",
+      "status": "repair1_rereview_active",
       "attempts": 1,
       "commit": "574a1d6",
       "repair_attempts": 1,
