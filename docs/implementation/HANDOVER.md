@@ -177,15 +177,14 @@ C-05 acceptance is recorded in
 warnings remain visible and must not be called warning-free. No real study or
 biological MOFA validation is claimed.
 
-Resume at the clean archive package gate for integrated C-08 snapshot after
-commits `c5535fb` and `2170820`. The focused shared rereview passed with no
-remaining findings. Fresh integrated tests passed C-08 288, C-01 109, C-03 82
-and C-04 132 assertions with zero failures, warnings or skips. The exact Stage-C
-CLI exited 0, endpoint JSON and all envelopes validated, and the scheduled B
-request bound the persisted endpoint bundle hash. Run
-`Rscript --vanilla tools/check-package.R` from a clean Git archive of the
-committed snapshot. Accept C-08 only after that package gate passes and every
-warning is named and dispositioned. Do not rerun consumed packet repairs.
+Resume by reconciling `/root/c08_shared_luna` for the final narrow package-path
+continuation. The clean archive check at snapshot `329f3a6` passed build,
+install, static and example checks, then stopped at FAIL 3, WARN 24, SKIP 0,
+PASS 4346 because three new shared C-08 tests use a source-only path for the
+public C-08 YAML fixture. The worker may change only that shared test/helper and
+registration evidence so the same fixture resolves in source and installed
+contexts. No product logic or scientific contract change and no further review
+round are authorized. Sol must verify directly and rerun the clean package gate.
 C-09/C-06/G6/D remain closed.
 C-09 and C-06 stay closed until C-08 is accepted; G6 and D stay closed until
 their declared gates. Do not loosen the B-T04 0.08 bound, reroll seeds

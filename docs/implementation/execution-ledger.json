@@ -34,15 +34,40 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/c08_shared_luna",
+      "role": "luna_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "packet": "C-08",
+      "attempt": "exclusive_shared_correctness_repair_package_continuation",
+      "base_commit": "9338bd841c3cb959028f22d7f42d05bb6c6c802a",
+      "candidate_commit": null,
+      "worktree": "/Users/megastore/.codex/worktrees/c08-shared-handoff/PML MultiOmics Analysis Pipeline",
+      "allowed_next_transition": "Change only installed/source fixture lookup in the shared C-08 test and registration evidence, then return one clean additive commit for direct Sol verification and a repeated clean package gate.",
+      "wait_cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "c08_integrated_package_check_pending",
+    "status": "c08_package_fixture_repair_active",
     "last_reconciled": "2026-10-20",
-    "active_handoffs": [],
+    "active_handoffs": ["/root/c08_shared_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Focused Sol rereview passed and shared commits were integrated as c5535fb and 2170820. Fresh integrated C-08/C-01/C-03/C-04 tests and exact CLI read-back pass. C-08 remains unaccepted pending the clean archive package gate."
+    "disposition": "Focused Sol rereview passed and shared commits were integrated as c5535fb and 2170820. The clean archive gate at 329f3a6 reached PASS 4346 but failed three new C-08 tests whose source-only fixture path is unavailable in installed context. One final narrow shared continuation owns only that test-fixture lookup; C-08 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "c08_package_check_installed_fixture_failure_repair_dispatched",
+      "date": "2026-10-20",
+      "worker": "/root/c08_shared_luna",
+      "snapshot": "329f3a6",
+      "package_check": "Status 1 ERROR; FAIL 3, WARN 24, SKIP 0, PASS 4346.",
+      "failure_scope": "Three new C-08 shared tests cannot resolve inst/examples/tickets/C-08.yaml from installed-package test context; two file-open warnings are consequential. Product behavior was not reached in those tests.",
+      "review_ref": "docs/implementation/reviews/2026-10-20-c08-package-check.md",
+      "allowed_next_transition": "One final narrow test/registration-only repair, direct Sol verification, then a repeated clean archive package gate. No further reviewer round or packet repair reset.",
+      "disposition": "The failure cannot be waived, but it does not change the passed focused review or authorize any product/scientific change."
+    },
     {
       "event": "c08_shared_focused_rereview_pass_integrated_verification_green",
       "date": "2026-10-20",
