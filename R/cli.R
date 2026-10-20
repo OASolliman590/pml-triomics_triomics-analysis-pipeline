@@ -302,8 +302,14 @@ triomics_c08_cli_unit_map <- function(resolved, sample_registry, analysis_unit_m
   })
 }
 
-triomics_c08_cli_selection <- function(request, ingested) {
-  block_ids <- as.character(unlist(request$block_ids, use.names = FALSE))
+triomics_c08_cli_selection <- function(request, ingested, block_ids) {
+  block_ids <- as.character(unlist(block_ids, use.names = FALSE))
+  if (!length(block_ids) || anyNA(block_ids) || any(!nzchar(block_ids))) {
+    triomics_c08_abort(
+      "C_SCORE_LINEAGE_INVALID", "C-08 requires the fitted analysis block ids for source selection.",
+      "block_ids"
+    )
+  }
   selection <- ingested$selection
   source_selection <- lapply(block_ids, function(block_id) {
     if (!is.data.frame(selection) || !all(c("block_id", "selection_history", "inference_gate") %in% names(selection))) {
@@ -337,7 +343,13 @@ triomics_c08_cli_selection <- function(request, ingested) {
   list(
     ancestry = ancestry,
     inspected_outcome = NULL,
-    validity = if (any(gates == "panel_only")) "panel_only" else "qualified",
+    validity = if (any(gates == "withheld")) {
+      "withheld"
+    } else if (any(gates == "panel_only")) {
+      "panel_only"
+    } else {
+      "qualified"
+    },
     source_selection = source_selection,
     adapter_selection = request$selection
   )
@@ -401,6 +413,23 @@ triomics_c08_cli_write_artifact <- function(payload, path, envelope_path, artifa
     payload_sha256 = triomics_sha256(path),
     envelope_sha256 = triomics_sha256(envelope_path)
   )
+}
+
+triomics_c08_cli_endpoint_payload <- function(endpoint_bundle) {
+  payload <- unclass(endpoint_bundle)
+  payload$schema_version <- "2.0"
+  payload$payload_sha256 <- NULL
+  payload$payload_sha256 <- triomics_c08_bundle_hash(payload)
+  class(payload) <- class(endpoint_bundle)
+  triomics_c08_validate_endpoint_bundle(payload)
+  payload
+}
+
+triomics_c08_cli_validate_endpoint_readback <- function(path) {
+  endpoint_bundle <- jsonlite::read_json(path, simplifyVector = FALSE)
+  class(endpoint_bundle) <- c("IntegrationScoreEndpointBundle", "list")
+  triomics_c08_validate_endpoint_bundle(endpoint_bundle)
+  endpoint_bundle
 }
 
 triomics_c02_block_operations <- function(block) {
@@ -763,7 +792,7 @@ triomics_execute_stage_c <- function(config_path, output) {
       unit_map <- triomics_c08_cli_unit_map(
         resolved, ingested$sample_registry, analysis_unit_map, clinical_view
       )
-      selection <- triomics_c08_cli_selection(request, ingested)
+      selection <- triomics_c08_cli_selection(request, ingested, block_ids)
       fit_context <- list(
         integration_id = request$integration_id,
         unit_map = unit_map,
@@ -782,8 +811,7 @@ triomics_execute_stage_c <- function(config_path, output) {
       endpoint_stub <- sprintf("integration-%02d", request_index)
       endpoint_path <- file.path(endpoint_directory, paste0(endpoint_stub, ".json"))
       endpoint_envelope_path <- file.path(endpoint_directory, paste0(endpoint_stub, ".envelope.json"))
-      endpoint_payload <- unclass(endpoint_bundle)
-      endpoint_payload$schema_version <- "2.0"
+      endpoint_payload <- triomics_c08_cli_endpoint_payload(endpoint_bundle)
       source_inputs <- unname(lapply(ingested$source_manifests, function(source) {
         list(artifact_id = source$source_id, sha256 = source$sha256)
       }))
@@ -795,6 +823,7 @@ triomics_execute_stage_c <- function(config_path, output) {
         status = "complete",
         privacy_class = if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive"
       )
+      endpoint_bundle <- triomics_c08_cli_validate_endpoint_readback(endpoint_path)
       endpoint_reference <- list(
         artifact_id = paste0("c08-score-endpoint-bundle-", request_index),
         payload_file = file.path("C", "score-endpoints", basename(endpoint_path)),

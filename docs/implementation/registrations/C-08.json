@@ -4,7 +4,7 @@
   "implementation_base": "cad313b749814c45ed75b5116adf4951103ee2c9",
   "accepted": false,
   "applied_to_shared_files": false,
-  "implementation_status": "The exclusive shared correctness repair is locally implemented and verified on base b45f31a422349c6fd4e5a702c30d7df1c4570e6d. The internal seam validates, fits, extracts, and binds once while public integrate_blocks() remains the six-field IntegrationResult. Actual PCA and mixOmics DIABLO/block.spls fits carry qualified same-fit handoffs; the CLI emits immutable C endpoints and schedules a B-owned request without executing B models. Local candidate remains unaccepted pending coordinator review/integration. Native MOFA execution remains unavailable, and focused C-05 compatibility has pre-existing registration/runtime failures.",
+  "implementation_status": "The shared C-08 candidate from b579bfd214618957adb6fcd7193284758913aa27 received two Important findings in the fresh Sol review; both are addressed in this additive continuation. Stage C now binds selection ancestry to fitted analysis block IDs and validates the serialized, schema-bearing endpoint bundle on read-back before scheduling B from that exact bundle. One-fit behavior and the six-field public IntegrationResult remain unchanged. Candidate remains unaccepted pending coordinator re-review/integration. Native MOFA execution remains unavailable, and the previously baseline-matched C-05 runtime/registration failures remain disclosed.",
   "synthetic_software_only": true,
   "local_files": [
     "R/integration_contract.R",
@@ -21,6 +21,11 @@
     "docs/implementation/registrations/C-08.json"
   ],
   "shared_repair_base": "b45f31a422349c6fd4e5a702c30d7df1c4570e6d",
+  "review_continuation_base": "b579bfd214618957adb6fcd7193284758913aa27",
+  "review_findings_addressed": [
+    "Source selection is resolved against analysis-level fitted block_ids; unknown history fails closed, outcome_selected ancestry/gate remain descriptive-only, and normal fixture retains both fitted block records.",
+    "The schema-bearing serialized endpoint body is rehashed before persistence, read back, validated with triomics_c08_validate_endpoint_bundle(), and that exact validated bundle hash is used by the B request."
+  ],
   "stage_registry_changed": false,
   "integration_endpoints": {
     "methods": [
@@ -110,15 +115,20 @@
     "repair_2_red_result": "Final repair TDD red: 22 observed failures/errors before testthat's failure limit, 194 passes, 0 warnings, 0 skips. Failures covered production list-shaped mean weights, B visit/time handoff, B-T08/B-T09 behavior, derived delta semantics, and invalid ISO dates.",
     "final_command": "Rscript --vanilla -e \"testthat::test_local(filter='C-08', stop_on_failure=TRUE)\"",
     "final_exit": 0,
-    "test_blocks": 19,
-    "assertions_passed": 277,
+    "test_blocks": 21,
+    "assertions_passed": 288,
     "failures": 0,
     "warnings": 0,
     "skips": 0,
-    "final_result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 277 ]",
+    "final_result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 288 ]",
     "shared_command": "Rscript --vanilla -e \"testthat::test_local(filter='C-08-shared', stop_on_failure=TRUE)\"",
     "shared_exit": 0,
-    "shared_result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 41 ]",
+    "shared_result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 52 ]",
+    "sol_review_continuation_red": [
+      "[ FAIL 8 | WARN 0 | SKIP 0 | PASS 43 ]: source-selection records were absent, unknown history was not rejected, outcome_selected was reduced to prespecified/qualified, and persisted bundle read-back failed C_SCORE_ENDPOINT_HASH.",
+      "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 51 ]: B request source_endpoint_bundle_sha256 did not match the schema-bearing persisted bundle hash."
+    ],
+    "sol_review_continuation_green": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 52 ]",
     "compatibility": {
       "C-01": {"command": "Rscript --vanilla -e \"testthat::test_local(filter='C-01', stop_on_failure=TRUE)\"", "exit": 0, "result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 109 ]"},
       "C-03": {"command": "Rscript --vanilla -e \"testthat::test_local(filter='C-03', stop_on_failure=TRUE)\"", "exit": 0, "result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 82 ]"},
@@ -139,13 +149,16 @@
     "repair_2": "Actual production subject-mean named-list visit_weights are canonicalized to a named numeric vector after validation; source-link visit names, weights, and coverage are checked. The scheduler creates a separate immutable B-compatible endpoint bundle with linked subject_key/visit_id/time and source hashes. Subject deltas are typed refusals as one derived score. Between-person, effect-modification, and prediction requests require a valid ISO date. No native MOFA fit was run."
   },
   "cli": {
-    "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-08.yaml --stage C --output /private/tmp/c08-shared-final.stbdoe",
+    "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-08.yaml --stage C --output /private/tmp/c08-sol-review-final.miHo3y",
     "final_exit": 0,
     "run_status": "complete",
-    "evidence_root": "/private/tmp/c08-shared-final.stbdoe",
+    "evidence_root": "/private/tmp/c08-sol-review-final.miHo3y",
     "repeat_collision_verified_by_test": true,
     "envelopes_validated": true,
-    "scope_note": "Public synthetic local fixture uses declared subject/sample/visit/time mappings. Stage C wrote the existing six-field IntegrationResult plus immutable level score endpoints, and wrote a B-owned scheduled/not_started clinical score request with results=[] and recurses_to_stage_c=false. No B clinical model was executed.",
+    "serialized_endpoint_readback_validation": true,
+    "request_source_bundle_matches_persisted_bundle_hash": true,
+    "endpoint_source_selection_blocks": ["block_1", "block_2"],
+    "scope_note": "Public synthetic local fixture uses declared subject/sample/visit/time mappings. Stage C wrote the existing six-field IntegrationResult plus an immutable schema-bearing endpoint bundle. The written JSON was reconstructed and validated before the B request was scheduled from that same bundle hash. The request is B-owned scheduled/not_started with empty results and no recursion; no B model was executed.",
     "endpoint_count": 2,
     "request_status": "scheduled",
     "request_owner_stage": "B",
@@ -172,11 +185,11 @@
   },
   "file_sha256": {
     "R/integration_contract.R": "885e8e88865ce6bc66df6f4ac3da7c19bae0787298fa0f4a8693e906d8a89efd",
-    "R/cli.R": "7092569926e9eff32f70d04b76ff450f8ad580e9d3081d3c50f14298b78c7df9",
+    "R/cli.R": "df57aa86ae056e5f6f4a531a0f69ef578d3450694ceae6148d76265305283a3d",
     "R/integration_endpoints.R": "96dad78affb5161c29bd35f0a65a6cf2a7a1053deec80a27ebddbe3e9f03adb3",
     "R/clinical_score_requests.R": "a9156c1797800dc832e8361b20da4183e09f15fd0dcb3e97ea86b873e69e67cc",
     "tests/testthat/test-C-08.R": "18a6ee1b8c746b186fdb8a66971f67f64b731738c162597e789502c677d520ef",
-    "tests/testthat/test-C-08-shared.R": "29b8ee5f3cb5ccbe12cd25654677fdaca93b06cb5cef7061a52449d849fc141e",
+    "tests/testthat/test-C-08-shared.R": "23e2449482f2964ab710606156d7fb25f3243d139c8d7a38e4c3c8743cee8f7d",
     "inst/examples/tickets/C-08.yaml": "4ce00266dc48f21b1c8151113c6109a6534d40c53287fd214b55efbd754a8fd6",
     "inst/examples/data/c08/metadata.tsv": "0f1e8a8dbb98a98fc47dd6c2ede477e3eb9d6084894100b8e80ddf776ad7ee8e",
     "inst/examples/data/c08/dictionary.tsv": "318cbd0dd8ba24b18a29f98111111674dd502ddb936c898050b7ad319d3f6a92",
@@ -184,12 +197,14 @@
     "inst/examples/data/c08/links.tsv": "663a34f15ae4bc125c4fcfdabb8dd4c9b428106e491fc86dda6f6c1f70a49bad"
   },
   "cli_hashes": {
-    "integration_results_payload_sha256": "d30e77fffe8918d49b1d5f983a4a81c387d77424c4c9e810303143d46615a395",
-    "integration_results_envelope_file_sha256": "954b6796e015f8c2078bf020e36fd0b5acbb771ebd3101af328787377605abe6",
-    "score_endpoint_payload_sha256": "385acfd55d83217f76964c2580b52e229a75fde374668708dae5da2f711e6e7c",
-    "score_endpoint_envelope_file_sha256": "252c394f6b1ad49e7e53d9d81eae912a1a13f460722d6e7c3984cd05634d9ef7",
-    "clinical_score_request_payload_sha256": "4c67421f93b66092fa9ecdd4014de62e2ee3f10a24f6570eef3a107bb1593d8a",
-    "clinical_score_request_envelope_file_sha256": "8ef993295cd32fb4c8e33bd948d95a6b7b55e793b0df6c0d6e0728b0b97edd70",
+    "integration_results_payload_sha256": "9f8ff0f9598b3c517d25b6bac283522fbf2545a24ca672c29b3e9297aacdc040",
+    "integration_results_envelope_file_sha256": "c178de5be8544fc14b39707b69e8deb7e9b8285688f0aa40f8c00248599a670e",
+    "score_endpoint_payload_sha256": "f4b92152fd47d4dde42997cb169f2f66b5410d50f4fecebc9b744ac4d3341d1b",
+    "score_endpoint_bundle_sha256": "0559bcb352370fc719a923b31b787ddb829fc02bff4d35ff16f5b299e08d7879",
+    "score_endpoint_envelope_file_sha256": "e1f82824e3650385082e2b9ff9b7189924f90567fa08fde7148806e7fa9b88a6",
+    "clinical_score_request_payload_sha256": "d2cc151d271fed55b84d1ca499548e731866642031f057bb4a68e18ebc21791b",
+    "clinical_score_request_envelope_file_sha256": "318945de7f4779514ad211f674bdadd36c0e133c45d3362556fec2540dcf3bbc",
+    "clinical_score_request_internal_sha256": "c2232b97b01b159298604b2521c6cf190736c6aa24a1db267694a7a48f35f61f",
     "run_manifest_sha256": "e596d397395e7b8381065c05aa072a1a5ddf3e3273e24b0ba918951795f5e1e6"
   },
   "acceptance": {
@@ -199,7 +214,7 @@
     },
     "AC2": {
       "status": "pass_local_b_consumer_and_cli_schedule_candidate_unaccepted",
-      "evidence": "Direct synthetic B-T08 and B-T09 consumers estimate from level endpoints. The exact Stage-C CLI run writes immutable endpoints and atomically schedules the B-owned request; status is scheduled/not_started, results are empty, and recursion is false. No B model executes."
+      "evidence": "Direct synthetic B-T08 and B-T09 consumers estimate from level endpoints. The exact Stage-C CLI run writes the schema-bearing endpoint bundle, reconstructs and validates it from JSON, then schedules the B-owned request with the matching persisted bundle hash; status is scheduled/not_started, results are empty, and recursion is false. No B model executes."
     },
     "AC3": {
       "status": "pass_local_rule_tests_candidate_unaccepted",
@@ -207,12 +222,12 @@
     },
     "AC4": {
       "status": "pass_local_contract_and_cli_candidate_unaccepted",
-      "evidence": "Level, mean, and delta contracts retain unit/link ancestry and typed exclusions. Direct B-T08/B-T09 level consumers pass; derived subject deltas remain a typed refusal with no valid consumer route. The CLI endpoint/request envelopes validate and collision refusal is covered by test."
+      "evidence": "Level, mean, and delta contracts retain unit/link ancestry and typed exclusions. Unknown source selection fails closed; outcome_selected remains withheld/descriptive-only; normal Stage C output retains source selection for both fitted blocks. Direct B-T08/B-T09 level consumers pass; derived subject deltas remain a typed refusal with no valid consumer route. CLI endpoint bundle read-back and artifact envelopes validate; collision refusal is covered by test."
     }
   },
   "shared_registration_request": {
     "required": true,
-    "request_kind": "exclusive_shared_correctness_repair_completed_pending_coordinator_integration",
+    "request_kind": "exclusive_shared_correctness_repair_with_sol_review_findings_addressed_pending_re_review_and_integration",
     "coordinator_owned_files_to_update": [
       "R/integration_contract.R",
       "R/cli.R",
@@ -228,7 +243,7 @@
       "source_endpoint_sha256", "source_link_id", "source_link_sha256",
       "subject_key", "visit_id", "time", "request_sha256"
     ],
-    "request": "Completed locally in the isolated worker checkout: added one-fit same-fit handoff, preserved the six-field public result, bound exact native fit evidence, and composed Stage-C immutable endpoints plus B-owned request scheduling from declared public fixture mappings. This remains unaccepted and awaits coordinator inspection/cherry-pick. No stage_registry change, MOFA native execution, or scientific-validity claim.",
+    "request": "Completed locally in the isolated worker checkout: retained the one-fit handoff and six-field public result; fixed source selection to use fitted analysis block IDs; fails closed for unknown ancestry and retains outcome_selected as withheld/descriptive-only; hashes the schema-bearing serialized endpoint body before persistence; validates JSON read-back and schedules B from that exact endpoint bundle. This remains unaccepted and awaits coordinator re-review/integration. No stage_registry change, MOFA native execution, or scientific-validity claim.",
     "exports": [],
     "dependency_changes": [],
     "applied_by_worker": false

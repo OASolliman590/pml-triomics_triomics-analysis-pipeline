@@ -185,6 +185,40 @@ c08_shared_objective <- function(endpoint_id, analysis_id, mode, visit = "V1") {
   )
 }
 
+c08_shared_config_with_selection <- function(selection_by_block) {
+  source_path <- testthat::test_path("..", "..", "inst", "examples", "tickets", "C-08.yaml")
+  config <- yaml::read_yaml(source_path)
+  config_root <- dirname(source_path)
+  resolve_fixture_path <- function(path) {
+    if (is.null(path)) return(NULL)
+    normalizePath(file.path(config_root, path), winslash = "/", mustWork = TRUE)
+  }
+  for (i in seq_along(config$sources)) {
+    config$sources[[i]]$file <- resolve_fixture_path(config$sources[[i]]$file)
+  }
+  config$metadata$file <- resolve_fixture_path(config$metadata$file)
+  for (i in seq_along(config$blocks)) {
+    config$blocks[[i]]$file <- resolve_fixture_path(config$blocks[[i]]$file)
+    config$blocks[[i]]$source_refs <- as.list(config$blocks[[i]]$source_refs)
+  }
+  for (field in c("dictionary_file", "observations_file", "links_file")) {
+    config$clinical[[field]] <- resolve_fixture_path(config$clinical[[field]])
+  }
+  block_ids <- vapply(config$blocks, `[[`, character(1L), "block_id")
+  source_ids <- vapply(config$sources, `[[`, character(1L), "source_id")
+  for (block_id in names(selection_by_block)) {
+    block_index <- match(block_id, block_ids)
+    source_refs <- unlist(config$blocks[[block_index]]$source_refs, use.names = FALSE)
+    for (source_ref in source_refs) {
+      source_index <- match(source_ref, source_ids)
+      config$sources[[source_index]]$selection_history <- selection_by_block[[block_id]]
+    }
+  }
+  path <- tempfile("triomics-c08-selection-", fileext = ".yaml")
+  yaml::write_yaml(config, path)
+  path
+}
+
 testthat::test_that("the shared fit seam retains one fit and emits a qualified PCA handoff", {
   ids <- sprintf("sample-%02d", seq_len(8L))
   resolved <- c08_shared_resolved(ids)
@@ -461,6 +495,15 @@ testthat::test_that("Stage C writes immutable C-08 endpoints and schedules, but 
   testthat::expect_true(file.exists(request_path))
   testthat::expect_true(triomics_validate_envelope(endpoint_envelope_path))
   testthat::expect_true(triomics_validate_envelope(request_envelope_path))
+  endpoint_bundle <- jsonlite::read_json(endpoint_path, simplifyVector = FALSE)
+  class(endpoint_bundle) <- c("IntegrationScoreEndpointBundle", "list")
+  testthat::expect_no_error(triomics_c08_validate_endpoint_bundle(endpoint_bundle))
+  testthat::expect_identical(endpoint_bundle$schema_version, "2.0")
+  source_selection <- endpoint_bundle$endpoints[[1L]]$selection$source_selection
+  testthat::expect_setequal(names(source_selection), c("block_1", "block_2"))
+  testthat::expect_true(all(vapply(source_selection, function(source) {
+    length(source$selection_history) == 1L && nzchar(source$selection_history)
+  }, logical(1L))))
   request <- jsonlite::read_json(
     request_path, simplifyVector = FALSE
   )
@@ -469,8 +512,40 @@ testthat::test_that("Stage C writes immutable C-08 endpoints and schedules, but 
   testthat::expect_identical(request$model_execution, "not_started")
   testthat::expect_length(request$results, 0L)
   testthat::expect_false(isTRUE(request$recurses_to_stage_c))
+  testthat::expect_identical(
+    request$source_endpoint_bundle_sha256, endpoint_bundle$payload_sha256
+  )
   testthat::expect_error(
     triomics_execute_stage_c(config_path, output_dir),
     class = "triomics_error"
   )
+})
+
+testthat::test_that("Stage C refuses an unknown source selection history", {
+  config_path <- c08_shared_config_with_selection(c(block_1 = "unknown"))
+  output_dir <- tempfile("triomics-c08-unknown-selection-")
+  on.exit(unlink(c(config_path, output_dir), recursive = TRUE), add = TRUE)
+
+  error <- testthat::capture_error(triomics_execute_stage_c(config_path, output_dir))
+
+  testthat::expect_identical(error$code, "C_SCORE_LINEAGE_INVALID")
+  testthat::expect_false(file.exists(file.path(output_dir, "C", "score-endpoints", "integration-01.json")))
+})
+
+testthat::test_that("Stage C propagates outcome-selected ancestry as withheld and descriptive-only", {
+  config_path <- c08_shared_config_with_selection(c(block_1 = "outcome_selected"))
+  output_dir <- tempfile("triomics-c08-outcome-selected-")
+  on.exit(unlink(c(config_path, output_dir), recursive = TRUE), add = TRUE)
+
+  result <- triomics_execute_stage_c(config_path, output_dir)
+  endpoint_path <- file.path(
+    output_dir, result$results[[1L]]$score_endpoint_bundle$payload_file
+  )
+  endpoint_bundle <- jsonlite::read_json(endpoint_path, simplifyVector = FALSE)
+  endpoint <- endpoint_bundle$endpoints[[1L]]
+
+  testthat::expect_identical(endpoint$selection$ancestry, "selected_after_clinical_outcome")
+  testthat::expect_identical(endpoint$selection$validity, "withheld")
+  testthat::expect_identical(endpoint$inference_status, "descriptive_only")
+  testthat::expect_identical(endpoint$selection$source_selection$block_1$inference_gate, "withheld")
 })
