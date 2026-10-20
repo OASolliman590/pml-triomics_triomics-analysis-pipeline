@@ -38,6 +38,41 @@ c08_methods <- function() {
   )
 }
 
+c08_sha <- function(value) {
+  triomics_hash_text(triomics_canonical_json(value))
+}
+
+c08_training_y_hash <- function(training_y, training_unit_ids) {
+  if (is.null(training_y)) return(NULL)
+  c08_sha(list(
+    variable_id = training_y$variable_id,
+    unit_ids = as.list(training_unit_ids),
+    values = as.list(training_y$values[training_unit_ids])
+  ))
+}
+
+c08_score_hash <- function(scores) {
+  c08_sha(triomics_matrix_payload(scores))
+}
+
+c08_handoff <- function(fit_hash, scores, input_hashes, training_y, training_unit_ids,
+                        selection, unit_map, representation_id) {
+  fields <- list(
+    schema_version = "C-08-fit-handoff-1",
+    qualification = "same_fit_adapter_handoff",
+    fit_state_sha256 = fit_hash,
+    training_scores_sha256 = c08_score_hash(scores),
+    training_unit_ids = as.list(training_unit_ids),
+    input_hashes = input_hashes,
+    training_y_sha256 = c08_training_y_hash(training_y, training_unit_ids),
+    selection_sha256 = c08_sha(selection),
+    unit_map_sha256 = c08_sha(unit_map),
+    representation_id = representation_id
+  )
+  fields$handoff_sha256 <- c08_sha(fields)
+  fields
+}
+
 c08_inputs <- function(method = "mixomics_diablo", visits = rep("V1", 4L),
                        times = rep("2020-01-01", 4L),
                        subjects = paste0("subject-u", seq_len(4L)),
@@ -60,54 +95,130 @@ c08_inputs <- function(method = "mixomics_diablo", visits = rep("V1", 4L),
     dimnames = list(c("alpha", "beta"), colnames(scores))
   )
   fit_hash <- paste(rep("a", 64L), collapse = "")
-  result_params <- list(
-    method = method,
-    native_method = method_spec$native_method,
-    training_unit_ids = units,
-    training_state_hash = fit_hash,
-    score_definition = method_spec$score_definition,
-    versions = list(R = "4.5.1")
-  )
-  if (identical(method, "concat_pca")) {
-    result_params$state <- list(
-      state_version = "C-01-pca-1", training_unit_ids = units,
-      preparation_context_id = "ctx-c08"
-    )
-    result_params$training_unit_ids <- NULL
-    result_params$training_state_hash <- NULL
-    result_params$score_definition <- NULL
-  }
-  result <- triomics_new_integration_result(
-    scores = scores, loadings = loadings, variance = variance,
-    selected = lapply(loadings, rownames), backend = method, params = result_params
-  )
-  result_hash <- if (identical(method, "concat_pca")) NULL else fit_hash
-  fit_metadata <- list(
-    backend = method,
-    native_method = method_spec$native_method,
-    native_version = "fixture-native-1",
-    model_role = if (method_spec$uses_y) "supervised_prediction" else "exploratory_structure_discovery",
-    training_unit_ids = units,
-    state_hash = result_hash,
-    preparation_context_id = "ctx-c08"
-  )
-  fit <- structure(list(result_params = result_params, metadata = fit_metadata), class = "BackendFit")
-  unit_map <- data.frame(
-    unit_id = units,
-    sample_id = paste0("sample-", units),
-    subject_key = as.character(subjects),
-    unit_type = rep("sample_visit", length(units)),
-    visit_id = as.character(visits),
-    time = as.character(times),
-    stringsAsFactors = FALSE
-  )
   input_hashes <- stats::setNames(
     as.list(c(paste(rep("b", 64L), collapse = ""), paste(rep("c", 64L), collapse = ""))),
     c("alpha", "beta")
   )
-  training_y <- list(
-    variable_id = "clinical_group",
-    values = stats::setNames(c("control", "control", "case", "case"), units)
+  training_y <- if (method_spec$uses_y) list(
+      variable_id = "clinical_group",
+      values = stats::setNames(c("control", "control", "case", "case"), units)
+    ) else NULL
+  unit_map <- data.frame(
+    unit_id = units,
+    unit_type = rep("visit_level", length(units)),
+    subject_id = as.character(subjects),
+    representation_id = rep("levels", length(units)),
+    eligibility = rep("retained", length(units)),
+    stringsAsFactors = FALSE
+  )
+  unit_map$source_sample_ids <- I(lapply(units, function(unit) paste0("sample-", unit)))
+
+  native_state <- NULL
+  result_scores <- scores
+  result_params <- switch(method,
+    concat_pca = list(
+      method = "concat_pca",
+      state = list(
+        state_version = "C-01-pca-1", training_unit_ids = units,
+        preparation_context_id = "ctx-c08", representation_id = "levels"
+      )
+    ),
+    mixomics_diablo = list(
+      native_method = "mixOmics::block.splsda", native_version = "6.36.0",
+      training_unit_ids = units, training_state_hash = fit_hash,
+      score_definition = "consensus_mean"
+    ),
+    mixomics_block_spls = list(
+      native_method = "mixOmics::block.spls", native_version = "6.36.0",
+      task = "continuous_regression", training_unit_ids = units,
+      training_state_hash = fit_hash,
+      score_definition = "equal_weight_mean_of_signed_training_standardized_native_scores"
+    ),
+    mofa2 = list(
+      native_method = "MOFA2::run_mofa", native_version = "1.18.0",
+      training_unit_ids = units, training_state_hash = fit_hash,
+      score_definition = "native_mofa_factor_values",
+      training_input_hashes = input_hashes
+    )
+  )
+  if (method %in% c("mixomics_diablo", "mixomics_block_spls")) {
+    native_scores <- list(
+      alpha = scores,
+      beta = sweep(scores, 2L, c(1, 2), `+`)
+    )
+    native_loadings <- loadings
+    consensus_state <- make_consensus_state(
+      native_scores, native_loadings, units,
+      list(required_views = names(native_scores), score_definition = method_spec$score_definition)
+    )
+    result_scores <- apply_consensus_state(native_scores, consensus_state)
+    native_state <- if (identical(method, "mixomics_diablo")) list(
+      block_ids = names(native_scores), training_unit_ids = units,
+      class_levels = c("control", "case"), components = colnames(scores),
+      native_scores = native_scores, native_loadings = native_loadings,
+      consensus_state = consensus_state
+    ) else list(
+      block_ids = names(native_scores), unit_ids = units,
+      component_ids = colnames(scores), training_scores = native_scores,
+      block_loadings = native_loadings, selected = lapply(native_loadings, rownames),
+      consensus_state = consensus_state
+    )
+  } else if (identical(method, "concat_pca")) {
+    native_state <- list(
+      state = result_params$state, training_scores = scores,
+      block_loadings = loadings, block_projection_fraction = variance
+    )
+  } else {
+    native_state <- list(
+      block_ids = names(loadings), training_unit_ids = units,
+      components = colnames(scores), factors = scores
+    )
+  }
+  result_params$provenance <- list(
+    study_id = "study-c08-synthetic", analysis_id = "analysis-c08-synthetic",
+    preparation_context_id = "ctx-c08", representation_id = "levels",
+    unit_map = units, matrix_sha256 = input_hashes,
+    source_selection = stats::setNames(lapply(names(input_hashes), function(block_id) {
+      list(status = "supplied", value = "full_unselected")
+    }), names(input_hashes)),
+    outcome_eligibility = list(status = if (is.null(training_y)) "not_applicable" else "supplied")
+  )
+  result <- triomics_new_integration_result(
+    scores = result_scores, loadings = loadings, variance = variance,
+    selected = lapply(loadings, rownames), backend = method, params = result_params
+  )
+  result_params <- result$params
+  handoff <- c08_handoff(fit_hash, result_scores, input_hashes, training_y, units,
+                         selection, unit_map, "levels")
+  fit_metadata <- switch(method,
+    concat_pca = list(
+      backend = method, backend_version = R.version.string,
+      model_role = "unsupervised_predictor_structure",
+      training_unit_ids = units, preparation_context_id = "ctx-c08"
+    ),
+    mixomics_diablo = list(
+      backend = "mixomics_diablo", native_method = "mixOmics::block.splsda",
+      native_version = "6.36.0", model_role = "supervised_prediction",
+      training_unit_ids = units, preparation_context_id = "ctx-c08", state_hash = fit_hash
+    ),
+    mixomics_block_spls = list(
+      backend = "mixomics_block_spls", native_method = "mixOmics::block.spls",
+      native_version = "6.36.0", model_role = "continuous_regression_prediction",
+      training_unit_ids = units, preparation_context_id = "ctx-c08", state_hash = fit_hash
+    ),
+    mofa2 = list(
+      backend = "mofa2", native_method = "MOFA2::run_mofa",
+      native_version = "1.18.0", python_backend_version = "1.2.0",
+      model_role = "exploratory_structure_discovery", training_unit_ids = units,
+      state_hash = fit_hash, training_input_hashes = input_hashes
+    )
+  )
+  fit_metadata$c08_handoff <- handoff
+  fit_result_params <- result_params
+  fit_result_params$provenance <- NULL
+  fit <- structure(
+    list(native_state = native_state, result_params = fit_result_params, metadata = fit_metadata),
+    class = "BackendFit"
   )
   context <- list(
     study_id = "study-c08-synthetic",
@@ -122,8 +233,16 @@ c08_inputs <- function(method = "mixomics_diablo", visits = rep("V1", 4L),
     available_at_time = "V1",
     dependency_group = paste0("dependency-", method)
   )
-  list(result = result, fit = fit, context = context, scores = scores,
-       unit_map = unit_map, method_spec = method_spec, fit_hash = fit_hash)
+  links <- lapply(seq_along(units), function(i) list(
+    link_id = paste0("link-", units[[i]]),
+    sample_id = paste0("sample-", units[[i]]),
+    subject_key = as.character(subjects[[i]]),
+    visit_id = as.character(visits[[i]]),
+    status = "approved", cardinality = "one_to_one",
+    reference_time = as.character(times[[i]])
+  ))
+  list(result = result, fit = fit, context = context, scores = result_scores,
+       unit_map = unit_map, links = links, method_spec = method_spec, fit_hash = fit_hash)
 }
 
 c08_bundle <- function(method = "mixomics_diablo", ...) {
@@ -132,19 +251,63 @@ c08_bundle <- function(method = "mixomics_diablo", ...) {
   list(input = input, bundle = bundle)
 }
 
-c08_clinical_view <- function(unit_map) {
+c08_clinical_view <- function(unit_map, links = NULL) {
+  if (!is.null(links)) return(list(study_id = "study-c08-synthetic", links = links))
   list(
     study_id = "study-c08-synthetic",
     links = lapply(seq_len(nrow(unit_map)), function(i) list(
       link_id = paste0("link-", unit_map$unit_id[[i]]),
-      sample_id = unit_map$sample_id[[i]],
-      subject_key = unit_map$subject_key[[i]],
-      visit_id = unit_map$visit_id[[i]],
+      sample_id = unit_map$source_sample_ids[[i]][[1L]],
+      subject_key = unit_map$subject_id[[i]],
+      visit_id = "V1",
       status = "approved",
       cardinality = "one_to_one",
-      reference_time = unit_map$time[[i]]
+      reference_time = "2020-01-01"
     ))
   )
+}
+
+c08_set_representation <- function(input, representation = c("mean", "delta")) {
+  representation <- match.arg(representation)
+  units <- input$context$unit_map$unit_id
+  source_ids <- lapply(units, function(unit) paste0("sample-", unit, "-", c("V0", "V1")))
+  unit_map <- data.frame(
+    unit_id = units,
+    unit_type = if (identical(representation, "mean")) "subject_mean" else "subject_delta",
+    subject_id = paste0("subject-", units),
+    representation_id = representation,
+    eligibility = "retained",
+    stringsAsFactors = FALSE
+  )
+  unit_map$source_sample_ids <- I(source_ids)
+  weights <- if (identical(representation, "mean")) {
+    stats::setNames(c(.5, .5), c("V0", "V1"))
+  } else {
+    stats::setNames(c(-1, 1), c("V0", "V1"))
+  }
+  unit_map$visit_weights <- I(rep(list(weights), length(units)))
+  input$context$unit_map <- unit_map
+  input$context$representation_id <- representation
+  input$result$params$provenance$representation_id <- representation
+  input$links <- unlist(lapply(seq_along(units), function(i) list(
+    list(
+      link_id = paste0("link-", units[[i]], "-V0"), sample_id = source_ids[[i]][[1L]],
+      subject_key = unit_map$subject_id[[i]], visit_id = "V0", status = "approved",
+      cardinality = "one_to_one", reference_time = "2020-01-01"
+    ),
+    list(
+      link_id = paste0("link-", units[[i]], "-V1"), sample_id = source_ids[[i]][[2L]],
+      subject_key = unit_map$subject_id[[i]], visit_id = "V1", status = "approved",
+      cardinality = "one_to_one", reference_time = "2020-01-31"
+    )
+  )), recursive = FALSE)
+  handoff <- input$fit$metadata$c08_handoff
+  handoff$unit_map_sha256 <- c08_sha(unit_map)
+  handoff$representation_id <- representation
+  handoff$handoff_sha256 <- NULL
+  handoff$handoff_sha256 <- c08_sha(handoff)
+  input$fit$metadata$c08_handoff <- handoff
+  input
 }
 
 c08_objective <- function(endpoint_id, mode = "between_person", visit = "V1") {
@@ -196,17 +359,22 @@ testthat::test_that("C-08-AC1 emits per-unit lineage for PCA, DIABLO, block.spls
     testthat::expect_identical(endpoint$training_ids, paste0("subject-u", 1:4))
     testthat::expect_identical(endpoint$training_y$training_unit_ids, paste0("u", 1:4))
     testthat::expect_identical(endpoint$training_y$training_subjects, paste0("subject-u", 1:4))
-    testthat::expect_match(endpoint$training_y$values_sha256, "^[0-9a-f]{64}$")
-    testthat::expect_identical(endpoint$training_y$variable_id, "clinical_group")
+    if (spec$uses_y) {
+      testthat::expect_match(endpoint$training_y$values_sha256, "^[0-9a-f]{64}$")
+      testthat::expect_identical(endpoint$training_y$variable_id, "clinical_group")
+    } else {
+      testthat::expect_null(endpoint$training_y$values_sha256)
+      testthat::expect_null(endpoint$training_y$variable_id)
+    }
     testthat::expect_identical(endpoint$training_y$used_by_fit, spec$uses_y)
     testthat::expect_identical(endpoint$training_outcome,
                                if (spec$uses_y) "clinical_group" else NULL)
     testthat::expect_identical(endpoint$samples[[3L]]$unit_id, "u3")
     testthat::expect_equal(endpoint$samples[[3L]]$value,
                            fixture$input$scores["u3", "component_1"])
-    testthat::expect_identical(endpoint$samples[[3L]]$unit_type, "sample_visit")
-    testthat::expect_identical(endpoint$samples[[3L]]$subject_key, "subject-u3")
-    testthat::expect_identical(endpoint$samples[[3L]]$visit_id, "V1")
+    testthat::expect_identical(endpoint$samples[[3L]]$unit_type, "visit_level")
+    testthat::expect_identical(endpoint$samples[[3L]]$source_sample_ids, "sample-u3")
+    testthat::expect_identical(endpoint$samples[[3L]]$subject_id, "subject-u3")
     testthat::expect_identical(names(endpoint$input_hashes), c("alpha", "beta"))
     testthat::expect_identical(endpoint$available_at_time, "V1")
     testthat::expect_identical(endpoint$dependency_group, paste0("dependency-", method))
@@ -254,7 +422,7 @@ testthat::test_that("C-08-AC2 schedules an immutable B-owned score request witho
   request <- triomics_schedule_clinical_score_request(
     fixture$bundle,
     c08_objective(endpoint$endpoint_id),
-    c08_clinical_view(fixture$input$unit_map)
+    c08_clinical_view(fixture$input$unit_map, fixture$input$links)
   )
 
   testthat::expect_s3_class(request, "ClinicalScoreAssociationRequest")
@@ -275,9 +443,22 @@ testthat::test_that("C-08-AC2 schedules an immutable B-owned score request witho
   c08_abort(
     triomics_schedule_clinical_score_request(
       changed, c08_objective(endpoint$endpoint_id),
-      c08_clinical_view(fixture$input$unit_map)
+      c08_clinical_view(fixture$input$unit_map, fixture$input$links)
     ),
     "C_SCORE_ENDPOINT_HASH"
+  )
+
+  changed_lineage <- fixture$bundle
+  changed_lineage$endpoints[[2L]]$samples[[1L]]$source_sample_ids <- "unrelated-source"
+  changed_lineage$endpoints[[2L]]$endpoint_sha256 <-
+    triomics_c08_endpoint_hash(changed_lineage$endpoints[[2L]])
+  changed_lineage$payload_sha256 <- triomics_c08_bundle_hash(changed_lineage)
+  c08_abort(
+    triomics_schedule_clinical_score_request(
+      changed_lineage, c08_objective(changed_lineage$endpoints[[2L]]$endpoint_id),
+      c08_clinical_view(fixture$input$unit_map, fixture$input$links)
+    ),
+    "C_SCORE_COVERAGE_MISMATCH"
   )
 })
 
@@ -286,7 +467,7 @@ testthat::test_that("C-08-AC3 keeps DIABLO training-Y and selected MOFA associat
   diablo_endpoint <- diablo$bundle$endpoints[[1L]]
   diablo_request <- triomics_schedule_clinical_score_request(
     diablo$bundle, c08_objective(diablo_endpoint$endpoint_id),
-    c08_clinical_view(diablo$input$unit_map)
+    c08_clinical_view(diablo$input$unit_map, diablo$input$links)
   )
   testthat::expect_identical(diablo_request$endpoint_bundle$endpoints[[1L]]$training_outcome,
                              "clinical_group")
@@ -302,7 +483,7 @@ testthat::test_that("C-08-AC3 keeps DIABLO training-Y and selected MOFA associat
   mofa_endpoint <- mofa$bundle$endpoints[[1L]]
   mofa_request <- triomics_schedule_clinical_score_request(
     mofa$bundle, c08_objective(mofa_endpoint$endpoint_id),
-    c08_clinical_view(mofa$input$unit_map)
+    c08_clinical_view(mofa$input$unit_map, mofa$input$links)
   )
   scheduled <- mofa_request$endpoint_bundle$endpoints[[1L]]
   testthat::expect_identical(scheduled$training_outcome, NULL)
@@ -315,7 +496,7 @@ testthat::test_that("C-08-AC3 keeps DIABLO training-Y and selected MOFA associat
 testthat::test_that("C-08-AC4 refuses score-to-clinical unit or visit mismatches", {
   fixture <- c08_bundle("concat_pca")
   endpoint <- fixture$bundle$endpoints[[1L]]
-  view <- c08_clinical_view(fixture$input$unit_map)
+  view <- c08_clinical_view(fixture$input$unit_map, fixture$input$links)
   view$links <- view$links[-1L]
   c08_abort(
     triomics_schedule_clinical_score_request(
@@ -326,7 +507,7 @@ testthat::test_that("C-08-AC4 refuses score-to-clinical unit or visit mismatches
 
   fixture <- c08_bundle("concat_pca")
   endpoint <- fixture$bundle$endpoints[[1L]]
-  view <- c08_clinical_view(fixture$input$unit_map)
+  view <- c08_clinical_view(fixture$input$unit_map, fixture$input$links)
   view$links[[1L]]$visit_id <- "V2"
   c08_abort(
     triomics_schedule_clinical_score_request(
@@ -350,7 +531,8 @@ testthat::test_that("C-08-AC4 refuses repeated-visit time horizons that do not m
   objective$objectives[[1L]]$baseline_adjustment <- FALSE
   c08_abort(
     triomics_schedule_clinical_score_request(
-      fixture$bundle, objective, c08_clinical_view(fixture$input$unit_map)
+      fixture$bundle, objective,
+      c08_clinical_view(fixture$input$unit_map, fixture$input$links)
     ),
     "C_SCORE_TIME_MISMATCH"
   )
@@ -368,8 +550,181 @@ testthat::test_that("C-08-AC4 rejects feature-association artifacts at the score
     triomics_schedule_clinical_score_request(
       feature_results,
       c08_objective(fixture$bundle$endpoints[[1L]]$endpoint_id),
-      c08_clinical_view(fixture$input$unit_map)
+      c08_clinical_view(fixture$input$unit_map, fixture$input$links)
     ),
     "C_SCORE_REQUEST_INVALID"
   )
+})
+
+testthat::test_that("C-08 probes accepted adapter shapes and refuses absent handoff identity", {
+  pca <- c08_inputs("concat_pca")
+  testthat::expect_identical(pca$fit$metadata$backend, "concat_pca")
+  testthat::expect_null(pca$fit$metadata$state_hash)
+  testthat::expect_identical(pca$fit$native_state$training_scores, pca$result$scores)
+
+  diablo <- c08_inputs("mixomics_diablo")
+  testthat::expect_null(diablo$fit$result_params$method)
+  testthat::expect_identical(diablo$fit$metadata$native_method, "mixOmics::block.splsda")
+  testthat::expect_true(inherits(diablo$fit$native_state$consensus_state, "ConsensusState"))
+  testthat::expect_equal(
+    apply_consensus_state(diablo$fit$native_state$native_scores,
+                          diablo$fit$native_state$consensus_state),
+    diablo$result$scores
+  )
+
+  block_spls <- c08_inputs("mixomics_block_spls")
+  testthat::expect_null(block_spls$fit$result_params$method)
+  testthat::expect_identical(block_spls$fit$metadata$native_method, "mixOmics::block.spls")
+  testthat::expect_true(inherits(block_spls$fit$native_state$consensus_state, "ConsensusState"))
+  testthat::expect_equal(
+    apply_consensus_state(block_spls$fit$native_state$training_scores,
+                          block_spls$fit$native_state$consensus_state),
+    block_spls$result$scores
+  )
+
+  mofa <- c08_inputs("mofa2")
+  testthat::expect_null(mofa$fit$result_params$method)
+  testthat::expect_null(mofa$fit$metadata$preparation_context_id)
+  testthat::expect_identical(mofa$fit$metadata$native_method, "MOFA2::run_mofa")
+  testthat::expect_identical(mofa$fit$native_state$factors, mofa$result$scores)
+
+  for (fixture in list(pca, diablo, block_spls, mofa)) {
+    fixture$fit$metadata$c08_handoff <- NULL
+    error <- testthat::capture_error(triomics_integration_score_endpoints(
+      fixture$result, fixture$fit, fixture$context
+    ))
+    testthat::expect_s3_class(error, "triomics_error")
+    testthat::expect_identical(error$code, "C_SCORE_LINEAGE_INVALID")
+    testthat::expect_match(conditionMessage(error), "handoff|state identity")
+  }
+})
+
+testthat::test_that("C-08 binds scores, source inputs, Y, selection and AnalysisUnitMap to the fit handoff", {
+  fixture <- c08_inputs("mofa2")
+  changed_scores <- fixture
+  changed_scores$result$scores[1L, 1L] <- changed_scores$result$scores[1L, 1L] + 1
+  error <- testthat::capture_error(triomics_integration_score_endpoints(
+    changed_scores$result, changed_scores$fit, changed_scores$context
+  ))
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "C_SCORE_FIT_BINDING_MISMATCH")
+
+  changed_inputs <- fixture
+  changed_inputs$context$input_hashes$alpha <- paste(rep("d", 64L), collapse = "")
+  error <- testthat::capture_error(triomics_integration_score_endpoints(
+    changed_inputs$result, changed_inputs$fit, changed_inputs$context
+  ))
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "C_SCORE_FIT_BINDING_MISMATCH")
+
+  supervised <- c08_inputs("mixomics_diablo")
+  supervised$context$training_y$values[["u4"]] <- "control"
+  error <- testthat::capture_error(triomics_integration_score_endpoints(
+    supervised$result, supervised$fit, supervised$context
+  ))
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "C_SCORE_FIT_BINDING_MISMATCH")
+
+  changed_selection <- fixture
+  changed_selection$context$selection$ancestry <- "selected_after_clinical_outcome"
+  error <- testthat::capture_error(triomics_integration_score_endpoints(
+    changed_selection$result, changed_selection$fit, changed_selection$context
+  ))
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "C_SCORE_FIT_BINDING_MISMATCH")
+
+  changed_map <- fixture
+  changed_map$context$unit_map$source_sample_ids[[1L]] <- "unrelated-sample"
+  error <- testthat::capture_error(triomics_integration_score_endpoints(
+    changed_map$result, changed_map$fit, changed_map$context
+  ))
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "C_SCORE_FIT_BINDING_MISMATCH")
+})
+
+testthat::test_that("C-08 preserves mean and delta AnalysisUnitMap lineage and rejects incompatible times", {
+  mean_input <- c08_set_representation(c08_inputs("mofa2"), "mean")
+  mean_endpoint <- triomics_integration_score_endpoints(
+    mean_input$result, mean_input$fit, mean_input$context
+  )$endpoints[[1L]]
+  testthat::expect_identical(mean_endpoint$representation_id, "mean")
+  testthat::expect_identical(mean_endpoint$samples[[1L]]$unit_type, "subject_mean")
+  testthat::expect_identical(mean_endpoint$samples[[1L]]$source_sample_ids,
+                             c("sample-u1-V0", "sample-u1-V1"))
+  testthat::expect_identical(mean_endpoint$samples[[1L]]$visit_weights,
+                             stats::setNames(c(.5, .5), c("V0", "V1")))
+  mean_bundle <- triomics_integration_score_endpoints(
+    mean_input$result, mean_input$fit, mean_input$context
+  )
+  mean_objective <- c08_objective(mean_bundle$endpoints[[1L]]$endpoint_id, visit = "V0")
+  error <- testthat::capture_error(triomics_schedule_clinical_score_request(
+    mean_bundle, mean_objective,
+    c08_clinical_view(mean_input$context$unit_map, mean_input$links)
+  ))
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "C_SCORE_TIME_MISMATCH")
+
+  delta_input <- c08_set_representation(c08_inputs("mofa2"), "delta")
+  delta_bundle <- triomics_integration_score_endpoints(
+    delta_input$result, delta_input$fit, delta_input$context
+  )
+  delta_endpoint <- delta_bundle$endpoints[[1L]]
+  testthat::expect_identical(delta_endpoint$representation_id, "delta")
+  testthat::expect_identical(delta_endpoint$samples[[1L]]$unit_type, "subject_delta")
+  testthat::expect_identical(delta_endpoint$samples[[1L]]$source_sample_ids,
+                             c("sample-u1-V0", "sample-u1-V1"))
+  testthat::expect_identical(delta_endpoint$samples[[1L]]$visit_weights,
+                             stats::setNames(c(-1, 1), c("V0", "V1")))
+  delta_objective <- c08_objective(delta_endpoint$endpoint_id, mode = "baseline_to_later", visit = "V0")
+  delta_objective$objectives[[1L]]$baseline_visit_ref <- "V0"
+  delta_objective$objectives[[1L]]$later_visit_ref <- "V1"
+  delta_objective$objectives[[1L]]$horizon_days <- 30L
+  testthat::expect_s3_class(triomics_schedule_clinical_score_request(
+    delta_bundle, delta_objective,
+    c08_clinical_view(delta_input$context$unit_map, delta_input$links)
+  ), "ClinicalScoreAssociationRequest")
+
+  reversed_links <- delta_input$links
+  reversed_links[[1L]]$visit_id <- "V1"
+  reversed_links[[2L]]$visit_id <- "V0"
+  error <- testthat::capture_error(triomics_schedule_clinical_score_request(
+    delta_bundle, delta_objective,
+    c08_clinical_view(delta_input$context$unit_map, reversed_links)
+  ))
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "C_SCORE_TIME_MISMATCH")
+
+  invalid <- c08_inputs("mofa2")
+  invalid$context$unit_map$unit_type[[1L]] <- "invented_unit"
+  error <- testthat::capture_error(triomics_integration_score_endpoints(
+    invalid$result, invalid$fit, invalid$context
+  ))
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "C_SCORE_LINEAGE_INVALID")
+
+  with_exclusion <- c08_inputs("mofa2")
+  records <- lapply(seq_len(nrow(with_exclusion$context$unit_map)), function(i) {
+    lapply(names(with_exclusion$context$unit_map), function(name) {
+      with_exclusion$context$unit_map[[name]][[i]]
+    })
+  })
+  for (i in seq_along(records)) names(records[[i]]) <- names(with_exclusion$context$unit_map)
+  records[[5L]] <- list(
+    unit_id = "u5", unit_type = "visit_level", source_sample_ids = "sample-u5",
+    subject_id = "subject-u5", representation_id = "levels", eligibility = "excluded",
+    exclusion_reason = "not_present_in_producing_fit"
+  )
+  with_exclusion$context$unit_map <- records
+  handoff <- with_exclusion$fit$metadata$c08_handoff
+  handoff$unit_map_sha256 <- c08_sha(records)
+  handoff$handoff_sha256 <- NULL
+  handoff$handoff_sha256 <- c08_sha(handoff)
+  with_exclusion$fit$metadata$c08_handoff <- handoff
+  excluded_bundle <- triomics_integration_score_endpoints(
+    with_exclusion$result, with_exclusion$fit, with_exclusion$context
+  )
+  testthat::expect_length(excluded_bundle$endpoints[[1L]]$samples, 4L)
+  testthat::expect_identical(excluded_bundle$endpoints[[1L]]$unit_map$eligibility[[5L]], "excluded")
+  testthat::expect_identical(excluded_bundle$endpoints[[1L]]$unit_map$exclusion_reason[[5L]],
+                             "not_present_in_producing_fit")
 })

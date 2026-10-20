@@ -10,6 +10,19 @@ triomics_c08_validate_endpoint_bundle <- function(endpoint_bundle) {
   if (anyNA(endpoint_ids) || any(!nzchar(endpoint_ids)) || anyDuplicated(endpoint_ids)) {
     triomics_c08_abort("C_SCORE_REQUEST_INVALID", "Score endpoint ids must be unique and complete.", "endpoint_id")
   }
+  endpoint_unit_signature <- function(endpoint) {
+    lapply(endpoint$samples, function(sample) {
+      if (!identical(sample$sample_id, sample$unit_id)) {
+        triomics_c08_abort("C_SCORE_COVERAGE_MISMATCH", "B-compatible score sample ids must remain the declared analysis unit ids.", "unit_id")
+      }
+      sample[c(
+        "sample_id", "unit_id", "unit_type", "source_sample_ids", "subject_id",
+        "representation_id", "visit_weights", "eligibility", "study_id",
+        "analysis_id", "preparation_context_id"
+      )]
+    })
+  }
+  reference_unit_signature <- NULL
   for (endpoint in endpoint_bundle$endpoints) {
     if (!identical(endpoint$artifact_type, "integration_score_endpoint") ||
         !triomics_c08_valid_sha256(endpoint$endpoint_sha256) ||
@@ -19,6 +32,11 @@ triomics_c08_validate_endpoint_bundle <- function(endpoint_bundle) {
     if (!triomics_c08_valid_sha256(endpoint$matrix_hash) ||
         !identical(endpoint$matrix_hash, triomics_c08_matrix_hash(endpoint))) {
       triomics_c08_abort("C_SCORE_ENDPOINT_HASH", "A score endpoint matrix has changed since C-08 construction.", "matrix_hash")
+    }
+    signature <- endpoint_unit_signature(endpoint)
+    if (is.null(reference_unit_signature)) reference_unit_signature <- signature else if (
+        !identical(reference_unit_signature, signature)) {
+      triomics_c08_abort("C_SCORE_COVERAGE_MISMATCH", "Every component endpoint must retain the same AnalysisUnitMap lineage.", "unit_map")
     }
   }
   invisible(endpoint_ids)
@@ -35,9 +53,9 @@ triomics_c08_validate_clinical_links <- function(endpoint_bundle, clinical_view)
     triomics_c08_abort("C_SCORE_COVERAGE_MISMATCH", "Clinical view and score bundle must identify one study and approved links.", "clinical_view")
   }
   endpoint_samples <- endpoint_bundle$endpoints[[1L]]$samples
-  sample_ids <- vapply(endpoint_samples, function(sample) sample$sample_id, character(1))
-  if (anyDuplicated(sample_ids)) {
-    triomics_c08_abort("C_SCORE_COVERAGE_MISMATCH", "Score endpoint sample coverage is not one-to-one.", "sample_id")
+  source_ids <- unlist(lapply(endpoint_samples, function(sample) sample$source_sample_ids), use.names = FALSE)
+  if (!length(source_ids) || anyNA(source_ids) || any(!nzchar(source_ids)) || anyDuplicated(source_ids)) {
+    triomics_c08_abort("C_SCORE_COVERAGE_MISMATCH", "Analysis units must map to unique source samples before clinical linking.", "source_sample_ids")
   }
   links <- clinical_view$links
   link_ids <- vapply(links, function(link) {
@@ -47,33 +65,44 @@ triomics_c08_validate_clinical_links <- function(endpoint_bundle, clinical_view)
     if (is.null(link$sample_id)) "" else as.character(link$sample_id)
   }, character(1))
   if (any(!nzchar(link_ids)) || anyDuplicated(link_ids) || any(!nzchar(link_samples)) || anyDuplicated(link_samples) ||
-      !setequal(link_samples, sample_ids) || length(link_samples) != length(sample_ids)) {
-    triomics_c08_abort("C_SCORE_COVERAGE_MISMATCH", "Approved clinical links must cover every score sample exactly once.", "clinical_links")
+      !setequal(link_samples, source_ids) || length(link_samples) != length(source_ids)) {
+    triomics_c08_abort("C_SCORE_COVERAGE_MISMATCH", "Approved clinical links must cover every AnalysisUnitMap source sample exactly once.", "clinical_links")
   }
   index <- stats::setNames(links, link_samples)
-  linked <- lapply(endpoint_samples, function(sample) {
-    link <- index[[sample$sample_id]]
+  linked <- lapply(source_ids, function(sample_id) {
+    link <- index[[sample_id]]
+    subject <- if (is.null(link$subject_key)) link$subject_id else link$subject_key
     if (is.null(link) || !identical(link$status, "approved") ||
         !identical(link$cardinality, "one_to_one") ||
-        !identical(link$subject_key, sample$subject_key)) {
-      triomics_c08_abort("C_SCORE_COVERAGE_MISMATCH", "A score sample lacks one approved clinical subject link.", "clinical_links")
-    }
-    if (!identical(link$visit_id, sample$visit_id) ||
-        is.null(link$reference_time) || !identical(as.character(link$reference_time), sample$time)) {
-      triomics_c08_abort("C_SCORE_TIME_MISMATCH", "Clinical link visit or reference time differs from the score unit map.", "clinical_links")
+        !is.character(subject) || length(subject) != 1L || is.na(subject) || !nzchar(subject)) {
+      triomics_c08_abort("C_SCORE_COVERAGE_MISMATCH", "An AnalysisUnitMap source sample lacks one approved clinical subject link.", "clinical_links")
     }
     list(
-      link_id = if (is.null(link$link_id)) "" else as.character(link$link_id),
-      sample_id = sample$sample_id,
-      subject_key = sample$subject_key,
-      visit_id = sample$visit_id,
-      reference_time = sample$time,
+      link_id = as.character(link$link_id),
+      sample_id = sample_id,
+      subject_id = as.character(subject),
+      visit_id = if (is.null(link$visit_id)) NULL else as.character(link$visit_id),
+      reference_time = if (is.null(link$reference_time)) NULL else as.character(link$reference_time),
       status = link$status,
       cardinality = link$cardinality
     )
   })
+  names(linked) <- source_ids
+  by_unit <- lapply(endpoint_samples, function(sample) {
+    unit_links <- linked[sample$source_sample_ids]
+    subjects <- vapply(unit_links, `[[`, character(1), "subject_id")
+    if (length(unique(subjects)) != 1L) {
+      triomics_c08_abort("C_SCORE_COVERAGE_MISMATCH", "Derived unit source samples do not belong to one clinical subject.", "clinical_links")
+    }
+    if (!is.null(sample$subject_id) && any(subjects != sample$subject_id)) {
+      triomics_c08_abort("C_SCORE_COVERAGE_MISMATCH", "Clinical subject links disagree with the AnalysisUnitMap subject_id.", "subject_id")
+    }
+    unit_links
+  })
+  names(by_unit) <- vapply(endpoint_samples, `[[`, character(1), "unit_id")
   list(
     links = linked,
+    by_unit = by_unit,
     links_sha256 = triomics_c08_sha256(linked)
   )
 }
@@ -85,24 +114,41 @@ triomics_c08_parse_date <- function(value) {
   if (is.na(parsed) || !identical(format(parsed, "%Y-%m-%d"), value)) NULL else parsed
 }
 
-triomics_c08_validate_objective_time <- function(objective, endpoint) {
+triomics_c08_validate_objective_time <- function(objective, endpoint, links_by_unit) {
   mode <- objective$mode
   valid_modes <- c("between_person", "within_person", "baseline_to_later", "effect_modification", "prediction")
   if (!is.character(mode) || length(mode) != 1L || !mode %in% valid_modes) {
     triomics_c08_abort("C_SCORE_TIME_MISMATCH", "Clinical score objective has an unsupported time mode.", "mode")
   }
   samples <- endpoint$samples
-  visits <- vapply(samples, function(sample) sample$visit_id, character(1))
-  subjects <- vapply(samples, function(sample) sample$subject_key, character(1))
-  times <- vapply(samples, function(sample) sample$time, character(1))
-  parsed_times <- lapply(times, triomics_c08_parse_date)
-  if (any(vapply(parsed_times, is.null, logical(1)))) {
-    triomics_c08_abort("C_SCORE_TIME_MISMATCH", "Every score sample needs a valid ISO collection date.", "time")
+  unit_types <- vapply(samples, `[[`, character(1), "unit_type")
+  if (any(unit_types == "subject_mean")) {
+    triomics_c08_abort("C_SCORE_TIME_MISMATCH", "A multi-visit subject mean cannot be assigned to a single clinical objective time window.", "representation_id")
+  }
+  get_link_fields <- function(sample) {
+    links <- links_by_unit[[sample$unit_id]]
+    if (is.null(links) || !length(links) || any(vapply(links, function(link) {
+      is.null(link$visit_id) || length(link$visit_id) != 1L || is.na(link$visit_id) ||
+        !nzchar(link$visit_id) || is.null(link$reference_time) ||
+        length(link$reference_time) != 1L || is.na(link$reference_time) ||
+        !nzchar(link$reference_time)
+    }, logical(1)))) {
+      triomics_c08_abort("C_SCORE_TIME_MISMATCH", "Every linked source sample needs an explicit visit and collection time.", "clinical_links")
+    }
+    list(
+      visits = vapply(links, `[[`, character(1), "visit_id"),
+      times = vapply(links, `[[`, character(1), "reference_time"),
+      subjects = vapply(links, `[[`, character(1), "subject_id")
+    )
   }
   if (identical(mode, "between_person") || identical(mode, "effect_modification") || identical(mode, "prediction")) {
     visit <- objective$time_window_ref
-    if (!is.character(visit) || length(visit) != 1L || is.na(visit) || !nzchar(visit) ||
-        any(visits != visit)) {
+    if (any(unit_types == "subject_delta") ||
+        !is.character(visit) || length(visit) != 1L || is.na(visit) || !nzchar(visit) ||
+        any(vapply(samples, function(sample) {
+          fields <- get_link_fields(sample)
+          length(fields$visits) != 1L || !identical(fields$visits[[1L]], visit)
+        }, logical(1)))) {
       triomics_c08_abort("C_SCORE_TIME_MISMATCH", "All score units must match the objective's declared visit window.", "time_window_ref")
     }
     return(invisible(TRUE))
@@ -113,9 +159,40 @@ triomics_c08_validate_objective_time <- function(objective, endpoint) {
   if (!is.character(baseline) || length(baseline) != 1L || is.na(baseline) || !nzchar(baseline) ||
       !is.character(later) || length(later) != 1L || is.na(later) || !nzchar(later) ||
       identical(baseline, later) || !is.numeric(horizon) || length(horizon) != 1L ||
-      is.na(horizon) || !is.finite(horizon) || horizon <= 0 || horizon != as.integer(horizon) ||
-      any(!visits %in% c(baseline, later))) {
+      is.na(horizon) || !is.finite(horizon) || horizon <= 0 || horizon != as.integer(horizon)) {
     triomics_c08_abort("C_SCORE_TIME_MISMATCH", "Repeated-visit objectives need explicit baseline/later visits and a positive integer horizon.", "time_window_ref")
+  }
+  if (any(unit_types == "subject_delta")) {
+    if (!identical(mode, "baseline_to_later") || any(unit_types != "subject_delta")) {
+      triomics_c08_abort("C_SCORE_TIME_MISMATCH", "Subject-delta endpoints require a baseline-to-later objective.", "mode")
+    }
+    for (sample in samples) {
+      weights <- sample$visit_weights
+      fields <- get_link_fields(sample)
+      if (!identical(names(weights), c(baseline, later)) ||
+          !identical(as.numeric(weights), c(-1, 1)) ||
+          !identical(unname(fields$visits), names(weights)) || length(fields$visits) != 2L) {
+        triomics_c08_abort("C_SCORE_TIME_MISMATCH", "Delta visit weights must match the objective's baseline-to-later ordering.", "visit_weights")
+      }
+      baseline_time <- triomics_c08_parse_date(fields$times[match(baseline, fields$visits)])
+      later_time <- triomics_c08_parse_date(fields$times[match(later, fields$visits)])
+      if (is.null(baseline_time) || is.null(later_time)) {
+        triomics_c08_abort("C_SCORE_TIME_MISMATCH", "Delta source links need valid ISO dates.", "reference_time")
+      }
+      observed <- as.integer(later_time - baseline_time)
+      if (observed <= 0L || observed != as.integer(horizon)) {
+        triomics_c08_abort("C_SCORE_TIME_MISMATCH", "Observed source-sample horizon differs from the declared objective horizon.", "horizon_days")
+      }
+    }
+    return(invisible(TRUE))
+  }
+  unit_fields <- lapply(samples, get_link_fields)
+  visits <- vapply(unit_fields, function(fields) fields$visits[[1L]], character(1))
+  subjects <- vapply(unit_fields, function(fields) fields$subjects[[1L]], character(1))
+  times <- vapply(unit_fields, function(fields) fields$times[[1L]], character(1))
+  parsed_times <- lapply(times, triomics_c08_parse_date)
+  if (any(vapply(parsed_times, is.null, logical(1))) || any(!visits %in% c(baseline, later))) {
+    triomics_c08_abort("C_SCORE_TIME_MISMATCH", "Repeated-visit score units need valid linked baseline/later visits and dates.", "time")
   }
   pairs <- split(seq_along(samples), subjects)
   for (indices in pairs) {
@@ -154,7 +231,7 @@ triomics_schedule_clinical_score_request <- function(endpoint_bundle, objective_
         is.na(objective$objective_id) || !nzchar(objective$objective_id)) {
       triomics_c08_abort("C_SCORE_REQUEST_INVALID", "Score-association objectives must target a C-08 score endpoint, not a feature artifact.", "endpoint_ref")
     }
-    triomics_c08_validate_objective_time(objective, endpoints[[endpoint_id]])
+    triomics_c08_validate_objective_time(objective, endpoints[[endpoint_id]], linkage$by_unit)
   }
   request <- list(
     artifact_type = "clinical_score_association_request",
@@ -169,6 +246,7 @@ triomics_schedule_clinical_score_request <- function(endpoint_bundle, objective_
     clinical_linkage = list(
       study_id = clinical_view$study_id,
       approved_links = linkage$links,
+      unit_links = linkage$by_unit,
       links_sha256 = linkage$links_sha256
     ),
     results = list()

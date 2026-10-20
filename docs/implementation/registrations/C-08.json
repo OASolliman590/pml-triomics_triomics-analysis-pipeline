@@ -4,13 +4,14 @@
   "implementation_base": "cad313b749814c45ed75b5116adf4951103ee2c9",
   "accepted": false,
   "applied_to_shared_files": false,
-  "implementation_status": "Local packet candidate; behavioral acceptance is green, but shared stage-C composition is pending coordinator registration and review.",
+  "implementation_status": "Repair 1 is locally green for 11 behavioral test blocks / 206 assertions, but the accepted C-03/C-04/C-05 fit seams lack a qualified C-08 dependency handoff. Actual accepted fits fail closed; shared endpoint/CLI composition is pending an exclusive correctness repair. Candidate is not accepted.",
   "synthetic_software_only": true,
   "local_files": [
     "R/integration_endpoints.R",
     "R/clinical_score_requests.R",
     "tests/testthat/test-C-08.R",
-    "inst/examples/tickets/C-08.yaml"
+    "inst/examples/tickets/C-08.yaml",
+    "docs/implementation/registrations/C-08.json"
   ],
   "integration_endpoints": {
     "methods": [
@@ -48,14 +49,28 @@
       }
     ],
     "lineage_fields": [
-      "unit/sample/subject/visit/time mapping",
+      "AnalysisUnitMap unit_id, permitted unit_type, source_sample_ids, subject_id, representation_id, eligibility, and named visit_weights when derived",
       "training units and subjects",
       "training Y variable identity, used-by-fit status, and value hash when present",
-      "producing BackendFit identity and state hash",
+      "producing BackendFit identity and authoritative state hash, plus a qualified same-fit handoff binding recomputed scores, inputs, Y, selection, unit map, and representation",
       "selection ancestry and inference status",
       "available_at_time and dependency_group",
-      "per-block input hashes, source hash, B-compatible matrix hash, endpoint and bundle hashes"
-    ]
+      "per-block input hashes, source hash, B-compatible matrix hash, endpoint and bundle hashes",
+      "clinical source-sample links are separate from score-unit ids; no subject/visit/time values are inferred from absent fields"
+    ],
+    "accepted_adapter_notes": {
+      "concat_pca": "BackendFit result params identify concat_pca and native_state exposes training_scores; accepted metadata has no state_hash. A qualified authoritative state identity is required.",
+      "mixomics_diablo": "BackendFit result params omit method; metadata/state provide native method, training ids, preparation context, and state hash; common scores must reproduce via apply_consensus_state(native_scores, consensus_state).",
+      "mixomics_block_spls": "BackendFit result params omit method; metadata/state provide native method, training ids, preparation context, and state hash; common scores must reproduce via apply_consensus_state(training_scores, consensus_state).",
+      "mofa2": "BackendFit result params omit method and metadata omits preparation_context_id; factors are the score source and preparation context is available on IntegrationResult provenance."
+    },
+    "fit_handoff_required": true,
+    "fit_handoff_fields": [
+      "schema_version", "qualification", "fit_state_sha256", "training_scores_sha256",
+      "training_unit_ids", "input_hashes", "training_y_sha256", "selection_sha256",
+      "unit_map_sha256", "representation_id", "handoff_sha256"
+    ],
+    "actual_accepted_backendfit_seams_qualified": false
   },
   "clinical_score_request": {
     "owner_stage": "B",
@@ -64,22 +79,24 @@
     "recurses_to_stage_c": false,
     "feature_association_artifacts_accepted": false,
     "clinical_models_executed_or_duplicated": false,
-    "integrity": "Bundle, endpoint, and matrix hashes are checked before request construction; approved one-to-one links and visit/time/coverage are fail-closed."
+    "integrity": "Bundle, endpoint, and matrix hashes are checked before request construction; approved one-to-one links cover AnalysisUnitMap source_sample_ids; mean/delta weights, visit order, objective time, and coverage are fail-closed.",
+    "shared_composition": "pending exclusive shared fit-retention and CLI repair"
   },
   "tests": {
     "red_command": "Rscript --vanilla -e \"testthat::test_local(filter='C-08', stop_on_failure=TRUE)\"",
     "red_exit": 1,
-    "red_evidence": "artifacts/acceptance/C-08/red-test.log",
-    "red_result": "Expected absent behavior: constructor not found; initial behavioral run failed without skips.",
+    "red_evidence": "artifacts/acceptance/C-08/repair1-red-summary.txt",
+    "red_result": "Repair-1 red run after actual-shape and adversarial tests: testthat stopped at its failure limit after 18 observed failures; 173 passes, 0 warnings, 0 skips.",
+    "repair_1_red_evidence": "artifacts/acceptance/C-08/repair1-red-summary.txt",
     "final_command": "Rscript --vanilla -e \"testthat::test_local(filter='C-08', stop_on_failure=TRUE)\"",
     "final_exit": 0,
-    "test_blocks": 8,
-    "assertions_passed": 149,
+    "test_blocks": 11,
+    "assertions_passed": 206,
     "failures": 0,
     "warnings": 0,
     "skips": 0,
-    "final_result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 149 ]",
-    "intermediate_repair": "One post-implementation run exposed AC4 feature-artifact error precedence; the boundary check was corrected and the final run passed."
+    "final_result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 206 ]",
+    "intermediate_repair": "The final focused run also verified delta source-sample order against named -1/+1 visit weights."
   },
   "cli": {
     "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-08.yaml --stage C --output artifacts/acceptance/C-08",
@@ -87,8 +104,9 @@
     "run_status": "complete",
     "evidence_root": "artifacts/acceptance/C-08",
     "first_repeat_collision_exit": 4,
-    "collision_note": "The CLI refuses to atomically overwrite existing generated outputs. The first successful run was preserved in artifacts/acceptance/C-08/prior-success before rerunning the exact command into a clean output path.",
-    "scope_note": "The existing shared CLI currently emits IntegrationResult output only; it does not yet compose C-08 endpoints or B requests. CLI exit 0 proves the synthetic PCA stage-C slice, not shared endpoint registration."
+    "collision_note": "The CLI refuses to atomically overwrite existing generated outputs. Intermediate output was preserved under artifacts/acceptance/C-08/repair1-prior, repair1-second-prior, repair1-final-prior, and repair1-last-prior before the final exact run.",
+    "scope_note": "The shared CLI emits the legacy IntegrationResult only. The fixture has no supported AnalysisUnitMap or clinical links/objectives, so endpoint/request composition is pending and no subject/visit/time values were invented. CLI exit 0 is synthetic software evidence for stage C only.",
+    "payload_sha256": "2f01bb0e7cb558bd61492365ab7ec70c6e65fdcdaf887c27abd02f9d62f60acb"
   },
   "runtime": {
     "R": "4.6.1 (2026-06-24)",
@@ -101,42 +119,48 @@
     "limma": "3.68.5"
   },
   "file_sha256": {
-    "R/integration_endpoints.R": "52d2ecb12b2d63722fae3e685fcaecec915ea586ad6042a91d0ee8221e1c1535",
-    "R/clinical_score_requests.R": "7411d5e6b1d7f452e32f184279bc65ddfb036745ccdce3794d8e11e35a0008f0",
-    "tests/testthat/test-C-08.R": "ea809f2e0293592175d1910180c310122ead85ca16521b4d9e3f97e5121f3b25",
+    "R/integration_endpoints.R": "c32b92b1942912b5fcd59e88b8ab43fa146a4c3fe87819ec590fdbb1c8661478",
+    "R/clinical_score_requests.R": "88ef2001744d13e4b213597d7cbf4d42d0f61371784e41253970b7faa75f5a34",
+    "tests/testthat/test-C-08.R": "5f3b1d7866d7a9d11425222de925a709ead325dc9cdc4c432b18088318b2a05f",
     "inst/examples/tickets/C-08.yaml": "72145b84b27f4039173f69e295f9d2052d44769bc7ff09e7803e6543327a3b51"
   },
   "cli_hashes": {
     "integration_results_payload_sha256": "2f01bb0e7cb558bd61492365ab7ec70c6e65fdcdaf887c27abd02f9d62f60acb",
-    "integration_results_envelope_file_sha256": "a2d3e0ffae4e27106574eeb479c97571fb7084d9189e2dd129631284be5e0e95",
+    "integration_results_envelope_file_sha256": "450dcb8e1f164889433ae72c2dda6a8c245f709411970d12ece21fb4f0ad3380",
     "run_manifest_sha256": "e596d397395e7b8381065c05aa072a1a5ddf3e3273e24b0ba918951795f5e1e6"
   },
   "acceptance": {
     "AC1": {
-      "status": "pass_behavioral_tests",
-      "evidence": "All four method contracts, unit/sample/subject/visit, scales/orientations, fit and training lineage, input hashes, availability/dependency, and B-compatible matrix hashes are asserted. Synthetic fixtures only; MOFA2 runtime is not installed."
+      "status": "blocked_until_shared_fit_handoff",
+      "evidence": "Method-specific score sources and actual adapter field shapes were probed without new native fits. The local API verifies score reproduction and rejects absent/unqualified fit evidence. Current accepted adapter fits do not provide the required handoff, so no actual accepted fit can emit a C-08 endpoint yet; synthetic qualified-handoff tests cover the local endpoint contract. MOFA2 runtime is not installed."
     },
     "AC2": {
       "status": "pass_local_request_api_pending_shared_composition",
       "evidence": "A hash-checked B-owned request is scheduled without modeling, outputs, or C recursion. Shared CLI/orchestrator composition is not wired because the accepted shared fit path currently discards BackendFit before returning IntegrationResult."
     },
     "AC3": {
-      "status": "pass_behavioral_tests",
-      "evidence": "DIABLO and block.spls training-Y associations are descriptive-only; same-data selected MOFA ancestry and inspected outcome remain descriptive-only."
+      "status": "pass_local_rule_tests_pending_shared_fit_handoff",
+      "evidence": "Under qualified synthetic handoffs, DIABLO/block.spls training-Y associations and same-data selected MOFA ancestry/inspected outcomes remain descriptive-only; actual accepted fit routes refuse until handoff fields exist."
     },
     "AC4": {
-      "status": "pass_behavioral_tests",
-      "evidence": "Unit coverage, clinical link, visit, date/horizon, immutable hash, and feature-versus-score request mismatches fail closed."
+      "status": "pass_local_contract_tests_pending_shared_composition",
+      "evidence": "Actual levels/mean/delta AnalysisUnitMap fields and excluded-row reasons are preserved; only retained score rows become endpoints. Invalid type, coverage, clinical link, source visit ordering, objective time/horizon, endpoint integrity, and feature-versus-score request mismatches fail closed. Shared CLI composition is pending."
     }
   },
   "shared_registration_request": {
     "required": true,
+    "request_kind": "exclusive_shared_correctness_repair_before_mechanical_registration",
     "coordinator_owned_files_to_update": [
       "R/integration_contract.R",
       "R/cli.R",
       "R/stage_registry.R"
     ],
-    "request": "Add a single-fit internal orchestration seam that retains the exact BackendFit and IntegrationResult produced by the accepted adapter path, without expanding the six-field IntegrationResult or refitting. The stage-C writer should construct C-08 endpoints from that fit/result and public unit/input/selection lineage, emit the immutable endpoint bundle, and—when configured clinical links/objectives are available—create a B-owned scheduled request only. It must not execute associate_endpoints/associate_longitudinal_endpoints, re-run C, or duplicate clinical models. Keep the feature-association and score-association artifact/request types distinct.",
+    "required_fit_handoff_fields": [
+      "schema_version", "qualification", "fit_state_sha256", "training_scores_sha256",
+      "training_unit_ids", "input_hashes", "training_y_sha256", "selection_sha256",
+      "unit_map_sha256", "representation_id", "handoff_sha256"
+    ],
+    "request": "This is not mechanical registration yet. Add a single-fit internal orchestration seam retaining the exact BackendFit, IntegrationResult and public context without expanding the six-field IntegrationResult or refitting. Create a qualified same-fit handoff binding the authoritative fit state identity, method-specific recomputed training scores, exact input hashes, training Y when used, selection ancestry, AnalysisUnitMap source_sample_ids/visit_weights/representation and training units. PCA has no accepted state_hash and needs an authoritative fit-state identity; do not substitute a hash of the result/scores. MOFA preparation_context_id must come from IntegrationResult provenance. Pass only actual declared unit maps and approved clinical links/objectives; do not infer or invent subject/visit/time values. Compose immutable C score endpoints and a B-owned scheduled request only when those inputs exist. Never execute/duplicate clinical models or recurse B-to-C; keep feature-association and score-association types distinct.",
     "exports": [],
     "dependency_changes": [],
     "applied_by_worker": false
