@@ -36,42 +36,52 @@
   },
   "active_workers": [
     {
-      "agent": "/root/c09_luna",
-      "role": "luna_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/c09_sol_review",
+      "role": "sol_focused_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "packet": "C-09",
       "attempt": 1,
       "repair_attempt": 1,
       "base_commit": "ef7da20",
-      "candidate_commit": "45a0f9900306f60a6a87a2fbfffbf7dd57adca2e",
+      "candidate_commit": "253c6f0da495f0ec61c0c7ec943dca5b2bb2a7c9",
       "worktree": "/Users/megastore/.codex/worktrees/c09-clinical-prediction/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Return one clean allowlisted C-09 repair commit closing the two Important failure-accounting findings and replacing the test-only fixture handoff with runnable public inputs; Sol inspects and sends the one focused rereview. Real-study deployment remains unqualified.",
+      "allowed_next_transition": "Focused pass permits serial packet integration followed by an exclusive shared registration repair. Any remaining Important finding permits only bounded repair 2; no second focused rereview.",
       "wait_cursor": null
     },
     {
-      "agent": "/root/c06_luna",
-      "role": "luna_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/c06_sol_review",
+      "role": "sol_focused_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "packet": "C-06",
       "attempt": 1,
       "repair_attempt": 1,
       "base_commit": "ef7da20",
-      "candidate_commit": "d8fa515d32b6d5d0c637e325d8fe41705ff3dae6",
+      "candidate_commit": "a60a7a56eec1250bd4a9e44253597f83a3e565fd",
       "worktree": "/Users/megastore/.codex/worktrees/c06-cross-backend/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Return one clean allowlisted C-06 repair commit closing the six Important contract, lineage and privacy findings; Sol inspects and sends the one focused rereview. Shared CLI changes remain closed until the packet seam passes.",
+      "allowed_next_transition": "Focused pass permits serial packet integration followed by an exclusive shared CLI repair. Any remaining Important finding permits only bounded repair 2; no second focused rereview.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c09_c06_repair1_workers_active",
-    "last_reconciled": "2026-10-20",
-    "active_handoffs": ["/root/c09_luna", "/root/c06_luna"],
+    "status": "c09_c06_focused_rereviews_active",
+    "last_reconciled": "2026-10-21",
+    "active_handoffs": ["/root/c09_sol_review", "/root/c06_sol_review"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Sol-6.1-high reviews rejected both initial candidates with no Critical finding. The original Luna-max workers own bounded repair 1 on their disjoint allowlists. Shared C-06/C-09 registration remains closed until focused rereviews pass. G6 and D remain closed."
+    "disposition": "Both bounded repair-1 candidates are committed and allowlist-clean. The same fresh Sol-6.1-high reviewers own the single permitted focused rereviews. Shared C-06/C-09 registration remains closed until focused pass. G6 and D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "c09_c06_repair1_focused_rereviews_dispatched",
+      "date": "2026-10-21",
+      "workers": ["/root/c09_luna", "/root/c06_luna"],
+      "reviewers": ["/root/c09_sol_review", "/root/c06_sol_review"],
+      "repair_commits": {"C-09": "253c6f0da495f0ec61c0c7ec943dca5b2bb2a7c9", "C-06": "a60a7a56eec1250bd4a9e44253597f83a3e565fd"},
+      "worker_tests": {"C-09": "repair RED 7 failures/26 passes; exact GREEN PASS 47, FAIL 0, WARN 0, SKIP 0", "C-06": "successive RED probes 8/52, 1/92, 2/97 and 1/99; exact GREEN PASS 100, FAIL 0, WARN 0, SKIP 0; C-01 adjacent PASS 109"},
+      "allowed_next_transition": "Focused pass permits serial integration and fresh Sol verification. Findings remaining permit bounded repair 2 only, followed by direct Sol verification without another rereview.",
+      "disposition": "Both repairs remain packet-owned. C-09 keeps real protocol qualification open and shared schema/CLI pending. C-06 keeps shared CLI pending and records missing generated B-T07 evidence plus unavailable MOFA runtime as environment limitations, not passes."
+    },
     {
       "event": "c09_c06_initial_reviews_changes_required_repair1_dispatched",
       "date": "2026-10-20",
@@ -3108,18 +3118,18 @@
       "blockers": []
     },
     "C-09": {
-      "status": "repair_1_active",
+      "status": "repair_1_focused_rereview_active",
       "attempts": 1,
       "repair_attempts": 1,
-      "commit": "45a0f9900306f60a6a87a2fbfffbf7dd57adca2e",
+      "commit": "253c6f0da495f0ec61c0c7ec943dca5b2bb2a7c9",
       "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c09-sol-review.md"],
       "blockers": []
     },
     "C-06": {
-      "status": "repair_1_active",
+      "status": "repair_1_focused_rereview_active",
       "attempts": 1,
       "repair_attempts": 1,
-      "commit": "d8fa515d32b6d5d0c637e325d8fe41705ff3dae6",
+      "commit": "a60a7a56eec1250bd4a9e44253597f83a3e565fd",
       "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c06-sol-review.md"],
       "blockers": []
     },
