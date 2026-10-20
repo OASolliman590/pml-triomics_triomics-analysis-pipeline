@@ -36,27 +36,38 @@
   },
   "active_workers": [
     {
-      "agent": "/root/c08_luna",
+      "agent": "/root/c08_shared_luna",
       "role": "luna_implementer",
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "packet": "C-08",
-      "attempt": "repair2",
-      "base_commit": "cad313b749814c45ed75b5116adf4951103ee2c9",
-      "candidate_commit": "53acd32ac6859b0ffcef8d8c7d610b195c8f545f",
-      "worktree": "/Users/megastore/.codex/worktrees/c08-endpoint-lineage/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Return one final allowlisted repair-2 commit for mean weights, B-compatible endpoint visit/time semantics and date validation; Sol then inspects and verifies directly with no further rereview.",
+      "attempt": "exclusive_shared_correctness_repair",
+      "base_commit": "b45f31a422349c6fd4e5a702c30d7df1c4570e6d",
+      "candidate_commit": null,
+      "worktree": "/Users/megastore/.codex/worktrees/c08-shared-handoff/PML MultiOmics Analysis Pipeline",
+      "allowed_next_transition": "Return one clean shared-repair commit retaining the exact single fit and composing endpoint/request artifacts; Sol inspects, verifies, and applies the normal acceptance gates.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c08_repair2_active",
+    "status": "c08_shared_correctness_repair_active",
     "last_reconciled": "2026-10-20",
-    "active_handoffs": ["/root/c08_luna"],
+    "active_handoffs": ["/root/c08_shared_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The C-08 focused rereview closed three original lineage defects and retained three bounded unit/time/consumer findings. Final permitted repair 2 is active in the same Luna worktree. The rereview allowance is consumed; Sol will verify directly afterward."
+    "disposition": "C-08 packet-owned commits are integrated at b45f31a and pass 236 focused assertions, but the packet remains unaccepted. One fresh isolated Luna-max worker owns the exclusive shared correctness repair for exact fit retention, authoritative handoff binding and stage-C endpoint/request composition."
   },
   "orchestration_events": [
+    {
+      "event": "c08_packet_integrated_shared_correctness_repair_dispatched",
+      "date": "2026-10-20",
+      "worker": "/root/c08_shared_luna",
+      "base_commit": "b45f31a422349c6fd4e5a702c30d7df1c4570e6d",
+      "packet_commits": ["bd34cb8", "519f48c", "b45f31a"],
+      "sol_verification": "Integrated C-08 focused suite: PASS 236, FAIL 0, WARN 0, SKIP 0.",
+      "allowlist": ["R/integration_contract.R", "R/cli.R", "R/stage_registry.R", "tests/testthat/test-C-08-shared.R", "inst/examples/tickets/C-08.yaml", "inst/examples/data/c08/**", "docs/implementation/registrations/C-08.json"],
+      "allowed_next_transition": "Inspect and directly verify the shared candidate. C-08 remains unaccepted until actual single-fit handoff, exact CLI endpoint/request artifacts and package gate pass.",
+      "disposition": "Packet repair budget and focused rereview are exhausted. This is the one separately scoped shared-behavior repair required by the registration seam, not a packet repair reset or scientific change."
+    },
     {
       "event": "c08_repair1_rereview_findings_remain_repair2_dispatched",
       "date": "2026-10-20",
@@ -2957,19 +2968,17 @@
       "blockers": []
     },
     "C-08": {
-      "status": "repair2_active",
+      "status": "shared_correctness_repair_active",
       "attempts": 1,
-      "commit": "53acd32ac6859b0ffcef8d8c7d610b195c8f545f",
+      "commit": "b45f31a422349c6fd4e5a702c30d7df1c4570e6d",
       "repair_attempts": 2,
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-20-c08-sol-review.md",
         "docs/implementation/reviews/2026-10-20-c08-repair1-rereview.md"
       ],
       "blockers": [
-        "Accepted subject-mean maps use named-list visit weights that the candidate rejects.",
-        "Scheduled endpoint samples omit visit/time fields consumed by accepted B association services.",
-        "Invalid nonblank dates pass single-visit scheduling.",
-        "Shared fit retention and CLI composition require an exclusive correctness-repair gate after the packet seam is corrected."
+        "Registered fits do not yet emit the qualified same-fit C-08 handoff.",
+        "Stage C does not yet export endpoint and scheduled B-owned request artifacts from the retained fit."
       ]
     },
     "C-09": {
