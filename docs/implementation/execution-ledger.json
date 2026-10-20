@@ -36,27 +36,42 @@
   },
   "active_workers": [
     {
-      "agent": "/root/c06_shared_sol_review",
-      "role": "sol_shared_diff_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
+      "agent": "/root/c06_shared_luna",
+      "role": "luna_shared_integration_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
       "packet": "C-06-shared",
       "attempt": 1,
+      "repair_attempt": 1,
       "base_commit": "634c29f",
       "candidate_commit": "1cc35048907ab4dd866d7129759ddcb7672d05eb",
       "worktree": "/Users/megastore/.codex/worktrees/c06-shared-cli/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Pass permits serial integration and final fresh Sol cycle verification. Findings require one bounded shared-seam repair before pausing; do not start C-09 shared registration, the M6 audit or Stage D.",
+      "allowed_next_transition": "Return one bounded shared repair closing the four Important findings and one misleading split-plan field. The same reviewer performs the single focused rereview; then Sol reconciles and pauses without starting C-09 shared registration, M6 audit or Stage D.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c06_shared_review_active_c09_integrated",
+    "status": "c06_shared_repair1_active_c09_integrated",
     "last_reconciled": "2026-10-21",
-    "active_handoffs": ["/root/c06_shared_sol_review"],
+    "active_handoffs": ["/root/c06_shared_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-09 packet commits are integrated and fresh exact tests pass; its shared namespace/schema/CLI registration is intentionally not started before the requested pause. C-06 shared candidate 1cc3504 is under fresh read-only review. Finish this shared cycle, reconcile and pause; do not start M6 audit or Stage D."
+    "disposition": "C-06 shared review found four Important defects, including a reproduced regression of the accepted C-02 nested CLI. The original shared Luna owns bounded repair 1; the same reviewer gets one focused rereview. C-09 shared registration, M6 audit and Stage D remain intentionally unopened before the requested pause."
   },
   "orchestration_events": [
+    {
+      "event": "c06_shared_review_changes_required_repair1_dispatched",
+      "date": "2026-10-21",
+      "worker": "/root/c06_shared_luna",
+      "reviewer": "/root/c06_shared_sol_review",
+      "candidate": "1cc35048907ab4dd866d7129759ddcb7672d05eb",
+      "verdict": "changes_required",
+      "findings": {"critical": 0, "important": 4, "minor": 1},
+      "review_ref": "docs/implementation/reviews/2026-10-21-c06-shared-sol-review.md",
+      "reviewer_test": "PASS 172, FAIL 0, WARN 0, SKIP 0; fresh C-06 CLI artifacts/hashes valid",
+      "regression": "Exact accepted C-02 nested fixture now exits 2 at C_EVAL_EVIDENCE_INVALID after evaluation because the C-06 unrun-control fallback lacks verified unit identity.",
+      "allowed_next_transition": "One bounded repair 1 followed by the single focused shared rereview. Pass permits integration and final cycle verification; findings remaining permit at most repair 2 and direct Sol verification.",
+      "disposition": "Green C-06 fixture evidence is insufficient while the shared seam ignores B nominations, emits incomplete lineage, regresses C-02 nested execution and does not enforce requiredness."
+    },
     {
       "event": "c09_packet_integrated_c06_shared_candidate_review_dispatched",
       "date": "2026-10-21",
@@ -3148,13 +3163,14 @@
       "blockers": ["Shared NAMESPACE, typed schema and Stage-C CLI registration are pending; the real endpoint/deployment/uncertainty protocol remains unqualified."]
     },
     "C-06": {
-      "status": "integrated_shared_cli_review_active",
+      "status": "integrated_shared_cli_repair_1_active",
       "attempts": 1,
       "repair_attempts": 1,
+      "shared_repair_attempts": 1,
       "commit": "a60a7a56eec1250bd4a9e44253597f83a3e565fd",
       "integration_commits": ["7d29da4", "634c29f"],
       "shared_candidate_commit": "1cc35048907ab4dd866d7129759ddcb7672d05eb",
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c06-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md"],
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c06-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c06-shared-sol-review.md"],
       "blockers": []
     },
     "D-T01": {
