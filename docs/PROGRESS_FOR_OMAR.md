@@ -19,8 +19,9 @@ performance estimates for the fasting, diabetic-treatment, or organophosphate
 studies. No private study was fitted, and MOFA factors have no established
 biological interpretation or predictive validity.
 
-**Next:** Implement C-08, then its dependent C-09 and C-06 packets, before the
-M6 review. Stage D remains closed.
+**Next:** C-08 is active in one isolated Luna-max worktree. Its fresh Sol-high
+review comes next; C-09 and C-06 follow only after C-08 acceptance. Stage D
+remains closed.
 
 **Needs Omar:** Only publication timing; no scientific choice blocks work.
 

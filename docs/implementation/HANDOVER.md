@@ -177,10 +177,9 @@ C-05 acceptance is recorded in
 warnings remain visible and must not be called warning-free. No real study or
 biological MOFA validation is claimed.
 
-Resume by dispatching C-08 from the committed C-05 acceptance snapshot to one
-fresh isolated Luna-max worker using the exact packet allowlist. After its
-candidate, obtain one fresh Sol-6.1-high review before serial integration.
+Resume by reconciling `/root/c08_luna`, the active initial C-08 implementer in
+the isolated `c08-endpoint-lineage` worktree at base `cad313b`. Inspect its
+candidate and obtain one fresh Sol-6.1-high review before serial integration.
 C-09 and C-06 stay closed until C-08 is accepted; G6 and D stay closed until
 their declared gates. Do not loosen the B-T04 0.08 bound, reroll seeds
 1001:1400, edit frozen `discovery/spec-v2` content, or read private study data.
-No run-owned implementation worker is active at this handoff.

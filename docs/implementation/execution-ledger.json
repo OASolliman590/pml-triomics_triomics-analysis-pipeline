@@ -34,15 +34,41 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/c08_luna",
+      "role": "luna_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "packet": "C-08",
+      "attempt": "initial",
+      "base_commit": "cad313b749814c45ed75b5116adf4951103ee2c9",
+      "candidate_commit": null,
+      "worktree": "/Users/megastore/.codex/worktrees/c08-endpoint-lineage/PML MultiOmics Analysis Pipeline",
+      "allowed_next_transition": "Return one clean allowlisted C-08 candidate commit to Sol; Sol inspects it and dispatches one fresh Sol-6.1-high review before any integration.",
+      "wait_cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "c05_accepted_c08_ready",
+    "status": "c08_initial_active",
     "last_reconciled": "2026-10-20",
-    "active_handoffs": [],
+    "active_handoffs": ["/root/c08_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-02 through C-05 are accepted on synthetic software evidence. C-05 passed focused tests, exact CLI, and the decisive clean archive package check after both permitted repairs. C-08 is the next legal M6 packet; C-09 and C-06 remain dependency-closed behind it."
+    "disposition": "C-02 through C-05 are accepted on synthetic software evidence. One fresh isolated Luna-max worker is implementing dependency-safe C-08. C-09 and C-06 remain dependency-closed behind C-08; G6 and D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "c08_initial_luna_dispatched",
+      "date": "2026-10-20",
+      "worker": "/root/c08_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "base_commit": "cad313b749814c45ed75b5116adf4951103ee2c9",
+      "worktree": "/Users/megastore/.codex/worktrees/c08-endpoint-lineage/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["R/integration_endpoints.R", "R/clinical_score_requests.R", "tests/testthat/test-C-08.R", "inst/examples/tickets/C-08.yaml", "docs/implementation/registrations/C-08.json"],
+      "allowed_next_transition": "Inspect the clean candidate and dispatch one fresh Sol-6.1-high review. Do not integrate or release C-09/C-06 before review and fresh Sol verification.",
+      "disposition": "Initial attempt only; public synthetic fixtures, no private study data, no duplicated clinical fitting, and no shared registration writes."
+    },
     {
       "event": "c05_accepted_after_integrated_gates",
       "date": "2026-10-20",
@@ -2882,8 +2908,8 @@
       "blockers": []
     },
     "C-08": {
-      "status": "not_started",
-      "attempts": 0,
+      "status": "initial_active",
+      "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": []
