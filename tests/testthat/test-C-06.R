@@ -25,13 +25,28 @@ c06_run <- function(method = "mixomics_diablo", preparation = "prep-1",
     c06_matrix(c(0.8, 0.2, 0.3, 0.7), features[[block_id]], component_ids)
   }), c06_blocks)
   common_variance <- c06_matrix(c(0.4, 0.2, 0.3, 0.5), c06_blocks, component_ids)
-  variance_semantics <- list(
-    metric = metric,
-    units = "proportion",
-    semantics = "per_component_against_original_block_not_cumulative",
-    denominator = denominator,
-    assay_space = "mixomics_fitted_block_after_declared_scaling"
-  )
+  variance_semantics <- if (identical(method, "mofa2")) {
+    list(
+      metric = "MOFA2::get_variance_explained$r2_per_factor",
+      assay_space = "adapter_transformed_training_views",
+      numerator = "observed_residual_sse_reduction_for_single_factor_reconstruction",
+      denominator = "sum_of_squared_observed_transformed_values_about_zero_per_view",
+      native_unit = "percentage",
+      output_unit = "proportion",
+      conversion = "divide_by_100_unconditionally",
+      accumulation = "single_factor_per_view_against_zero_baseline_not_cumulative",
+      missing_observations = "excluded_by_native_na_rm",
+      interpretation = "exploratory_variance_diagnostic_not_predictive_variance"
+    )
+  } else {
+    list(
+      metric = metric,
+      units = "proportion",
+      semantics = "per_component_against_original_block_not_cumulative",
+      denominator = denominator,
+      assay_space = "mixomics_fitted_block_after_declared_scaling"
+    )
+  }
   provenance <- list(
     study_id = "synthetic-c06",
     analysis_id = "analysis-1",
@@ -138,6 +153,12 @@ c06_run <- function(method = "mixomics_diablo", preparation = "prep-1",
     method = method,
     required = TRUE,
     status = run_status,
+    native_artifact_ref = if (identical(run_status, "complete") && isTRUE(include_native)) {
+      list(
+        artifact_id = paste0("native-state-", method),
+        sha256 = paste(rep("f", 64), collapse = "")
+      )
+    } else NULL,
     result = result,
     eligibility = eligibility,
     sidecars = sidecars
@@ -151,7 +172,13 @@ c06_primary_nominations <- function() {
     study_id = "synthetic-c06",
     analysis_id = "analysis-1",
     status = "complete",
-    source_artifact_id = "b-t07-candidate-nominations",
+    source_artifact_id = "stage-b-block-results",
+    source_artifact_ref = list(
+      artifact_id = "b-t07-candidate-nominations",
+      sha256 = paste(rep("1", 64), collapse = "")
+    ),
+    preparation_context_id = "prep-1",
+    representation_id = "levels",
     nominations = list(list(
       nomination_id = paste(rep("d", 64), collapse = ""),
       feature_key = "p1",
@@ -191,6 +218,72 @@ c06_unrun_controls <- function() {
   lapply(c("null", "weak_signal", "strong_signal", "adversarial"), c06_control)
 }
 
+c06_c01_fit_run <- function() {
+  units <- paste0("U", seq_len(6L))
+  proteome <- c06_matrix(
+    c(1, 2, 4, 3, 5, 8,
+      8, 7, 6, 5, 3, 2,
+      2, 4, 1, 5, 3, 6,
+      rep(9, 6)),
+    c("p1", "p2", "p3", "p0"), units
+  )
+  metabolome <- c06_matrix(
+    c(3, 1, 4, 2, 8, 5,
+      4, 6, 3, 7, 1, 5,
+      5, 2, 7, 3, 9, 4),
+    c("m1", "m2", "m3"), units
+  )
+  resolved <- list(
+    study_id = "synthetic-c06",
+    analysis_id = "analysis-1",
+    preparation_context_id = "prep-1",
+    representation = "levels",
+    unit_ids = units,
+    blocks = list(
+      proteome = list(
+        block_id = "proteome", assay = proteome, sample_ids = units,
+        feature_keys = rownames(proteome), source_selection = "full_unselected"
+      ),
+      metabolome = list(
+        block_id = "metabolome", assay = metabolome, sample_ids = units,
+        feature_keys = rownames(metabolome), source_selection = "full_unselected"
+      )
+    )
+  )
+  spec <- list(
+    method = "concat_pca",
+    block_ids = c("proteome", "metabolome"),
+    unit_ids = units,
+    training_unit_ids = units,
+    target_unit_ids = units,
+    n_components = 2L,
+    scale_features = FALSE,
+    block_scaling = "none",
+    selection = list(rule = "none")
+  )
+  fit <- triomics_integration_fit_once(resolved, spec)
+  payload_path <- tempfile("c06-c01-result-", fileext = ".json")
+  triomics_write_json_atomic(triomics_c01_result_payload(fit$result), payload_path)
+  native_state_sha256 <- triomics_hash_text(
+    triomics_canonical_json(fit$backend_fit$native_state$state)
+  )
+  run <- list(
+    integration_id = "c01-actual-pca-fit",
+    method = "concat_pca",
+    required = TRUE,
+    status = "complete",
+    native_artifact_ref = list(
+      artifact_id = "stage-c-integration-results",
+      sha256 = triomics_sha256(payload_path)
+    ),
+    result = fit$result,
+    eligibility = fit$eligibility,
+    sidecars = c(fit$sidecars, list(metadata = fit$backend_fit$metadata))
+  )
+  list(run = run, fit = fit, payload_path = payload_path,
+       native_state_sha256 = native_state_sha256)
+}
+
 testthat::test_that("C-06 exports both nomination branches and complete keyed integration evidence", {
   run <- c06_run()
   evidence <- triomics_c06_export_integration(run)
@@ -222,7 +315,8 @@ testthat::test_that("C-06 exports both nomination branches and complete keyed in
   written <- triomics_c06_write_handoff(
     handoff, output_root,
     config_sha256 = paste(rep("f", 64), collapse = ""),
-    producer_commit = "ef7da20"
+    producer_commit = "ef7da20",
+    privacy_class = "synthetic"
   )
   candidate_path <- file.path(written$directory, "candidate-nominations.json")
   evidence_path <- file.path(written$directory, "integration-evidence.json")
@@ -263,6 +357,235 @@ testthat::test_that("C-06 preserves native PCA scores/loadings and separates glo
   testthat::expect_equal(mofa_evidence$native$loadings$proteome$values[[1]][[1]], 0.8)
   testthat::expect_identical(mofa_evidence$native$variance_definition$metric,
                              "MOFA2::get_variance_explained$r2_per_factor")
+  testthat::expect_identical(mofa_evidence$native$variance_definition$units, "percent")
+  testthat::expect_identical(mofa_evidence$native$variance_definition$native_unit, "percentage")
+  testthat::expect_identical(mofa_evidence$native$variance_definition$conversion,
+                             "divide_by_100_unconditionally")
+  testthat::expect_equal(mofa_evidence$native$variance_values$values[[1]][[1]], 40)
+  testthat::expect_identical(mofa_evidence$variance$common_definition$units, "proportion")
+  testthat::expect_equal(mofa_evidence$variance$common_values$values[[1]][[1]], 0.4)
+})
+
+testthat::test_that("C-06 exports a real accepted C-01 fit without invented PCA sidecars", {
+  actual <- c06_c01_fit_run()
+  on.exit(unlink(actual$payload_path), add = TRUE)
+  testthat::expect_s3_class(actual$fit$result, "IntegrationResult")
+  testthat::expect_identical(actual$fit$result$backend, "concat_pca")
+
+  evidence <- triomics_c06_export_integration(actual$run)
+
+  testthat::expect_identical(evidence$context$preparation_context_id, "prep-1")
+  testthat::expect_identical(evidence$context$representation_id, "levels")
+  testthat::expect_identical(
+    evidence$variance$common_definition$metric,
+    "orthogonal_pca_block_projection"
+  )
+  testthat::expect_identical(
+    evidence$native$variance_definition$source,
+    "stats::prcomp$sdev"
+  )
+  testthat::expect_identical(
+    evidence$native$native_version,
+    actual$fit$backend_fit$metadata$backend_version
+  )
+  testthat::expect_equal(
+    evidence$native$variance_values[[1]],
+    actual$fit$result$params$diagnostics$global_prcomp_variance[[1]]
+  )
+  testthat::expect_equal(
+    evidence$native$scores$values[[1]][[1]],
+    actual$fit$result$scores[1, 1]
+  )
+  testthat::expect_equal(
+    evidence$native$loadings_by_view$proteome$values[[1]][[1]],
+    actual$fit$result$loadings$proteome[1, 1]
+  )
+  testthat::expect_identical(
+    evidence$native$state_sha256,
+    actual$native_state_sha256
+  )
+})
+
+testthat::test_that("C-06 preserves a legitimate complete-empty primary nomination branch", {
+  primary <- c06_primary_nominations()
+  primary$nominations <- list()
+  handoff <- triomics_c06_build_handoff(
+    primary_nominations = primary,
+    integration_runs = list(c06_run()),
+    evaluation_evidence = list(controls = c06_unrun_controls()),
+    backend_statuses = list(mixomics_diablo = list(status = "complete")),
+    clinical_prediction = list(status = "not_started", completion_policy = "conditional", packet_id = "C-09")
+  )
+  testthat::expect_identical(handoff$nomination_branches$primary_statistics$status, "complete")
+  testthat::expect_identical(handoff$nomination_branches$primary_statistics$source_artifact_id,
+                             "stage-b-block-results")
+  testthat::expect_length(handoff$nomination_branches$primary_statistics$nominations, 0L)
+  testthat::expect_true(any(vapply(handoff$nominations, function(x) {
+    identical(x$source_branch, "integration_selection")
+  }, logical(1))))
+})
+
+testthat::test_that("C-06 preserves an explicitly unrequested primary nomination branch", {
+  handoff <- triomics_c06_build_handoff(
+    primary_nominations = NULL,
+    integration_runs = list(c06_run()),
+    evaluation_evidence = list(controls = c06_unrun_controls()),
+    backend_statuses = list(mixomics_diablo = list(status = "complete")),
+    clinical_prediction = list(status = "not_started", completion_policy = "conditional", packet_id = "C-09")
+  )
+  testthat::expect_identical(handoff$nomination_branches$primary_statistics$status, "not_requested")
+  testthat::expect_null(handoff$nomination_branches$primary_statistics$source_artifact_ref)
+  testthat::expect_length(handoff$lineage_inputs, 1L)
+})
+
+testthat::test_that("C-06 D envelopes require and propagate the authoritative privacy class", {
+  handoff <- triomics_c06_build_handoff(
+    primary_nominations = c06_primary_nominations(),
+    integration_runs = list(c06_run()),
+    evaluation_evidence = list(controls = c06_unrun_controls()),
+    backend_statuses = list(mixomics_diablo = list(status = "complete")),
+    clinical_prediction = list(status = "not_started", completion_policy = "conditional", packet_id = "C-09")
+  )
+  output_root <- tempfile("triomics-c06-sensitive-")
+  written <- triomics_c06_write_handoff(
+    handoff, output_root,
+    config_sha256 = paste(rep("e", 64), collapse = ""),
+    producer_commit = "c06-test",
+    privacy_class = "sensitive"
+  )
+  envelope_paths <- c(
+    list.files(written$directory, pattern = "\\.envelope\\.json$", full.names = TRUE)
+  )
+  envelopes <- lapply(envelope_paths, jsonlite::read_json, simplifyVector = FALSE)
+  testthat::expect_length(envelopes, 6L)
+  testthat::expect_true(all(vapply(envelopes, function(envelope) {
+    identical(envelope$privacy_class, "sensitive")
+  }, logical(1))))
+  testthat::expect_error(
+    triomics_c06_write_handoff(
+      handoff, tempfile("triomics-c06-no-privacy-"),
+      config_sha256 = paste(rep("e", 64), collapse = ""),
+      producer_commit = "c06-test"
+    ),
+    class = "triomics_error"
+  )
+  unlink(output_root, recursive = TRUE)
+})
+
+testthat::test_that("C-06 envelopes bind context and immutable nomination, evaluation and native lineage", {
+  handoff <- triomics_c06_build_handoff(
+    primary_nominations = c06_primary_nominations(),
+    integration_runs = list(c06_run()),
+    evaluation_evidence = list(controls = c06_unrun_controls()),
+    backend_statuses = list(mixomics_diablo = list(status = "complete")),
+    clinical_prediction = list(status = "not_started", completion_policy = "conditional", packet_id = "C-09")
+  )
+  testthat::expect_identical(handoff$preparation_context_id, "prep-1")
+  testthat::expect_identical(handoff$representation_id, "levels")
+  output_root <- tempfile("triomics-c06-lineage-")
+  written <- triomics_c06_write_handoff(
+    handoff, output_root,
+    config_sha256 = paste(rep("a", 64), collapse = ""),
+    producer_commit = "c06-test",
+    privacy_class = "synthetic"
+  )
+  candidate_envelope <- jsonlite::read_json(
+    file.path(written$directory, "candidate-nominations.envelope.json"),
+    simplifyVector = FALSE
+  )
+  integration_envelope <- jsonlite::read_json(
+    file.path(written$directory, "integration-evidence.envelope.json"),
+    simplifyVector = FALSE
+  )
+  evaluation_envelope <- jsonlite::read_json(
+    file.path(written$directory, "evaluation-evidence.envelope.json"),
+    simplifyVector = FALSE
+  )
+  envelope_names <- c(
+    "candidate-nominations.envelope.json",
+    "integration-evidence.envelope.json",
+    "evaluation-evidence.envelope.json"
+  )
+  for (envelope_path in file.path(written$directory, envelope_names)) {
+    envelope <- jsonlite::read_json(envelope_path, simplifyVector = FALSE)
+    testthat::expect_identical(envelope$analysis_id, "analysis-1")
+    testthat::expect_identical(envelope$preparation_context_id, "prep-1")
+    testthat::expect_identical(envelope$representation_id, "levels")
+    testthat::expect_true(triomics_validate_envelope(envelope_path))
+  }
+  has_input <- function(envelope, artifact_id, sha256 = NULL) {
+    any(vapply(envelope$inputs, function(input) {
+      identical(input$artifact_id, artifact_id) &&
+        (is.null(sha256) || identical(input$sha256, sha256))
+    }, logical(1)))
+  }
+  testthat::expect_true(has_input(
+    candidate_envelope, "b-t07-candidate-nominations",
+    c06_primary_nominations()$source_artifact_ref$sha256
+  ))
+  testthat::expect_true(has_input(
+    candidate_envelope, "native-state-mixomics_diablo",
+    c06_run()$native_artifact_ref$sha256
+  ))
+  evaluation_file <- file.path(written$directory, "evaluation-evidence.json")
+  testthat::expect_true(has_input(
+    candidate_envelope, "c06-evaluation-evidence", triomics_sha256(evaluation_file)
+  ))
+  missing_native <- c06_run()
+  missing_native$native_artifact_ref <- NULL
+  testthat::expect_error(
+    triomics_c06_build_handoff(
+      primary_nominations = c06_primary_nominations(),
+      integration_runs = list(missing_native),
+      evaluation_evidence = list(controls = c06_unrun_controls()),
+      backend_statuses = list(mixomics_diablo = list(status = "complete")),
+      clinical_prediction = list(status = "not_started", completion_policy = "conditional", packet_id = "C-09")
+    ),
+    class = "triomics_error"
+  )
+  bad_context <- handoff
+  bad_context$preparation_context_id <- "changed-after-fit"
+  testthat::expect_error(
+    triomics_c06_write_handoff(
+      bad_context, tempfile("triomics-c06-context-mismatch-"),
+      config_sha256 = paste(rep("a", 64), collapse = ""),
+      producer_commit = "c06-test",
+      privacy_class = "synthetic"
+    ),
+    class = "triomics_error"
+  )
+  missing_lineage <- handoff
+  missing_lineage$lineage_inputs <- list()
+  missing_lineage_root <- tempfile("triomics-c06-lineage-missing-")
+  testthat::expect_error(
+    triomics_c06_write_handoff(
+      missing_lineage, missing_lineage_root,
+      config_sha256 = paste(rep("b", 64), collapse = ""),
+      producer_commit = "c06-test",
+      privacy_class = "synthetic"
+    ),
+    class = "triomics_error"
+  )
+  unlink(missing_lineage_root, recursive = TRUE)
+  fabricated_evaluation_source <- handoff
+  fabricated_ref <- list(
+    artifact_id = "fabricated-c07-source",
+    sha256 = paste(rep("c", 64), collapse = "")
+  )
+  fabricated_evaluation_source$evaluation_evidence$source_artifacts <- list(fabricated_ref)
+  fabricated_evaluation_source$lineage_inputs <- c(
+    fabricated_evaluation_source$lineage_inputs, list(fabricated_ref)
+  )
+  testthat::expect_error(
+    triomics_c06_write_handoff(
+      fabricated_evaluation_source, tempfile("triomics-c06-evaluation-lineage-"),
+      config_sha256 = paste(rep("c", 64), collapse = ""),
+      producer_commit = "c06-test",
+      privacy_class = "synthetic"
+    ),
+    class = "triomics_error"
+  )
+  unlink(output_root, recursive = TRUE)
 })
 
 testthat::test_that("C-06 comparisons bind sample, feature, preparation and representation identity", {

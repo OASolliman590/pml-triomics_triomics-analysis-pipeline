@@ -24,6 +24,45 @@ triomics_c06_ids <- function(value, label, allow_empty = FALSE) {
   value
 }
 
+triomics_c06_artifact_ref <- function(value, label) {
+  if (!is.list(value) || !triomics_c06_nonempty_string(value$artifact_id) ||
+      !triomics_sha256_text(value$sha256)) {
+    triomics_integration_abort(
+      "C_EXPORT_LINEAGE_INVALID",
+      paste0(label, " must identify an immutable artifact by artifact_id and payload SHA256."),
+      key = label
+    )
+  }
+  list(artifact_id = value$artifact_id, sha256 = value$sha256)
+}
+
+triomics_c06_lineage_inputs <- function(inputs, label = "lineage_inputs") {
+  if (!is.list(inputs)) {
+    triomics_integration_abort(
+      "C_EXPORT_LINEAGE_INVALID", "Artifact lineage inputs must be a list.", key = label
+    )
+  }
+  checked <- lapply(seq_along(inputs), function(index) {
+    triomics_c06_artifact_ref(inputs[[index]], paste0(label, "[", index, "]"))
+  })
+  ids <- vapply(checked, `[[`, character(1), "artifact_id")
+  if (anyDuplicated(ids)) {
+    duplicates <- unique(ids[duplicated(ids)])
+    for (artifact_id in duplicates) {
+      hashes <- vapply(checked[ids == artifact_id], `[[`, character(1), "sha256")
+      if (length(unique(hashes)) != 1L) {
+        triomics_integration_abort(
+          "C_EXPORT_LINEAGE_INVALID",
+          paste0("Artifact lineage '", artifact_id, "' is bound to conflicting hashes."),
+          key = label
+        )
+      }
+    }
+    checked <- checked[!duplicated(ids)]
+  }
+  unname(checked)
+}
+
 triomics_c06_matrix_payload <- function(value, label) {
   if (!is.matrix(value) || !is.numeric(value) || is.complex(value) ||
       length(dim(value)) != 2L || any(dim(value) < 1L) || any(!is.finite(value)) ||
@@ -153,9 +192,15 @@ triomics_c06_native_payload <- function(integration_run, result, variance_defini
   native_scores <- state$native_scores
   if (is.null(native_scores)) native_scores <- state$training_scores
   if (is.null(native_scores)) native_scores <- state$variates
+  native_pca_scores <- if (identical(method, "concat_pca")) {
+    if (is.matrix(state$training_scores)) state$training_scores else result$scores
+  } else {
+    NULL
+  }
   native_loadings <- state$native_loadings
   if (is.null(native_loadings)) native_loadings <- state$block_loadings
   if (is.null(native_loadings)) native_loadings <- state$weights
+  if (is.null(native_loadings) && identical(method, "concat_pca")) native_loadings <- result$loadings
   if (identical(method, "mofa2")) {
     native_scores <- NULL
     native_loadings <- NULL
@@ -175,11 +220,21 @@ triomics_c06_native_payload <- function(integration_run, result, variance_defini
       key = "native_variance"
     )
   }
+  state_sha256 <- metadata$state_hash %||% result$params$training_state_hash %||%
+    result$params$state_sha256
+  if (is.null(state_sha256) && identical(method, "concat_pca")) {
+    immutable_state <- state$state %||% state
+    state_sha256 <- triomics_hash_text(triomics_canonical_json(immutable_state))
+  }
+  native_method <- metadata$native_method %||% result$params$native_method
+  if (is.null(native_method) && identical(method, "concat_pca")) native_method <- "stats::prcomp"
+  native_version <- metadata$native_version %||% metadata$backend_version %||%
+    result$params$native_version
   payload <- list(
     method = method,
-    native_method = metadata$native_method %||% result$params$native_method,
-    native_version = metadata$native_version %||% result$params$native_version,
-    state_sha256 = metadata$state_hash %||% result$params$training_state_hash,
+    native_method = native_method,
+    native_version = native_version,
+    state_sha256 = state_sha256,
     model_role = metadata$model_role %||% if (identical(method, "mofa2")) "exploratory_structure_discovery" else "integration_fit",
     training_unit_ids = result$params$training_unit_ids %||% result$params$provenance$unit_map,
     scores_by_view = if (is.list(native_scores)) {
@@ -187,8 +242,8 @@ triomics_c06_native_payload <- function(integration_run, result, variance_defini
     } else NULL,
     scores = if (is.matrix(state$factors)) {
       triomics_c06_matrix_payload(state$factors, "native_factors")
-    } else if (identical(method, "concat_pca") && is.matrix(state$training_scores)) {
-      triomics_c06_matrix_payload(state$training_scores, "native_pca_scores")
+    } else if (identical(method, "concat_pca") && is.matrix(native_pca_scores)) {
+      triomics_c06_matrix_payload(native_pca_scores, "native_pca_scores")
     } else NULL,
     loadings_by_view = if (is.list(native_loadings)) {
       triomics_c06_matrix_list_payload(native_loadings[intersect(block_ids, names(native_loadings))], "native_loadings")
@@ -237,7 +292,13 @@ triomics_c06_native_variance_definition <- function(result) {
       source = "stats::prcomp$sdev"
     ))
   }
-  triomics_c06_variance_definition(result)
+  definition <- triomics_c06_variance_definition(result)
+  if (identical(result$backend, "mofa2")) {
+    definition$metric <- "MOFA2::get_variance_explained$r2_per_factor"
+    definition$units <- "percent"
+    definition$source <- "MOFA2::get_variance_explained(r2_per_factor)"
+  }
+  definition
 }
 
 triomics_c06_eligibility_details <- function(eligibility, unit_ids, required_views,
@@ -294,6 +355,9 @@ triomics_c06_export_integration <- function(integration_run) {
       "C_EXPORT_EVIDENCE_INVALID", "Only a completed IntegrationResult with eligibility evidence can be exported."
     )
   }
+  native_artifact_ref <- triomics_c06_artifact_ref(
+    integration_run$native_artifact_ref, "integration_run.native_artifact_ref"
+  )
   result <- triomics_validate_integration_result(integration_run$result)
   provenance <- result$params$provenance
   if (!is.list(provenance)) {
@@ -398,6 +462,7 @@ triomics_c06_export_integration <- function(integration_run) {
     integration_id = integration_run$integration_id %||% paste0("integration-", result$backend),
     status = "complete",
     backend = result$backend,
+    native_artifact_ref = native_artifact_ref,
     context = context,
     identity_sha256 = triomics_hash_text(triomics_canonical_json(identity)),
     identity = triomics_c06_json_value(identity),
@@ -442,6 +507,7 @@ triomics_c06_primary_branch <- function(primary_nominations, study_id, analysis_
       !identical(primary_nominations$artifact_type, "candidate_nominations") ||
       !is.list(primary_nominations$nominations) ||
       !triomics_c06_nonempty_string(primary_nominations$source_artifact_id) ||
+      is.null(primary_nominations$source_artifact_ref) ||
       !identical(as.character(primary_nominations$study_id), study_id) ||
       !identical(as.character(primary_nominations$analysis_id), analysis_id)) {
     triomics_integration_abort(
@@ -451,13 +517,15 @@ triomics_c06_primary_branch <- function(primary_nominations, study_id, analysis_
   }
   valid_statuses <- c("not_requested", "not_started", "running", "complete", "partial", "unavailable", "failed")
   if (!is.character(primary_nominations$status) || length(primary_nominations$status) != 1L ||
-      is.na(primary_nominations$status) || !primary_nominations$status %in% valid_statuses ||
-      (identical(primary_nominations$status, "complete") && !length(primary_nominations$nominations))) {
+      is.na(primary_nominations$status) || !primary_nominations$status %in% valid_statuses) {
     triomics_integration_abort(
       "C_EXPORT_NOMINATION_INVALID", "Primary-statistics nomination status must match its immutable source artifact.",
       key = "primary_nominations.status"
     )
   }
+  source_artifact_ref <- triomics_c06_artifact_ref(
+    primary_nominations$source_artifact_ref, "primary_nominations.source_artifact_ref"
+  )
   required_fields <- c("nomination_id", "feature_key", "source_branch", "result_ref",
                        "selection_rule", "selection_value", "q_threshold", "effect_threshold")
   for (nomination in primary_nominations$nominations) {
@@ -474,6 +542,9 @@ triomics_c06_primary_branch <- function(primary_nominations, study_id, analysis_
   list(
     status = as.character(primary_nominations$status),
     source_artifact_id = primary_nominations$source_artifact_id %||% NULL,
+    source_artifact_ref = source_artifact_ref,
+    preparation_context_id = primary_nominations$preparation_context_id %||% NULL,
+    representation_id = primary_nominations$representation_id %||% NULL,
     nominations = primary_nominations$nominations
   )
 }
@@ -590,6 +661,135 @@ triomics_c06_stage_status <- function(integration_runs, integration_evidence) {
   "complete"
 }
 
+triomics_c06_handoff_context <- function(integration_evidence, primary_nominations, evaluation) {
+  contexts <- lapply(integration_evidence, function(item) {
+    if (identical(item$status, "complete")) item$context else NULL
+  })
+  contexts <- Filter(function(context) !is.null(context), contexts)
+  if (is.list(primary_nominations)) {
+    primary_context <- list(
+      preparation_context_id = primary_nominations$preparation_context_id,
+      representation_id = primary_nominations$representation_id
+    )
+    if (any(vapply(primary_context, triomics_c06_nonempty_string, logical(1)))) {
+      contexts <- c(contexts, list(primary_context))
+    }
+  }
+  evaluation_contexts <- lapply(evaluation$controls, function(control) {
+    control$candidate$match_context[c("preparation_context_id", "representation_id")]
+  })
+  contexts <- c(contexts, evaluation_contexts)
+  if (!length(contexts)) {
+    triomics_integration_abort(
+      "C_EXPORT_CONTEXT_MISSING",
+      "The D handoff needs immutable preparation and representation identity.",
+      key = "handoff.context"
+    )
+  }
+  preparation_ids <- vapply(contexts, function(context) {
+    value <- context$preparation_context_id
+    if (!triomics_c06_nonempty_string(value)) "" else value
+  }, character(1))
+  representation_ids <- vapply(contexts, function(context) {
+    value <- context$representation_id
+    if (!triomics_c06_nonempty_string(value)) "" else value
+  }, character(1))
+  if (any(!nzchar(preparation_ids)) || length(unique(preparation_ids)) != 1L ||
+      any(!nzchar(representation_ids)) || length(unique(representation_ids)) != 1L) {
+    triomics_integration_abort(
+      "C_EXPORT_CONTEXT_MISMATCH",
+      "Primary nominations, integrations and C-07 evaluation must share preparation and representation identity.",
+      key = "handoff.context"
+    )
+  }
+  list(
+    preparation_context_id = preparation_ids[[1L]],
+    representation_id = representation_ids[[1L]]
+  )
+}
+
+triomics_c06_evaluation_lineage <- function(evaluation) {
+  required_names <- triomics_c06_control_names()
+  controls <- evaluation$controls
+  if (!is.list(evaluation) || !is.list(controls) ||
+      length(controls) != length(required_names) ||
+      !is.list(evaluation$source_artifacts)) {
+    triomics_integration_abort(
+      "C_EXPORT_LINEAGE_INVALID",
+      "Evaluation lineage requires all four control records and their declared source artifacts.",
+      key = "evaluation_evidence"
+    )
+  }
+  observed <- list()
+  for (index in seq_along(required_names)) {
+    control <- controls[[index]]
+    if (!is.list(control) || !identical(control$control, required_names[[index]])) {
+      triomics_integration_abort(
+        "C_EXPORT_LINEAGE_INVALID",
+        "Evaluation controls must retain their canonical order and identity.",
+        key = "evaluation_evidence.controls"
+      )
+    }
+    for (side in c("candidate", "baseline")) {
+      observation <- control[[side]]
+      if (!is.list(observation)) {
+        triomics_integration_abort(
+          "C_EXPORT_LINEAGE_INVALID",
+          "Each evaluation control must preserve candidate and baseline observations.",
+          key = paste0("evaluation_evidence.controls.", required_names[[index]], ".", side)
+        )
+      }
+      status <- observation$status
+      if (!is.character(status) || length(status) != 1L || is.na(status)) {
+        triomics_integration_abort(
+          "C_EXPORT_LINEAGE_INVALID",
+          "Evaluation observation status must be explicit before lineage can be verified.",
+          key = paste0("evaluation_evidence.controls.", required_names[[index]], ".", side)
+        )
+      }
+      if (identical(status, "complete")) {
+        observed[[length(observed) + 1L]] <- triomics_c06_artifact_ref(
+          list(artifact_id = observation$artifact_ref, sha256 = observation$artifact_sha256),
+          paste0("evaluation_evidence.controls.", required_names[[index]], ".", side)
+        )
+      } else if (!status %in% c("not_run", "unavailable", "failed") ||
+                 !is.null(observation$artifact_ref) || !is.null(observation$artifact_sha256)) {
+        triomics_integration_abort(
+          "C_EXPORT_LINEAGE_INVALID",
+          "Only complete evaluation records may bind source artifact references.",
+          key = paste0("evaluation_evidence.controls.", required_names[[index]], ".", side)
+        )
+      }
+    }
+  }
+  observed <- triomics_c06_lineage_inputs(observed, "evaluation_evidence.controls")
+  declared <- triomics_c06_lineage_inputs(
+    evaluation$source_artifacts, "evaluation_evidence.source_artifacts"
+  )
+  if (!identical(observed, declared)) {
+    triomics_integration_abort(
+      "C_EXPORT_LINEAGE_MISMATCH",
+      "Evaluation source references do not match the complete candidate/baseline control records.",
+      key = "evaluation_evidence.source_artifacts"
+    )
+  }
+  observed
+}
+
+triomics_c06_handoff_lineage <- function(primary_nominations, integration_runs, evaluation) {
+  inputs <- list()
+  if (is.list(primary_nominations) && !is.null(primary_nominations$source_artifact_ref)) {
+    inputs <- c(inputs, list(primary_nominations$source_artifact_ref))
+  }
+  for (run in integration_runs) {
+    if (identical(run$status, "complete")) {
+      inputs <- c(inputs, list(run$native_artifact_ref))
+    }
+  }
+  inputs <- c(inputs, triomics_c06_evaluation_lineage(evaluation))
+  triomics_c06_lineage_inputs(inputs, "handoff.lineage_inputs")
+}
+
 triomics_c06_build_handoff <- function(primary_nominations = NULL,
                                        integration_runs = list(),
                                        evaluation_evidence,
@@ -640,6 +840,8 @@ triomics_c06_build_handoff <- function(primary_nominations = NULL,
     analysis_id <- if (!is.null(primary_nominations$analysis_id)) primary_nominations$analysis_id else "unknown"
   }
   primary <- triomics_c06_primary_branch(primary_nominations, study_id, analysis_id)
+  handoff_context <- triomics_c06_handoff_context(evidence, primary, evaluation)
+  lineage_inputs <- triomics_c06_handoff_lineage(primary, integration_runs, evaluation)
   integration_nominations <- triomics_c06_integration_nominations(evidence)
   integration_branch <- list(
     status = if (length(integration_nominations)) "complete" else "unavailable",
@@ -687,6 +889,8 @@ triomics_c06_build_handoff <- function(primary_nominations = NULL,
     status = status,
     study_id = study_id,
     analysis_id = analysis_id,
+    preparation_context_id = handoff_context$preparation_context_id,
+    representation_id = handoff_context$representation_id,
     nomination_status = nomination_status,
     nomination_branches = list(
       primary_statistics = primary,
@@ -694,6 +898,7 @@ triomics_c06_build_handoff <- function(primary_nominations = NULL,
     ),
     nominations = combined_nominations,
     integration_evidence = evidence,
+    lineage_inputs = lineage_inputs,
     comparisons = comparisons,
     evaluation_evidence = evaluation,
     backend_statuses = backend_statuses,
@@ -702,12 +907,45 @@ triomics_c06_build_handoff <- function(primary_nominations = NULL,
 }
 
 triomics_c06_write_handoff <- function(handoff, output_root, config_sha256,
-                                       producer_commit = "not-recorded") {
+                                       privacy_class = NULL, producer_commit = "not-recorded") {
   if (!is.list(handoff) || !identical(handoff$artifact_type, "stage_c_d_handoff") ||
       !triomics_c06_nonempty_string(output_root) ||
-      !triomics_sha256_text(config_sha256) || !triomics_c06_nonempty_string(producer_commit)) {
+      !triomics_sha256_text(config_sha256) || !triomics_c06_nonempty_string(producer_commit) ||
+      !is.character(privacy_class) || length(privacy_class) != 1L || is.na(privacy_class) ||
+      !privacy_class %in% c("synthetic", "sensitive")) {
     triomics_integration_abort(
-      "C_EXPORT_INPUT_INVALID", "A validated C handoff, local output root and configuration SHA256 are required."
+      "C_EXPORT_INPUT_INVALID",
+      "A validated C handoff, local output root, configuration SHA256 and authoritative privacy class are required."
+    )
+  }
+  expected_context <- triomics_c06_handoff_context(
+    handoff$integration_evidence,
+    handoff$nomination_branches$primary_statistics,
+    handoff$evaluation_evidence
+  )
+  if (!triomics_c06_nonempty_string(handoff$study_id) ||
+      !triomics_c06_nonempty_string(handoff$analysis_id) ||
+      !identical(handoff$preparation_context_id, expected_context$preparation_context_id) ||
+      !identical(handoff$representation_id, expected_context$representation_id)) {
+    triomics_integration_abort(
+      "C_EXPORT_CONTEXT_MISMATCH",
+      "The D handoff context no longer matches its integration, nomination and evaluation evidence.",
+      key = "handoff.context"
+    )
+  }
+  lineage_inputs <- triomics_c06_lineage_inputs(
+    handoff$lineage_inputs, "handoff.lineage_inputs"
+  )
+  expected_lineage <- triomics_c06_handoff_lineage(
+    handoff$nomination_branches$primary_statistics,
+    handoff$integration_evidence,
+    handoff$evaluation_evidence
+  )
+  if (!identical(lineage_inputs, expected_lineage)) {
+    triomics_integration_abort(
+      "C_EXPORT_LINEAGE_MISMATCH",
+      "The D handoff lineage no longer matches its primary, integration and evaluation evidence.",
+      key = "handoff.lineage_inputs"
     )
   }
   root <- normalizePath(output_root, winslash = "/", mustWork = FALSE)
@@ -718,6 +956,8 @@ triomics_c06_write_handoff <- function(handoff, output_root, config_sha256,
     artifact_type = "candidate_nominations",
     study_id = handoff$study_id,
     analysis_id = handoff$analysis_id,
+    preparation_context_id = handoff$preparation_context_id,
+    representation_id = handoff$representation_id,
     status = handoff$nomination_status,
     source_artifact_id = "stage-c-d-handoff",
     n_nominations = as.integer(length(handoff$nominations)),
@@ -727,21 +967,31 @@ triomics_c06_write_handoff <- function(handoff, output_root, config_sha256,
   integration_payload <- list(
     schema_version = "2.0", artifact_type = "integration_evidence_bundle",
     study_id = handoff$study_id, analysis_id = handoff$analysis_id,
+    preparation_context_id = handoff$preparation_context_id,
+    representation_id = handoff$representation_id,
     status = handoff$status, integrations = handoff$integration_evidence
   )
   comparison_payload <- list(
     schema_version = "2.0", artifact_type = "integration_comparisons",
     study_id = handoff$study_id, analysis_id = handoff$analysis_id,
+    preparation_context_id = handoff$preparation_context_id,
+    representation_id = handoff$representation_id,
     status = handoff$comparisons$status, comparisons = handoff$comparisons
   )
   evaluation_payload <- handoff$evaluation_evidence
   evaluation_payload$study_id <- handoff$study_id
   evaluation_payload$analysis_id <- handoff$analysis_id
+  evaluation_payload$preparation_context_id <- handoff$preparation_context_id
+  evaluation_payload$representation_id <- handoff$representation_id
+  evaluation_payload$lineage_inputs <- lineage_inputs
   status_payload <- list(
     schema_version = "2.0", artifact_type = "stage_c_status",
     study_id = handoff$study_id, analysis_id = handoff$analysis_id,
+    preparation_context_id = handoff$preparation_context_id,
+    representation_id = handoff$representation_id,
     status = handoff$status, backend_statuses = handoff$backend_statuses,
-    clinical_prediction = handoff$clinical_prediction
+    clinical_prediction = handoff$clinical_prediction,
+    lineage_inputs = lineage_inputs
   )
   payloads <- list(
     list(name = "candidate-nominations.json", type = "candidate_nominations", value = candidate_payload, status = candidate_payload$status),
@@ -750,14 +1000,14 @@ triomics_c06_write_handoff <- function(handoff, output_root, config_sha256,
     list(name = "evaluation-evidence.json", type = "integration_evaluation_evidence", value = evaluation_payload, status = evaluation_payload$status),
     list(name = "stage-status.json", type = "stage_c_status", value = status_payload, status = status_payload$status)
   )
-  inputs <- list()
+  matrix_inputs <- list()
   for (evidence in handoff$integration_evidence) {
     hashes <- evidence$eligibility$matrix_sha256
     if (is.list(hashes)) {
       for (block_id in names(hashes)) {
         value <- hashes[[block_id]]
         if (is.character(value) && length(value) == 1L && triomics_sha256_text(value)) {
-          inputs[[length(inputs) + 1L]] <- list(
+          matrix_inputs[[length(matrix_inputs) + 1L]] <- list(
             artifact_id = paste(evidence$integration_id, block_id, sep = "::"),
             sha256 = value
           )
@@ -765,10 +1015,29 @@ triomics_c06_write_handoff <- function(handoff, output_root, config_sha256,
       }
     }
   }
-  artifacts <- lapply(payloads, function(item) {
+  inputs <- triomics_c06_lineage_inputs(c(lineage_inputs, matrix_inputs), "handoff.inputs")
+  payload_records <- lapply(payloads, function(item) {
     path <- file.path(d_root, item$name)
-    envelope_path <- file.path(d_root, sub("\\.json$", ".envelope.json", item$name))
     triomics_write_json_atomic(item$value, path)
+    list(item = item, path = path, payload_sha256 = triomics_sha256(path))
+  })
+  evaluation_record <- payload_records[[which(vapply(payload_records, function(record) {
+    identical(record$item$type, "integration_evaluation_evidence")
+  }, logical(1)))]]
+  artifacts <- lapply(payload_records, function(record) {
+    item <- record$item
+    path <- record$path
+    envelope_path <- file.path(d_root, sub("\\.json$", ".envelope.json", item$name))
+    artifact_inputs <- inputs
+    if (!identical(item$type, "integration_evaluation_evidence")) {
+      artifact_inputs <- c(artifact_inputs, list(list(
+        artifact_id = "c06-evaluation-evidence",
+        sha256 = evaluation_record$payload_sha256
+      )))
+    }
+    artifact_inputs <- triomics_c06_lineage_inputs(
+      artifact_inputs, paste0("envelope.inputs.", item$type)
+    )
     envelope <- triomics_artifact_envelope(
       artifact_type = item$type,
       artifact_id = paste0("c06-", sub("\\.json$", "", item$name)),
@@ -778,16 +1047,18 @@ triomics_c06_write_handoff <- function(handoff, output_root, config_sha256,
       config_sha256 = config_sha256,
       payload = path,
       producer_commit = producer_commit,
-      inputs = inputs,
+      inputs = artifact_inputs,
       reason_codes = character(),
-      privacy_class = "synthetic"
+      privacy_class = privacy_class
     )
     envelope$analysis_id <- handoff$analysis_id
+    envelope$preparation_context_id <- handoff$preparation_context_id
+    envelope$representation_id <- handoff$representation_id
     triomics_write_envelope(envelope, envelope_path)
     list(
       artifact_type = item$type,
       payload_file = item$name,
-      payload_sha256 = triomics_sha256(path),
+      payload_sha256 = record$payload_sha256,
       envelope_file = basename(envelope_path),
       envelope_sha256 = triomics_sha256(envelope_path)
     )
@@ -797,11 +1068,20 @@ triomics_c06_write_handoff <- function(handoff, output_root, config_sha256,
     artifact_type = "stage_c_handoff_manifest",
     study_id = handoff$study_id,
     analysis_id = handoff$analysis_id,
+    preparation_context_id = handoff$preparation_context_id,
+    representation_id = handoff$representation_id,
     status = handoff$status,
     artifacts = artifacts
   )
   manifest_path <- file.path(d_root, "handoff-manifest.json")
   triomics_write_json_atomic(manifest, manifest_path)
+  manifest_inputs <- c(inputs, lapply(artifacts, function(artifact) {
+    list(
+      artifact_id = paste0("c06-", sub("\\.json$", "", artifact$payload_file)),
+      sha256 = artifact$payload_sha256
+    )
+  }))
+  manifest_inputs <- triomics_c06_lineage_inputs(manifest_inputs, "manifest.inputs")
   manifest_envelope <- triomics_artifact_envelope(
     artifact_type = "stage_c_handoff_manifest",
     artifact_id = "c06-handoff-manifest",
@@ -811,11 +1091,13 @@ triomics_c06_write_handoff <- function(handoff, output_root, config_sha256,
     config_sha256 = config_sha256,
     payload = manifest_path,
     producer_commit = producer_commit,
-    inputs = inputs,
+    inputs = manifest_inputs,
     reason_codes = character(),
-    privacy_class = "synthetic"
+    privacy_class = privacy_class
   )
   manifest_envelope$analysis_id <- handoff$analysis_id
+  manifest_envelope$preparation_context_id <- handoff$preparation_context_id
+  manifest_envelope$representation_id <- handoff$representation_id
   triomics_write_envelope(manifest_envelope, file.path(d_root, "handoff-manifest.envelope.json"))
   list(
     directory = d_root,

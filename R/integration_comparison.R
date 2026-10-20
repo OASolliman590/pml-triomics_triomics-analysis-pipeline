@@ -53,18 +53,17 @@ triomics_c06_context_identity <- function(integration_run) {
 
 triomics_c06_variance_definition <- function(result) {
   variance <- result$params$variance
-  if (!is.list(variance)) {
-    triomics_integration_abort(
-      "C_VARIANCE_EVIDENCE_MISSING", "A comparison requires a declared native/common variance definition.",
-      key = "result.params.variance"
-    )
+  if (!is.list(variance)) variance <- list()
+  metric <- variance$metric %||% attr(result$variance, "metric")
+  units <- variance$units %||% attr(result$variance, "units")
+  if (is.null(units) && identical(result$backend, "concat_pca") &&
+      identical(metric, "orthogonal_pca_block_projection")) {
+    units <- "proportion"
   }
-  metric <- variance$metric
-  units <- variance$units
   if (is.null(units)) units <- variance$output_unit
   if (is.null(units)) units <- result$params$variance_units
-  denominator <- variance$denominator
-  semantics <- variance$semantics
+  denominator <- variance$denominator %||% attr(result$variance, "denominator")
+  semantics <- variance$semantics %||% attr(result$variance, "semantics")
   if (is.null(semantics)) semantics <- variance$accumulation
   required <- list(metric = metric, units = units, denominator = denominator, semantics = semantics)
   if (any(vapply(required, function(value) {
@@ -76,6 +75,8 @@ triomics_c06_variance_definition <- function(result) {
     )
   }
   definition <- variance
+  definition$metric <- metric
+  definition$assay_space <- definition$assay_space %||% attr(result$variance, "assay_space")
   definition$units <- units
   definition$denominator <- denominator
   definition$semantics <- semantics
@@ -195,6 +196,7 @@ triomics_c06_validate_control_observation <- function(observation, label) {
     )
     if (!inherits(run, "EvaluationResult") || any(!required_run_fields %in% names(run)) ||
         !triomics_nonempty_string(observation$artifact_ref) ||
+        !triomics_sha256_text(observation$artifact_sha256) ||
         !identical(run$method, observation$method) ||
         !triomics_sha256_text(run$split_plan_hash) ||
         !identical(run$split_plan_hash, observation$match_context$split_plan_sha256) ||
@@ -237,6 +239,7 @@ triomics_c06_validate_control_observation <- function(observation, label) {
   } else {
     if (!triomics_nonempty_string(observation$reason) ||
         !is.null(observation$artifact_ref) || !is.null(observation$metrics) ||
+        !is.null(observation$artifact_sha256) ||
         !is.null(observation$evaluation_result)) {
       triomics_integration_abort(
         "C_EVAL_EVIDENCE_INVALID", paste0(label, " must explicitly explain an unrun/failed route and contain no fabricated result."),
@@ -300,6 +303,22 @@ triomics_c06_evaluation_evidence <- function(controls) {
     )
   })
   names(normalized) <- required_names
+  reference_context <- normalized[[required_names[[1L]]]]$candidate$match_context
+  if (any(!vapply(normalized, function(item) {
+    identical(item$candidate$match_context, reference_context)
+  }, logical(1)))) {
+    triomics_integration_abort(
+      "C_EVAL_CONTEXT_MISMATCH", "All C-07 control regimes must share one immutable evaluation context.",
+      key = "controls"
+    )
+  }
+  source_artifacts <- unlist(lapply(normalized, function(item) {
+    lapply(list(item$candidate, item$baseline), function(observation) {
+      if (!identical(observation$status, "complete")) return(NULL)
+      list(artifact_id = observation$artifact_ref, sha256 = observation$artifact_sha256)
+    })
+  }), recursive = FALSE)
+  source_artifacts <- Filter(function(artifact) !is.null(artifact), source_artifacts)
   list(
     schema_version = "2.0",
     artifact_type = "integration_evaluation_evidence",
@@ -308,6 +327,7 @@ triomics_c06_evaluation_evidence <- function(controls) {
     } else {
       "partial"
     },
-    controls = unname(normalized)
+    controls = unname(normalized),
+    source_artifacts = unname(source_artifacts)
   )
 }

@@ -4,7 +4,7 @@
   "implementation_base": "ef7da2086e7a0244e18a8ea1902423596d6a2b75",
   "accepted": false,
   "applied_to_shared_files": false,
-  "implementation_status": "Initial isolated candidate implemented and focused tests are green. Sol-owned C-stage CLI wiring to emit the D handoff remains pending; no packet acceptance or scientific validation is claimed.",
+  "implementation_status": "Targeted repair 1 implemented in the five-file packet allowlist. Exact C-06 focused tests are green; Sol-owned C-stage CLI wiring to emit the D handoff remains pending. This is synthetic software evidence only; the packet is not accepted.",
   "synthetic_software_only": true,
   "local_files": [
     "R/export_c.R",
@@ -20,6 +20,36 @@
     "evaluation": "Requires the null, weak-signal, strong-signal and adversarial controls, paired candidate/baseline match context, and either an actual typed EvaluationResult or an explicit not_run/unavailable/failed record. Fabricated complete metrics are rejected.",
     "completion": "An empty or unavailable integration cannot produce complete handoff status. Backend dispositions and conditional C-09 clinical-prediction status are retained."
   },
+  "repair_1": {
+    "review_basis": "Coordinator-supplied authoritative Sol review summary for candidate d8fa515d32b6d5d0c637e325d8fe41705ff3dae6; review document was not present in this isolated checkout.",
+    "status": "implemented_not_accepted",
+    "findings": [
+      {
+        "id": "F1",
+        "response": "C-01 export now consumes the accepted IntegrationResult diagnostics, scores, loadings, BackendFit metadata and native state. A behavioral test performs triomics_integration_fit_once(), serializes via triomics_c01_result_payload(), then exports the actual fit; no invented PCA variance sidecar is required. Native version comes from authoritative runtime metadata rather than the C-01 state schema label."
+      },
+      {
+        "id": "F2",
+        "response": "MOFA native variance is labelled with MOFA2 get_variance_explained r2_per_factor semantics and percent units; common variance retains proportion units. Public synthetic tests assert the numerical 40 percent versus 0.4 proportion values and conversion semantics."
+      },
+      {
+        "id": "F3",
+        "response": "A valid B primary-statistics nomination branch with status complete and zero nominations is retained as complete. The explicitly not_requested branch also remains valid without a source artifact reference."
+      },
+      {
+        "id": "F4",
+        "response": "The handoff writer requires an explicit validated privacy_class and propagates it to all D envelopes; it no longer hardcodes synthetic. The current example declares synthetic data_class; shared CLI wiring must pass the authoritative configured class."
+      },
+      {
+        "id": "F5",
+        "response": "Preparation and representation identities are carried through every D payload and envelope. Primary B, native integration and completed evaluation artifact references are bound as immutable lineage inputs; the writer re-derives and verifies context and lineage before writing, and cross-links the evaluation evidence payload."
+      },
+      {
+        "id": "F6",
+        "response": "Registration records the repaired behavior and remaining CLI handoff request honestly. R/cli.R, namespace, schema, lock, ledger and review files were not edited; candidate remains unaccepted."
+      }
+    ]
+  },
   "red_green_cycle": {
     "red": {
       "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\"",
@@ -30,11 +60,52 @@
     "green": {
       "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\"",
       "exit_code": 0,
-      "expectations_passed": 52,
-      "test_blocks": 5,
+      "expectations_passed": 100,
+      "test_blocks": 10,
       "failures": 0,
       "warnings": 0,
       "skips": 0
+    },
+    "repair_1": {
+      "red_runs": [
+        {
+          "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\"",
+          "exit_code": 1,
+          "failures": 8,
+          "passes": 52,
+          "diagnosis": "New regressions exposed missing accepted C-01 variance metadata support, MOFA native unit loss, complete-empty B nomination rejection, missing explicit privacy class, and missing D context/lineage support."
+        },
+        {
+          "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\"",
+          "exit_code": 1,
+          "failures": 1,
+          "passes": 92,
+          "diagnosis": "Adversarial writer test showed that deleting handoff lineage_inputs was not rejected."
+        },
+        {
+          "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\"",
+          "exit_code": 1,
+          "failures": 2,
+          "passes": 97,
+          "diagnosis": "Additional assertions revealed the public synthetic MOFA fixture omitted native semantics present in accepted C-05 output; the fixture was aligned to C-05's documented variance semantics before final green."
+        },
+        {
+          "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\"",
+          "exit_code": 1,
+          "failures": 1,
+          "passes": 99,
+          "diagnosis": "Adversarial control test showed the writer trusted a fabricated evaluation source_artifacts list without deriving it from the candidate/baseline controls."
+        }
+      ],
+      "green": {
+        "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\"",
+        "exit_code": 0,
+        "expectations_passed": 100,
+        "test_blocks": 10,
+        "failures": 0,
+        "warnings": 0,
+        "skips": 0
+      }
     }
   },
   "cli_registration": {
@@ -44,7 +115,7 @@
     "planned_command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-06.yaml --stage C --output artifacts/acceptance/C-06",
     "exit_code": 0,
     "output_status": "complete for the existing C integration-results artifact only",
-    "scope_note": "The command wrote existing C integration-results and score-endpoint artifacts but no D handoff payloads. The exact CLI path does not yet call the new C-06 handoff builder/writer, so this is not C-06 end-to-end completion. The CLI run preceded the final exporter hardening; focused tests were rerun after that hardening. Sol must rerun the integrated CLI after applying the shared registration.",
+    "scope_note": "The command was run on the initial isolated candidate before this repair and wrote existing C integration-results and score-endpoint artifacts but no D handoff payloads. The exact CLI path does not call the C-06 handoff builder/writer, so this is not C-06 end-to-end completion. Sol must apply the shared registration and rerun the integrated CLI against the repaired candidate.",
     "output_artifacts": [
       "C/integration-results.json",
       "C/integration-results.envelope.json",
@@ -60,10 +131,29 @@
     "jsonlite": "2.0.0",
     "digest": "0.6.39"
   },
+  "adjacent_checks": {
+    "C-01": {
+      "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-01|C-05', stop_on_failure=TRUE)\"",
+      "result": "C-01 completed before C-05 testthat failure",
+      "expectations_passed": 109
+    },
+    "C-05": {
+      "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-01|C-05', stop_on_failure=TRUE)\"",
+      "result": "18 failures / 87 passes; failures were pre-existing environment/registration prerequisites, not C-06 regressions",
+      "limitations": [
+        "Registration tests expect accepted=false although the current accepted C-05 registration reports true.",
+        "MOFA2 1.22.1 and mofapy2 0.7.5 are unavailable in this runtime, so real MOFA fit/extraction tests cannot execute."
+      ]
+    },
+    "B-T07": {
+      "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-01|C-05|B-T07', stop_on_failure=TRUE)\"",
+      "result": "Stopped in B-T07 at missing generated acceptance evidence directories under artifacts/acceptance/B-T07/testthat; no artifacts were fabricated."
+    }
+  },
   "file_sha256": {
-    "R/export_c.R": "b42f0226612ffdff3633c7563611cf3904e7c17bb66a04a881e19a2143c53cb0",
-    "R/integration_comparison.R": "dc5f2dd151e32d9200d01152e4e77c374024f304af118b92586d62f7685766d6",
-    "tests/testthat/test-C-06.R": "09a6df1eb3461988e2cf6ca0638e584923ef74af3cdd314badb42d4d6fc48a",
+    "R/export_c.R": "b26983e8b3830e9d71e776d0ccdc33385bc423bb0af5c3420ceeccbfac2196fd",
+    "R/integration_comparison.R": "1cbdf1bde4bcbd24c72fef845bac281dd503e7649ea6dad45f414f866617d904",
+    "tests/testthat/test-C-06.R": "87021d187843b7282d53649805d46922ed84e50d7ed41486622d52c4fba8f436",
     "inst/examples/tickets/C-06.yaml": "3d11d5e8fb69893fbc1c284cc8568c6d09b04a7c61d79e1302689c507a638df0"
   },
   "cli_artifact_sha256": {
@@ -76,11 +166,11 @@
   "acceptance": {
     "AC1": {
       "status": "implementation_tested_cli_registration_pending",
-      "evidence": "Both nomination branches and complete eligibility/native/common/selection/variance evidence are constructed, validated and written to D in synthetic writer tests. The exact Stage-C CLI currently emits no D handoff because R/cli.R is coordinator-owned and unchanged."
+      "evidence": "Both nomination branches, including a complete-empty primary branch, and complete eligibility/native/common/selection/variance evidence are constructed, validated and written to D. A real public-synthetic C-01 fit-to-export test uses the accepted fit and result serializer. The exact Stage-C CLI still emits no D handoff because R/cli.R is coordinator-owned and unchanged."
     },
     "AC2": {
       "status": "passed_synthetic_behavior_tests",
-      "evidence": "Matched comparisons bind sample IDs, full feature maps, matrix hashes, preparation context and representation. Adversarial identity mismatch and missing evidence fail closed; native variance definitions remain distinct and unlike definitions have no ranking."
+      "evidence": "Matched comparisons bind sample IDs, full feature maps, matrix hashes, preparation context and representation. Adversarial identity mismatch and missing evidence fail closed; MOFA native percentage versus common proportion is numerically tested (40 versus 0.4), and unlike definitions have no ranking."
     },
     "AC3": {
       "status": "passed_explicit_unrun_policy_tests",
@@ -88,7 +178,7 @@
     },
     "AC4": {
       "status": "passed_synthetic_behavior_tests_cli_registration_pending",
-      "evidence": "Backend unavailable/failed dispositions and conditional clinical-prediction status remain visible; tests verify empty and unavailable integrations cannot complete the handoff. Full integrated CLI behavior still requires Sol's R/cli.R wiring."
+      "evidence": "Backend unavailable/failed dispositions and conditional clinical-prediction status remain visible; explicit privacy class is required and propagated; tests verify empty and unavailable integrations cannot complete the handoff. Full integrated CLI behavior still requires Sol's R/cli.R wiring."
     }
   },
   "shared_changes_for_sol": [
@@ -101,11 +191,11 @@
   "coordinator_owned_files_to_update": ["R/cli.R"],
   "namespace_change_requested": false,
   "known_gaps": [
-    "The exact C-06 CLI command exits 0 but does not yet emit D artifacts; shared CLI integration and a fresh integrated CLI run are required.",
+    "The exact C-06 CLI command previously exited 0 but did not emit D artifacts; shared CLI integration and a fresh integrated CLI run against this repair are required.",
     "No C-07 evaluation was executed. All four controls are explicitly unrun; only the evidence policy and matching behavior are tested.",
     "The fixture and all tests are public synthetic software evidence; no private-study or biological validation is claimed.",
     "The conditional C-09 clinical-prediction route remains not_started and is not a completion requirement for this packet."
   ],
   "acceptance_ref": "discovery/spec-v2/packets/C-06.md",
-  "next_action": "Sol applies the requested R/cli.R registration, reruns integrated checks, and owns acceptance."
+  "next_action": "Sol applies the requested R/cli.R registration, reruns integrated checks, and owns acceptance; no acceptance is claimed by this candidate."
 }
