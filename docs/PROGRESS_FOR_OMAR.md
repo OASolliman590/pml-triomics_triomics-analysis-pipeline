@@ -19,9 +19,9 @@ performance estimates for the fasting, diabetic-treatment, or organophosphate
 studies. No private study was fitted, and MOFA factors have no established
 biological interpretation or predictive validity.
 
-**Next:** C-08 repair 1 now has 206 focused assertions passing and is in its one
-focused Sol-high rereview. C-09 and C-06 follow only after C-08 acceptance.
-Stage D remains closed.
+**Next:** Final C-08 repair 2 is active for three concrete unit/time handoff
+defects. Sol will verify it directly; C-09 and C-06 follow only after C-08
+acceptance. Stage D remains closed.
 
 **Needs Omar:** Only publication timing; no scientific choice blocks work.
 
