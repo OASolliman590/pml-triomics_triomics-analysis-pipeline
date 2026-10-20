@@ -34,15 +34,40 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/c05_repair1_luna",
+      "role": "luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "packet": "C-05",
+      "attempt": "repair1",
+      "base_commit": "8dcd78d",
+      "worktree": "/Users/megastore/.codex/worktrees/c05-repair1/PML MultiOmics Analysis Pipeline",
+      "allowed_next_transition": "Inspect the committed allowlisted candidate, rerun focused evidence, then one focused Sol-high rereview. Do not register mofa2 before that rereview and fresh Sol verification.",
+      "wait_cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "c03_c04_accepted_c05_unaccepted",
+    "status": "c05_repair1_active",
     "last_reconciled": "2026-10-20",
-    "active_handoffs": [],
+    "active_handoffs": ["/root/c05_repair1_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-02 and G5 are accepted. The eight fda190f warnings are named and dispositioned as installed B-T07 missing-Git-metadata probes; the run remains WARN 8. Sol accepted C-03 and C-04 on synthetic software evidence. C-05 is implemented but unaccepted and mofa2 is not publicly registered. C-08, C-09, C-06, G6 and every D packet remain closed."
+    "disposition": "C-02 through C-04 are accepted on synthetic software evidence. One bounded C-05 repair-1 Luna-max worker is active in a fresh isolated worktree. Public mofa2 registration remains disabled. C-08, C-09, C-06, G6 and every D packet remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "c05_repair1_dispatched",
+      "date": "2026-10-20",
+      "worker": "/root/c05_repair1_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "base_commit": "8dcd78d",
+      "worktree": "/Users/megastore/.codex/worktrees/c05-repair1/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["R/integration_mofa.R", "R/mofa_state.R", "tools/check-mofa-environment.R", "tests/testthat/test-C-05.R", "inst/examples/tickets/C-05.yaml", "docs/implementation/registrations/C-05.json"],
+      "allowed_next_transition": "Worker commit to focused Sol-high rereview; shared registration remains coordinator-owned and closed.",
+      "disposition": "Repair 1 addresses the five Important findings from the initial Sol review. One heavy-fit lease; public synthetic inputs only."
+    },
     {
       "event": "c05_initial_sol_review_changes_required",
       "date": "2026-10-20",
@@ -2820,10 +2845,10 @@
       "blockers": []
     },
     "C-05": {
-      "status": "changes_required",
+      "status": "repair1_active",
       "attempts": 1,
       "commit": "574a1d6",
-      "repair_attempts": 0,
+      "repair_attempts": 1,
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-20-c05-sol-review.md"
       ],
