@@ -20,6 +20,8 @@ Imports:
 Suggests:
     BiocManager,
     DEqMS (== 1.30.0),
+    MOFA2 (== 1.22.1),
     renv,
+    reticulate,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

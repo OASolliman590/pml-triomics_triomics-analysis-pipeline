@@ -106,7 +106,10 @@ triomics_new_integration_result <- function(scores, loadings, variance, selected
 }
 
 triomics_integration_backend_names <- function() {
-  c("concat_pca", "concat_plsda", "concat_pls", "mixomics_diablo", "mixomics_block_spls")
+  c(
+    "concat_pca", "concat_plsda", "concat_pls", "mixomics_diablo",
+    "mixomics_block_spls", "mofa2"
+  )
 }
 
 triomics_integration_backend <- function(method) {
@@ -127,6 +130,39 @@ triomics_integration_backend <- function(method) {
   }
   if (identical(method, "mixomics_block_spls")) {
     return(triomics_block_spls_backend())
+  }
+  if (identical(method, "mofa2")) {
+    return(structure(
+      list(
+        validate = function(resolved_analysis, params) {
+          triomics_mofa_validate(resolved_analysis, params)
+        },
+        fit = function(resolved_analysis, params) {
+          state <- triomics_mofa_fit(resolved_analysis, params)
+          if (!inherits(state, "BackendFit")) {
+            triomics_integration_abort(
+              "C_SCORE_BACKEND_UNAVAILABLE",
+              "The registered MOFA2 route requires loadable MOFA2 and mofapy2 runtimes.",
+              key = "integration.method",
+              remediation = "Run with the verified isolated MOFA2 1.22.1 and mofapy2 0.7.5 environment."
+            )
+          }
+          state
+        },
+        predict = function(backend_fit, new_resolved_analysis, params) {
+          triomics_integration_abort(
+            "C_EVAL_PREDICTION_UNSUPPORTED",
+            "Core MOFA2 is exploratory and has no qualified unseen-subject prediction route.",
+            key = "integration.method"
+          )
+        },
+        extract = function(backend_fit, context, params) {
+          triomics_mofa_extract(backend_fit, context, params)
+        },
+        evaluation_modes = "exploratory"
+      ),
+      class = "BackendAdapter"
+    ))
   }
   structure(
     list(

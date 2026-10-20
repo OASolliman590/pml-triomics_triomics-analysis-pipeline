@@ -246,11 +246,40 @@ testthat::test_that("C-05 ticket validates under the existing config schema and 
   testthat::expect_identical(request$evaluation$mode, "exploratory")
 })
 
-testthat::test_that("C-05 public registry refuses the unregistered mofa2 name", {
-  c05_error(triomics_integration_backend("mofa2"), "C_SCORE_BACKEND_UNAVAILABLE")
+testthat::test_that("C-05 public registry exposes only the exploratory MOFA2 adapter", {
+  adapter <- triomics_integration_backend("mofa2")
+  testthat::expect_s3_class(adapter, "BackendAdapter")
+  testthat::expect_identical(adapter$evaluation_modes, "exploratory")
+  c05_error(
+    adapter$predict(NULL, NULL, list(method = "mofa2")),
+    "C_EVAL_PREDICTION_UNSUPPORTED"
+  )
+  c05_error(triomics_integration_backend("mofa2_unregistered"), "C_SCORE_BACKEND_UNAVAILABLE")
 })
 
-testthat::test_that("C-05 registration request records an unaccepted, unapplied and CLI-disabled route", {
+testthat::test_that("C-05 seed sensitivity is JSON-safe at the shared CLI boundary", {
+  sensitivity <- structure(
+    list(status = "assessed", seeds = c(1L, 2L), comparisons = list()),
+    class = "MofaSeedSensitivity"
+  )
+  result <- triomics_new_integration_result(
+    scores = matrix(0, nrow = 2L, ncol = 1L,
+                    dimnames = list(c("sample_1", "sample_2"), "Factor1")),
+    loadings = list(view_1 = matrix(
+      0, nrow = 1L, ncol = 1L, dimnames = list("feature_1", "Factor1")
+    )),
+    variance = matrix(0, nrow = 1L, ncol = 1L,
+                      dimnames = list("view_1", "Factor1")),
+    selected = list(view_1 = "feature_1"), backend = "mofa2",
+    params = list(seed_sensitivity = sensitivity)
+  )
+
+  payload <- triomics_c01_result_payload(result)
+  testthat::expect_null(attr(payload$params$seed_sensitivity, "class", exact = TRUE))
+  testthat::expect_no_error(jsonlite::toJSON(payload, auto_unbox = TRUE, null = "null"))
+})
+
+testthat::test_that("C-05 registration request records the applied but unaccepted route", {
   registration_path <- testthat::test_path(
     "..", "..", "docs", "implementation", "registrations", "C-05.json"
   )
@@ -258,8 +287,8 @@ testthat::test_that("C-05 registration request records an unaccepted, unapplied 
     "..", "..", "discovery", "spec-v2", "schemas", "config.schema.json"
   ))
   if (!source_checkout) {
-    # docs/ is excluded from the built package. The public registry must still refuse the method.
-    c05_error(triomics_integration_backend("mofa2"), "C_SCORE_BACKEND_UNAVAILABLE")
+    # docs/ is excluded from the built package. The public adapter must still be registered.
+    testthat::expect_s3_class(triomics_integration_backend("mofa2"), "BackendAdapter")
     return()
   }
   testthat::expect_true(file.exists(registration_path))
@@ -267,12 +296,12 @@ testthat::test_that("C-05 registration request records an unaccepted, unapplied 
 
   testthat::expect_identical(registration$packet_id, "C-05")
   testthat::expect_false(registration$accepted)
-  testthat::expect_false(registration$applied_to_shared_files)
-  testthat::expect_false(registration$cli_registration$enabled)
+  testthat::expect_true(registration$applied_to_shared_files)
+  testthat::expect_true(registration$cli_registration$enabled)
   testthat::expect_identical(registration$integration_backends$method, "mofa2")
   testthat::expect_identical(registration$dependencies$package, c("MOFA2", "mofapy2"))
   testthat::expect_match(registration$implementation_status, "AC2-AC4 adapter behavior implemented")
-  testthat::expect_match(registration$integration_backends$status, "implemented_unregistered")
+  testthat::expect_match(registration$integration_backends$status, "implemented_registered")
   testthat::expect_true(any(grepl("synthetic software evidence only", registration$known_gaps, fixed = TRUE)))
   testthat::expect_true(any(grepl("enrichment execution was not performed", registration$known_gaps, fixed = TRUE)))
   testthat::expect_false(any(grepl("not implemented", registration$known_gaps, fixed = TRUE)))
@@ -438,6 +467,8 @@ testthat::test_that("C-05 real MOFA2 fit preserves scattered missingness and rep
   )
 
   testthat::expect_true(fit$trained)
+  testthat::expect_null(names(fit$selected$view_1))
+  testthat::expect_identical(fit$selected$view_1, rownames(fit$native_state$weights$view_1))
   testthat::expect_true(eligibility$missingness_mask$view_1["view_1_feature_2", "sample_03"])
   testthat::expect_true(fit$native_state$missingness_mask$view_1["view_1_feature_2", "sample_03"])
   testthat::expect_identical(fit$result_params$variance$assay_space, "adapter_transformed_training_views")

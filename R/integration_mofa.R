@@ -1,6 +1,5 @@
-# Packet C-05: MOFA2 adapter gate. The public registry still refuses "mofa2"
-# (see triomics_integration_backend_names()); this adapter is exercised directly
-# until Sol applies the shared registration.
+# Packet C-05: MOFA2 exploratory adapter. The coordinator-owned public registry
+# exposes this route only through the runtime-qualified BackendAdapter seam.
 
 triomics_mofa_abort <- function(code, message, key = NULL,
                                 remediation = "Install MOFA2 and mofapy2 in an isolated environment, then rerun the C-05 checks.") {
@@ -1061,7 +1060,9 @@ triomics_mofa_fit <- function(resolved_analysis, params, status = triomics_mofa_
         seed_sensitivity = seed_sensitivity,
         training_transform = eligibility$transforms, prediction_state = list(uses_outcome = FALSE)
       ),
-      selected = stats::setNames(lapply(eligibility$data, rownames), eligibility$block_ids),
+      selected = stats::setNames(lapply(eligibility$data, function(block) {
+        unname(rownames(block))
+      }), eligibility$block_ids),
       result_params = result_params,
       metadata = list(
         backend = "mofa2", native_method = "MOFA2::run_mofa",

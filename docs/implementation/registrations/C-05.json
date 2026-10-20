@@ -3,7 +3,7 @@
   "request_type": "registration_request",
   "implementation_base": "6ea8d20f0b654e8e544f9f8d6cf8517ab0fcae29",
   "accepted": false,
-  "implementation_status": "partial: isolated MOFA2 train/save/reload and AC2-AC4 adapter behavior implemented in this packet; pending Sol acceptance and shared registration. Evidence is synthetic software evidence only.",
+  "implementation_status": "isolated MOFA2 train/save/reload and AC2-AC4 adapter behavior implemented; Sol shared registration applied, pending integrated CLI/package gates and acceptance. Evidence is synthetic software evidence only.",
   "dependencies": [
     {
       "package": "MOFA2",
@@ -35,39 +35,39 @@
   "integration_backends": [
     {
       "method": "mofa2",
-      "adapter_factory": "triomics_mofa_fit",
-      "status": "implemented_unregistered",
+      "adapter_factory": "triomics_integration_backend('mofa2')",
+      "status": "implemented_registered",
       "task_mode": "exploratory",
       "classification": false,
       "native_fit": "MOFA2::run_mofa writes the HDF5 model; MOFA2::load_model verifies the primary fit. Gaussian views, observed-value scaling, preserved missingness masks, typed native-percentage variance, and the ticket-declared independent seeds are recorded before trained=TRUE.",
       "native_prediction": "not supported; core MOFA makes no new-subject prediction claim",
-      "common_result": "direct adapter extraction emits the six-field IntegrationResult and a typed version-bound enrichment-input handoff; the public registry remains disabled"
+      "common_result": "registered adapter extraction emits the six-field IntegrationResult and a typed version-bound enrichment-input handoff"
     }
   ],
   "cli_registration": {
     "stage": "C",
     "service": "evaluate_pipeline",
-    "enabled": false,
-    "requested_enabled": false,
-    "note": "Not enabled. The public registry and CLI remain disabled pending Sol's shared registration and acceptance review. The public CLI does not accept this method."
+    "enabled": true,
+    "requested_enabled": true,
+    "note": "Sol registered the exploratory-only mofa2 adapter after focused review and both permitted repairs. Runtime absence still fails closed."
   },
-  "method_name_note": "This request uses mofa2 to match the existing config schema enum and frozen spec. MOFA2 is not a mixOmics method; retain the method name for the disabled handoff.",
+  "method_name_note": "This route uses mofa2 to match the existing config schema enum and frozen spec. MOFA2 is not a mixOmics method; the registered route remains exploratory-only.",
   "shared_changes_for_sol": [
     {
       "file": "R/integration_contract.R",
-      "change": "Sol applies the shared registry/dispatch and CLI/dependency changes only after this packet's acceptance review. Not applied here.",
-      "reason": "Until then the public registry refuses mofa2 with C_SCORE_BACKEND_UNAVAILABLE."
+      "change": "Sol added mofa2 to the shared registry and dispatches it through an exploratory-only BackendAdapter.",
+      "reason": "The adapter has no qualified prediction mode and requires the verified isolated runtime."
     }
   ],
   "tests_that_change_when_registered": [
-    "tests/testthat/test-C-05.R 'C-05 public registry refuses the unregistered mofa2 name' must change when the shared registration is applied."
+    "tests/testthat/test-C-05.R verifies the registered exploratory adapter, explicit prediction refusal, and an unknown-method refusal."
   ],
   "known_gaps": [
     "AC1 has isolated synthetic software evidence only for train/save/reload; independent milestone review and acceptance recording remain pending.",
     "AC2 adapter behavior is implemented and exercised on synthetic missingness fixtures; no private-study data validation is claimed.",
     "AC3 reports sign/permutation-aligned factor and subspace sensitivity over the declared seeds; weak/null controls have no forced recovery threshold or biological factor naming.",
     "AC4 emits version-bound model/data/mask/annotation hashes for downstream enrichment handoff. enrichment execution was not performed, and no predictive or new-subject claim is made.",
-    "The C-05 ticket validates against the existing schema because mofa2 is already in its enum. The public registry and CLI remain disabled; no CLI run was performed."
+    "The C-05 ticket validates against the existing schema because mofa2 is already in its enum. Integrated CLI and package gates remain pending."
   ],
   "coordinator_owned_files_to_update": [
     "R/integration_contract.R",
@@ -76,5 +76,5 @@
     "DESCRIPTION",
     "renv.lock"
   ],
-  "applied_to_shared_files": false
+  "applied_to_shared_files": true
 }

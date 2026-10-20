@@ -172,7 +172,7 @@ triomics_c01_result_payload <- function(result) {
     variance = variance,
     selected = result$selected,
     backend = result$backend,
-    params = result$params
+    params = triomics_c02_json_safe(result$params)
   )
 }
 
