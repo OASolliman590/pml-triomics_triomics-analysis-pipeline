@@ -108,7 +108,7 @@ testthat::test_that("Stage C consumes the verified B nomination artifact and pre
   )
 
   cli <- c06_shared_cli_run(output_root)
-  testthat::expect_identical(cli$status, 4L, info = paste(cli$output, collapse = "\n"))
+  testthat::expect_identical(cli$status, 0L, info = paste(cli$output, collapse = "\n"))
 
   d_root <- file.path(output_root, "D")
   expected_files <- c(
@@ -212,11 +212,18 @@ testthat::test_that("Stage C consumes the verified B nomination artifact and pre
   }, logical(1))))
   testthat::expect_identical(native_payload$native$state_sha256, integration$native$state_sha256)
   testthat::expect_identical(native_payload$preparation_state_hashes, state_hashes)
+  testthat::expect_identical(sort(names(native_payload$preparation_state_refs)),
+                             c("block_1", "block_2"))
   for (block_id in names(state_hashes)) {
+    state_ref <- native_payload$preparation_state_refs[[block_id]]
+    state_path <- file.path(output_root, state_ref$path)
+    testthat::expect_identical(state_ref$state_hash, state_hashes[[block_id]])
+    testthat::expect_identical(state_ref$payload_sha256, triomics_sha256(state_path))
     testthat::expect_true(any(vapply(native_envelope$inputs, function(input) {
       identical(input$artifact_id, paste("preparation-state", block_id, sep = "::")) &&
-        identical(input$sha256, state_hashes[[block_id]])
+        identical(input$sha256, triomics_sha256(state_path))
     }, logical(1L))))
+    testthat::expect_false(identical(state_ref$payload_sha256, state_ref$state_hash))
   }
   testthat::expect_identical(integration$eligibility$status, "validated")
   testthat::expect_true(length(integration$native$scores$values) > 0L)
@@ -248,32 +255,13 @@ testthat::test_that("Stage C consumes the verified B nomination artifact and pre
                              "levels")
   split_plan_path <- file.path(output_root, "C", "evaluation-plans", "c06-control-split-plan.json")
   split_plan_envelope_path <- sub("[.]json$", ".envelope.json", split_plan_path)
-  has_split_plan <- file.exists(split_plan_path) && file.exists(split_plan_envelope_path)
-  testthat::expect_true(file.exists(split_plan_path))
-  testthat::expect_true(triomics_validate_envelope(split_plan_envelope_path))
-  testthat::skip_if_not(has_split_plan, "The C-07 control plan was not persisted for read-back.")
-  split_plan <- jsonlite::read_json(split_plan_path, simplifyVector = FALSE)
-  testthat::expect_identical(split_plan$status, "not_started")
-  testthat::expect_identical(split_plan$artifact_type, "split_plan")
-  plan_body <- split_plan$plan
-  declared_plan_hash <- plan_body$creation_hash
-  plan_body$creation_hash <- NULL
+  testthat::expect_false(file.exists(split_plan_path))
+  testthat::expect_false(file.exists(split_plan_envelope_path))
   testthat::expect_identical(
-    triomics_hash_text(triomics_canonical_json(plan_body)), declared_plan_hash
+    evaluation$controls[[1L]]$candidate$match_context$split_plan_status,
+    "not_run"
   )
-  testthat::expect_identical(split_plan$creation_hash, declared_plan_hash)
-  testthat::expect_identical(
-    evaluation$controls[[1L]]$candidate$match_context$split_plan_sha256,
-    split_plan$creation_hash
-  )
-  testthat::expect_length(split_plan$plan$folds, 2L)
-  testthat::expect_true(all(vapply(split_plan$plan$folds, function(fold) {
-      length(fold$training_unit_ids) > 0L && length(fold$test_unit_ids) > 0L &&
-      !length(intersect(
-        unlist(fold$training_unit_ids, use.names = FALSE),
-        unlist(fold$test_unit_ids, use.names = FALSE)
-      ))
-  }, logical(1L))))
+  testthat::expect_null(evaluation$controls[[1L]]$candidate$match_context$split_plan_sha256)
 
   status_payload <- jsonlite::read_json(file.path(d_root, "stage-status.json"), simplifyVector = FALSE)
   testthat::expect_identical(status_payload$status, "partial")
@@ -285,7 +273,7 @@ testthat::test_that("Stage C consumes the verified B nomination artifact and pre
   testthat::expect_identical(status_payload$clinical_prediction$completion_policy, "conditional")
   testthat::expect_identical(status_payload$clinical_prediction$packet_id, "C-09")
   run_record <- jsonlite::read_json(file.path(output_root, "registries", "run.json"), simplifyVector = FALSE)
-  testthat::expect_identical(run_record$status, status_payload$status)
+  testthat::expect_identical(run_record$status, "complete")
 })
 
 testthat::test_that("Stage C keeps an absent primary nomination source explicitly not requested", {
@@ -293,7 +281,7 @@ testthat::test_that("Stage C keeps an absent primary nomination source explicitl
   on.exit(unlink(output_root, recursive = TRUE), add = TRUE)
 
   cli <- c06_shared_cli_run(output_root)
-  testthat::expect_identical(cli$status, 4L, info = paste(cli$output, collapse = "\n"))
+  testthat::expect_identical(cli$status, 0L, info = paste(cli$output, collapse = "\n"))
   payload <- jsonlite::read_json(
     file.path(output_root, "D", "candidate-nominations.json"), simplifyVector = FALSE
   )
@@ -307,7 +295,7 @@ testthat::test_that("nested C-02 Stage-C evaluation retains verified units for i
   config <- triomics_test_resource("examples", "tickets", "C-02.yaml")
 
   cli <- c06_shared_cli_run(output_root, config_path = config)
-  testthat::expect_identical(cli$status, 4L, info = paste(cli$output, collapse = "\n"))
+  testthat::expect_identical(cli$status, 0L, info = paste(cli$output, collapse = "\n"))
   testthat::expect_false(any(grepl("C_EVAL_EVIDENCE_INVALID", cli$output, fixed = TRUE)))
   has_d_evidence <- file.exists(file.path(output_root, "D", "evaluation-evidence.json"))
   testthat::expect_true(has_d_evidence)
@@ -339,6 +327,7 @@ testthat::test_that("nested C-02 Stage-C evaluation retains verified units for i
   testthat::expect_false(file.exists(file.path(
     output_root, "C", "evaluation-plans", "c06-control-split-plan.json"
   )))
+  testthat::expect_identical(context$split_plan_status, "executed")
   d_root <- file.path(output_root, "D")
   expected_files <- c(
     "candidate-nominations.json", "candidate-nominations.envelope.json",
@@ -364,6 +353,8 @@ testthat::test_that("nested C-02 Stage-C evaluation retains verified units for i
     testthat::expect_true(triomics_validate_envelope(envelope_path))
     envelope <- jsonlite::read_json(envelope_path, simplifyVector = FALSE)
     testthat::expect_identical(envelope$privacy_class, "synthetic")
+    testthat::expect_identical(envelope$study_id, config_values$study_id)
+    testthat::expect_identical(envelope$analysis_id, analysis$analysis_id)
     testthat::expect_identical(envelope$preparation_context_id, analysis$preparation_context_id)
     testthat::expect_identical(envelope$representation_id, analysis$design$representation)
   }
@@ -372,6 +363,8 @@ testthat::test_that("nested C-02 Stage-C evaluation retains verified units for i
   testthat::expect_identical(triomics_sha256(file.path(d_root, "handoff-manifest.json")),
                              manifest_envelope$payload_sha256)
   testthat::expect_true(triomics_validate_envelope(manifest_envelope_path))
+  testthat::expect_identical(manifest$study_id, config_values$study_id)
+  testthat::expect_identical(manifest$analysis_id, analysis$analysis_id)
   candidates <- jsonlite::read_json(
     file.path(d_root, "candidate-nominations.json"), simplifyVector = FALSE
   )
@@ -381,6 +374,8 @@ testthat::test_that("nested C-02 Stage-C evaluation retains verified units for i
   )
   testthat::expect_identical(integration_evidence$status, "unavailable")
   testthat::expect_identical(integration_evidence$integrations[[1L]]$status, "unavailable")
+  testthat::expect_identical(integration_evidence$study_id, config_values$study_id)
+  testthat::expect_identical(integration_evidence$analysis_id, analysis$analysis_id)
   status_payload <- jsonlite::read_json(
     file.path(d_root, "stage-status.json"), simplifyVector = FALSE
   )
@@ -389,5 +384,76 @@ testthat::test_that("nested C-02 Stage-C evaluation retains verified units for i
   run_record <- jsonlite::read_json(
     file.path(output_root, "registries", "run.json"), simplifyVector = FALSE
   )
-  testthat::expect_identical(run_record$status, "unavailable")
+  testthat::expect_identical(run_record$status, "complete")
+  nested <- c_integration$integrations[[1L]]$evaluation
+  testthat::expect_identical(nested$n_predicted, 12L)
+  testthat::expect_identical(nested$total_denominator, 12L)
+  testthat::expect_identical(nested$failed_prediction_count, 0L)
+  testthat::expect_identical(c_integration$study_id, config_values$study_id)
+  testthat::expect_identical(c_integration$analysis_id, analysis$analysis_id)
+})
+
+testthat::test_that("unrun C-07 controls can declare no split plan while complete controls require one", {
+  no_plan_context <- list(
+    sample_ids = c("u1", "u2"),
+    feature_keys = list(block_1 = "f1", block_2 = "f2"),
+    preparation_context_id = "prep-no-plan",
+    representation_id = "levels",
+    split_plan_status = "not_run",
+    split_plan_sha256 = NULL
+  )
+  unrun <- function(method) list(
+    method = method,
+    status = "not_run",
+    artifact_ref = NULL,
+    artifact_sha256 = NULL,
+    metrics = NULL,
+    reason = "C-07 control and split plan were not run.",
+    match_context = no_plan_context
+  )
+  unrun_controls <- lapply(triomics_c06_control_names(), function(name) list(
+    control = name,
+    candidate = unrun("not_selected"),
+    baseline = unrun("concat_pca")
+  ))
+  validated <- triomics_c06_evaluation_evidence(unrun_controls)
+  testthat::expect_true(all(vapply(validated$controls, function(control) {
+    identical(control$candidate$status, "not_run") &&
+      identical(control$baseline$status, "not_run") &&
+      identical(control$candidate$match_context$split_plan_status, "not_run") &&
+      is.null(control$candidate$match_context$split_plan_sha256)
+  }, logical(1L))))
+
+  incomplete_run <- structure(list(
+    method = "concat_pca",
+    split_plan_hash = NULL,
+    predictions = data.frame(unit_id = c("u1", "u2"), prediction = c(1, 2)),
+    metrics = list(model = list(score = 1), baseline = list(score = 0)),
+    n_predicted = 2L,
+    total_denominator = 2L,
+    failed_prediction_count = 0L,
+    inspected_fit_count = 1L,
+    max_fits = 1L
+  ), class = "EvaluationResult")
+  complete <- list(
+    method = "concat_pca",
+    status = "complete",
+    artifact_ref = "c07-complete-control",
+    artifact_sha256 = paste(rep("a", 64L), collapse = ""),
+    metrics = NULL,
+    reason = NULL,
+    evaluation_result = incomplete_run,
+    match_context = no_plan_context
+  )
+  complete_control <- list(
+    control = "null",
+    candidate = complete,
+    baseline = complete
+  )
+  testthat::expect_error(
+    triomics_c06_evaluation_evidence(c(
+      list(complete_control), unrun_controls[-1L]
+    )),
+    class = "triomics_error"
+  )
 })

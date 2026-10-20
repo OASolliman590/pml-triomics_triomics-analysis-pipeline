@@ -144,13 +144,19 @@ triomics_c06_control_names <- function() {
 
 triomics_c06_validate_control_context <- function(context, label) {
   required <- c("sample_ids", "feature_keys", "preparation_context_id",
-                "representation_id", "split_plan_sha256")
+                "representation_id")
   if (!is.list(context) || !all(required %in% names(context))) {
     triomics_integration_abort(
-      "C_EVAL_EVIDENCE_INVALID", paste0(label, " must declare matched samples, features, preparation, representation and split plan."),
+      "C_EVAL_EVIDENCE_INVALID", paste0(label, " must declare matched samples, features, preparation and representation."),
       key = label
     )
   }
+  split_plan_status <- context$split_plan_status
+  split_plan_sha256 <- context$split_plan_sha256
+  if (is.null(split_plan_status) && triomics_sha256_text(split_plan_sha256)) {
+    split_plan_status <- "executed"
+  }
+  valid_plan_statuses <- c("executed", "not_run", "unavailable", "failed")
   sample_ids <- context$sample_ids
   feature_keys <- context$feature_keys
   if (!is.character(sample_ids) || !length(sample_ids) || anyNA(sample_ids) ||
@@ -159,11 +165,15 @@ triomics_c06_validate_control_context <- function(context, label) {
       anyDuplicated(names(feature_keys)) || any(!nzchar(names(feature_keys))) ||
       !triomics_nonempty_string(context$preparation_context_id) ||
       !triomics_nonempty_string(context$representation_id) ||
-      !triomics_sha256_text(context$split_plan_sha256)) {
+      !is.character(split_plan_status) || length(split_plan_status) != 1L ||
+      is.na(split_plan_status) || !split_plan_status %in% valid_plan_statuses ||
+      (identical(split_plan_status, "executed") && !triomics_sha256_text(split_plan_sha256)) ||
+      (!identical(split_plan_status, "executed") && !is.null(split_plan_sha256))) {
     triomics_integration_abort(
       "C_EVAL_EVIDENCE_INVALID", paste0(label, " has invalid or incomplete match identity."), key = label
     )
   }
+  context$split_plan_status <- split_plan_status
   for (block_id in names(feature_keys)) {
     features <- feature_keys[[block_id]]
     if (!is.character(features) || !length(features) || anyNA(features) ||
@@ -197,6 +207,7 @@ triomics_c06_validate_control_observation <- function(observation, label) {
     if (!inherits(run, "EvaluationResult") || any(!required_run_fields %in% names(run)) ||
         !triomics_nonempty_string(observation$artifact_ref) ||
         !triomics_sha256_text(observation$artifact_sha256) ||
+        !identical(observation$match_context$split_plan_status, "executed") ||
         !identical(run$method, observation$method) ||
         !triomics_sha256_text(run$split_plan_hash) ||
         !identical(run$split_plan_hash, observation$match_context$split_plan_sha256) ||

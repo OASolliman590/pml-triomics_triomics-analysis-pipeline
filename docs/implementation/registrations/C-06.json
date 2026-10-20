@@ -4,7 +4,7 @@
   "implementation_base": "ef7da2086e7a0244e18a8ea1902423596d6a2b75",
   "accepted": false,
   "applied_to_shared_files": false,
-  "implementation_status": "Targeted repair 1 and the authorized shared C-stage CLI seam are implemented in this candidate. The exact synthetic C-06 CLI writes a lineage-bound D handoff and reports partial while all C-07 controls remain explicitly unrun. This is synthetic software evidence only; the packet is not accepted.",
+  "implementation_status": "Targeted repairs 1 and 2 and the authorized shared C-stage CLI seam are implemented in this candidate. Requested evaluation completion is separated from D single-fit export availability; persisted preparation JSON byte hashes, verified nested-only identities, and explicit no-plan C-07 controls are retained. This is synthetic software evidence only; the packet is not accepted.",
   "synthetic_software_only": true,
   "local_files": [
     "R/cli.R",
@@ -131,10 +131,12 @@
     "service": "evaluate_pipeline",
     "enabled": true,
     "base_commit": "634c29f7b19669a9bbde17d6b9a0fd230dc81f4b",
+    "repair_2_base_commit": "be2a4e4",
     "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-06.yaml --stage C --output <fresh local temporary directory>",
-    "exit_code": 4,
-    "output_status": "partial",
-    "scope_note": "Repair 1 runs the exact synthetic C-06 CLI against a verified complete-empty B candidate-nominations artifact bound to B/block-results.json. It persists actual preparation-state hashes and ingest ancestry, a separately persisted not_started C-07 control split plan, all D payloads/envelopes and the manifest, then exits 4 because the handoff remains partial. The four C-07 controls remain not_run and conditional C-09 remains not_started; no result or optional route is marked complete by rendering.",
+    "output_root": "/private/tmp/c06-direct-repair2-4hLbeK",
+    "exit_code": 0,
+    "output_status": "requested Stage-C evaluation complete; D handoff partial because C-07 controls are explicitly unrun",
+    "scope_note": "Repair 2 runs the exact synthetic C-06 CLI against a verified complete-empty B candidate-nominations artifact bound to B/block-results.json. The required concat_pca evaluation completes, so the CLI and run registry report complete; the D handoff remains partial because all four C-07 controls are not_run. No C-07 split plan is created, and conditional C-09 remains not_started. Preparation semantic state hashes and persisted JSON byte hashes remain separately identified.",
     "output_artifacts": [
       "C/integration-results.json",
       "C/integration-results.envelope.json",
@@ -142,8 +144,6 @@
       "C/score-endpoints/integration-01.envelope.json",
       "C/preparation-states/st_7b3bd9588abc9e5b08b9.json",
       "C/preparation-states/st_faa9b16dc51c8de750c9.json",
-      "C/evaluation-plans/c06-control-split-plan.json",
-      "C/evaluation-plans/c06-control-split-plan.envelope.json",
       "C/native-states/integration-01.json",
       "C/native-states/integration-01.envelope.json",
       "D/candidate-nominations.json",
@@ -161,16 +161,15 @@
       "registries/run.json"
     ],
     "readback": {
-      "manifest_sha256": "b5079466a349db6029b5ec184af460a5613b4a3e49eafd7437aa6ce58d1b2cf4",
-      "manifest_envelope_sha256": "d9e545ff0aca2743f00bf54d78cd21421e3c218b14d201245d85955b875a130e",
-      "native_state_sha256": "9f5bbdf088c85acc2ec3806d296d8fb19dd017638b40d6c9291976025482e963",
-      "native_state_envelope_sha256": "45d629e172d94a3364bcbe5ff9f09325cee6e9407544e5612852358164659254",
-      "integration_results_sha256": "20f648845d62391b1fc734c30c006a6cc01bc82272121f201e3cd5f73513f980",
-      "control_split_plan_sha256": "5ff2e14403c67438f376fad40d36b9b8ece86fabaefa932b10dec61e54233526",
-      "preparation_state_hashes": [
-        "7b3bd9588abc9e5b08b93af0e6562fa068a61e9ab8bee83649d1eecfd6dd3a1e",
-        "faa9b16dc51c8de750c990aa10d5490181b8b094eba9670105980b03091f50f5"
-      ],
+      "manifest_sha256": "e6b254bf11613ee0df941477f677fadd270675353fa9005e41b7252846a1204b",
+      "manifest_envelope_sha256": "5ee68a36eb2ab035cbd15fe3807bb5fb9bfa484e8fa6c232e09a5bb572d6ee18",
+      "native_state_sha256": "ce96b8749c8eae58270151722e18bca89f38209fc24b74964bfb5591c0105286",
+      "native_state_envelope_sha256": "45f5cca399ea7d2cef1be3240d09e2a496229bf34a2a9d20c553c974d3c2f834",
+      "integration_results_sha256": "d7200e1ad7d679ce6ee6aa1286743d2fab538d2ce8eae3ee46cfbc51b4de4419",
+      "preparation_states": {
+        "block_1": {"state_hash": "faa9b16dc51c8de750c990aa10d5490181b8b094eba9670105980b03091f50f5", "payload_sha256": "c8b04907bc45ad4e2d5239e2cbb34f16dadee5f03ba5079ed752176aa3c76995"},
+        "block_2": {"state_hash": "7b3bd9588abc9e5b08b93af0e6562fa068a61e9ab8bee83649d1eecfd6dd3a1e", "payload_sha256": "b95037ef127ed46d8f90ae09a4c54803a863b763d68d77c47473a0f0df404a89"}
+      },
       "d_payload_hashes_and_envelopes_valid": "5/5",
       "d_envelopes_valid": "6/6",
       "native_state_envelope_valid": true,
@@ -178,9 +177,12 @@
       "evaluation_status": "partial",
       "clinical_prediction": "not_started_conditional",
       "manifest_stage_run_status": "partial",
-      "cli_exit_code": 4,
+      "run_registry_status": "complete",
+      "cli_exit_code": 0,
       "primary_branch": "complete_empty_verified_b_artifact",
-      "control_statuses": ["not_run", "not_run", "not_run", "not_run"]
+      "control_statuses": ["not_run", "not_run", "not_run", "not_run"],
+      "control_split_plan_status": "not_run",
+      "control_split_plan_sha256": null
     }
   },
   "shared_cli_tests": {
@@ -194,7 +196,7 @@
     "green": {
       "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\"",
       "exit_code": 0,
-      "expectations_passed": 266,
+      "expectations_passed": 290,
       "failures": 0,
       "warnings": 0,
       "skips": 0
@@ -263,6 +265,76 @@
           "run_status": "unavailable"
         }
       }
+    },
+    "repair_2": {
+      "status": "implemented_not_accepted",
+      "authorized_allowlist_addition": "R/integration_comparison.R; explicit unrun C-07 controls may carry split_plan_status in not_run/unavailable/failed with a null hash, while complete controls require an executed plan hash matching EvaluationResult.",
+      "red": {
+        "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-06-shared', stop_on_failure=TRUE)\"",
+        "exit_code": 1,
+        "failures_observed": 22,
+        "failure_cap_reached": true,
+        "diagnosis": "The tests caught required direct/nested evaluations exiting 4, absent byte-hash state refs, nested-only D identities set to unknown, and run registry status tied to D availability."
+      },
+      "green": {
+        "shared_cli_command": "Rscript --vanilla -e \"testthat::test_local(filter='C-06-shared', stop_on_failure=TRUE)\"",
+        "shared_cli_exit_code": 0,
+        "shared_cli_expectations_passed": 190,
+        "full_c06_command": "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\"",
+        "full_c06_exit_code": 0,
+        "full_c06_expectations_passed": 290,
+        "failures": 0,
+        "warnings": 0,
+        "skips": 0
+      },
+      "exact_cli_readback": {
+        "C-06_direct": {
+          "output_root": "/private/tmp/c06-direct-repair2-4hLbeK",
+          "exit_code": 0,
+          "manifest_status": "partial",
+          "run_registry_status": "complete",
+          "study_id": "triomics_c_06_fixture",
+          "analysis_id": "c06_synthetic_exploratory",
+          "primary_branch": "complete_empty_verified_b_artifact",
+          "c07_controls": ["not_run", "not_run", "not_run", "not_run"],
+          "c07_plan_status": "not_run",
+          "c07_plan_sha256": null,
+          "clinical_prediction": "not_started_conditional",
+          "d_payloads": 5,
+          "d_envelopes": "6/6_valid",
+          "manifest_sha256": "e6b254bf11613ee0df941477f677fadd270675353fa9005e41b7252846a1204b",
+          "manifest_envelope_sha256": "5ee68a36eb2ab035cbd15fe3807bb5fb9bfa484e8fa6c232e09a5bb572d6ee18",
+          "native_state_sha256": "ce96b8749c8eae58270151722e18bca89f38209fc24b74964bfb5591c0105286",
+          "native_state_envelope_sha256": "45f5cca399ea7d2cef1be3240d09e2a496229bf34a2a9d20c553c974d3c2f834",
+          "integration_results_sha256": "d7200e1ad7d679ce6ee6aa1286743d2fab538d2ce8eae3ee46cfbc51b4de4419",
+          "preparation_states": {
+            "block_1": {"state_hash": "faa9b16dc51c8de750c990aa10d5490181b8b094eba9670105980b03091f50f5", "payload_sha256": "c8b04907bc45ad4e2d5239e2cbb34f16dadee5f03ba5079ed752176aa3c76995"},
+            "block_2": {"state_hash": "7b3bd9588abc9e5b08b93af0e6562fa068a61e9ab8bee83649d1eecfd6dd3a1e", "payload_sha256": "b95037ef127ed46d8f90ae09a4c54803a863b763d68d77c47473a0f0df404a89"}
+          },
+          "all_payload_and_envelope_hashes_read_back": true
+        },
+        "C-02_nested": {
+          "output_root": "/private/tmp/c02-c06-repair2-verify-t7hAAr",
+          "exit_code": 0,
+          "manifest_status": "unavailable",
+          "run_registry_status": "complete",
+          "study_id": "triomics_c_02_fixture",
+          "analysis_id": "c02_nested_supervised",
+          "predictions": "12/12",
+          "failed_predictions": 0,
+          "split_plan_sha256": "8fa9871d6e4090c7d1dce629947831a4ffd678396a64063215a13ee44f2b2603",
+          "c07_controls": ["not_run", "not_run", "not_run", "not_run"],
+          "clinical_prediction": "not_started_conditional",
+          "d_payloads": 5,
+          "d_envelopes": "6/6_valid",
+          "manifest_sha256": "d522ab20f25503bcd52e1b012339331a7f14e5a938e090ba40040466a0ba8d9c",
+          "manifest_envelope_sha256": "160301b2f7eba7b9cf9e7c6a0f0205a895cfcf79d7d0d5a6904abee18aeb16e8",
+          "integration_results_sha256": "478caf914ec25b6be868bc15f1eca7e33f89fa15b2f8ceff14a532d248d5385c",
+          "all_payload_and_envelope_hashes_read_back": true,
+          "warnings": 6,
+          "warning_source": "mixOmics internal_wrapper.mint: at least one study has fewer than five samples"
+        }
+      }
     }
   },
   "runtime": {
@@ -293,23 +365,23 @@
   },
   "file_sha256": {
     "R/export_c.R": "b26983e8b3830e9d71e776d0ccdc33385bc423bb0af5c3420ceeccbfac2196fd",
-    "R/integration_comparison.R": "1cbdf1bde4bcbd24c72fef845bac281dd503e7649ea6dad45f414f866617d904",
-    "R/cli.R": "54cdeffa86f1fa8b2cf97d4c870adbb1fa4a04bad3f1a1d7dd04896be4bed9ef",
-    "tests/testthat/test-C-06-shared.R": "a84d0a806235c8aba79da2e263bbdb8e07583a4b83ae707d904d0a64b4548208",
+    "R/integration_comparison.R": "7c705c40f8fe73bc99260436ed1b4cc7e4c0d3916af35cc04c8e267a27092965",
+    "R/cli.R": "2470d4e69649f2d29ad9ab08746b5b59585c4b15e62b8c721430631c92c9f9fc",
+    "tests/testthat/test-C-06-shared.R": "8c2720926b98383769d31f68b3922ae2f9db53809b547a6ade850b8a64728f24",
     "tests/testthat/test-C-06.R": "87021d187843b7282d53649805d46922ed84e50d7ed41486622d52c4fba8f436",
     "inst/examples/tickets/C-06.yaml": "3d11d5e8fb69893fbc1c284cc8568c6d09b04a7c61d79e1302689c507a638df0"
   },
   "cli_artifact_sha256": {
-    "C/integration-results.json": "84c2786fd7efa07b91069b7f0d913ac6786beb71a0e30a39b482a5618bef85ad",
-    "C/integration-results.envelope.json": "69cb368626393d317608ea6b1cfb5a4a6e22f8cb18f135dd4a50b755f3af",
-    "C/score-endpoints/integration-01.json": "bf82df796216d8bb38c1cc81ea83dcb086ee8148ce5a6da907211628c562abf6",
-    "C/score-endpoints/integration-01.envelope.json": "94973c8d23791dc285d3486d805ec66a12dc201228fc4f9c315880ed4f7c0452",
+    "C/integration-results.json": "d7200e1ad7d679ce6ee6aa1286743d2fab538d2ce8eae3ee46cfbc51b4de4419",
+    "C/integration-results.envelope.json": "e36402809d59d5ea39ca2d98dfc1099064f182773b4b060a311ce5ad82f7d963",
+    "C/score-endpoints/integration-01.json": "7d8032bc011a4d35c05619c4b480b6a0b26cc386f7bc0309b9ae61bceaa792bf",
+    "C/score-endpoints/integration-01.envelope.json": "29adbe5897a0a7ce89d1e0b94466c4677319be70f170b6b09f034106374051dc",
     "registries/run.json": "cea800047c1f3295406d0bb217685f04e772347d7278649b432fb69aa77ea06a"
   },
   "acceptance": {
     "AC1": {
       "status": "synthetic_cli_handoff_verified_acceptance_pending",
-      "evidence": "The exact Stage-C CLI exports the actual accepted IntegrationResult and typed native sidecar, marks the primary statistics branch not_requested because no B nomination artifact is present, emits the integration-selection branch, and writes all D payloads/envelopes/manifest. Fresh-output read-back verifies hashes, context, privacy and native lineage. Independent milestone review and coordinator acceptance remain pending."
+      "evidence": "The exact Stage-C C-06 CLI consumes a verified complete-empty B primary nomination artifact, exports the actual accepted IntegrationResult and typed native sidecar, and writes all D payloads/envelopes/manifest. Fresh-output read-back verifies source roles, selection ancestry, privacy, preparation state semantics and byte hashes, and native lineage. Nested C-02 separately exits 0 with 12/12 predictions while D accurately marks the single-fit export unavailable. Independent milestone review and coordinator acceptance remain pending."
     },
     "AC2": {
       "status": "passed_synthetic_behavior_tests",
@@ -317,28 +389,33 @@
     },
     "AC3": {
       "status": "passed_explicit_unrun_policy_tests",
-      "evidence": "All four controls and paired baseline records are required and identity-matched. This packet ran no C-07 evaluations: fixture entries are explicit not_run records. A complete status without an actual matched EvaluationResult is rejected; no performance result is fabricated."
+      "evidence": "All four controls and paired baseline records are required and identity-matched. This packet ran no C-07 evaluations: controls are explicit not_run records, and the direct C-06 run has split_plan_status=not_run with no split_plan_sha256 or generated future plan. A complete control without an actual matched EvaluationResult and executed split-plan hash is rejected; no performance result is fabricated."
     },
     "AC4": {
       "status": "synthetic_cli_status_verified_acceptance_pending",
-      "evidence": "The exact CLI shows concat_pca complete and unrequested backends not_requested, preserves C-09 as not_started/conditional, and reports partial aggregate status because C-07 controls are not_run. Empty and unavailable integration tests still prevent complete status. No packet acceptance is claimed."
+      "evidence": "The exact CLI shows concat_pca complete and unrequested backends not_requested, preserves C-09 as not_started/conditional, and keeps the D aggregate partial because C-07 controls are not_run while the requested Stage-C run registry and CLI exit are complete under declared requiredness. A nested C-02 evaluation remains successful without a single-fit D export. No packet acceptance is claimed."
     }
   },
   "shared_changes_for_sol": [
     {
       "file": "R/cli.R",
-      "change": "Implemented in the isolated candidate: capture accepted IntegrationRun results and typed BackendFit metadata, persist native sidecars with source/matrix lineage, assemble both nomination branches and explicit C-07 unrun controls, preserve conditional C-09 status, write all D artifacts, and propagate partial status when required C-07 evidence is unrun.",
+      "change": "The shared seam captures accepted IntegrationRun results and typed BackendFit metadata, persists native sidecars with source/matrix/preparation-file lineage, assembles both nomination branches and explicit C-07 no-plan controls, preserves conditional C-09 status, writes all D artifacts, and bases CLI success on requested required-evaluation completion rather than single-fit D export availability.",
       "reason": "This shared seam was assigned as an exclusive coordinator-owned handoff; the candidate remains unaccepted and awaits Sol's serial integration and milestone review."
+    },
+    {
+      "file": "R/integration_comparison.R",
+      "change": "The control-context validator accepts an explicit not_run/unavailable/failed no-plan disposition with a null split-plan hash while preserving sample, feature, preparation and representation validation; complete observations still require an executed 64-hex plan hash matching their EvaluationResult.",
+      "reason": "The coordinator-authorized repair-2 allowlist addition reconciles C-06-AC3 explicit unrun controls with the previous unconditional SplitPlan-hash requirement."
     }
   ],
-  "coordinator_owned_files_to_update": ["R/cli.R"],
+  "coordinator_owned_files_to_update": ["R/cli.R", "R/integration_comparison.R"],
   "namespace_change_requested": false,
   "known_gaps": [
-    "No C-07 evaluation was executed. All four controls are explicitly unrun and the aggregate CLI status is partial.",
+    "No C-07 evaluation was executed. All four controls are explicitly unrun; the D aggregate remains partial even when the declared required Stage-C evaluation and CLI run complete.",
     "The fixture and all tests are public synthetic software evidence; no private-study or biological validation is claimed.",
     "The conditional C-09 clinical-prediction route remains not_started; its optional status is not presented as completed.",
     "Independent milestone review and Sol's packet acceptance remain pending."
   ],
   "acceptance_ref": "discovery/spec-v2/packets/C-06.md",
-  "next_action": "Sol inspects and serially integrates this candidate, performs the authorized milestone checks, and owns packet acceptance; no acceptance is claimed here."
+  "next_action": "Sol directly inspects and verifies the repair-2 candidate, then pauses; no second rereview or packet acceptance is requested."
 }

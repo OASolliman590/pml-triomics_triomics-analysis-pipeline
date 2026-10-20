@@ -654,6 +654,26 @@ triomics_c02_evaluate_request <- function(config, ingested, analysis, request,
   )
 }
 
+triomics_c06_cli_requested_evaluation_status <- function(evaluation) {
+  counts <- c("n_eligible", "n_predicted", "failed_prediction_count",
+              "n_ineligible", "total_denominator")
+  values <- lapply(counts, function(name) evaluation[[name]])
+  names(values) <- counts
+  if (any(!vapply(values, function(value) {
+    is.numeric(value) && length(value) == 1L && !is.na(value) && is.finite(value)
+  }, logical(1L)))) {
+    return("failed")
+  }
+  if (values$n_predicted > 0L &&
+      values$n_predicted == values$total_denominator &&
+      values$n_eligible == values$total_denominator &&
+      values$failed_prediction_count == 0L &&
+      values$n_ineligible == 0L) {
+    return("complete")
+  }
+  if (values$n_predicted > 0L) "partial" else "failed"
+}
+
 triomics_c06_cli_integration_run <- function(request, fitted) {
   sidecars <- fitted$sidecars
   if (!is.list(sidecars)) sidecars <- list()
@@ -880,6 +900,44 @@ triomics_c06_cli_write_native_state <- function(integration_run, config, analysi
   variance_definition <- triomics_c06_variance_definition(result)
   native <- triomics_c06_native_payload(integration_run, result, variance_definition)
   native$variance_definition <- triomics_c06_native_variance_definition(result)
+  preparation_hashes <- integration_run$eligibility$preparation_state_hashes %||% list()
+  source_state_refs <- provenance$preparation_state_refs %||% list()
+  if (length(preparation_hashes) &&
+      (!identical(sort(names(preparation_hashes)), sort(names(source_state_refs))) ||
+       any(!vapply(preparation_hashes, triomics_sha256_text, logical(1L))))) {
+    triomics_integration_abort(
+      "C_SCORE_LINEAGE_INVALID",
+      "Native sidecar preparation hashes and immutable state references must match by block.",
+      key = "preparation_state_refs"
+    )
+  }
+  state_directory <- file.path(output, "C", "preparation-states")
+  preparation_state_refs <- stats::setNames(lapply(names(preparation_hashes), function(block_id) {
+    state_ref <- source_state_refs[[block_id]]
+    if (!is.list(state_ref) || !triomics_c06_nonempty_string(state_ref$path) ||
+        !identical(state_ref$state_hash, preparation_hashes[[block_id]])) {
+      triomics_integration_abort(
+        "C_SCORE_LINEAGE_INVALID",
+        "A native sidecar cannot bind an absent or mismatched preparation state.",
+        key = paste0("preparation_state_refs.", block_id)
+      )
+    }
+    state <- triomics_read_state(state_ref, state_directory)
+    if (!identical(state$block_id, block_id)) {
+      triomics_integration_abort(
+        "C_SCORE_LINEAGE_INVALID",
+        "A persisted preparation state does not match its declared block.",
+        key = paste0("preparation_state_refs.", block_id)
+      )
+    }
+    state_path <- file.path(state_directory, state_ref$path)
+    list(
+      state_id = state_ref$state_id,
+      path = file.path("C", "preparation-states", basename(state_path)),
+      state_hash = state_ref$state_hash,
+      payload_sha256 = triomics_sha256(state_path)
+    )
+  }), names(preparation_hashes))
   artifact_id <- paste0("c01-native-state-", integration_run$integration_id)
   payload <- list(
     schema_version = "2.0",
@@ -891,7 +949,8 @@ triomics_c06_cli_write_native_state <- function(integration_run, config, analysi
     backend = result$backend,
     preparation_context_id = provenance$preparation_context_id,
     representation_id = provenance$representation_id,
-    preparation_state_hashes = integration_run$eligibility$preparation_state_hashes %||% list(),
+    preparation_state_hashes = preparation_hashes,
+    preparation_state_refs = preparation_state_refs,
     native = native
   )
   stub <- sprintf("integration-%02d", request_index)
@@ -905,11 +964,10 @@ triomics_c06_cli_write_native_state <- function(integration_run, config, analysi
       sha256 = provenance$matrix_sha256[[block_id]]
     )
   })
-  preparation_hashes <- integration_run$eligibility$preparation_state_hashes %||% list()
   preparation_inputs <- lapply(names(preparation_hashes), function(block_id) {
     list(
       artifact_id = paste("preparation-state", block_id, sep = "::"),
-      sha256 = preparation_hashes[[block_id]]
+      sha256 = preparation_state_refs[[block_id]]$payload_sha256
     )
   })
   envelope <- triomics_artifact_envelope(
@@ -939,12 +997,13 @@ triomics_c06_cli_write_native_state <- function(integration_run, config, analysi
 }
 
 triomics_c06_cli_unrun_controls <- function(integration_runs, resolved, analysis,
-                                           integration_results, output, config) {
+                                           integration_results) {
   completed <- Filter(function(run) {
     identical(run$status, "complete") && inherits(run$result, "IntegrationResult")
   }, integration_runs)
   nested <- Filter(function(item) is.list(item$evaluation), integration_results)
   split_plan_sha256 <- NULL
+  split_plan_status <- "not_run"
   if (length(completed)) {
     provenance <- completed[[1L]]$result$params$provenance
     sample_ids <- provenance$unit_map %||% completed[[1L]]$result$params$training_unit_ids
@@ -992,6 +1051,7 @@ triomics_c06_cli_unrun_controls <- function(integration_runs, resolved, analysis
     representation_id <- resolved$representation_id %||% resolved$representation %||%
       analysis$design$representation
     split_plan_sha256 <- as.character(evaluation$split_plan_hash)
+    split_plan_status <- "executed"
     candidate_method <- "not_selected"
   } else {
     sample_ids <- resolved$unit_ids
@@ -1027,61 +1087,25 @@ triomics_c06_cli_unrun_controls <- function(integration_runs, resolved, analysis
     sample_ids = sample_ids,
     feature_keys = feature_keys,
     preparation_context_id = as.character(preparation_context_id),
-    representation_id = as.character(representation_id)
+    representation_id = as.character(representation_id),
+    split_plan_status = split_plan_status,
+    split_plan_sha256 = split_plan_sha256
   )
-  if (is.null(split_plan_sha256)) {
-    split_plan <- triomics_nested_split_plan(
-      unit_ids = sample_ids,
-      n_outer = 2L,
-      n_inner = 2L,
-      seed = config$execution$seed,
-      target = "C-07 matched control context"
-    )
-    triomics_validate_split_plan(split_plan, require_hash = TRUE)
-    split_plan_sha256 <- split_plan$creation_hash
-    plan_path <- file.path(output, "C", "evaluation-plans", "c06-control-split-plan.json")
-    plan_envelope_path <- sub("[.]json$", ".envelope.json", plan_path)
-    triomics_write_json_atomic(list(
-      schema_version = "2.0",
-      artifact_type = "split_plan",
-      status = "not_started",
-      creation_hash = split_plan_sha256,
-      plan = split_plan
-    ), plan_path)
-    envelope <- triomics_artifact_envelope(
-      artifact_type = "split_plan",
-      artifact_id = "c06-control-split-plan",
-      study_id = config$study_id,
-      run_id = "c-06-control-context",
-      status = "not_started",
-      config_sha256 = attr(config, "config_sha256"),
-      payload = plan_path,
-      producer_commit = "not-recorded",
-      inputs = list(),
-      reason_codes = character(),
-      privacy_class = if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive"
-    )
-    envelope$analysis_id <- analysis$analysis_id
-    envelope$preparation_context_id <- context$preparation_context_id
-    envelope$representation_id <- context$representation_id
-    triomics_write_envelope(envelope, plan_envelope_path)
-  }
-  if (!triomics_sha256_text(split_plan_sha256)) {
+  if (identical(split_plan_status, "executed") && !triomics_sha256_text(split_plan_sha256)) {
     triomics_integration_abort(
-      "C_EVAL_EVIDENCE_INVALID", "C-07 controls must reference an actual immutable split plan hash.",
+      "C_EVAL_EVIDENCE_INVALID", "Nested Stage-C evidence must retain its actual immutable split plan hash.",
       key = "evaluation_evidence.controls.match_context.split_plan_sha256"
     )
   }
-  context$split_plan_sha256 <- split_plan_sha256
   reason <- if (length(nested)) {
     paste(
       "C-07 candidate was not selected and matched-baseline controls were not run;",
-      "the hash refers only to the executed nested-CV plan in this Stage-C evaluation."
+      "the split-plan hash refers only to the executed nested-CV plan, not to a C-07 run."
     )
   } else {
     paste(
       "C-07 candidate was not selected and matched-baseline controls were not run;",
-      "the persisted split plan is a future control context, not executed C-07 evidence."
+      "no C-07 split plan was executed or created."
     )
   }
   lapply(triomics_c06_control_names(), function(control_name) {
@@ -1246,6 +1270,7 @@ triomics_execute_stage_c <- function(config_path, output) {
         method = request$method,
         required = isTRUE(request$required),
         status = "unavailable",
+        requested_evaluation_status = triomics_c06_cli_requested_evaluation_status(evaluation),
         reason_code = "C06_INTEGRATION_RESULT_UNAVAILABLE",
         reason = paste(
           "Nested-CV evaluation did not produce a single IntegrationResult",
@@ -1420,7 +1445,7 @@ triomics_execute_stage_c <- function(config_path, output) {
   envelope$representation_id <- representation
   triomics_write_envelope(envelope, file.path(output, "C", "integration-results.envelope.json"))
   evaluation_controls <- triomics_c06_cli_unrun_controls(
-    c06_integration_runs, resolved, analysis, integration_results, output, config
+    c06_integration_runs, resolved, analysis, integration_results
   )
   handoff <- triomics_c06_build_handoff(
     primary_nominations = triomics_c06_cli_primary_nominations(output, config, analysis),
@@ -1434,6 +1459,16 @@ triomics_execute_stage_c <- function(config_path, output) {
       reason = "Conditional matched clinical prediction has not been executed."
     )
   )
+  if (!triomics_c06_nonempty_string(ingested$study_id) ||
+      !triomics_c06_nonempty_string(analysis$analysis_id)) {
+    triomics_integration_abort(
+      "C_EXPORT_CONTEXT_MISSING",
+      "The Stage-C handoff needs verified study and analysis identities from its resolved request.",
+      key = "handoff.context"
+    )
+  }
+  handoff$study_id <- ingested$study_id
+  handoff$analysis_id <- analysis$analysis_id
   handoff <- triomics_c06_cli_aggregate_status(handoff)
   triomics_c06_write_handoff(
     handoff,
@@ -1442,19 +1477,22 @@ triomics_execute_stage_c <- function(config_path, output) {
     producer_commit = "not-recorded",
     privacy_class = privacy_class
   )
+  required_runs <- Filter(function(run) isTRUE(run$required), c06_integration_runs)
+  required_complete <- all(vapply(required_runs, function(run) {
+    requested_status <- run$requested_evaluation_status %||% run$status
+    identical(requested_status, "complete")
+  }, logical(1L)))
+  run_status <- if (required_complete) "complete" else handoff$status
   triomics_write_json_atomic(list(
     schema_version = "2.0",
     run_id = "c-01",
     study_id = ingested$study_id,
     stage = "C",
-    status = handoff$status
+    status = run_status
   ), file.path(output, "registries", "run.json"))
-  required_runs <- Filter(function(run) isTRUE(run$required), c06_integration_runs)
-  required_complete <- all(vapply(required_runs, function(run) {
-    identical(run$status, "complete")
-  }, logical(1L)))
   invisible(list(
       status = handoff$status,
+      run_status = run_status,
       payload_path = payload_path,
       results = integration_results,
       required_complete = required_complete
@@ -1493,8 +1531,7 @@ triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
       triomics_b07_cli_after_stage_b(args, stage_b_result)
     } else if (identical(options$stage, "C")) {
       stage_c_result <- triomics_execute_stage_c(options$config, options$output)
-      if (!isTRUE(stage_c_result$required_complete) ||
-          !identical(stage_c_result$status, "complete")) {
+      if (!isTRUE(stage_c_result$required_complete)) {
         return(4L)
       }
     } else {
