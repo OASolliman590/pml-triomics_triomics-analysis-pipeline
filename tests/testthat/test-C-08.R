@@ -78,12 +78,14 @@ c08_inputs <- function(method = "mixomics_diablo", visits = rep("V1", 4L),
                        subjects = paste0("subject-u", seq_len(4L)),
                        selection = list(ancestry = "prespecified", validity = "qualified",
                                         inspected_outcome = NULL)) {
-  units <- paste0("u", seq_len(4L))
+  units <- paste0("u", seq_len(length(subjects)))
   method_spec <- c08_methods()[[method]]
-  scores <- matrix(
-    c(1, 10, 2, 20, 3, 30, 4, 40), nrow = 4L, byrow = TRUE,
-    dimnames = list(units, c("component_1", "component_2"))
+  score_index <- seq_along(units)
+  scores <- cbind(
+    component_1 = score_index^2 + score_index + sin(score_index),
+    component_2 = 10 * score_index^2 + score_index + cos(score_index)
   )
+  rownames(scores) <- units
   loadings <- stats::setNames(list(
     matrix(c(.6, .8, .8, .6), nrow = 2L,
            dimnames = list(c("feature_a", "feature_b"), colnames(scores))),
@@ -101,7 +103,8 @@ c08_inputs <- function(method = "mixomics_diablo", visits = rep("V1", 4L),
   )
   training_y <- if (method_spec$uses_y) list(
       variable_id = "clinical_group",
-      values = stats::setNames(c("control", "control", "case", "case"), units)
+      values = stats::setNames(rep(c("control", "control", "case", "case"),
+                                   length.out = length(units)), units)
     ) else NULL
   unit_map <- data.frame(
     unit_id = units,
@@ -252,10 +255,7 @@ c08_bundle <- function(method = "mixomics_diablo", ...) {
 }
 
 c08_clinical_view <- function(unit_map, links = NULL) {
-  if (!is.null(links)) return(list(study_id = "study-c08-synthetic", links = links))
-  list(
-    study_id = "study-c08-synthetic",
-    links = lapply(seq_len(nrow(unit_map)), function(i) list(
+  if (is.null(links)) links <- lapply(seq_len(nrow(unit_map)), function(i) list(
       link_id = paste0("link-", unit_map$unit_id[[i]]),
       sample_id = unit_map$source_sample_ids[[i]][[1L]],
       subject_key = unit_map$subject_id[[i]],
@@ -264,6 +264,36 @@ c08_clinical_view <- function(unit_map, links = NULL) {
       cardinality = "one_to_one",
       reference_time = "2020-01-01"
     ))
+  observations <- lapply(seq_along(links), function(i) {
+    link <- links[[i]]
+    subject_key <- if (is.null(link$subject_key)) link$subject_id else link$subject_key
+    list(
+      variable_id = "glucose",
+      subject_key = as.character(subject_key),
+      visit_id = as.character(link$visit_id),
+      sample_id = as.character(link$sample_id),
+      time = as.character(link$reference_time),
+      value_kind = "numeric",
+      numeric_value = as.numeric(i + if (identical(link$visit_id, "V1")) 0.5 else 0),
+      units = "mmol/L",
+      time_semantics = "visit"
+    )
+  })
+  list(
+    study_id = "study-c08-synthetic",
+    links = links,
+    dictionary = list(list(
+      variable_id = "glucose",
+      declared_type = "continuous",
+      type = "continuous",
+      units = "mmol/L",
+      units_verification = "verified",
+      time_semantics = "visit",
+      privacy = "ordinary",
+      verification = "verified",
+      modelable = TRUE
+    )),
+    observations = observations
   )
 }
 
@@ -281,7 +311,7 @@ c08_set_representation <- function(input, representation = c("mean", "delta")) {
   )
   unit_map$source_sample_ids <- I(source_ids)
   weights <- if (identical(representation, "mean")) {
-    stats::setNames(c(.5, .5), c("V0", "V1"))
+    stats::setNames(list(.5, .5), c("V0", "V1"))
   } else {
     stats::setNames(c(-1, 1), c("V0", "V1"))
   }
@@ -430,13 +460,18 @@ testthat::test_that("C-08-AC2 schedules an immutable B-owned score request witho
   testthat::expect_identical(request$owner_stage, "B")
   testthat::expect_identical(request$status, "scheduled")
   testthat::expect_identical(request$model_execution, "not_started")
-  testthat::expect_identical(request$endpoint_bundle_sha256, fixture$bundle$payload_sha256)
+  testthat::expect_identical(request$source_endpoint_bundle_sha256, fixture$bundle$payload_sha256)
+  testthat::expect_identical(request$endpoint_bundle_sha256,
+                             request$endpoint_bundle$payload_sha256)
   testthat::expect_match(request$request_sha256, "^[0-9a-f]{64}$")
   testthat::expect_match(request$clinical_linkage$links_sha256, "^[0-9a-f]{64}$")
   testthat::expect_identical(request$objective_spec$objectives[[1L]]$endpoint_ref,
                              endpoint$endpoint_id)
   testthat::expect_length(request$results, 0L)
   testthat::expect_false(isTRUE(request$recurses_to_stage_c))
+  request_body <- request
+  request_body$request_sha256 <- NULL
+  testthat::expect_identical(request$request_sha256, c08_sha(request_body))
 
   changed <- fixture$bundle
   changed$endpoints[[1L]]$samples[[1L]]$value <- -999
@@ -644,6 +679,11 @@ testthat::test_that("C-08 binds scores, source inputs, Y, selection and Analysis
 
 testthat::test_that("C-08 preserves mean and delta AnalysisUnitMap lineage and rejects incompatible times", {
   mean_input <- c08_set_representation(c08_inputs("mofa2"), "mean")
+  testthat::expect_type(mean_input$context$unit_map$visit_weights[[1L]], "list")
+  testthat::expect_identical(names(mean_input$context$unit_map$visit_weights[[1L]]),
+                             c("V0", "V1"))
+  testthat::expect_identical(unlist(mean_input$context$unit_map$visit_weights[[1L]]),
+                             c(V0 = .5, V1 = .5))
   mean_endpoint <- triomics_integration_score_endpoints(
     mean_input$result, mean_input$fit, mean_input$context
   )$endpoints[[1L]]
@@ -679,10 +719,13 @@ testthat::test_that("C-08 preserves mean and delta AnalysisUnitMap lineage and r
   delta_objective$objectives[[1L]]$baseline_visit_ref <- "V0"
   delta_objective$objectives[[1L]]$later_visit_ref <- "V1"
   delta_objective$objectives[[1L]]$horizon_days <- 30L
-  testthat::expect_s3_class(triomics_schedule_clinical_score_request(
+  error <- testthat::capture_error(triomics_schedule_clinical_score_request(
     delta_bundle, delta_objective,
     c08_clinical_view(delta_input$context$unit_map, delta_input$links)
-  ), "ClinicalScoreAssociationRequest")
+  ))
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "C_SCORE_TIME_MISMATCH")
+  testthat::expect_match(conditionMessage(error), "independent visit-level")
 
   reversed_links <- delta_input$links
   reversed_links[[1L]]$visit_id <- "V1"
@@ -692,7 +735,7 @@ testthat::test_that("C-08 preserves mean and delta AnalysisUnitMap lineage and r
     c08_clinical_view(delta_input$context$unit_map, reversed_links)
   ))
   testthat::expect_s3_class(error, "triomics_error")
-  testthat::expect_identical(error$code, "C_SCORE_TIME_MISMATCH")
+  testthat::expect_identical(error$code, "C_SCORE_COVERAGE_MISMATCH")
 
   invalid <- c08_inputs("mofa2")
   invalid$context$unit_map$unit_type[[1L]] <- "invented_unit"
@@ -727,4 +770,96 @@ testthat::test_that("C-08 preserves mean and delta AnalysisUnitMap lineage and r
   testthat::expect_identical(excluded_bundle$endpoints[[1L]]$unit_map$eligibility[[5L]], "excluded")
   testthat::expect_identical(excluded_bundle$endpoints[[1L]]$unit_map$exclusion_reason[[5L]],
                              "not_present_in_producing_fit")
+})
+
+testthat::test_that("C-08 hands immutable visit/time-linked level endpoints directly to B-T08 and B-T09", {
+  between_input <- c08_inputs("mofa2")
+  between_bundle <- triomics_integration_score_endpoints(
+    between_input$result, between_input$fit, between_input$context
+  )
+  between_endpoint <- between_bundle$endpoints[[1L]]
+  between_view <- c08_clinical_view(between_input$context$unit_map, between_input$links)
+  between_request <- triomics_schedule_clinical_score_request(
+    between_bundle, c08_objective(between_endpoint$endpoint_id), between_view
+  )
+  handed_off <- between_request$endpoint_bundle$endpoints[[1L]]
+
+  testthat::expect_null(between_endpoint$samples[[1L]]$visit_id)
+  testthat::expect_null(between_endpoint$samples[[1L]]$time)
+  testthat::expect_identical(handed_off$samples[[1L]]$visit_id, "V1")
+  testthat::expect_identical(handed_off$samples[[1L]]$time, "2020-01-01")
+  testthat::expect_identical(handed_off$source_endpoint_sha256,
+                             between_endpoint$endpoint_sha256)
+  testthat::expect_identical(between_request$source_endpoint_bundle_sha256,
+                             between_bundle$payload_sha256)
+  b08 <- triomics_associate_endpoints(
+    between_request$endpoint_bundle, between_view, between_request$objective_spec
+  )
+  testthat::expect_identical(b08$results[[1L]]$estimation_status, "estimated")
+  testthat::expect_identical(b08$results[[1L]]$n_subjects, 4L)
+
+  repeated_input <- c08_inputs(
+    "mofa2",
+    visits = rep(c("V0", "V1"), 4L),
+    times = rep(c("2020-01-01", "2020-01-31"), 4L),
+    subjects = rep(paste0("subject-", LETTERS[1:4]), each = 2L)
+  )
+  repeated_bundle <- triomics_integration_score_endpoints(
+    repeated_input$result, repeated_input$fit, repeated_input$context
+  )
+  repeated_endpoint <- repeated_bundle$endpoints[[1L]]
+  repeated_objective <- c08_objective(
+    repeated_endpoint$endpoint_id, mode = "baseline_to_later", visit = "V0"
+  )
+  repeated_objective$objectives[[1L]]$baseline_visit_ref <- "V0"
+  repeated_objective$objectives[[1L]]$later_visit_ref <- "V1"
+  repeated_objective$objectives[[1L]]$horizon_days <- 30L
+  repeated_objective$objectives[[1L]]$baseline_adjustment <- FALSE
+  repeated_objective$objectives[[1L]]$outcome_estimand <- "change"
+  repeated_view <- c08_clinical_view(repeated_input$context$unit_map,
+                                     repeated_input$links)
+  repeated_request <- triomics_schedule_clinical_score_request(
+    repeated_bundle, repeated_objective, repeated_view
+  )
+  b09_rows <- triomics_b09_endpoint_rows(
+    repeated_request$endpoint_bundle$endpoints[[1L]], repeated_view
+  )
+  testthat::expect_identical(b09_rows[[1L]]$visit_id, "V0")
+  testthat::expect_identical(b09_rows[[1L]]$time, "2020-01-01")
+  testthat::expect_identical(b09_rows[[2L]]$visit_id, "V1")
+  testthat::expect_identical(b09_rows[[2L]]$time, "2020-01-31")
+  b09 <- triomics_associate_longitudinal_endpoints(
+    repeated_request$endpoint_bundle, repeated_view, repeated_request$objective_spec
+  )
+  testthat::expect_identical(b09$results[[1L]]$estimation_status, "estimated")
+  testthat::expect_identical(b09$results[[1L]]$n_subjects, 4L)
+  testthat::expect_identical(b09$results[[1L]]$n_samples, 8L)
+})
+
+testthat::test_that("C-08 rejects named mean weights with link visits outside their coverage", {
+  mean_input <- c08_set_representation(c08_inputs("mofa2"), "mean")
+  bundle <- triomics_integration_score_endpoints(
+    mean_input$result, mean_input$fit, mean_input$context
+  )
+  view <- c08_clinical_view(mean_input$context$unit_map, mean_input$links)
+  view$links[[1L]]$visit_id <- "V2"
+  error <- testthat::capture_error(triomics_schedule_clinical_score_request(
+    bundle, c08_objective(bundle$endpoints[[1L]]$endpoint_id, visit = "V0"), view
+  ))
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "C_SCORE_COVERAGE_MISMATCH")
+})
+
+testthat::test_that("C-08 rejects non-ISO dates for one-visit B objectives", {
+  for (mode in c("between_person", "effect_modification", "prediction")) {
+    fixture <- c08_bundle("mofa2")
+    endpoint <- fixture$bundle$endpoints[[1L]]
+    view <- c08_clinical_view(fixture$input$context$unit_map, fixture$input$links)
+    view$links[[1L]]$reference_time <- "2020-02-30"
+    error <- testthat::capture_error(triomics_schedule_clinical_score_request(
+      fixture$bundle, c08_objective(endpoint$endpoint_id, mode = mode), view
+    ))
+    testthat::expect_s3_class(error, "triomics_error")
+    testthat::expect_identical(error$code, "C_SCORE_TIME_MISMATCH")
+  }
 })

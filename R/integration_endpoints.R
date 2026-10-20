@@ -85,6 +85,27 @@ triomics_c08_unit_records <- function(unit_map) {
   unit_map
 }
 
+triomics_c08_canonical_mean_weights <- function(weights) {
+  if (is.list(weights)) {
+    if (is.null(names(weights)) || !length(weights) || anyDuplicated(names(weights)) ||
+        any(!nzchar(names(weights))) ||
+        any(!vapply(weights, function(value) {
+          is.numeric(value) && length(value) == 1L && !is.na(value) && is.finite(value)
+        }, logical(1)))) {
+      return(NULL)
+    }
+    weights <- stats::setNames(vapply(weights, as.numeric, numeric(1)), names(weights))
+  } else if (!is.numeric(weights)) {
+    return(NULL)
+  }
+  if (!length(weights) || is.null(names(weights)) || anyNA(weights) ||
+      any(!is.finite(weights)) || anyDuplicated(names(weights)) ||
+      any(!nzchar(names(weights))) || any(weights < 0) || sum(weights) <= 0) {
+    return(NULL)
+  }
+  stats::setNames(as.numeric(weights), names(weights))
+}
+
 triomics_c08_validate_unit_map <- function(unit_map, score_unit_ids, context) {
   records <- triomics_c08_unit_records(unit_map)
   if (is.null(records) || !length(records)) {
@@ -121,7 +142,8 @@ triomics_c08_validate_unit_map <- function(unit_map, score_unit_ids, context) {
     triomics_c08_abort("C_SCORE_COVERAGE_MISMATCH", "AnalysisUnitMap source samples must belong to one unit only.", "unit_map.source_sample_ids")
   }
   valid_types <- c("sample", "visit_level", "subject_mean", "subject_delta")
-  for (record in records) {
+  for (record_index in seq_along(records)) {
+    record <- records[[record_index]]
     unit_type <- record$unit_type
     unit_representation <- record$representation_id
     source_ids <- record$source_sample_ids
@@ -149,15 +171,16 @@ triomics_c08_validate_unit_map <- function(unit_map, score_unit_ids, context) {
       }
     } else if (identical(unit_type, "subject_mean")) {
       expected_representation <- "mean"
+      weights <- triomics_c08_canonical_mean_weights(weights)
       if (!is.character(subject_id) || length(source_ids) < 1L ||
-          !is.numeric(weights) || !length(weights) || is.null(names(weights)) ||
-          anyNA(weights) || any(!is.finite(weights)) || anyDuplicated(names(weights)) ||
-          any(!nzchar(names(weights))) || sum(weights) == 0) {
+          length(subject_id) != 1L || is.null(weights)) {
         triomics_c08_abort("C_SCORE_LINEAGE_INVALID", "Subject means require a subject, source samples and named finite visit weights.", "unit_map.visit_weights")
       }
+      records[[record_index]]$visit_weights <- weights
     } else {
       expected_representation <- "delta"
-      if (!is.character(subject_id) || (!is_excluded && length(source_ids) != 2L) ||
+      if (!is.character(subject_id) || length(subject_id) != 1L ||
+          (!is_excluded && length(source_ids) != 2L) ||
           (is_excluded && !length(source_ids)) ||
           !is.numeric(weights) || length(weights) != 2L || is.null(names(weights)) ||
           anyNA(weights) || any(!is.finite(weights)) || anyDuplicated(names(weights)) ||
