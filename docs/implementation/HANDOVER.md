@@ -176,7 +176,11 @@ progress. C-08 acceptance is recorded in
 warnings remain visible and must not be called warning-free. No real study,
 biological endpoint validation or clinical association is claimed.
 
-Resume by archiving the completed C-08 shared worktree, then dispatch C-09 and
-C-06 on disjoint allowlists. G6 and D stay closed until both packets and their
-declared milestone gates pass. Do not loosen the B-T04 0.08 bound, reroll seeds
+Resume by reconciling `/root/c09_luna` and `/root/c06_luna`, the two fresh
+isolated Luna-max workers at base `ef7da20`. C-09 owns only its clinical
+prediction-comparison packet and may test a public synthetic declared protocol;
+it must not invent real endpoint/deployment qualification. C-06 owns only the
+cross-backend comparison and D-handoff packet. Inspect each candidate and send
+it to a fresh Sol-6.1-high review before integration. G6 and D stay closed until
+both packets and their declared milestone gates pass. Do not loosen the B-T04 0.08 bound, reroll seeds
 1001:1400, edit frozen `discovery/spec-v2` content, or read private study data.

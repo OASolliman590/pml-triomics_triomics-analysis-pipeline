@@ -34,15 +34,55 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/c09_luna",
+      "role": "luna_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "packet": "C-09",
+      "attempt": 1,
+      "base_commit": "ef7da20",
+      "candidate_commit": null,
+      "worktree": "/Users/megastore/.codex/worktrees/c09-clinical-prediction/PML MultiOmics Analysis Pipeline",
+      "allowed_next_transition": "Return one clean allowlisted C-09 candidate or an evidence-backed conditional-gate blocker; Sol inspects and dispatches fresh review. Real-study deployment remains unqualified.",
+      "wait_cursor": null
+    },
+    {
+      "agent": "/root/c06_luna",
+      "role": "luna_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "packet": "C-06",
+      "attempt": 1,
+      "base_commit": "ef7da20",
+      "candidate_commit": null,
+      "worktree": "/Users/megastore/.codex/worktrees/c06-cross-backend/PML MultiOmics Analysis Pipeline",
+      "allowed_next_transition": "Return one clean allowlisted C-06 candidate; Sol inspects and dispatches fresh review. Shared CLI/namespace changes remain coordinator-owned.",
+      "wait_cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "c08_accepted_c09_c06_released",
+    "status": "c09_c06_initial_workers_active",
     "last_reconciled": "2026-10-20",
-    "active_handoffs": [],
+    "active_handoffs": ["/root/c09_luna", "/root/c06_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-08 is accepted at d69ef1e after fresh focused tests, exact CLI read-back and a clean archive package check with Status OK, FAIL 0, WARN 22, SKIP 0, PASS 4367. C-09 and C-06 are released by dependency; G6 and D remain closed."
+    "disposition": "C-08 is accepted at d69ef1e. Fresh isolated Luna-max workers own C-09 and C-06 on disjoint exact write sets at base ef7da20. C-09 may validate only an explicit public synthetic protocol and must keep real deployment unqualified. G6 and D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "c09_c06_initial_workers_dispatched",
+      "date": "2026-10-20",
+      "base_commit": "ef7da20",
+      "workers": ["/root/c09_luna", "/root/c06_luna"],
+      "worktrees": ["/Users/megastore/.codex/worktrees/c09-clinical-prediction/PML MultiOmics Analysis Pipeline", "/Users/megastore/.codex/worktrees/c06-cross-backend/PML MultiOmics Analysis Pipeline"],
+      "allowlists": {
+        "C-09": ["R/clinical_prediction_comparison.R", "tests/testthat/test-C-09.R", "inst/examples/tickets/C-09.yaml", "docs/implementation/registrations/C-09.json"],
+        "C-06": ["R/export_c.R", "R/integration_comparison.R", "tests/testthat/test-C-06.R", "inst/examples/tickets/C-06.yaml", "docs/implementation/registrations/C-06.json"]
+      },
+      "allowed_next_transition": "Inspect each completed candidate independently, then dispatch fresh Sol-6.1-high review. Do not integrate either packet before its review; do not release G6 or D.",
+      "disposition": "Write sets are disjoint and dependencies/review gate G5 are satisfied. C-09 remains conditional: public synthetic software tests may establish machinery, but no real endpoint/deployment qualification may be invented."
+    },
     {
       "event": "c08_accepted_after_clean_package_gate",
       "date": "2026-10-20",
@@ -3045,15 +3085,15 @@
       "blockers": []
     },
     "C-09": {
-      "status": "not_started",
-      "attempts": 0,
+      "status": "initial_attempt_active",
+      "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": []
     },
     "C-06": {
-      "status": "not_started",
-      "attempts": 0,
+      "status": "initial_attempt_active",
+      "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": []
