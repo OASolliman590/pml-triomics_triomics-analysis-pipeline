@@ -36,27 +36,39 @@
   },
   "active_workers": [
     {
-      "agent": "/root/c05_repair1_sol_rereview",
-      "role": "sol_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
+      "agent": "/root/c05_repair1_luna",
+      "role": "luna_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
       "packet": "C-05",
-      "attempt": "focused_rereview",
+      "attempt": "repair2",
       "base_commit": "8dcd78d",
       "candidate_commit": "9eb420702c854b7e7e6de7a8303d21b9a6393c8b",
       "worktree": "/Users/megastore/.codex/worktrees/c05-repair1/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "If the focused rereview passes, integrate serially and apply coordinator-owned shared registration before exact CLI and package gates. If changes are required, return only bounded repair 2 findings to Luna.",
+      "allowed_next_transition": "Return one clean allowlisted repair-2 commit to Sol. Sol must inspect and verify directly because the single focused rereview allowance is consumed.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c05_repair1_rereview_active",
+    "status": "c05_repair2_active",
     "last_reconciled": "2026-10-20",
-    "active_handoffs": ["/root/c05_repair1_sol_rereview"],
+    "active_handoffs": ["/root/c05_repair1_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-02 through C-04 are accepted on synthetic software evidence. C-05 repair-1 candidate 9eb4207 is under its one focused Sol-high rereview. The exact isolated suite passed 110 assertions with 14 named native MOFA diagnostics, zero failures and zero skips. Public mofa2 registration remains disabled."
+    "disposition": "C-02 through C-04 are accepted on synthetic software evidence. The C-05 focused rereview closed every original finding except typed MappingEdge validation, so final permitted repair 2 is active in the existing isolated Luna worktree. Public mofa2 registration remains disabled."
   },
   "orchestration_events": [
+    {
+      "event": "c05_repair1_rereview_changes_required_repair2_dispatched",
+      "date": "2026-10-20",
+      "reviewer": "/root/c05_repair1_sol_rereview",
+      "worker": "/root/c05_repair1_luna",
+      "candidate_commit": "9eb420702c854b7e7e6de7a8303d21b9a6393c8b",
+      "verdict": "changes_required",
+      "findings": {"critical": 0, "important": 1, "minor": 0},
+      "review_ref": "docs/implementation/reviews/2026-10-20-c05-repair1-rereview.md",
+      "allowed_next_transition": "One final bounded repair of typed MappingEdge shape and fitted-feature correspondence, then direct Sol inspection and verification. No second focused rereview.",
+      "disposition": "Original variance, missingness, seed-sensitivity and version-bound hashing findings are closed. Annotation mapping validation remains open."
+    },
     {
       "event": "c05_repair1_candidate_under_focused_rereview",
       "date": "2026-10-20",
@@ -2858,18 +2870,17 @@
       "blockers": []
     },
     "C-05": {
-      "status": "repair1_rereview_active",
+      "status": "repair2_active",
       "attempts": 1,
       "commit": "574a1d6",
-      "repair_attempts": 1,
+      "repair_attempts": 2,
       "acceptance_refs": [
-        "docs/implementation/reviews/2026-10-20-c05-sol-review.md"
+        "docs/implementation/reviews/2026-10-20-c05-sol-review.md",
+        "docs/implementation/reviews/2026-10-20-c05-repair1-rereview.md"
       ],
       "blockers": [
         "Public mofa2 registration remains disabled.",
-        "C-05-AC2 has a reproduced native-variance unit defect and incomplete missingness evidence.",
-        "C-05-AC3 seed sensitivity is absent.",
-        "C-05-AC4 typed enrichment sidecar hashes are absent."
+        "C-05-AC4 annotation inputs do not yet validate the typed MappingEdge shape or fitted-feature correspondence."
       ]
     },
     "C-08": {
