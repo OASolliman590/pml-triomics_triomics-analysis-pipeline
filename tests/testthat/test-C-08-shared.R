@@ -185,8 +185,12 @@ c08_shared_objective <- function(endpoint_id, analysis_id, mode, visit = "V1") {
   )
 }
 
+c08_shared_fixture_path <- function() {
+  triomics_test_resource("examples", "tickets", "C-08.yaml")
+}
+
 c08_shared_config_with_selection <- function(selection_by_block) {
-  source_path <- testthat::test_path("..", "..", "inst", "examples", "tickets", "C-08.yaml")
+  source_path <- c08_shared_fixture_path()
   config <- yaml::read_yaml(source_path)
   config_root <- dirname(source_path)
   resolve_fixture_path <- function(path) {
@@ -481,7 +485,7 @@ testthat::test_that("scheduled PCA level endpoints are directly accepted by B-T0
 
 testthat::test_that("Stage C writes immutable C-08 endpoints and schedules, but does not execute, B work", {
   output_dir <- tempfile("triomics-c08-shared-cli-")
-  config_path <- testthat::test_path("..", "..", "inst", "examples", "tickets", "C-08.yaml")
+  config_path <- c08_shared_fixture_path()
   result <- triomics_execute_stage_c(
     config_path, output_dir
   )

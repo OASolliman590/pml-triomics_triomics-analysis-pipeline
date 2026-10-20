@@ -4,7 +4,7 @@
   "implementation_base": "cad313b749814c45ed75b5116adf4951103ee2c9",
   "accepted": false,
   "applied_to_shared_files": false,
-  "implementation_status": "The shared C-08 candidate from b579bfd214618957adb6fcd7193284758913aa27 received two Important findings in the fresh Sol review; both are addressed in this additive continuation. Stage C now binds selection ancestry to fitted analysis block IDs and validates the serialized, schema-bearing endpoint bundle on read-back before scheduling B from that exact bundle. One-fit behavior and the six-field public IntegrationResult remain unchanged. Candidate remains unaccepted pending coordinator re-review/integration. Native MOFA execution remains unavailable, and the previously baseline-matched C-05 runtime/registration failures remain disclosed.",
+  "implementation_status": "The shared C-08 candidate from b579bfd214618957adb6fcd7193284758913aa27 received two Important findings in the fresh Sol review; both are addressed in this additive continuation. Stage C now binds selection ancestry to fitted analysis block IDs and validates the serialized, schema-bearing endpoint bundle on read-back before scheduling B from that exact bundle. The Stage-C tests now resolve the same public ticket fixture in source and installed-package layouts through the repository's triomics_test_resource() helper. One-fit behavior and the six-field public IntegrationResult remain unchanged. Candidate remains unaccepted pending coordinator integration/acceptance. Native MOFA execution remains unavailable, and the previously baseline-matched C-05 runtime/registration failures remain disclosed.",
   "synthetic_software_only": true,
   "local_files": [
     "R/integration_contract.R",
@@ -129,6 +129,20 @@
       "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 51 ]: B request source_endpoint_bundle_sha256 did not match the schema-bearing persisted bundle hash."
     ],
     "sol_review_continuation_green": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 52 ]",
+    "installed_fixture_path_repair": {
+      "resolver": "c08_shared_fixture_path() delegates to the existing triomics_test_resource('examples', 'tickets', 'C-08.yaml') source/installed resolver; the public fixture is not copied or synthesized.",
+      "install_note": "R CMD INSTALL completed successfully; renv bootstrap emitted network-unavailable warnings, but package installation and the installed test run completed.",
+      "red_install_command": "R CMD INSTALL --install-tests --library=/private/tmp/c08-shared-installed.tdTMCV/lib .",
+      "red_command": "R_LIBS=/private/tmp/c08-shared-installed.tdTMCV/lib Rscript --vanilla -e \"library(triomics); setwd(file.path(find.package('triomics'), 'tests')); testthat::test_check('triomics', filter='C-08-shared', stop_on_failure=TRUE)\"",
+      "red_result": "[ FAIL 3 | WARN 2 | SKIP 0 | PASS 31 ]: all three Stage-C tests failed from source-only fixture paths (one missing config and two unreadable configs).",
+      "green_install_command": "R CMD INSTALL --install-tests --library=/private/tmp/c08-shared-installed.tdTMCV/lib .",
+      "green_command": "R_LIBS=/private/tmp/c08-shared-installed.tdTMCV/lib Rscript --vanilla -e \"library(triomics); setwd(file.path(find.package('triomics'), 'tests')); testthat::test_check('triomics', filter='C-08-shared', stop_on_failure=TRUE)\"",
+      "green_result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 52 ]: all three Stage-C tests execute with the installed-package fixture path; endpoint/request behavior, unknown-history refusal, and outcome-selected restrictions pass.",
+      "source_results_after_repair": {
+        "C-08-shared": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 52 ]",
+        "C-08": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 288 ]"
+      }
+    },
     "compatibility": {
       "C-01": {"command": "Rscript --vanilla -e \"testthat::test_local(filter='C-01', stop_on_failure=TRUE)\"", "exit": 0, "result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 109 ]"},
       "C-03": {"command": "Rscript --vanilla -e \"testthat::test_local(filter='C-03', stop_on_failure=TRUE)\"", "exit": 0, "result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 82 ]"},
@@ -189,7 +203,7 @@
     "R/integration_endpoints.R": "96dad78affb5161c29bd35f0a65a6cf2a7a1053deec80a27ebddbe3e9f03adb3",
     "R/clinical_score_requests.R": "a9156c1797800dc832e8361b20da4183e09f15fd0dcb3e97ea86b873e69e67cc",
     "tests/testthat/test-C-08.R": "18a6ee1b8c746b186fdb8a66971f67f64b731738c162597e789502c677d520ef",
-    "tests/testthat/test-C-08-shared.R": "23e2449482f2964ab710606156d7fb25f3243d139c8d7a38e4c3c8743cee8f7d",
+    "tests/testthat/test-C-08-shared.R": "f00c0165f6e9df36e6cf8cc955d20d13130f5e28ea283dd7b06fb0fd71b4fc10",
     "inst/examples/tickets/C-08.yaml": "4ce00266dc48f21b1c8151113c6109a6534d40c53287fd214b55efbd754a8fd6",
     "inst/examples/data/c08/metadata.tsv": "0f1e8a8dbb98a98fc47dd6c2ede477e3eb9d6084894100b8e80ddf776ad7ee8e",
     "inst/examples/data/c08/dictionary.tsv": "318cbd0dd8ba24b18a29f98111111674dd502ddb936c898050b7ad319d3f6a92",
