@@ -48,16 +48,41 @@
       "worktree": "/Users/megastore/.codex/worktrees/c09-clinical-prediction/PML MultiOmics Analysis Pipeline",
       "allowed_next_transition": "Return one narrow repair-2 commit removing the fixture generator's global profile-registry reset and proving caller registrations survive. Sol inspects and verifies directly; no second focused rereview.",
       "wait_cursor": null
+    },
+    {
+      "agent": "/root/c06_shared_luna",
+      "role": "luna_shared_integration_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "packet": "C-06-shared",
+      "attempt": 1,
+      "base_commit": "634c29f",
+      "candidate_commit": null,
+      "worktree": "/Users/megastore/.codex/worktrees/c06-shared-cli/PML MultiOmics Analysis Pipeline",
+      "allowed_next_transition": "Return one clean C-06 shared CLI candidate with exact end-to-end D artifact read-back; Sol inspects, reviews if warranted, integrates and verifies. Do not accept C-06 or release G6.",
+      "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c06_ready_to_integrate_c09_repair2_active",
+    "status": "c06_shared_cli_and_c09_repair2_active",
     "last_reconciled": "2026-10-21",
-    "active_handoffs": ["/root/c09_luna"],
+    "active_handoffs": ["/root/c09_luna", "/root/c06_shared_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-06 repair 1 passed its sole focused rereview and is ready for serial integration plus fresh Sol verification. C-09 closed its original findings but repair 2 must remove a confirmed global registry side effect; no second focused rereview is available. Shared registration, G6 and D remain closed."
+    "disposition": "C-06 packet commits are integrated at 634c29f and fresh focused tests pass. One exclusive Luna-max worker owns the shared CLI seam on that snapshot while the original C-09 worker owns final packet repair 2 on a disjoint allowlist. G6 and D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "c06_packet_integrated_shared_cli_worker_dispatched",
+      "date": "2026-10-21",
+      "packet_commits": ["d8fa515d32b6d5d0c637e325d8fe41705ff3dae6", "a60a7a56eec1250bd4a9e44253597f83a3e565fd"],
+      "integration_commits": ["7d29da4", "634c29f"],
+      "worker": "/root/c06_shared_luna",
+      "worktree": "/Users/megastore/.codex/worktrees/c06-shared-cli/PML MultiOmics Analysis Pipeline",
+      "sol_tests": {"C-06": "PASS 100, FAIL 0, WARN 0, SKIP 0", "C-01": "PASS 109, FAIL 0, WARN 0, SKIP 0"},
+      "allowlist": ["R/cli.R", "tests/testthat/test-C-06-shared.R", "inst/examples/tickets/C-06.yaml", "docs/implementation/registrations/C-06.json"],
+      "allowed_next_transition": "Inspect the shared candidate and its exact CLI artifact read-back before integration. C-06 remains unaccepted until shared wiring, integrated verification and the M6 package/milestone gates pass.",
+      "disposition": "The shared worker may connect only the reviewed C-06 builders/writers to Stage C. It may not fabricate C-07 results, mark optional C-09 complete, read private data or change the scientific contract."
+    },
     {
       "event": "c06_focused_pass_c09_registry_regression_repair2_dispatched",
       "date": "2026-10-21",
@@ -3123,10 +3148,11 @@
       "blockers": []
     },
     "C-06": {
-      "status": "ready_to_integrate",
+      "status": "integrated_shared_cli_active",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "a60a7a56eec1250bd4a9e44253597f83a3e565fd",
+      "integration_commits": ["7d29da4", "634c29f"],
       "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c06-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md"],
       "blockers": []
     },
