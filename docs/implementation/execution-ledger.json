@@ -36,42 +36,39 @@
   },
   "active_workers": [
     {
-      "agent": "/root/c09_sol_review",
-      "role": "sol_focused_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
+      "agent": "/root/c09_luna",
+      "role": "luna_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
       "packet": "C-09",
       "attempt": 1,
-      "repair_attempt": 1,
+      "repair_attempt": 2,
       "base_commit": "ef7da20",
       "candidate_commit": "253c6f0da495f0ec61c0c7ec943dca5b2bb2a7c9",
       "worktree": "/Users/megastore/.codex/worktrees/c09-clinical-prediction/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Focused pass permits serial packet integration followed by an exclusive shared registration repair. Any remaining Important finding permits only bounded repair 2; no second focused rereview.",
-      "wait_cursor": null
-    },
-    {
-      "agent": "/root/c06_sol_review",
-      "role": "sol_focused_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "packet": "C-06",
-      "attempt": 1,
-      "repair_attempt": 1,
-      "base_commit": "ef7da20",
-      "candidate_commit": "a60a7a56eec1250bd4a9e44253597f83a3e565fd",
-      "worktree": "/Users/megastore/.codex/worktrees/c06-cross-backend/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Focused pass permits serial packet integration followed by an exclusive shared CLI repair. Any remaining Important finding permits only bounded repair 2; no second focused rereview.",
+      "allowed_next_transition": "Return one narrow repair-2 commit removing the fixture generator's global profile-registry reset and proving caller registrations survive. Sol inspects and verifies directly; no second focused rereview.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c09_c06_focused_rereviews_active",
+    "status": "c06_ready_to_integrate_c09_repair2_active",
     "last_reconciled": "2026-10-21",
-    "active_handoffs": ["/root/c09_sol_review", "/root/c06_sol_review"],
+    "active_handoffs": ["/root/c09_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Both bounded repair-1 candidates are committed and allowlist-clean. The same fresh Sol-6.1-high reviewers own the single permitted focused rereviews. Shared C-06/C-09 registration remains closed until focused pass. G6 and D remain closed."
+    "disposition": "C-06 repair 1 passed its sole focused rereview and is ready for serial integration plus fresh Sol verification. C-09 closed its original findings but repair 2 must remove a confirmed global registry side effect; no second focused rereview is available. Shared registration, G6 and D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "c06_focused_pass_c09_registry_regression_repair2_dispatched",
+      "date": "2026-10-21",
+      "reviewers": ["/root/c06_sol_review", "/root/c09_sol_review"],
+      "candidates": {"C-06": "a60a7a56eec1250bd4a9e44253597f83a3e565fd", "C-09": "253c6f0da495f0ec61c0c7ec943dca5b2bb2a7c9"},
+      "review_refs": ["docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c09-repair1-rereview.md"],
+      "reviewer_tests": {"C-06": "PASS 100, FAIL 0, WARN 0, SKIP 0", "C-09": "PASS 47, FAIL 0, WARN 0, SKIP 0"},
+      "verdicts": {"C-06": "addressed_ready_to_integrate", "C-09": "findings_addressed_new_important_regression"},
+      "allowed_next_transition": "Serially integrate C-06 packet commits and run fresh focused checks while C-09 Luna performs final bounded repair 2. Inspect and verify C-09 repair 2 directly; do not dispatch another reviewer.",
+      "disposition": "C-06 closed all six initial findings. C-09's runtime generator deletes caller profile registrations; this confirmed side effect must be removed before packet integration."
+    },
     {
       "event": "c09_c06_repair1_focused_rereviews_dispatched",
       "date": "2026-10-21",
@@ -3118,19 +3115,19 @@
       "blockers": []
     },
     "C-09": {
-      "status": "repair_1_focused_rereview_active",
+      "status": "repair_2_active",
       "attempts": 1,
-      "repair_attempts": 1,
+      "repair_attempts": 2,
       "commit": "253c6f0da495f0ec61c0c7ec943dca5b2bb2a7c9",
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c09-sol-review.md"],
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c09-sol-review.md", "docs/implementation/reviews/2026-10-21-c09-repair1-rereview.md"],
       "blockers": []
     },
     "C-06": {
-      "status": "repair_1_focused_rereview_active",
+      "status": "ready_to_integrate",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "a60a7a56eec1250bd4a9e44253597f83a3e565fd",
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c06-sol-review.md"],
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c06-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md"],
       "blockers": []
     },
     "D-T01": {
