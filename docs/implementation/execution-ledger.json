@@ -36,41 +36,40 @@
   },
   "active_workers": [
     {
-      "agent": "/root/c09_luna",
-      "role": "luna_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "packet": "C-09",
-      "attempt": 1,
-      "repair_attempt": 2,
-      "base_commit": "ef7da20",
-      "candidate_commit": "253c6f0da495f0ec61c0c7ec943dca5b2bb2a7c9",
-      "worktree": "/Users/megastore/.codex/worktrees/c09-clinical-prediction/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Return one narrow repair-2 commit removing the fixture generator's global profile-registry reset and proving caller registrations survive. Sol inspects and verifies directly; no second focused rereview.",
-      "wait_cursor": null
-    },
-    {
-      "agent": "/root/c06_shared_luna",
-      "role": "luna_shared_integration_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/c06_shared_sol_review",
+      "role": "sol_shared_diff_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "packet": "C-06-shared",
       "attempt": 1,
       "base_commit": "634c29f",
-      "candidate_commit": null,
+      "candidate_commit": "1cc35048907ab4dd866d7129759ddcb7672d05eb",
       "worktree": "/Users/megastore/.codex/worktrees/c06-shared-cli/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Return one clean C-06 shared CLI candidate with exact end-to-end D artifact read-back; Sol inspects, reviews if warranted, integrates and verifies. Do not accept C-06 or release G6.",
+      "allowed_next_transition": "Pass permits serial integration and final fresh Sol cycle verification. Findings require one bounded shared-seam repair before pausing; do not start C-09 shared registration, the M6 audit or Stage D.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c06_shared_cli_and_c09_repair2_active",
+    "status": "c06_shared_review_active_c09_integrated",
     "last_reconciled": "2026-10-21",
-    "active_handoffs": ["/root/c09_luna", "/root/c06_shared_luna"],
+    "active_handoffs": ["/root/c06_shared_sol_review"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-06 packet commits are integrated at 634c29f and fresh focused tests pass. One exclusive Luna-max worker owns the shared CLI seam on that snapshot while the original C-09 worker owns final packet repair 2 on a disjoint allowlist. G6 and D remain closed."
+    "disposition": "C-09 packet commits are integrated and fresh exact tests pass; its shared namespace/schema/CLI registration is intentionally not started before the requested pause. C-06 shared candidate 1cc3504 is under fresh read-only review. Finish this shared cycle, reconcile and pause; do not start M6 audit or Stage D."
   },
   "orchestration_events": [
+    {
+      "event": "c09_packet_integrated_c06_shared_candidate_review_dispatched",
+      "date": "2026-10-21",
+      "c09_packet_commits": ["45a0f9900306f60a6a87a2fbfffbf7dd57adca2e", "253c6f0da495f0ec61c0c7ec943dca5b2bb2a7c9", "de9ea9e73e3bb24d69c6e1232b25225408c200a9"],
+      "c09_integration_commits": ["98f73c3", "6713603", "996087f"],
+      "c09_sol_test": "PASS 53, FAIL 0, WARN 0, SKIP 0",
+      "c06_shared_candidate": "1cc35048907ab4dd866d7129759ddcb7672d05eb",
+      "c06_shared_reviewer": "/root/c06_shared_sol_review",
+      "c06_worker_test": "PASS 172, FAIL 0, WARN 0, SKIP 0",
+      "c06_worker_cli": "Exit 0; preserved C artifacts, wrote native sidecar and D handoff; 5/5 payload hashes and 6/6 D envelopes validated; aggregate partial because all four C-07 controls are not_run; C-09 remains conditional/not_started.",
+      "allowed_next_transition": "Review then integrate/verify the C-06 shared seam if accepted. Reconcile and pause without starting C-09 shared registration, M6 audit or Stage D.",
+      "disposition": "C-09 repair 2 removed the global profile-registry reset and exact tests passed after integration. Its real endpoint/deployment gate remains open. The C-06 shared diff is cross-cutting and therefore receives a fresh review before integration."
+    },
     {
       "event": "c06_packet_integrated_shared_cli_worker_dispatched",
       "date": "2026-10-21",
@@ -3140,19 +3139,21 @@
       "blockers": []
     },
     "C-09": {
-      "status": "repair_2_active",
+      "status": "integrated_shared_registration_pending",
       "attempts": 1,
       "repair_attempts": 2,
-      "commit": "253c6f0da495f0ec61c0c7ec943dca5b2bb2a7c9",
+      "commit": "de9ea9e73e3bb24d69c6e1232b25225408c200a9",
+      "integration_commits": ["98f73c3", "6713603", "996087f"],
       "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c09-sol-review.md", "docs/implementation/reviews/2026-10-21-c09-repair1-rereview.md"],
-      "blockers": []
+      "blockers": ["Shared NAMESPACE, typed schema and Stage-C CLI registration are pending; the real endpoint/deployment/uncertainty protocol remains unqualified."]
     },
     "C-06": {
-      "status": "integrated_shared_cli_active",
+      "status": "integrated_shared_cli_review_active",
       "attempts": 1,
       "repair_attempts": 1,
       "commit": "a60a7a56eec1250bd4a9e44253597f83a3e565fd",
       "integration_commits": ["7d29da4", "634c29f"],
+      "shared_candidate_commit": "1cc35048907ab4dd866d7129759ddcb7672d05eb",
       "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c06-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md"],
       "blockers": []
     },
