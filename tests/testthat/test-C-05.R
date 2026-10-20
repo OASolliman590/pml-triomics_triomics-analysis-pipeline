@@ -67,6 +67,43 @@ c05_runtime_fixture <- function(cell = "scattered_na", repeats = 3L) {
   )
 }
 
+c05_mapping_edge <- function(target_entity_id) {
+  list(
+    block_id = "view_1", feature_key = "view_1_feature_1",
+    target_namespace = "synthetic_namespace", target_entity_id = target_entity_id,
+    relation = "maps_to", resolution = "exact", taxon = "synthetic_taxon",
+    context = "synthetic_context", resource_release = "fixture-v1",
+    evidence = "synthetic_fixture_evidence", ambiguity_group = "synthetic-group-1"
+  )
+}
+
+c05_sidecar_state <- function() {
+  model_path <- tempfile("c05-sidecar-model-")
+  writeBin(as.raw(c(0x4d, 0x4f, 0x46, 0x41)), model_path)
+  list(
+    model_path = model_path,
+    native_model_sha256 = triomics_mofa_hash_file(model_path),
+    training_input_hashes = list(
+      transformed_data_sha256 = paste(rep("a", 64L), collapse = ""),
+      missingness_mask_sha256 = paste(rep("b", 64L), collapse = ""),
+      transformed_data_and_masks_sha256 = paste(rep("c", 64L), collapse = "")
+    ),
+    native_version = "1.22.1", python_backend_version = "0.7.5",
+    training_state_hash = paste(rep("d", 64L), collapse = ""),
+    components = "Factor1", block_ids = c("view_1", "view_2"),
+    factors = matrix(0, nrow = 2L, ncol = 1L,
+                     dimnames = list(c("sample_1", "sample_2"), "Factor1")),
+    weights = list(
+      view_1 = matrix(0, nrow = 2L, ncol = 1L,
+                      dimnames = list(c("view_1_feature_1", "view_1_feature_2"), "Factor1")),
+      view_2 = matrix(0, nrow = 2L, ncol = 1L,
+                      dimnames = list(c("view_2_feature_1", "view_2_feature_2"), "Factor1"))
+    ),
+    variance = matrix(0, nrow = 1L, ncol = 2L),
+    variance_semantics = list()
+  )
+}
+
 c05_require_runtime <- function() {
   status <- triomics_mofa_backend_status()
   testthat::expect_true(status$available)
@@ -285,6 +322,104 @@ testthat::test_that("C-05 seed comparison aligns sign and permutation and compar
   testthat::expect_identical(classified$factor_naming, "native_generic_ids_only")
 })
 
+testthat::test_that("C-05 enrichment handoff accepts typed MappingEdges and hashes their canonical meaning", {
+  state <- c05_sidecar_state()
+  on.exit(unlink(state$model_path), add = TRUE)
+  edges <- list(c05_mapping_edge("synthetic:target-b"), c05_mapping_edge("synthetic:target-a"))
+  as_table <- as.data.frame(do.call(rbind, lapply(edges, as.data.frame)), stringsAsFactors = FALSE)
+  as_table <- as_table[nrow(as_table):1L, , drop = FALSE]
+
+  handoff <- triomics_mofa_enrichment_input_sidecar(
+    state, context = list(annotation_mappings = edges)
+  )
+  table_handoff <- triomics_mofa_enrichment_input_sidecar(
+    state, context = list(annotation_mappings = as_table)
+  )
+  expected <- data.frame(
+    block_id = c("view_1", "view_1"),
+    feature_key = c("view_1_feature_1", "view_1_feature_1"),
+    target_namespace = c("synthetic_namespace", "synthetic_namespace"),
+    target_entity_id = c("synthetic:target-a", "synthetic:target-b"),
+    relation = c("maps_to", "maps_to"), resolution = c("exact", "exact"),
+    taxon = c("synthetic_taxon", "synthetic_taxon"),
+    context = c("synthetic_context", "synthetic_context"),
+    resource_release = c("fixture-v1", "fixture-v1"),
+    evidence = c("synthetic_fixture_evidence", "synthetic_fixture_evidence"),
+    ambiguity_group = c("synthetic-group-1", "synthetic-group-1"),
+    stringsAsFactors = FALSE
+  )
+
+  testthat::expect_identical(handoff$annotation_mappings, expected)
+  testthat::expect_identical(table_handoff$annotation_mappings, expected)
+  testthat::expect_identical(handoff$hashes$annotation_mappings_sha256,
+                             table_handoff$hashes$annotation_mappings_sha256)
+  testthat::expect_identical(handoff$annotation_mapping_status, "supplied")
+  testthat::expect_identical(handoff$status, "ready_for_downstream_handoff")
+
+  changed <- triomics_mofa_enrichment_input_sidecar(
+    state, context = list(annotation_mappings = list(c05_mapping_edge("synthetic:target-c")))
+  )
+  testthat::expect_false(identical(
+    handoff$hashes$annotation_mappings_sha256,
+    changed$hashes$annotation_mappings_sha256
+  ))
+})
+
+testthat::test_that("C-05 enrichment handoff rejects malformed MappingEdge collections with a typed error", {
+  state <- c05_sidecar_state()
+  on.exit(unlink(state$model_path), add = TRUE)
+
+  for (malformed in list("synthetic scalar", list("not an edge object"))) {
+    err <- c05_error(
+      triomics_mofa_enrichment_input_sidecar(
+        state, context = list(annotation_mappings = malformed)
+      ),
+      "D_MAPPING_INVALID"
+    )
+    testthat::expect_identical(err$config_key, "annotation_mappings")
+  }
+})
+
+testthat::test_that("C-05 enrichment handoff rejects missing MappingEdge fields", {
+  state <- c05_sidecar_state()
+  on.exit(unlink(state$model_path), add = TRUE)
+  incomplete <- c05_mapping_edge("synthetic:target-a")
+  incomplete$ambiguity_group <- NULL
+
+  err <- c05_error(
+    triomics_mofa_enrichment_input_sidecar(
+      state, context = list(annotation_mappings = list(incomplete))
+    ),
+    "D_MAPPING_INVALID"
+  )
+  testthat::expect_identical(err$config_key, "annotation_mappings")
+})
+
+testthat::test_that("C-05 enrichment handoff rejects MappingEdges outside the fitted feature map", {
+  state <- c05_sidecar_state()
+  on.exit(unlink(state$model_path), add = TRUE)
+  absent <- c05_mapping_edge("synthetic:target-a")
+  absent$feature_key <- "not_a_fitted_feature"
+
+  err <- c05_error(
+    triomics_mofa_enrichment_input_sidecar(
+      state, context = list(annotation_mappings = list(absent))
+    ),
+    "D_MAPPING_INVALID"
+  )
+  testthat::expect_identical(err$config_key, "feature_key")
+})
+
+testthat::test_that("C-05 enrichment handoff marks empty mappings as not supplied", {
+  state <- c05_sidecar_state()
+  on.exit(unlink(state$model_path), add = TRUE)
+  handoff <- triomics_mofa_enrichment_input_sidecar(state, context = list())
+
+  testthat::expect_identical(handoff$status, "annotation_mapping_not_supplied")
+  testthat::expect_identical(handoff$annotation_mapping_status, "not_supplied")
+  testthat::expect_identical(nrow(handoff$annotation_mappings), 0L)
+})
+
 testthat::test_that("C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes", {
   status <- c05_require_runtime()
   ticket <- triomics_read_config(triomics_test_resource("examples", "tickets", "C-05.yaml"))
@@ -298,9 +433,7 @@ testthat::test_that("C-05 real MOFA2 fit preserves scattered missingness and rep
   fit <- triomics_mofa_fit(fixture$resolved, fixture$params, status = status)
   extraction <- triomics_mofa_extract(
     fit,
-    context = list(annotation_mappings = list(list(
-      feature_key = "view_1_feature_1", namespace = "synthetic", mapped_id = "SYN:1"
-    ))),
+    context = list(annotation_mappings = list(c05_mapping_edge("synthetic:target-a"))),
     params = fixture$params
   )
 
@@ -357,10 +490,9 @@ testthat::test_that("C-05 real MOFA2 fit preserves scattered missingness and rep
       algo = "sha256", serialize = TRUE
     )
   )
-  testthat::expect_identical(
-    handoff$hashes$annotation_mappings_sha256,
-    digest::digest(handoff$annotation_mappings, algo = "sha256", serialize = TRUE)
-  )
+  testthat::expect_identical(handoff$annotation_mapping_status, "supplied")
+  testthat::expect_identical(nrow(handoff$annotation_mappings), 1L)
+  testthat::expect_identical(handoff$annotation_mappings$feature_key, "view_1_feature_1")
   testthat::expect_identical(handoff$enrichment_execution, "not_performed")
 })
 

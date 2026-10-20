@@ -667,6 +667,122 @@ triomics_mofa_hash_file <- function(path) {
   digest::digest(file = path, algo = "sha256", serialize = FALSE)
 }
 
+triomics_mofa_mapping_edge_columns <- function() {
+  c(
+    "block_id", "feature_key", "target_namespace", "target_entity_id",
+    "relation", "resolution", "taxon", "context", "resource_release",
+    "evidence", "ambiguity_group"
+  )
+}
+
+triomics_mofa_mapping_invalid <- function(message, key = "annotation_mappings") {
+  triomics_abort(
+    "D_MAPPING_INVALID", message, key = key, module = "annotation", stage = "D",
+    remediation = "Provide a typed MappingEdge collection keyed to fitted features, or omit mappings explicitly."
+  )
+}
+
+triomics_mofa_canonical_mapping_edges <- function(mappings, state) {
+  columns <- triomics_mofa_mapping_edge_columns()
+  empty <- as.data.frame(
+    stats::setNames(rep(list(character()), length(columns)), columns),
+    stringsAsFactors = FALSE
+  )
+  if (is.null(mappings) || (is.list(mappings) && length(mappings) == 0L) ||
+      (is.data.frame(mappings) && nrow(mappings) == 0L)) {
+    return(empty)
+  }
+
+  if (is.data.frame(mappings)) {
+    if (anyDuplicated(names(mappings)) || !setequal(names(mappings), columns)) {
+      triomics_mofa_mapping_invalid("MappingEdge tables must contain exactly the supported fields.")
+    }
+    edges <- mappings[, columns, drop = FALSE]
+  } else if (is.list(mappings)) {
+    rows <- lapply(mappings, function(edge) {
+      if (!is.list(edge) || is.null(names(edge)) || anyDuplicated(names(edge)) ||
+          !setequal(names(edge), columns)) {
+        triomics_mofa_mapping_invalid("Each MappingEdge must be a named record with exactly the supported fields.")
+      }
+      valid <- vapply(columns, function(field) {
+        value <- edge[[field]]
+        is.character(value) && length(value) == 1L &&
+          (is.na(value) && field %in% c("taxon", "context", "ambiguity_group") ||
+             (!is.na(value) && nzchar(trimws(value))))
+      }, logical(1L))
+      if (!all(valid)) {
+        triomics_mofa_mapping_invalid("MappingEdge fields must be scalar character values; required values cannot be blank or missing.")
+      }
+      edge[columns]
+    })
+    values <- lapply(columns, function(field) {
+      vapply(rows, function(edge) edge[[field]], character(1L), USE.NAMES = FALSE)
+    })
+    edges <- as.data.frame(stats::setNames(values, columns), stringsAsFactors = FALSE)
+  } else {
+    triomics_mofa_mapping_invalid("MappingEdge collections must be data frames or lists of edge records.")
+  }
+
+  nullable <- c("taxon", "context", "ambiguity_group")
+  valid_values <- vapply(columns, function(field) {
+    value <- edges[[field]]
+    is.character(value) && length(value) == nrow(edges) &&
+      !any(!is.na(value) & !nzchar(trimws(value))) &&
+      (field %in% nullable || !anyNA(value))
+  }, logical(1L))
+  if (!all(valid_values)) {
+    triomics_mofa_mapping_invalid("MappingEdge fields must be character values; required values cannot be blank or missing.")
+  }
+
+  identity_columns <- setdiff(columns, "evidence")
+  if (anyDuplicated(edges[, identity_columns, drop = FALSE])) {
+    triomics_mofa_mapping_invalid("MappingEdge identities must be unique.", key = "mapping_edge_identity")
+  }
+
+  weights <- state$weights
+  block_ids <- state$block_ids
+  if (!is.list(weights) || is.null(names(weights)) || anyDuplicated(names(weights)) ||
+      !is.character(block_ids) || !length(block_ids) || anyNA(block_ids) ||
+      any(!nzchar(block_ids)) || anyDuplicated(block_ids) ||
+      !setequal(names(weights), block_ids)) {
+    triomics_mofa_abort(
+      "C_SCORE_RESULT_INVALID", "The fitted MOFA2 feature map is invalid.", key = "weights"
+    )
+  }
+  fitted_features <- do.call(rbind, lapply(block_ids, function(block_id) {
+    feature_keys <- rownames(weights[[block_id]])
+    if (!is.character(feature_keys) || !length(feature_keys) || anyNA(feature_keys) ||
+        any(!nzchar(feature_keys)) || anyDuplicated(feature_keys)) {
+      triomics_mofa_abort(
+        "C_SCORE_RESULT_INVALID", "The fitted MOFA2 feature map is invalid.", key = "weights"
+      )
+    }
+    data.frame(block_id = block_id, feature_key = feature_keys, stringsAsFactors = FALSE)
+  }))
+  rownames(fitted_features) <- NULL
+  feature_matches <- merge(
+    data.frame(
+      edge_index = seq_len(nrow(edges)), block_id = edges$block_id,
+      feature_key = edges$feature_key, stringsAsFactors = FALSE
+    ),
+    fitted_features, by = c("block_id", "feature_key"), sort = FALSE
+  )
+  if (nrow(feature_matches) != nrow(edges)) {
+    triomics_mofa_mapping_invalid(
+      "Every MappingEdge measured feature must belong to the fitted MOFA2 feature map.",
+      key = "feature_key"
+    )
+  }
+
+  order_index <- do.call(
+    order,
+    c(unname(as.list(edges[, columns, drop = FALSE])), list(na.last = TRUE, method = "radix"))
+  )
+  edges <- edges[order_index, columns, drop = FALSE]
+  rownames(edges) <- NULL
+  edges
+}
+
 triomics_mofa_fit_once <- function(eligibility, params, model_path, reload = FALSE) {
   model <- MOFA2::create_mofa(eligibility$data)
   options <- triomics_mofa_prepare_options(model, eligibility, params)
@@ -709,9 +825,13 @@ triomics_mofa_enrichment_input_sidecar <- function(state, context = list(), para
       key = "model_sha256"
     )
   }
+  if (!is.list(context) || !is.list(params)) {
+    triomics_mofa_mapping_invalid("MappingEdge inputs must be supplied through named context or parameter lists.")
+  }
   mappings <- context$annotation_mappings %||% context$annotation_mapping %||%
     params$annotation_mappings %||% params$annotation_mapping %||% list()
-  mapping_count <- if (is.data.frame(mappings)) nrow(mappings) else length(mappings)
+  mappings <- triomics_mofa_canonical_mapping_edges(mappings, state)
+  mapping_count <- nrow(mappings)
   mapping_sha256 <- triomics_mofa_hash_object(mappings)
   training_hashes <- state$training_input_hashes
   if (!is.list(training_hashes) ||
