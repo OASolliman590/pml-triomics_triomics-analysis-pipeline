@@ -44,6 +44,18 @@
   },
   "orchestration_events": [
     {
+      "event": "c05_initial_sol_review_changes_required",
+      "date": "2026-10-20",
+      "snapshot": "bb1ac1a",
+      "reviewer": "/root/c05_sol_review",
+      "verdict": "changes_required",
+      "findings": {"critical": 0, "important": 5, "minor": 1},
+      "acceptance": {"C-05-AC1": "pass", "C-05-AC2": "open", "C-05-AC3": "open", "C-05-AC4": "partial"},
+      "review_ref": "docs/implementation/reviews/2026-10-20-c05-sol-review.md",
+      "allowed_next_transition": "One bounded C-05 repair 1 in a fresh isolated Luna-max worktree on the packet allowlist. Keep mofa2 registration disabled pending focused rereview and Sol verification.",
+      "disposition": "The existing candidate is not accepted. The reproduced native-variance unit defect and AC2-AC4 gaps require repair; no private-data run or scope expansion is requested."
+    },
+    {
       "event": "c03_c04_accepted_after_named_warning_disposition",
       "date": "2026-10-20",
       "snapshot": "1d0a5da7f8bd8af379b414be947e8db1524e9909",
@@ -2808,13 +2820,18 @@
       "blockers": []
     },
     "C-05": {
-      "status": "implemented_unaccepted",
+      "status": "changes_required",
       "attempts": 1,
       "commit": "574a1d6",
-      "acceptance_refs": [],
+      "repair_attempts": 0,
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-10-20-c05-sol-review.md"
+      ],
       "blockers": [
         "Public mofa2 registration remains disabled.",
-        "C-05-AC2 through C-05-AC4 do not have complete acceptance evidence."
+        "C-05-AC2 has a reproduced native-variance unit defect and incomplete missingness evidence.",
+        "C-05-AC3 seed sensitivity is absent.",
+        "C-05-AC4 typed enrichment sidecar hashes are absent."
       ]
     },
     "C-08": {
