@@ -2,9 +2,9 @@
   "packet_id": "C-08",
   "request_type": "registration_request",
   "implementation_base": "cad313b749814c45ed75b5116adf4951103ee2c9",
-  "accepted": false,
-  "applied_to_shared_files": false,
-  "implementation_status": "The shared C-08 candidate from b579bfd214618957adb6fcd7193284758913aa27 received two Important findings in the fresh Sol review; both are addressed in this additive continuation. Stage C now binds selection ancestry to fitted analysis block IDs and validates the serialized, schema-bearing endpoint bundle on read-back before scheduling B from that exact bundle. The Stage-C tests now resolve the same public ticket fixture in source and installed-package layouts through the repository's triomics_test_resource() helper. One-fit behavior and the six-field public IntegrationResult remain unchanged. Candidate remains unaccepted pending coordinator integration/acceptance. Native MOFA execution remains unavailable, and the previously baseline-matched C-05 runtime/registration failures remain disclosed.",
+  "accepted": true,
+  "applied_to_shared_files": true,
+  "implementation_status": "Accepted by Sol at integrated snapshot d69ef1e after packet review, shared-diff review, one focused shared rereview, fresh integrated tests, exact Stage-C CLI read-back, and a clean archive package check with Status: OK. Stage C binds selection ancestry to fitted block IDs, validates the schema-bearing endpoint bundle before scheduling B from that exact bundle, and resolves the public fixture in source and installed contexts. The B request remains scheduled/not_started and non-recursive. Evidence is synthetic software evidence only.",
   "synthetic_software_only": true,
   "local_files": [
     "R/integration_contract.R",
@@ -194,7 +194,7 @@
     "jsonlite": "2.0.0",
     "digest": "0.6.39",
     "mixOmics": "6.36.0",
-    "MOFA2": "not-installed",
+    "MOFA2": "1.22.1 in the isolated package-gate runtime; unavailable in the original worker default library",
     "limma": "3.68.5"
   },
   "file_sha256": {
@@ -223,25 +223,25 @@
   },
   "acceptance": {
     "AC1": {
-      "status": "pass_local_shared_fit_handoff_candidate_unaccepted",
+      "status": "accepted_synthetic_software_evidence",
       "evidence": "The fit-count instrument records one fit. Public PCA and actual mixOmics DIABLO/block.spls fits bind authoritative same-fit state, recomputed training scores, units, exact inputs, training Y when used, selection, and AnalysisUnitMap; integrate_blocks() still returns exactly six fields. The MOFA accepted shape is synthetic-only; no native run is claimed."
     },
     "AC2": {
-      "status": "pass_local_b_consumer_and_cli_schedule_candidate_unaccepted",
+      "status": "accepted_synthetic_software_evidence",
       "evidence": "Direct synthetic B-T08 and B-T09 consumers estimate from level endpoints. The exact Stage-C CLI run writes the schema-bearing endpoint bundle, reconstructs and validates it from JSON, then schedules the B-owned request with the matching persisted bundle hash; status is scheduled/not_started, results are empty, and recursion is false. No B model executes."
     },
     "AC3": {
-      "status": "pass_local_rule_tests_candidate_unaccepted",
+      "status": "accepted_synthetic_software_evidence",
       "evidence": "Supervised DIABLO/block.spls handoffs bind the fitted Y and produce descriptive-only endpoints; same-data selection/MOFA rules and feature-vs-score separation remain enforced. Native MOFA execution remains unverified because the isolated runtime is unavailable."
     },
     "AC4": {
-      "status": "pass_local_contract_and_cli_candidate_unaccepted",
+      "status": "accepted_synthetic_software_evidence",
       "evidence": "Level, mean, and delta contracts retain unit/link ancestry and typed exclusions. Unknown source selection fails closed; outcome_selected remains withheld/descriptive-only; normal Stage C output retains source selection for both fitted blocks. Direct B-T08/B-T09 level consumers pass; derived subject deltas remain a typed refusal with no valid consumer route. CLI endpoint bundle read-back and artifact envelopes validate; collision refusal is covered by test."
     }
   },
   "shared_registration_request": {
-    "required": true,
-    "request_kind": "exclusive_shared_correctness_repair_with_sol_review_findings_addressed_pending_re_review_and_integration",
+    "required": false,
+    "request_kind": "exclusive_shared_correctness_repair_applied_and_accepted",
     "coordinator_owned_files_to_update": [
       "R/integration_contract.R",
       "R/cli.R",
@@ -257,16 +257,25 @@
       "source_endpoint_sha256", "source_link_id", "source_link_sha256",
       "subject_key", "visit_id", "time", "request_sha256"
     ],
-    "request": "Completed locally in the isolated worker checkout: retained the one-fit handoff and six-field public result; fixed source selection to use fitted analysis block IDs; fails closed for unknown ancestry and retains outcome_selected as withheld/descriptive-only; hashes the schema-bearing serialized endpoint body before persistence; validates JSON read-back and schedules B from that exact endpoint bundle. This remains unaccepted and awaits coordinator re-review/integration. No stage_registry change, MOFA native execution, or scientific-validity claim.",
+    "request": "Applied by the coordinator: retained the one-fit handoff and six-field public result; source selection uses fitted analysis block IDs; unknown ancestry fails closed and outcome_selected remains withheld/descriptive-only; the schema-bearing serialized endpoint body is hashed before persistence; JSON read-back validates and schedules B from that exact bundle. No stage_registry change or biological-validity claim.",
     "exports": [],
     "dependency_changes": [],
-    "applied_by_worker": false
+    "applied_by_worker": false,
+    "applied_by_coordinator": true
   },
   "gaps": [
-    "The shared repair is only a local candidate until coordinator integration and acceptance; this worker did not modify stage_registry or mark the packet accepted.",
-    "MOFA2 is not installed in this environment; MOFA endpoint lineage is verified with synthetic public-seam fixtures only, not native runtime execution.",
-    "Focused C-05 compatibility fails identically on the clean requested base: 2 stale registration assertions and 16 unavailable native-MOFA/cascade failures; exact breakdown is recorded under tests.compatibility.C-05.",
+    "C-08 MOFA endpoint lineage is verified with the accepted public adapter shape; no new native C-08 MOFA endpoint run is claimed.",
     "All evidence is synthetic software evidence only; no private study, clinical, biological, or scientific-validity claim is made."
   ],
-  "accepted_snapshot": null
+  "accepted_snapshot": "d69ef1e",
+  "acceptance_ref": "docs/implementation/reviews/2026-10-20-c08-sol-acceptance.md",
+  "package_gate": {
+    "snapshot": "d69ef1e",
+    "status": "OK",
+    "result": "[ FAIL 0 | WARN 22 | SKIP 0 | PASS 4367 ]",
+    "warning_disposition": "Eight accepted B-T07 installed-artifact missing-Git-metadata probes and fourteen native MOFA small-fixture/QC diagnostics; no C-08 file-open warning remains.",
+    "archive_sha256": "3add3184bc71a12998eec8975fe57f012a1f7c0321cb7dca27f5588eee72051f",
+    "check_log_sha256": "6451fce47a1e6bc3d3a5aeb9b58411d455e1f3d85dac6e32232ce4e44d83c548",
+    "testthat_rout_sha256": "9e39253521cfbd9ef74800432bb7a7cef38222ebe868932aa75e87760927e67b"
+  }
 }

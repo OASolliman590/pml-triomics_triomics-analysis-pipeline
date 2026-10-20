@@ -36,13 +36,27 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "c08_package_check_retry_pending",
+    "status": "c08_accepted_c09_c06_released",
     "last_reconciled": "2026-10-20",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Final installed-fixture repair 6ec94b3 was integrated as d45c88f and fresh source C-08 verification passes 288 with no failures, warnings or skips. No product code changed. C-08 remains unaccepted pending the repeated clean archive package gate."
+    "disposition": "C-08 is accepted at d69ef1e after fresh focused tests, exact CLI read-back and a clean archive package check with Status OK, FAIL 0, WARN 22, SKIP 0, PASS 4367. C-09 and C-06 are released by dependency; G6 and D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "c08_accepted_after_clean_package_gate",
+      "date": "2026-10-20",
+      "snapshot": "d69ef1e",
+      "integrated_commits": ["bd34cb8", "519f48c", "b45f31a", "c5535fb", "2170820", "d45c88f"],
+      "focused_tests": "C-08 PASS 288; C-01 PASS 109; C-03 PASS 82; C-04 PASS 132; all focused runs FAIL 0, WARN 0, SKIP 0.",
+      "cli": "Exact Stage-C command exited 0; endpoint JSON and three envelopes validated; B request remained scheduled/not_started, empty-result and non-recursive; endpoint/request source hash matched.",
+      "package_check": "Clean archive at d69ef1e: Status OK; FAIL 0, WARN 22, SKIP 0, PASS 4367.",
+      "warning_disposition": "Eight accepted B-T07 installed-artifact missing-Git-metadata probes plus fourteen native MOFA small-fixture/QC diagnostics. The prior two C-08 file-open warnings are absent.",
+      "acceptance": ["C-08-AC1", "C-08-AC2", "C-08-AC3", "C-08-AC4"],
+      "review_ref": "docs/implementation/reviews/2026-10-20-c08-sol-acceptance.md",
+      "allowed_next_transition": "Archive the C-08 shared worktree, then dispatch C-09 and C-06 only on disjoint allowlists. G6 and D remain closed until both packets and the milestone audit pass.",
+      "disposition": "Accepted on synthetic software evidence only. No private data, biological endpoint validity, clinical association, prediction performance or new native C-08 MOFA endpoint claim is made."
+    },
     {
       "event": "c08_package_fixture_repair_integrated",
       "date": "2026-10-20",
@@ -3016,18 +3030,19 @@
       "blockers": []
     },
     "C-08": {
-      "status": "shared_correctness_repair_active",
+      "status": "accepted",
       "attempts": 1,
-      "commit": "b45f31a422349c6fd4e5a702c30d7df1c4570e6d",
+      "commit": "d69ef1e",
       "repair_attempts": 2,
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-20-c08-sol-review.md",
-        "docs/implementation/reviews/2026-10-20-c08-repair1-rereview.md"
+        "docs/implementation/reviews/2026-10-20-c08-repair1-rereview.md",
+        "docs/implementation/reviews/2026-10-20-c08-shared-sol-review.md",
+        "docs/implementation/reviews/2026-10-20-c08-shared-focused-rereview.md",
+        "docs/implementation/reviews/2026-10-20-c08-package-check.md",
+        "docs/implementation/reviews/2026-10-20-c08-sol-acceptance.md"
       ],
-      "blockers": [
-        "Registered fits do not yet emit the qualified same-fit C-08 handoff.",
-        "Stage C does not yet export endpoint and scheduled B-owned request artifacts from the retained fit."
-      ]
+      "blockers": []
     },
     "C-09": {
       "status": "not_started",
@@ -3190,8 +3205,8 @@
       "status": "in_progress",
       "review_ref": null,
       "commit": null,
-      "accepted_packets": ["C-03", "C-04", "C-05"],
-      "blocking_packets": ["C-08", "C-09", "C-06"]
+      "accepted_packets": ["C-03", "C-04", "C-05", "C-08"],
+      "blocking_packets": ["C-09", "C-06"]
     },
     "M7": {
       "status": "not_started",

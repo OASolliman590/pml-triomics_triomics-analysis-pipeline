@@ -2,13 +2,12 @@
 
 Run `triomics-20260920-sol-01` continues on branch
 `spec/harden-v2-20260920`. G0 through G5 are released. Stages A and B and C-01
-through C-05 are accepted on synthetic software evidence. The decisive C-05
-clean archive check at `c34d9ff` is `Status: OK`, with testthat FAIL 0, WARN
-22, SKIP 0, PASS 4076. Eight warnings are the previously dispositioned B-T07
-missing-Git-metadata probes; fourteen are native MOFA small-fixture/QC
-diagnostics. The run is not described as warning-free. C-05 is
-exploratory-only and explicitly does not support prediction. C-08 is the next
-legal packet; C-09 and C-06 depend on it. G6 and every D packet remain closed.
+through C-05 plus C-08 are accepted on synthetic software evidence. The
+decisive C-08 clean archive check at `d69ef1e` is `Status: OK`, with testthat
+FAIL 0, WARN 22, SKIP 0, PASS 4367. Eight warnings are the previously
+dispositioned B-T07 missing-Git-metadata probes; fourteen are native MOFA
+small-fixture/QC diagnostics. The run is not described as warning-free. C-09
+and C-06 are the next legal packets. G6 and every D packet remain closed.
 The historical sections below keep their original wording.
 
 ## Current evidence
@@ -169,22 +168,15 @@ the first predictor block only; native component mismatch still fails closed.
 ## Literal resume instruction
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
-`execution-ledger.json`, and this handover. C-01 through C-05 are accepted on
-public synthetic software evidence; G5 is released and M6 is in progress.
-C-05 acceptance is recorded in
-`reviews/2026-10-20-c05-sol-acceptance.md`. Its decisive clean archive check at
-`c34d9ff` is `Status: OK`, testthat FAIL 0, WARN 22, SKIP 0, PASS 4076. The
-warnings remain visible and must not be called warning-free. No real study or
-biological MOFA validation is claimed.
+`execution-ledger.json`, and this handover. C-01 through C-05 and C-08 are
+accepted on public synthetic software evidence; G5 is released and M6 is in
+progress. C-08 acceptance is recorded in
+`reviews/2026-10-20-c08-sol-acceptance.md`. Its decisive clean archive check at
+`d69ef1e` is `Status: OK`, testthat FAIL 0, WARN 22, SKIP 0, PASS 4367. The
+warnings remain visible and must not be called warning-free. No real study,
+biological endpoint validation or clinical association is claimed.
 
-Resume at the repeated clean archive package gate after integrated fixture-path
-repair `d45c88f`. The repair changed only the C-08 shared test and registration,
-using the existing source/installed `triomics_test_resource()` resolver. Fresh
-source C-08 verification passes 288 assertions with no failures, warnings or
-skips; the worker's installed C-08-shared run passed 52. Re-run the full package
-check with both verified R library roots and the isolated MOFA Python runtime.
-Accept C-08 only after `Status: OK` and explicit warning disposition.
-C-09/C-06/G6/D remain closed.
-C-09 and C-06 stay closed until C-08 is accepted; G6 and D stay closed until
-their declared gates. Do not loosen the B-T04 0.08 bound, reroll seeds
+Resume by archiving the completed C-08 shared worktree, then dispatch C-09 and
+C-06 on disjoint allowlists. G6 and D stay closed until both packets and their
+declared milestone gates pass. Do not loosen the B-T04 0.08 bound, reroll seeds
 1001:1400, edit frozen `discovery/spec-v2` content, or read private study data.

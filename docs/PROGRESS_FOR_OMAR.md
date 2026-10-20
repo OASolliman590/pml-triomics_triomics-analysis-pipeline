@@ -7,21 +7,23 @@ and lipidomics while keeping studies separate.
 Stage C has accepted data handoff, concatenation baselines, leakage-safe nested
 evaluation, categorical DIABLO, continuous block.spls, and exploratory MOFA2.
 
-**Changed:** C-05 completed both permitted repairs and is accepted. MOFA2 now
-trains, saves, reloads, handles declared missingness, reports native variance,
-compares independent seeds, rejects prediction claims, and validates typed
-feature mappings. The exact CLI passed. The clean archive check was `Status:
-OK`: 4,076 passes and 22 documented warnings—eight earlier B-T07 provenance
-warnings and fourteen native MOFA small-fixture diagnostics.
+**Changed:** C-08 is accepted. Stage C now turns fitted integration scores into
+immutable, traceable endpoints and schedules a separate Stage-B clinical
+association request without running the association twice. It preserves which
+samples, subjects, visits, outcomes and selection decisions produced each
+score; unsafe or ambiguous lineage fails closed. The clean archive check was
+`Status: OK`: 4,367 passes and the same 22 documented warnings—eight earlier
+B-T07 provenance warnings and fourteen native MOFA small-fixture diagnostics.
 
 **Not established:** These are synthetic fixtures, not biological validation or
 performance estimates for the fasting, diabetic-treatment, or organophosphate
 studies. No private study was fitted, and MOFA factors have no established
 biological interpretation or predictive validity.
 
-**Next:** C-08's packet code is integrated and passes 236 focused assertions.
-One isolated Luna worker is repairing the shared single-fit/CLI handoff; C-09
-and C-06 follow only after C-08 acceptance. Stage D remains closed.
+**Next:** C-09 (one declared matched clinical-prediction route) and C-06
+(cross-backend comparison and the full Stage-D handoff) are now released by
+dependency. G6 and Stage D remain closed until both packets pass review and the
+milestone audit.
 
 **Needs Omar:** Only publication timing; no scientific choice blocks work.
 
