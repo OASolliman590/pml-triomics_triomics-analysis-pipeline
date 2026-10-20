@@ -2,13 +2,14 @@
 
 Run `triomics-20260920-sol-01` continues on branch
 `spec/harden-v2-20260920`. G0 through G5 are released. Stages A and B, C-01,
-and C-02 are accepted on synthetic evidence. The package check of `fda190f`
-is `Status: OK`, with testthat FAIL 0, WARN 8, SKIP 0, PASS 3985. The eight
-warnings are not named to tests, so C-03 and C-04 stay unaccepted. C-05 has
-an unregistered train/save/reload path. Sol reproduced one synthetic smoke
-and Astra passed that path. C-05 is not accepted and `mofa2` is not
-registered. C-08 and every D packet stay closed. The historical sections
-below keep their original wording.
+C-02, C-03, and C-04 are accepted on synthetic software evidence. The
+`fda190f` package check remains `Status: OK`, with testthat FAIL 0, WARN 8,
+SKIP 0, PASS 3985. On 2026-10-20 Sol named all eight warnings as installed
+B-T07 missing-Git-metadata probes, and a fresh Astra-low adjudication approved
+their explicit disposition under A-T01-AC2. The run is not described as
+warning-free. C-05 has an unregistered train/save/reload path and remains
+unaccepted; C-08, C-09, C-06, G6, and every D packet stay closed. The
+historical sections below keep their original wording.
 
 ## Current evidence
 
@@ -112,7 +113,7 @@ Acceptance receipts are commit `38bc7dc`. The three run-owned chats are archived
 and the C-01 worktree is archived with a recoverable snapshot. C-02 is released;
 C-03/C-04/C-05 remain behind G5.
 
-## Active C-02 handoff
+## Historical C-02 handoff
 
 Fresh Luna-max chat `01a15056-fa00-79b3-867c-538f1a004894` completed C-02
 candidate `809190e` in isolated worktree
@@ -168,44 +169,20 @@ the first predictor block only; native component mismatch still fails closed.
 ## Literal resume instruction
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
-`execution-ledger.json`, and this handover. Head is `fda190f`.
-C-01 and C-02 are accepted on synthetic software evidence. G5 is released.
-C-03 is registered at `d5037ec` and is not accepted. The focused rereview
-`01a15383-3d65-7320-b462-e5c7b03b7c66` passed. The synthetic stage C command
-exited 0 for `mixomics_diablo`, 12/12 predicted, 15 inspected fits.
-Balanced error 0 is a fixture result. The package check of archive
-`d5037ec` failed: Status 1 ERROR, FAIL 7, WARN 8, PASS 3803. The known
-causes are the C-01 and C-02 tests that still treat DIABLO as unregistered,
-and the C-03 schema path that is absent from the installed package.
-See `reviews/2026-10-19-c03-package-check.md`. That check does not cover
-`6ea8d20`. The registry assertions and the installed schema path are
-repaired on the current tree. Sol reran C-01 (109 passed) and C-03
-(82 passed). Luna reran C-02 (165 passed) and C-04 (130 passed) on the
-repair worktree. The later installed check of `ed2f579` still failed:
-one second untrace of `triomics_block_spls_variance`, eight warnings,
-and one empty-test skip. `fda190f` untraces only while that binding is
-traceable. Sol reran filter C-04: 132 passed, 0 failed, 0 warnings,
-0 skips, 155.9 seconds. Astra's read-only review of that guard passed
-and did not rerun tests. The package check of `fda190f` is `Status: OK`. Its testthat line is
-FAIL 0, WARN 8, SKIP 0, PASS 3985. See
-`reviews/2026-10-19-c04-package-check.md`. Do not accept C-03 or C-04
-until those eight warnings are named.
+`execution-ledger.json`, and this handover. Current documentation snapshot is
+based on HEAD `1d0a5da`; commit the 2026-10-20 ledger/review reconciliation
+before dispatching new packet work. C-01 through C-04 are accepted on public
+synthetic software evidence; G5 is released and M6 is in progress. The
+`fda190f` package check is `Status: OK`, testthat FAIL 0, WARN 8, SKIP 0,
+PASS 3985. The eight warnings are named and explicitly dispositioned in
+`reviews/2026-10-20-fda190f-warning-disposition.md`; they remain visible and
+must not be called warning-free. C-03/C-04 acceptance is recorded in
+`reviews/2026-10-20-c03-c04-sol-acceptance.md`.
 
-C-04 is registered at `6ea8d20` and is not accepted. Astra's review of
-`a3b9713` was changes_required. Sol repaired variance preservation, the
-DIABLO continuous expectation, and the synthetic `score` fixture, then
-reran filter C-04 (129 passed) and the stage C CLI (12/12 predicted,
-rmse about 0.509). Those numbers are fixture results. The focused
-rereview of `6ea8d20` passed with the three Important findings closed
-and no new Critical or Important defect. See
-`reviews/2026-10-19-c04-repair-rereview.md`. That pass does not accept
-C-04. MOFA2 and mofapy2 are not installed, so C-05 AC1
-cannot be claimed from a missing runtime. The unregistered adapter now
-trains only after a nonempty HDF5 save, a reload, and output agreement.
-Sol's synthetic smoke returned trained=TRUE, a 12 by 1 factor matrix,
-and agreement on factors, weights, and variance. The public registry
-still refuses `mofa2`. Both C-05 suites passed 46 expectations. That
-smoke does not accept C-05. AC2 through AC4 remain open.
-Do not start C-08 or any D packet. Do not loosen the
-B-T04 0.08 bound or reroll seeds 1001:1400. Do not edit frozen
-`discovery/spec-v2` content. Leave private study data unread.
+Next legal implementation work is C-05 acceptance completion. Its unregistered
+MOFA path trained, saved and reloaded once in an isolated synthetic runtime,
+but C-05-AC2 through AC4 remain open and the public registry still refuses
+`mofa2`. Do not claim C-05 from that smoke. C-08, C-09 and C-06 remain
+unaccepted; G6 and D remain closed. Do not loosen the B-T04 0.08 bound or
+reroll seeds 1001:1400. Do not edit frozen `discovery/spec-v2` content. Leave
+private study data unread. No run-owned implementation worker is active.

@@ -36,13 +36,40 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "fda190f_package_check_status_ok_warnings_unnamed",
-    "last_reconciled": "2026-10-19",
+    "status": "c03_c04_accepted_c05_unaccepted",
+    "last_reconciled": "2026-10-20",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The package check of fda190f is Status OK, with testthat FAIL 0, WARN 8, SKIP 0, PASS 3985. The eight warnings are not named to tests, so C-03 and C-04 stay unaccepted. C-05 has an unregistered train/save/reload path and one Sol synthetic smoke. It is not accepted and mofa2 is not registered. C-08 and every D packet stay closed."
+    "disposition": "C-02 and G5 are accepted. The eight fda190f warnings are named and dispositioned as installed B-T07 missing-Git-metadata probes; the run remains WARN 8. Sol accepted C-03 and C-04 on synthetic software evidence. C-05 is implemented but unaccepted and mofa2 is not publicly registered. C-08, C-09, C-06, G6 and every D packet remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "c03_c04_accepted_after_named_warning_disposition",
+      "date": "2026-10-20",
+      "snapshot": "1d0a5da7f8bd8af379b414be947e8db1524e9909",
+      "package_archive_commit": "fda190fee27cad7c915b5c18eeb956f3d3b28bcb",
+      "package_check": "Status: OK; testthat FAIL 0, WARN 8, SKIP 0, PASS 3985. This was not a warning-free run.",
+      "warning_disposition": "All eight warnings are B-T07 git rev-parse status 128 diagnostics from installed artifact output roots without Git metadata: AC1 once, AC2 once, AC3 once, AC4 missing-artifact loop four times, privacy wording once. C-03, C-04 and A installed suites emitted zero warnings.",
+      "astra_adjudication": "Fresh read-only /root/c03_c04_warning_gate_astra: no Critical or Important blocker; A-T01-AC2 permits an explicit disposition and does not require another B-T07 repair exception.",
+      "fresh_tests": "Current-head C-03 and C-04 focused suites completed successfully with no testthat warning or failure.",
+      "acceptance": ["C-03-AC1", "C-03-AC2", "C-03-AC3", "C-03-AC4", "C-04-AC1", "C-04-AC2", "C-04-AC3", "C-04-AC4"],
+      "review_refs": [
+        "docs/implementation/reviews/2026-10-20-fda190f-warning-disposition.md",
+        "docs/implementation/reviews/2026-10-20-c03-c04-sol-acceptance.md"
+      ],
+      "allowed_next_transition": "Complete C-05 acceptance work without claiming unavailable runtime routes; then C-08, C-09 and C-06 may proceed only through their packet dependencies. G6 and D remain closed until the full M6 gate.",
+      "disposition": "Sol accepted C-03 and C-04 on synthetic software evidence. No B-T07 code change, threshold change, test weakening or repair-counter reset occurred."
+    },
+    {
+      "event": "fda190f_warnings_named_as_b_t07_git_metadata_probes",
+      "date": "2026-10-20",
+      "archive_sha256": "3edc121b735220774135e959e1e781010efe0e9eb3d5cdb431ede996e33e5bfe",
+      "testthat_rout_sha256": "dafca78abbce192b94568e969bcde9299a17c2a3afd4379090283aa17f88648a",
+      "check_log_sha256": "5bad850bd9a7eaaf4e862cbfeb31710ac542b79c9b6cd7e52e7f805deeac591a",
+      "environment": "R 4.6.1; testthat 3.3.2; triomics 0.1.0; mixOmics 6.36.0",
+      "review_ref": "docs/implementation/reviews/2026-10-20-fda190f-warning-disposition.md",
+      "disposition": "The exact warnings are preserved and disposed as expected installed-context absence of Git provenance. unavailable is not a verified commit hash."
+    },
     {
       "event": "fda190f_package_check_status_ok_warnings_unnamed",
       "date": "2026-10-19",
@@ -2743,32 +2770,52 @@
       "blockers": []
     },
     "C-02": {
-      "status": "final_repair2_active",
+      "status": "accepted",
       "attempts": 1,
-      "commit": null,
-      "acceptance_refs": [],
+      "repair_attempts": 2,
+      "commit": "85922cf",
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-10-19-c02-registration.md",
+        "docs/implementation/reviews/2026-10-19-c02-m5-acceptance.md"
+      ],
       "blockers": []
     },
     "C-03": {
-      "status": "not_started",
-      "attempts": 0,
-      "commit": null,
-      "acceptance_refs": [],
+      "status": "accepted",
+      "attempts": 1,
+      "repair_attempts": 1,
+      "commit": "d5037ec",
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-10-19-c03-astra-review.md",
+        "docs/implementation/reviews/2026-10-19-c03-repair-rereview.md",
+        "docs/implementation/reviews/2026-10-20-fda190f-warning-disposition.md",
+        "docs/implementation/reviews/2026-10-20-c03-c04-sol-acceptance.md"
+      ],
       "blockers": []
     },
     "C-04": {
-      "status": "not_started",
-      "attempts": 0,
-      "commit": null,
-      "acceptance_refs": [],
+      "status": "accepted",
+      "attempts": 1,
+      "repair_attempts": 1,
+      "commit": "6ea8d20",
+      "package_guard_commit": "fda190f",
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-10-19-c04-repair-rereview.md",
+        "docs/implementation/reviews/2026-10-19-c04-untrace-guard.md",
+        "docs/implementation/reviews/2026-10-20-fda190f-warning-disposition.md",
+        "docs/implementation/reviews/2026-10-20-c03-c04-sol-acceptance.md"
+      ],
       "blockers": []
     },
     "C-05": {
-      "status": "not_started",
-      "attempts": 0,
-      "commit": null,
+      "status": "implemented_unaccepted",
+      "attempts": 1,
+      "commit": "574a1d6",
       "acceptance_refs": [],
-      "blockers": []
+      "blockers": [
+        "Public mofa2 registration remains disabled.",
+        "C-05-AC2 through C-05-AC4 do not have complete acceptance evidence."
+      ]
     },
     "C-08": {
       "status": "not_started",
@@ -2930,14 +2977,16 @@
       "blocking_packets": []
     },
     "M5": {
-      "status": "c02_initial_attempt_active",
-      "review_ref": null,
-      "commit": null
+      "status": "accepted",
+      "review_ref": "docs/implementation/reviews/2026-10-19-c02-m5-acceptance.md",
+      "commit": "1a8cbe4"
     },
     "M6": {
-      "status": "not_started",
+      "status": "in_progress",
       "review_ref": null,
-      "commit": null
+      "commit": null,
+      "accepted_packets": ["C-03", "C-04"],
+      "blocking_packets": ["C-05", "C-08", "C-09", "C-06"]
     },
     "M7": {
       "status": "not_started",
