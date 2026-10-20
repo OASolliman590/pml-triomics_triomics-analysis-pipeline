@@ -1,30 +1,26 @@
 # Tri-omics progress
 
-**Goal:** Build a reproducible pipeline for quantified proteomics, metabolomics
-and lipidomics while keeping studies separate.
+**Goal:** Build a reproducible proteomics, metabolomics and lipidomics pipeline
+while keeping each study separate.
 
 **Works now:** Stages A and B are accepted on synthetic software evidence.
-Stage C has accepted data handoff, concatenation baselines, leakage-safe nested
-evaluation, categorical DIABLO, continuous block.spls, and exploratory MOFA2.
+Stage C has accepted handoff, baseline, leakage-safe evaluation, DIABLO,
+block.spls, exploratory MOFA2, and traceable score-endpoint machinery. C-06 now
+compares integration outputs and produces a Stage-D handoff. Its fresh suite
+passed 290 expectations; the synthetic CLI exited 0 and all hashes verified.
 
-**Changed:** C-08 is accepted. Stage C now turns fitted integration scores into
-immutable, traceable endpoints and schedules a separate Stage-B clinical
-association request without running the association twice. It preserves which
-samples, subjects, visits, outcomes and selection decisions produced each
-score; unsafe or ambiguous lineage fails closed. The clean archive check was
-`Status: OK`: 4,367 passes and the same 22 documented warnings—eight earlier
-B-T07 provenance warnings and fourteen native MOFA small-fixture diagnostics.
+**Changed:** The handoff distinguishes work that ran from work that did not.
+All four C-07 controls are explicitly `not_run`, so it is correctly partial.
+C-09's generic prediction machinery is integrated and passed 53 expectations,
+but shared CLI/schema registration is pending.
 
-**Not established:** These are synthetic fixtures, not biological validation or
-performance estimates for the fasting, diabetic-treatment, or organophosphate
-studies. No private study was fitted, and MOFA factors have no established
-biological interpretation or predictive validity.
+**Not established:** No private study was fitted. There is no biological
+validation, clinical performance estimate, executed C-07 comparison, or real
+C-09 protocol qualification. C-06 and C-09 are not M6-accepted.
 
-**Next:** C-09 (one declared matched clinical-prediction route) and C-06
-(cross-backend comparison and the full Stage-D handoff) are now released by
-dependency. G6 and Stage D remain closed until both packets pass review and the
-milestone audit.
+**Next:** After resume, register and verify C-09, then run the clean package
+gate and immutable Astra M6 audit. G6 and Stage D remain closed.
 
-**Needs Omar:** Only publication timing; no scientific choice blocks work.
+**Needs Omar:** Nothing now; work is paused at the requested cycle boundary.
 
 **Sync:** Local Git is authoritative. No new GitHub or Notion sync is claimed.

@@ -7,8 +7,34 @@ decisive C-08 clean archive check at `d69ef1e` is `Status: OK`, with testthat
 FAIL 0, WARN 22, SKIP 0, PASS 4367. Eight warnings are the previously
 dispositioned B-T07 missing-Git-metadata probes; fourteen are native MOFA
 small-fixture/QC diagnostics. The run is not described as warning-free. C-09
-and C-06 are the next legal packets. G6 and every D packet remain closed.
+packet code and C-06 packet/shared code are now integrated. C-06 passed fresh
+integrated verification, but neither packet is accepted at M6. C-09 shared
+registration and the M6 package/Astra gates remain pending. The run is paused
+at Omar's request; G6 and every D packet remain closed.
 The historical sections below keep their original wording.
+
+## 21 October pause after C-06 shared cycle
+
+C-09 initial plus two bounded repairs were integrated as `98f73c3`, `6713603`
+and `996087f`; its exact packet suite passed 53 expectations. Its exclusive
+shared NAMESPACE/schema/CLI registration has not started, and its real
+endpoint, deployment and uncertainty protocol remains unqualified.
+
+C-06 packet commits were integrated as `7d29da4` and `634c29f`. Its reviewed
+shared Stage-C/D-handoff series was integrated as `32ab4d1`, `a658398` and
+`3753be0`. Fresh integrated C-06 tests passed 290 expectations with zero
+failures, warnings or skips. The exact synthetic CLI exited 0 and wrote a
+truthful partial D handoff: all five payload/envelope pairs plus the manifest
+envelope matched recorded hashes; the four C-07 controls are explicitly
+`not_run`; C-09 is conditional/not started. The accepted C-02 regression
+fixture also exited 0 with 12/12 eligible predictions and correct root identity.
+Its single-fit D export remains explicitly unavailable without downgrading the
+complete nested evaluation.
+
+This is synthetic software evidence only. No private study data were read or
+fitted. No package gate or immutable M6 Astra audit ran after this integration,
+so C-06 is verified but not M6-accepted. All run-owned workers are reconciled;
+there is no active handoff or background polling.
 
 ## Current evidence
 
@@ -170,17 +196,16 @@ the first predictor block only; native component mismatch still fails closed.
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `execution-ledger.json`, and this handover. C-01 through C-05 and C-08 are
 accepted on public synthetic software evidence; G5 is released and M6 is in
-progress. C-08 acceptance is recorded in
-`reviews/2026-10-20-c08-sol-acceptance.md`. Its decisive clean archive check at
-`d69ef1e` is `Status: OK`, testthat FAIL 0, WARN 22, SKIP 0, PASS 4367. The
-warnings remain visible and must not be called warning-free. No real study,
-biological endpoint validation or clinical association is claimed.
+progress. C-09 packet code is integrated but shared registration is pending.
+C-06 packet and shared CLI/D-handoff code are integrated and verified at
+`3753be0`, but acceptance still requires the M6 package and immutable audit
+gates. No real study, biological endpoint validation or clinical association is
+claimed.
 
-Resume by reconciling `/root/c09_luna` and `/root/c06_luna`, the two fresh
-isolated Luna-max workers at base `ef7da20`. C-09 owns only its clinical
-prediction-comparison packet and may test a public synthetic declared protocol;
-it must not invent real endpoint/deployment qualification. C-06 owns only the
-cross-backend comparison and D-handoff packet. Inspect each candidate and send
-it to a fresh Sol-6.1-high review before integration. G6 and D stay closed until
-both packets and their declared milestone gates pass. Do not loosen the B-T04 0.08 bound, reroll seeds
-1001:1400, edit frozen `discovery/spec-v2` content, or read private study data.
+Resume by starting one fresh isolated Luna-max worker for **C-09 exclusive
+shared NAMESPACE/schema/Stage-C CLI registration from the paused HEAD only**.
+After review and serial integration, run fresh C-09 verification, the clean M6
+package gate, and an immutable Astra-low M6 audit. Do not rerun C-02, C-06, or
+any prior Luna repairs. Do not release G6 or Stage D before M6 acceptance. Do
+not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
+`discovery/spec-v2` content, or read private study data.

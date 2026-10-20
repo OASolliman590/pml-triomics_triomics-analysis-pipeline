@@ -34,30 +34,32 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/c06_shared_luna",
-      "role": "luna_shared_integration_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "packet": "C-06-shared",
-      "attempt": 1,
-      "repair_attempt": 2,
-      "base_commit": "634c29f",
-      "candidate_commit": "be2a4e4",
-      "worktree": "/Users/megastore/.codex/worktrees/c06-shared-cli/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Return final bounded repair 2 closing the four Important focused-rereview findings. Sol inspects and verifies directly with no second rereview, then reconciles and pauses without starting C-09 shared registration, M6 audit or Stage D.",
-      "wait_cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "c06_shared_repair2_active",
+    "status": "paused_user_requested_after_c06_shared_cycle",
     "last_reconciled": "2026-10-21",
-    "active_handoffs": ["/root/c06_shared_luna"],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The sole C-06 shared focused rereview left four Important findings. Final bounded repair 2 must preserve accepted C-02 success, correct root identity and byte-hash lineage, and avoid inventing a split policy for unrun C-07 controls. C-09 shared registration, M6 audit and Stage D remain intentionally unopened before the requested pause."
+    "disposition": "C-06 shared repair 2 was inspected, integrated and freshly verified. C-09 packet code is integrated but its exclusive shared registration remains pending. The user requested a pause after this cycle; no C-09 shared worker, M6 package/audit gate or Stage D work was started."
   },
   "orchestration_events": [
+    {
+      "event": "c06_shared_cycle_integrated_verified_and_paused",
+      "date": "2026-10-21",
+      "worker": "/root/c06_shared_luna",
+      "candidate_commits": ["1cc35048907ab4dd866d7129759ddcb7672d05eb", "be2a4e4", "29e1e19"],
+      "integration_commits": ["32ab4d1", "a658398", "3753be0"],
+      "integrated_test": "C-06 PASS 290, FAIL 0, WARN 0, SKIP 0",
+      "c06_cli": "Exit 0; D handoff partial; all five payload/envelope pairs plus manifest envelope matched recorded SHA-256; C-07 controls explicitly not_run; C-09 conditional/not_started.",
+      "c06_manifest_sha256": "ecc9b0ffd794c902aa2644e5e7fbacc74cfbee7fc562ae5ad0100cc2e1cc1fbb",
+      "c06_manifest_envelope_sha256": "5053e22e173ef3aaa893a5a37f7a95f629a9ee9c6c9bc5f558807db20b7eb680",
+      "c02_regression": "Exact accepted fixture exit 0; 12/12 eligible synthetic units predicted; complete run registry; root identities preserved; single-fit D export remains explicitly unavailable.",
+      "c02_manifest_sha256": "56d720c76c687fc7a088a54321d618eedd773ec5811f64d6caeacf472d877647",
+      "c02_manifest_envelope_sha256": "6b1030f3d3d0ee8503db1a6220bdc11f601737caf90cd9f15b2b563b46a45ecf",
+      "review_ref": "docs/implementation/reviews/2026-10-21-c06-shared-integration-verification.md",
+      "allowed_next_transition": "On explicit resume, start only the C-09 exclusive shared NAMESPACE/schema/CLI registration from the paused HEAD. Then verify it and run the M6 package gate plus immutable Astra audit. Do not rerun C-02 or Luna repairs.",
+      "disposition": "Paused at the user-requested cycle boundary. C-06 is integrated and verified but remains M6-pending; G6 and Stage D remain closed."
+    },
     {
       "event": "c06_shared_repair1_rereview_findings_repair2_dispatched",
       "date": "2026-10-21",
@@ -3188,16 +3190,17 @@
       "blockers": ["Shared NAMESPACE, typed schema and Stage-C CLI registration are pending; the real endpoint/deployment/uncertainty protocol remains unqualified."]
     },
     "C-06": {
-      "status": "integrated_shared_cli_repair_2_active",
+      "status": "integrated_verified_m6_pending",
       "attempts": 1,
       "repair_attempts": 1,
       "shared_repair_attempts": 2,
       "commit": "a60a7a56eec1250bd4a9e44253597f83a3e565fd",
-      "integration_commits": ["7d29da4", "634c29f"],
+      "integration_commits": ["7d29da4", "634c29f", "32ab4d1", "a658398", "3753be0"],
       "shared_candidate_commit": "1cc35048907ab4dd866d7129759ddcb7672d05eb",
       "shared_repair_candidate": "be2a4e4",
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c06-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c06-shared-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-shared-repair1-rereview.md"],
-      "blockers": []
+      "shared_repair2_candidate": "29e1e19",
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c06-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c06-shared-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-shared-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c06-shared-integration-verification.md"],
+      "blockers": ["M6 clean package gate and immutable Astra milestone audit remain pending; C-07 control evaluation was explicitly not run."]
     },
     "D-T01": {
       "status": "not_started",
@@ -3382,5 +3385,5 @@
       "docs/implementation/notion-sync/2026-10-17-three-study-dataset-handover.md"
     ]
   },
-  "close_state": "open_active"
+  "close_state": "open_paused"
 }

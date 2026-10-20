@@ -28,4 +28,3 @@ complete-empty case, propagate authoritative lineage, preserve accepted C-02
 nested execution with real regression coverage, enforce requiredness without
 erasing member dispositions, and represent an absent unrun split plan honestly.
 This review neither accepts C-06 nor releases G6.
-
