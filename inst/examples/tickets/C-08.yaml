@@ -3,7 +3,7 @@ study_id: triomics_c_08_fixture
 data_class: synthetic
 sources:
   - source_id: sample_metadata
-    file: ../data/independent/metadata.tsv
+    file: ../data/c08/metadata.tsv
     format: tsv
     role: sample_metadata
     selection_history: full_unselected
@@ -21,12 +21,13 @@ sources:
     selection_history: full_unselected
     selection_evidence: Synthetic software fixture; no outcome-based selection.
 metadata:
-  file: ../data/independent/metadata.tsv
+  file: ../data/c08/metadata.tsv
   sample_id: sample_id
-  subject_id: null
+  subject_id: subject_id
   column_types:
     sample_id: string
     group: factor
+    subject_id: string
   factor_levels:
     group:
       - control
@@ -174,11 +175,28 @@ analyses:
           uncertainty_protocol_ref: null
     completeness: strict
 clinical:
-  enabled: false
-  dictionary_file: null
-  observations_file: null
-  links_file: null
-  objectives: []
+  enabled: true
+  dictionary_file: ../data/c08/dictionary.tsv
+  observations_file: ../data/c08/observations.tsv
+  links_file: ../data/c08/links.tsv
+  objectives:
+    - objective_id: pca_pc1_glucose_change
+      analysis_id: synthetic_c08_scores
+      mode: baseline_to_later
+      response_ref: score_fe78a4f3b590e50bd2f2
+      predictor_ref: glucose
+      endpoint_ref: score_fe78a4f3b590e50bd2f2
+      baseline_visit_ref: V0
+      later_visit_ref: V1
+      horizon_days: 30
+      baseline_adjustment: false
+      outcome_estimand: change
+      adjustments: []
+      time_window_ref: null
+      missingness_policy: complete_case
+      family_ref: synthetic_c08_score_family
+      hypothesis_status: exploratory
+      protocol_ref: synthetic-c08-score-association-schedule
 annotation:
   resources: []
   requests: []

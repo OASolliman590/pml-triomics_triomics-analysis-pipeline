@@ -1,0 +1,13 @@
+link_id	subject_id	visit_id	sample_id	cardinality	match_rule	reference_time
+SYN_LINK_C01_V0	C01	V0	SYN_01	one_to_one	exact_sample	2020-01-01
+SYN_LINK_C02_V0	C02	V0	SYN_02	one_to_one	exact_sample	2020-01-01
+SYN_LINK_C03_V0	C03	V0	SYN_03	one_to_one	exact_sample	2020-01-01
+SYN_LINK_T01_V0	T01	V0	SYN_04	one_to_one	exact_sample	2020-01-01
+SYN_LINK_T02_V0	T02	V0	SYN_05	one_to_one	exact_sample	2020-01-01
+SYN_LINK_T03_V0	T03	V0	SYN_06	one_to_one	exact_sample	2020-01-01
+SYN_LINK_C01_V1	C01	V1	SYN_07	one_to_one	exact_sample	2020-01-31
+SYN_LINK_C02_V1	C02	V1	SYN_08	one_to_one	exact_sample	2020-01-31
+SYN_LINK_C03_V1	C03	V1	SYN_09	one_to_one	exact_sample	2020-01-31
+SYN_LINK_T01_V1	T01	V1	SYN_10	one_to_one	exact_sample	2020-01-31
+SYN_LINK_T02_V1	T02	V1	SYN_11	one_to_one	exact_sample	2020-01-31
+SYN_LINK_T03_V1	T03	V1	SYN_12	one_to_one	exact_sample	2020-01-31

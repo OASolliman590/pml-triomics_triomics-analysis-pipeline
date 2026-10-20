@@ -1,0 +1,2 @@
+variable_id	label	type	units	units_verification	role	allowed_model_roles	time_semantics	privacy	verification	evidence	codebook	missing_map	censoring	value_separator	time_format
+glucose	Synthetic glucose	continuous	mmol/L	verified	measured	predictor	visit	ordinary	verified	Public synthetic fixture; no participant data.		.=placeholder	forbidden		iso8601_date

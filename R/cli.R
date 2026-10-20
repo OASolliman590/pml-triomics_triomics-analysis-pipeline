@@ -176,6 +176,233 @@ triomics_c01_result_payload <- function(result) {
   )
 }
 
+triomics_c08_cli_links <- function(clinical, source_sample_ids) {
+  public <- clinical$public
+  source_sample_ids <- as.character(source_sample_ids)
+  if (!is.list(public) || !is.list(public$links)) {
+    triomics_c08_abort(
+      "C_SCORE_COVERAGE_MISMATCH",
+      "C-08 clinical scheduling requires the public, linked clinical input view.",
+      "clinical_view"
+    )
+  }
+  links <- lapply(source_sample_ids, function(sample_id) {
+    matches <- Filter(function(link) identical(link$sample_id, sample_id), public$links)
+    if (!length(matches)) {
+      triomics_c08_abort(
+        "C_SCORE_COVERAGE_MISMATCH",
+        "An endpoint source sample has no declared clinical link.",
+        "clinical.links_file"
+      )
+    }
+    required <- c("link_id", "subject_key", "visit_id", "reference_time", "status", "cardinality")
+    signatures <- lapply(matches, function(link) {
+      lapply(required, function(field) {
+        value <- link[[field]]
+        if (is.null(value)) "" else as.character(value)
+      }) |> stats::setNames(required)
+    })
+    reference <- signatures[[1L]]
+    agrees <- vapply(signatures, function(signature) {
+      all(vapply(required[-1L], function(field) {
+        identical(signature[[field]], reference[[field]])
+      }, logical(1L)))
+    }, logical(1L))
+    if (!all(agrees) || !identical(reference$status, "approved") ||
+        !identical(reference$cardinality, "one_to_one") ||
+        !nzchar(reference$subject_key) || !nzchar(reference$visit_id) ||
+        !nzchar(reference$reference_time) || !nzchar(reference$link_id)) {
+      triomics_c08_abort(
+        "C_SCORE_COVERAGE_MISMATCH",
+        "Per-sample clinical links must agree on one approved subject, visit, time, and cardinality.",
+        "clinical.links_file"
+      )
+    }
+    # Preserve the actual link id from the first agreeing source row; do not mint a replacement.
+    list(
+      link_id = matches[[1L]]$link_id,
+      sample_id = sample_id,
+      subject_id = reference$subject_key,
+      subject_key = reference$subject_key,
+      visit_id = reference$visit_id,
+      reference_time = reference$reference_time,
+      status = reference$status,
+      cardinality = reference$cardinality,
+      source_sha256 = matches[[1L]]$source_sha256
+    )
+  })
+  names(links) <- source_sample_ids
+  links
+}
+
+triomics_c08_cli_clinical_view <- function(clinical, source_sample_ids) {
+  public <- clinical$public
+  links <- triomics_c08_cli_links(clinical, source_sample_ids)
+  list(
+    study_id = public$study_id,
+    dictionary = public$dictionary,
+    observations = public$observations,
+    links = links
+  )
+}
+
+triomics_c08_cli_unit_map <- function(resolved, sample_registry, analysis_unit_map,
+                                      clinical_view = NULL) {
+  declared_map <- if (!is.null(resolved$unit_map)) resolved$unit_map else analysis_unit_map
+  representation_id <- resolved$representation_id
+  if (is.null(representation_id)) representation_id <- resolved$representation
+  records <- triomics_c08_unit_records(declared_map)
+  if (is.null(records) || !length(records)) {
+    triomics_c08_abort(
+      "C_SCORE_LINEAGE_INVALID",
+      "C-08 requires the declared AnalysisUnitMap from analysis resolution.",
+      "analysis_unit_map"
+    )
+  }
+  registry <- sample_registry
+  if (!is.data.frame(registry) || !"sample_id" %in% names(registry)) {
+    triomics_c08_abort(
+      "C_SCORE_LINEAGE_INVALID", "C-08 requires the predecessor sample registry.", "sample_registry"
+    )
+  }
+  clinical_links <- if (is.null(clinical_view)) list() else clinical_view$links
+  lapply(records, function(record) {
+    source_ids <- record$source_sample_ids
+    if (!is.character(source_ids) || !length(source_ids) || anyNA(source_ids) ||
+        any(!nzchar(source_ids))) {
+      triomics_c08_abort(
+        "C_SCORE_LINEAGE_INVALID", "AnalysisUnitMap source sample ids are incomplete.", "source_sample_ids"
+      )
+    }
+    subject_ids <- character()
+    if (length(clinical_links)) {
+      mapped <- clinical_links[source_ids]
+      if (length(mapped) != length(source_ids) || any(vapply(mapped, is.null, logical(1L)))) {
+        triomics_c08_abort(
+          "C_SCORE_COVERAGE_MISMATCH", "A declared AnalysisUnitMap source sample is not linked.",
+          "clinical.links_file"
+        )
+      }
+      subject_ids <- vapply(mapped, `[[`, character(1L), "subject_key")
+    } else if ("subject_id" %in% names(registry)) {
+      subject_ids <- as.character(registry$subject_id[match(source_ids, registry$sample_id)])
+      subject_ids[is.na(subject_ids)] <- ""
+    }
+    subject_ids <- unique(subject_ids[nzchar(subject_ids)])
+    if (length(subject_ids) > 1L) {
+      triomics_c08_abort(
+        "C_SCORE_COVERAGE_MISMATCH",
+        "AnalysisUnitMap source samples disagree on the declared subject identity.",
+        "analysis_unit_map.subject_id"
+      )
+    }
+    record$subject_id <- if (length(subject_ids)) subject_ids[[1L]] else NULL
+    record$representation_id <- representation_id
+    record
+  })
+}
+
+triomics_c08_cli_selection <- function(request, ingested) {
+  block_ids <- as.character(unlist(request$block_ids, use.names = FALSE))
+  selection <- ingested$selection
+  source_selection <- lapply(block_ids, function(block_id) {
+    if (!is.data.frame(selection) || !all(c("block_id", "selection_history", "inference_gate") %in% names(selection))) {
+      triomics_c08_abort(
+        "C_SCORE_LINEAGE_INVALID", "C-08 requires source selection ancestry from ingest.", "selection"
+      )
+    }
+    rows <- selection[selection$block_id == block_id, , drop = FALSE]
+    if (nrow(rows) != 1L) {
+      triomics_c08_abort(
+        "C_SCORE_LINEAGE_INVALID", "Source selection ancestry must resolve once per block.", "selection"
+      )
+    }
+    as.list(rows[1L, , drop = FALSE])
+  })
+  names(source_selection) <- block_ids
+  histories <- vapply(source_selection, function(source) as.character(source$selection_history), character(1L))
+  gates <- vapply(source_selection, function(source) as.character(source$inference_gate), character(1L))
+  if (any(histories == "unknown")) {
+    triomics_c08_abort(
+      "C_SCORE_LINEAGE_INVALID",
+      "Unknown source selection ancestry cannot produce a qualified C-08 handoff.",
+      "selection"
+    )
+  }
+  ancestry <- if (any(histories == "outcome_selected")) {
+    "selected_after_clinical_outcome"
+  } else {
+    "prespecified"
+  }
+  list(
+    ancestry = ancestry,
+    inspected_outcome = NULL,
+    validity = if (any(gates == "panel_only")) "panel_only" else "qualified",
+    source_selection = source_selection,
+    adapter_selection = request$selection
+  )
+}
+
+triomics_c08_cli_objective_spec <- function(config, analysis) {
+  objectives <- config$clinical$objectives
+  if (!is.list(objectives) || !length(objectives)) {
+    triomics_c08_abort(
+      "C_SCORE_REQUEST_INVALID", "Clinical score scheduling needs explicitly declared objectives.",
+      "clinical.objectives"
+    )
+  }
+  family_refs <- unique(vapply(objectives, function(objective) {
+    if (is.null(objective$family_ref)) "" else as.character(objective$family_ref)
+  }, character(1L)))
+  if (length(family_refs) != 1L || !nzchar(family_refs[[1L]])) {
+    triomics_c08_abort(
+      "C_SCORE_REQUEST_INVALID", "One scheduled request must carry one declared objective family.",
+      "clinical.objectives.family_ref"
+    )
+  }
+  list(
+    objectives = objectives,
+    family = list(
+      family_id = family_refs[[1L]],
+      member_ids = unique(vapply(objectives, function(objective) as.character(objective$endpoint_ref), character(1L))),
+      claim_scope = "declared_clinical_score_associations"
+    ),
+    trend = isTRUE(analysis$statistics$trend),
+    robust = isTRUE(analysis$statistics$robust),
+    fallback = if (is.null(analysis$statistics$fallback)) "none" else analysis$statistics$fallback,
+    imputation = "none"
+  )
+}
+
+triomics_c08_cli_write_artifact <- function(payload, path, envelope_path, artifact_type,
+                                            artifact_id, config, analysis, inputs,
+                                            status, privacy_class) {
+  triomics_write_json_atomic(payload, path)
+  envelope <- triomics_artifact_envelope(
+    artifact_type = artifact_type,
+    artifact_id = artifact_id,
+    study_id = config$study_id,
+    run_id = "c-08",
+    status = status,
+    config_sha256 = attr(config, "config_sha256"),
+    payload = path,
+    producer_commit = "not-recorded",
+    inputs = inputs,
+    reason_codes = character(),
+    privacy_class = privacy_class
+  )
+  envelope$analysis_id <- analysis$analysis_id
+  envelope$preparation_context_id <- analysis$preparation_context_id
+  envelope$representation_id <- analysis$design$representation
+  triomics_write_envelope(envelope, envelope_path)
+  list(
+    path = path,
+    envelope_path = envelope_path,
+    payload_sha256 = triomics_sha256(path),
+    envelope_sha256 = triomics_sha256(envelope_path)
+  )
+}
+
 triomics_c02_block_operations <- function(block) {
   preprocessing <- block$preprocessing
   filter_method <- if (!is.null(preprocessing$filter$prevalence) ||
@@ -441,9 +668,34 @@ triomics_execute_stage_c <- function(config_path, output) {
   }
 
   ingested <- triomics_ingest_configured_study(config, config_path)
+  clinical <- if (isTRUE(config$clinical$enabled)) {
+    triomics_ingest_clinical(config, config_path, ingested$sample_registry)
+  } else {
+    NULL
+  }
   unit_ids <- as.character(ingested$sample_metadata$sample_id)
   representation <- analysis$design$representation
   block_ids <- as.character(unlist(analysis$block_ids, use.names = FALSE))
+  analysis_unit_map <- NULL
+  if (identical(representation, "levels")) {
+    unit_type <- if (is.character(analysis$design$visit_column) &&
+                     length(analysis$design$visit_column) == 1L &&
+                     nzchar(analysis$design$visit_column)) "visit_level" else "sample"
+    analysis_unit_map <- data.frame(
+      unit_id = unit_ids,
+      unit_type = rep(unit_type, length(unit_ids)),
+      representation_id = rep(representation, length(unit_ids)),
+      stringsAsFactors = FALSE
+    )
+    analysis_unit_map$source_sample_ids <- I(lapply(unit_ids, identity))
+    if ("subject_id" %in% names(ingested$sample_registry)) {
+      registry_subjects <- as.character(ingested$sample_registry$subject_id)
+      if (length(registry_subjects) == length(unit_ids) && all(!is.na(registry_subjects)) &&
+          all(nzchar(registry_subjects))) {
+        analysis_unit_map$subject_id <- registry_subjects
+      }
+    }
+  }
   study <- list(
     study_id = ingested$study_id,
     preparation_context_id = analysis$preparation_context_id,
@@ -453,16 +705,42 @@ triomics_execute_stage_c <- function(config_path, output) {
     feature_registry = ingested$feature_registry,
     assays = ingested$assays[block_ids],
     assay_hashes = NULL,
-    analysis_unit_map = data.frame(
-      unit_id = unit_ids,
-      representation_id = rep(representation, length(unit_ids)),
-      stringsAsFactors = FALSE
-    )
+    analysis_unit_map = analysis_unit_map
   )
   resolved <- triomics_resolve_analysis(study, analysis)
+  c08_methods <- c("concat_pca", "mixomics_diablo", "mixomics_block_spls", "mofa2")
+  has_clinical_objectives <- isTRUE(config$clinical$enabled) &&
+    is.list(config$clinical$objectives) && length(config$clinical$objectives) > 0L
+  resolved_unit_records <- triomics_c08_unit_records(
+    if (!is.null(resolved$unit_map)) resolved$unit_map else analysis_unit_map
+  )
+  clinical_source_ids <- unique(unlist(lapply(resolved_unit_records, function(record) {
+    record$source_sample_ids
+  }), use.names = FALSE))
+  clinical_view <- if (has_clinical_objectives && !is.null(clinical) && length(clinical_source_ids)) {
+    triomics_c08_cli_clinical_view(clinical, clinical_source_ids)
+  } else {
+    NULL
+  }
 
-  integration_results <- lapply(requests, function(request) {
+  integration_results <- lapply(seq_along(requests), function(request_index) {
+    request <- requests[[request_index]]
+    c08_method <- request$method %in% c08_methods
+    if (has_clinical_objectives && !c08_method) {
+      triomics_c08_abort(
+        "C_SCORE_BACKEND_UNAVAILABLE",
+        "Declared clinical objectives need a registered C-08 score endpoint method.",
+        "analyses.integration.method"
+      )
+    }
     if (identical(request$evaluation$mode, "nested_cv")) {
+      if (has_clinical_objectives) {
+        triomics_c08_abort(
+          "C_SCORE_REQUEST_INVALID",
+          "Nested evaluation does not expose a single same-fit score endpoint for B scheduling.",
+          "analyses.integration.evaluation.mode"
+        )
+      }
       evaluation <- triomics_c02_evaluate_request(
         config, ingested, analysis, request, block_ids, unit_ids, output
       )
@@ -481,14 +759,105 @@ triomics_execute_stage_c <- function(config_path, output) {
     spec$target_unit_ids <- unit_ids
     spec$required_views <- block_ids
     spec$task_mode <- request$evaluation$mode
-    result <- integrate_blocks(resolved, spec)
-    list(
+    result <- if (c08_method) {
+      unit_map <- triomics_c08_cli_unit_map(
+        resolved, ingested$sample_registry, analysis_unit_map, clinical_view
+      )
+      selection <- triomics_c08_cli_selection(request, ingested)
+      fit_context <- list(
+        integration_id = request$integration_id,
+        unit_map = unit_map,
+        selection = selection,
+        available_at_time = "after_integration_fit",
+        dependency_group = paste(ingested$study_id, request$integration_id, sep = "::")
+      )
+      fitted <- triomics_integration_fit_once(resolved, spec, c08_context = fit_context)
+      endpoint_bundle <- triomics_integration_score_endpoints(
+        fitted$result, fitted$backend_fit, fitted$context
+      )
+      endpoint_ids <- vapply(endpoint_bundle$endpoints, function(endpoint) {
+        endpoint$endpoint_id
+      }, character(1L))
+      endpoint_directory <- file.path(output, "C", "score-endpoints")
+      endpoint_stub <- sprintf("integration-%02d", request_index)
+      endpoint_path <- file.path(endpoint_directory, paste0(endpoint_stub, ".json"))
+      endpoint_envelope_path <- file.path(endpoint_directory, paste0(endpoint_stub, ".envelope.json"))
+      endpoint_payload <- unclass(endpoint_bundle)
+      endpoint_payload$schema_version <- "2.0"
+      source_inputs <- unname(lapply(ingested$source_manifests, function(source) {
+        list(artifact_id = source$source_id, sha256 = source$sha256)
+      }))
+      endpoint_artifact <- triomics_c08_cli_write_artifact(
+        endpoint_payload, endpoint_path, endpoint_envelope_path,
+        artifact_type = "integration_score_endpoint_bundle",
+        artifact_id = paste0("c08-score-endpoint-bundle-", request_index),
+        config = config, analysis = analysis, inputs = source_inputs,
+        status = "complete",
+        privacy_class = if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive"
+      )
+      endpoint_reference <- list(
+        artifact_id = paste0("c08-score-endpoint-bundle-", request_index),
+        payload_file = file.path("C", "score-endpoints", basename(endpoint_path)),
+        envelope_file = file.path("C", "score-endpoints", basename(endpoint_envelope_path)),
+        payload_sha256 = endpoint_artifact$payload_sha256,
+        envelope_sha256 = endpoint_artifact$envelope_sha256,
+        endpoint_ids = as.list(endpoint_ids)
+      )
+      request_reference <- NULL
+      if (has_clinical_objectives) {
+        objective_spec <- triomics_c08_cli_objective_spec(config, analysis)
+        scheduled <- triomics_schedule_clinical_score_request(
+          endpoint_bundle, objective_spec, clinical_view
+        )
+        request_directory <- file.path(output, "B", "clinical-score-association-requests")
+        request_stub <- sprintf("request-%02d", request_index)
+        request_path <- file.path(request_directory, paste0(request_stub, ".json"))
+        request_envelope_path <- file.path(request_directory, paste0(request_stub, ".envelope.json"))
+        clinical_inputs <- list(
+          list(artifact_id = endpoint_reference$artifact_id, sha256 = endpoint_artifact$payload_sha256),
+          list(artifact_id = "clinical-dictionary-source", sha256 = clinical$dictionary_sha256),
+          list(artifact_id = "clinical-observations-source", sha256 = clinical$observations_sha256),
+          list(artifact_id = "clinical-links-source", sha256 = clinical$links_sha256)
+        )
+        request_artifact <- triomics_c08_cli_write_artifact(
+          unclass(scheduled), request_path, request_envelope_path,
+          artifact_type = "clinical_score_association_request",
+          artifact_id = paste0("c08-clinical-score-request-", request_index),
+          config = config, analysis = analysis, inputs = clinical_inputs,
+          status = "not_started",
+          privacy_class = if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive"
+        )
+        request_reference <- list(
+          artifact_id = paste0("c08-clinical-score-request-", request_index),
+          payload_file = file.path("B", "clinical-score-association-requests", basename(request_path)),
+          envelope_file = file.path("B", "clinical-score-association-requests", basename(request_envelope_path)),
+          payload_sha256 = request_artifact$payload_sha256,
+          envelope_sha256 = request_artifact$envelope_sha256,
+          request_sha256 = scheduled$request_sha256,
+          status = scheduled$status,
+          owner_stage = scheduled$owner_stage,
+          model_execution = scheduled$model_execution
+        )
+      }
+      list(
+        result = fitted$result,
+        endpoint_bundle = endpoint_bundle,
+        endpoint_reference = endpoint_reference,
+        request_reference = request_reference
+      )
+    } else {
+      list(result = integrate_blocks(resolved, spec))
+    }
+    item <- list(
       integration_id = request$integration_id,
       method = request$method,
       required = isTRUE(request$required),
       status = "complete",
-      result = triomics_c01_result_payload(result)
+      result = triomics_c01_result_payload(result$result)
     )
+    if (!is.null(result$endpoint_reference)) item$score_endpoint_bundle <- result$endpoint_reference
+    if (!is.null(result$request_reference)) item$clinical_score_request <- result$request_reference
+    item
   })
 
   payload <- list(

@@ -1,0 +1,13 @@
+sample_id	group	subject_id
+SYN_01	control	C01
+SYN_02	control	C02
+SYN_03	control	C03
+SYN_04	control	T01
+SYN_05	control	T02
+SYN_06	control	T03
+SYN_07	treatment	C01
+SYN_08	treatment	C02
+SYN_09	treatment	C03
+SYN_10	treatment	T01
+SYN_11	treatment	T02
+SYN_12	treatment	T03
