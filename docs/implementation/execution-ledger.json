@@ -34,29 +34,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/c08_shared_luna",
-      "role": "luna_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "packet": "C-08",
-      "attempt": "exclusive_shared_correctness_repair_package_continuation",
-      "base_commit": "9338bd841c3cb959028f22d7f42d05bb6c6c802a",
-      "candidate_commit": null,
-      "worktree": "/Users/megastore/.codex/worktrees/c08-shared-handoff/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Change only installed/source fixture lookup in the shared C-08 test and registration evidence, then return one clean additive commit for direct Sol verification and a repeated clean package gate.",
-      "wait_cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "c08_package_fixture_repair_active",
+    "status": "c08_package_check_retry_pending",
     "last_reconciled": "2026-10-20",
-    "active_handoffs": ["/root/c08_shared_luna"],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Focused Sol rereview passed and shared commits were integrated as c5535fb and 2170820. The clean archive gate at 329f3a6 reached PASS 4346 but failed three new C-08 tests whose source-only fixture path is unavailable in installed context. One final narrow shared continuation owns only that test-fixture lookup; C-08 remains unaccepted."
+    "disposition": "Final installed-fixture repair 6ec94b3 was integrated as d45c88f and fresh source C-08 verification passes 288 with no failures, warnings or skips. No product code changed. C-08 remains unaccepted pending the repeated clean archive package gate."
   },
   "orchestration_events": [
+    {
+      "event": "c08_package_fixture_repair_integrated",
+      "date": "2026-10-20",
+      "worker": "/root/c08_shared_luna",
+      "candidate_commit": "6ec94b35f7fe05cb61ff30b43d7bd7bf2955c508",
+      "integrated_commit": "d45c88f",
+      "changed_files": ["tests/testthat/test-C-08-shared.R", "docs/implementation/registrations/C-08.json"],
+      "worker_installed_test": "C-08-shared PASS 52, FAIL 0, WARN 0, SKIP 0 after reproducing FAIL 3, WARN 2, PASS 31 before the path repair.",
+      "sol_source_test": "C-08 PASS 288, FAIL 0, WARN 0, SKIP 0.",
+      "allowed_next_transition": "Repeat the full clean archive package gate with the verified combined R libraries and isolated MOFA Python runtime. Accept C-08 only after Status OK and named warning disposition.",
+      "disposition": "The additive repair delegates fixture lookup to the existing source/installed triomics_test_resource resolver. No product code, scientific contract, threshold or runtime route changed."
+    },
     {
       "event": "c08_package_check_installed_fixture_failure_repair_dispatched",
       "date": "2026-10-20",

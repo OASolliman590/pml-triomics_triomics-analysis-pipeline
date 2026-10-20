@@ -177,14 +177,13 @@ C-05 acceptance is recorded in
 warnings remain visible and must not be called warning-free. No real study or
 biological MOFA validation is claimed.
 
-Resume by reconciling `/root/c08_shared_luna` for the final narrow package-path
-continuation. The clean archive check at snapshot `329f3a6` passed build,
-install, static and example checks, then stopped at FAIL 3, WARN 24, SKIP 0,
-PASS 4346 because three new shared C-08 tests use a source-only path for the
-public C-08 YAML fixture. The worker may change only that shared test/helper and
-registration evidence so the same fixture resolves in source and installed
-contexts. No product logic or scientific contract change and no further review
-round are authorized. Sol must verify directly and rerun the clean package gate.
+Resume at the repeated clean archive package gate after integrated fixture-path
+repair `d45c88f`. The repair changed only the C-08 shared test and registration,
+using the existing source/installed `triomics_test_resource()` resolver. Fresh
+source C-08 verification passes 288 assertions with no failures, warnings or
+skips; the worker's installed C-08-shared run passed 52. Re-run the full package
+check with both verified R library roots and the isolated MOFA Python runtime.
+Accept C-08 only after `Status: OK` and explicit warning disposition.
 C-09/C-06/G6/D remain closed.
 C-09 and C-06 stay closed until C-08 is accepted; G6 and D stay closed until
 their declared gates. Do not loosen the B-T04 0.08 bound, reroll seeds
