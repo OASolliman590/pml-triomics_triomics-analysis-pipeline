@@ -60,6 +60,20 @@ triomics_mofa_convergence <- function(params) {
   value
 }
 
+triomics_mofa_seed_repeats <- function(params) {
+  value <- params$mofa_seed_repeats
+  if (is.null(value)) value <- 1L
+  if (!is.numeric(value) || length(value) != 1L || is.na(value) ||
+      !is.finite(value) || value < 1 || value != trunc(value) ||
+      value > .Machine$integer.max) {
+    triomics_mofa_abort(
+      "C_SCORE_PARAMETER", "MOFA2 seed repeats must be one positive integer.",
+      key = "mofa_seed_repeats"
+    )
+  }
+  as.integer(value)
+}
+
 triomics_mofa_validate <- function(resolved_analysis, params) {
   if (!is.list(resolved_analysis) || !is.list(params) ||
       !identical(as.character(params$method), "mofa2")) {
@@ -92,6 +106,7 @@ triomics_mofa_validate <- function(resolved_analysis, params) {
   }
 
   block_data <- stats::setNames(vector("list", length(block_ids)), block_ids)
+  missingness_masks <- stats::setNames(vector("list", length(block_ids)), block_ids)
   all_units <- character()
   for (block_id in block_ids) {
     block <- blocks[[block_id]]
@@ -167,6 +182,15 @@ triomics_mofa_validate <- function(resolved_analysis, params) {
     assay <- matrix(NA_real_, nrow = length(current$feature_keys), ncol = length(units),
                     dimnames = list(current$feature_keys, units))
     assay[, match(current$sample_ids, units)] <- current$assay
+    missing_features <- which(rowSums(!is.na(assay)) == 0L)
+    if (length(missing_features)) {
+      triomics_mofa_abort(
+        "C_NA_CAPABILITY",
+        paste0("MOFA2 view '", block_id, "' contains an all-missing feature."),
+        key = current$feature_keys[[missing_features[[1L]]]]
+      )
+    }
+    missingness_masks[[block_id]] <- is.na(assay)
     if (isTRUE(scale_features)) {
       center <- rowMeans(assay, na.rm = TRUE)
       counts <- rowSums(!is.na(assay))
@@ -210,8 +234,10 @@ triomics_mofa_validate <- function(resolved_analysis, params) {
 
   list(
     block_ids = block_ids, units = units, data = data, transforms = transforms,
+    missingness_mask = missingness_masks,
     scale_features = isTRUE(scale_features), n_components = triomics_mofa_n_components(params),
-    seed = triomics_mofa_seed(params), convergence = triomics_mofa_convergence(params),
+    seed = triomics_mofa_seed(params), seed_repeats = triomics_mofa_seed_repeats(params),
+    convergence = triomics_mofa_convergence(params),
     study_id = if (is.null(resolved_analysis$study_id)) NA_character_ else resolved_analysis$study_id,
     preparation_context_id = if (is.null(resolved_analysis$preparation_context_id)) NA_character_ else resolved_analysis$preparation_context_id,
     representation_id = if (!is.null(resolved_analysis$representation_id)) resolved_analysis$representation_id else if (is.null(resolved_analysis$representation)) NA_character_ else resolved_analysis$representation
@@ -290,6 +316,48 @@ triomics_mofa_native_matrix <- function(value, label, row_ids = NULL, column_ids
   value
 }
 
+triomics_mofa_variance_semantics <- function() {
+  list(
+    metric = "MOFA2::get_variance_explained$r2_per_factor",
+    assay_space = "adapter_transformed_training_views",
+    numerator = "observed_residual_sse_reduction_for_single_factor_reconstruction",
+    denominator = "sum_of_squared_observed_transformed_values_about_zero_per_view",
+    native_unit = "percentage",
+    output_unit = "proportion",
+    conversion = "divide_by_100_unconditionally",
+    accumulation = "single_factor_per_view_against_zero_baseline_not_cumulative",
+    missing_observations = "excluded_by_native_na_rm",
+    interpretation = "exploratory_variance_diagnostic_not_predictive_variance"
+  )
+}
+
+triomics_mofa_variance_proportions <- function(per_factor, factor_ids, block_ids) {
+  if (!is.matrix(per_factor) || !is.numeric(per_factor) || is.complex(per_factor) ||
+      is.null(rownames(per_factor)) || is.null(colnames(per_factor)) ||
+      !setequal(rownames(per_factor), factor_ids) || !setequal(colnames(per_factor), block_ids)) {
+    triomics_mofa_abort(
+      "C_SCORE_VARIANCE_UNAVAILABLE", "MOFA2 per-factor variance has an unexpected map.",
+      key = "variance"
+    )
+  }
+  native <- per_factor[factor_ids, block_ids, drop = FALSE]
+  if (any(!is.finite(native)) || any(native < 0 | native > 100)) {
+    triomics_mofa_abort(
+      "C_SCORE_VARIANCE_UNAVAILABLE", "MOFA2 native variance percentages must be finite values from 0 to 100.",
+      key = "variance"
+    )
+  }
+  variance <- t(native) / 100
+  rownames(variance) <- block_ids
+  colnames(variance) <- factor_ids
+  list(
+    variance = variance,
+    native_variance_percentage = native,
+    variance_units = "proportion_from_native_percentage",
+    semantics = triomics_mofa_variance_semantics()
+  )
+}
+
 triomics_mofa_native_outputs <- function(model, eligibility) {
   factors <- tryCatch(MOFA2::get_factors(model), error = function(error) {
     triomics_mofa_abort("C_SCORE_RESULT_INVALID", paste0("MOFA2 factor extraction failed: ", conditionMessage(error)), key = "factors")
@@ -337,23 +405,16 @@ triomics_mofa_native_outputs <- function(model, eligibility) {
     triomics_mofa_abort("C_SCORE_VARIANCE_UNAVAILABLE", "MOFA2 variance output did not preserve the ungrouped model.", key = "variance")
   }
   per_factor <- per_factor[[1L]]
-  if (!is.matrix(per_factor) || is.null(rownames(per_factor)) || is.null(colnames(per_factor)) ||
-      !setequal(rownames(per_factor), colnames(factors)) ||
-      !setequal(colnames(per_factor), eligibility$block_ids)) {
-    triomics_mofa_abort("C_SCORE_VARIANCE_UNAVAILABLE", "MOFA2 per-factor variance has an unexpected map.", key = "variance")
-  }
-  variance <- t(per_factor[colnames(factors), eligibility$block_ids, drop = FALSE])
-  colnames(variance) <- colnames(factors)
-  rownames(variance) <- eligibility$block_ids
-  variance_units <- "proportion"
-  if (all(is.finite(variance)) && max(variance) > 1 && max(variance) <= 100) {
-    variance <- variance / 100
-    variance_units <- "proportion_from_native_percentage"
-  }
-  if (any(!is.finite(variance)) || any(variance < 0 | variance > 1)) {
-    triomics_mofa_abort("C_SCORE_VARIANCE_UNAVAILABLE", "MOFA2 variance is not a finite proportion.", key = "variance")
-  }
-  list(factors = factors, weights = weights, variance = variance, variance_units = variance_units)
+  converted_variance <- triomics_mofa_variance_proportions(
+    per_factor, colnames(factors), eligibility$block_ids
+  )
+  list(
+    factors = factors, weights = weights,
+    variance = converted_variance$variance,
+    native_variance_percentage = converted_variance$native_variance_percentage,
+    variance_units = converted_variance$variance_units,
+    variance_semantics = converted_variance$semantics
+  )
 }
 
 triomics_mofa_outputs_agree <- function(fitted, reloaded) {
@@ -368,7 +429,10 @@ triomics_mofa_outputs_agree <- function(fitted, reloaded) {
   c(
     factors = same_matrix(fitted$factors, reloaded$factors),
     weights = same_list(fitted$weights, reloaded$weights),
-    variance = same_matrix(fitted$variance, reloaded$variance)
+    variance = same_matrix(fitted$variance, reloaded$variance),
+    native_variance_percentage = same_matrix(
+      fitted$native_variance_percentage, reloaded$native_variance_percentage
+    )
   )
 }
 
@@ -405,7 +469,307 @@ triomics_mofa_align_reloaded_outputs <- function(fitted, reloaded) {
   })
   aligned$variance <- reloaded$variance[, permutation, drop = FALSE]
   colnames(aligned$variance) <- colnames(fitted$factors)
+  aligned$native_variance_percentage <- reloaded$native_variance_percentage[
+    permutation, , drop = FALSE
+  ]
+  rownames(aligned$native_variance_percentage) <- colnames(fitted$factors)
   aligned
+}
+
+triomics_mofa_align_seed_factors <- function(reference, candidate) {
+  if (!is.matrix(reference) || !is.numeric(reference) || any(!is.finite(reference)) ||
+      !is.matrix(candidate) || !is.numeric(candidate) || any(!is.finite(candidate)) ||
+      nrow(reference) != nrow(candidate) || is.null(rownames(reference)) ||
+      is.null(rownames(candidate)) || !identical(rownames(reference), rownames(candidate)) ||
+      ncol(reference) < 1L || ncol(candidate) < 1L) {
+    triomics_mofa_abort(
+      "C_SCORE_RESULT_INVALID", "Seed factor matrices must share a finite keyed sample map.",
+      key = "seed_sensitivity"
+    )
+  }
+  correlations <- matrix(0, nrow = ncol(reference), ncol = ncol(candidate))
+  for (i in seq_len(ncol(reference))) {
+    for (j in seq_len(ncol(candidate))) {
+      left <- reference[, i]
+      right <- candidate[, j]
+      if (stats::sd(left) > .Machine$double.eps && stats::sd(right) > .Machine$double.eps) {
+        value <- suppressWarnings(stats::cor(left, right))
+        if (is.finite(value)) correlations[i, j] <- value
+      }
+    }
+  }
+  permutation <- rep(NA_integer_, ncol(reference))
+  signs <- rep(NA_real_, ncol(reference))
+  aligned_correlations <- rep(NA_real_, ncol(reference))
+  remaining_rows <- seq_len(nrow(correlations))
+  remaining_columns <- seq_len(ncol(correlations))
+  for (unused in seq_len(min(nrow(correlations), ncol(correlations)))) {
+    available <- abs(correlations[remaining_rows, remaining_columns, drop = FALSE])
+    selected <- which(available == max(available), arr.ind = TRUE)[1L, ]
+    row <- remaining_rows[[selected[[1L]]]]
+    column <- remaining_columns[[selected[[2L]]]]
+    value <- correlations[row, column]
+    permutation[[row]] <- column
+    signs[[row]] <- if (value < 0) -1 else 1
+    aligned_correlations[[row]] <- abs(value)
+    remaining_rows <- setdiff(remaining_rows, row)
+    remaining_columns <- setdiff(remaining_columns, column)
+  }
+  matched <- which(!is.na(permutation))
+  scores <- sweep(
+    candidate[, permutation[matched], drop = FALSE], 2L, signs[matched], "*"
+  )
+  colnames(scores) <- colnames(reference)[matched]
+  rownames(scores) <- rownames(reference)
+  names(permutation) <- colnames(reference)
+  names(signs) <- colnames(reference)
+  names(aligned_correlations) <- colnames(reference)
+  list(
+    scores = scores, permutation = permutation, signs = signs,
+    aligned_correlations = aligned_correlations[matched],
+    matched_reference_factors = colnames(reference)[matched],
+    unmatched_reference_factors = colnames(reference)[is.na(permutation)],
+    unmatched_candidate_factors = colnames(candidate)[setdiff(seq_len(ncol(candidate)), permutation[matched])]
+  )
+}
+
+triomics_mofa_subspace_similarity <- function(left, right) {
+  if (!is.matrix(left) || !is.numeric(left) || any(!is.finite(left)) ||
+      !is.matrix(right) || !is.numeric(right) || any(!is.finite(right)) ||
+      nrow(left) != nrow(right) || is.null(rownames(left)) || is.null(rownames(right)) ||
+      !identical(rownames(left), rownames(right))) {
+    triomics_mofa_abort(
+      "C_SCORE_RESULT_INVALID", "Seed factor subspaces must share a finite keyed sample map.",
+      key = "seed_sensitivity"
+    )
+  }
+  orthonormal_basis <- function(value) {
+    value <- scale(value, center = TRUE, scale = FALSE)
+    decomposition <- qr(value, tol = 1e-10)
+    rank <- decomposition$rank
+    if (rank < 1L) return(list(basis = matrix(numeric(), nrow(value), 0L), rank = 0L))
+    list(basis = qr.Q(decomposition, complete = FALSE)[, seq_len(rank), drop = FALSE], rank = rank)
+  }
+  left_basis <- orthonormal_basis(left)
+  right_basis <- orthonormal_basis(right)
+  if (left_basis$rank < 1L || right_basis$rank < 1L) {
+    return(list(similarity = NA_real_, left_rank = left_basis$rank, right_rank = right_basis$rank))
+  }
+  overlap <- crossprod(left_basis$basis, right_basis$basis)
+  similarity <- sum(overlap^2) / sqrt(left_basis$rank * right_basis$rank)
+  if (!is.finite(similarity) || similarity < -1e-12 || similarity > 1 + 1e-12) {
+    triomics_mofa_abort(
+      "C_SCORE_RESULT_INVALID", "MOFA2 subspace similarity is outside its mathematical range.",
+      key = "seed_sensitivity"
+    )
+  }
+  similarity <- min(1, max(0, similarity))
+  list(similarity = similarity, left_rank = left_basis$rank, right_rank = right_basis$rank)
+}
+
+triomics_mofa_seed_sensitivity <- function(runs, control_regime = "unspecified") {
+  if (!is.list(runs) || !length(runs) || !is.character(control_regime) ||
+      length(control_regime) != 1L || is.na(control_regime) || !nzchar(control_regime)) {
+    triomics_mofa_abort(
+      "C_SCORE_RESULT_INVALID", "Seed sensitivity requires non-empty run records and a control label.",
+      key = "seed_sensitivity"
+    )
+  }
+  complete <- which(vapply(runs, function(run) identical(run$status, "complete"), logical(1L)))
+  failures <- which(vapply(runs, function(run) identical(run$status, "software_failure"), logical(1L)))
+  comparisons <- list()
+  if (length(complete) > 1L) {
+    reference_index <- complete[[1L]]
+    for (index in complete[-1L]) {
+      reference <- runs[[reference_index]]$outputs$factors
+      candidate <- runs[[index]]$outputs$factors
+      aligned <- triomics_mofa_align_seed_factors(reference, candidate)
+      subspace <- triomics_mofa_subspace_similarity(reference, candidate)
+      comparisons[[length(comparisons) + 1L]] <- list(
+        reference_seed = runs[[reference_index]]$seed,
+        seed = runs[[index]]$seed,
+        fit_status = "complete",
+        alignment = list(
+          permutation = aligned$permutation,
+          signs = aligned$signs,
+          matched_reference_factors = aligned$matched_reference_factors,
+          unmatched_reference_factors = aligned$unmatched_reference_factors,
+          unmatched_candidate_factors = aligned$unmatched_candidate_factors
+        ),
+        aligned_correlations = aligned$aligned_correlations,
+        subspace_similarity = subspace$similarity,
+        subspace_ranks = c(reference = subspace$left_rank, candidate = subspace$right_rank)
+      )
+    }
+  }
+  correlations <- unlist(lapply(comparisons, `[[`, "aligned_correlations"), use.names = FALSE)
+  subspace_values <- vapply(comparisons, `[[`, numeric(1L), "subspace_similarity")
+  finite_subspace_values <- subspace_values[is.finite(subspace_values)]
+  run_summaries <- lapply(runs, function(run) {
+    list(
+      seed = run$seed,
+      status = run$status,
+      error_code = run$error_code %||% NULL,
+      error_message = run$error_message %||% NULL
+    )
+  })
+  structure(
+    list(
+      requested_repeats = length(runs),
+      seeds = vapply(runs, `[[`, integer(1L), "seed"),
+      status = if (length(failures)) "software_failure" else if (length(comparisons)) "assessed" else "not_assessed_single_seed",
+      software_status = if (length(failures)) "partial_failure" else "complete",
+      stability_status = if (!length(comparisons)) "not_estimable" else if (all(is.finite(subspace_values))) {
+        "quantified"
+      } else {
+        "partially_quantified"
+      },
+      control_regime = control_regime,
+      runs = run_summaries,
+      comparisons = comparisons,
+      uncertainty = list(
+        aligned_correlation_min = if (length(correlations)) min(correlations) else NULL,
+        aligned_correlation_max = if (length(correlations)) max(correlations) else NULL,
+        subspace_similarity_min = if (length(finite_subspace_values)) min(finite_subspace_values) else NULL,
+        subspace_similarity_max = if (length(finite_subspace_values)) max(finite_subspace_values) else NULL
+      ),
+      recovery_threshold = NULL,
+      factor_naming = "native_generic_ids_only",
+      interpretation = "descriptive_stability_uncertainty_no_forced_recovery"
+    ),
+    class = "MofaSeedSensitivity"
+  )
+}
+
+triomics_mofa_hash_object <- function(value) {
+  digest::digest(value, algo = "sha256", serialize = TRUE)
+}
+
+triomics_mofa_hash_training_inputs <- function(data, missingness_mask) {
+  list(
+    transformed_data_sha256 = triomics_mofa_hash_object(data),
+    missingness_mask_sha256 = triomics_mofa_hash_object(missingness_mask),
+    transformed_data_and_masks_sha256 = triomics_mofa_hash_object(list(
+      transformed_data = data,
+      missingness_mask = missingness_mask
+    ))
+  )
+}
+
+triomics_mofa_hash_file <- function(path) {
+  if (!is.character(path) || length(path) != 1L || is.na(path) || !file.exists(path) ||
+      is.na(file.info(path)$size) || file.info(path)$size <= 0) {
+    triomics_mofa_abort(
+      "C_SCORE_RESULT_INVALID", "The saved native MOFA2 model is missing or empty.",
+      key = "model_path"
+    )
+  }
+  digest::digest(file = path, algo = "sha256", serialize = FALSE)
+}
+
+triomics_mofa_fit_once <- function(eligibility, params, model_path, reload = FALSE) {
+  model <- MOFA2::create_mofa(eligibility$data)
+  options <- triomics_mofa_prepare_options(model, eligibility, params)
+  model <- MOFA2::prepare_mofa(
+    object = model, data_options = options$data,
+    model_options = options$model, training_options = options$training
+  )
+  fitted <- MOFA2::run_mofa(model, outfile = model_path, use_basilisk = FALSE)
+  if (is.null(fitted)) fitted <- model
+  native_model_sha256 <- triomics_mofa_hash_file(model_path)
+  fitted_outputs <- triomics_mofa_native_outputs(fitted, eligibility)
+  reloaded <- NULL
+  agreement <- c(factors = NA, weights = NA, variance = NA, native_variance_percentage = NA)
+  if (isTRUE(reload)) {
+    reloaded <- MOFA2::load_model(
+      model_path, sort_factors = FALSE, remove_inactive_factors = TRUE
+    )
+    reloaded_outputs <- triomics_mofa_native_outputs(reloaded, eligibility)
+    reloaded_outputs <- triomics_mofa_align_reloaded_outputs(fitted_outputs, reloaded_outputs)
+    agreement <- triomics_mofa_outputs_agree(fitted_outputs, reloaded_outputs)
+    if (!all(agreement)) {
+      stop(
+        paste0("MOFA2 save/reload output disagreement: ", paste(names(agreement)[!agreement], collapse = ", ")),
+        call. = FALSE
+      )
+    }
+  }
+  list(
+    model = fitted, reloaded_model = reloaded, outputs = fitted_outputs,
+    agreement = agreement, options = options,
+    model_path = model_path, native_model_sha256 = native_model_sha256
+  )
+}
+
+triomics_mofa_enrichment_input_sidecar <- function(state, context = list(), params = list()) {
+  model_sha256 <- triomics_mofa_hash_file(state$model_path)
+  if (!identical(model_sha256, state$native_model_sha256)) {
+    triomics_mofa_abort(
+      "C_SCORE_RESULT_INVALID", "The saved MOFA2 model bytes changed after the fitted state was created.",
+      key = "model_sha256"
+    )
+  }
+  mappings <- context$annotation_mappings %||% context$annotation_mapping %||%
+    params$annotation_mappings %||% params$annotation_mapping %||% list()
+  mapping_count <- if (is.data.frame(mappings)) nrow(mappings) else length(mappings)
+  mapping_sha256 <- triomics_mofa_hash_object(mappings)
+  training_hashes <- state$training_input_hashes
+  if (!is.list(training_hashes) ||
+      !all(vapply(training_hashes, triomics_sha256_text, logical(1L)))) {
+    triomics_mofa_abort(
+      "C_SCORE_RESULT_INVALID", "MOFA2 transformed training data and missingness masks lack valid hashes.",
+      key = "training_input_hashes"
+    )
+  }
+  hashes <- list(
+    native_model_sha256 = model_sha256,
+    transformed_data_sha256 = training_hashes$transformed_data_sha256,
+    missingness_mask_sha256 = training_hashes$missingness_mask_sha256,
+    transformed_data_and_masks_sha256 = training_hashes$transformed_data_and_masks_sha256,
+    annotation_mappings_sha256 = mapping_sha256
+  )
+  artifact_id <- paste0(
+    "mofa2-enrichment-inputs-",
+    substr(triomics_mofa_hash_object(hashes), 1L, 20L)
+  )
+  structure(
+    list(
+      schema_version = "2.0",
+      artifact_type = "mofa2_enrichment_input_handoff",
+      artifact_id = artifact_id,
+      status = if (mapping_count > 0L) "ready_for_downstream_handoff" else "annotation_mapping_not_supplied",
+      adapter_version = "C-05/2.0.0-rc1",
+      native_method = "MOFA2",
+      native_version = state$native_version,
+      python_backend = "mofapy2",
+      python_backend_version = state$python_backend_version,
+      training_state_hash = state$training_state_hash,
+      factor_ids = state$components,
+      view_ids = state$block_ids,
+      factors = state$factors,
+      weights = state$weights,
+      variance = state$variance,
+      variance_semantics = state$variance_semantics,
+      annotation_mappings = mappings,
+      annotation_mapping_status = if (mapping_count > 0L) "supplied" else "not_supplied",
+      inputs = list(
+        native_model = list(artifact_type = "mofa2_native_model", sha256 = model_sha256),
+        transformed_data_and_masks = list(
+          artifact_type = "mofa2_transformed_training_data_and_missingness_masks",
+          sha256 = training_hashes$transformed_data_and_masks_sha256
+        ),
+        annotation_mappings = list(
+          artifact_type = "annotation_mapping_collection",
+          sha256 = mapping_sha256,
+          status = if (mapping_count > 0L) "supplied" else "not_supplied"
+        )
+      ),
+      hashes = hashes,
+      enrichment_execution = "not_performed",
+      prediction_claim = "none; exploratory structure discovery only"
+    ),
+    class = "MofaEnrichmentInputSidecar"
+  )
 }
 
 triomics_mofa_fit <- function(resolved_analysis, params, status = triomics_mofa_backend_status()) {
@@ -437,59 +801,96 @@ triomics_mofa_fit <- function(resolved_analysis, params, status = triomics_mofa_
     triomics_mofa_abort("C_SCORE_PARAMETER", "MOFA2 model_path parent directory does not exist.", key = "model_path")
   }
 
-  trained <- tryCatch({
-    model <- MOFA2::create_mofa(eligibility$data)
-    options <- triomics_mofa_prepare_options(model, eligibility, params)
-    model <- MOFA2::prepare_mofa(
-      object = model, data_options = options$data,
-      model_options = options$model, training_options = options$training
+  seed_values <- as.double(eligibility$seed) + seq_len(eligibility$seed_repeats) - 1
+  if (any(!is.finite(seed_values) | seed_values > .Machine$integer.max |
+          seed_values < -.Machine$integer.max)) {
+    triomics_mofa_abort(
+      "C_SCORE_PARAMETER", "MOFA2 repeated seeds exceed the supported integer range.",
+      key = "mofa_seed_repeats"
     )
-    fitted <- MOFA2::run_mofa(model, outfile = model_path, use_basilisk = FALSE)
-    if (is.null(fitted)) fitted <- model
-    # run_mofa writes the native HDF5 model to outfile as part of the fit.
-    # MOFA2 has no separate R-side save_model API in the supported interface.
-    if (!file.exists(model_path) || file.info(model_path)$size <= 0) {
-      stop("MOFA2 did not create a non-empty saved model.", call. = FALSE)
-    }
-    reloaded <- MOFA2::load_model(
-      model_path, sort_factors = FALSE, remove_inactive_factors = TRUE
-    )
-    fitted_outputs <- triomics_mofa_native_outputs(fitted, eligibility)
-    reloaded_outputs <- triomics_mofa_native_outputs(reloaded, eligibility)
-    reloaded_outputs <- triomics_mofa_align_reloaded_outputs(fitted_outputs, reloaded_outputs)
-    agreement <- triomics_mofa_outputs_agree(fitted_outputs, reloaded_outputs)
-    if (!all(agreement)) {
-      stop(
-        paste0("MOFA2 save/reload output disagreement: ", paste(names(agreement)[!agreement], collapse = ", ")),
-        call. = FALSE
-      )
-    }
-    list(
-      model = fitted, reloaded_model = reloaded, outputs = fitted_outputs,
-      agreement = agreement
-    )
-  }, error = function(error) {
+  }
+  seed_values <- as.integer(seed_values)
+  fit_started <- proc.time()[["elapsed"]]
+  primary <- tryCatch(
+    triomics_mofa_fit_once(eligibility, params, model_path, reload = TRUE),
+    error = function(error) {
     if (inherits(error, "triomics_error")) stop(error)
     triomics_mofa_abort(
       "C_EVAL_NATIVE_FIT",
       paste0("MOFA2 training, save or reload failed: ", conditionMessage(error)),
       key = "mofa2"
     )
-  })
+    }
+  )
 
+  seed_runs <- list(list(
+    seed = seed_values[[1L]], status = "complete", outputs = primary$outputs
+  ))
+  if (length(seed_values) > 1L) {
+    for (seed in seed_values[-1L]) {
+      repeat_path <- tempfile(
+        pattern = paste0("triomics-mofa-seed-", seed, "-"),
+        tmpdir = dirname(model_path), fileext = ".hdf5"
+      )
+      repeat_eligibility <- eligibility
+      repeat_eligibility$seed <- seed
+      repeat_params <- params
+      repeat_params$seed <- seed
+      repeat_run <- tryCatch({
+        value <- triomics_mofa_fit_once(
+          repeat_eligibility, repeat_params, repeat_path, reload = FALSE
+        )
+        unlink(repeat_path)
+        list(seed = seed, status = "complete", outputs = value$outputs)
+      }, error = function(error) {
+        unlink(repeat_path)
+        list(
+          seed = seed, status = "software_failure",
+          error_code = if (inherits(error, "triomics_error")) error$code else "C_EVAL_NATIVE_FIT",
+          error_message = conditionMessage(error)
+        )
+      })
+      seed_runs[[length(seed_runs) + 1L]] <- repeat_run
+    }
+  }
+  seed_sensitivity <- triomics_mofa_seed_sensitivity(
+    seed_runs, control_regime = params$mofa_control_regime %||% "unspecified"
+  )
+  fit_runtime_seconds <- max(0, proc.time()[["elapsed"]] - fit_started)
+  seed_sensitivity$fit_count <- length(seed_values)
+  seed_sensitivity$runtime_seconds <- fit_runtime_seconds
+
+  trained <- primary
+  options <- trained$options
   outputs <- trained$outputs
   components <- colnames(outputs$factors)
+  native_version <- as.character(utils::packageVersion("MOFA2"))
+  python_backend_version <- real$mofapy2$version
+  training_input_hashes <- triomics_mofa_hash_training_inputs(
+    eligibility$data, eligibility$missingness_mask
+  )
   state_hash <- digest::digest(
     list(
-      method = "mofa2", native_version = as.character(utils::packageVersion("MOFA2")),
+      method = "mofa2", native_version = native_version,
+      python_backend_version = python_backend_version,
       training_unit_ids = eligibility$units, block_ids = eligibility$block_ids,
       components = components, transforms = eligibility$transforms,
-      factors = outputs$factors, weights = outputs$weights, variance = outputs$variance
+      training_input_hashes = training_input_hashes,
+      native_model_sha256 = trained$native_model_sha256,
+      factors = outputs$factors, weights = outputs$weights,
+      variance = outputs$variance,
+      seed_sensitivity = list(
+        seeds = seed_sensitivity$seeds,
+        status = seed_sensitivity$status,
+        comparisons = seed_sensitivity$comparisons
+      )
     ), algo = "sha256", serialize = TRUE
   )
   result_params <- list(
     native_method = "MOFA2::run_mofa",
-    native_version = as.character(utils::packageVersion("MOFA2")),
+    native_version = native_version,
+    python_backend = "mofapy2",
+    python_backend_version = python_backend_version,
     likelihoods = stats::setNames(rep("gaussian", length(eligibility$block_ids)), eligibility$block_ids),
     requested_n_components = eligibility$n_components,
     retained_n_components = length(components),
@@ -501,7 +902,14 @@ triomics_mofa_fit <- function(resolved_analysis, params, status = triomics_mofa_
     model_options = options$model,
     feature_transforms = eligibility$transforms,
     missingness = "native_MOFA_likelihood_preserved; no imputation evidence",
-    variance_units = "proportion",
+    variance_units = outputs$variance_units,
+    variance = outputs$variance_semantics,
+    training_input_hashes = training_input_hashes,
+    native_model_sha256 = trained$native_model_sha256,
+    mofa_seed_repeats = eligibility$seed_repeats,
+    seed_sensitivity = seed_sensitivity,
+    fit_count = seed_sensitivity$fit_count,
+    fit_runtime_seconds = fit_runtime_seconds,
     groups = list(
       model_structure = "single_group",
       native_group_ids = options$data$groups,
@@ -519,16 +927,31 @@ triomics_mofa_fit <- function(resolved_analysis, params, status = triomics_mofa_
         model = trained$model, reloaded_model = trained$reloaded_model,
         block_ids = eligibility$block_ids, training_unit_ids = eligibility$units,
         components = components, factors = outputs$factors, weights = outputs$weights,
-        variance = outputs$variance, reload_agreement = trained$agreement,
+        variance = outputs$variance,
+        native_variance_percentage = outputs$native_variance_percentage,
+        variance_semantics = outputs$variance_semantics,
+        reload_agreement = trained$agreement,
+        model_path = trained$model_path,
+        native_model_sha256 = trained$native_model_sha256,
+        native_version = native_version,
+        python_backend_version = python_backend_version,
+        training_state_hash = state_hash,
+        training_input_hashes = training_input_hashes,
+        missingness_mask = eligibility$missingness_mask,
+        seed_sensitivity = seed_sensitivity,
         training_transform = eligibility$transforms, prediction_state = list(uses_outcome = FALSE)
       ),
       selected = stats::setNames(lapply(eligibility$data, rownames), eligibility$block_ids),
       result_params = result_params,
       metadata = list(
         backend = "mofa2", native_method = "MOFA2::run_mofa",
-        native_version = result_params$native_version, model_role = "exploratory_structure_discovery",
+        native_version = result_params$native_version,
+        python_backend_version = python_backend_version,
+        model_role = "exploratory_structure_discovery",
         training_unit_ids = eligibility$units, state_hash = state_hash,
-        save_reload = result_params$save_reload
+        save_reload = result_params$save_reload,
+        training_input_hashes = training_input_hashes,
+        native_model_sha256 = trained$native_model_sha256
       )
     ),
     class = "BackendFit"
@@ -541,12 +964,19 @@ triomics_mofa_extract <- function(backend_fit, context, params) {
     triomics_mofa_abort("C_EVAL_NATIVE_FIT", "Extraction requires a successfully trained MOFA2 BackendFit.", key = "backend_fit")
   }
   state <- backend_fit$native_state
+  enrichment_inputs <- triomics_mofa_enrichment_input_sidecar(state, context, params)
   result <- triomics_new_integration_result(
     scores = state$factors, loadings = state$weights, variance = state$variance,
     selected = backend_fit$selected, backend = "mofa2", params = backend_fit$result_params
   )
   list(
     result = triomics_validate_integration_result(result),
-    sidecars = list(native_state = state, metadata = backend_fit$metadata, context = context, params = params)
+    sidecars = list(
+      native_state = state,
+      metadata = backend_fit$metadata,
+      context = context,
+      params = params,
+      enrichment_inputs = enrichment_inputs
+    )
   )
 }

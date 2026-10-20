@@ -3,7 +3,7 @@
   "request_type": "registration_request",
   "implementation_base": "6ea8d20f0b654e8e544f9f8d6cf8517ab0fcae29",
   "accepted": false,
-  "implementation_status": "partial: unregistered MOFA2 train, save and reload path. Sol reproduced one synthetic smoke. The packet is not accepted. AC2-AC4 remain open.",
+  "implementation_status": "partial: isolated MOFA2 train/save/reload and AC2-AC4 adapter behavior implemented in this packet; pending Sol acceptance and shared registration. Evidence is synthetic software evidence only.",
   "dependencies": [
     {
       "package": "MOFA2",
@@ -36,12 +36,12 @@
     {
       "method": "mofa2",
       "adapter_factory": "triomics_mofa_fit",
-      "status": "unavailable_gate_only",
+      "status": "implemented_unregistered",
       "task_mode": "exploratory",
       "classification": false,
-      "native_fit": "MOFA2::run_mofa writes the HDF5 outfile; MOFA2::load_model reloads it. Gaussian views, observed-value scaling, and save/reload agreement are required before trained=TRUE.",
+      "native_fit": "MOFA2::run_mofa writes the HDF5 model; MOFA2::load_model verifies the primary fit. Gaussian views, observed-value scaling, preserved missingness masks, typed native-percentage variance, and the ticket-declared independent seeds are recorded before trained=TRUE.",
       "native_prediction": "not supported; core MOFA makes no new-subject prediction claim",
-      "common_result": "not produced; the unavailable state carries no factors, weights or variance"
+      "common_result": "direct adapter extraction emits the six-field IntegrationResult and a typed version-bound enrichment-input handoff; the public registry remains disabled"
     }
   ],
   "cli_registration": {
@@ -49,13 +49,13 @@
     "service": "evaluate_pipeline",
     "enabled": false,
     "requested_enabled": false,
-    "note": "Not enabled. The public registry must refuse mofa2 until Sol applies a shared registration after AC1 passes. The public CLI does not accept this method."
+    "note": "Not enabled. The public registry and CLI remain disabled pending Sol's shared registration and acceptance review. The public CLI does not accept this method."
   },
-  "method_name_note": "The packet brief named this method mixomics_mofa. This request uses mofa2 to match the existing config schema enum, the C-01 registration deferral and the spec draft. MOFA2 is not a mixOmics method. Sol to confirm the name before shared registration.",
+  "method_name_note": "This request uses mofa2 to match the existing config schema enum and frozen spec. MOFA2 is not a mixOmics method; retain the method name for the disabled handoff.",
   "shared_changes_for_sol": [
     {
       "file": "R/integration_contract.R",
-      "change": "After AC1 passes, add 'mofa2' to triomics_integration_backend_names() and a dispatch branch that returns the C-05 adapter. Not applied here.",
+      "change": "Sol applies the shared registry/dispatch and CLI/dependency changes only after this packet's acceptance review. Not applied here.",
       "reason": "Until then the public registry refuses mofa2 with C_SCORE_BACKEND_UNAVAILABLE."
     }
   ],
@@ -63,11 +63,11 @@
     "tests/testthat/test-C-05.R 'C-05 public registry refuses the unregistered mofa2 name' must change when the shared registration is applied."
   ],
   "known_gaps": [
-    "AC1 training, save and reload evidence is absent from the accepted record. Sol reproduced one synthetic train, save and reload on 2026-10-19; this request stays unaccepted until review.",
-    "AC2 is not implemented: Gaussian view fitting, native factor/weight/variance extraction and per-view missingness handling.",
-    "AC3 is not implemented: seed sensitivity and sign/permutation alignment across declared seeds.",
-    "AC4 is not implemented: native enrichment sidecar hashes. No predictive or new-subject claim is made.",
-    "The C-05 ticket validates against the existing schema because mofa2 is already in its enum. The stage C route refuses it, and no CLI run was performed."
+    "AC1 has isolated synthetic software evidence only for train/save/reload; independent milestone review and acceptance recording remain pending.",
+    "AC2 adapter behavior is implemented and exercised on synthetic missingness fixtures; no private-study data validation is claimed.",
+    "AC3 reports sign/permutation-aligned factor and subspace sensitivity over the declared seeds; weak/null controls have no forced recovery threshold or biological factor naming.",
+    "AC4 emits version-bound model/data/mask/annotation hashes for downstream enrichment handoff. enrichment execution was not performed, and no predictive or new-subject claim is made.",
+    "The C-05 ticket validates against the existing schema because mofa2 is already in its enum. The public registry and CLI remain disabled; no CLI run was performed."
   ],
   "coordinator_owned_files_to_update": [
     "R/integration_contract.R",
