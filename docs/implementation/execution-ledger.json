@@ -36,27 +36,39 @@
   },
   "active_workers": [
     {
-      "agent": "/root/c08_luna",
-      "role": "luna_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/c08_sol_review",
+      "role": "sol_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "packet": "C-08",
-      "attempt": "initial",
+      "attempt": "initial_review",
       "base_commit": "cad313b749814c45ed75b5116adf4951103ee2c9",
-      "candidate_commit": null,
+      "candidate_commit": "809fc8933d84f1b716205a829a717643c8c5e15f",
       "worktree": "/Users/megastore/.codex/worktrees/c08-endpoint-lineage/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Return one clean allowlisted C-08 candidate commit to Sol; Sol inspects it and dispatches one fresh Sol-6.1-high review before any integration.",
+      "allowed_next_transition": "Pass permits serial candidate integration and Sol-owned shared registration; changes required permits bounded Luna repair 1 in the same isolated worktree.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c08_initial_active",
+    "status": "c08_initial_under_sol_review",
     "last_reconciled": "2026-10-20",
-    "active_handoffs": ["/root/c08_luna"],
+    "active_handoffs": ["/root/c08_sol_review"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-02 through C-05 are accepted on synthetic software evidence. One fresh isolated Luna-max worker is implementing dependency-safe C-08. C-09 and C-06 remain dependency-closed behind C-08; G6 and D remain closed."
+    "disposition": "C-08 candidate 809fc89 is clean and exactly allowlisted after 149 passing focused assertions and an exit-0 synthetic CLI. One fresh Sol-6.1-high review is active before integration or shared registration. C-09, C-06, G6 and D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "c08_initial_candidate_sol_review_dispatched",
+      "date": "2026-10-20",
+      "worker": "/root/c08_luna",
+      "reviewer": "/root/c08_sol_review",
+      "candidate_commit": "809fc8933d84f1b716205a829a717643c8c5e15f",
+      "changed_files": ["R/integration_endpoints.R", "R/clinical_score_requests.R", "tests/testthat/test-C-08.R", "inst/examples/tickets/C-08.yaml", "docs/implementation/registrations/C-08.json"],
+      "worker_tests": "Exact C-08 suite: 8 blocks, PASS 149, FAIL 0, WARN 0, SKIP 0; initial red run recorded missing implementation.",
+      "worker_cli": "Exact synthetic stage-C command exited 0; legacy IntegrationResult output remains until Sol adjudicates the packet-owned shared registration request.",
+      "allowed_next_transition": "Pass: integrate serially and apply only reviewed Sol-owned registration. Changes required: one bounded Luna repair 1. No C-08 acceptance or downstream release yet.",
+      "disposition": "Candidate is synthetic software evidence only. MOFA endpoint behavior uses a contract fixture because the worker did not load the isolated MOFA runtime; no biological or independent-validation claim is made."
+    },
     {
       "event": "c08_initial_luna_dispatched",
       "date": "2026-10-20",
@@ -2908,9 +2920,9 @@
       "blockers": []
     },
     "C-08": {
-      "status": "initial_active",
+      "status": "under_sol_review",
       "attempts": 1,
-      "commit": null,
+      "commit": "809fc8933d84f1b716205a829a717643c8c5e15f",
       "acceptance_refs": [],
       "blockers": []
     },
