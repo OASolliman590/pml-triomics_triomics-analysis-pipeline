@@ -36,27 +36,40 @@
   },
   "active_workers": [
     {
-      "agent": "/root/c08_sol_review",
-      "role": "sol_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
+      "agent": "/root/c08_luna",
+      "role": "luna_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
       "packet": "C-08",
-      "attempt": "initial_review",
+      "attempt": "repair1",
       "base_commit": "cad313b749814c45ed75b5116adf4951103ee2c9",
       "candidate_commit": "809fc8933d84f1b716205a829a717643c8c5e15f",
       "worktree": "/Users/megastore/.codex/worktrees/c08-endpoint-lineage/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Pass permits serial candidate integration and Sol-owned shared registration; changes required permits bounded Luna repair 1 in the same isolated worktree.",
+      "allowed_next_transition": "Return one allowlisted repair-1 commit closing the four Important findings; Sol then inspects it and dispatches the single focused Sol-high rereview.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c08_initial_under_sol_review",
+    "status": "c08_repair1_active",
     "last_reconciled": "2026-10-20",
-    "active_handoffs": ["/root/c08_sol_review"],
+    "active_handoffs": ["/root/c08_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-08 candidate 809fc89 is clean and exactly allowlisted after 149 passing focused assertions and an exit-0 synthetic CLI. One fresh Sol-6.1-high review is active before integration or shared registration. C-09, C-06, G6 and D remain closed."
+    "disposition": "The initial C-08 Sol-high review found four Important lineage and real-adapter compatibility defects. Bounded repair 1 is active in the same isolated Luna worktree. Shared fit retention and CLI composition remain closed for a later exclusive correctness-repair gate."
   },
   "orchestration_events": [
+    {
+      "event": "c08_initial_review_changes_required_repair1_dispatched",
+      "date": "2026-10-20",
+      "reviewer": "/root/c08_sol_review",
+      "worker": "/root/c08_luna",
+      "candidate_commit": "809fc8933d84f1b716205a829a717643c8c5e15f",
+      "verdict": "changes_required",
+      "findings": {"critical": 0, "important": 4, "minor": 0},
+      "acceptance": {"C-08-AC1": "fail", "C-08-AC2": "partial", "C-08-AC3": "conditional_pass", "C-08-AC4": "incomplete"},
+      "review_ref": "docs/implementation/reviews/2026-10-20-c08-sol-review.md",
+      "allowed_next_transition": "One bounded allowlisted repair 1 followed by the single focused Sol-high rereview. Shared correctness repair stays exclusive and unopened until the packet-owned seam is corrected.",
+      "disposition": "Green fabricated fixtures do not establish compatibility with accepted native fit shapes or authoritative lineage. No candidate integration or downstream release is allowed."
+    },
     {
       "event": "c08_initial_candidate_sol_review_dispatched",
       "date": "2026-10-20",
@@ -2920,11 +2933,19 @@
       "blockers": []
     },
     "C-08": {
-      "status": "under_sol_review",
+      "status": "repair1_active",
       "attempts": 1,
       "commit": "809fc8933d84f1b716205a829a717643c8c5e15f",
-      "acceptance_refs": [],
-      "blockers": []
+      "repair_attempts": 1,
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-10-20-c08-sol-review.md"
+      ],
+      "blockers": [
+        "Actual DIABLO, block.spls and MOFA fit metadata are incompatible with the candidate constructor.",
+        "Authoritative fit/input/outcome/selection/score lineage is not bound and absent state identity is fabricated.",
+        "Mean/delta and visit/time representation lineage is not preserved or validated.",
+        "Shared fit retention and CLI composition require an exclusive correctness-repair gate after the packet seam is corrected."
+      ]
     },
     "C-09": {
       "status": "not_started",

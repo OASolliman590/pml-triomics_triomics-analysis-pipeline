@@ -177,12 +177,14 @@ C-05 acceptance is recorded in
 warnings remain visible and must not be called warning-free. No real study or
 biological MOFA validation is claimed.
 
-Resume by reconciling `/root/c08_sol_review`, the active fresh reviewer of C-08
-candidate `809fc8933d84f1b716205a829a717643c8c5e15f` in the isolated
-`c08-endpoint-lineage` worktree. The candidate changes exactly five allowlisted
-files and reports 149 focused assertions passing with no failure, warning, or
-skip. Integrate only after a review pass; otherwise send bounded repair 1 to
-`/root/c08_luna` in the same worktree.
+Resume by reconciling `/root/c08_luna`, which is performing bounded C-08 repair
+1 in the isolated `c08-endpoint-lineage` worktree. Initial candidate
+`809fc8933d84f1b716205a829a717643c8c5e15f` remains unintegrated. Fresh review
+found four Important defects: incompatibility with actual adapter fit shapes,
+fabricated fallback state identity, unbound supplied lineage, and lost/invalid
+unit representation. After the repair commit, dispatch the single focused
+Sol-6.1-high rereview. Shared fit retention/CLI composition is an exclusive
+correctness repair, not mechanical registration, and remains closed meanwhile.
 C-09 and C-06 stay closed until C-08 is accepted; G6 and D stay closed until
 their declared gates. Do not loosen the B-T04 0.08 bound, reroll seeds
 1001:1400, edit frozen `discovery/spec-v2` content, or read private study data.
