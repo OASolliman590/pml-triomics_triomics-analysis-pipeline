@@ -36,27 +36,39 @@
   },
   "active_workers": [
     {
-      "agent": "/root/c08_luna",
-      "role": "luna_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/c08_sol_review",
+      "role": "sol_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "packet": "C-08",
-      "attempt": "repair1",
+      "attempt": "focused_rereview",
       "base_commit": "cad313b749814c45ed75b5116adf4951103ee2c9",
-      "candidate_commit": "809fc8933d84f1b716205a829a717643c8c5e15f",
+      "candidate_commit": "53acd32ac6859b0ffcef8d8c7d610b195c8f545f",
       "worktree": "/Users/megastore/.codex/worktrees/c08-endpoint-lineage/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Return one allowlisted repair-1 commit closing the four Important findings; Sol then inspects it and dispatches the single focused Sol-high rereview.",
+      "allowed_next_transition": "Pass permits packet candidate integration as implemented-but-unaccepted and opening one exclusive shared correctness repair; findings remaining permit only bounded repair 2 and direct Sol verification.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c08_repair1_active",
+    "status": "c08_repair1_under_focused_rereview",
     "last_reconciled": "2026-10-20",
-    "active_handoffs": ["/root/c08_luna"],
+    "active_handoffs": ["/root/c08_sol_review"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The initial C-08 Sol-high review found four Important lineage and real-adapter compatibility defects. Bounded repair 1 is active in the same isolated Luna worktree. Shared fit retention and CLI composition remain closed for a later exclusive correctness-repair gate."
+    "disposition": "C-08 repair 1 candidate 53acd32 is exactly allowlisted and reports 206 focused passes with no failure, warning, or skip. The single focused Sol-high rereview is active. Shared fit retention and CLI composition remain closed for a later exclusive correctness-repair gate."
   },
   "orchestration_events": [
+    {
+      "event": "c08_repair1_focused_rereview_dispatched",
+      "date": "2026-10-20",
+      "worker": "/root/c08_luna",
+      "reviewer": "/root/c08_sol_review",
+      "candidate_commit": "53acd32ac6859b0ffcef8d8c7d610b195c8f545f",
+      "changed_files": ["R/integration_endpoints.R", "R/clinical_score_requests.R", "tests/testthat/test-C-08.R", "docs/implementation/registrations/C-08.json"],
+      "worker_tests": "Exact C-08 suite: 11 blocks, PASS 206, FAIL 0, WARN 0, SKIP 0. Adversarial red run exited 1 with 18 observed failures and no skips.",
+      "worker_cli": "Exact stage-C command exited 0 but exercises only the legacy PCA result; registration records the shared handoff as unresolved and C-08 remains unaccepted.",
+      "allowed_next_transition": "Pass: integrate packet-owned commits as implemented-but-unaccepted, then open one exclusive shared Luna correctness repair. Findings remaining: bounded repair 2 only, followed by direct Sol verification.",
+      "disposition": "The repair fails closed without a qualified c08_handoff and requests exact shared binding fields. The focused rereview is the last independent rereview for this packet."
+    },
     {
       "event": "c08_initial_review_changes_required_repair1_dispatched",
       "date": "2026-10-20",
@@ -2933,9 +2945,9 @@
       "blockers": []
     },
     "C-08": {
-      "status": "repair1_active",
+      "status": "repair1_under_focused_rereview",
       "attempts": 1,
-      "commit": "809fc8933d84f1b716205a829a717643c8c5e15f",
+      "commit": "53acd32ac6859b0ffcef8d8c7d610b195c8f545f",
       "repair_attempts": 1,
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-20-c08-sol-review.md"

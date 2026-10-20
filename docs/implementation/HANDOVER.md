@@ -177,14 +177,15 @@ C-05 acceptance is recorded in
 warnings remain visible and must not be called warning-free. No real study or
 biological MOFA validation is claimed.
 
-Resume by reconciling `/root/c08_luna`, which is performing bounded C-08 repair
-1 in the isolated `c08-endpoint-lineage` worktree. Initial candidate
-`809fc8933d84f1b716205a829a717643c8c5e15f` remains unintegrated. Fresh review
-found four Important defects: incompatibility with actual adapter fit shapes,
-fabricated fallback state identity, unbound supplied lineage, and lost/invalid
-unit representation. After the repair commit, dispatch the single focused
-Sol-6.1-high rereview. Shared fit retention/CLI composition is an exclusive
-correctness repair, not mechanical registration, and remains closed meanwhile.
+Resume by reconciling `/root/c08_sol_review`, which is performing the single
+focused rereview of C-08 repair-1 commit
+`53acd32ac6859b0ffcef8d8c7d610b195c8f545f` in the isolated
+`c08-endpoint-lineage` worktree. The repair changes four allowlisted files and
+reports 206 focused assertions passing with no failure, warning, or skip. A
+rereview pass permits packet-owned integration as implemented-but-unaccepted
+and one exclusive shared correctness repair for the qualified fit handoff and
+CLI composition. Findings remaining permit repair 2 only; no second focused
+rereview. C-09/C-06/G6/D remain closed.
 C-09 and C-06 stay closed until C-08 is accepted; G6 and D stay closed until
 their declared gates. Do not loosen the B-T04 0.08 bound, reroll seeds
 1001:1400, edit frozen `discovery/spec-v2` content, or read private study data.
