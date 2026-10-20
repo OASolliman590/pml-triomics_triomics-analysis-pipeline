@@ -1,0 +1,111 @@
+{
+  "packet_id": "C-06",
+  "request_type": "registration_request",
+  "implementation_base": "ef7da2086e7a0244e18a8ea1902423596d6a2b75",
+  "accepted": false,
+  "applied_to_shared_files": false,
+  "implementation_status": "Initial isolated candidate implemented and focused tests are green. Sol-owned C-stage CLI wiring to emit the D handoff remains pending; no packet acceptance or scientific validation is claimed.",
+  "synthetic_software_only": true,
+  "local_files": [
+    "R/export_c.R",
+    "R/integration_comparison.R",
+    "tests/testthat/test-C-06.R",
+    "inst/examples/tickets/C-06.yaml",
+    "docs/implementation/registrations/C-06.json"
+  ],
+  "dependencies": ["C-03", "C-04", "C-05", "C-08"],
+  "behavior": {
+    "nomination_export": "Builds separately identified primary-statistics and integration-selection nomination branches and writes D candidate nominations, complete per-integration evidence, comparison, evaluation, route-status payloads, envelopes and a manifest.",
+    "comparison": "Requires exact agreement on study/analysis, training samples, full feature maps, input matrix hashes, preparation context and representation. It carries native variance definitions and withholds ranking when definitions differ.",
+    "evaluation": "Requires the null, weak-signal, strong-signal and adversarial controls, paired candidate/baseline match context, and either an actual typed EvaluationResult or an explicit not_run/unavailable/failed record. Fabricated complete metrics are rejected.",
+    "completion": "An empty or unavailable integration cannot produce complete handoff status. Backend dispositions and conditional C-09 clinical-prediction status are retained."
+  },
+  "red_green_cycle": {
+    "red": {
+      "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\"",
+      "result": "Failed before implementation: missing C-06 behavior; testthat reached its failure cap.",
+      "observed_failures_lower_bound": 37,
+      "failure_cap_reached": true
+    },
+    "green": {
+      "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\"",
+      "exit_code": 0,
+      "expectations_passed": 52,
+      "test_blocks": 5,
+      "failures": 0,
+      "warnings": 0,
+      "skips": 0
+    }
+  },
+  "cli_registration": {
+    "stage": "C",
+    "service": "evaluate_pipeline",
+    "enabled": true,
+    "planned_command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-06.yaml --stage C --output artifacts/acceptance/C-06",
+    "exit_code": 0,
+    "output_status": "complete for the existing C integration-results artifact only",
+    "scope_note": "The command wrote existing C integration-results and score-endpoint artifacts but no D handoff payloads. The exact CLI path does not yet call the new C-06 handoff builder/writer, so this is not C-06 end-to-end completion. The CLI run preceded the final exporter hardening; focused tests were rerun after that hardening. Sol must rerun the integrated CLI after applying the shared registration.",
+    "output_artifacts": [
+      "C/integration-results.json",
+      "C/integration-results.envelope.json",
+      "C/score-endpoints/integration-01.json",
+      "C/score-endpoints/integration-01.envelope.json",
+      "registries/run.json"
+    ]
+  },
+  "runtime": {
+    "R": "4.6.1 (2026-06-24)",
+    "triomics": "0.1.0",
+    "testthat": "3.3.2",
+    "jsonlite": "2.0.0",
+    "digest": "0.6.39"
+  },
+  "file_sha256": {
+    "R/export_c.R": "b42f0226612ffdff3633c7563611cf3904e7c17bb66a04a881e19a2143c53cb0",
+    "R/integration_comparison.R": "dc5f2dd151e32d9200d01152e4e77c374024f304af118b92586d62f7685766d6",
+    "tests/testthat/test-C-06.R": "09a6df1eb3461988e2cf6ca0638e584923ef74af3cdd314badb42d4d6fc48a",
+    "inst/examples/tickets/C-06.yaml": "3d11d5e8fb69893fbc1c284cc8568c6d09b04a7c61d79e1302689c507a638df0"
+  },
+  "cli_artifact_sha256": {
+    "C/integration-results.json": "84c2786fd7efa07b91069b7f0d913ac6786beb71a0e30a39b482a5618bef85ad",
+    "C/integration-results.envelope.json": "69cb368626393d317608ea6b1cfb5a4a6e22f8cb18f135dd4a50b755f3af",
+    "C/score-endpoints/integration-01.json": "bf82df796216d8bb38c1cc81ea83dcb086ee8148ce5a6da907211628c562abf6",
+    "C/score-endpoints/integration-01.envelope.json": "94973c8d23791dc285d3486d805ec66a12dc201228fc4f9c315880ed4f7c0452",
+    "registries/run.json": "cea800047c1f3295406d0bb217685f04e772347d7278649b432fb69aa77ea06a"
+  },
+  "acceptance": {
+    "AC1": {
+      "status": "implementation_tested_cli_registration_pending",
+      "evidence": "Both nomination branches and complete eligibility/native/common/selection/variance evidence are constructed, validated and written to D in synthetic writer tests. The exact Stage-C CLI currently emits no D handoff because R/cli.R is coordinator-owned and unchanged."
+    },
+    "AC2": {
+      "status": "passed_synthetic_behavior_tests",
+      "evidence": "Matched comparisons bind sample IDs, full feature maps, matrix hashes, preparation context and representation. Adversarial identity mismatch and missing evidence fail closed; native variance definitions remain distinct and unlike definitions have no ranking."
+    },
+    "AC3": {
+      "status": "passed_explicit_unrun_policy_tests",
+      "evidence": "All four controls and paired baseline records are required and identity-matched. This packet ran no C-07 evaluations: fixture entries are explicit not_run records. A complete status without an actual matched EvaluationResult is rejected; no performance result is fabricated."
+    },
+    "AC4": {
+      "status": "passed_synthetic_behavior_tests_cli_registration_pending",
+      "evidence": "Backend unavailable/failed dispositions and conditional clinical-prediction status remain visible; tests verify empty and unavailable integrations cannot complete the handoff. Full integrated CLI behavior still requires Sol's R/cli.R wiring."
+    }
+  },
+  "shared_changes_for_sol": [
+    {
+      "file": "R/cli.R",
+      "change": "In the C-stage path, assemble the accepted integration runs, both nomination branches, explicit C-07 control records, backend dispositions and conditional C-09 status; call triomics_c06_build_handoff() and triomics_c06_write_handoff() to persist the D payloads, envelopes and manifest. Preserve the existing C artifacts and propagate the non-complete status when no eligible integration evidence exists.",
+      "reason": "The packet implementation is intentionally limited to its allowlist; C-06 must not edit coordinator-owned CLI registration."
+    }
+  ],
+  "coordinator_owned_files_to_update": ["R/cli.R"],
+  "namespace_change_requested": false,
+  "known_gaps": [
+    "The exact C-06 CLI command exits 0 but does not yet emit D artifacts; shared CLI integration and a fresh integrated CLI run are required.",
+    "No C-07 evaluation was executed. All four controls are explicitly unrun; only the evidence policy and matching behavior are tested.",
+    "The fixture and all tests are public synthetic software evidence; no private-study or biological validation is claimed.",
+    "The conditional C-09 clinical-prediction route remains not_started and is not a completion requirement for this packet."
+  ],
+  "acceptance_ref": "discovery/spec-v2/packets/C-06.md",
+  "next_action": "Sol applies the requested R/cli.R registration, reruns integrated checks, and owns acceptance."
+}
