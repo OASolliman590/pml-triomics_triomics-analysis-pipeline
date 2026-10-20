@@ -177,16 +177,15 @@ C-05 acceptance is recorded in
 warnings remain visible and must not be called warning-free. No real study or
 biological MOFA validation is claimed.
 
-Resume by reconciling `/root/c08_shared_luna` in the isolated C-08 shared
-worktree. Candidate `b579bfd214618957adb6fcd7193284758913aa27` implemented the
-fit-once handoff and Stage-C endpoint/request composition, but fresh read-only
-Sol review found two Important defects recorded in
-`reviews/2026-10-20-c08-shared-sol-review.md`: Stage C reads block IDs from the
-wrong object and silently discards source-selection ancestry, and it adds a
-schema field after the endpoint integrity hash is finalized. The same worker is
-authorized for one targeted additive continuation covering only those findings
-and their behavioral tests. Do not rerun the consumed packet repairs. After the
-worker returns, inspect and verify the additive commit before integration.
+Resume at the clean archive package gate for integrated C-08 snapshot after
+commits `c5535fb` and `2170820`. The focused shared rereview passed with no
+remaining findings. Fresh integrated tests passed C-08 288, C-01 109, C-03 82
+and C-04 132 assertions with zero failures, warnings or skips. The exact Stage-C
+CLI exited 0, endpoint JSON and all envelopes validated, and the scheduled B
+request bound the persisted endpoint bundle hash. Run
+`Rscript --vanilla tools/check-package.R` from a clean Git archive of the
+committed snapshot. Accept C-08 only after that package gate passes and every
+warning is named and dispositioned. Do not rerun consumed packet repairs.
 C-09/C-06/G6/D remain closed.
 C-09 and C-06 stay closed until C-08 is accepted; G6 and D stay closed until
 their declared gates. Do not loosen the B-T04 0.08 bound, reroll seeds

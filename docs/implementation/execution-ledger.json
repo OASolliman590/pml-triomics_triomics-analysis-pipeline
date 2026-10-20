@@ -34,29 +34,29 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/c08_shared_sol_review",
-      "role": "sol_focused_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "packet": "C-08",
-      "attempt": "exclusive_shared_correctness_repair_focused_rereview",
-      "base_commit": "b579bfd214618957adb6fcd7193284758913aa27",
-      "candidate_commit": "9338bd841c3cb959028f22d7f42d05bb6c6c802a",
-      "worktree": "/Users/megastore/.codex/worktrees/c08-shared-handoff/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Focused pass permits serial integration and fresh Sol verification; findings remaining keep C-08 blocked. No further shared rereview is authorized.",
-      "wait_cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "c08_shared_focused_rereview_active",
+    "status": "c08_integrated_package_check_pending",
     "last_reconciled": "2026-10-20",
-    "active_handoffs": ["/root/c08_shared_sol_review"],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The targeted additive repair is 9338bd8 over shared candidate b579bfd. Luna reports both Important review findings fixed with exact C-08 and adjacent suites green. The single focused Sol rereview is active; C-08 remains unaccepted."
+    "disposition": "Focused Sol rereview passed and shared commits were integrated as c5535fb and 2170820. Fresh integrated C-08/C-01/C-03/C-04 tests and exact CLI read-back pass. C-08 remains unaccepted pending the clean archive package gate."
   },
   "orchestration_events": [
+    {
+      "event": "c08_shared_focused_rereview_pass_integrated_verification_green",
+      "date": "2026-10-20",
+      "reviewer": "/root/c08_shared_sol_review",
+      "candidate_commits": ["b579bfd214618957adb6fcd7193284758913aa27", "9338bd841c3cb959028f22d7f42d05bb6c6c802a"],
+      "integrated_commits": ["c5535fb", "2170820"],
+      "verdict": "addressed/pass",
+      "findings": {"critical": 0, "important": 0, "minor": 0},
+      "review_ref": "docs/implementation/reviews/2026-10-20-c08-shared-focused-rereview.md",
+      "integrated_tests": "C-08 PASS 288; C-01 PASS 109; C-03 PASS 82; C-04 PASS 132; all FAIL 0, WARN 0, SKIP 0.",
+      "integrated_cli": "Exact Stage-C command exited 0 at /private/tmp/triomics-c08-exact.7WHwC0; endpoint JSON and all three envelopes validated; scheduled B source hash matched endpoint bundle 0559bcb352370fc719a923b31b787ddb829fc02bff4d35ff16f5b299e08d7879.",
+      "allowed_next_transition": "Run tools/check-package.R from a clean archive of the committed snapshot. Accept C-08 only if that gate passes with every warning named and dispositioned.",
+      "disposition": "No private data or native MOFA qualification is claimed. C-05 remains separately disclosed as baseline-identical failures under the unavailable current MOFA runtime."
+    },
     {
       "event": "c08_shared_targeted_repair_focused_rereview_dispatched",
       "date": "2026-10-20",
