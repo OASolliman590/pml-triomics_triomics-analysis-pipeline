@@ -42,10 +42,11 @@
       "requested_effort": "max",
       "packet": "C-09",
       "attempt": 1,
+      "repair_attempt": 1,
       "base_commit": "ef7da20",
-      "candidate_commit": null,
+      "candidate_commit": "45a0f9900306f60a6a87a2fbfffbf7dd57adca2e",
       "worktree": "/Users/megastore/.codex/worktrees/c09-clinical-prediction/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Return one clean allowlisted C-09 candidate or an evidence-backed conditional-gate blocker; Sol inspects and dispatches fresh review. Real-study deployment remains unqualified.",
+      "allowed_next_transition": "Return one clean allowlisted C-09 repair commit closing the two Important failure-accounting findings and replacing the test-only fixture handoff with runnable public inputs; Sol inspects and sends the one focused rereview. Real-study deployment remains unqualified.",
       "wait_cursor": null
     },
     {
@@ -55,21 +56,43 @@
       "requested_effort": "max",
       "packet": "C-06",
       "attempt": 1,
+      "repair_attempt": 1,
       "base_commit": "ef7da20",
-      "candidate_commit": null,
+      "candidate_commit": "d8fa515d32b6d5d0c637e325d8fe41705ff3dae6",
       "worktree": "/Users/megastore/.codex/worktrees/c06-cross-backend/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Return one clean allowlisted C-06 candidate; Sol inspects and dispatches fresh review. Shared CLI/namespace changes remain coordinator-owned.",
+      "allowed_next_transition": "Return one clean allowlisted C-06 repair commit closing the six Important contract, lineage and privacy findings; Sol inspects and sends the one focused rereview. Shared CLI changes remain closed until the packet seam passes.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c09_c06_initial_workers_active",
+    "status": "c09_c06_repair1_workers_active",
     "last_reconciled": "2026-10-20",
     "active_handoffs": ["/root/c09_luna", "/root/c06_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-08 is accepted at d69ef1e. Fresh isolated Luna-max workers own C-09 and C-06 on disjoint exact write sets at base ef7da20. C-09 may validate only an explicit public synthetic protocol and must keep real deployment unqualified. G6 and D remain closed."
+    "disposition": "Fresh Sol-6.1-high reviews rejected both initial candidates with no Critical finding. The original Luna-max workers own bounded repair 1 on their disjoint allowlists. Shared C-06/C-09 registration remains closed until focused rereviews pass. G6 and D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "c09_c06_initial_reviews_changes_required_repair1_dispatched",
+      "date": "2026-10-20",
+      "workers": ["/root/c09_luna", "/root/c06_luna"],
+      "reviewers": ["/root/c09_sol_review", "/root/c06_sol_review"],
+      "candidates": {"C-09": "45a0f9900306f60a6a87a2fbfffbf7dd57adca2e", "C-06": "d8fa515d32b6d5d0c637e325d8fe41705ff3dae6"},
+      "verdict": "changes_required",
+      "findings": {"C-09": {"critical": 0, "important": 2, "minor": 0}, "C-06": {"critical": 0, "important": 6, "minor": 0}},
+      "review_refs": ["docs/implementation/reviews/2026-10-20-c09-sol-review.md", "docs/implementation/reviews/2026-10-20-c06-sol-review.md"],
+      "reviewer_tests": {"C-09": "PASS 24, FAIL 0, WARN 0, SKIP 0", "C-06": "PASS 52, FAIL 0, WARN 0, SKIP 0"},
+      "allowed_next_transition": "Each bounded repair 1 receives the single focused Sol-high rereview. Only focused pass permits serial packet integration; shared schema/CLI work remains closed until then.",
+      "disposition": "C-09 must preserve candidate-specific failures and named reasons and provide runnable public inputs while keeping the real protocol gate open. C-06 must repair accepted-predecessor compatibility, variance units, complete-empty nominations, privacy propagation and immutable lineage before shared CLI wiring."
+    },
+    {
+      "event": "c02_resume_request_reconciled_to_accepted_history",
+      "date": "2026-10-20",
+      "requested_checkpoint": "interrupted C-02 package check",
+      "actual_state": "C-02 accepted at immutable snapshot 1a8cbe4; code and registration 85922cf; package check Status OK; M5 accepted",
+      "allowed_next_transition": "Do not rerun C-02 Luna repairs or package check. Preserve accepted receipts and continue the live M6 handoffs.",
+      "disposition": "Commit 1a8cbe4 is an ancestor of the current branch. Replaying the historical checkpoint would duplicate accepted work and violate restore-by-ledger rules."
+    },
     {
       "event": "c09_c06_initial_workers_dispatched",
       "date": "2026-10-20",
@@ -3085,17 +3108,19 @@
       "blockers": []
     },
     "C-09": {
-      "status": "initial_attempt_active",
+      "status": "repair_1_active",
       "attempts": 1,
-      "commit": null,
-      "acceptance_refs": [],
+      "repair_attempts": 1,
+      "commit": "45a0f9900306f60a6a87a2fbfffbf7dd57adca2e",
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c09-sol-review.md"],
       "blockers": []
     },
     "C-06": {
-      "status": "initial_attempt_active",
+      "status": "repair_1_active",
       "attempts": 1,
-      "commit": null,
-      "acceptance_refs": [],
+      "repair_attempts": 1,
+      "commit": "d8fa515d32b6d5d0c637e325d8fe41705ff3dae6",
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c06-sol-review.md"],
       "blockers": []
     },
     "D-T01": {
