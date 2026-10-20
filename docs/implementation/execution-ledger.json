@@ -36,28 +36,40 @@
   },
   "active_workers": [
     {
-      "agent": "/root/c06_shared_luna",
-      "role": "luna_shared_integration_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/c06_shared_sol_review",
+      "role": "sol_shared_focused_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "packet": "C-06-shared",
       "attempt": 1,
       "repair_attempt": 1,
       "base_commit": "634c29f",
-      "candidate_commit": "1cc35048907ab4dd866d7129759ddcb7672d05eb",
+      "candidate_commit": "be2a4e4",
       "worktree": "/Users/megastore/.codex/worktrees/c06-shared-cli/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Return one bounded shared repair closing the four Important findings and one misleading split-plan field. The same reviewer performs the single focused rereview; then Sol reconciles and pauses without starting C-09 shared registration, M6 audit or Stage D.",
+      "allowed_next_transition": "Focused pass permits serial integration and final cycle verification. Findings remaining permit bounded shared repair 2 and direct Sol verification only; then reconcile and pause without starting C-09 shared registration, M6 audit or Stage D.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c06_shared_repair1_active_c09_integrated",
+    "status": "c06_shared_repair1_focused_rereview_active",
     "last_reconciled": "2026-10-21",
-    "active_handoffs": ["/root/c06_shared_luna"],
+    "active_handoffs": ["/root/c06_shared_sol_review"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-06 shared review found four Important defects, including a reproduced regression of the accepted C-02 nested CLI. The original shared Luna owns bounded repair 1; the same reviewer gets one focused rereview. C-09 shared registration, M6 audit and Stage D remain intentionally unopened before the requested pause."
+    "disposition": "C-06 shared repair 1 is committed and the same Sol reviewer owns the single focused rereview. The exit-4 policy is under explicit scrutiny against accepted C-02 semantics. C-09 shared registration, M6 audit and Stage D remain intentionally unopened before the requested pause."
   },
   "orchestration_events": [
+    {
+      "event": "c06_shared_repair1_focused_rereview_dispatched",
+      "date": "2026-10-21",
+      "worker": "/root/c06_shared_luna",
+      "reviewer": "/root/c06_shared_sol_review",
+      "initial_candidate": "1cc35048907ab4dd866d7129759ddcb7672d05eb",
+      "repair_commit": "be2a4e4",
+      "worker_test": "Repair RED PASS 73 with 25 failures; final C-06 filter PASS 266, FAIL 0, WARN 0, SKIP 0.",
+      "worker_cli": "Direct C-06 exit 4 partial and nested C-02 exit 4 unavailable; each wrote five D payloads and six valid envelopes with verified hashes. Complete-empty B nominations and a real C-02 split hash were preserved.",
+      "allowed_next_transition": "Focused pass permits integration and fresh Sol verification. Findings remaining permit shared repair 2 only, followed by direct Sol verification without another rereview.",
+      "disposition": "Rereview must determine whether exit 4 correctly expresses required incompleteness or improperly regresses accepted C-02 nested evaluation semantics."
+    },
     {
       "event": "c06_shared_review_changes_required_repair1_dispatched",
       "date": "2026-10-21",
@@ -3163,13 +3175,14 @@
       "blockers": ["Shared NAMESPACE, typed schema and Stage-C CLI registration are pending; the real endpoint/deployment/uncertainty protocol remains unqualified."]
     },
     "C-06": {
-      "status": "integrated_shared_cli_repair_1_active",
+      "status": "integrated_shared_cli_repair_1_rereview_active",
       "attempts": 1,
       "repair_attempts": 1,
       "shared_repair_attempts": 1,
       "commit": "a60a7a56eec1250bd4a9e44253597f83a3e565fd",
       "integration_commits": ["7d29da4", "634c29f"],
       "shared_candidate_commit": "1cc35048907ab4dd866d7129759ddcb7672d05eb",
+      "shared_repair_candidate": "be2a4e4",
       "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c06-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c06-shared-sol-review.md"],
       "blockers": []
     },
