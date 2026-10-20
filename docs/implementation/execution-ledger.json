@@ -36,27 +36,40 @@
   },
   "active_workers": [
     {
-      "agent": "/root/c08_shared_luna",
-      "role": "luna_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/c08_shared_sol_review",
+      "role": "sol_focused_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "packet": "C-08",
-      "attempt": "exclusive_shared_correctness_repair_targeted_continuation",
-      "base_commit": "b45f31a422349c6fd4e5a702c30d7df1c4570e6d",
-      "candidate_commit": "b579bfd214618957adb6fcd7193284758913aa27",
+      "attempt": "exclusive_shared_correctness_repair_focused_rereview",
+      "base_commit": "b579bfd214618957adb6fcd7193284758913aa27",
+      "candidate_commit": "9338bd841c3cb959028f22d7f42d05bb6c6c802a",
       "worktree": "/Users/megastore/.codex/worktrees/c08-shared-handoff/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Address only the two Important shared-review findings: preserve declared source-selection ancestry and make the serialized endpoint bundle self-validating. Return one additive clean commit for fresh Sol verification.",
+      "allowed_next_transition": "Focused pass permits serial integration and fresh Sol verification; findings remaining keep C-08 blocked. No further shared rereview is authorized.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c08_shared_targeted_continuation_active",
+    "status": "c08_shared_focused_rereview_active",
     "last_reconciled": "2026-10-20",
-    "active_handoffs": ["/root/c08_shared_luna"],
+    "active_handoffs": ["/root/c08_shared_sol_review"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-08 packet-owned commits are integrated at b45f31a and the shared candidate is b579bfd. Fresh Sol review found two Important shared defects: discarded source-selection ancestry and a post-hash schema mutation. The same isolated Luna worker is limited to this targeted continuation; C-08 remains unaccepted."
+    "disposition": "The targeted additive repair is 9338bd8 over shared candidate b579bfd. Luna reports both Important review findings fixed with exact C-08 and adjacent suites green. The single focused Sol rereview is active; C-08 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "c08_shared_targeted_repair_focused_rereview_dispatched",
+      "date": "2026-10-20",
+      "worker": "/root/c08_shared_luna",
+      "reviewer": "/root/c08_shared_sol_review",
+      "base_candidate": "b579bfd214618957adb6fcd7193284758913aa27",
+      "repair_commit": "9338bd841c3cb959028f22d7f42d05bb6c6c802a",
+      "changed_files": ["R/cli.R", "tests/testthat/test-C-08-shared.R", "docs/implementation/registrations/C-08.json"],
+      "worker_tests": "C-08 PASS 288; C-08-shared PASS 52; C-01 PASS 109; C-03 PASS 82; C-04 PASS 132; all reported FAIL 0, WARN 0, SKIP 0.",
+      "worker_cli": "Fresh Stage-C command exited 0; persisted endpoint read-back validated and its bundle hash matched the scheduled B request source hash.",
+      "allowed_next_transition": "Focused pass permits serial integration and fresh Sol verification. Findings remaining keep C-08 blocked; no second shared rereview.",
+      "disposition": "This rereview covers only the two Important shared-review findings and does not reopen consumed packet repair or review rounds."
+    },
     {
       "event": "c08_shared_review_findings_targeted_continuation_dispatched",
       "date": "2026-10-20",
