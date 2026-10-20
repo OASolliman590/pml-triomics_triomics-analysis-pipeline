@@ -369,7 +369,10 @@ testthat::test_that("the adapter registry exposes only the registered integratio
   testthat::expect_true(all(c("validate", "fit", "predict", "extract") %in% names(adapter)))
   testthat::expect_setequal(
     triomics_integration_backend_names(),
-    c("concat_pca", "concat_plsda", "concat_pls", "mixomics_diablo", "mixomics_block_spls")
+    c(
+      "concat_pca", "concat_plsda", "concat_pls", "mixomics_diablo",
+      "mixomics_block_spls", "mofa2"
+    )
   )
   c01_error_code(triomics_integration_backend("mixomics_unregistered"), "C_SCORE_BACKEND_UNAVAILABLE")
 })
