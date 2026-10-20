@@ -1,0 +1,150 @@
+{
+  "packet_id": "C-08",
+  "request_type": "registration_request",
+  "implementation_base": "cad313b749814c45ed75b5116adf4951103ee2c9",
+  "accepted": false,
+  "applied_to_shared_files": false,
+  "implementation_status": "Local packet candidate; behavioral acceptance is green, but shared stage-C composition is pending coordinator registration and review.",
+  "synthetic_software_only": true,
+  "local_files": [
+    "R/integration_endpoints.R",
+    "R/clinical_score_requests.R",
+    "tests/testthat/test-C-08.R",
+    "inst/examples/tickets/C-08.yaml"
+  ],
+  "integration_endpoints": {
+    "methods": [
+      {
+        "method": "concat_pca",
+        "native_method": "stats::prcomp",
+        "score_definition": "native_pca_scores",
+        "scale": "native_pca_score",
+        "orientation": "native_component_sign",
+        "selection": "Explicit selection ancestry and same-outcome restriction are carried on each immutable per-unit endpoint."
+      },
+      {
+        "method": "mixomics_diablo",
+        "native_method": "mixOmics::block.splsda",
+        "score_definition": "consensus_mean",
+        "scale": "training_standardized_native_score_mean",
+        "orientation": "frozen_consensus_training_anchor",
+        "selection": "Training Y identity/value hash and subjects are preserved; association is descriptive-only because the fit used Y."
+      },
+      {
+        "method": "mixomics_block_spls",
+        "native_method": "mixOmics::block.spls",
+        "score_definition": "equal_weight_mean_of_signed_training_standardized_native_scores",
+        "scale": "training_standardized_native_score_mean",
+        "orientation": "frozen_consensus_training_anchor",
+        "selection": "Training Y identity/value hash and subjects are preserved; association is descriptive-only because the fit used Y."
+      },
+      {
+        "method": "mofa2",
+        "native_method": "MOFA2::run_mofa",
+        "score_definition": "native_mofa_factor_values",
+        "scale": "native_mofa_factor_value",
+        "orientation": "native_factor_sign_unaligned",
+        "selection": "Same-data clinical selection ancestry and inspected outcome are retained and marked descriptive-only."
+      }
+    ],
+    "lineage_fields": [
+      "unit/sample/subject/visit/time mapping",
+      "training units and subjects",
+      "training Y variable identity, used-by-fit status, and value hash when present",
+      "producing BackendFit identity and state hash",
+      "selection ancestry and inference status",
+      "available_at_time and dependency_group",
+      "per-block input hashes, source hash, B-compatible matrix hash, endpoint and bundle hashes"
+    ]
+  },
+  "clinical_score_request": {
+    "owner_stage": "B",
+    "status": "scheduled_only",
+    "model_execution": "not_started",
+    "recurses_to_stage_c": false,
+    "feature_association_artifacts_accepted": false,
+    "clinical_models_executed_or_duplicated": false,
+    "integrity": "Bundle, endpoint, and matrix hashes are checked before request construction; approved one-to-one links and visit/time/coverage are fail-closed."
+  },
+  "tests": {
+    "red_command": "Rscript --vanilla -e \"testthat::test_local(filter='C-08', stop_on_failure=TRUE)\"",
+    "red_exit": 1,
+    "red_evidence": "artifacts/acceptance/C-08/red-test.log",
+    "red_result": "Expected absent behavior: constructor not found; initial behavioral run failed without skips.",
+    "final_command": "Rscript --vanilla -e \"testthat::test_local(filter='C-08', stop_on_failure=TRUE)\"",
+    "final_exit": 0,
+    "test_blocks": 8,
+    "assertions_passed": 149,
+    "failures": 0,
+    "warnings": 0,
+    "skips": 0,
+    "final_result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 149 ]",
+    "intermediate_repair": "One post-implementation run exposed AC4 feature-artifact error precedence; the boundary check was corrected and the final run passed."
+  },
+  "cli": {
+    "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-08.yaml --stage C --output artifacts/acceptance/C-08",
+    "final_exit": 0,
+    "run_status": "complete",
+    "evidence_root": "artifacts/acceptance/C-08",
+    "first_repeat_collision_exit": 4,
+    "collision_note": "The CLI refuses to atomically overwrite existing generated outputs. The first successful run was preserved in artifacts/acceptance/C-08/prior-success before rerunning the exact command into a clean output path.",
+    "scope_note": "The existing shared CLI currently emits IntegrationResult output only; it does not yet compose C-08 endpoints or B requests. CLI exit 0 proves the synthetic PCA stage-C slice, not shared endpoint registration."
+  },
+  "runtime": {
+    "R": "4.6.1 (2026-06-24)",
+    "triomics": "0.1.0",
+    "testthat": "3.3.2",
+    "jsonlite": "2.0.0",
+    "digest": "0.6.39",
+    "mixOmics": "6.36.0",
+    "MOFA2": "not-installed",
+    "limma": "3.68.5"
+  },
+  "file_sha256": {
+    "R/integration_endpoints.R": "52d2ecb12b2d63722fae3e685fcaecec915ea586ad6042a91d0ee8221e1c1535",
+    "R/clinical_score_requests.R": "7411d5e6b1d7f452e32f184279bc65ddfb036745ccdce3794d8e11e35a0008f0",
+    "tests/testthat/test-C-08.R": "ea809f2e0293592175d1910180c310122ead85ca16521b4d9e3f97e5121f3b25",
+    "inst/examples/tickets/C-08.yaml": "72145b84b27f4039173f69e295f9d2052d44769bc7ff09e7803e6543327a3b51"
+  },
+  "cli_hashes": {
+    "integration_results_payload_sha256": "2f01bb0e7cb558bd61492365ab7ec70c6e65fdcdaf887c27abd02f9d62f60acb",
+    "integration_results_envelope_file_sha256": "a2d3e0ffae4e27106574eeb479c97571fb7084d9189e2dd129631284be5e0e95",
+    "run_manifest_sha256": "e596d397395e7b8381065c05aa072a1a5ddf3e3273e24b0ba918951795f5e1e6"
+  },
+  "acceptance": {
+    "AC1": {
+      "status": "pass_behavioral_tests",
+      "evidence": "All four method contracts, unit/sample/subject/visit, scales/orientations, fit and training lineage, input hashes, availability/dependency, and B-compatible matrix hashes are asserted. Synthetic fixtures only; MOFA2 runtime is not installed."
+    },
+    "AC2": {
+      "status": "pass_local_request_api_pending_shared_composition",
+      "evidence": "A hash-checked B-owned request is scheduled without modeling, outputs, or C recursion. Shared CLI/orchestrator composition is not wired because the accepted shared fit path currently discards BackendFit before returning IntegrationResult."
+    },
+    "AC3": {
+      "status": "pass_behavioral_tests",
+      "evidence": "DIABLO and block.spls training-Y associations are descriptive-only; same-data selected MOFA ancestry and inspected outcome remain descriptive-only."
+    },
+    "AC4": {
+      "status": "pass_behavioral_tests",
+      "evidence": "Unit coverage, clinical link, visit, date/horizon, immutable hash, and feature-versus-score request mismatches fail closed."
+    }
+  },
+  "shared_registration_request": {
+    "required": true,
+    "coordinator_owned_files_to_update": [
+      "R/integration_contract.R",
+      "R/cli.R",
+      "R/stage_registry.R"
+    ],
+    "request": "Add a single-fit internal orchestration seam that retains the exact BackendFit and IntegrationResult produced by the accepted adapter path, without expanding the six-field IntegrationResult or refitting. The stage-C writer should construct C-08 endpoints from that fit/result and public unit/input/selection lineage, emit the immutable endpoint bundle, and—when configured clinical links/objectives are available—create a B-owned scheduled request only. It must not execute associate_endpoints/associate_longitudinal_endpoints, re-run C, or duplicate clinical models. Keep the feature-association and score-association artifact/request types distinct.",
+    "exports": [],
+    "dependency_changes": [],
+    "applied_by_worker": false
+  },
+  "gaps": [
+    "No shared CLI endpoint/request composition until Sol applies the requested serial registration; the successful CLI output remains the existing IntegrationResult artifact.",
+    "MOFA2 is not installed in this environment; MOFA endpoint lineage is verified with synthetic public-seam fixtures only, not native runtime execution.",
+    "All evidence is synthetic software evidence only; no private study, clinical, biological, or scientific-validity claim is made."
+  ],
+  "accepted_snapshot": null
+}
