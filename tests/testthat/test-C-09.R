@@ -383,3 +383,34 @@ testthat::test_that("C-09 provides a packet-owned runtime synthetic generator wi
   testthat::expect_identical(inputs$protocol$deployment$real_deployment_status, "not_qualified")
   testthat::expect_identical(inputs$protocol$uncertainty$method, "paired_subject_cluster_bootstrap")
 })
+
+c09_registry_preservation_case <- function() {
+  registry <- getFromNamespace(".triomics_profile_registry", "triomics")
+  sentinel_id <- "c09_test_sentinel_profile"
+  sentinel_profile <- triomics_baseline_profile()
+  triomics_register_profile(sentinel_id, sentinel_profile)
+  on.exit({
+    if (exists(sentinel_id, envir = registry, inherits = FALSE)) {
+      rm(list = sentinel_id, envir = registry)
+    }
+  }, add = TRUE)
+
+  inputs <- triomics_c09_synthetic_inputs(seed = 90210L, n_subjects = 32L)
+  registered <- tryCatch(triomics_registered_profile(sentinel_id), error = function(error) NULL)
+  list(inputs = inputs, registered = registered, sentinel_profile = sentinel_profile)
+}
+
+testthat::test_that("C-09 synthetic generation preserves caller-registered profiles", {
+  result <- c09_registry_preservation_case()
+  testthat::expect_false(is.null(result$registered))
+  testthat::expect_identical(result$registered, result$sentinel_profile)
+  testthat::expect_s3_class(result$inputs, "C09SyntheticInputs")
+  testthat::expect_invisible(triomics_validate_split_plan(result$inputs$split_plan, TRUE))
+  testthat::expect_invisible(triomics_c09_validate_protocol(
+    result$inputs$protocol, result$inputs$split_plan
+  ))
+  testthat::expect_invisible(triomics_c09_validate_c08(
+    result$inputs$endpoint_bundle, result$inputs$clinical_score_request,
+    result$inputs$split_plan
+  ))
+})

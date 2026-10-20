@@ -660,14 +660,13 @@ triomics_c09_synthetic_study <- function(blocks, outcome, state_dir) {
     clinical_observations = list(),
     upstream_steps = stats::setNames(replicate(length(block_ids), character(), FALSE), block_ids)
   )
-  triomics_reset_profiles()
-  triomics_register_profile("baseline", triomics_baseline_profile())
+  triomics_register_profile("c09_synthetic_fixture", triomics_baseline_profile())
   study <- triomics_assemble_study(raw, alignment = "strict")
   operations <- lapply(c("validate", "filter", "derive", "transform", "normalise", "impute"), function(stage) {
     list(stage = stage, method = "none")
   })
   block_specs <- lapply(block_ids, function(block_id) {
-    list(block_id = block_id, profile_id = "baseline", operations = operations)
+    list(block_id = block_id, profile_id = "c09_synthetic_fixture", operations = operations)
   })
   list(
     study = study,

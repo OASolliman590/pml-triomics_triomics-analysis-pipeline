@@ -56,15 +56,28 @@
         "No packet-owned runtime synthetic generator existed outside the test file."
       ]
     },
+    "repair2_red": {
+      "command": "Rscript --vanilla -e \"testthat::test_file('tests/testthat/test-C-09.R', package='triomics', load_package='source', desc='C-09 synthetic generation preserves caller-registered profiles')\"",
+      "exit": 0,
+      "result": "[ FAIL 2 | WARN 0 | SKIP 0 | PASS 4 ]",
+      "duration_seconds": 8.8,
+      "reason": "The new behavioral assertions detected that synthetic generation removed the sentinel profile registered by the caller."
+    },
+    "repair2_focused_green": {
+      "command": "Rscript --vanilla -e \"testthat::test_file('tests/testthat/test-C-09.R', package='triomics', load_package='source', desc='C-09 synthetic generation preserves caller-registered profiles')\"",
+      "exit": 0,
+      "result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 6 ]",
+      "duration_seconds": 11.9
+    },
     "final_exit": 0,
-    "final_evidence": "artifacts/acceptance/C-09/green-summary.txt",
-    "test_blocks": 7,
-    "assertions_passed": 47,
+    "final_evidence": "Embedded in this registration under tests: exact command, repair-2 result, and duration; no generated output file was committed.",
+    "test_blocks": 8,
+    "assertions_passed": 53,
     "failures": 0,
     "warnings": 0,
     "skips": 0,
-    "duration_seconds": 146.6,
-    "final_result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 47 ]"
+    "duration_seconds": 68.3,
+    "final_result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 53 ]"
   },
   "cli": {
     "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-09.yaml --stage C --output artifacts/acceptance/C-09",
@@ -98,11 +111,11 @@
     "environment_fingerprint_inputs": "R.version.string, R.version[[platform]], testthat, mixOmics, and digest versions joined with newline and SHA-256 hashed without serialization."
   },
   "file_sha256": {
-    "R/clinical_prediction_comparison.R": "b1b9187bd1f6204db40bc7d3b843c67dabc70b1f76523e1a6b3bbfac29c67dd2",
-    "tests/testthat/test-C-09.R": "1324ceffda36aa7d2d9b40e605e73d851f610ff8e562fc277b58d19982d2a33e",
+    "R/clinical_prediction_comparison.R": "09a79510762f72376dfa375673068d83dc8e80418e49debaee4ed2a17a3f9b2e",
+    "tests/testthat/test-C-09.R": "64e8ba8472b159a024f251ed8a9d5cfe6aa2914b882556d86056d9dcdbbf26b8",
     "inst/examples/tickets/C-09.yaml": "3bc396e4077c4698d3d9d89058f87fb9a733351e226370f061acc81277e5657e"
   },
-  "registration_sha256_evidence": "artifacts/acceptance/C-09/registration-sha256.txt",
+  "registration_sha256_evidence": "Implementation, test, and YAML source hashes are recorded in file_sha256; this registration hash is not self-referential.",
   "acceptance": {
     "AC1": {
       "status": "conditional_synthetic_software_evidence",
