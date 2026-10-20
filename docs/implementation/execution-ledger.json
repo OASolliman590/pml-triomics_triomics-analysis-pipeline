@@ -41,22 +41,34 @@
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "packet": "C-08",
-      "attempt": "exclusive_shared_correctness_repair",
+      "attempt": "exclusive_shared_correctness_repair_targeted_continuation",
       "base_commit": "b45f31a422349c6fd4e5a702c30d7df1c4570e6d",
-      "candidate_commit": null,
+      "candidate_commit": "b579bfd214618957adb6fcd7193284758913aa27",
       "worktree": "/Users/megastore/.codex/worktrees/c08-shared-handoff/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Return one clean shared-repair commit retaining the exact single fit and composing endpoint/request artifacts; Sol inspects, verifies, and applies the normal acceptance gates.",
+      "allowed_next_transition": "Address only the two Important shared-review findings: preserve declared source-selection ancestry and make the serialized endpoint bundle self-validating. Return one additive clean commit for fresh Sol verification.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c08_shared_correctness_repair_active",
+    "status": "c08_shared_targeted_continuation_active",
     "last_reconciled": "2026-10-20",
     "active_handoffs": ["/root/c08_shared_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-08 packet-owned commits are integrated at b45f31a and pass 236 focused assertions, but the packet remains unaccepted. One fresh isolated Luna-max worker owns the exclusive shared correctness repair for exact fit retention, authoritative handoff binding and stage-C endpoint/request composition."
+    "disposition": "C-08 packet-owned commits are integrated at b45f31a and the shared candidate is b579bfd. Fresh Sol review found two Important shared defects: discarded source-selection ancestry and a post-hash schema mutation. The same isolated Luna worker is limited to this targeted continuation; C-08 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "c08_shared_review_findings_targeted_continuation_dispatched",
+      "date": "2026-10-20",
+      "reviewer": "/root/c08_shared_sol_review",
+      "worker": "/root/c08_shared_luna",
+      "candidate_commit": "b579bfd214618957adb6fcd7193284758913aa27",
+      "verdict": "findings_remain",
+      "findings": {"critical": 0, "important": 2, "minor": 0},
+      "review_ref": "docs/implementation/reviews/2026-10-20-c08-shared-sol-review.md",
+      "allowed_next_transition": "One additive targeted continuation in the same isolated shared worker, followed by fresh Sol inspection and verification. Do not rerun packet repairs or release C-09/C-06.",
+      "disposition": "The fit-once seam and B-owned scheduling behavior passed focused tests, but Stage C silently dropped source-selection ancestry and wrote an endpoint bundle whose body no longer matched its own hash. C-08 remains unaccepted."
+    },
     {
       "event": "c08_packet_integrated_shared_correctness_repair_dispatched",
       "date": "2026-10-20",

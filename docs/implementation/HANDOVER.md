@@ -177,15 +177,16 @@ C-05 acceptance is recorded in
 warnings remain visible and must not be called warning-free. No real study or
 biological MOFA validation is claimed.
 
-Resume by reconciling `/root/c08_shared_luna`, the one fresh isolated worker for
-the exclusive C-08 shared correctness repair at base
-`b45f31a422349c6fd4e5a702c30d7df1c4570e6d`. Packet-owned C-08 commits are
-integrated and the main-tree focused suite passes 236 expectations with no
-failure, warning, or skip, but C-08 remains unaccepted. The worker must retain
-one exact BackendFit/IntegrationResult/context, emit an authoritative qualified
-handoff, and make the exact stage-C CLI export endpoint plus scheduled B-owned
-request artifacts without refitting or recursion. Inspect and verify its commit
-directly; packet repairs and the focused rereview are exhausted.
+Resume by reconciling `/root/c08_shared_luna` in the isolated C-08 shared
+worktree. Candidate `b579bfd214618957adb6fcd7193284758913aa27` implemented the
+fit-once handoff and Stage-C endpoint/request composition, but fresh read-only
+Sol review found two Important defects recorded in
+`reviews/2026-10-20-c08-shared-sol-review.md`: Stage C reads block IDs from the
+wrong object and silently discards source-selection ancestry, and it adds a
+schema field after the endpoint integrity hash is finalized. The same worker is
+authorized for one targeted additive continuation covering only those findings
+and their behavioral tests. Do not rerun the consumed packet repairs. After the
+worker returns, inspect and verify the additive commit before integration.
 C-09/C-06/G6/D remain closed.
 C-09 and C-06 stay closed until C-08 is accepted; G6 and D stay closed until
 their declared gates. Do not loosen the B-T04 0.08 bound, reroll seeds
