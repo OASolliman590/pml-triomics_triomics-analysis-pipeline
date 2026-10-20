@@ -2,8 +2,8 @@
   "packet_id": "C-05",
   "request_type": "registration_request",
   "implementation_base": "6ea8d20f0b654e8e544f9f8d6cf8517ab0fcae29",
-  "accepted": false,
-  "implementation_status": "isolated MOFA2 train/save/reload and AC2-AC4 adapter behavior implemented; Sol shared registration applied, pending integrated CLI/package gates and acceptance. Evidence is synthetic software evidence only.",
+  "accepted": true,
+  "implementation_status": "accepted on synthetic software evidence after isolated MOFA2 train/save/reload, focused adapter tests, exact stage-C CLI, and a clean archive package check ending Status: OK. No real-study or biological validation is claimed.",
   "dependencies": [
     {
       "package": "MOFA2",
@@ -49,7 +49,8 @@
     "service": "evaluate_pipeline",
     "enabled": true,
     "requested_enabled": true,
-    "note": "Sol registered the exploratory-only mofa2 adapter after focused review and both permitted repairs. Runtime absence still fails closed."
+    "gate": "passed",
+    "note": "Sol registered the exploratory-only mofa2 adapter after focused review and both permitted repairs. Exact stage-C CLI exited 0, JSON evidence hashes were recorded, and runtime absence still fails closed."
   },
   "method_name_note": "This route uses mofa2 to match the existing config schema enum and frozen spec. MOFA2 is not a mixOmics method; the registered route remains exploratory-only.",
   "shared_changes_for_sol": [
@@ -63,11 +64,10 @@
     "tests/testthat/test-C-05.R verifies the registered exploratory adapter, explicit prediction refusal, and an unknown-method refusal."
   ],
   "known_gaps": [
-    "AC1 has isolated synthetic software evidence only for train/save/reload; independent milestone review and acceptance recording remain pending.",
-    "AC2 adapter behavior is implemented and exercised on synthetic missingness fixtures; no private-study data validation is claimed.",
-    "AC3 reports sign/permutation-aligned factor and subspace sensitivity over the declared seeds; weak/null controls have no forced recovery threshold or biological factor naming.",
-    "AC4 emits version-bound model/data/mask/annotation hashes for downstream enrichment handoff. enrichment execution was not performed, and no predictive or new-subject claim is made.",
-    "The C-05 ticket validates against the existing schema because mofa2 is already in its enum. Integrated CLI and package gates remain pending."
+    "Acceptance is synthetic software evidence only; private-study validation and biological factor interpretation remain unperformed.",
+    "Seed sensitivity is descriptive and fixture-bound; weak/null controls have no forced recovery threshold or biological factor naming.",
+    "The version-bound MappingEdge handoff is validated, but enrichment execution was not performed and no predictive or new-subject claim is made.",
+    "The decisive package run was Status: OK with 22 visible testthat warnings: eight previously dispositioned B-T07 Git-metadata warnings and fourteen native MOFA small-fixture diagnostics."
   ],
   "coordinator_owned_files_to_update": [
     "R/integration_contract.R",
@@ -76,5 +76,7 @@
     "DESCRIPTION",
     "renv.lock"
   ],
-  "applied_to_shared_files": true
+  "applied_to_shared_files": true,
+  "acceptance_ref": "docs/implementation/reviews/2026-10-20-c05-sol-acceptance.md",
+  "accepted_snapshot": "c34d9fffd4f17d88d54a69dda6410d4bc6ee6365"
 }

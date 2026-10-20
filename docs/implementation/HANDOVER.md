@@ -1,15 +1,15 @@
 # Implementation handover
 
 Run `triomics-20260920-sol-01` continues on branch
-`spec/harden-v2-20260920`. G0 through G5 are released. Stages A and B, C-01,
-C-02, C-03, and C-04 are accepted on synthetic software evidence. The
-`fda190f` package check remains `Status: OK`, with testthat FAIL 0, WARN 8,
-SKIP 0, PASS 3985. On 2026-10-20 Sol named all eight warnings as installed
-B-T07 missing-Git-metadata probes, and a fresh Astra-low adjudication approved
-their explicit disposition under A-T01-AC2. The run is not described as
-warning-free. C-05 has an unregistered train/save/reload path and remains
-unaccepted; C-08, C-09, C-06, G6, and every D packet stay closed. The
-historical sections below keep their original wording.
+`spec/harden-v2-20260920`. G0 through G5 are released. Stages A and B and C-01
+through C-05 are accepted on synthetic software evidence. The decisive C-05
+clean archive check at `c34d9ff` is `Status: OK`, with testthat FAIL 0, WARN
+22, SKIP 0, PASS 4076. Eight warnings are the previously dispositioned B-T07
+missing-Git-metadata probes; fourteen are native MOFA small-fixture/QC
+diagnostics. The run is not described as warning-free. C-05 is
+exploratory-only and explicitly does not support prediction. C-08 is the next
+legal packet; C-09 and C-06 depend on it. G6 and every D packet remain closed.
+The historical sections below keep their original wording.
 
 ## Current evidence
 
@@ -169,20 +169,18 @@ the first predictor block only; native component mismatch still fails closed.
 ## Literal resume instruction
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
-`execution-ledger.json`, and this handover. Current documentation snapshot is
-based on HEAD `1d0a5da`; commit the 2026-10-20 ledger/review reconciliation
-before dispatching new packet work. C-01 through C-04 are accepted on public
-synthetic software evidence; G5 is released and M6 is in progress. The
-`fda190f` package check is `Status: OK`, testthat FAIL 0, WARN 8, SKIP 0,
-PASS 3985. The eight warnings are named and explicitly dispositioned in
-`reviews/2026-10-20-fda190f-warning-disposition.md`; they remain visible and
-must not be called warning-free. C-03/C-04 acceptance is recorded in
-`reviews/2026-10-20-c03-c04-sol-acceptance.md`.
+`execution-ledger.json`, and this handover. C-01 through C-05 are accepted on
+public synthetic software evidence; G5 is released and M6 is in progress.
+C-05 acceptance is recorded in
+`reviews/2026-10-20-c05-sol-acceptance.md`. Its decisive clean archive check at
+`c34d9ff` is `Status: OK`, testthat FAIL 0, WARN 22, SKIP 0, PASS 4076. The
+warnings remain visible and must not be called warning-free. No real study or
+biological MOFA validation is claimed.
 
-Next legal implementation work is C-05 acceptance completion. Its unregistered
-MOFA path trained, saved and reloaded once in an isolated synthetic runtime,
-but C-05-AC2 through AC4 remain open and the public registry still refuses
-`mofa2`. Do not claim C-05 from that smoke. C-08, C-09 and C-06 remain
-unaccepted; G6 and D remain closed. Do not loosen the B-T04 0.08 bound or
-reroll seeds 1001:1400. Do not edit frozen `discovery/spec-v2` content. Leave
-private study data unread. No run-owned implementation worker is active.
+Resume by dispatching C-08 from the committed C-05 acceptance snapshot to one
+fresh isolated Luna-max worker using the exact packet allowlist. After its
+candidate, obtain one fresh Sol-6.1-high review before serial integration.
+C-09 and C-06 stay closed until C-08 is accepted; G6 and D stay closed until
+their declared gates. Do not loosen the B-T04 0.08 bound, reroll seeds
+1001:1400, edit frozen `discovery/spec-v2` content, or read private study data.
+No run-owned implementation worker is active at this handoff.

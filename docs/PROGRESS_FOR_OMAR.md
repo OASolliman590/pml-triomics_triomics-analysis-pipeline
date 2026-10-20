@@ -4,24 +4,23 @@
 and lipidomics while keeping studies separate.
 
 **Works now:** Stages A and B are accepted on synthetic software evidence.
-Stage C has accepted data handoff, concatenation baselines, leakage-safe
-nested evaluation, categorical DIABLO, and continuous block.spls. C-03 and C-04
-passed their focused reviews and tests.
+Stage C has accepted data handoff, concatenation baselines, leakage-safe nested
+evaluation, categorical DIABLO, continuous block.spls, and exploratory MOFA2.
 
-**Changed:** The interrupted package check was resolved without rerunning Luna
-repairs. Its eight warnings were traced to B-T07 asking an installed artifact
-folder for Git metadata. They are documented as expected missing provenance;
-the run remains `WARN 8`, while C-03 and C-04 produced no
-warnings. Fresh Astra review found no new blocker, and Sol accepted both
-packets. G5 is released; M6 is in progress.
+**Changed:** C-05 completed both permitted repairs and is accepted. MOFA2 now
+trains, saves, reloads, handles declared missingness, reports native variance,
+compares independent seeds, rejects prediction claims, and validates typed
+feature mappings. The exact CLI passed. The clean archive check was `Status:
+OK`: 4,076 passes and 22 documented warnings—eight earlier B-T07 provenance
+warnings and fourteen native MOFA small-fixture diagnostics.
 
 **Not established:** These are synthetic fixtures, not biological validation or
 performance estimates for the fasting, diabetic-treatment, or organophosphate
-studies. No private study was fitted. C-05 has one isolated MOFA train/save/reload
-smoke, but its remaining scientific acceptance evidence is incomplete.
+studies. No private study was fitted, and MOFA factors have no established
+biological interpretation or predictive validity.
 
-**Next:** Complete C-05, then C-08, C-09, and C-06 before the M6 review. Stage D
-remains closed.
+**Next:** Implement C-08, then its dependent C-09 and C-06 packets, before the
+M6 review. Stage D remains closed.
 
 **Needs Omar:** Only publication timing; no scientific choice blocks work.
 
