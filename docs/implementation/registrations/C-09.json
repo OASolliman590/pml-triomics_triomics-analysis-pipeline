@@ -1,0 +1,130 @@
+{
+  "packet_id": "C-09",
+  "request_type": "registration_request",
+  "implementation_base": "ef7da2086e7a0244e18a8ea1902423596d6a2b75",
+  "accepted": false,
+  "applied_to_shared_files": false,
+  "implementation_status": "Local packet candidate only. This is not accepted and does not qualify a real endpoint, clinical deployment, biological claim, guaranteed benefit, or independent validation.",
+  "synthetic_software_only": true,
+  "local_files": [
+    "R/clinical_prediction_comparison.R",
+    "tests/testthat/test-C-09.R",
+    "inst/examples/tickets/C-09.yaml",
+    "docs/implementation/registrations/C-09.json"
+  ],
+  "dependency_seams": {
+    "C-02": "Uses public SplitPlan validation and evaluate_pipeline() results. Candidate comparisons share the same immutable split plan; no private/native model object is consumed.",
+    "C-08": "Validates the immutable IntegrationScoreEndpointBundle and scheduled ClinicalScoreAssociationRequest through C-08 public validators and checksums.",
+    "MOFA": "Rejects MOFA2::run_mofa (or a public mofa2 backend/id) before evaluate_pipeline() unless qualified fold-local new-subject inference is present and held-out units were not used to fit the representation. The current C-08 MOFA handoff does not qualify that route."
+  },
+  "conditional_gate": {
+    "status": "open",
+    "scope": "The public synthetic fixture exercises generic matched incremental prediction software behavior only.",
+    "missing": [
+      "A real endpoint and response model approved for clinical prediction.",
+      "A real prediction-time information set and horizon protocol.",
+      "A qualified clinical deployment/use protocol and uncertainty protocol.",
+      "Independent validation on appropriate real data."
+    ],
+    "claim_limit": "No real-study endpoint, clinical deployment, biological validity, independent validation, or guaranteed clinical benefit is claimed."
+  },
+  "tests": {
+    "red_command": "Rscript --vanilla -e \"testthat::test_local(filter='C-09', stop_on_failure=TRUE)\"",
+    "red_exit": 1,
+    "red_evidence": "artifacts/acceptance/C-09/red-summary.txt",
+    "red_result": "Initial behavioral red before implementation: 10 failing/error expectations; the requested run_clinical_prediction_comparison() entrypoint was absent.",
+    "diagnostic_attempts": [
+      {
+        "exit": 1,
+        "result": "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 10 ]: C-02 preparation-failure folds retained candidate dispositions but had no candidate ID on aggregate failed inner records or a selected candidate."
+      },
+      {
+        "exit": 1,
+        "result": "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 10 ]: equal C-02 fold/candidate IDs carried list-derived names and were rejected by an overly strict identity comparison."
+      }
+    ],
+    "final_command": "Rscript --vanilla -e \"testthat::test_local(filter='C-09', stop_on_failure=TRUE)\"",
+    "final_exit": 0,
+    "final_evidence": "artifacts/acceptance/C-09/green-summary.txt",
+    "test_blocks": 4,
+    "assertions_passed": 24,
+    "failures": 0,
+    "warnings": 0,
+    "skips": 0,
+    "duration_seconds": 136.3,
+    "final_result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 24 ]"
+  },
+  "cli": {
+    "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-09.yaml --stage C --output artifacts/acceptance/C-09",
+    "exit": 2,
+    "result": "triomics A_CONFIG_UNKNOWN_KEY: Unknown configuration key 'clinical_prediction'.",
+    "evidence": "artifacts/acceptance/C-09/cli-summary.txt",
+    "disposition": "Expected shared registration boundary. The command stopped in config validation before Stage C execution or artifact production; no foreign/shared file was edited."
+  },
+  "delivery": {
+    "candidate_commit_status": "candidate_local_unaccepted; commit hash is returned in the task receipt",
+    "candidate_commit_base": "ef7da2086e7a0244e18a8ea1902423596d6a2b75",
+    "allowlisted_files_only": true,
+    "candidate_files": [
+      "R/clinical_prediction_comparison.R",
+      "tests/testthat/test-C-09.R",
+      "inst/examples/tickets/C-09.yaml",
+      "docs/implementation/registrations/C-09.json"
+    ],
+    "historical_staging_blocker": "The first staging attempt failed when the shared Git volume had 1.0 MiB available and no reported free inodes. The coordinator safely resolved the space issue before the final stage; this worker did not delete any existing files.",
+    "generated_evidence_committed": false,
+    "required_next_action": "Coordinator handles integration and acceptance review; this registration remains a request, not an acceptance."
+  },
+  "runtime": {
+    "R": "4.6.1 (2026-06-24)",
+    "platform": "x86_64-apple-darwin20",
+    "testthat": "3.3.2",
+    "mixOmics": "6.36.0",
+    "digest": "0.6.39",
+    "triomics_description_version": "0.1.0",
+    "environment_fingerprint_sha256": "c1c290810919280616aa85c6bceef2e066a1c35b132aa3446b7b2fcb8ba5af7d",
+    "environment_fingerprint_inputs": "R.version.string, R.version[[platform]], testthat, mixOmics, and digest versions joined with newline and SHA-256 hashed without serialization."
+  },
+  "file_sha256": {
+    "R/clinical_prediction_comparison.R": "7f61b0043531f7cff622ef94e0214e17736ec4f821b82928b94c92b341c00129",
+    "tests/testthat/test-C-09.R": "f59380d2229ab7a7226076fec83e3016cef4a0e9a399e28ab0349ac8510b9acb",
+    "inst/examples/tickets/C-09.yaml": "6aa84e47e0770aeebaa3a865a81305376d7c4aac6024672a9410ac3bdcd8f171"
+  },
+  "registration_sha256_evidence": "artifacts/acceptance/C-09/registration-sha256.txt",
+  "acceptance": {
+    "AC1": {
+      "status": "conditional_synthetic_software_evidence",
+      "evidence": "The typed synthetic protocol fixes a continuous concat_pls response, training-intercept baseline, V0-to-V30 30-day horizon, metric set, and baseline clinical/molecular information sets. Real endpoint, deployment, and uncertainty-protocol approval remain absent."
+    },
+    "AC2": {
+      "status": "synthetic_software_behavior_pass",
+      "evidence": "All three candidate information sets are validated against identical units, subjects, response values, declared nested candidate grid, C-02 SplitPlan hash, held-out patient/fold ledger, truth, and failure dispositions; the same metric definitions and nested selection are required."
+    },
+    "AC3": {
+      "status": "synthetic_guard_pass",
+      "evidence": "An adversarial full-cohort MOFA endpoint with missing candidate inputs is rejected with C_C09_MOFA_NONINDUCTIVE before evaluate_pipeline() can run. The current C-08 public MOFA handoff has no qualified fold-local new-subject inference."
+    },
+    "AC4": {
+      "status": "synthetic_software_behavior_pass",
+      "evidence": "The result reports paired subject-cluster bootstrap intervals for combined-minus-comparator metrics, requested/completed/failed replicate counts, denominators and failure reasons, candidate tuning and inner-fold history, limitations, and explicit not-qualified real deployment/independent-validation status; benefit_guaranteed is false. Intervals remain conditional on the fixed split plan."
+    }
+  },
+  "shared_registration_request": {
+    "required": true,
+    "request_kind": "coordinator_owned_config_and_cli_registration",
+    "coordinator_owned_files_to_update": [
+      "inst/schema/config.schema.json",
+      "R/cli.R"
+    ],
+    "request": "Add a closed, typed clinical_prediction config section for the packet's declared protocol and predecessor references, then wire the existing Stage-C CLI path to obtain validated public C-02 SplitPlan/evaluation inputs and the persisted C-08 endpoint bundle plus scheduled B request, call run_clinical_prediction_comparison(), and persist its result. Preserve the current no-native-object and no-recursion boundaries. The exact CLI currently exits 2 at A_CONFIG_UNKNOWN_KEY before Stage C. No new stage is requested; add no real-endpoint default and leave the route conditional until a separately approved real protocol exists.",
+    "exports": [],
+    "dependency_changes": [],
+    "applied_by_worker": false,
+    "applied_by_coordinator": false
+  },
+  "gaps": [
+    "The exact planned CLI could not invoke the C-09 runner because the coordinator-owned schema/CLI registration does not yet recognize the packet-owned config section.",
+    "The public fixture and test inputs are deterministic synthetic software fixtures only; no private study data or clinical identifiers were read or written.",
+    "No acceptance, clinical validity, deployment qualification, independent validation, or guaranteed gain is claimed."
+  ]
+}

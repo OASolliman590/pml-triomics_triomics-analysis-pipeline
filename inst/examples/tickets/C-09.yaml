@@ -1,0 +1,75 @@
+# Public software fixture only. The C-09 config section is intentionally not
+# registered in the shared schema/CLI yet; the packet registration requests that
+# coordinator-owned seam. The behavioral suite creates deterministic matrices in
+# memory and passes public C-02/C-08 artifacts, not native/private objects.
+schema_version: '2.0'
+study_id: triomics_c09_synthetic_fixture
+data_class: synthetic
+clinical_prediction:
+  enabled: true
+  protocol:
+    protocol_id: C-09-SYNTH-30D-v1
+    approval_scope: synthetic_fixture_only
+    endpoint_id: synthetic_response_30d
+    response_model:
+      type: continuous
+      algorithm: concat_pls
+      baseline: training_intercept
+      metric_names: [rmse, mae, r_squared]
+    horizon:
+      anchor: V0
+      outcome_visit: V30
+      value: 30
+      unit: day
+    information_set:
+      prediction_time: V0
+      clinical_feature_ids:
+        - baseline_clinical_signal
+        - baseline_clinical_trend
+        - baseline_clinical_noise
+      molecular_feature_ids:
+        - baseline_molecular_signal
+        - baseline_molecular_trend
+        - baseline_molecular_noise
+      availability_rule: available_by_prediction_time
+      excludes_future: true
+      candidate_block_ids:
+        clinical_only: clinical
+        molecular_only: molecular
+        combined: [clinical, molecular]
+    deployment:
+      scope: synthetic_research_comparison
+      real_deployment_status: not_qualified
+    uncertainty:
+      method: paired_subject_cluster_bootstrap
+      resampling_unit: subject
+      replicates: 200
+      confidence_level: 0.95
+      seed: 90210
+  predecessor_contracts:
+    split_plan:
+      producer: C-02
+      artifact_type: SplitPlan
+      grouping_unit: subject
+      outer_folds: 2
+      inner_folds: 2
+      seed: 90210
+      response_target: synthetic_response_30d
+    score_endpoint:
+      producer: C-08
+      artifact_type: IntegrationScoreEndpointBundle
+      fixture_endpoint_id: score_c09_synthetic_pc1
+      information_time: V0
+      clinical_score_request_status: scheduled
+      clinical_score_request_owner: B
+      clinical_score_request_execution: not_started
+      clinical_score_request_recurses_to_stage_c: false
+  synthetic_fixture:
+    generator: tests/testthat/test-C-09.R::c09_fixture
+    evidence_scope: software_behavior_only
+    clinical_only_candidate: clinical
+    molecular_only_candidate: molecular
+    combined_candidate: [clinical, molecular]
+    real_endpoint_protocol: not_supplied
+    independent_validation: not_performed
+    benefit_guaranteed: false
