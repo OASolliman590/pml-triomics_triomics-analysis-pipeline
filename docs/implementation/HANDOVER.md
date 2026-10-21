@@ -1,7 +1,16 @@
 # Implementation handover
 
 Run `triomics-20260920-sol-01` continues on branch
-`spec/harden-v2-20260920`. G0 through G5 are released. Stages A and B and C-01
+`spec/harden-v2-20260920`. The bounded C-09 Rd repair is integrated as
+`76fe5e2` after a fresh reviewer pass. Its repeated archive package check ended
+`Status: 1 ERROR` before testthat because the invocation exposed only the
+isolated MOFA R library and hid the normal dependency library. No second check
+or repair was run, and Astra was not dispatched. Resume the M6 clean-archive
+gate from `76fe5e2` with the full previously working R library path plus the
+isolated MOFA Python; do not repeat the Rd repair or reviewer. M6 is unaccepted;
+G6 and Stage D remain closed.
+
+G0 through G5 are released. Stages A and B and C-01
 through C-05 plus C-08 are accepted on synthetic software evidence. The
 decisive C-08 clean archive check at `d69ef1e` is `Status: OK`, with testthat
 FAIL 0, WARN 22, SKIP 0, PASS 4367. Eight warnings are the previously

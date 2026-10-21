@@ -36,13 +36,33 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "paused_m6_package_gate_failed",
+    "status": "paused_m6_archive_gate_dependency_visibility_error",
     "last_reconciled": "2026-10-21",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The clean M6 git-archive package gate at c5e65f9 ended Status: 1 WARNING because triomics_c09_synthetic_inputs lacks documentation. Installed tests passed 4787 with the 22 previously named warnings. Astra was not dispatched; M6 is unaccepted and G6 plus Stage D remain closed."
+    "disposition": "The one-file C-09 Rd repair is integrated as 76fe5e2 after a fresh reviewer pass. The repeated clean archive gate ended Status: 1 ERROR before testthat because the invocation exposed only the MOFA R library and hid normal dependencies. No rerun or Astra audit occurred; M6 is unaccepted and G6 plus Stage D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m6_rd_repair_reviewed_integrated_archive_gate_dependency_error",
+      "date": "2026-10-21",
+      "worker": "/root/m6_rd_repair_luna",
+      "reviewer": "/root/m6_rd_repair_sol_review",
+      "repair_candidate": "1ebba455857449bc07343712cffb01460f691f2d",
+      "integration_commit": "76fe5e2974d32da4f496027b41b3ca1499f998b4",
+      "review_verdict": "pass; Critical 0, Important 0, Minor 0",
+      "archive_sha256": "d667a72f771f34040f5725e91c1e7ca0a89d66a31a323516a5ca54dcef76aaff",
+      "wrapper_exit": 1,
+      "status_line": "Status: 1 ERROR",
+      "failure": "Dependency checking stopped before testthat because R_LIBS_USER exposed only /tmp/triomics-mofa-lib and hid the normal repository dependency library.",
+      "testthat": "not run; counts unavailable",
+      "warning_disposition": "Not reached. The prior named WARN 22 set was neither reproduced nor changed by this aborted gate.",
+      "log_path": "/private/tmp/triomics-m6-76fe5e2.i6VQDq/logs",
+      "review_ref": "docs/implementation/reviews/2026-10-21-m6-rd-repair-package-gate.md",
+      "astra_dispatched": false,
+      "allowed_next_transition": "Resume the M6 clean-archive package gate from 76fe5e2 with the full previously working R library path plus isolated MOFA Python. Do not repeat the Rd repair or reviewer. Dispatch Astra only after exact Status: OK and the same named WARN 22 set.",
+      "disposition": "Stopped under the explicit non-OK rule. M6 remains unaccepted; G6 and every Stage-D packet remain closed."
+    },
     {
       "event": "m6_clean_archive_package_gate_failed",
       "date": "2026-10-21",
@@ -3457,10 +3477,10 @@
       "commit": "1a8cbe4"
     },
     "M6": {
-      "status": "package_gate_failed",
-      "review_ref": "docs/implementation/reviews/2026-10-21-m6-package-gate.md",
-      "commit": "c5e65f906a82eff9870fdb9efcfe55546d49b005",
-      "package_status": "Status: 1 WARNING",
+      "status": "package_gate_failed_dependency_visibility",
+      "review_ref": "docs/implementation/reviews/2026-10-21-m6-rd-repair-package-gate.md",
+      "commit": "76fe5e2974d32da4f496027b41b3ca1499f998b4",
+      "package_status": "Status: 1 ERROR",
       "astra_verdict": null,
       "accepted_packets": ["C-03", "C-04", "C-05", "C-08"],
       "blocking_packets": ["C-09", "C-06"]
