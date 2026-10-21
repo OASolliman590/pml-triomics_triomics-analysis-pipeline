@@ -1,14 +1,19 @@
 # Implementation handover
 
 Run `triomics-20260920-sol-01` continues on branch
-`spec/harden-v2-20260920`. The bounded C-09 Rd repair is integrated as
-`76fe5e2` after a fresh reviewer pass. Its repeated archive package check ended
-`Status: 1 ERROR` before testthat because the invocation exposed only the
-isolated MOFA R library and hid the normal dependency library. No second check
-or repair was run, and Astra was not dispatched. Resume the M6 clean-archive
-gate from `76fe5e2` with the full previously working R library path plus the
-isolated MOFA Python; do not repeat the Rd repair or reviewer. M6 is unaccepted;
-G6 and Stage D remain closed.
+`spec/harden-v2-20260920`. The resumed clean archive gate at implementation
+snapshot `76fe5e2` ended `Status: OK` with FAIL 0, WARN 22, SKIP 0, PASS 4787.
+Initial Astra returned `changes_required` only because DOC-M6 was absent; it
+found no additional correctness blocker. DOC-M6, durable gate/Astra receipts,
+and the reviewed durable-link repair are integrated through `68bbd34`. The Sol
+focused rereview marked its sole finding ADDRESSED with no new finding.
+
+Omar requested a stop at the nearest safe boundary. The focused Astra rereview
+has not started. Resume by creating an immutable snapshot from the paused head
+and dispatching the single focused Astra-low rereview of M6-ASTRA-01. Do not
+repeat the package gate, DOC-M6 worker or Sol review. If Astra passes, Sol may
+accept M6 and release G6; do not start Stage D in that acceptance run. M6 is
+unaccepted; G6 and Stage D remain closed.
 
 G0 through G5 are released. Stages A and B and C-01
 through C-05 plus C-08 are accepted on synthetic software evidence. The

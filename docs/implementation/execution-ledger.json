@@ -36,13 +36,37 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "paused_m6_archive_gate_dependency_visibility_error",
+    "status": "paused_m6_doc_repair_integrated_focused_astra_pending",
     "last_reconciled": "2026-10-21",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The one-file C-09 Rd repair is integrated as 76fe5e2 after a fresh reviewer pass. The repeated clean archive gate ended Status: 1 ERROR before testthat because the invocation exposed only the MOFA R library and hid normal dependencies. No rerun or Astra audit occurred; M6 is unaccepted and G6 plus Stage D remain closed."
+    "disposition": "The resumed clean archive gate at 76fe5e2 ended Status: OK with FAIL 0, WARN 22, SKIP 0, PASS 4787. Initial Astra found only missing DOC-M6. DOC-M6, durable receipts and its reviewed link repair are integrated through 68bbd34. The focused Astra rereview has not started; M6 is unaccepted and G6 plus Stage D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m6_clean_gate_passed_doc_m6_repaired_reviewed_and_paused",
+      "date": "2026-10-21",
+      "package_snapshot": "76fe5e2974d32da4f496027b41b3ca1499f998b4",
+      "package_status": "Status: OK",
+      "testthat": "FAIL 0, WARN 22, SKIP 0, PASS 4787",
+      "warning_disposition": "Same named eight B-T07 Git-metadata probes and fourteen C-05 native MOFA small-fixture diagnostics; none suppressed.",
+      "initial_astra_reviewer": "/root/m6_astra_review",
+      "initial_astra_verdict": "changes_required",
+      "initial_astra_finding": "M6-ASTRA-01: required docs/implementation/milestones/M6.md was absent; no additional correctness blocker found.",
+      "doc_worker": "/root/doc_m6_worker",
+      "doc_reviewer": "/root/doc_m6_sol_review",
+      "doc_candidate": "e6f9eabcf6a25cf418b32fc89db7b9f403f157fc",
+      "doc_repair": "c11d47e1eeeb73430007e7c5f0d59cb42fe2bca3",
+      "integrated_head": "68bbd34",
+      "doc_review": "Initial changes_required with one Important durable-reference finding; focused rereview ADDRESSED with Critical 0, Important 0, Minor 0.",
+      "review_refs": [
+        "docs/implementation/milestones/M6.md",
+        "docs/implementation/reviews/2026-10-21-m6-clean-package-gate.md",
+        "docs/implementation/reviews/2026-10-21-m6-astra-review.md"
+      ],
+      "allowed_next_transition": "Create an immutable snapshot from the paused head and dispatch the single focused Astra-low rereview of M6-ASTRA-01. If it passes, Sol may accept M6 and release G6. Do not repeat the package gate, DOC-M6 worker or Sol review. Do not start Stage D in that acceptance run.",
+      "disposition": "Paused at the nearest safe documentation-cycle boundary at Omar's request. Focused Astra has not run. M6 remains unaccepted; G6 and every Stage-D packet remain closed."
+    },
     {
       "event": "m6_rd_repair_reviewed_integrated_archive_gate_dependency_error",
       "date": "2026-10-21",
@@ -3477,11 +3501,11 @@
       "commit": "1a8cbe4"
     },
     "M6": {
-      "status": "package_gate_failed_dependency_visibility",
-      "review_ref": "docs/implementation/reviews/2026-10-21-m6-rd-repair-package-gate.md",
-      "commit": "76fe5e2974d32da4f496027b41b3ca1499f998b4",
-      "package_status": "Status: 1 ERROR",
-      "astra_verdict": null,
+      "status": "focused_astra_rereview_pending",
+      "review_ref": "docs/implementation/reviews/2026-10-21-m6-astra-review.md",
+      "commit": "68bbd34",
+      "package_status": "Status: OK; FAIL 0, WARN 22, SKIP 0, PASS 4787 at implementation snapshot 76fe5e2",
+      "astra_verdict": "changes_required: M6-ASTRA-01 only; DOC-M6 repair integrated and focused rereview pending",
       "accepted_packets": ["C-03", "C-04", "C-05", "C-08"],
       "blocking_packets": ["C-09", "C-06"]
     },

@@ -70,4 +70,3 @@ clinical-performance validation. C-09 remains `synthetic_fixture_only` with no
 qualified real endpoint, deployment or uncertainty protocol. C-05 remains
 exploratory and C-07 controls remain unrun. The successful package gate permits
 the immutable M6 review; it does not itself accept M6 or release G6.
-
