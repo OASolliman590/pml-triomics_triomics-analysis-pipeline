@@ -44,6 +44,9 @@
     "clinical": {
       "$ref": "#/$defs/clinical"
     },
+    "clinical_prediction": {
+      "$ref": "#/$defs/clinical_prediction"
+    },
     "annotation": {
       "$ref": "#/$defs/annotation"
     },
@@ -57,15 +60,79 @@
   "required": [
     "schema_version",
     "study_id",
-    "data_class",
-    "sources",
-    "metadata",
-    "blocks",
-    "analyses",
-    "clinical",
-    "annotation",
-    "target_investigation",
-    "execution"
+    "data_class"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "clinical_prediction"
+        ]
+      },
+      "then": {
+        "properties": {
+          "data_class": {
+            "const": "synthetic"
+          }
+        },
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "sources"
+              ]
+            },
+            {
+              "required": [
+                "metadata"
+              ]
+            },
+            {
+              "required": [
+                "blocks"
+              ]
+            },
+            {
+              "required": [
+                "analyses"
+              ]
+            },
+            {
+              "required": [
+                "clinical"
+              ]
+            },
+            {
+              "required": [
+                "annotation"
+              ]
+            },
+            {
+              "required": [
+                "target_investigation"
+              ]
+            },
+            {
+              "required": [
+                "execution"
+              ]
+            }
+          ]
+        }
+      },
+      "else": {
+        "required": [
+          "sources",
+          "metadata",
+          "blocks",
+          "analyses",
+          "clinical",
+          "annotation",
+          "target_investigation",
+          "execution"
+        ]
+      }
+    }
   ],
   "additionalProperties": false,
   "$defs": {
@@ -1760,6 +1827,418 @@
         "max_fits",
         "audience",
         "disclosure_policy_ref"
+      ],
+      "additionalProperties": false
+    },
+    "clinical_prediction": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "const": true
+        },
+        "protocol": {
+          "$ref": "#/$defs/c09_protocol"
+        },
+        "predecessor_contracts": {
+          "$ref": "#/$defs/c09_predecessor_contracts"
+        },
+        "synthetic_fixture": {
+          "$ref": "#/$defs/c09_synthetic_fixture"
+        }
+      },
+      "required": [
+        "enabled",
+        "protocol",
+        "predecessor_contracts",
+        "synthetic_fixture"
+      ],
+      "additionalProperties": false
+    },
+    "c09_protocol": {
+      "type": "object",
+      "properties": {
+        "protocol_id": {
+          "const": "C-09-SYNTH-30D-v1"
+        },
+        "approval_scope": {
+          "const": "synthetic_fixture_only"
+        },
+        "endpoint_id": {
+          "const": "synthetic_response_30d"
+        },
+        "response_model": {
+          "$ref": "#/$defs/c09_response_model"
+        },
+        "horizon": {
+          "$ref": "#/$defs/c09_horizon"
+        },
+        "information_set": {
+          "$ref": "#/$defs/c09_information_set"
+        },
+        "deployment": {
+          "$ref": "#/$defs/c09_deployment"
+        },
+        "uncertainty": {
+          "$ref": "#/$defs/c09_uncertainty"
+        }
+      },
+      "required": [
+        "protocol_id",
+        "approval_scope",
+        "endpoint_id",
+        "response_model",
+        "horizon",
+        "information_set",
+        "deployment",
+        "uncertainty"
+      ],
+      "additionalProperties": false
+    },
+    "c09_response_model": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "continuous"
+        },
+        "algorithm": {
+          "const": "concat_pls"
+        },
+        "baseline": {
+          "const": "training_intercept"
+        },
+        "metric_names": {
+          "type": "array",
+          "const": [
+            "rmse",
+            "mae",
+            "r_squared"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "algorithm",
+        "baseline",
+        "metric_names"
+      ],
+      "additionalProperties": false
+    },
+    "c09_horizon": {
+      "type": "object",
+      "properties": {
+        "anchor": {
+          "const": "V0"
+        },
+        "outcome_visit": {
+          "const": "V30"
+        },
+        "value": {
+          "type": "integer",
+          "const": 30
+        },
+        "unit": {
+          "const": "day"
+        }
+      },
+      "required": [
+        "anchor",
+        "outcome_visit",
+        "value",
+        "unit"
+      ],
+      "additionalProperties": false
+    },
+    "c09_information_set": {
+      "type": "object",
+      "properties": {
+        "prediction_time": {
+          "const": "V0"
+        },
+        "clinical_feature_ids": {
+          "type": "array",
+          "const": [
+            "baseline_clinical_signal",
+            "baseline_clinical_trend",
+            "baseline_clinical_noise"
+          ]
+        },
+        "molecular_feature_ids": {
+          "type": "array",
+          "const": [
+            "baseline_molecular_signal",
+            "baseline_molecular_trend",
+            "baseline_molecular_noise"
+          ]
+        },
+        "availability_rule": {
+          "const": "available_by_prediction_time"
+        },
+        "excludes_future": {
+          "const": true
+        },
+        "candidate_block_ids": {
+          "$ref": "#/$defs/c09_candidate_block_ids"
+        }
+      },
+      "required": [
+        "prediction_time",
+        "clinical_feature_ids",
+        "molecular_feature_ids",
+        "availability_rule",
+        "excludes_future",
+        "candidate_block_ids"
+      ],
+      "additionalProperties": false
+    },
+    "c09_candidate_block_ids": {
+      "type": "object",
+      "properties": {
+        "clinical_only": {
+          "const": "clinical"
+        },
+        "molecular_only": {
+          "const": "molecular"
+        },
+        "combined": {
+          "type": "array",
+          "const": [
+            "clinical",
+            "molecular"
+          ]
+        }
+      },
+      "required": [
+        "clinical_only",
+        "molecular_only",
+        "combined"
+      ],
+      "additionalProperties": false
+    },
+    "c09_deployment": {
+      "type": "object",
+      "properties": {
+        "scope": {
+          "const": "synthetic_research_comparison"
+        },
+        "real_deployment_status": {
+          "const": "not_qualified"
+        }
+      },
+      "required": [
+        "scope",
+        "real_deployment_status"
+      ],
+      "additionalProperties": false
+    },
+    "c09_uncertainty": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "const": "paired_subject_cluster_bootstrap"
+        },
+        "resampling_unit": {
+          "const": "subject"
+        },
+        "replicates": {
+          "type": "integer",
+          "const": 200
+        },
+        "confidence_level": {
+          "type": "number",
+          "const": 0.95
+        },
+        "seed": {
+          "type": "integer",
+          "const": 90210
+        }
+      },
+      "required": [
+        "method",
+        "resampling_unit",
+        "replicates",
+        "confidence_level",
+        "seed"
+      ],
+      "additionalProperties": false
+    },
+    "c09_predecessor_contracts": {
+      "type": "object",
+      "properties": {
+        "split_plan": {
+          "$ref": "#/$defs/c09_split_plan_contract"
+        },
+        "score_endpoint": {
+          "$ref": "#/$defs/c09_score_endpoint_contract"
+        }
+      },
+      "required": [
+        "split_plan",
+        "score_endpoint"
+      ],
+      "additionalProperties": false
+    },
+    "c09_split_plan_contract": {
+      "type": "object",
+      "properties": {
+        "producer": {
+          "const": "C-02"
+        },
+        "artifact_type": {
+          "const": "SplitPlan"
+        },
+        "grouping_unit": {
+          "const": "subject"
+        },
+        "outer_folds": {
+          "type": "integer",
+          "const": 2
+        },
+        "inner_folds": {
+          "type": "integer",
+          "const": 2
+        },
+        "seed": {
+          "type": "integer",
+          "const": 90210
+        },
+        "response_target": {
+          "const": "synthetic_response_30d"
+        }
+      },
+      "required": [
+        "producer",
+        "artifact_type",
+        "grouping_unit",
+        "outer_folds",
+        "inner_folds",
+        "seed",
+        "response_target"
+      ],
+      "additionalProperties": false
+    },
+    "c09_score_endpoint_contract": {
+      "type": "object",
+      "properties": {
+        "producer": {
+          "const": "C-08"
+        },
+        "artifact_type": {
+          "const": "IntegrationScoreEndpointBundle"
+        },
+        "fixture_endpoint_id": {
+          "const": "score_c09_synthetic_pc1"
+        },
+        "information_time": {
+          "const": "V0"
+        },
+        "clinical_score_request_status": {
+          "const": "scheduled"
+        },
+        "clinical_score_request_owner": {
+          "const": "B"
+        },
+        "clinical_score_request_execution": {
+          "const": "not_started"
+        },
+        "clinical_score_request_recurses_to_stage_c": {
+          "const": false
+        }
+      },
+      "required": [
+        "producer",
+        "artifact_type",
+        "fixture_endpoint_id",
+        "information_time",
+        "clinical_score_request_status",
+        "clinical_score_request_owner",
+        "clinical_score_request_execution",
+        "clinical_score_request_recurses_to_stage_c"
+      ],
+      "additionalProperties": false
+    },
+    "c09_synthetic_fixture": {
+      "type": "object",
+      "properties": {
+        "generator": {
+          "const": "triomics::triomics_c09_synthetic_inputs"
+        },
+        "generator_arguments": {
+          "$ref": "#/$defs/c09_generator_arguments"
+        },
+        "output_artifact": {
+          "const": "C09SyntheticInputs"
+        },
+        "evidence_scope": {
+          "const": "software_behavior_only"
+        },
+        "clinical_only_candidate": {
+          "const": "clinical"
+        },
+        "molecular_only_candidate": {
+          "const": "molecular"
+        },
+        "combined_candidate": {
+          "type": "array",
+          "const": [
+            "clinical",
+            "molecular"
+          ]
+        },
+        "real_endpoint_protocol": {
+          "const": "not_supplied"
+        },
+        "real_deployment_status": {
+          "const": "not_qualified"
+        },
+        "uncertainty_protocol_approval": {
+          "const": "open"
+        },
+        "independent_validation": {
+          "const": "not_performed"
+        },
+        "benefit_guaranteed": {
+          "const": false
+        }
+      },
+      "required": [
+        "generator",
+        "generator_arguments",
+        "output_artifact",
+        "evidence_scope",
+        "clinical_only_candidate",
+        "molecular_only_candidate",
+        "combined_candidate",
+        "real_endpoint_protocol",
+        "real_deployment_status",
+        "uncertainty_protocol_approval",
+        "independent_validation",
+        "benefit_guaranteed"
+      ],
+      "additionalProperties": false
+    },
+    "c09_generator_arguments": {
+      "type": "object",
+      "properties": {
+        "seed": {
+          "type": "integer",
+          "const": 90210
+        },
+        "n_subjects": {
+          "type": "integer",
+          "const": 32
+        },
+        "endpoint_method": {
+          "const": "stats::prcomp"
+        },
+        "missing_outcome": {
+          "const": false
+        }
+      },
+      "required": [
+        "seed",
+        "n_subjects",
+        "endpoint_method",
+        "missing_outcome"
       ],
       "additionalProperties": false
     }

@@ -1133,6 +1133,228 @@ triomics_c06_cli_aggregate_status <- function(handoff) {
   handoff
 }
 
+triomics_c09_cli_protocol_signature <- function(protocol) {
+  as.character(jsonlite::toJSON(
+    protocol, auto_unbox = TRUE, null = "null", digits = NA
+  ))
+}
+
+triomics_c09_cli_validate_predecessors <- function(declared, inputs) {
+  split_plan <- inputs$split_plan
+  split_contract <- declared$predecessor_contracts$split_plan
+  tryCatch(
+    triomics_validate_split_plan(split_plan, TRUE),
+    error = function(error) triomics_c09_abort(
+      "C_C09_SPLIT_INVALID", paste0("The generated C-02 SplitPlan failed validation: ", conditionMessage(error)),
+      "split_plan"
+    )
+  )
+  split_matches <- identical(split_plan$schema, split_contract$artifact_type) &&
+    identical(split_plan$grouping_unit, split_contract$grouping_unit) &&
+    identical(as.integer(split_plan$n_outer), as.integer(split_contract$outer_folds)) &&
+    identical(as.integer(split_plan$n_inner), as.integer(split_contract$inner_folds)) &&
+    identical(as.integer(split_plan$seed), as.integer(split_contract$seed)) &&
+    identical(split_plan$target, split_contract$response_target) &&
+    length(split_plan$folds) == split_contract$outer_folds &&
+    all(vapply(split_plan$folds, function(fold) {
+      length(fold$inner) == split_contract$inner_folds
+    }, logical(1L)))
+  if (!isTRUE(split_matches)) {
+    triomics_c09_abort(
+      "C_C09_SPLIT_INVALID",
+      "The generated C-02 SplitPlan does not match the declared C-09 predecessor contract.",
+      "predecessor_contracts.split_plan"
+    )
+  }
+
+  endpoint_bundle <- inputs$endpoint_bundle
+  request <- inputs$clinical_score_request
+  endpoint_contract <- declared$predecessor_contracts$score_endpoint
+  tryCatch(
+    triomics_c09_validate_c08(endpoint_bundle, request, split_plan),
+    error = function(error) triomics_c09_abort(
+      "C_C09_ENDPOINT_INVALID", paste0("The generated C-08 handoff failed validation: ", conditionMessage(error)),
+      "score_endpoint"
+    )
+  )
+  endpoints <- endpoint_bundle$endpoints
+  endpoint <- endpoints[[1L]]
+  endpoint_matches <- inherits(endpoint_bundle, endpoint_contract$artifact_type) &&
+    identical(endpoint_bundle$artifact_type, "integration_score_endpoint_bundle") &&
+    identical(length(endpoints), 1L) &&
+    identical(endpoint$endpoint_id, endpoint_contract$fixture_endpoint_id) &&
+    identical(endpoint$available_at_time, endpoint_contract$information_time) &&
+    identical(request$status, endpoint_contract$clinical_score_request_status) &&
+    identical(request$owner_stage, endpoint_contract$clinical_score_request_owner) &&
+    identical(request$model_execution, endpoint_contract$clinical_score_request_execution) &&
+    identical(request$recurses_to_stage_c,
+              endpoint_contract$clinical_score_request_recurses_to_stage_c)
+  if (!isTRUE(endpoint_matches)) {
+    triomics_c09_abort(
+      "C_C09_ENDPOINT_INVALID",
+      "The generated C-08 endpoint bundle and scheduled B request do not match the declared predecessor contract.",
+      "predecessor_contracts.score_endpoint"
+    )
+  }
+
+  generated_protocol <- inputs$protocol
+  generated_protocol$information_set$c08_endpoint_bundle_sha256 <- NULL
+  if (!identical(
+    triomics_c09_cli_protocol_signature(generated_protocol),
+    triomics_c09_cli_protocol_signature(declared$protocol)
+  )) {
+    triomics_c09_abort(
+      "C_C09_PROTOCOL_INVALID",
+      "The generated synthetic protocol does not match the declared C-09 protocol.",
+      "protocol"
+    )
+  }
+  tryCatch(
+    triomics_c09_validate_protocol(inputs$protocol, split_plan),
+    error = function(error) triomics_c09_abort(
+      "C_C09_PROTOCOL_INVALID", paste0("The generated C-09 protocol failed validation: ", conditionMessage(error)),
+      "protocol"
+    )
+  )
+  invisible(TRUE)
+}
+
+triomics_execute_c09_synthetic_stage <- function(config, output) {
+  if (dir.exists(output) && length(list.files(output, all.files = TRUE, no.. = TRUE))) {
+    triomics_c09_abort(
+      "A_ARTIFACT_IMMUTABLE",
+      "The C-09 synthetic output directory is nonempty; choose a new output directory.",
+      "output"
+    )
+  }
+
+  declared <- config$clinical_prediction
+  fixture <- declared$synthetic_fixture
+  if (!identical(fixture$generator, "triomics::triomics_c09_synthetic_inputs")) {
+    triomics_c09_abort(
+      "C_C09_SYNTHETIC_INPUT_INVALID",
+      "Stage C accepts only the declared public C-09 synthetic input generator.",
+      "synthetic_fixture.generator"
+    )
+  }
+  arguments <- fixture$generator_arguments
+  inputs <- triomics_c09_synthetic_inputs(
+    seed = arguments$seed,
+    n_subjects = arguments$n_subjects,
+    endpoint_method = arguments$endpoint_method,
+    missing_outcome = arguments$missing_outcome
+  )
+  if (!inherits(inputs, "C09SyntheticInputs") ||
+      !identical(names(inputs$candidates), c("clinical_only", "molecular_only", "combined"))) {
+    triomics_c09_abort(
+      "C_C09_SYNTHETIC_INPUT_INVALID",
+      "The public C-09 generator did not return the declared matched synthetic candidates.",
+      "synthetic_fixture"
+    )
+  }
+  triomics_c09_cli_validate_predecessors(declared, inputs)
+
+  result <- run_clinical_prediction_comparison(
+    inputs$protocol, inputs$endpoint_bundle, inputs$clinical_score_request,
+    inputs$split_plan, inputs$candidates
+  )
+  payload <- unclass(result)
+  endpoint <- inputs$endpoint_bundle$endpoints[[1L]]
+  payload$study_id <- config$study_id
+  payload$predecessor_identity <- list(
+    split_plan = list(
+      artifact_type = inputs$split_plan$schema,
+      creation_hash = inputs$split_plan$creation_hash,
+      target = inputs$split_plan$target,
+      grouping_unit = inputs$split_plan$grouping_unit,
+      seed = inputs$split_plan$seed,
+      outer_folds = inputs$split_plan$n_outer,
+      inner_folds = inputs$split_plan$n_inner
+    ),
+    c08_endpoint_bundle = list(
+      artifact_type = inputs$endpoint_bundle$artifact_type,
+      study_id = inputs$endpoint_bundle$study_id,
+      analysis_id = inputs$endpoint_bundle$analysis_id,
+      integration_id = inputs$endpoint_bundle$integration_id,
+      payload_sha256 = inputs$endpoint_bundle$payload_sha256
+    ),
+    c08_endpoint = list(
+      artifact_type = endpoint$artifact_type,
+      endpoint_id = endpoint$endpoint_id,
+      endpoint_sha256 = endpoint$endpoint_sha256,
+      information_time = endpoint$available_at_time
+    ),
+    clinical_score_request = list(
+      artifact_type = inputs$clinical_score_request$artifact_type,
+      request_type = inputs$clinical_score_request$request_type,
+      request_sha256 = inputs$clinical_score_request$request_sha256,
+      owner_stage = inputs$clinical_score_request$owner_stage,
+      status = inputs$clinical_score_request$status,
+      model_execution = inputs$clinical_score_request$model_execution,
+      recurses_to_stage_c = inputs$clinical_score_request$recurses_to_stage_c
+    )
+  )
+  payload$synthetic_fixture <- list(
+    generator = fixture$generator,
+    evidence_scope = fixture$evidence_scope,
+    generator_arguments = arguments
+  )
+
+  payload_path <- file.path(output, "C", "clinical-prediction-comparison.json")
+  envelope_path <- file.path(output, "C", "clinical-prediction-comparison.envelope.json")
+  triomics_write_json_atomic(payload, payload_path)
+  envelope <- triomics_artifact_envelope(
+    artifact_type = "clinical_prediction_comparison",
+    artifact_id = "stage-c-clinical-prediction-comparison",
+    study_id = config$study_id,
+    run_id = "c-09-synthetic",
+    status = "complete",
+    config_sha256 = attr(config, "config_sha256"),
+    payload = payload_path,
+    producer_commit = "not-recorded",
+    inputs = list(
+      list(artifact_id = "C-02::SplitPlan", sha256 = inputs$split_plan$creation_hash),
+      list(artifact_id = "C-08::IntegrationScoreEndpointBundle",
+           sha256 = inputs$endpoint_bundle$payload_sha256),
+      list(artifact_id = "B::ClinicalScoreAssociationRequest",
+           sha256 = inputs$clinical_score_request$request_sha256)
+    ),
+    reason_codes = "SYNTHETIC_FIXTURE_ONLY",
+    privacy_class = "synthetic"
+  )
+  triomics_write_envelope(envelope, envelope_path)
+
+  registry_path <- file.path(output, "registries", "run.json")
+  payload_sha256 <- triomics_sha256(payload_path)
+  envelope_sha256 <- triomics_sha256(envelope_path)
+  triomics_write_json_atomic(list(
+    schema_version = "2.0",
+    run_id = "c-09-synthetic",
+    study_id = config$study_id,
+    stage = "C",
+    status = "complete",
+    status_scope = "synthetic_fixture_only",
+    completion_policy = "conditional",
+    clinical_prediction_status = "synthetic_software_complete",
+    config_sha256 = attr(config, "config_sha256"),
+    artifact_ref = list(
+      artifact_id = envelope$artifact_id,
+      payload_file = file.path("C", basename(payload_path)),
+      payload_sha256 = payload_sha256,
+      envelope_file = file.path("C", basename(envelope_path)),
+      envelope_sha256 = envelope_sha256
+    )
+  ), registry_path)
+
+  invisible(list(
+    status = "complete",
+    run_status = "complete",
+    payload_path = payload_path,
+    envelope_path = envelope_path,
+    required_complete = TRUE
+  ))
+}
+
 triomics_execute_stage_c <- function(config_path, output) {
   if (!is.character(output) || length(output) != 1L || is.na(output) || !nzchar(output)) {
     triomics_abort(
@@ -1150,6 +1372,9 @@ triomics_execute_stage_c <- function(config_path, output) {
   }
 
   config <- triomics_read_config(config_path)
+  if (!is.null(config$clinical_prediction)) {
+    return(triomics_execute_c09_synthetic_stage(config, output))
+  }
   if (length(config$analyses) != 1L) {
     triomics_integration_abort(
       "C_ELIGIBILITY_INPUT_INVALID",
