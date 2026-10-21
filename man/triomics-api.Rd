@@ -17,6 +17,7 @@
 \alias{triomics_clinical_association_export}
 \alias{triomics_execute_clinical_associations}
 \alias{triomics_b08_endpoint_hash}
+\alias{triomics_c09_synthetic_inputs}
 \alias{integrate_blocks}
 \alias{evaluate_pipeline}
 \alias{make_consensus_state}
@@ -97,6 +98,13 @@ triomics_execute_clinical_associations(config_path, output)
 
 triomics_b08_endpoint_hash(endpoint)
 
+triomics_c09_synthetic_inputs(
+  seed = 90210L,
+  n_subjects = 32L,
+  endpoint_method = "stats::prcomp",
+  missing_outcome = FALSE
+)
+
 integrate_blocks(resolved_analysis, integration_spec)
 
 evaluate_pipeline(study, analysis_spec, integration_spec, split_plan)
@@ -120,7 +128,13 @@ associate_longitudinal_endpoints(
 triomics_execute_longitudinal_associations(config_path, output)
 }
 \arguments{
-  \item{n_subjects}{Positive integer number of synthetic subjects.}
+  \item{n_subjects}{Positive integer number of synthetic subjects; C-09 fixtures
+  require at least 16.}
+  \item{seed}{Non-negative integer used to generate the C-02 nested split plan.}
+  \item{endpoint_method}{Method label recorded in the synthetic endpoint's
+  producing-fit metadata.}
+  \item{missing_outcome}{Whether the first synthetic subject has a missing
+  outcome.}
   \item{n_features}{Named integer vector giving the number of features per block.}
   \item{design}{Synthetic study design.}
   \item{effect_size}{Finite planted effect size.}
@@ -182,6 +196,11 @@ stage B execution summary, verified Stage B handoff, resolved clinical
 objectives, privacy-scrubbed
 clinical results, or an endpoint hash. Clinical and longitudinal association
 functions return typed objective, family, audit, and result records.
+\code{triomics_c09_synthetic_inputs()} returns a \code{C09SyntheticInputs}
+object containing \code{protocol}, \code{endpoint_bundle},
+\code{clinical_score_request}, \code{split_plan}, and \code{candidates}.
+The candidates are named \code{clinical_only}, \code{molecular_only}, and
+\code{combined}.
 \code{integrate_blocks()} returns the protected six-field
 \code{IntegrationResult}; \code{evaluate_pipeline()} returns fold-level
 predictions, metrics, failure dispositions, and fit-budget evidence; the
@@ -201,6 +220,10 @@ integer \code{seed}, one non-empty \code{study_id}, and the recorded RNG kinds
 \code{Mersenne-Twister}, \code{Inversion}, and \code{Rejection}. The returned
 truth record includes the supplied seed, while the study record includes the
 study identifier, so the synthetic study can be replayed.
+
+\code{triomics_c09_synthetic_inputs()} returns a public synthetic fixture for
+the C-02 and C-08 seams. It does not supply a real endpoint, clinical
+deployment, uncertainty protocol, or biological validation.
 }
 \seealso{\code{system.file("exec", "triomics", package = "triomics")}}
 \examples{
