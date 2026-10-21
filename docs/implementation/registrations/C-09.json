@@ -147,13 +147,60 @@
       "triomics_c09_synthetic_inputs"
     ],
     "dependency_changes": [],
-    "applied_by_worker": false,
+    "applied_by_worker": true,
     "applied_by_coordinator": false
   },
+  "shared_registration_candidate": {
+    "base_commit": "95987d9800c9dae11d46a1f06b13789d497be251",
+    "implementation_commit": "c23a3c845cdca5d84961ddc74c08182a45482c00",
+    "commit_scope": "Allowlisted shared registration implementation and behavioral tests only; registration evidence is recorded separately and does not imply acceptance or coordinator integration.",
+    "files": [
+      "NAMESPACE",
+      "inst/schema/config.schema.json",
+      "R/cli.R",
+      "tests/testthat/test-C-09-shared.R"
+    ],
+    "registration_evidence_file": "docs/implementation/registrations/C-09.json",
+    "tests": {
+      "red_command": "Rscript --vanilla -e \"testthat::test_local(filter='C-09-shared', stop_on_failure=TRUE)\"",
+      "red_result": "[ FAIL 7 | WARN 0 | SKIP 0 | PASS 13 ] after correcting a test-helper invocation; all failures were the missing clinical_prediction shared config and public NAMESPACE export.",
+      "focused_green": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 64 ]",
+      "c09_green": "Rscript --vanilla -e \"testthat::test_local(filter='C-09', stop_on_failure=TRUE)\" — [ FAIL 0 | WARN 0 | SKIP 0 | PASS 117 ]",
+      "c06_green": "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\" — [ FAIL 0 | WARN 0 | SKIP 0 | PASS 290 ]",
+      "c02_green": "Rscript --vanilla -e \"testthat::test_local(filter='C-02', stop_on_failure=TRUE)\" — [ FAIL 0 | WARN 0 | SKIP 0 | PASS 165 ]",
+      "warnings": 0,
+      "skips": 0
+    },
+    "cli": {
+      "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-09.yaml --stage C --output /private/tmp/triomics-c09-cli.XaNlUS",
+      "exit": 0,
+      "readback": "Payload, standard integrity envelope, and run registry were present; triomics_validate_envelope() and registry hash references were checked. Status is complete for synthetic_fixture_only only.",
+      "artifacts": {
+        "payload": {
+          "path": "/private/tmp/triomics-c09-cli.XaNlUS/C/clinical-prediction-comparison.json",
+          "sha256": "cf099b49fca889d9eb82ce293ed4dc67dbf4bb60e2d79acaae3c0d6c9b06aafc"
+        },
+        "envelope": {
+          "path": "/private/tmp/triomics-c09-cli.XaNlUS/C/clinical-prediction-comparison.envelope.json",
+          "sha256": "f365f898292dc8a2bd6050068631f6be5c10fa92aec89ad28fdb8c5c1e776082"
+        },
+        "run_registry": {
+          "path": "/private/tmp/triomics-c09-cli.XaNlUS/registries/run.json",
+          "sha256": "e589230c962eca11992bbf4bb62ca3605afbdf063091d0c706613ed4df465626"
+        }
+      },
+      "qualification": "synthetic software behavior only; benefit_guaranteed=false; no real endpoint, deployment, independent validation, or clinical benefit is qualified."
+    },
+    "remaining_gaps": [
+      "A real endpoint, response model, prediction-time information set, and horizon require explicit approval.",
+      "Clinical deployment/use and the uncertainty protocol require qualification and approval.",
+      "Independent validation on appropriate real data has not been performed.",
+      "The candidate commit remains unaccepted and has not been applied to the coordinator integration branch."
+    ]
+  },
   "gaps": [
-    "The exact planned CLI could not invoke the C-09 runner because the coordinator-owned schema/CLI registration does not yet recognize the packet-owned config section.",
-    "The packet-owned synthetic generator is implemented in R runtime code, but its NAMESPACE export is coordinator-owned and remains pending; the YAML's triomics:: reference becomes externally runnable after that registration.",
+    "The shared route and public generator export are present only in isolated unaccepted candidate commit c23a3c845cdca5d84961ddc74c08182a45482c00; coordinator integration and acceptance remain pending.",
     "The public fixture and test inputs are deterministic synthetic software fixtures only; no private study data or clinical identifiers were read or written.",
-    "No acceptance, clinical validity, deployment qualification, independent validation, or guaranteed gain is claimed."
+    "No real endpoint or response protocol, deployment qualification, uncertainty-protocol approval, independent validation, or guaranteed gain is claimed."
   ]
 }
