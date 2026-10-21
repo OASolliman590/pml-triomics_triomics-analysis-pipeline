@@ -34,31 +34,28 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/c09_shared_sol_review",
-      "role": "sol_shared_registration_focused_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "effective_settings_exposed": false,
-      "packet": "C-09-shared",
-      "attempt": 1,
-      "repair_attempt": 1,
-      "base_commit": "95987d9800c9dae11d46a1f06b13789d497be251",
-      "candidate_commit": "b2aafd6e200964f1cc39267f118e01ff89485542",
-      "worktree": "/Users/megastore/.codex/worktrees/c09-shared-registration/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Return one focused repair rereview. A clean verdict permits serial integration and fresh Sol verification; remaining Critical/Important findings permit at most repair 2 followed by direct Sol inspection. Do not start M6 or Stage D.",
-      "wait_cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "c09_shared_registration_repair1_rereview_active",
+    "status": "c09_shared_registration_integration_pending",
     "last_reconciled": "2026-10-21",
-    "active_handoffs": ["/root/c09_shared_sol_review"],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Luna repair 1 returned a clean three-file delta with behavioral RED/GREEN evidence, four green regression suites, and exact CLI exit 0. The same fresh Sol-6.1-high reviewer is performing the single focused rereview; integration and later gates remain closed."
+    "disposition": "The single focused Sol-6.1-high rereview passed with no findings and marked the synthetic-only candidate ready to integrate. Sol is serially integrating the four candidate commits, after which fresh integrated verification is required; M6 and Stage D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "c09_shared_repair1_rereview_passed_integration_pending",
+      "date": "2026-10-21",
+      "reviewer": "/root/c09_shared_sol_review",
+      "fix_base": "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e",
+      "repair_head": "b2aafd6e200964f1cc39267f118e01ff89485542",
+      "verdict": "pass",
+      "findings": {"critical": 0, "important": 0, "minor": 0},
+      "focused_test": "PASS 7, FAIL 0, WARN 0, SKIP 0",
+      "review_ref": ".superpowers/sdd/c09-shared-registration/repair1-rereview.md",
+      "allowed_next_transition": "Sol serially cherry-picks the initial implementation, registration evidence, repair implementation, and repair evidence commits, then runs fresh integrated verification. Do not start M6 or Stage D before that evidence is reconciled.",
+      "disposition": "Original protocol-mapping-order finding resolved. Ready to integrate for synthetic software scope only; no real endpoint, deployment, uncertainty protocol, independent validation, packet acceptance or M6 acceptance is implied."
+    },
     {
       "event": "c09_shared_repair1_returned_focused_rereview_dispatched",
       "date": "2026-10-21",
@@ -3260,7 +3257,7 @@
       "blockers": []
     },
     "C-09": {
-      "status": "shared_registration_repair1_rereview_active",
+      "status": "shared_registration_review_passed_integration_pending",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "de9ea9e73e3bb24d69c6e1232b25225408c200a9",
