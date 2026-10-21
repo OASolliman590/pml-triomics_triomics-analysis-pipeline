@@ -196,7 +196,47 @@
       "Clinical deployment/use and the uncertainty protocol require qualification and approval.",
       "Independent validation on appropriate real data has not been performed.",
       "The candidate commit remains unaccepted and has not been applied to the coordinator integration branch."
-    ]
+    ],
+    "repair_1": {
+      "review_finding": "Protocol mappings were compared using an order-sensitive JSON string, rejecting equivalent top-level and nested mapping key orders.",
+      "implementation_commit": "604a8683bd87a1b2dddc9db40c9426010253af07",
+      "files": [
+        "R/cli.R",
+        "tests/testthat/test-C-09-shared.R"
+      ],
+      "behavior": "The protocol signature recursively sorts keys in named lists before serialization; unnamed sequences retain their order and scalar values remain exact.",
+      "red": {
+        "command": "Rscript --vanilla -e \"testthat::test_file('tests/testthat/test-C-09-shared.R', package='triomics', load_package='source', desc='C-09 accepts protocol mappings reordered at top and nested levels')\"",
+        "result": "[ FAIL 1 | WARN 0 | SKIP 0 | PASS 1 ]",
+        "observed_error_code": "C_C09_PROTOCOL_INVALID"
+      },
+      "targeted_green": [
+        {
+          "behavior": "Reordered top-level and nested mappings accepted after config validation.",
+          "result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 1 ]"
+        },
+        {
+          "behavior": "Changed scalar, sequence order, and sequence contents still rejected with C_C09_PROTOCOL_INVALID.",
+          "result": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 6 ]"
+        }
+      ],
+      "suite_green": {
+        "c09_shared": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 71 ] (218.2 seconds)",
+        "c09": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 124 ] (420.7 seconds)",
+        "c06": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 290 ] (314.1 seconds)",
+        "c02": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 165 ] (1093.3 seconds)",
+        "warnings": 0,
+        "skips": 0
+      },
+      "cli": {
+        "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-09.yaml --stage C --output /private/tmp/triomics-c09-repair.mtngJX",
+        "exit": 0,
+        "envelope_validated": true,
+        "payload_sha256": "cf099b49fca889d9eb82ce293ed4dc67dbf4bb60e2d79acaae3c0d6c9b06aafc",
+        "envelope_sha256": "3be8ce1b68ab92f32f39e593300313c84c799ee0e0aa4671455f6af8a5f3c696",
+        "run_registry_sha256": "076267baf622c92dd4eb228ae0e74e7aacd55127a73f75596f15d9885bd7dc96"
+      }
+    }
   },
   "gaps": [
     "The shared route and public generator export are present only in isolated unaccepted candidate commit c23a3c845cdca5d84961ddc74c08182a45482c00; coordinator integration and acceptance remain pending.",
