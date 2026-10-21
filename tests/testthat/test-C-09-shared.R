@@ -41,6 +41,72 @@ testthat::test_that("C-09 accepts only the closed declared synthetic fixture con
   )
 })
 
+testthat::test_that("C-09 accepts protocol mappings reordered at top and nested levels", {
+  path <- c09_shared_variant_path(function(config) {
+    protocol <- config$clinical_prediction$protocol
+    config$clinical_prediction$protocol <- protocol[rev(names(protocol))]
+    config$clinical_prediction$protocol$response_model <-
+      config$clinical_prediction$protocol$response_model[
+        rev(names(config$clinical_prediction$protocol$response_model))
+      ]
+    config
+  })
+  on.exit(unlink(path), add = TRUE)
+
+  config <- triomics_read_config(path)
+  inputs <- triomics::triomics_c09_synthetic_inputs(
+    seed = 90210L, n_subjects = 32L,
+    endpoint_method = "stats::prcomp", missing_outcome = FALSE
+  )
+  error <- tryCatch({
+    triomics_c09_cli_validate_predecessors(config$clinical_prediction, inputs)
+    NULL
+  }, error = identity)
+  if (!is.null(error)) {
+    testthat::expect_identical(error$code, "C_C09_PROTOCOL_INVALID")
+  }
+  testthat::expect_null(
+    error,
+    info = paste(
+      "Equivalent protocol mappings were rejected with",
+      if (inherits(error, "triomics_error")) error$code else "no typed code"
+    )
+  )
+})
+
+testthat::test_that("C-09 protocol comparison rejects changed scalars and sequence values or order", {
+  config <- triomics_read_config(c09_shared_fixture_path())
+  inputs <- triomics::triomics_c09_synthetic_inputs(
+    seed = 90210L, n_subjects = 32L,
+    endpoint_method = "stats::prcomp", missing_outcome = FALSE
+  )
+  variants <- list(
+    scalar = function(protocol) {
+      protocol$endpoint_id <- "altered_response_30d"
+      protocol
+    },
+    sequence_order = function(protocol) {
+      protocol$response_model$metric_names <- rev(protocol$response_model$metric_names)
+      protocol
+    },
+    sequence_content = function(protocol) {
+      protocol$response_model$metric_names[[3L]] <- "adjusted_r_squared"
+      protocol
+    }
+  )
+
+  for (variant in names(variants)) {
+    declared <- config$clinical_prediction
+    declared$protocol <- variants[[variant]](declared$protocol)
+    error <- tryCatch(
+      triomics_c09_cli_validate_predecessors(declared, inputs),
+      error = identity
+    )
+    testthat::expect_s3_class(error, "triomics_error")
+    testthat::expect_identical(error$code, "C_C09_PROTOCOL_INVALID", info = variant)
+  }
+})
+
 testthat::test_that("C-09 rejects an unknown nested protocol key at its declared path", {
   path <- c09_shared_variant_path(function(config) {
     config$clinical_prediction$protocol$response_model$surprise <- TRUE

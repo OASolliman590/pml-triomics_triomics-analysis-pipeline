@@ -1134,8 +1134,18 @@ triomics_c06_cli_aggregate_status <- function(handoff) {
 }
 
 triomics_c09_cli_protocol_signature <- function(protocol) {
+  canonicalize_mappings <- function(value) {
+    if (!is.list(value)) return(value)
+    value <- lapply(value, canonicalize_mappings)
+    value_names <- names(value)
+    if (!is.null(value_names)) {
+      value <- value[order(value_names, method = "radix")]
+    }
+    value
+  }
+
   as.character(jsonlite::toJSON(
-    protocol, auto_unbox = TRUE, null = "null", digits = NA
+    canonicalize_mappings(protocol), auto_unbox = TRUE, null = "null", digits = NA
   ))
 }
 
