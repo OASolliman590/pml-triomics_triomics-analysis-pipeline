@@ -36,29 +36,46 @@
   },
   "active_workers": [
     {
-      "agent": "/root/c09_shared_luna",
-      "role": "luna_shared_registration_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/c09_shared_sol_review",
+      "role": "sol_shared_registration_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "effective_settings_exposed": false,
       "packet": "C-09-shared",
       "attempt": 1,
       "repair_attempt": 0,
       "base_commit": "95987d9800c9dae11d46a1f06b13789d497be251",
-      "candidate_commit": null,
+      "candidate_commit": "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e",
       "worktree": "/Users/megastore/.codex/worktrees/c09-shared-registration/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Inspect the allowlisted candidate and TDD/test evidence, then dispatch one fresh Sol-6.1-high read-only task review. Do not integrate before review and do not start the M6 package/Astra gate or Stage D.",
+      "allowed_next_transition": "A clean spec-and-quality verdict permits serial integration and fresh Sol verification. Critical/Important findings return to the same Luna worker for bounded shared repair 1, followed by one focused rereview. Do not start M6 package/Astra or Stage D.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c09_shared_registration_active",
+    "status": "c09_shared_registration_review_active",
     "last_reconciled": "2026-10-21",
-    "active_handoffs": ["/root/c09_shared_luna"],
+    "active_handoffs": ["/root/c09_shared_sol_review"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar explicitly resumed the run. One fresh isolated Luna-max worker is implementing only C-09 shared NAMESPACE/schema/Stage-C CLI registration from the paused snapshot. C-02/C-06 repairs are not rerun; M6 package/audit and Stage D remain closed until reviewed integration evidence exists."
+    "disposition": "The isolated C-09 shared candidate returned two commits and passed its reported TDD/focused/adjacent checks. Sol confirmed the clean exact five-file range and dispatched one fresh Sol-6.1-high read-only task review. No integration, M6 package/audit or Stage D work is authorized before that verdict."
   },
   "orchestration_events": [
+    {
+      "event": "c09_shared_candidate_returned_review_dispatched",
+      "date": "2026-10-21",
+      "worker": "/root/c09_shared_luna",
+      "reviewer": "/root/c09_shared_sol_review",
+      "requested_reviewer_model": "gpt-6.1-sol",
+      "requested_reviewer_effort": "high",
+      "effective_settings_exposed": false,
+      "base_commit": "95987d9800c9dae11d46a1f06b13789d497be251",
+      "candidate_commits": ["c23a3c845cdca5d84961ddc74c08182a45482c00", "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e"],
+      "changed_files": ["NAMESPACE", "inst/schema/config.schema.json", "R/cli.R", "tests/testthat/test-C-09-shared.R", "docs/implementation/registrations/C-09.json"],
+      "worker_tests": "RED FAIL 7/PASS 13; GREEN C-09-shared PASS 64, C-09 PASS 117, C-06 PASS 290, C-02 PASS 165; all final runs FAIL 0, WARN 0, SKIP 0.",
+      "worker_cli": "Exact Stage-C fixture exit 0; payload, envelope and run registry persisted with recorded hashes; synthetic-only qualification and benefit_guaranteed=false retained.",
+      "review_package": "/private/tmp/triomics-c09-shared-review-package.md",
+      "allowed_next_transition": "Clean review -> serially integrate candidate and run fresh Sol verification. Critical/Important findings -> bounded shared repair 1 in the same Luna worktree, then one focused rereview.",
+      "disposition": "Candidate remains unaccepted and unapplied to the integration branch until review and fresh Sol verification. Real protocol qualification remains open."
+    },
     {
       "event": "c09_shared_registration_resumed_and_dispatched",
       "date": "2026-10-21",
@@ -3211,11 +3228,12 @@
       "blockers": []
     },
     "C-09": {
-      "status": "shared_registration_active",
+      "status": "shared_registration_review_active",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "de9ea9e73e3bb24d69c6e1232b25225408c200a9",
       "integration_commits": ["98f73c3", "6713603", "996087f"],
+      "shared_candidate_commits": ["c23a3c845cdca5d84961ddc74c08182a45482c00", "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e"],
       "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c09-sol-review.md", "docs/implementation/reviews/2026-10-21-c09-repair1-rereview.md"],
       "blockers": ["Shared NAMESPACE, typed schema and Stage-C CLI registration are pending; the real endpoint/deployment/uncertainty protocol remains unqualified."]
     },
