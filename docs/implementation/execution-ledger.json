@@ -34,15 +34,45 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/c09_shared_luna",
+      "role": "luna_shared_registration_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "packet": "C-09-shared",
+      "attempt": 1,
+      "repair_attempt": 0,
+      "base_commit": "95987d9800c9dae11d46a1f06b13789d497be251",
+      "candidate_commit": null,
+      "worktree": "/Users/megastore/.codex/worktrees/c09-shared-registration/PML MultiOmics Analysis Pipeline",
+      "allowed_next_transition": "Inspect the allowlisted candidate and TDD/test evidence, then dispatch one fresh Sol-6.1-high read-only task review. Do not integrate before review and do not start the M6 package/Astra gate or Stage D.",
+      "wait_cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "paused_user_requested_after_c06_shared_cycle",
+    "status": "c09_shared_registration_active",
     "last_reconciled": "2026-10-21",
-    "active_handoffs": [],
+    "active_handoffs": ["/root/c09_shared_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-06 shared repair 2 was inspected, integrated and freshly verified. C-09 packet code is integrated but its exclusive shared registration remains pending. The user requested a pause after this cycle; no C-09 shared worker, M6 package/audit gate or Stage D work was started."
+    "disposition": "Omar explicitly resumed the run. One fresh isolated Luna-max worker is implementing only C-09 shared NAMESPACE/schema/Stage-C CLI registration from the paused snapshot. C-02/C-06 repairs are not rerun; M6 package/audit and Stage D remain closed until reviewed integration evidence exists."
   },
   "orchestration_events": [
+    {
+      "event": "c09_shared_registration_resumed_and_dispatched",
+      "date": "2026-10-21",
+      "worker": "/root/c09_shared_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "base_commit": "95987d9800c9dae11d46a1f06b13789d497be251",
+      "worktree": "/Users/megastore/.codex/worktrees/c09-shared-registration/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["NAMESPACE", "inst/schema/config.schema.json", "R/cli.R", "tests/testthat/test-C-09-shared.R", "docs/implementation/registrations/C-09.json"],
+      "baseline": "C-09 PASS 53, FAIL 0, WARN 0, SKIP 0; exact CLI exit 2 at A_CONFIG_UNKNOWN_KEY clinical_prediction.",
+      "allowed_next_transition": "Worker result -> Sol inspection -> fresh Sol-6.1-high read-only review. A clean review permits serial integration and fresh Sol verification; findings permit the bounded repair loop only.",
+      "disposition": "This is the recorded next action from the pause handover. It is synthetic-only shared registration, not real endpoint qualification or M6 acceptance."
+    },
     {
       "event": "c06_shared_cycle_integrated_verified_and_paused",
       "date": "2026-10-21",
@@ -3181,7 +3211,7 @@
       "blockers": []
     },
     "C-09": {
-      "status": "integrated_shared_registration_pending",
+      "status": "shared_registration_active",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "de9ea9e73e3bb24d69c6e1232b25225408c200a9",
@@ -3385,5 +3415,5 @@
       "docs/implementation/notion-sync/2026-10-17-three-study-dataset-handover.md"
     ]
   },
-  "close_state": "open_paused"
+  "close_state": "open_active"
 }
