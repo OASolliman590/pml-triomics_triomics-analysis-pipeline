@@ -36,29 +36,43 @@
   },
   "active_workers": [
     {
-      "agent": "/root/c09_shared_sol_review",
-      "role": "sol_shared_registration_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
+      "agent": "/root/c09_shared_luna",
+      "role": "luna_shared_registration_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
       "effective_settings_exposed": false,
       "packet": "C-09-shared",
       "attempt": 1,
-      "repair_attempt": 0,
+      "repair_attempt": 1,
       "base_commit": "95987d9800c9dae11d46a1f06b13789d497be251",
       "candidate_commit": "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e",
       "worktree": "/Users/megastore/.codex/worktrees/c09-shared-registration/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "A clean spec-and-quality verdict permits serial integration and fresh Sol verification. Critical/Important findings return to the same Luna worker for bounded shared repair 1, followed by one focused rereview. Do not start M6 package/Astra or Stage D.",
+      "allowed_next_transition": "Return repair 1 with RED/GREEN evidence for order-independent recursive protocol mapping comparison. Sol inspects the repair range, then sends it to the same reviewer for the one focused rereview. Do not integrate or start M6/Stage D.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "c09_shared_registration_review_active",
+    "status": "c09_shared_registration_repair1_active",
     "last_reconciled": "2026-10-21",
-    "active_handoffs": ["/root/c09_shared_sol_review"],
+    "active_handoffs": ["/root/c09_shared_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The isolated C-09 shared candidate returned two commits and passed its reported TDD/focused/adjacent checks. Sol confirmed the clean exact five-file range and dispatched one fresh Sol-6.1-high read-only task review. No integration, M6 package/audit or Stage D work is authorized before that verdict."
+    "disposition": "Fresh Sol-6.1-high review found one Important correctness defect: valid equivalent protocol mappings were rejected when YAML key order changed. The same Luna worker is performing bounded shared repair 1 with a required RED/GREEN regression; integration and later gates remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "c09_shared_review_changes_required_repair1_dispatched",
+      "date": "2026-10-21",
+      "worker": "/root/c09_shared_luna",
+      "reviewer": "/root/c09_shared_sol_review",
+      "candidate_head": "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e",
+      "verdict": "changes_required",
+      "findings": {"critical": 0, "important": 1, "minor": 0},
+      "review_ref": ".superpowers/sdd/c09-shared-registration/task-review.md",
+      "finding": "R/cli.R protocol signature comparison is recursively order-sensitive for named YAML mappings, rejecting otherwise equivalent closed-schema declarations.",
+      "allowed_repair_files": ["R/cli.R", "tests/testthat/test-C-09-shared.R", "docs/implementation/registrations/C-09.json"],
+      "allowed_next_transition": "Repair 1 -> Sol inspect -> one focused rereview by the same fresh reviewer. A pass permits serial integration and fresh Sol verification; remaining findings permit at most repair 2 followed by direct Sol verification.",
+      "disposition": "Finding accepted as a real shared-seam correctness defect. Repair must canonicalize named mappings without sorting sequences or weakening altered-value rejection."
+    },
     {
       "event": "c09_shared_candidate_returned_review_dispatched",
       "date": "2026-10-21",
@@ -3228,7 +3242,7 @@
       "blockers": []
     },
     "C-09": {
-      "status": "shared_registration_review_active",
+      "status": "shared_registration_repair1_active",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "de9ea9e73e3bb24d69c6e1232b25225408c200a9",
