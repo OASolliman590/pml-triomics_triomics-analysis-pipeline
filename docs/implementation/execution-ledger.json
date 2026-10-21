@@ -36,13 +36,29 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "paused_after_c09_shared_cycle",
+    "status": "paused_m6_package_gate_failed",
     "last_reconciled": "2026-10-21",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "C-09 shared registration is reviewed, integrated, and freshly verified on synthetic software evidence. The run is paused at the requested cycle boundary with no active handoff. Resume at the clean M6 package gate; G6 and Stage D remain closed."
+    "disposition": "The clean M6 git-archive package gate at c5e65f9 ended Status: 1 WARNING because triomics_c09_synthetic_inputs lacks documentation. Installed tests passed 4787 with the 22 previously named warnings. Astra was not dispatched; M6 is unaccepted and G6 plus Stage D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m6_clean_archive_package_gate_failed",
+      "date": "2026-10-21",
+      "archive_commit": "c5e65f906a82eff9870fdb9efcfe55546d49b005",
+      "archive_sha256": "59b1bb5f444f8262856ecb7805ef6fb504fd81cb7e0b9d6b657deadb116882a5",
+      "wrapper_exit": 1,
+      "status_line": "Status: 1 WARNING",
+      "failure": "R CMD check missing-documentation warning for exported object triomics_c09_synthetic_inputs.",
+      "testthat": "FAIL 0, WARN 22, SKIP 0, PASS 4787",
+      "warning_disposition": "Eight B-T07 installed-artifact Git-metadata probes and fourteen native C-05 MOFA small-fixture diagnostics; exact test names are recorded in the gate receipt. No new testthat warning class or count appeared.",
+      "log_path": "/private/tmp/triomics-m6-c5e65f9.Zp4Kfr/logs",
+      "review_ref": "docs/implementation/reviews/2026-10-21-m6-package-gate.md",
+      "astra_dispatched": false,
+      "allowed_next_transition": "Stop this run. In a separately authorized repair cycle, add the missing public documentation without changing product behavior, review/integrate it, then rerun the clean M6 archive gate. Astra remains closed until Status: OK.",
+      "disposition": "No repair was made. C-06 and C-09 remain M6-pending; M6 is not accepted; G6 and every Stage-D packet remain closed."
+    },
     {
       "event": "c09_shared_cycle_integrated_verified_and_paused",
       "date": "2026-10-21",
@@ -3441,9 +3457,11 @@
       "commit": "1a8cbe4"
     },
     "M6": {
-      "status": "in_progress",
-      "review_ref": null,
-      "commit": null,
+      "status": "package_gate_failed",
+      "review_ref": "docs/implementation/reviews/2026-10-21-m6-package-gate.md",
+      "commit": "c5e65f906a82eff9870fdb9efcfe55546d49b005",
+      "package_status": "Status: 1 WARNING",
+      "astra_verdict": null,
       "accepted_packets": ["C-03", "C-04", "C-05", "C-08"],
       "blocking_packets": ["C-09", "C-06"]
     },

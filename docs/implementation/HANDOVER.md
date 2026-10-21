@@ -9,10 +9,26 @@ dispositioned B-T07 missing-Git-metadata probes; fourteen are native MOFA
 small-fixture/QC diagnostics. The run is not described as warning-free. C-09
 packet code and C-06 packet/shared code are now integrated. C-09 shared
 NAMESPACE/schema/CLI registration is also integrated and freshly verified.
-C-06 and C-09 are not yet accepted at M6 because the clean package and
-immutable Astra gates remain pending. The run is paused at Omar's requested
-cycle boundary; G6 and every D packet remain closed.
+C-06 and C-09 are not yet accepted at M6. The clean package gate at `c5e65f9`
+ended `Status: 1 WARNING` because the newly exported C-09 synthetic-input
+generator lacks a documentation entry. Astra did not run. The run is paused;
+G6 and every D packet remain closed.
 The historical sections below keep their original wording.
+
+## 21 October M6 package-gate failure
+
+Sol created a clean `git archive` of exact commit `c5e65f9`; live-checkout
+changes and AppleDouble files were not included. `tools/check-package.R` ran on
+the extracted archive with the accepted isolated MOFA runtime. Its wrapper
+exited 1 and `00check.log` ended `Status: 1 WARNING`. The sole R CMD check
+warning is missing public documentation for `triomics_c09_synthetic_inputs`.
+
+Installed tests themselves completed with FAIL 0, WARN 22, SKIP 0, PASS 4787.
+The warnings match the previously named eight B-T07 missing-Git probes and
+fourteen native C-05 MOFA small-fixture diagnostics; none was suppressed. Full
+hashes and test names are in
+`reviews/2026-10-21-m6-package-gate.md`. No repair was made and Astra was not
+dispatched. M6 is unaccepted; G6 and Stage D remain closed.
 
 ## 21 October pause after C-09 shared cycle
 
@@ -222,10 +238,11 @@ progress. C-09 packet and shared registration are integrated and verified at
 verified at `3753be0`. Both remain M6-pending. No real study, biological
 endpoint validation or clinical association is claimed.
 
-Resume at the paused HEAD by running the **clean M6 package gate**. If and only
-if it passes, create an immutable milestone snapshot and dispatch one fresh
-Astra-low read-only M6 audit using the milestone prompt. Do not dispatch a new
-Luna worker or rerun C-02/C-06/C-09 repairs unless the package/audit evidence
-identifies a bounded defect. Do not release G6 or Stage D before M6 acceptance.
-Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
+Resume in a separate repair cycle from the package-gate failure receipt. Add
+the missing public documentation for `triomics_c09_synthetic_inputs` without
+changing product behavior, review and integrate that bounded correction, then
+rerun the clean M6 package gate from a new immutable commit. Only an exact
+`Status: OK` with every testthat warning named permits one fresh Astra-low
+read-only M6 audit. Do not release G6 or Stage D before M6 acceptance. Do not
+loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, or read private study data.
