@@ -36,13 +36,29 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "c09_shared_registration_integration_pending",
+    "status": "paused_after_c09_shared_cycle",
     "last_reconciled": "2026-10-21",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The single focused Sol-6.1-high rereview passed with no findings and marked the synthetic-only candidate ready to integrate. Sol is serially integrating the four candidate commits, after which fresh integrated verification is required; M6 and Stage D remain closed."
+    "disposition": "C-09 shared registration is reviewed, integrated, and freshly verified on synthetic software evidence. The run is paused at the requested cycle boundary with no active handoff. Resume at the clean M6 package gate; G6 and Stage D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "c09_shared_cycle_integrated_verified_and_paused",
+      "date": "2026-10-21",
+      "worker": "/root/c09_shared_luna",
+      "reviewer": "/root/c09_shared_sol_review",
+      "candidate_commits": ["c23a3c845cdca5d84961ddc74c08182a45482c00", "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e", "604a8683bd87a1b2dddc9db40c9426010253af07", "b2aafd6e200964f1cc39267f118e01ff89485542"],
+      "integration_commits": ["91107d3", "164eda5", "c9613de", "40bc026"],
+      "integrated_tests": "C-09-shared PASS 71, C-09 PASS 124, C-06 PASS 290, C-02 PASS 165; all FAIL 0, WARN 0, SKIP 0.",
+      "cli": "Exact C-09 Stage-C fixture exit 0; envelope and registry hash references validated; status_scope synthetic_fixture_only; benefit_guaranteed=false.",
+      "payload_sha256": "cf099b49fca889d9eb82ce293ed4dc67dbf4bb60e2d79acaae3c0d6c9b06aafc",
+      "envelope_sha256": "6630a434b76f2ce6150479b7da2fbfc84bcb2a603bfa91bb296852cafc07839b",
+      "run_registry_sha256": "3d326d4f5b3f8c5af147986b76f5f4594fb6919a723444ece59f7cb756068557",
+      "review_ref": "docs/implementation/reviews/2026-10-21-c09-shared-integration-verification.md",
+      "allowed_next_transition": "On explicit resume, run the clean M6 package gate. If it passes, create an immutable snapshot and dispatch one fresh Astra-low M6 audit. Do not release G6 or Stage D before M6 acceptance.",
+      "disposition": "Paused at the user-requested cycle boundary. C-09 is integrated and verified but remains M6-pending; no real endpoint, deployment, uncertainty protocol, independent validation, biological validity, or guaranteed benefit is qualified."
+    },
     {
       "event": "c09_shared_repair1_rereview_passed_integration_pending",
       "date": "2026-10-21",
@@ -3257,15 +3273,16 @@
       "blockers": []
     },
     "C-09": {
-      "status": "shared_registration_review_passed_integration_pending",
+      "status": "integrated_verified_m6_pending",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "de9ea9e73e3bb24d69c6e1232b25225408c200a9",
       "integration_commits": ["98f73c3", "6713603", "996087f"],
       "shared_candidate_commits": ["c23a3c845cdca5d84961ddc74c08182a45482c00", "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e"],
       "shared_repair1_commits": ["604a8683bd87a1b2dddc9db40c9426010253af07", "b2aafd6e200964f1cc39267f118e01ff89485542"],
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c09-sol-review.md", "docs/implementation/reviews/2026-10-21-c09-repair1-rereview.md"],
-      "blockers": ["Shared NAMESPACE, typed schema and Stage-C CLI registration are pending; the real endpoint/deployment/uncertainty protocol remains unqualified."]
+      "shared_integration_commits": ["91107d3", "164eda5", "c9613de", "40bc026"],
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c09-sol-review.md", "docs/implementation/reviews/2026-10-21-c09-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c09-shared-integration-verification.md"],
+      "blockers": ["M6 clean package gate and immutable Astra milestone audit remain pending; the real endpoint/deployment/uncertainty protocol remains unqualified."]
     },
     "C-06": {
       "status": "integrated_verified_m6_pending",
@@ -3463,5 +3480,5 @@
       "docs/implementation/notion-sync/2026-10-17-three-study-dataset-handover.md"
     ]
   },
-  "close_state": "open_active"
+  "close_state": "paused"
 }

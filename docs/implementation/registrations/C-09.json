@@ -3,8 +3,8 @@
   "request_type": "registration_request",
   "implementation_base": "ef7da2086e7a0244e18a8ea1902423596d6a2b75",
   "accepted": false,
-  "applied_to_shared_files": false,
-  "implementation_status": "Local packet candidate only. This is not accepted and does not qualify a real endpoint, clinical deployment, biological claim, guaranteed benefit, or independent validation.",
+  "applied_to_shared_files": true,
+  "implementation_status": "Packet and shared synthetic Stage-C registration are integrated and freshly verified. This is not M6 acceptance and does not qualify a real endpoint, clinical deployment, biological claim, guaranteed benefit, or independent validation.",
   "synthetic_software_only": true,
   "local_files": [
     "R/clinical_prediction_comparison.R",
@@ -148,7 +148,7 @@
     ],
     "dependency_changes": [],
     "applied_by_worker": true,
-    "applied_by_coordinator": false
+    "applied_by_coordinator": true
   },
   "shared_registration_candidate": {
     "base_commit": "95987d9800c9dae11d46a1f06b13789d497be251",
@@ -161,6 +161,12 @@
       "tests/testthat/test-C-09-shared.R"
     ],
     "registration_evidence_file": "docs/implementation/registrations/C-09.json",
+    "integration_commits": [
+      "91107d3",
+      "164eda5",
+      "c9613de",
+      "40bc026"
+    ],
     "tests": {
       "red_command": "Rscript --vanilla -e \"testthat::test_local(filter='C-09-shared', stop_on_failure=TRUE)\"",
       "red_result": "[ FAIL 7 | WARN 0 | SKIP 0 | PASS 13 ] after correcting a test-helper invocation; all failures were the missing clinical_prediction shared config and public NAMESPACE export.",
@@ -195,7 +201,7 @@
       "A real endpoint, response model, prediction-time information set, and horizon require explicit approval.",
       "Clinical deployment/use and the uncertainty protocol require qualification and approval.",
       "Independent validation on appropriate real data has not been performed.",
-      "The candidate commit remains unaccepted and has not been applied to the coordinator integration branch."
+      "M6 acceptance still requires the clean package gate and immutable Astra milestone audit."
     ],
     "repair_1": {
       "review_finding": "Protocol mappings were compared using an order-sensitive JSON string, rejecting equivalent top-level and nested mapping key orders.",
@@ -236,10 +242,32 @@
         "envelope_sha256": "3be8ce1b68ab92f32f39e593300313c84c799ee0e0aa4671455f6af8a5f3c696",
         "run_registry_sha256": "076267baf622c92dd4eb228ae0e74e7aacd55127a73f75596f15d9885bd7dc96"
       }
+    },
+    "coordinator_integrated_verification": {
+      "date": "2026-10-21",
+      "review_ref": "docs/implementation/reviews/2026-10-21-c09-shared-integration-verification.md",
+      "candidate_tree_match": true,
+      "tests": {
+        "c09_shared": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 71 ] (850.2 seconds)",
+        "c09": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 124 ] (765.3 seconds)",
+        "c06": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 290 ] (279.4 seconds)",
+        "c02": "[ FAIL 0 | WARN 0 | SKIP 0 | PASS 165 ] (317.9 seconds)"
+      },
+      "cli": {
+        "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-09.yaml --stage C --output /private/tmp/triomics-c09-integrated.p7t4lm",
+        "exit": 0,
+        "payload_sha256": "cf099b49fca889d9eb82ce293ed4dc67dbf4bb60e2d79acaae3c0d6c9b06aafc",
+        "envelope_sha256": "6630a434b76f2ce6150479b7da2fbfc84bcb2a603bfa91bb296852cafc07839b",
+        "run_registry_sha256": "3d326d4f5b3f8c5af147986b76f5f4594fb6919a723444ece59f7cb756068557",
+        "envelope_validated": true,
+        "status": "complete",
+        "status_scope": "synthetic_fixture_only",
+        "benefit_guaranteed": false
+      }
     }
   },
   "gaps": [
-    "The shared route and public generator export are present only in isolated unaccepted candidate commit c23a3c845cdca5d84961ddc74c08182a45482c00; coordinator integration and acceptance remain pending.",
+    "The shared route and public generator export are integrated and verified, but C-09 remains M6-pending until the clean package gate and immutable Astra milestone audit pass.",
     "The public fixture and test inputs are deterministic synthetic software fixtures only; no private study data or clinical identifiers were read or written.",
     "No real endpoint or response protocol, deployment qualification, uncertainty-protocol approval, independent validation, or guaranteed gain is claimed."
   ]

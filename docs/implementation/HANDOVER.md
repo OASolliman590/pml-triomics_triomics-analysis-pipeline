@@ -7,11 +7,32 @@ decisive C-08 clean archive check at `d69ef1e` is `Status: OK`, with testthat
 FAIL 0, WARN 22, SKIP 0, PASS 4367. Eight warnings are the previously
 dispositioned B-T07 missing-Git-metadata probes; fourteen are native MOFA
 small-fixture/QC diagnostics. The run is not described as warning-free. C-09
-packet code and C-06 packet/shared code are now integrated. C-06 passed fresh
-integrated verification, but neither packet is accepted at M6. C-09 shared
-registration and the M6 package/Astra gates remain pending. The run is paused
-at Omar's request; G6 and every D packet remain closed.
+packet code and C-06 packet/shared code are now integrated. C-09 shared
+NAMESPACE/schema/CLI registration is also integrated and freshly verified.
+C-06 and C-09 are not yet accepted at M6 because the clean package and
+immutable Astra gates remain pending. The run is paused at Omar's requested
+cycle boundary; G6 and every D packet remain closed.
 The historical sections below keep their original wording.
+
+## 21 October pause after C-09 shared cycle
+
+C-09 shared candidates `c23a3c8`, `d5aaa1e`, `604a868`, and `b2aafd6` were
+reviewed and integrated as `91107d3`, `164eda5`, `c9613de`, and `40bc026`.
+The initial fresh Sol-6.1-high review found one Important mapping-order defect.
+Luna repair 1 fixed it, and the single focused rereview passed with no Critical,
+Important, or Minor findings. Fresh integrated tests passed C-09-shared 71,
+C-09 124, C-06 290, and C-02 165 expectations, all with zero failures,
+warnings, or skips.
+
+The exact synthetic C-09 Stage-C CLI exited 0. Its payload, envelope and run
+registry cross-hashes validated. The route is explicitly limited to
+`synthetic_fixture_only`, retains `benefit_guaranteed=false`, and does not
+qualify a real endpoint, clinical deployment, uncertainty protocol or
+independent validation. No private study data were read or fitted.
+
+This cycle intentionally stops before M6. No package gate or immutable Astra
+audit was run after C-09 integration. All run-owned workers are reconciled;
+there is no active handoff or background polling.
 
 ## 21 October pause after C-06 shared cycle
 
@@ -196,16 +217,15 @@ the first predictor block only; native component mismatch still fails closed.
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `execution-ledger.json`, and this handover. C-01 through C-05 and C-08 are
 accepted on public synthetic software evidence; G5 is released and M6 is in
-progress. C-09 packet code is integrated but shared registration is pending.
-C-06 packet and shared CLI/D-handoff code are integrated and verified at
-`3753be0`, but acceptance still requires the M6 package and immutable audit
-gates. No real study, biological endpoint validation or clinical association is
-claimed.
+progress. C-09 packet and shared registration are integrated and verified at
+`40bc026`. C-06 packet and shared CLI/D-handoff code are integrated and
+verified at `3753be0`. Both remain M6-pending. No real study, biological
+endpoint validation or clinical association is claimed.
 
-Resume by starting one fresh isolated Luna-max worker for **C-09 exclusive
-shared NAMESPACE/schema/Stage-C CLI registration from the paused HEAD only**.
-After review and serial integration, run fresh C-09 verification, the clean M6
-package gate, and an immutable Astra-low M6 audit. Do not rerun C-02, C-06, or
-any prior Luna repairs. Do not release G6 or Stage D before M6 acceptance. Do
-not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
+Resume at the paused HEAD by running the **clean M6 package gate**. If and only
+if it passes, create an immutable milestone snapshot and dispatch one fresh
+Astra-low read-only M6 audit using the milestone prompt. Do not dispatch a new
+Luna worker or rerun C-02/C-06/C-09 repairs unless the package/audit evidence
+identifies a bounded defect. Do not release G6 or Stage D before M6 acceptance.
+Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, or read private study data.
