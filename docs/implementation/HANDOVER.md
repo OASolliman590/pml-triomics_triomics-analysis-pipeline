@@ -28,7 +28,7 @@ The packet commits are integrated as `d2db62d` and `88f1591`. Fresh Luna-max
 The first shared Luna worktree predated the current ledger and its host guard
 refused Stage D. Both approved OpenCode free models then returned provider-quota
 429 before editing. Replacement Luna-max worker `/root/d_t01_shared_luna2` is
-being created from the current ledger snapshot for the same exclusive exports,
+active from current-ledger snapshot `ae6762b` for the same exclusive exports,
 stage-registry, manual and CLI seam. D-T01 remains unaccepted until that diff is
 reviewed, integrated and the exact public synthetic B-to-C-to-D artifact chain
 is read back. No private study data were read or delegated.

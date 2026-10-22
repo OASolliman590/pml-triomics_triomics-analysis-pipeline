@@ -44,8 +44,8 @@
       "packet": "D-T01",
       "shared_attempt": 1,
       "recovery": 1,
-      "base_commit": "pending-current-ledger-snapshot",
-      "worktree": "pending-managed-worktree",
+      "base_commit": "ae6762b",
+      "worktree": "/Users/megastore/.codex/worktrees/d-t01-shared-registration-2/PML MultiOmics Analysis Pipeline",
       "allowed_next_transition": "Shared candidate -> fresh read-only Sol-high review -> bounded repair if needed -> serial integration and fresh exact B/C/D CLI read-back. Do not accept D-T01 or start D-T02/D-T03 before those gates pass.",
       "wait_cursor": null
     }
@@ -63,6 +63,8 @@
       "date": "2026-10-22",
       "from_worker": "/root/d_t01_shared_luna",
       "to_worker": "/root/d_t01_shared_luna2",
+      "replacement_base": "ae6762b",
+      "replacement_worktree": "/Users/megastore/.codex/worktrees/d-t01-shared-registration-2/PML MultiOmics Analysis Pipeline",
       "luna_disposition": "The stale-base worktree host guard treated the historical freeze flag and M6-run Stage-D closure as current despite read-only evidence of the later G6 release and active ledger; no implementation edits were applied.",
       "red_tests": "FAIL 4, WARN 0, SKIP 0, PASS 132 in the abandoned worktree.",
       "opencode_attempts": [
