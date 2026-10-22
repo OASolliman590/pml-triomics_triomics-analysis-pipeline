@@ -36,28 +36,43 @@
   },
   "active_workers": [
     {
-      "agent": "/root/d_t01_shared_luna2",
-      "role": "replacement_exclusive_shared_registration_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/d_t01_shared_sol_review",
+      "role": "fresh_read_only_shared_registration_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "effective_settings_exposed": false,
       "packet": "D-T01",
-      "shared_attempt": 1,
-      "recovery": 1,
+      "shared_review_attempt": 1,
       "base_commit": "ae6762b",
+      "candidate_commit": "71c0a1b628c314c03112a4c2a27a760e9ab0d0a1",
       "worktree": "/Users/megastore/.codex/worktrees/d-t01-shared-registration-2/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Shared candidate -> fresh read-only Sol-high review -> bounded repair if needed -> serial integration and fresh exact B/C/D CLI read-back. Do not accept D-T01 or start D-T02/D-T03 before those gates pass.",
+      "allowed_next_transition": "Review pass -> serial integration and fresh exact B/C/D CLI read-back. Critical/Important finding -> one bounded repair and one focused rereview. Do not accept D-T01 or start D-T02/D-T03 before those gates pass.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "d_t01_shared_registration_resumed_after_upstream_repair",
+    "status": "d_t01_shared_registration_review_active",
     "last_reconciled": "2026-10-22",
-    "active_handoffs": ["/root/d_t01_shared_luna2"],
+    "active_handoffs": ["/root/d_t01_shared_sol_review"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The Stage-B BlockResult identity repair passed fresh Sol-high review with no finding and is integrated as 9efdf19. The replacement D-T01 shared worker is resuming the exact B-to-C-to-D gate with its authorized per_unit_beta fixture correction. D-T01 remains unaccepted."
+    "disposition": "The D-T01 shared candidate returned clean at 71c0a1b after PASS 204 and a fresh B-to-C-to-D sequence with exits 0/0/0. A fresh read-only Sol-high reviewer is auditing the eight-file D shared change. D-T01 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "d_t01_shared_candidate_returned_sol_review_dispatched",
+      "date": "2026-10-22",
+      "worker": "/root/d_t01_shared_luna2",
+      "reviewer": "/root/d_t01_shared_sol_review",
+      "checkpoint_commit": "a5c8f0903db9daccf030cd019100a382215e62fc",
+      "upstream_dependency_commit": "0ca90467fd8306f6a4a5e6fc4c73183cb87b6b6d",
+      "candidate_commit": "71c0a1b628c314c03112a4c2a27a760e9ab0d0a1",
+      "changed_files": ["NAMESPACE", "R/cli.R", "R/evidence_bundle.R", "R/stage_registry.R", "docs/implementation/registrations/D-T01.json", "inst/examples/tickets/D-T01.yaml", "man/triomics-api.Rd", "tests/testthat/test-D-T01-shared.R"],
+      "worker_tests": "FAIL 0, WARN 0, SKIP 0, PASS 204; git diff --check passed; worktree clean.",
+      "worker_cli": "Fresh same-root Stage B, C and D exits 0/0/0. D rerun exits 2 with D_OUTPUT_FINALIZED and all 41 file hashes unchanged; B/C trees remain unchanged by D.",
+      "review_package": "/private/tmp/triomics-d-t01-shared-review-package.diff",
+      "allowed_next_transition": "Review pass -> serial shared integration -> fresh exact integrated verification. Critical/Important finding -> one bounded repair and one focused rereview.",
+      "disposition": "D-T01, M7 and successors remain unaccepted/closed. No private study data were used."
+    },
     {
       "event": "blockresult_identity_repair_reviewed_integrated_shared_gate_resumed",
       "date": "2026-10-22",

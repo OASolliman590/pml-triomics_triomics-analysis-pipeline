@@ -36,11 +36,16 @@ public finalization boundary in candidate `05fc87c`; B-T01, B-T02 and B-T07 pass
 581, 208 and 216 expectations respectively, and the B-T02 public read-back has
 20 unique 64-hex identities. Fresh read-only Sol-high review passed with no
 Critical, Important, or Minor finding, and Sol integrated it as `9efdf19`.
-Replacement worker `/root/d_t01_shared_luna2` is resuming the exact B-to-C-to-D
-gate with its already-authorized `per_unit_beta` fixture correction. D will not
-invent an upstream identity or silently weaken the unit contract. D-T01 remains
-unaccepted pending shared review, integration, and fresh exact verification. No
-private study data were read or delegated.
+Replacement worker `/root/d_t01_shared_luna2` completed the exact B-to-C-to-D
+gate with its already-authorized `per_unit_beta` fixture correction. Candidate
+`71c0a1b` is clean; its named suite passed 204 expectations and fresh Stage B,
+C, and D CLI runs exited 0/0/0. The D rerun refused with
+`D_OUTPUT_FINALIZED`, all 41 output hashes remained unchanged, and D left the B
+and C trees unchanged. Fresh read-only Sol-high reviewer
+`/root/d_t01_shared_sol_review` is auditing the eight-file D shared change. D
+will not invent an upstream identity or silently weaken the unit contract.
+D-T01 remains unaccepted pending review, integration, and fresh exact
+verification. No private study data were read or delegated.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
