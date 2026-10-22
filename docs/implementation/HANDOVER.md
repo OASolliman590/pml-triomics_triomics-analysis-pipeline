@@ -20,9 +20,11 @@ packet. Luna-max returned the bounded six-file candidate `98bf4c5` from base
 review reproduced seven Important contract defects: lost provenance, discarded
 full B evidence, mutable nomination lineage, mismatched preparation identity,
 an ancestor-symlink escape, duplicate measured-feature counts, and an
-incompatible shared feature-registry boundary. Nothing was integrated. Bounded
-Luna repair 1 is active in `/root/d_t01_luna`, after which the same reviewer gets
-the single focused rereview. No private study data were read or delegated.
+incompatible shared feature-registry boundary. Nothing was integrated.
+Bounded Luna repair 1 returned `c857d64`, changing four allowlisted files; its
+focused suite passed 131 expectations with no failures, warnings, or skips.
+The same Sol-high reviewer is now performing the single focused rereview of all
+seven findings. No private study data were read or delegated.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation

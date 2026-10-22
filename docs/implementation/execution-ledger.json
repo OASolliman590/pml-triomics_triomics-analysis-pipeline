@@ -36,28 +36,41 @@
   },
   "active_workers": [
     {
-      "agent": "/root/d_t01_luna",
-      "role": "luna_packet_repairer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/d_t01_sol_review",
+      "role": "focused_read_only_packet_rereviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "effective_settings_exposed": false,
       "packet": "D-T01",
-      "repair_attempt": 1,
+      "rereview_attempt": 1,
       "base_commit": "98bf4c54a52cb8bab7fd3824fabb88deda579a23",
+      "candidate_commit": "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3",
       "worktree": "/Users/megastore/.codex/worktrees/d-t01-evidence-routing/PML MultiOmics Analysis Pipeline",
-      "review_ref": "/private/tmp/triomics-d-t01-sol-review.md",
-      "allowed_next_transition": "Repair return -> Sol inspection -> the single focused rereview by the same reviewer. A clean rereview permits serial integration and the exclusive shared-registration cycle. Do not start D-T02 or D-T03 before D-T01 acceptance.",
+      "review_package": "/private/tmp/triomics-d-t01-repair1-review-package.diff",
+      "allowed_next_transition": "A clean focused rereview permits serial packet integration and a separate exclusive shared-registration cycle. Remaining Critical/Important findings permit one final bounded repair 2 followed by direct Sol inspection only. Do not start D-T02 or D-T03 before D-T01 acceptance.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "d_t01_repair_1_active",
+    "status": "d_t01_focused_rereview_active",
     "last_reconciled": "2026-10-22",
-    "active_handoffs": ["/root/d_t01_luna"],
+    "active_handoffs": ["/root/d_t01_sol_review"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The fresh D-T01 review failed with seven Important findings covering provenance retention, full B evidence, nomination and preparation identity, symlink containment, measured-row accounting and the shared feature-registry boundary. Bounded Luna repair 1 is active in the same isolated worktree; no integration occurred."
+    "disposition": "D-T01 bounded repair 1 returned commit c857d64 with four allowlisted files and focused PASS 131, FAIL 0, WARN 0, SKIP 0. The same Sol-high reviewer is performing the one allowed focused rereview of all seven prior findings. No integration occurred."
   },
   "orchestration_events": [
+    {
+      "event": "d_t01_repair1_returned_focused_rereview_dispatched",
+      "date": "2026-10-22",
+      "worker": "/root/d_t01_luna",
+      "reviewer": "/root/d_t01_sol_review",
+      "repair_commit": "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3",
+      "changed_files": ["R/evidence_bundle.R", "R/annotation_router.R", "R/resource_manifest.R", "tests/testthat/test-D-T01.R"],
+      "worker_tests": "FAIL 0, WARN 0, SKIP 0, PASS 131; diff check passed; worktree clean.",
+      "review_package": "/private/tmp/triomics-d-t01-repair1-review-package.diff",
+      "allowed_next_transition": "Focused rereview pass -> serial packet integration and separate exclusive shared registration. Remaining Critical/Important findings -> final bounded repair 2 then direct Sol inspection.",
+      "disposition": "Worker reports F1-F7 addressed. Shared registration remains untouched and no private study data or network annotation service was used."
+    },
     {
       "event": "d_t01_initial_review_failed_repair1_dispatched",
       "date": "2026-10-22",
@@ -3431,9 +3444,9 @@
       "blockers": []
     },
     "D-T01": {
-      "status": "repair_1_active",
+      "status": "focused_rereview_active",
       "attempts": 2,
-      "commit": "98bf4c54a52cb8bab7fd3824fabb88deda579a23",
+      "commit": "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3",
       "acceptance_refs": [],
       "blockers": []
     },
