@@ -15,11 +15,12 @@ qualified. C-07 controls remain `not_run`. No private study data were read or
 fitted.
 
 Omar explicitly resumed Stage D on 2026-10-22. D-T01 is the only initially legal
-packet and its first implementation attempt is active in isolated Luna-max
-worker `/root/d_t01_luna` from base `57be42a`. The predecessor C-06 regression
-baseline passed 290 expectations with no failures, warnings, or skips. The exact
-six-file allowlist and next review transition are recorded in the execution
-ledger. No private study data were read or delegated.
+packet. Luna-max returned the bounded six-file candidate `98bf4c5` from base
+`57be42a`; its exact test suite passed 86 expectations with no failures,
+warnings, or skips. The required CLI remains intentionally unavailable until
+Sol-owned Stage D registration is integrated. Fresh read-only Sol-high reviewer
+`/root/d_t01_sol_review` is auditing the immutable range before integration.
+No private study data were read or delegated.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
