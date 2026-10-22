@@ -36,29 +36,42 @@
   },
   "active_workers": [
     {
-      "agent": "/root/d_t01_sol_review",
-      "role": "focused_read_only_packet_rereviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
+      "agent": "/root/d_t01_shared_luna",
+      "role": "exclusive_shared_registration_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
       "effective_settings_exposed": false,
       "packet": "D-T01",
-      "rereview_attempt": 1,
-      "base_commit": "98bf4c54a52cb8bab7fd3824fabb88deda579a23",
-      "candidate_commit": "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3",
-      "worktree": "/Users/megastore/.codex/worktrees/d-t01-evidence-routing/PML MultiOmics Analysis Pipeline",
-      "review_package": "/private/tmp/triomics-d-t01-repair1-review-package.diff",
-      "allowed_next_transition": "A clean focused rereview permits serial packet integration and a separate exclusive shared-registration cycle. Remaining Critical/Important findings permit one final bounded repair 2 followed by direct Sol inspection only. Do not start D-T02 or D-T03 before D-T01 acceptance.",
+      "shared_attempt": 1,
+      "base_commit": "88f1591",
+      "worktree": "/Users/megastore/.codex/worktrees/d-t01-shared-registration/PML MultiOmics Analysis Pipeline",
+      "allowed_next_transition": "Shared candidate -> fresh read-only Sol-high review -> bounded repair if needed -> serial integration and fresh exact B/C/D CLI read-back. Do not accept D-T01 or start D-T02/D-T03 before those gates pass.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "d_t01_focused_rereview_active",
+    "status": "d_t01_shared_registration_active",
     "last_reconciled": "2026-10-22",
-    "active_handoffs": ["/root/d_t01_sol_review"],
+    "active_handoffs": ["/root/d_t01_shared_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "D-T01 bounded repair 1 returned commit c857d64 with four allowlisted files and focused PASS 131, FAIL 0, WARN 0, SKIP 0. The same Sol-high reviewer is performing the one allowed focused rereview of all seven prior findings. No integration occurred."
+    "disposition": "The D-T01 focused rereview passed with all seven findings addressed and no new finding. Packet commits are integrated as d2db62d and 88f1591. A fresh isolated Luna-max worker is implementing only the exclusive shared registration and exact public-synthetic CLI seam; D-T01 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "d_t01_packet_rereview_passed_integrated_shared_registration_dispatched",
+      "date": "2026-10-22",
+      "reviewer": "/root/d_t01_sol_review",
+      "shared_worker": "/root/d_t01_shared_luna",
+      "repair_commit": "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3",
+      "review_verdict": "pass; F1-F7 addressed; Critical 0, Important 0, Minor 0; ready_for_integration=true",
+      "review_tests": "FAIL 0, WARN 0, SKIP 0, PASS 131 plus adversarial and actual-producer probes.",
+      "integration_commits": ["d2db62d", "88f1591"],
+      "review_ref": "docs/implementation/reviews/2026-10-22-d-t01-packet-review.md",
+      "shared_base": "88f1591",
+      "shared_worktree": "/Users/megastore/.codex/worktrees/d-t01-shared-registration/PML MultiOmics Analysis Pipeline",
+      "allowed_next_transition": "Shared result -> fresh Sol-high review -> bounded repair if needed -> serial integration and exact B/C/D CLI read-back. Only accepted D-T01 unlocks D-T02 and D-T03.",
+      "disposition": "Stage D must consume existing immutable B/C artifacts and may not refit upstream stages. No private study data were used."
+    },
     {
       "event": "d_t01_repair1_returned_focused_rereview_dispatched",
       "date": "2026-10-22",
@@ -3444,10 +3457,12 @@
       "blockers": []
     },
     "D-T01": {
-      "status": "focused_rereview_active",
+      "status": "packet_integrated_shared_registration_active",
       "attempts": 2,
-      "commit": "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3",
-      "acceptance_refs": [],
+      "commit": "88f1591",
+      "candidate_commits": ["98bf4c54a52cb8bab7fd3824fabb88deda579a23", "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3"],
+      "integration_commits": ["d2db62d", "88f1591"],
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-22-d-t01-packet-review.md"],
       "blockers": []
     },
     "D-T02": {

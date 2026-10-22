@@ -22,9 +22,14 @@ full B evidence, mutable nomination lineage, mismatched preparation identity,
 an ancestor-symlink escape, duplicate measured-feature counts, and an
 incompatible shared feature-registry boundary. Nothing was integrated.
 Bounded Luna repair 1 returned `c857d64`, changing four allowlisted files; its
-focused suite passed 131 expectations with no failures, warnings, or skips.
-The same Sol-high reviewer is now performing the single focused rereview of all
-seven findings. No private study data were read or delegated.
+focused suite passed 131 expectations with no failures, warnings, or skips. The
+single focused Sol-high rereview passed all seven findings with no new finding.
+The packet commits are integrated as `d2db62d` and `88f1591`. Fresh Luna-max
+worker `/root/d_t01_shared_luna` is implementing the exclusive exports,
+stage-registry, manual and CLI seam in a new isolated worktree. D-T01 remains
+unaccepted until that diff is reviewed, integrated and the exact public
+synthetic B-to-C-to-D artifact chain is read back. No private study data were
+read or delegated.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
