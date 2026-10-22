@@ -48,30 +48,31 @@
       "worktree": "/Users/megastore/.codex/worktrees/d-t01-shared-registration-2/PML MultiOmics Analysis Pipeline",
       "allowed_next_transition": "Shared candidate -> fresh read-only Sol-high review -> bounded repair if needed -> serial integration and fresh exact B/C/D CLI read-back. Do not accept D-T01 or start D-T02/D-T03 before those gates pass.",
       "wait_cursor": null
-    },
-    {
-      "agent": "/root/b_blockresult_sol_review",
-      "role": "cross_stage_contract_repair_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "effective_settings_exposed": false,
-      "packet": "D-T01-upstream-BlockResult-contract",
-      "review_attempt": 1,
-      "base_commit": "a50547f",
-      "candidate_commit": "05fc87c1bb66148a08f1fbb4db1dbde9a3622e0f",
-      "worktree": "/Users/megastore/.codex/worktrees/b-blockresult-result-id/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Review pass -> serial integration -> cherry-pick into the paused D-T01 shared worktree and resume its existing gate. Critical/Important finding -> one bounded repair and one focused rereview.",
-      "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "d_t01_upstream_blockresult_repair_review_active",
+    "status": "d_t01_shared_registration_resumed_after_upstream_repair",
     "last_reconciled": "2026-10-22",
-    "active_handoffs": ["/root/d_t01_shared_luna2", "/root/b_blockresult_sol_review"],
+    "active_handoffs": ["/root/d_t01_shared_luna2"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The bounded Stage-B BlockResult identity repair returned commit 05fc87c after B-T01 581/581, B-T02 208/208 and B-T07 216/216 passed. A fresh read-only Sol-high reviewer is auditing that immutable candidate. The replacement D-T01 shared worker remains paused with its changes preserved. D-T01 remains unaccepted."
+    "disposition": "The Stage-B BlockResult identity repair passed fresh Sol-high review with no finding and is integrated as 9efdf19. The replacement D-T01 shared worker is resuming the exact B-to-C-to-D gate with its authorized per_unit_beta fixture correction. D-T01 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "blockresult_identity_repair_reviewed_integrated_shared_gate_resumed",
+      "date": "2026-10-22",
+      "worker": "/root/b_blockresult_id_luna",
+      "reviewer": "/root/b_blockresult_sol_review",
+      "candidate_commit": "05fc87c1bb66148a08f1fbb4db1dbde9a3622e0f",
+      "integration_commit": "9efdf19",
+      "review_verdict": "ready_to_integrate: yes; Critical 0, Important 0, Minor 0",
+      "review_tests": "B-T01 PASS 581; B-T02 PASS 208; B-T07 PASS 216; 18 direct adversarial probes passed.",
+      "preservation": "Every pre-existing serialized B-T02 payload field matched the base exactly; the repair adds row identity/context only after fitting.",
+      "review_ref": "docs/implementation/reviews/2026-10-22-b-blockresult-identity-review.md",
+      "resumed_worker": "/root/d_t01_shared_luna2",
+      "allowed_next_transition": "Shared result -> fresh read-only Sol-high shared review -> bounded repair if needed -> serial integration and fresh exact B/C/D verification. Do not accept D-T01 before those gates pass.",
+      "disposition": "The D fixture effect-unit mismatch is separate and is already within the authorized D-T01 shared repair. No private study data were used."
+    },
     {
       "event": "blockresult_identity_repair_returned_sol_review_dispatched",
       "date": "2026-10-22",
@@ -3514,7 +3515,7 @@
       "blockers": []
     },
     "D-T01": {
-      "status": "shared_registration_paused_upstream_contract_repair_active",
+      "status": "shared_registration_resumed_after_upstream_contract_repair",
       "attempts": 2,
       "commit": "88f1591",
       "candidate_commits": ["98bf4c54a52cb8bab7fd3824fabb88deda579a23", "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3"],

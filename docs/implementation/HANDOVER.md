@@ -34,13 +34,13 @@ reached one real upstream failure: accepted public Stage-B BlockResult rows omit
 the frozen contract's required `result_id`. Luna-max repaired that central
 public finalization boundary in candidate `05fc87c`; B-T01, B-T02 and B-T07 pass
 581, 208 and 216 expectations respectively, and the B-T02 public read-back has
-20 unique 64-hex identities. Fresh read-only Sol-high reviewer
-`/root/b_blockresult_sol_review` is auditing the candidate before integration.
-The exact D-T01 Stage-B fixture also exposes a separate effect-unit mismatch:
-it declares `slope_per_score_unit`, which the B route rejects before artifact
-emission. D will not invent an upstream identity or silently weaken that unit
-contract. D-T01 remains unaccepted. No private study data were read or
-delegated.
+20 unique 64-hex identities. Fresh read-only Sol-high review passed with no
+Critical, Important, or Minor finding, and Sol integrated it as `9efdf19`.
+Replacement worker `/root/d_t01_shared_luna2` is resuming the exact B-to-C-to-D
+gate with its already-authorized `per_unit_beta` fixture correction. D will not
+invent an upstream identity or silently weaken the unit contract. D-T01 remains
+unaccepted pending shared review, integration, and fresh exact verification. No
+private study data were read or delegated.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
