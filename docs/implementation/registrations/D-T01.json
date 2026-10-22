@@ -1,0 +1,83 @@
+{
+  "packet_id": "D-T01",
+  "request_type": "registration_request",
+  "status": "registration_requested",
+  "implementation_base": "57be42a9078d533885c01f3015ac54464f9a2d9f",
+  "accepted": false,
+  "synthetic_software_only": true,
+  "local_files": [
+    "R/evidence_bundle.R",
+    "R/annotation_router.R",
+    "R/resource_manifest.R",
+    "tests/testthat/test-D-T01.R",
+    "inst/examples/tickets/D-T01.yaml",
+    "docs/implementation/registrations/D-T01.json"
+  ],
+  "dependencies": ["B-T07", "C-06"],
+  "package": {
+    "name": "triomics",
+    "version": "0.1.0",
+    "namespace_exports": [
+      "annotate_evidence",
+      "triomics_annotate_evidence"
+    ],
+    "namespace_edits": false,
+    "additional_dependencies": []
+  },
+  "stage_registry": {
+    "D": {
+      "validation_only": false,
+      "execution": false,
+      "integration_owner": "Sol",
+      "request": "Register the D evidence consumer after the verified B-T07/C-06 handoff is available."
+    }
+  },
+  "owned_functions": [
+    "triomics_d_read_c06_handoff",
+    "triomics_d_read_b_handoff",
+    "triomics_d_read_evidence_bundle",
+    "triomics_d_build_evidence_bundle",
+    "triomics_d_route_evidence",
+    "triomics_annotate_evidence",
+    "annotate_evidence",
+    "triomics_d_resource_access"
+  ],
+  "red_green_cycle": {
+    "red": {
+      "command": "Rscript --vanilla -e \"testthat::test_local(filter='D-T01', stop_on_failure=TRUE)\"",
+      "exit_code": 1,
+      "failures": 9,
+      "warnings": 0,
+      "skips": 0,
+      "result": "Behavioral assertions failed against the missing D-T01 services before implementation."
+    },
+    "green": {
+      "command": "Rscript --vanilla -e \"testthat::test_local(filter='D-T01', stop_on_failure=TRUE)\"",
+      "exit_code": 0,
+      "expectations_passed": 86,
+      "failures": 0,
+      "warnings": 0,
+      "skips": 0
+    }
+  },
+  "cli_registration": {
+    "stage": "D",
+    "service": "annotate_evidence",
+    "enabled": false,
+    "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T01.yaml --stage D --output artifacts/acceptance/D-T01",
+    "exit_code": 3,
+    "output": "triomics A_STAGE_UNAVAILABLE: Execution is not implemented for stage 'D'.",
+    "readback": "No acceptance output directory was created; Sol-owned stage registry and CLI registration are still required."
+  },
+  "package_suite_verification": {
+    "command": "Rscript --vanilla -e \"testthat::test_local(stop_on_failure=TRUE)\"",
+    "exit_code": 1,
+    "status": "blocked_by_sandbox_writes_in_preexisting_tests",
+    "evidence": [
+      "A-T09, B-T01, and B-T05 attempted temporary YAML writes under inst/examples/tickets and received Operation not permitted.",
+      "B-T07 acceptance tests could not create artifacts/acceptance/B-T07/testthat output roots and reached the test failure cap."
+    ],
+    "effect_on_D_T01": "The named D-T01 suite passed independently with no skips; the package suite did not complete."
+  },
+  "request": "Sol owns NAMESPACE, DESCRIPTION, R/cli.R, R/stage_registry.R, shared schema files and renv.lock. Export annotate_evidence and triomics_annotate_evidence and register the D consumer on the verified local B-T07/C-06 handoff. The worker provides hash-verified B/C readers, namespace/organism/resolution/capability routing, full evidence accounting, external-only imported statistics treatment, and local exact-release resource access. The D-T01 fixture declares zero annotation requests and offline resource access. This packet does not execute ORA, MOFA-native enrichment, BioPAN, or target investigation. C-07 controls remain not_run and C-09 remains conditional/not_started. Sol must rerun the integrated D CLI after applying shared registration; this worker has not accepted the packet or milestone."
+}
