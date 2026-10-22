@@ -14,11 +14,19 @@ protocol, independent validation, biological validity, or clinical benefit is
 qualified. C-07 controls remain `not_run`. No private study data were read or
 fitted.
 
-Stage D was intentionally not started in the M6 acceptance run. Literal resume
-instruction: **Resume from the M6/G6 acceptance commit, reconcile the Stage D
-dependency and packet ledger, and dispatch no Stage D worker until Omar
-explicitly asks to continue. Preserve every C-05, C-07, and C-09 scientific
-qualification. Do not repeat the M6 package gate or either Astra review.**
+Omar explicitly resumed Stage D on 2026-10-22. D-T01 is the only initially legal
+packet and its first implementation attempt is active in isolated Luna-max
+worker `/root/d_t01_luna` from base `57be42a`. The predecessor C-06 regression
+baseline passed 290 expectations with no failures, warnings, or skips. The exact
+six-file allowlist and next review transition are recorded in the execution
+ledger. No private study data were read or delegated.
+
+Omar also approved `opencode/deepseek-v4.1-flash-free` and
+`opencode/glm-5.3-flash-free` as additional public-synthetic implementation
+lanes. They are not used for D-T01: only after D-T01 acceptance do the
+file-disjoint D-T02 and D-T03 packets become legal. Preserve every C-05, C-07,
+and C-09 scientific qualification and never send private study inputs to free
+providers.
 
 G0 through G5 are released. Stages A and B and C-01
 through C-05 plus C-08 are accepted on synthetic software evidence. The

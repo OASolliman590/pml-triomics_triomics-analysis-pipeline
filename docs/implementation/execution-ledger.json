@@ -34,15 +34,43 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/d_t01_luna",
+      "role": "luna_packet_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "packet": "D-T01",
+      "attempt": 1,
+      "base_commit": "57be42a9078d533885c01f3015ac54464f9a2d9f",
+      "worktree": "/Users/megastore/.codex/worktrees/d-t01-evidence-routing/PML MultiOmics Analysis Pipeline",
+      "allowed_next_transition": "Inspect the bounded six-file candidate and evidence, then dispatch one fresh read-only Sol-high task review. A clean review permits serial integration and fresh Sol verification; findings permit the bounded repair loop. Do not start D-T02 or D-T03 before D-T01 acceptance.",
+      "wait_cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "m6_accepted_g6_released_stage_d_closed",
+    "status": "d_t01_initial_implementation_active",
     "last_reconciled": "2026-10-22",
-    "active_handoffs": [],
+    "active_handoffs": ["/root/d_t01_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The single focused Astra-low rereview of immutable snapshot 2150b4d passed with M6-ASTRA-01 ADDRESSED and no new blocker. Sol accepted M6 and released G6. Stage D was intentionally not started; all D packets remain not_started."
+    "disposition": "Omar explicitly resumed Stage D after M6 acceptance/G6 release. D-T01 is the only initially legal packet and is active in one isolated Luna-max worktree. The approved OpenCode free models opencode/deepseek-v4.1-flash-free and opencode/glm-5.3-flash-free are reserved for later dependency-satisfied, file-disjoint public-synthetic packets; no private data may be sent to them."
   },
   "orchestration_events": [
+    {
+      "event": "stage_d_resumed_d_t01_luna_dispatched",
+      "date": "2026-10-22",
+      "worker": "/root/d_t01_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "base_commit": "57be42a9078d533885c01f3015ac54464f9a2d9f",
+      "worktree": "/Users/megastore/.codex/worktrees/d-t01-evidence-routing/PML MultiOmics Analysis Pipeline",
+      "baseline": "Accepted predecessor C-06 focused suites: FAIL 0, WARN 0, SKIP 0, PASS 290.",
+      "allowlist": ["R/evidence_bundle.R", "R/annotation_router.R", "R/resource_manifest.R", "tests/testthat/test-D-T01.R", "inst/examples/tickets/D-T01.yaml", "docs/implementation/registrations/D-T01.json"],
+      "approved_future_free_models": ["opencode/deepseek-v4.1-flash-free", "opencode/glm-5.3-flash-free"],
+      "allowed_next_transition": "Worker result -> Sol inspection -> one fresh read-only Sol-high task review. Only accepted D-T01 unlocks D-T02 and D-T03. Those disjoint successors may use the two user-approved OpenCode free models with public synthetic inputs only.",
+      "disposition": "D-T01 attempt 1 is active. No private study data were read or delegated; no Stage D packet is accepted yet."
+    },
     {
       "event": "m6_focused_astra_passed_sol_accepted_g6_released",
       "date": "2026-10-22",
@@ -3377,8 +3405,8 @@
       "blockers": []
     },
     "D-T01": {
-      "status": "not_started",
-      "attempts": 0,
+      "status": "implementation_attempt_1_active",
+      "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": []
