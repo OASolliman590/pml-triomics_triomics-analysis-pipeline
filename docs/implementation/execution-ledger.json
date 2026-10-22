@@ -36,15 +36,16 @@
   },
   "active_workers": [
     {
-      "agent": "/root/d_t01_shared_luna",
-      "role": "exclusive_shared_registration_implementer",
+      "agent": "/root/d_t01_shared_luna2",
+      "role": "replacement_exclusive_shared_registration_implementer",
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "effective_settings_exposed": false,
       "packet": "D-T01",
       "shared_attempt": 1,
-      "base_commit": "88f1591",
-      "worktree": "/Users/megastore/.codex/worktrees/d-t01-shared-registration/PML MultiOmics Analysis Pipeline",
+      "recovery": 1,
+      "base_commit": "pending-current-ledger-snapshot",
+      "worktree": "pending-managed-worktree",
       "allowed_next_transition": "Shared candidate -> fresh read-only Sol-high review -> bounded repair if needed -> serial integration and fresh exact B/C/D CLI read-back. Do not accept D-T01 or start D-T02/D-T03 before those gates pass.",
       "wait_cursor": null
     }
@@ -52,11 +53,25 @@
   "orchestration_control": {
     "status": "d_t01_shared_registration_active",
     "last_reconciled": "2026-10-22",
-    "active_handoffs": ["/root/d_t01_shared_luna"],
+    "active_handoffs": ["/root/d_t01_shared_luna2"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The D-T01 focused rereview passed with all seven findings addressed and no new finding. Packet commits are integrated as d2db62d and 88f1591. A fresh isolated Luna-max worker is implementing only the exclusive shared registration and exact public-synthetic CLI seam; D-T01 remains unaccepted."
+    "disposition": "The first shared Luna worktree predated the current ledger and its host guard refused Stage D; both user-approved OpenCode free models then returned provider quota 429 before editing. A replacement isolated Luna-max worker is being created from the current canonical ledger snapshot. The packet commits remain integrated as d2db62d and 88f1591; D-T01 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "d_t01_shared_worker_recovery_after_guard_and_free_quota",
+      "date": "2026-10-22",
+      "from_worker": "/root/d_t01_shared_luna",
+      "to_worker": "/root/d_t01_shared_luna2",
+      "luna_disposition": "The stale-base worktree host guard treated the historical freeze flag and M6-run Stage-D closure as current despite read-only evidence of the later G6 release and active ledger; no implementation edits were applied.",
+      "red_tests": "FAIL 4, WARN 0, SKIP 0, PASS 132 in the abandoned worktree.",
+      "opencode_attempts": [
+        {"model": "opencode/deepseek-v4.1-flash-free", "status": "provider.quota", "http_status": 429, "edits": 0},
+        {"model": "opencode/glm-5.3-flash-free", "status": "provider.quota", "http_status": 429, "edits": 0}
+      ],
+      "allowed_next_transition": "Create one fresh worktree from this current ledger commit and resume the same bounded shared-registration attempt with Luna-max. Then fresh Sol review, serial integration and exact CLI read-back.",
+      "disposition": "No frozen spec, product implementation, private data or acceptance state was changed by the failed providers."
+    },
     {
       "event": "d_t01_packet_rereview_passed_integrated_shared_registration_dispatched",
       "date": "2026-10-22",
