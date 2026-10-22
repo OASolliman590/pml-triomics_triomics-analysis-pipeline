@@ -1,19 +1,24 @@
 # Implementation handover
 
 Run `triomics-20260920-sol-01` continues on branch
-`spec/harden-v2-20260920`. The resumed clean archive gate at implementation
-snapshot `76fe5e2` ended `Status: OK` with FAIL 0, WARN 22, SKIP 0, PASS 4787.
-Initial Astra returned `changes_required` only because DOC-M6 was absent; it
-found no additional correctness blocker. DOC-M6, durable gate/Astra receipts,
-and the reviewed durable-link repair are integrated through `68bbd34`. The Sol
-focused rereview marked its sole finding ADDRESSED with no new finding.
+`spec/harden-v2-20260920`. The clean archive package gate remains the accepted
+historical result at implementation snapshot `76fe5e2`: `Status: OK`, FAIL 0,
+WARN 22, SKIP 0, PASS 4787. The single focused Astra-low rereview of immutable
+commit `2150b4d` passed: `M6-ASTRA-01: ADDRESSED`, with no new blocker.
 
-Omar requested a stop at the nearest safe boundary. The focused Astra rereview
-has not started. Resume by creating an immutable snapshot from the paused head
-and dispatching the single focused Astra-low rereview of M6-ASTRA-01. Do not
-repeat the package gate, DOC-M6 worker or Sol review. If Astra passes, Sol may
-accept M6 and release G6; do not start Stage D in that acceptance run. M6 is
-unaccepted; G6 and Stage D remain closed.
+Sol accepted M6 and released G6 on 2026-10-22. C-06 is accepted on synthetic
+software evidence. C-09 remains conditionally deferred without completion
+credit: its public route is `synthetic_fixture_only`,
+`benefit_guaranteed=false`, and no real endpoint, deployment, uncertainty
+protocol, independent validation, biological validity, or clinical benefit is
+qualified. C-07 controls remain `not_run`. No private study data were read or
+fitted.
+
+Stage D was intentionally not started in the M6 acceptance run. Literal resume
+instruction: **Resume from the M6/G6 acceptance commit, reconcile the Stage D
+dependency and packet ledger, and dispatch no Stage D worker until Omar
+explicitly asks to continue. Preserve every C-05, C-07, and C-09 scientific
+qualification. Do not repeat the M6 package gate or either Astra review.**
 
 G0 through G5 are released. Stages A and B and C-01
 through C-05 plus C-08 are accepted on synthetic software evidence. The

@@ -36,13 +36,32 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "paused_m6_doc_repair_integrated_focused_astra_pending",
-    "last_reconciled": "2026-10-21",
+    "status": "m6_accepted_g6_released_stage_d_closed",
+    "last_reconciled": "2026-10-22",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The resumed clean archive gate at 76fe5e2 ended Status: OK with FAIL 0, WARN 22, SKIP 0, PASS 4787. Initial Astra found only missing DOC-M6. DOC-M6, durable receipts and its reviewed link repair are integrated through 68bbd34. The focused Astra rereview has not started; M6 is unaccepted and G6 plus Stage D remain closed."
+    "disposition": "The single focused Astra-low rereview of immutable snapshot 2150b4d passed with M6-ASTRA-01 ADDRESSED and no new blocker. Sol accepted M6 and released G6. Stage D was intentionally not started; all D packets remain not_started."
   },
   "orchestration_events": [
+    {
+      "event": "m6_focused_astra_passed_sol_accepted_g6_released",
+      "date": "2026-10-22",
+      "immutable_snapshot": "2150b4dffd174abd08a38389467f91e9d5c73e54",
+      "reviewer": "/root/m6_focused_astra_rereview",
+      "reviewer_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "astra_verdict": "pass",
+      "finding_disposition": "M6-ASTRA-01: ADDRESSED; no new blocking finding.",
+      "package_gate": "Not repeated. Prior clean archive result remains Status: OK; FAIL 0, WARN 22, SKIP 0, PASS 4787 at implementation snapshot 76fe5e2.",
+      "packet_disposition": "C-06 accepted on synthetic software evidence. C-09 deferred as synthetic_fixture_only without packet completion credit; benefit_guaranteed=false and real endpoint/deployment/uncertainty/independent-validation qualifications remain unavailable.",
+      "review_refs": [
+        "docs/implementation/reviews/2026-10-22-m6-focused-astra-rereview.md",
+        "docs/implementation/reviews/2026-10-22-m6-sol-acceptance.md",
+        "docs/implementation/milestones/M6.md"
+      ],
+      "allowed_next_transition": "Only on Omar's explicit continuation, reconcile and start the first legal Stage D packet from released G6. Do not repeat the M6 package gate or Astra reviews.",
+      "disposition": "M6 accepted and G6 released. Stage D deliberately remains closed in this acceptance run; no private study data were read or fitted."
+    },
     {
       "event": "m6_clean_gate_passed_doc_m6_repaired_reviewed_and_paused",
       "date": "2026-10-21",
@@ -3333,7 +3352,7 @@
       "blockers": []
     },
     "C-09": {
-      "status": "integrated_verified_m6_pending",
+      "status": "conditional_deferred_synthetic_fixture_only_no_completion_credit",
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "de9ea9e73e3bb24d69c6e1232b25225408c200a9",
@@ -3341,11 +3360,11 @@
       "shared_candidate_commits": ["c23a3c845cdca5d84961ddc74c08182a45482c00", "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e"],
       "shared_repair1_commits": ["604a8683bd87a1b2dddc9db40c9426010253af07", "b2aafd6e200964f1cc39267f118e01ff89485542"],
       "shared_integration_commits": ["91107d3", "164eda5", "c9613de", "40bc026"],
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c09-sol-review.md", "docs/implementation/reviews/2026-10-21-c09-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c09-shared-integration-verification.md"],
-      "blockers": ["M6 clean package gate and immutable Astra milestone audit remain pending; the real endpoint/deployment/uncertainty protocol remains unqualified."]
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c09-sol-review.md", "docs/implementation/reviews/2026-10-21-c09-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c09-shared-integration-verification.md", "docs/implementation/reviews/2026-10-22-m6-focused-astra-rereview.md", "docs/implementation/reviews/2026-10-22-m6-sol-acceptance.md"],
+      "blockers": ["No concrete real endpoint/model/deployment and uncertainty protocol was supplied. The verified synthetic fixture receives no C-09 packet completion credit; no clinical performance or benefit claim is qualified."]
     },
     "C-06": {
-      "status": "integrated_verified_m6_pending",
+      "status": "accepted_synthetic_software_evidence",
       "attempts": 1,
       "repair_attempts": 1,
       "shared_repair_attempts": 2,
@@ -3354,8 +3373,8 @@
       "shared_candidate_commit": "1cc35048907ab4dd866d7129759ddcb7672d05eb",
       "shared_repair_candidate": "be2a4e4",
       "shared_repair2_candidate": "29e1e19",
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c06-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c06-shared-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-shared-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c06-shared-integration-verification.md"],
-      "blockers": ["M6 clean package gate and immutable Astra milestone audit remain pending; C-07 control evaluation was explicitly not run."]
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c06-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c06-shared-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-shared-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c06-shared-integration-verification.md", "docs/implementation/reviews/2026-10-22-m6-focused-astra-rereview.md", "docs/implementation/reviews/2026-10-22-m6-sol-acceptance.md"],
+      "blockers": []
     },
     "D-T01": {
       "status": "not_started",
@@ -3501,13 +3520,16 @@
       "commit": "1a8cbe4"
     },
     "M6": {
-      "status": "focused_astra_rereview_pending",
-      "review_ref": "docs/implementation/reviews/2026-10-21-m6-astra-review.md",
-      "commit": "68bbd34",
+      "status": "accepted",
+      "review_ref": "docs/implementation/reviews/2026-10-22-m6-focused-astra-rereview.md",
+      "acceptance_ref": "docs/implementation/reviews/2026-10-22-m6-sol-acceptance.md",
+      "commit": "2150b4dffd174abd08a38389467f91e9d5c73e54",
       "package_status": "Status: OK; FAIL 0, WARN 22, SKIP 0, PASS 4787 at implementation snapshot 76fe5e2",
-      "astra_verdict": "changes_required: M6-ASTRA-01 only; DOC-M6 repair integrated and focused rereview pending",
-      "accepted_packets": ["C-03", "C-04", "C-05", "C-08"],
-      "blocking_packets": ["C-09", "C-06"]
+      "astra_verdict": "pass: M6-ASTRA-01 addressed; no new blocking finding",
+      "accepted_packets": ["C-03", "C-04", "C-05", "C-08", "C-06"],
+      "conditional_packets_without_completion_credit": ["C-09"],
+      "blocking_packets": [],
+      "gate_release": "G6"
     },
     "M7": {
       "status": "not_started",
@@ -3525,7 +3547,14 @@
       "commit": null
     }
   },
-  "conditional_dispositions": {},
+  "conditional_dispositions": {
+    "C-09": {
+      "status": "deferred_without_completion_credit",
+      "implemented_scope": "synthetic_fixture_only",
+      "benefit_guaranteed": false,
+      "remaining_qualification": "No concrete real endpoint/model/deployment and uncertainty protocol, independent validation, biological validity, clinical performance, or benefit is qualified."
+    }
+  },
   "usage": {
     "provider_reported_tokens": null,
     "provider_reported_cost": null,
