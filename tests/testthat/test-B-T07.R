@@ -528,6 +528,38 @@ testthat::test_that("B-T07 Stage B returns the same-run keyed matrices without s
     "preparation_refit", "matrix_origin", "filter_applied", "runtime",
     "blocks", "method_status"
   ))
+  result_ids <- character()
+  for (block_id in names(payload$blocks)) {
+    block <- payload$blocks[[block_id]]
+    for (group_name in c("contrasts", "joint_claims")) {
+      claims <- block[[group_name]]
+      if (!is.list(claims)) next
+      for (claim_id in names(claims)) {
+        claim <- claims[[claim_id]]
+        claim_type <- if (identical(group_name, "joint_claims")) "joint_contrast" else "scalar_contrast"
+        contrast_id <- if (identical(claim_type, "joint_contrast")) {
+          paste0("joint:", claim_id)
+        } else {
+          claim_id
+        }
+        for (row in claim$rows) {
+          result_id <- if (is.null(row$result_id)) "" else as.character(row$result_id)
+          testthat::expect_match(result_id, "^[a-f0-9]{64}$")
+          testthat::expect_identical(as.character(row$study_id), as.character(payload$study_id))
+          testthat::expect_identical(as.character(row$analysis_id), as.character(payload$analysis_id))
+          testthat::expect_identical(as.character(row$block_id), block_id)
+          testthat::expect_identical(as.character(row$claim_id), claim_id)
+          testthat::expect_identical(as.character(row$claim_type), claim_type)
+          testthat::expect_identical(as.character(row$family_id), as.character(claim$family$family_id))
+          testthat::expect_identical(as.character(row$contrast_id), contrast_id)
+          testthat::expect_identical(as.character(row$representation_id), as.character(payload$representation_id))
+          result_ids <- c(result_ids, result_id)
+        }
+      }
+    }
+  }
+  testthat::expect_gt(length(result_ids), 0L)
+  testthat::expect_length(unique(result_ids), length(result_ids))
   testthat::expect_identical(names(envelope), c(
     "schema_version", "artifact_type", "artifact_id", "study_id", "run_id",
     "status", "created_utc", "config_sha256", "inputs", "payload_file",

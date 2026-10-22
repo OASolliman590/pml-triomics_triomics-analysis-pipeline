@@ -132,6 +132,24 @@ b_row <- function(fit, feature, block = "block_1", contrast = "target_minus_refe
   hit[[1L]]
 }
 
+b_stage_cli_smoke <- function(config_path, output) {
+  source_root <- normalizePath(testthat::test_path("..", ".."), winslash = "/", mustWork = TRUE)
+  cli <- file.path(source_root, "inst", "exec", "triomics")
+  rscript <- file.path(R.home("bin"), "Rscript")
+  original_wd <- getwd()
+  setwd(dirname(cli))
+  on.exit(setwd(original_wd), add = TRUE)
+  lines <- system2(
+    rscript,
+    c("--vanilla", shQuote(basename(cli)), "--config", shQuote(config_path),
+      "--stage", "B", "--output", shQuote(output)),
+    stdout = TRUE, stderr = TRUE
+  )
+  status <- attr(lines, "status")
+  if (is.null(status)) status <- 0L
+  list(status = as.integer(status), output = lines)
+}
+
 b_qr <- function(y, groups, weights = c(control = -1, treatment = 1)) {
   ok <- is.finite(y)
   present <- factor(groups[ok], levels = c("control", "treatment"))
@@ -584,4 +602,241 @@ testthat::test_that("the stage B fixture envelope matches limma on predecessor m
   budget_output <- tempfile("b-t01-budget-out-")
   dir.create(budget_output)
   expect_code(triomics_execute_stage_b(budget_config, budget_output), "B_DESIGN_BUDGET")
+})
+
+testthat::test_that("Stage B CLI writes unique, deterministic BlockResult identities across contrasts", {
+  config_path <- triomics_test_resource("examples", "tickets", "B-T02.yaml")
+  first_output <- tempfile("b-t02-identity-first-")
+  second_output <- tempfile("b-t02-identity-second-")
+  dir.create(first_output)
+  dir.create(second_output)
+  on.exit(unlink(c(first_output, second_output), recursive = TRUE), add = TRUE)
+
+  first_run <- b_stage_cli_smoke(config_path, first_output)
+  second_run <- b_stage_cli_smoke(config_path, second_output)
+  testthat::expect_identical(first_run$status, 0L, info = paste(first_run$output, collapse = "\n"))
+  testthat::expect_identical(second_run$status, 0L, info = paste(second_run$output, collapse = "\n"))
+  first <- jsonlite::read_json(file.path(first_output, "B", "block-results.json"), simplifyVector = FALSE)
+  second <- jsonlite::read_json(file.path(second_output, "B", "block-results.json"), simplifyVector = FALSE)
+  claims <- first$blocks$block_1$contrasts
+  claim_ids <- names(claims)
+  testthat::expect_length(claim_ids, 2L)
+
+  ids <- character()
+  numeric_fields <- list()
+  scientific_fields <- c(
+    "feature_key", "family_id", "effect", "effect_unit", "ordinary_se",
+    "moderated_se", "statistic", "statistic_name", "ordinary_df",
+    "effective_test_df", "df_prior", "p", "q", "inferential_status",
+    "estimation_status", "estimation_reason", "n_samples", "n_subjects",
+    "n_rows_used", "count_prior_ref", "source_hash", "model_hash",
+    "representation_hash", "contrast_hash", "reference_direction_status",
+    "direction_status", "direction_reason", "direction_numerator",
+    "direction_denominator", "direction_zero_count", "n_pairs"
+  )
+  serialized_science <- list()
+  second_science <- list()
+  for (claim_id in claim_ids) {
+    claim <- claims[[claim_id]]
+    second_claim <- second$blocks$block_1$contrasts[[claim_id]]
+    for (index in seq_along(claim$rows)) {
+      row <- claim$rows[[index]]
+      testthat::expect_true(all(scientific_fields %in% names(row)))
+      projection_key <- paste(claim_id, index, sep = ":")
+      serialized_science[[projection_key]] <- row[scientific_fields]
+      second_science[[projection_key]] <- second_claim$rows[[index]][scientific_fields]
+      testthat::expect_true(is.character(row$result_id) && length(row$result_id) == 1L)
+      testthat::expect_match(if (is.null(row$result_id)) "" else as.character(row$result_id),
+                             "^[a-f0-9]{64}$")
+      testthat::expect_identical(as.character(row$study_id), "triomics_b_t02_fixture")
+      testthat::expect_identical(as.character(row$analysis_id), "synthetic_primary")
+      testthat::expect_identical(as.character(row$block_id), "block_1")
+      testthat::expect_identical(as.character(row$claim_type), "scalar_contrast")
+      testthat::expect_identical(as.character(row$claim_id), claim_id)
+      testthat::expect_identical(as.character(row$contrast_id), claim_id)
+      testthat::expect_identical(as.character(row$representation_id), "levels")
+      identity <- list(
+        study_id = first$study_id,
+        analysis_id = first$analysis_id,
+        block_id = "block_1",
+        claim_type = "scalar_contrast",
+        claim_id = claim_id,
+        family_id = claim$family$family_id,
+        feature_key = row$feature_key,
+        representation_id = first$representation_id,
+        contrast_id = claim_id
+      )
+      expected_id <- digest::digest(
+        triomics_canonical_json(identity), algo = "sha256", serialize = FALSE
+      )
+      testthat::expect_identical(row$result_id, expected_id)
+      testthat::expect_identical(
+        row$result_id, as.character(second_claim$rows[[index]]$result_id)
+      )
+      ids <- c(ids, row$result_id)
+      numeric_fields[[length(numeric_fields) + 1L]] <- row[c(
+        "effect", "effect_unit", "ordinary_se", "moderated_se", "statistic",
+        "effective_test_df", "p", "q", "estimation_status", "estimation_reason"
+      )]
+      testthat::expect_identical(
+        numeric_fields[[length(numeric_fields)]],
+        second_claim$rows[[index]][c(
+          "effect", "effect_unit", "ordinary_se", "moderated_se", "statistic",
+          "effective_test_df", "p", "q", "estimation_status", "estimation_reason"
+        )]
+      )
+    }
+  }
+  testthat::expect_gt(length(ids), 0L)
+  testthat::expect_length(unique(ids), length(ids))
+  testthat::expect_identical(triomics_b_hash(serialized_science), triomics_b_hash(second_science))
+})
+
+testthat::test_that("public identity finalization preserves the fitted scientific rows exactly", {
+  config_path <- triomics_test_resource("examples", "tickets", "B-T02.yaml")
+  config <- triomics_read_config(config_path)
+  ingested <- triomics_ingest_configured_study(config, config_path)
+  analysis <- config$analyses[[1L]]
+  study <- list(
+    study_id = ingested$study_id,
+    preparation_context_id = analysis$preparation_context_id,
+    sample_metadata = ingested$sample_metadata,
+    sample_registry = ingested$sample_registry,
+    declared_factor_levels = ingested$declared_factor_levels,
+    feature_registry = ingested$feature_registry,
+    assays = ingested$assays[as.character(analysis$block_ids)],
+    assay_hashes = NULL,
+    analysis_unit_map = NULL
+  )
+  resolved <- triomics_resolve_analysis(study, analysis)
+  fitted <- triomics_fit_block_models(resolved, analysis$statistics)
+  fitted_blocks_before <- fitted$blocks
+  scientific_fields <- c(
+    "feature_key", "family_id", "effect", "effect_unit", "ordinary_se",
+    "moderated_se", "statistic", "statistic_name", "ordinary_df",
+    "effective_test_df", "df_prior", "p", "q", "inferential_status",
+    "estimation_status", "estimation_reason", "n_samples", "n_subjects",
+    "n_rows_used", "count_prior_ref", "source_hash", "model_hash",
+    "representation_hash", "contrast_hash", "reference_direction_status",
+    "direction_status", "direction_reason", "direction_numerator",
+    "direction_denominator", "direction_zero_count", "n_pairs"
+  )
+  fitted_projection <- list()
+  for (claim_id in names(fitted_blocks_before$block_1$contrasts)) {
+    fitted_rows <- fitted_blocks_before$block_1$contrasts[[claim_id]]$rows
+    for (index in seq_along(fitted_rows)) {
+      key <- paste(claim_id, index, sep = ":")
+      fitted_projection[[key]] <- fitted_rows[[index]][scientific_fields]
+    }
+  }
+  public_payload <- triomics_b_finalize_public_result_identity(list(
+    study_id = ingested$study_id,
+    analysis_id = analysis$analysis_id,
+    representation_id = analysis$design$representation,
+    blocks = fitted$blocks
+  ))
+  finalized_projection <- list()
+  for (claim_id in names(public_payload$blocks$block_1$contrasts)) {
+    finalized_rows <- public_payload$blocks$block_1$contrasts[[claim_id]]$rows
+    for (index in seq_along(finalized_rows)) {
+      key <- paste(claim_id, index, sep = ":")
+      finalized_projection[[key]] <- finalized_rows[[index]][scientific_fields]
+    }
+  }
+  testthat::expect_identical(finalized_projection, fitted_projection)
+  testthat::expect_identical(fitted$blocks, fitted_blocks_before)
+  testthat::expect_identical(triomics_b_hash(finalized_projection), triomics_b_hash(fitted_projection))
+  testthat::expect_identical(
+    triomics_b_finalize_public_result_identity(public_payload), public_payload
+  )
+})
+
+testthat::test_that("Stage B serializes joint claim identity without choosing a member contrast", {
+  source_config <- triomics_test_resource("examples", "tickets", "B-T02.yaml")
+  output <- tempfile("b-t02-joint-identity-")
+  dir.create(output)
+  on.exit(unlink(output, recursive = TRUE), add = TRUE)
+  original_fit <- getFromNamespace("triomics_fit_block_models", "triomics")
+  testthat::local_mocked_bindings(
+    triomics_fit_block_models = function(resolved_analysis, statistics_spec) {
+      statistics_spec$claims <- list(list(
+        claim_id = "all_declared_groups_joint",
+        claim_type = "joint_contrast",
+        contrast_ids = c("treatment_minus_control", "unobserved_minus_control"),
+        effect_unit = statistics_spec$effect_unit
+      ))
+      original_fit(resolved_analysis, statistics_spec)
+    },
+    .package = "triomics"
+  )
+  triomics_execute_stage_b(source_config, output)
+  payload <- jsonlite::read_json(file.path(output, "B", "block-results.json"), simplifyVector = FALSE)
+  claim <- payload$blocks$block_1$joint_claims$all_declared_groups_joint
+  members <- c("treatment_minus_control", "unobserved_minus_control")
+  testthat::expect_identical(as.character(claim$claim_id), "all_declared_groups_joint")
+  testthat::expect_identical(unlist(claim$contrast_ids, use.names = FALSE), members)
+  for (row in claim$rows) {
+    testthat::expect_identical(as.character(row$claim_id), "all_declared_groups_joint")
+    testthat::expect_identical(as.character(row$claim_type), "joint_contrast")
+    testthat::expect_identical(as.character(row$contrast_id), "joint:all_declared_groups_joint")
+    testthat::expect_identical(unlist(row$contrast_ids, use.names = FALSE), members)
+    identity <- list(
+      study_id = payload$study_id,
+      analysis_id = payload$analysis_id,
+      block_id = "block_1",
+      claim_type = "joint_contrast",
+      claim_id = "all_declared_groups_joint",
+      family_id = claim$family$family_id,
+      feature_key = row$feature_key,
+      representation_id = payload$representation_id,
+      contrast_id = "joint:all_declared_groups_joint",
+      contrast_ids = as.list(members)
+    )
+    expected_id <- digest::digest(
+      triomics_canonical_json(identity), algo = "sha256", serialize = FALSE
+    )
+    testthat::expect_identical(row$result_id, expected_id)
+  }
+})
+
+testthat::test_that("Stage B rejects a supplied result context that conflicts with its enclosing claim", {
+  config_path <- triomics_test_resource("examples", "tickets", "B-T01.yaml")
+  output <- tempfile("b-t01-conflicting-result-context-")
+  dir.create(output)
+  on.exit(unlink(output, recursive = TRUE), add = TRUE)
+  original_fit <- getFromNamespace("triomics_fit_block_models", "triomics")
+
+  testthat::local_mocked_bindings(
+    triomics_fit_block_models = function(resolved_analysis, statistics_spec) {
+      fit <- original_fit(resolved_analysis, statistics_spec)
+      rows <- fit$blocks$block_1$contrasts$target_minus_reference$rows
+      rows[[1L]]$analysis_id <- "another_analysis"
+      fit$blocks$block_1$contrasts$target_minus_reference$rows <- rows
+      fit
+    },
+    .package = "triomics"
+  )
+
+  expect_code(triomics_execute_stage_b(config_path, output), "B_RESULT_CONTRACT")
+})
+
+testthat::test_that("Stage B rejects a supplied result ID that disagrees with its canonical identity", {
+  config_path <- triomics_test_resource("examples", "tickets", "B-T01.yaml")
+  output <- tempfile("b-t01-conflicting-result-id-")
+  dir.create(output)
+  on.exit(unlink(output, recursive = TRUE), add = TRUE)
+  original_fit <- getFromNamespace("triomics_fit_block_models", "triomics")
+
+  testthat::local_mocked_bindings(
+    triomics_fit_block_models = function(resolved_analysis, statistics_spec) {
+      fit <- original_fit(resolved_analysis, statistics_spec)
+      rows <- fit$blocks$block_1$contrasts$target_minus_reference$rows
+      rows[[1L]]$result_id <- paste(rep("a", 64L), collapse = "")
+      fit$blocks$block_1$contrasts$target_minus_reference$rows <- rows
+      fit
+    },
+    .package = "triomics"
+  )
+
+  expect_code(triomics_execute_stage_b(config_path, output), "B_RESULT_CONTRACT")
 })
