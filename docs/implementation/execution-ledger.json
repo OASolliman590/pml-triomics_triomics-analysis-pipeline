@@ -50,27 +50,42 @@
       "wait_cursor": null
     },
     {
-      "agent": "/root/b_blockresult_id_luna",
-      "role": "cross_stage_contract_repairer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/b_blockresult_sol_review",
+      "role": "cross_stage_contract_repair_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "effective_settings_exposed": false,
       "packet": "D-T01-upstream-BlockResult-contract",
-      "repair_attempt": 1,
+      "review_attempt": 1,
       "base_commit": "a50547f",
+      "candidate_commit": "05fc87c1bb66148a08f1fbb4db1dbde9a3622e0f",
       "worktree": "/Users/megastore/.codex/worktrees/b-blockresult-result-id/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Repair result -> fresh read-only Sol-high cross-stage review -> serial integration if clean -> cherry-pick into the paused D-T01 shared worktree and resume its existing gate.",
+      "allowed_next_transition": "Review pass -> serial integration -> cherry-pick into the paused D-T01 shared worktree and resume its existing gate. Critical/Important finding -> one bounded repair and one focused rereview.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "d_t01_shared_registration_active",
+    "status": "d_t01_upstream_blockresult_repair_review_active",
     "last_reconciled": "2026-10-22",
-    "active_handoffs": ["/root/d_t01_shared_luna2", "/root/b_blockresult_id_luna"],
+    "active_handoffs": ["/root/d_t01_shared_luna2", "/root/b_blockresult_sol_review"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Replacement D-T01 shared work reached the real B-to-C-to-D gate and is paused with one failure: accepted public Stage-B BlockResult rows omit the frozen contract's required result_id. A separate isolated Luna-max worker is repairing the central Stage-B public finalization boundary; D will not invent an upstream identity. D-T01 remains unaccepted."
+    "disposition": "The bounded Stage-B BlockResult identity repair returned commit 05fc87c after B-T01 581/581, B-T02 208/208 and B-T07 216/216 passed. A fresh read-only Sol-high reviewer is auditing that immutable candidate. The replacement D-T01 shared worker remains paused with its changes preserved. D-T01 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "blockresult_identity_repair_returned_sol_review_dispatched",
+      "date": "2026-10-22",
+      "worker": "/root/b_blockresult_id_luna",
+      "reviewer": "/root/b_blockresult_sol_review",
+      "candidate_commit": "05fc87c1bb66148a08f1fbb4db1dbde9a3622e0f",
+      "changed_files": ["R/results_b.R", "tests/testthat/test-B-T01.R", "tests/testthat/test-B-T07.R"],
+      "worker_tests": "B-T01 FAIL 0, WARN 0, SKIP 0, PASS 581; B-T02 FAIL 0, WARN 0, SKIP 0, PASS 208; B-T07 FAIL 0, WARN 0, SKIP 0, PASS 216.",
+      "public_readback": "B-T02 CLI produced 20 rows with 20 unique lowercase 64-hex result_id values and consistent enclosing identity context.",
+      "separate_fixture_blocker": "The exact D-T01 Stage-B fixture exits 2 with B_DESIGN_EFFECT_UNIT before artifact emission because it declares slope_per_score_unit; no D file was changed by the upstream worker.",
+      "review_package": "/private/tmp/triomics-b-blockresult-review-package.diff",
+      "allowed_next_transition": "Review pass -> serial integration -> apply reviewed upstream fix to paused D-T01 shared worktree -> resume exact B/C/D gate. Critical/Important finding -> one bounded repair and one focused rereview.",
+      "disposition": "No private study data were used. The OpenCode DeepSeek and GLM free lanes remain unavailable after provider-quota 429 responses before edits."
+    },
     {
       "event": "d_t01_shared_gate_paused_for_upstream_blockresult_identity_repair",
       "date": "2026-10-22",
