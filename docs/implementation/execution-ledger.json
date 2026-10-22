@@ -48,16 +48,41 @@
       "worktree": "/Users/megastore/.codex/worktrees/d-t01-shared-registration-2/PML MultiOmics Analysis Pipeline",
       "allowed_next_transition": "Shared candidate -> fresh read-only Sol-high review -> bounded repair if needed -> serial integration and fresh exact B/C/D CLI read-back. Do not accept D-T01 or start D-T02/D-T03 before those gates pass.",
       "wait_cursor": null
+    },
+    {
+      "agent": "/root/b_blockresult_id_luna",
+      "role": "cross_stage_contract_repairer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "packet": "D-T01-upstream-BlockResult-contract",
+      "repair_attempt": 1,
+      "base_commit": "a50547f",
+      "worktree": "/Users/megastore/.codex/worktrees/b-blockresult-result-id/PML MultiOmics Analysis Pipeline",
+      "allowed_next_transition": "Repair result -> fresh read-only Sol-high cross-stage review -> serial integration if clean -> cherry-pick into the paused D-T01 shared worktree and resume its existing gate.",
+      "wait_cursor": null
     }
   ],
   "orchestration_control": {
     "status": "d_t01_shared_registration_active",
     "last_reconciled": "2026-10-22",
-    "active_handoffs": ["/root/d_t01_shared_luna2"],
+    "active_handoffs": ["/root/d_t01_shared_luna2", "/root/b_blockresult_id_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The first shared Luna worktree predated the current ledger and its host guard refused Stage D; both user-approved OpenCode free models then returned provider quota 429 before editing. A replacement isolated Luna-max worker is being created from the current canonical ledger snapshot. The packet commits remain integrated as d2db62d and 88f1591; D-T01 remains unaccepted."
+    "disposition": "Replacement D-T01 shared work reached the real B-to-C-to-D gate and is paused with one failure: accepted public Stage-B BlockResult rows omit the frozen contract's required result_id. A separate isolated Luna-max worker is repairing the central Stage-B public finalization boundary; D will not invent an upstream identity. D-T01 remains unaccepted."
   },
   "orchestration_events": [
+    {
+      "event": "d_t01_shared_gate_paused_for_upstream_blockresult_identity_repair",
+      "date": "2026-10-22",
+      "shared_worker": "/root/d_t01_shared_luna2",
+      "upstream_worker": "/root/b_blockresult_id_luna",
+      "shared_evidence": "FAIL 1, WARN 0, SKIP 0, PASS 175; packet subset PASS 131. Sole failure: real B block-results rows lack required result_id.",
+      "contract_ref": "discovery/spec-v2/DATA_CONTRACTS.md#4-statisticalclinical-results",
+      "upstream_base": "a50547f",
+      "upstream_worktree": "/Users/megastore/.codex/worktrees/b-blockresult-result-id/PML MultiOmics Analysis Pipeline",
+      "allowed_next_transition": "Fresh Sol-high review of the upstream repair -> serial integration -> apply reviewed fix to paused D shared worktree -> resume exact B/C/D gate. No D-side synthetic identity is permitted.",
+      "disposition": "The D worker is paused without a commit. Its existing shared and repair-2 changes are preserved; no private study data were used."
+    },
     {
       "event": "d_t01_shared_worker_recovery_after_guard_and_free_quota",
       "date": "2026-10-22",
@@ -3474,7 +3499,7 @@
       "blockers": []
     },
     "D-T01": {
-      "status": "packet_integrated_shared_registration_active",
+      "status": "shared_registration_paused_upstream_contract_repair_active",
       "attempts": 2,
       "commit": "88f1591",
       "candidate_commits": ["98bf4c54a52cb8bab7fd3824fabb88deda579a23", "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3"],

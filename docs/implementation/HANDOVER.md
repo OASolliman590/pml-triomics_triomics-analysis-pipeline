@@ -29,9 +29,13 @@ The first shared Luna worktree predated the current ledger and its host guard
 refused Stage D. Both approved OpenCode free models then returned provider-quota
 429 before editing. Replacement Luna-max worker `/root/d_t01_shared_luna2` is
 active from current-ledger snapshot `ae6762b` for the same exclusive exports,
-stage-registry, manual and CLI seam. D-T01 remains unaccepted until that diff is
-reviewed, integrated and the exact public synthetic B-to-C-to-D artifact chain
-is read back. No private study data were read or delegated.
+stage-registry, manual and CLI seam. Its exact B-to-C-to-D gate reached one real
+upstream failure: accepted public Stage-B BlockResult rows omit the frozen
+contract's required `result_id`. The D worker is paused with FAIL 1, WARN 0,
+SKIP 0, PASS 175 while `/root/b_blockresult_id_luna` repairs the central public
+Stage-B finalization boundary in a separate worktree. D will not invent an
+upstream identity. D-T01 remains unaccepted. No private study data were read or
+delegated.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
