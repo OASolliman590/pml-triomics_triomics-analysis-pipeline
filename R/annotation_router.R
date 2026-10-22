@@ -38,14 +38,24 @@ triomics_d_route_compatibility <- function(feature, source, route) {
   if (!identical(as.character(source$role), "measurement_matrix")) {
     return(list(compatible = FALSE, reason = "source_role_not_measurement_matrix"))
   }
+  if (!identical(as.character(feature$taxon_status), "declared")) {
+    return(list(compatible = FALSE, reason = "taxon_unknown"))
+  }
   if (!as.character(feature$id_namespace) %in% triomics_d_route_character_values(route$namespaces)) {
     return(list(compatible = FALSE, reason = "namespace_mismatch"))
   }
   if (!as.character(feature$taxon_id) %in% triomics_d_route_character_values(route$organisms)) {
     return(list(compatible = FALSE, reason = "organism_mismatch"))
   }
+  if (!identical(as.character(feature$capability_status), "declared")) {
+    return(list(compatible = FALSE, reason = "capability_unknown"))
+  }
   if (!as.character(feature$structural_resolution) %in% triomics_d_route_character_values(route$resolutions)) {
-    return(list(compatible = FALSE, reason = "molecular_resolution_mismatch"))
+    return(list(compatible = FALSE, reason = if (identical(as.character(feature$resolution_status), "unknown")) {
+      "molecular_resolution_unknown"
+    } else {
+      "molecular_resolution_mismatch"
+    }))
   }
   feature_capabilities <- triomics_d_route_character_values(feature$capabilities)
   required_capabilities <- triomics_d_route_character_values(route$capabilities)
@@ -56,61 +66,15 @@ triomics_d_route_compatibility <- function(feature, source, route) {
 }
 
 triomics_d_find_b_claim <- function(bundle, nomination) {
-  reference <- nomination$result_ref
-  block_id <- as.character(reference$block_id %||% "")
-  claim_id <- as.character(reference$claim_id %||% "")
-  claim <- NULL
-  for (record in bundle$tested_claims) {
-    if (identical(as.character(record$block_id), block_id) &&
-        identical(as.character(record$claim_id), claim_id)) {
-      claim <- record
-      break
-    }
-  }
-  if (is.null(claim) || !identical(as.character(claim$family$family_id), as.character(reference$family_id))) {
-    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "A B nomination does not resolve to its full tested family.",
-                     as.character(nomination$nomination_id))
-  }
-  family_record <- NULL
-  for (family in bundle$b$family_ledger$families) {
-    if (identical(as.character(family$block_id), block_id) &&
-        identical(as.character(family$claim_id), claim_id)) {
-      family_record <- family
-      break
-    }
-  }
-  if (is.null(family_record) ||
-      !identical(as.character(family_record$family$family_id), as.character(reference$family_id))) {
-    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "A B nomination is missing its registered family ledger entry.",
-                     as.character(nomination$nomination_id))
-  }
-  list(tested_rows = claim$rows, family = family_record$family, family_record = family_record)
+  resolved <- triomics_d_resolve_primary_nomination(
+    bundle$b$block_results, bundle$b$family_ledger, nomination, bundle$analysis_id
+  )
+  list(tested_rows = resolved$claim$rows, family = resolved$family_record$family,
+       family_record = resolved$family_record)
 }
 
 triomics_d_find_c_selection <- function(bundle, nomination) {
-  reference <- nomination$result_ref
-  integration_id <- as.character(reference$integration_id %||% "")
-  integrations <- bundle$c$integration_evidence$integrations
-  integration <- NULL
-  for (item in integrations) {
-    if (identical(as.character(item$integration_id), integration_id)) {
-      integration <- item
-      break
-    }
-  }
-  if (is.null(integration) || !identical(as.character(integration$status), "complete") ||
-      !is.list(integration$selection)) {
-    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "A C nomination does not resolve to complete native selection evidence.",
-                     as.character(nomination$nomination_id))
-  }
-  if (!is.null(reference$block_id) &&
-      !as.character(nomination$feature_key) %in% triomics_d_route_character_values(
-        integration$selection$selected[[as.character(reference$block_id)]]
-      )) {
-    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "A C nomination is absent from the selected feature map.",
-                     as.character(nomination$nomination_id))
-  }
-  list(selection = integration$selection, integration = integration)
+  triomics_d_resolve_integration_nomination(bundle$c$integration_evidence, nomination)
 }
 
 triomics_d_nomination_evidence <- function(bundle, nomination) {
@@ -204,9 +168,15 @@ triomics_d_route_evidence <- function(evidence_bundle, route_specs = list()) {
     preparation_context_id = evidence_bundle$preparation_context_id,
     representation_id = evidence_bundle$representation_id,
     interpretation = "no_biological_absence_inferred",
+    immutable_inputs = evidence_bundle$immutable_inputs,
     routes = routes,
     imported_evidence = evidence_bundle$imported_evidence,
     inherited_evidence = list(
+      b = evidence_bundle$b,
+      source_manifests = evidence_bundle$source_manifests,
+      feature_registry = evidence_bundle$feature_registry,
+      tested_claims = evidence_bundle$tested_claims,
+      measured_rows = evidence_bundle$measured_rows,
       integration_evidence = evidence_bundle$c$integration_evidence,
       integration_comparisons = evidence_bundle$c$integration_comparisons,
       evaluation_evidence = evidence_bundle$c$evaluation_evidence,
@@ -235,6 +205,42 @@ triomics_d_route_evidence <- function(evidence_bundle, route_specs = list()) {
   )
 }
 
+triomics_d_output_input_pairs <- function(provenance) {
+  required_b <- c("block_results", "family_ledger", "candidate_nominations")
+  if (!is.list(provenance) ||
+      !triomics_d_nonempty_string(provenance$b_bundle_artifact_id) ||
+      !triomics_sha256_text(as.character(provenance$b_bundle_sha256)) ||
+      !triomics_sha256_text(as.character(provenance$b_bundle_envelope_sha256)) ||
+      !is.list(provenance$b_artifacts) || !all(required_b %in% names(provenance$b_artifacts)) ||
+      !identical(as.character(provenance$c_manifest_artifact_id), "c06-handoff-manifest") ||
+      !triomics_sha256_text(as.character(provenance$c_manifest_sha256)) ||
+      !triomics_sha256_text(as.character(provenance$c_manifest_envelope_sha256))) {
+    triomics_d_abort("D_HANDOFF_INVALID", "D output requires complete immutable B/C payload and envelope references.",
+                     "immutable_inputs")
+  }
+  inputs <- list(
+    list(artifact_id = as.character(provenance$b_bundle_artifact_id),
+         sha256 = as.character(provenance$b_bundle_sha256))
+  )
+  for (name in required_b) {
+    artifact <- provenance$b_artifacts[[name]]
+    if (!is.list(artifact) || !triomics_d_nonempty_string(artifact$artifact_id) ||
+        !triomics_sha256_text(as.character(artifact$sha256)) ||
+        !triomics_sha256_text(as.character(artifact$envelope_sha256))) {
+      triomics_d_abort("D_HANDOFF_INVALID", "A B-T07 member lacks its immutable payload or envelope reference.",
+                       paste0("immutable_inputs.b_artifacts.", name))
+    }
+    inputs[[length(inputs) + 1L]] <- list(
+      artifact_id = as.character(artifact$artifact_id), sha256 = as.character(artifact$sha256)
+    )
+  }
+  inputs[[length(inputs) + 1L]] <- list(
+    artifact_id = as.character(provenance$c_manifest_artifact_id),
+    sha256 = as.character(provenance$c_manifest_sha256)
+  )
+  unname(inputs)
+}
+
 triomics_d_write_evidence_result <- function(result, output_root, config_sha256,
                                             producer_commit, privacy_class,
                                             run_id = "d-t01") {
@@ -254,45 +260,36 @@ triomics_d_write_evidence_result <- function(result, output_root, config_sha256,
     triomics_d_abort("D_OUTPUT_INVALID", "D output needs a typed result, local root, exact config hash, producer, and privacy class.",
                      "output_root")
   }
-  if (dir.exists(output_root) && triomics_is_symlink(output_root)) {
-    triomics_d_abort("D_OUTPUT_INVALID", "D output root cannot be a symlink.", "output_root")
-  }
-  if (!dir.exists(output_root)) dir.create(output_root, recursive = TRUE, showWarnings = FALSE)
-  root <- normalizePath(output_root, winslash = "/", mustWork = TRUE)
+  inputs <- triomics_d_output_input_pairs(result$immutable_inputs)
+  root <- triomics_d_secure_path(
+    output_root, "D_OUTPUT_INVALID", "D output root is invalid or crosses a symlink.",
+    "output_root", directory = TRUE
+  )
+  root <- triomics_d_create_directory_safely(
+    root, "D_OUTPUT_INVALID", "D output root could not be created safely.", "output_root"
+  )
   d_root <- file.path(root, "D")
-  if (dir.exists(d_root) && triomics_is_symlink(d_root)) {
-    triomics_d_abort("D_OUTPUT_INVALID", "D output directory cannot be a symlink.", "output_root")
-  }
-  if (!dir.exists(d_root)) dir.create(d_root, recursive = TRUE, showWarnings = FALSE)
+  d_root <- triomics_d_create_directory_safely(
+    d_root, "D_OUTPUT_INVALID", "D output directory could not be created safely.", "output_root"
+  )
   if (!dir.exists(d_root)) {
     triomics_d_abort("D_OUTPUT_INVALID", "The local D output directory could not be created.", "output_root")
   }
   payload <- result
   payload$config_sha256 <- as.character(config_sha256)
   payload$privacy_class <- as.character(privacy_class)
-  payload_path <- file.path(d_root, "evidence-routing.json")
-  envelope_path <- file.path(d_root, "evidence-routing.envelope.json")
+  payload_path <- triomics_d_secure_path(
+    file.path(d_root, "evidence-routing.json"), "D_OUTPUT_INVALID",
+    "D output payload path is invalid or crosses a symlink.", "output_root"
+  )
+  envelope_path <- triomics_d_secure_path(
+    file.path(d_root, "evidence-routing.envelope.json"), "D_OUTPUT_INVALID",
+    "D output envelope path is invalid or crosses a symlink.", "output_root"
+  )
+  if (dir.exists(payload_path) || dir.exists(envelope_path)) {
+    triomics_d_abort("D_OUTPUT_INVALID", "D output payload and envelope paths must be files.", "output_root")
+  }
   triomics_write_json_atomic(payload, payload_path)
-  provenance <- result$immutable_inputs %||% list()
-  inputs <- list()
-  if (triomics_sha256_text(as.character(provenance$b_bundle_sha256))) {
-    inputs[[length(inputs) + 1L]] <- list(artifact_id = "stage-b-public-bundle",
-                                         sha256 = as.character(provenance$b_bundle_sha256))
-  }
-  if (triomics_sha256_text(as.character(provenance$c_manifest_sha256))) {
-    inputs[[length(inputs) + 1L]] <- list(artifact_id = "c06-handoff-manifest",
-                                         sha256 = as.character(provenance$c_manifest_sha256))
-  }
-  for (name in names(provenance$b_artifacts %||% list())) {
-    artifact <- provenance$b_artifacts[[name]]
-    if (is.list(artifact) && triomics_d_nonempty_string(artifact$artifact_id) &&
-        triomics_sha256_text(as.character(artifact$sha256))) {
-      inputs[[length(inputs) + 1L]] <- list(
-        artifact_id = as.character(artifact$artifact_id),
-        sha256 = as.character(artifact$sha256)
-      )
-    }
-  }
   envelope <- triomics_artifact_envelope(
     artifact_type = "annotation_routing_result",
     artifact_id = "d-evidence-routing",

@@ -23,6 +23,117 @@ d_t01_nomination <- function(id, feature_key, source_branch, result_ref,
   )
 }
 
+d_t01_as_shared_input <- function(input) {
+  original_registry <- input$feature_registry
+  old_keys <- names(original_registry)
+  new_keys <- stats::setNames(vapply(old_keys, function(old_key) {
+    feature <- original_registry[[old_key]]
+    triomics_feature_key(input$study_id, feature$block_id, feature$source_row)
+  }, character(1)), old_keys)
+  remap_key <- function(value) {
+    value <- as.character(value)
+    if (!value %in% names(new_keys)) stop("Unknown synthetic feature key: ", value)
+    unname(new_keys[[value]])
+  }
+  remap_family <- function(family) {
+    family$member_ids <- lapply(family$member_ids, remap_key)
+    family$member_hash <- d_t01_hash(paste(unlist(family$member_ids, use.names = FALSE), collapse = "|"))
+    family
+  }
+  remap_nominations <- function(items) {
+    lapply(items, function(item) {
+      item$feature_key <- remap_key(item$feature_key)
+      item
+    })
+  }
+
+  input$b$block_results$preparation_context_id <- "prep_d_t01"
+  input$b$block_results$representation_id <- "levels"
+  for (block_id in names(input$b$block_results$blocks)) {
+    block <- input$b$block_results$blocks[[block_id]]
+    for (group_name in c("contrasts", "joint_claims")) {
+      claims <- block[[group_name]]
+      if (!is.list(claims)) next
+      for (claim_id in names(claims)) {
+        claim <- claims[[claim_id]]
+        claim$family <- remap_family(claim$family)
+        claim$rows <- lapply(claim$rows, function(row) {
+          row$feature_key <- remap_key(row$feature_key)
+          row
+        })
+        claims[[claim_id]] <- claim
+      }
+      block[[group_name]] <- claims
+    }
+    input$b$block_results$blocks[[block_id]] <- block
+  }
+  input$b$family_ledger$families <- lapply(input$b$family_ledger$families, function(record) {
+    record$family <- remap_family(record$family)
+    record
+  })
+  input$b$candidate_nominations$nominations <- remap_nominations(input$b$candidate_nominations$nominations)
+  input$c$candidate_nominations$branches$primary_statistics$nominations <- remap_nominations(
+    input$c$candidate_nominations$branches$primary_statistics$nominations
+  )
+  input$c$candidate_nominations$branches$integration_selection$nominations <- remap_nominations(
+    input$c$candidate_nominations$branches$integration_selection$nominations
+  )
+  input$c$candidate_nominations$nominations <- remap_nominations(input$c$candidate_nominations$nominations)
+  integration <- input$c$integration_evidence$integrations[[1]]
+  integration$selection$selected <- lapply(integration$selection$selected, function(ids) {
+    lapply(ids, remap_key)
+  })
+  integration$selection$selected_values <- lapply(integration$selection$selected_values, function(values) {
+    names(values) <- vapply(names(values), remap_key, character(1))
+    values
+  })
+  input$c$integration_evidence$integrations[[1]] <- integration
+
+  registry_rows <- lapply(old_keys, function(old_key) {
+    feature <- original_registry[[old_key]]
+    data.frame(
+      study_id = input$study_id,
+      block_id = feature$block_id,
+      feature_key = unname(new_keys[[old_key]]),
+      original_id = old_key,
+      id_namespace = feature$id_namespace,
+      source_id = feature$source_id,
+      source_row = feature$source_row,
+      measured_or_derived = feature$measured_or_derived,
+      quantity = "intensity",
+      scale = "linear",
+      units = "synthetic_arbitrary_units",
+      structural_resolution = "unknown",
+      alias_refs = "",
+      parent_refs = "",
+      annotation_route = if (grepl("^gene_", old_key)) "gene_reaction" else "lipid_ontology",
+      stringsAsFactors = FALSE
+    )
+  })
+  input$feature_registry <- do.call(rbind, registry_rows)
+  rownames(input$feature_registry) <- NULL
+  input$routing_metadata <- stats::setNames(lapply(old_keys, function(old_key) {
+    feature <- original_registry[[old_key]]
+    list(
+      taxon = list(status = "declared", value = feature$taxon_id,
+                   provenance_ref = "synthetic://d-t01/taxon"),
+      capabilities = list(status = "declared", value = unname(unlist(feature$capabilities)),
+                           provenance_ref = "synthetic://d-t01/capabilities"),
+      resolution = list(status = "declared", value = feature$structural_resolution,
+                        provenance_ref = "synthetic://d-t01/resolution")
+    )
+  }), unname(new_keys))
+  input
+}
+
+d_t01_key <- function(label) {
+  source_rows <- c(gene_a = "protein-row-a", gene_b = "protein-row-b",
+                   lipid_a = "lipid-row-a", lipid_b = "lipid-row-b")
+  block_ids <- c(gene_a = "proteome", gene_b = "proteome",
+                 lipid_a = "lipidome", lipid_b = "lipidome")
+  triomics_feature_key("synthetic-d-t01", block_ids[[label]], source_rows[[label]])
+}
+
 d_t01_input <- function() {
   study_id <- "synthetic-d-t01"
   analysis_id <- "analysis-d-t01"
@@ -30,7 +141,8 @@ d_t01_input <- function() {
     "gene-nomination", "gene_a", "primary_statistics",
     list(analysis_id = analysis_id, block_id = "proteome", claim_id = "contrast_1",
          family_id = "family_1"),
-    "qualified_q_and_effect_thresholds", list(p = 0.01, q = 0.02, effect = 1.5),
+    "valid_q_at_or_below_threshold_and_absolute_effect_at_or_above_reporting_threshold",
+    list(p = 0.01, q = 0.02, effect = 1.5, effect_unit = "group_difference"),
     q_threshold = 0.05, effect_threshold = 1
   )
   lipid_nomination <- d_t01_nomination(
@@ -41,9 +153,9 @@ d_t01_input <- function() {
   )
   gene_rows <- list(
     list(result_id = "result_gene_a", feature_key = "gene_a", effect = 1.5, p = 0.01,
-         q = 0.02, estimation_status = "estimated"),
+         q = 0.02, effect_unit = "group_difference", estimation_status = "estimated"),
     list(result_id = "result_gene_b", feature_key = "gene_b", effect = 0.1, p = 0.8,
-         q = 0.9, estimation_status = "estimated")
+         q = 0.9, effect_unit = "group_difference", estimation_status = "estimated")
   )
   lipid_rows <- list(
     list(result_id = "result_lipid_a", feature_key = "lipid_a", effect = -0.4, p = 0.2,
@@ -69,6 +181,7 @@ d_t01_input <- function() {
   )
   integration <- list(
     integration_id = "integration_1", backend = "mixomics_diablo", status = "complete",
+    common = list(scores = list(columns = list("comp_1"))),
     eligibility = list(source_roles = list(
       proteome = list(status = "supplied", value = list("measurement_matrix")),
       lipidome = list(status = "supplied", value = list("measurement_matrix"))
@@ -82,7 +195,7 @@ d_t01_input <- function() {
       ))
     )
   )
-  list(
+  input <- list(
     study_id = study_id,
     analysis_id = analysis_id,
     source_manifests = list(
@@ -110,7 +223,8 @@ d_t01_input <- function() {
     b = list(
       block_results = list(
         schema_version = "2.0", artifact_type = "block_results", study_id = study_id,
-        analysis_id = analysis_id, status = "complete",
+        analysis_id = analysis_id, preparation_context_id = "prep_d_t01",
+        representation_id = "levels", status = "complete",
         blocks = list(
           proteome = list(contrasts = list(contrast_1 = list(family = gene_family, rows = gene_rows))),
           lipidome = list(contrasts = list(contrast_1 = list(
@@ -145,7 +259,8 @@ d_t01_input <- function() {
       ),
       evaluation_evidence = list(
         artifact_type = "integration_evaluation_evidence", study_id = study_id,
-        analysis_id = analysis_id, status = "partial",
+        analysis_id = analysis_id, preparation_context_id = "prep_d_t01",
+        representation_id = "levels", status = "partial",
         controls = lapply(c("null", "weak_signal", "strong_signal", "adversarial"), function(control) {
           list(control = control, status = "not_run",
                candidate = list(status = "not_run", method = "not_selected", metrics = NULL),
@@ -154,6 +269,7 @@ d_t01_input <- function() {
       ),
       stage_status = list(
         artifact_type = "stage_c_status", study_id = study_id, analysis_id = analysis_id,
+        preparation_context_id = "prep_d_t01", representation_id = "levels",
         status = "partial", clinical_prediction = list(status = "not_started",
           completion_policy = "conditional", packet_id = "C-09")
       )
@@ -163,6 +279,7 @@ d_t01_input <- function() {
       p = 0.001, q = 0.002, effect = 99, source_ref = "local-synthetic-reference"
     ))
   )
+  d_t01_as_shared_input(input)
 }
 
 d_t01_routes <- function(enabled) {
@@ -244,13 +361,13 @@ d_t01_write_b_handoff <- function(output_root, input) {
   handoff_dir <- file.path(b_dir, "handoffs", "synthetic-d-t01-cache")
   dir.create(handoff_dir, recursive = TRUE, showWarnings = FALSE)
   config_hash <- d_t01_hash("d-t01-config")
-  write_artifact <- function(value, path, type, id) {
+  write_artifact <- function(value, path, type, id, inputs = list()) {
     triomics_write_json_atomic(value, path)
     envelope_path <- sub("[.]json$", ".envelope.json", path)
     envelope <- triomics_artifact_envelope(
       artifact_type = type, artifact_id = id, study_id = input$study_id,
       run_id = "b-t07", status = value$status, config_sha256 = config_hash,
-      payload = path, producer_commit = "synthetic-test", inputs = list(),
+      payload = path, producer_commit = "synthetic-test", inputs = inputs,
       privacy_class = "synthetic"
     )
     triomics_write_envelope(envelope, envelope_path)
@@ -260,10 +377,12 @@ d_t01_write_b_handoff <- function(output_root, input) {
   block <- write_artifact(input$b$block_results, file.path(b_dir, "block-results.json"),
                           "block_results", "stage-b-block-results")
   family <- write_artifact(input$b$family_ledger, file.path(handoff_dir, "family-ledger.json"),
-                           "family_ledger", "b-t07-family-ledger")
+                           "family_ledger", "b-t07-family-ledger",
+                           list(list(artifact_id = "stage-b-block-results", sha256 = block$sha256)))
   nominations <- write_artifact(input$b$candidate_nominations,
                                 file.path(handoff_dir, "candidate-nominations.json"),
-                                "candidate_nominations", "b-t07-candidate-nominations")
+                                "candidate_nominations", "b-t07-candidate-nominations",
+                                list(list(artifact_id = "stage-b-block-results", sha256 = block$sha256)))
   output_relative <- function(path) substring(normalizePath(path),
                                                nchar(normalizePath(output_root)) + 2L)
   members <- list(
@@ -280,12 +399,15 @@ d_t01_write_b_handoff <- function(output_root, input) {
   bundle_path <- file.path(handoff_dir, "bundle.json")
   bundle <- list(
     schema_version = "2.0", artifact_type = "stage_b_public_bundle",
+    artifact_id = "b-t07-bundle",
     study_id = input$study_id, analysis_id = input$analysis_id,
+    preparation_context_id = input$b$block_results$preparation_context_id,
+    representation_id = input$b$block_results$representation_id,
     status = "complete", cache_key = d_t01_hash("synthetic-d-t01-cache"), members = members
   )
   triomics_write_json_atomic(bundle, bundle_path)
   envelope <- triomics_artifact_envelope(
-    artifact_type = "stage_b_public_bundle", artifact_id = "b-t07-bundle",
+    artifact_type = "stage_b_public_bundle", artifact_id = bundle$artifact_id,
     study_id = input$study_id, run_id = "b-t07", status = "complete",
     config_sha256 = config_hash, payload = bundle_path, producer_commit = "synthetic-test",
     inputs = list(), reason_codes = character(), privacy_class = "synthetic"
@@ -297,6 +419,17 @@ d_t01_write_b_handoff <- function(output_root, input) {
   )
 }
 
+d_t01_public_bundle <- function(root, input, routing_metadata = NULL) {
+  b_handoff <- d_t01_write_b_handoff(root, input)
+  input$c$candidate_nominations$branches$primary_statistics$source_artifact_ref <- b_handoff$candidate_ref
+  d_t01_write_c06_handoff(file.path(root, "D"), input)
+  arguments <- list(root, input$study_id, input$analysis_id, input$source_manifests,
+                    input$feature_registry, input$imported_statistics)
+  routing_metadata <- routing_metadata %||% input$routing_metadata
+  if (!is.null(routing_metadata)) arguments[[length(arguments) + 1L]] <- routing_metadata
+  d_t01_invoke("triomics_d_read_evidence_bundle", arguments)
+}
+
 testthat::test_that("D-T01 routes B and C nominations by molecular identity and keeps their full evidence", {
   bundle <- d_t01_invoke("triomics_d_build_evidence_bundle", list(d_t01_input()))
   testthat::expect_true(is.list(bundle))
@@ -305,21 +438,23 @@ testthat::test_that("D-T01 routes B and C nominations by molecular identity and 
   routed <- d_t01_invoke("triomics_d_route_evidence", list(bundle, d_t01_routes(TRUE)))
   testthat::expect_true(is.list(routed))
   if (!is.list(routed)) return(invisible(NULL))
-  testthat::expect_setequal(vapply(routed$routes$gene_reaction$nominations, `[[`, character(1), "feature_key"), "gene_a")
-  testthat::expect_setequal(vapply(routed$routes$lipid_ontology$nominations, `[[`, character(1), "feature_key"), "lipid_a")
+  testthat::expect_setequal(vapply(routed$routes$gene_reaction$nominations, `[[`, character(1), "feature_key"), d_t01_key("gene_a"))
+  testthat::expect_setequal(vapply(routed$routes$lipid_ontology$nominations, `[[`, character(1), "feature_key"), d_t01_key("lipid_a"))
   testthat::expect_identical(routed$routes$gene_reaction$nominations[[1]]$source_branch, "primary_statistics")
   testthat::expect_identical(routed$routes$lipid_ontology$nominations[[1]]$source_branch, "integration_selection")
   testthat::expect_length(routed$routes$gene_reaction$nominations[[1]]$evidence$tested_rows, 2L)
   testthat::expect_identical(routed$routes$gene_reaction$nominations[[1]]$evidence$family$member_ids,
-                             list("gene_a", "gene_b"))
+                             list(d_t01_key("gene_a"), d_t01_key("gene_b")))
   testthat::expect_true("selection_value" %in% names(routed$routes$gene_reaction$nominations[[1]]$evidence$nomination))
   testthat::expect_identical(routed$routes$lipid_ontology$nominations[[1]]$evidence$selection$selected,
-                             list(lipidome = list("lipid_a", "lipid_b")))
+                             list(lipidome = list(d_t01_key("lipid_a"), d_t01_key("lipid_b"))))
   testthat::expect_identical(routed$study_id, "synthetic-d-t01")
 })
 
 testthat::test_that("D-T01 all-disabled routes retain accounting without making absence or enrichment claims", {
-  bundle <- d_t01_invoke("triomics_d_build_evidence_bundle", list(d_t01_input()))
+  root <- tempfile("d-t01-accounting-input-")
+  on.exit(unlink(root, recursive = TRUE), add = TRUE)
+  bundle <- d_t01_public_bundle(root, d_t01_input())
   testthat::expect_true(is.list(bundle))
   if (!is.list(bundle)) return(invisible(NULL))
   routed <- d_t01_invoke("triomics_d_route_evidence", list(bundle, d_t01_routes(FALSE)))
@@ -337,8 +472,7 @@ testthat::test_that("D-T01 all-disabled routes retain accounting without making 
   testthat::expect_identical(routed$inherited_evidence$evaluation_evidence$controls[[1]]$status, "not_run")
   testthat::expect_identical(routed$inherited_evidence$stage_status$clinical_prediction$status, "not_started")
 
-  output_root <- tempfile("d-t01-accounting-output-")
-  on.exit(unlink(output_root, recursive = TRUE), add = TRUE)
+  output_root <- file.path(root, "accounting-output")
   written <- d_t01_invoke("triomics_d_write_evidence_result", list(
     routed, output_root, d_t01_hash("d-t01-config"), "synthetic-test", "synthetic"
   ))
@@ -525,7 +659,7 @@ testthat::test_that("D-T01 resolves the exact B artifact named by the C-06 immut
   if (!is.list(b_handoff)) return(invisible(NULL))
   testthat::expect_identical(b_handoff$block_results$study_id, input$study_id)
   testthat::expect_identical(b_handoff$family_ledger$families[[1]]$family$member_ids,
-                             list("gene_a", "gene_b"))
+                             list(d_t01_key("gene_a"), d_t01_key("gene_b")))
   testthat::expect_identical(b_handoff$candidate_nominations$nominations[[1]]$nomination_id,
                              input$b$candidate_nominations$nominations[[1]]$nomination_id)
 
@@ -545,4 +679,239 @@ testthat::test_that("D-T01 resolves the exact B artifact named by the C-06 immut
   testthat::expect_error(d_t01_invoke("triomics_d_read_b_handoff", list(
     root, wrong_ref, input$study_id, input$analysis_id
   )), class = "triomics_error")
+})
+
+testthat::test_that("D-T01 preserves exact immutable input hashes through public routing and output", {
+  root <- tempfile("d-t01-public-lineage-")
+  on.exit(unlink(root, recursive = TRUE), add = TRUE)
+  input <- d_t01_input()
+  bundle <- d_t01_public_bundle(root, input)
+  testthat::expect_true(is.list(bundle$immutable_inputs))
+  if (!is.list(bundle$immutable_inputs)) return(invisible(NULL))
+
+  routed <- d_t01_invoke("annotate_evidence", list(bundle, list(routes = d_t01_routes(FALSE))))
+  testthat::expect_identical(routed$immutable_inputs, bundle$immutable_inputs)
+  output_root <- file.path(root, "D-result")
+  written <- d_t01_invoke("triomics_d_write_evidence_result", list(
+    routed, output_root, d_t01_hash("d-t01-config"), "synthetic-test", "synthetic"
+  ))
+  testthat::expect_true(is.list(written))
+  if (!is.list(written)) return(invisible(NULL))
+  payload <- jsonlite::read_json(written$payload_path, simplifyVector = FALSE)
+  envelope <- jsonlite::read_json(written$envelope_path, simplifyVector = FALSE)
+  expected_inputs <- list(
+    list(artifact_id = "b-t07-bundle", sha256 = bundle$immutable_inputs$b_bundle_sha256),
+    list(artifact_id = "stage-b-block-results", sha256 = bundle$immutable_inputs$b_artifacts$block_results$sha256),
+    list(artifact_id = "b-t07-family-ledger", sha256 = bundle$immutable_inputs$b_artifacts$family_ledger$sha256),
+    list(artifact_id = "b-t07-candidate-nominations", sha256 = bundle$immutable_inputs$b_artifacts$candidate_nominations$sha256),
+    list(artifact_id = "c06-handoff-manifest", sha256 = bundle$immutable_inputs$c_manifest_sha256)
+  )
+  testthat::expect_identical(payload$immutable_inputs, bundle$immutable_inputs)
+  testthat::expect_identical(envelope$inputs, expected_inputs)
+  testthat::expect_true(triomics_validate_envelope(written$envelope_path))
+})
+
+testthat::test_that("D-T01 disabled output retains failed and nonnominated B evidence", {
+  root <- tempfile("d-t01-full-b-evidence-")
+  on.exit(unlink(root, recursive = TRUE), add = TRUE)
+  input <- d_t01_input()
+  failed_family <- list(
+    family_id = "family_failed_nonnominated", member_ids = list(d_t01_key("gene_b")), n_declared = 1L,
+    dispositions = list(failed = 1L), member_hash = d_t01_hash(d_t01_key("gene_b"))
+  )
+  failed_claim <- list(
+    family = failed_family,
+    rows = list(list(result_id = "result_gene_b_failed", feature_key = d_t01_key("gene_b"),
+                     estimation_status = "failed", reason = "synthetic_not_estimable"))
+  )
+  input$b$block_results$blocks$proteome$contrasts$contrast_failed <- failed_claim
+  input$b$family_ledger$families[[3]] <- list(
+    block_id = "proteome", claim_id = "contrast_failed", family = failed_family
+  )
+  bundle <- d_t01_public_bundle(root, input)
+  routed <- d_t01_invoke("annotate_evidence", list(bundle, list(routes = d_t01_routes(FALSE))))
+  testthat::expect_true(is.list(routed$inherited_evidence$b))
+  if (!is.list(routed$inherited_evidence$b)) return(invisible(NULL))
+  testthat::expect_true("contrast_failed" %in% names(
+    routed$inherited_evidence$b$block_results$blocks$proteome$contrasts
+  ))
+  written <- d_t01_invoke("triomics_d_write_evidence_result", list(
+    routed, file.path(root, "D-result"), d_t01_hash("d-t01-config"), "synthetic-test", "synthetic"
+  ))
+  payload <- jsonlite::read_json(written$payload_path, simplifyVector = FALSE)
+  failed <- payload$inherited_evidence$b$block_results$blocks$proteome$contrasts$contrast_failed
+  testthat::expect_identical(failed$family$family_id, "family_failed_nonnominated")
+  testthat::expect_identical(failed$rows[[1]]$result_id, "result_gene_b_failed")
+  testthat::expect_identical(failed$rows[[1]]$estimation_status, "failed")
+})
+
+testthat::test_that("D-T01 reconciles canonical nomination bodies and producer-selected values", {
+  flattened_feature <- d_t01_input()
+  flattened_feature$c$candidate_nominations$nominations[[1]]$feature_key <- d_t01_key("gene_b")
+  testthat::expect_error(d_t01_invoke("triomics_d_build_evidence_bundle", list(flattened_feature)),
+                         class = "triomics_error")
+
+  flattened_stat <- d_t01_input()
+  flattened_stat$c$candidate_nominations$nominations[[1]]$selection_value$effect <- 99
+  testthat::expect_error(d_t01_invoke("triomics_d_build_evidence_bundle", list(flattened_stat)),
+                         class = "triomics_error")
+
+  branch_mismatch <- d_t01_input()
+  branch_mismatch$c$candidate_nominations$branches$primary_statistics$nominations[[1]]$feature_key <- d_t01_key("gene_b")
+  testthat::expect_error(d_t01_invoke("triomics_d_build_evidence_bundle", list(branch_mismatch)),
+                         class = "triomics_error")
+
+  primary_consistent_tamper <- d_t01_input()
+  forged_primary <- primary_consistent_tamper$c$candidate_nominations$branches$primary_statistics$nominations[[1]]
+  forged_primary$feature_key <- d_t01_key("gene_b")
+  forged_primary$selection_value$effect <- 99
+  primary_consistent_tamper$c$candidate_nominations$branches$primary_statistics$nominations[[1]] <- forged_primary
+  primary_consistent_tamper$c$candidate_nominations$nominations[[1]] <- forged_primary
+  testthat::expect_error(d_t01_invoke("triomics_d_build_evidence_bundle", list(primary_consistent_tamper)),
+                         class = "triomics_error")
+
+  integration_body <- d_t01_input()
+  integration_body$c$candidate_nominations$branches$integration_selection$nominations[[1]]$selection_value$component_loadings$comp_1 <- 99
+  testthat::expect_error(d_t01_invoke("triomics_d_build_evidence_bundle", list(integration_body)),
+                         class = "triomics_error")
+
+  integration_consistent_tamper <- d_t01_input()
+  forged_integration <- integration_consistent_tamper$c$candidate_nominations$branches$integration_selection$nominations[[1]]
+  forged_integration$selection_value$component_loadings$comp_1 <- 99
+  integration_consistent_tamper$c$candidate_nominations$branches$integration_selection$nominations[[1]] <- forged_integration
+  integration_consistent_tamper$c$candidate_nominations$nominations[[2]] <- forged_integration
+  testthat::expect_error(d_t01_invoke("triomics_d_build_evidence_bundle", list(integration_consistent_tamper)),
+                         class = "triomics_error")
+
+  integration_value <- d_t01_input()
+  integration_value$c$integration_evidence$integrations[[1]]$selection$selected_values$lipidome[[d_t01_key("lipid_a")]]$component_loadings$comp_1 <- 0.9
+  testthat::expect_error(d_t01_invoke("triomics_d_build_evidence_bundle", list(integration_value)),
+                         class = "triomics_error")
+})
+
+testthat::test_that("D-T01 refuses B evidence with missing or conflicting preparation lineage", {
+  mismatch_root <- tempfile("d-t01-b-context-mismatch-")
+  on.exit(unlink(mismatch_root, recursive = TRUE), add = TRUE)
+  mismatch <- d_t01_input()
+  mismatch$b$block_results$preparation_context_id <- "different-b-preparation"
+  mismatch$b$block_results$representation_id <- "delta"
+  testthat::expect_error(d_t01_public_bundle(mismatch_root, mismatch), class = "triomics_error")
+
+  missing_root <- tempfile("d-t01-b-context-missing-")
+  on.exit(unlink(missing_root, recursive = TRUE), add = TRUE)
+  missing <- d_t01_input()
+  missing$b$block_results$preparation_context_id <- NULL
+  missing$b$block_results$representation_id <- NULL
+  testthat::expect_error(d_t01_public_bundle(missing_root, missing), class = "triomics_error")
+})
+
+testthat::test_that("D-T01 rejects cache and output paths traversing symlink ancestors", {
+  root <- tempfile("d-t01-path-boundary-")
+  dir.create(root)
+  on.exit(unlink(root, recursive = TRUE), add = TRUE)
+  allowed <- file.path(root, "allowed")
+  outside <- file.path(root, "outside")
+  dir.create(allowed)
+  dir.create(outside)
+  resource_file <- file.path(root, "reference.tsv")
+  writeLines(c("source_id\ttarget_id", "gene_a\tR1"), resource_file)
+  content_hash <- triomics_sha256(resource_file)
+  resource <- list(
+    resource_id = "fixture-path-map", version = "2026.1", sha256 = content_hash,
+    source_url = "local://synthetic-path-map", local_file = resource_file,
+    terms_url = "local://synthetic-fixture", rights_status = "verified",
+    permitted_operation = list("gene_reaction"), redistribution = "prohibited"
+  )
+  primed <- d_t01_invoke("triomics_d_resource_access", list(
+    resource, "gene_reaction", "2026.1", content_hash, file.path(outside, "cache"), "offline"
+  ))
+  testthat::expect_identical(primed$status, "available")
+  link <- file.path(allowed, "escape")
+  testthat::expect_true(file.symlink(outside, link))
+  testthat::expect_error(d_t01_invoke("triomics_d_resource_access", list(
+    resource, "gene_reaction", "2026.1", content_hash, file.path(link, "cache"), "offline"
+  )), class = "triomics_error")
+  miss_resource <- resource
+  miss_resource$resource_id <- "fixture-path-map-second-operation"
+  testthat::expect_error(d_t01_invoke("triomics_d_resource_access", list(
+    miss_resource, "gene_reaction", "2026.1", content_hash, file.path(link, "cache"), "offline"
+  )), class = "triomics_error")
+  testthat::expect_error(d_t01_invoke("triomics_d_resource_access", list(
+    resource, "gene_reaction", "2026.1", content_hash,
+    file.path(allowed, "..", "outside", "traversal-cache"), "offline"
+  )), class = "triomics_error")
+
+  handoff_root <- file.path(root, "handoff")
+  result_bundle <- d_t01_public_bundle(handoff_root, d_t01_input())
+  routed <- d_t01_invoke("triomics_d_route_evidence", list(result_bundle, d_t01_routes(FALSE)))
+  testthat::expect_error(d_t01_invoke("triomics_d_write_evidence_result", list(
+    routed, file.path(link, "written"), d_t01_hash("d-t01-config"), "synthetic-test", "synthetic"
+  )), class = "triomics_error")
+  testthat::expect_false(file.exists(file.path(outside, "written", "D", "evidence-routing.json")))
+  testthat::expect_error(d_t01_invoke("triomics_d_write_evidence_result", list(
+    routed, file.path(allowed, "..", "outside", "traversal-output"),
+    d_t01_hash("d-t01-config"), "synthetic-test", "synthetic"
+  )), class = "triomics_error")
+})
+
+testthat::test_that("D-T01 separates tested results from unique measured features across contrasts", {
+  input <- d_t01_input()
+  repeated_family <- list(
+    family_id = "family_repeat", member_ids = list(d_t01_key("gene_a")), n_declared = 1L,
+    dispositions = list(estimated = 1L), member_hash = d_t01_hash(d_t01_key("gene_a"))
+  )
+  repeated_row <- input$b$block_results$blocks$proteome$contrasts$contrast_1$rows[[1]]
+  repeated_row$result_id <- "result_gene_a_contrast_2"
+  input$b$block_results$blocks$proteome$contrasts$contrast_2 <- list(
+    family = repeated_family, rows = list(repeated_row)
+  )
+  input$b$family_ledger$families[[3]] <- list(
+    block_id = "proteome", claim_id = "contrast_2", family = repeated_family
+  )
+  bundle <- d_t01_invoke("triomics_d_build_evidence_bundle", list(input))
+  testthat::expect_identical(bundle$accounting$tested_result_count, 4L)
+  testthat::expect_identical(bundle$accounting$measured_row_count, 3L)
+  testthat::expect_length(bundle$tested_claims, 3L)
+})
+
+testthat::test_that("D-T01 adapts the shared A feature registry without inventing route metadata", {
+  input <- d_t01_input()
+  bundle <- tryCatch(d_t01_invoke("triomics_d_build_evidence_bundle", list(input)),
+                     error = function(error) error)
+  testthat::expect_false(inherits(bundle, "error"))
+  if (inherits(bundle, "error")) return(invisible(NULL))
+  feature_key <- triomics_feature_key(input$study_id, "proteome", "protein-row-a")
+  feature <- bundle$feature_registry[[feature_key]]
+  testthat::expect_identical(feature$study_id, input$study_id)
+  testthat::expect_identical(feature$block_id, "proteome")
+  testthat::expect_identical(feature$source_row, "protein-row-a")
+  testthat::expect_identical(feature$taxon_status, "declared")
+  testthat::expect_true("feature_registry_row" %in% names(feature$provenance))
+
+  unknown <- input
+  unknown$routing_metadata <- NULL
+  unknown_bundle <- d_t01_invoke("triomics_d_build_evidence_bundle", list(unknown))
+  unknown_feature <- unknown_bundle$feature_registry[[feature_key]]
+  testthat::expect_identical(unknown_feature$taxon_status, "unknown")
+  testthat::expect_identical(unknown_feature$capability_status, "unknown")
+  testthat::expect_identical(unknown_feature$resolution_status, "unknown")
+  routed_unknown <- d_t01_invoke("triomics_d_route_evidence", list(unknown_bundle, d_t01_routes(TRUE)))
+  testthat::expect_identical(routed_unknown$routes$gene_reaction$candidate_count, 0L)
+  testthat::expect_true(any(vapply(routed_unknown$incompatible_nominations, function(item) {
+    identical(item$reason_code, "taxon_unknown")
+  }, logical(1))))
+
+  mixed <- input
+  mixed$feature_registry$study_id[[1]] <- "another-study"
+  testthat::expect_error(d_t01_invoke("triomics_d_build_evidence_bundle", list(mixed)),
+                         class = "triomics_error")
+  invalid_key <- input
+  invalid_key$feature_registry$feature_key[[1]] <- "gene_a"
+  testthat::expect_error(d_t01_invoke("triomics_d_build_evidence_bundle", list(invalid_key)),
+                         class = "triomics_error")
+
+  malformed_metadata <- input
+  malformed_metadata$routing_metadata[[feature_key]]$taxon$status <- c("declared", "unknown")
+  testthat::expect_error(d_t01_invoke("triomics_d_build_evidence_bundle", list(malformed_metadata)),
+                         class = "triomics_error")
 })

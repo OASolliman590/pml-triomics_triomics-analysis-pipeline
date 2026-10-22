@@ -5,19 +5,79 @@ triomics_d_resource_abort <- function(code, message, key = NULL) {
   )
 }
 
-triomics_d_resource_cache_path <- function(cache_dir, cache_key) {
-  cache_parts <- if (triomics_d_nonempty_string(cache_dir)) {
-    strsplit(cache_dir, "[/\\\\]+")[[1L]]
+triomics_d_secure_path <- function(path, code, message, key, directory = FALSE) {
+  if (!triomics_d_nonempty_string(path)) {
+    triomics_d_abort(code, message, key)
+  }
+  path <- path.expand(path)
+  if (grepl("(^|[/\\\\])\\.\\.([/\\\\]|$)", path)) {
+    triomics_d_abort(code, message, key)
+  }
+  raw_temp <- sub("[/\\\\]+$", "", tempdir())
+  temp_prefix <- paste0(raw_temp, "/")
+  if (identical(path, raw_temp) || startsWith(path, temp_prefix)) {
+    canonical_temp <- normalizePath(raw_temp, winslash = "/", mustWork = TRUE)
+    suffix <- if (identical(path, raw_temp)) "" else substring(path, nchar(raw_temp) + 1L)
+    current <- canonical_temp
+    parts <- strsplit(suffix, "[/\\\\]+")[[1L]]
   } else {
-    character()
+    absolute <- if (grepl("^(?:[A-Za-z]:[/\\\\]|/|\\\\)", path)) path else file.path(getwd(), path)
+    if (grepl("^[A-Za-z]:[/\\\\]", absolute)) {
+      current <- substr(absolute, 1L, 2L)
+      suffix <- substring(absolute, 3L)
+    } else {
+      current <- "/"
+      suffix <- absolute
+    }
+    parts <- strsplit(suffix, "[/\\\\]+")[[1L]]
   }
-  if (!triomics_d_nonempty_string(cache_dir) || any(cache_parts == "..")) {
-    triomics_d_resource_abort("D_RESOURCE_CACHE_INVALID", "The local resource cache path is invalid.", "cache_dir")
+  parts <- parts[nzchar(parts) & parts != "."]
+  for (index in seq_along(parts)) {
+    current <- file.path(current, parts[[index]])
+    if (triomics_is_symlink(current)) {
+      triomics_d_abort(code, message, key)
+    }
+    if (file.exists(current) && index < length(parts) && !dir.exists(current)) {
+      triomics_d_abort(code, message, key)
+    }
   }
-  if (dir.exists(cache_dir) && triomics_is_symlink(cache_dir)) {
-    triomics_d_resource_abort("D_RESOURCE_CACHE_INVALID", "The local resource cache cannot be a symlink.", "cache_dir")
+  if (directory && file.exists(current) && !dir.exists(current)) {
+    triomics_d_abort(code, message, key)
   }
-  file.path(cache_dir, paste0(cache_key, ".resource"))
+  if (file.exists(current) || dir.exists(current)) {
+    normalizePath(current, winslash = "/", mustWork = TRUE)
+  } else {
+    current
+  }
+}
+
+triomics_d_create_directory_safely <- function(path, code, message, key) {
+  safe_path <- triomics_d_secure_path(path, code, message, key, directory = TRUE)
+  if (dir.exists(safe_path)) return(safe_path)
+  parts <- strsplit(safe_path, "[/\\\\]+")[[1L]]
+  parts <- parts[nzchar(parts)]
+  current <- if (grepl("^[A-Za-z]:[/\\\\]", safe_path)) substr(safe_path, 1L, 2L) else "/"
+  if (grepl("^[A-Za-z]:[/\\\\]", safe_path)) parts <- parts[-1L]
+  for (part in parts) {
+    current <- file.path(current, part)
+    current <- triomics_d_secure_path(current, code, message, key, directory = TRUE)
+    if (!dir.exists(current) && !dir.create(current, recursive = FALSE, showWarnings = FALSE) &&
+        !dir.exists(current)) {
+      triomics_d_abort(code, message, key)
+    }
+    if (triomics_is_symlink(current) || !dir.exists(current)) {
+      triomics_d_abort(code, message, key)
+    }
+  }
+  normalizePath(safe_path, winslash = "/", mustWork = TRUE)
+}
+
+triomics_d_resource_cache_path <- function(cache_dir, cache_key) {
+  safe_cache_dir <- triomics_d_secure_path(
+    cache_dir, "D_RESOURCE_CACHE_INVALID", "The local resource cache path is invalid or crosses a symlink.",
+    "cache_dir", directory = TRUE
+  )
+  file.path(safe_cache_dir, paste0(cache_key, ".resource"))
 }
 
 triomics_d_resource_manifest <- function(resource, operation, status, cache_status,
@@ -83,6 +143,10 @@ triomics_d_resource_access <- function(resource, operation, expected_version,
     sha256 = as.character(expected_sha256), operation = operation
   )))
   cache_path <- triomics_d_resource_cache_path(cache_dir, cache_key)
+  cache_path <- triomics_d_secure_path(
+    cache_path, "D_RESOURCE_CACHE_INVALID", "The local resource cache path is invalid or crosses a symlink.",
+    "cache_dir"
+  )
   if (file.exists(cache_path) || dir.exists(cache_path)) {
     if (dir.exists(cache_path) || triomics_is_symlink(cache_path) ||
         !identical(triomics_sha256(cache_path), as.character(expected_sha256))) {
@@ -123,16 +187,16 @@ triomics_d_resource_access <- function(resource, operation, expected_version,
     triomics_d_resource_abort("D_RESOURCE_HASH_MISMATCH", "The local resource bytes do not match the pinned SHA256.",
                               as.character(resource$resource_id))
   }
-  cache_parent <- dirname(cache_path)
-  if (dir.exists(cache_parent) && triomics_is_symlink(cache_parent)) {
-    triomics_d_resource_abort("D_RESOURCE_CACHE_INVALID", "The resource cache directory cannot be a symlink.", "cache_dir")
-  }
-  if (!dir.exists(cache_parent)) dir.create(cache_parent, recursive = TRUE, showWarnings = FALSE)
-  if (!dir.exists(cache_parent) || triomics_is_symlink(cache_parent)) {
-    triomics_d_resource_abort("D_RESOURCE_CACHE_INVALID", "The local resource cache directory could not be created safely.", "cache_dir")
-  }
+  cache_parent <- triomics_d_create_directory_safely(
+    dirname(cache_path), "D_RESOURCE_CACHE_INVALID",
+    "The local resource cache directory could not be created safely.", "cache_dir"
+  )
   temporary <- tempfile(pattern = ".d-resource-", tmpdir = cache_parent, fileext = ".tmp")
   on.exit(if (file.exists(temporary)) unlink(temporary), add = TRUE)
+  triomics_d_secure_path(
+    temporary, "D_RESOURCE_CACHE_INVALID", "The local resource cache temporary path crosses a symlink.",
+    "cache_dir"
+  )
   if (!file.copy(source_path, temporary, overwrite = FALSE) ||
       !identical(triomics_sha256(temporary), as.character(expected_sha256))) {
     triomics_d_resource_abort("D_RESOURCE_CACHE_WRITE", "The verified local resource could not be copied into cache.",

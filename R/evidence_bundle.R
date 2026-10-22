@@ -12,7 +12,8 @@ triomics_d_nonempty_string <- function(value) {
 
 triomics_d_same_identity <- function(payload, field, expected, label) {
   value <- if (is.list(payload)) payload[[field]] else NULL
-  if (!triomics_d_nonempty_string(as.character(value)) || !identical(as.character(value), expected)) {
+  if (!triomics_d_nonempty_string(value) || !triomics_d_nonempty_string(expected) ||
+      !identical(value, expected)) {
     triomics_d_abort(
       "D_IDENTITY_MISMATCH", paste0(label, " has an absent or mismatched ", field, "."),
       key = paste0(label, ".", field)
@@ -81,6 +82,8 @@ triomics_d_read_c06_handoff <- function(handoff_dir, expected_study_id, expected
       !identical(envelope$artifact_id, "c06-handoff-manifest") ||
       !identical(envelope$study_id, manifest$study_id) ||
       !identical(envelope$analysis_id, manifest$analysis_id) ||
+      !identical(envelope$preparation_context_id, manifest$preparation_context_id) ||
+      !identical(envelope$representation_id, manifest$representation_id) ||
       !identical(as.character(envelope$status), as.character(manifest$status))) {
     triomics_d_abort("D_HANDOFF_INVALID", "The C-06 manifest identity, type, or status is inconsistent.",
                      "handoff_manifest")
@@ -98,13 +101,8 @@ triomics_d_read_c06_handoff <- function(handoff_dir, expected_study_id, expected
     triomics_d_abort("D_HANDOFF_INVALID", "The C-06 manifest member set is incomplete or duplicated.",
                      "handoff_manifest.artifacts")
   }
-  if (!triomics_d_same_identity(manifest, "preparation_context_id", as.character(manifest$preparation_context_id),
-                                "C-06 manifest") ||
-      !triomics_d_same_identity(manifest, "representation_id", as.character(manifest$representation_id),
-                                "C-06 manifest")) {
-    triomics_d_abort("D_HANDOFF_INVALID", "The C-06 handoff has incomplete preparation identity.",
-                     "handoff_manifest")
-  }
+  triomics_d_same_identity(manifest, "preparation_context_id", manifest$preparation_context_id, "C-06 manifest")
+  triomics_d_same_identity(manifest, "representation_id", manifest$representation_id, "C-06 manifest")
 
   payloads <- vector("list", length(required_types))
   names(payloads) <- names(required_types)
@@ -130,7 +128,9 @@ triomics_d_read_c06_handoff <- function(handoff_dir, expected_study_id, expected
         !identical(as.character(member_envelope$artifact_type), artifact_type) ||
         !identical(as.character(member_envelope$payload_sha256), as.character(artifact$payload_sha256)) ||
         !identical(as.character(member_envelope$study_id), as.character(manifest$study_id)) ||
-        !identical(as.character(member_envelope$analysis_id), as.character(manifest$analysis_id))) {
+        !identical(as.character(member_envelope$analysis_id), as.character(manifest$analysis_id)) ||
+        !identical(as.character(member_envelope$preparation_context_id), as.character(manifest$preparation_context_id)) ||
+        !identical(as.character(member_envelope$representation_id), as.character(manifest$representation_id))) {
       triomics_d_abort("D_HANDOFF_INVALID", "A C-06 member type or envelope identity is inconsistent.",
                        paste0("handoff_manifest.", output_name))
     }
@@ -142,6 +142,16 @@ triomics_d_read_c06_handoff <- function(handoff_dir, expected_study_id, expected
                        paste0("handoff_manifest.", output_name))
     }
     payloads[[output_name]] <- member
+  }
+  for (artifact in manifest$artifacts) {
+    artifact_id <- paste0("c06-", sub("[.]json$", "", artifact$payload_file))
+    if (!any(vapply(envelope$inputs, function(input) {
+      identical(as.character(input$artifact_id), artifact_id) &&
+        identical(as.character(input$sha256), as.character(artifact$payload_sha256))
+    }, logical(1)))) {
+      triomics_d_abort("D_HANDOFF_INVALID", "The C-06 manifest envelope does not bind every declared member payload.",
+                       paste0("handoff_manifest.", artifact_id))
+    }
   }
   controls <- payloads$evaluation_evidence$controls
   expected_controls <- c("null", "weak_signal", "strong_signal", "adversarial")
@@ -165,6 +175,7 @@ triomics_d_read_c06_handoff <- function(handoff_dir, expected_study_id, expected
     preparation_context_id = as.character(manifest$preparation_context_id),
     representation_id = as.character(manifest$representation_id),
     manifest = manifest,
+    manifest_artifact_id = as.character(envelope$artifact_id),
     manifest_sha256 = triomics_sha256(manifest_path),
     manifest_envelope_sha256 = triomics_sha256(envelope_path),
     candidate_nominations = payloads$candidate_nominations,
@@ -176,7 +187,9 @@ triomics_d_read_c06_handoff <- function(handoff_dir, expected_study_id, expected
 }
 
 triomics_d_read_b_handoff <- function(output_root, candidate_ref,
-                                     expected_study_id, expected_analysis_id) {
+                                     expected_study_id, expected_analysis_id,
+                                     expected_preparation_context_id = NULL,
+                                     expected_representation_id = NULL) {
   if (!triomics_d_nonempty_string(output_root) || !dir.exists(output_root) ||
       triomics_is_symlink(output_root) || !is.list(candidate_ref) ||
       !triomics_d_nonempty_string(candidate_ref$artifact_id) ||
@@ -206,6 +219,7 @@ triomics_d_read_b_handoff <- function(output_root, candidate_ref,
     if (!is.list(bundle) || !is.list(bundle_envelope) ||
         !identical(bundle$artifact_type, "stage_b_public_bundle") ||
         !identical(bundle_envelope$artifact_type, "stage_b_public_bundle") ||
+        !identical(as.character(bundle$artifact_id), as.character(bundle_envelope$artifact_id)) ||
         !identical(as.character(bundle$study_id), expected_study_id) ||
         !identical(as.character(bundle$analysis_id), expected_analysis_id) ||
         !identical(as.character(bundle_envelope$study_id), expected_study_id) ||
@@ -263,6 +277,7 @@ triomics_d_read_b_handoff <- function(output_root, candidate_ref,
     payload <- triomics_d_read_json(payload_path, paste0("B/", member_name))
     member_envelope <- triomics_d_read_json(envelope_path, paste0("B/", member_name, ".envelope"))
     if (!identical(as.character(payload$artifact_type), member_id) ||
+        !identical(as.character(member$artifact_id), member_id) ||
         !identical(as.character(member_envelope$artifact_type), member_id) ||
         !identical(as.character(member_envelope$study_id), expected_study_id) ||
         !identical(as.character(member_envelope$payload_sha256), as.character(member$sha256)) ||
@@ -277,7 +292,8 @@ triomics_d_read_b_handoff <- function(output_root, candidate_ref,
       artifact_id = as.character(member_envelope$artifact_id),
       sha256 = as.character(member$sha256),
       envelope_sha256 = as.character(member$envelope_sha256),
-      path = as.character(member$path)
+      path = as.character(member$path),
+      envelope_inputs = member_envelope$inputs
     )
   }
   if (!identical(as.character(artifact_refs$candidate_nominations$artifact_id),
@@ -288,10 +304,40 @@ triomics_d_read_b_handoff <- function(output_root, candidate_ref,
     triomics_d_abort("D_B_HANDOFF_INVALID", "The B candidate nomination reference does not match the C-06 immutable input.",
                      "candidate_nominations.source_artifact_ref")
   }
+  preparation_context_id <- bundle$preparation_context_id
+  representation_id <- bundle$representation_id
+  block_results <- payloads$block_results
+  if (!triomics_d_nonempty_string(preparation_context_id) ||
+      !triomics_d_nonempty_string(representation_id) ||
+      !identical(block_results$preparation_context_id, preparation_context_id) ||
+      !identical(block_results$representation_id, representation_id) ||
+      (triomics_d_nonempty_string(expected_preparation_context_id) &&
+       !identical(preparation_context_id, expected_preparation_context_id)) ||
+      (triomics_d_nonempty_string(expected_representation_id) &&
+       !identical(representation_id, expected_representation_id))) {
+    triomics_d_abort("D_IDENTITY_MISMATCH", "B-T07 and its source block results do not match the C preparation context and representation.",
+                     "B.bundle.preparation_context_id")
+  }
+  expected_block_ref <- list(artifact_id = "stage-b-block-results",
+                             sha256 = artifact_refs$block_results$sha256)
+  for (derived_name in c("family_ledger", "candidate_nominations")) {
+    has_source_edge <- any(vapply(artifact_refs[[derived_name]]$envelope_inputs, function(input) {
+      identical(as.character(input$artifact_id), expected_block_ref$artifact_id) &&
+        identical(as.character(input$sha256), expected_block_ref$sha256)
+    }, logical(1)))
+    if (!has_source_edge) {
+      triomics_d_abort("D_B_HANDOFF_INVALID", "A derived B-T07 artifact is not hash-bound to its source block results.",
+                       paste0("B.bundle.", derived_name, ".source"))
+    }
+  }
   list(
     study_id = expected_study_id, analysis_id = expected_analysis_id,
     bundle = bundle, bundle_path = match$bundle_path,
+    preparation_context_id = preparation_context_id,
+    representation_id = representation_id,
     bundle_sha256 = triomics_sha256(match$bundle_path),
+    bundle_artifact_id = as.character(match$bundle_envelope$artifact_id),
+    bundle_envelope_sha256 = triomics_sha256(match$bundle_envelope_path),
     block_results = payloads$block_results,
     family_ledger = payloads$family_ledger,
     candidate_nominations = payloads$candidate_nominations,
@@ -301,7 +347,7 @@ triomics_d_read_b_handoff <- function(output_root, candidate_ref,
 
 triomics_d_read_evidence_bundle <- function(output_root, expected_study_id, expected_analysis_id,
                                             source_manifests, feature_registry,
-                                            imported_statistics = list()) {
+                                            imported_statistics = list(), routing_metadata = NULL) {
   if (!triomics_d_nonempty_string(output_root) || !dir.exists(output_root) ||
       triomics_is_symlink(output_root)) {
     triomics_d_abort("D_HANDOFF_MISSING", "The Stage-B/Stage-C local output root is unavailable.", "output_root")
@@ -311,12 +357,16 @@ triomics_d_read_evidence_bundle <- function(output_root, expected_study_id, expe
     file.path(root, "D"), expected_study_id, expected_analysis_id
   )
   nomination_ref <- c_handoff$candidate_nominations$branches$primary_statistics$source_artifact_ref
-  b_handoff <- triomics_d_read_b_handoff(root, nomination_ref, expected_study_id, expected_analysis_id)
+  b_handoff <- triomics_d_read_b_handoff(
+    root, nomination_ref, expected_study_id, expected_analysis_id,
+    c_handoff$preparation_context_id, c_handoff$representation_id
+  )
   result <- triomics_d_build_evidence_bundle(list(
     study_id = expected_study_id,
     analysis_id = expected_analysis_id,
     source_manifests = source_manifests,
     feature_registry = feature_registry,
+    routing_metadata = routing_metadata,
     b = b_handoff,
     c = list(
       candidate_nominations = c_handoff$candidate_nominations,
@@ -329,7 +379,10 @@ triomics_d_read_evidence_bundle <- function(output_root, expected_study_id, expe
   ))
   result$immutable_inputs <- list(
     b_bundle_sha256 = b_handoff$bundle_sha256,
+    b_bundle_artifact_id = b_handoff$bundle_artifact_id,
+    b_bundle_envelope_sha256 = b_handoff$bundle_envelope_sha256,
     b_artifacts = b_handoff$artifact_refs,
+    c_manifest_artifact_id = c_handoff$manifest_artifact_id,
     c_manifest_sha256 = c_handoff$manifest_sha256,
     c_manifest_envelope_sha256 = c_handoff$manifest_envelope_sha256
   )
@@ -396,28 +449,107 @@ triomics_d_validate_source_role_evidence <- function(integration_evidence, sourc
   invisible(TRUE)
 }
 
-triomics_d_validate_feature_registry <- function(feature_registry, sources) {
-  if (!is.list(feature_registry) || !length(feature_registry)) {
-    triomics_d_abort("D_FEATURE_REGISTRY_INVALID", "D needs a keyed feature registry.", "feature_registry")
+triomics_d_adapt_feature_registry <- function(feature_registry, routing_metadata, study_id, sources) {
+  required <- c("study_id", "block_id", "feature_key", "original_id", "id_namespace", "source_id",
+                "source_row", "measured_or_derived", "quantity", "scale", "units",
+                "structural_resolution", "alias_refs", "parent_refs", "annotation_route")
+  if (!is.data.frame(feature_registry) || !all(required %in% names(feature_registry)) ||
+      nrow(feature_registry) < 1L) {
+    triomics_d_abort("D_FEATURE_REGISTRY_INVALID", "D requires the shared A FeatureRegistry data-frame contract.",
+                     "feature_registry")
   }
-  feature_keys <- names(feature_registry)
-  if (is.null(feature_keys) || any(!nzchar(feature_keys)) || anyDuplicated(feature_keys)) {
-    triomics_d_abort("D_FEATURE_REGISTRY_INVALID", "D feature keys must be unique and named.", "feature_registry")
+  identity_fields <- c("study_id", "block_id", "feature_key", "original_id", "id_namespace", "source_id",
+                       "source_row", "measured_or_derived", "structural_resolution")
+  if (any(!vapply(feature_registry[identity_fields], is.character, logical(1)))) {
+    triomics_d_abort("D_FEATURE_REGISTRY_INVALID", "A FeatureRegistry identity and routing fields must remain character.",
+                     "feature_registry")
   }
-  for (feature_key in feature_keys) {
-    feature <- feature_registry[[feature_key]]
-    source_id <- as.character(feature$source_id %||% "")
-    if (!identical(as.character(feature$feature_key), feature_key) ||
-        !triomics_d_nonempty_string(feature$id_namespace) ||
-        !triomics_d_nonempty_string(feature$taxon_id) ||
-        !triomics_d_nonempty_string(feature$structural_resolution) ||
-        !source_id %in% names(sources) ||
-        !is.list(feature$capabilities)) {
-      triomics_d_abort("D_FEATURE_REGISTRY_INVALID", "A D feature registry entry lacks key, namespace, taxon, resolution, source, or capabilities.",
+  if (!is.null(routing_metadata) && (!is.list(routing_metadata) ||
+      (length(routing_metadata) && (is.null(names(routing_metadata)) ||
+       any(!nzchar(names(routing_metadata))) || anyDuplicated(names(routing_metadata)))))) {
+    triomics_d_abort("D_FEATURE_REGISTRY_INVALID", "D routing metadata must be a uniquely keyed packet-owned list.",
+                     "routing_metadata")
+  }
+  feature_keys <- feature_registry$feature_key
+  if (!length(feature_keys) || anyNA(feature_keys) || any(!nzchar(feature_keys)) || anyDuplicated(feature_keys)) {
+    triomics_d_abort("D_FEATURE_REGISTRY_INVALID", "A FeatureRegistry needs unique, non-empty feature keys.",
+                     "feature_registry.feature_key")
+  }
+  if (!is.null(routing_metadata) && any(!names(routing_metadata) %in% feature_keys)) {
+    triomics_d_abort("D_FEATURE_REGISTRY_INVALID", "D routing metadata refers to a feature outside the A registry.",
+                     "routing_metadata")
+  }
+  adapted <- vector("list", length(feature_keys))
+  names(adapted) <- feature_keys
+  for (index in seq_along(feature_keys)) {
+    row <- lapply(feature_registry, `[`, index)
+    feature_key <- feature_keys[[index]]
+    block_id <- feature_registry$block_id[[index]]
+    source_row <- feature_registry$source_row[[index]]
+    source_id <- feature_registry$source_id[[index]]
+    identities_valid <- all(vapply(identity_fields, function(field) {
+      triomics_d_nonempty_string(feature_registry[[field]][[index]])
+    }, logical(1))) &&
+      identical(feature_registry$study_id[[index]], study_id) &&
+      identical(feature_key, triomics_feature_key(study_id, block_id, source_row)) &&
+      source_id %in% names(sources) &&
+      feature_registry$measured_or_derived[[index]] %in% c("measured", "derived")
+    if (!identities_valid) {
+      triomics_d_abort("D_FEATURE_REGISTRY_INVALID", "A FeatureRegistry row has mixed study, invalid study/block/source-row identity, or unknown source.",
                        paste0("feature_registry.", feature_key))
     }
+    metadata <- if (is.null(routing_metadata)) NULL else routing_metadata[[feature_key]]
+    if (!is.null(metadata) && !is.list(metadata)) {
+      triomics_d_abort("D_FEATURE_REGISTRY_INVALID", "A D routing metadata record must be a typed list.",
+                       paste0("routing_metadata.", feature_key))
+    }
+    taxon <- metadata$taxon %||% list(status = "unknown", value = NULL, provenance_ref = NULL)
+    capabilities <- metadata$capabilities %||% list(status = "unknown", value = list(), provenance_ref = NULL)
+    resolution <- metadata$resolution %||% if (identical(feature_registry$structural_resolution[[index]], "unknown")) {
+      list(status = "unknown", value = NULL, provenance_ref = NULL)
+    } else {
+      list(status = "declared", value = feature_registry$structural_resolution[[index]],
+           provenance_ref = "A.FeatureRegistry.structural_resolution")
+    }
+    valid_state <- function(record) {
+      triomics_d_nonempty_string(record$status) && record$status %in% c("declared", "unknown")
+    }
+    if (!is.list(taxon) || !is.list(capabilities) || !is.list(resolution) ||
+        !valid_state(taxon) || !valid_state(capabilities) || !valid_state(resolution)) {
+      triomics_d_abort("D_FEATURE_REGISTRY_INVALID", "Taxon, capability, and resolution states must be declared or explicitly unknown.",
+                       paste0("routing_metadata.", feature_key))
+    }
+    for (record in list(taxon, capabilities, resolution)) {
+      if (identical(record$status, "declared") && !triomics_d_nonempty_string(record$provenance_ref)) {
+        triomics_d_abort("D_FEATURE_REGISTRY_INVALID", "Declared D routing metadata needs a provenance reference.",
+                         paste0("routing_metadata.", feature_key))
+      }
+    }
+    if (identical(taxon$status, "declared") && !triomics_d_nonempty_string(taxon$value)) {
+      triomics_d_abort("D_FEATURE_REGISTRY_INVALID", "A declared taxon needs one non-empty taxon ID.",
+                       paste0("routing_metadata.", feature_key, ".taxon"))
+    }
+    if (identical(capabilities$status, "declared") &&
+        (!is.character(capabilities$value) || !length(capabilities$value) || anyNA(capabilities$value) ||
+         any(!nzchar(capabilities$value)))) {
+      triomics_d_abort("D_FEATURE_REGISTRY_INVALID", "Declared feature capabilities must be explicit character values.",
+                       paste0("routing_metadata.", feature_key, ".capabilities"))
+    }
+    if (identical(resolution$status, "declared") && !triomics_d_nonempty_string(resolution$value)) {
+      triomics_d_abort("D_FEATURE_REGISTRY_INVALID", "A declared molecular resolution needs one non-empty value.",
+                       paste0("routing_metadata.", feature_key, ".resolution"))
+    }
+    feature <- row
+    feature$taxon_id <- if (identical(taxon$status, "declared")) taxon$value else NULL
+    feature$taxon_status <- taxon$status
+    feature$capabilities <- if (identical(capabilities$status, "declared")) as.list(capabilities$value) else list()
+    feature$capability_status <- capabilities$status
+    feature$structural_resolution <- if (identical(resolution$status, "declared")) resolution$value else "unknown"
+    feature$resolution_status <- resolution$status
+    feature$provenance <- list(feature_registry_row = row, routing_metadata = metadata)
+    adapted[[feature_key]] <- feature
   }
-  invisible(TRUE)
+  adapted
 }
 
 triomics_d_claim_records <- function(block_results) {
@@ -472,6 +604,160 @@ triomics_d_tested_rows <- function(claims, feature_registry) {
   unname(indexed)
 }
 
+triomics_d_unique_measured_features <- function(tested_results, feature_registry) {
+  feature_keys <- unique(vapply(tested_results, function(result) {
+    as.character(result$row$feature_key)
+  }, character(1)))
+  lapply(feature_keys, function(feature_key) feature_registry[[feature_key]])
+}
+
+triomics_d_index_nominations <- function(nominations, feature_registry, label) {
+  if (!is.list(nominations)) {
+    triomics_d_abort("D_NOMINATION_INVALID", "A nomination branch must be a list.", label)
+  }
+  indexed <- list()
+  for (nomination in nominations) {
+    triomics_d_validate_nomination(nomination, feature_registry)
+    nomination_id <- as.character(nomination$nomination_id)
+    previous <- indexed[[nomination_id]]
+    if (!is.null(previous) &&
+        !identical(triomics_canonical_json(previous), triomics_canonical_json(nomination))) {
+      triomics_d_abort("D_DUPLICATE_NOMINATION_CONFLICT", "A nomination branch repeats a nomination ID.",
+                       paste0(label, ".", nomination_id))
+    }
+    if (is.null(previous)) indexed[[nomination_id]] <- nomination
+  }
+  indexed
+}
+
+triomics_d_reconcile_nominations <- function(expected, actual, feature_registry, label) {
+  expected_by_id <- triomics_d_index_nominations(expected, feature_registry, paste0(label, ".expected"))
+  actual_by_id <- triomics_d_index_nominations(actual, feature_registry, paste0(label, ".actual"))
+  if (!setequal(names(expected_by_id), names(actual_by_id))) {
+    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "A C-06 nomination branch differs from its immutable producer nominations.",
+                     label)
+  }
+  for (nomination_id in names(expected_by_id)) {
+    if (!identical(triomics_canonical_json(expected_by_id[[nomination_id]]),
+                   triomics_canonical_json(actual_by_id[[nomination_id]]))) {
+      triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "A nomination ID carries different feature or selection evidence across branches.",
+                       paste0(label, ".", nomination_id))
+    }
+  }
+  invisible(TRUE)
+}
+
+triomics_d_resolve_primary_nomination <- function(block_results, family_ledger,
+                                                  nomination, analysis_id) {
+  reference <- nomination$result_ref
+  expected_ref <- list(
+    analysis_id = analysis_id,
+    block_id = as.character(reference$block_id %||% ""),
+    claim_id = as.character(reference$claim_id %||% ""),
+    family_id = as.character(reference$family_id %||% "")
+  )
+  if (!identical(triomics_canonical_json(reference), triomics_canonical_json(expected_ref))) {
+    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "A primary nomination reference has extra or mismatched producer identity.",
+                     as.character(nomination$nomination_id))
+  }
+  block_id <- expected_ref$block_id
+  claim_id <- expected_ref$claim_id
+  claim <- block_results$blocks[[block_id]]$contrasts[[claim_id]] %||%
+    block_results$blocks[[block_id]]$joint_claims[[claim_id]]
+  if (!is.list(claim) || !is.list(claim$family) || !is.list(claim$rows) ||
+      !identical(as.character(claim$family$family_id), expected_ref$family_id)) {
+    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "A primary nomination does not resolve to its complete B family-backed claim.",
+                     as.character(nomination$nomination_id))
+  }
+  family_records <- Filter(function(record) {
+    identical(as.character(record$block_id), block_id) &&
+      identical(as.character(record$claim_id), claim_id)
+  }, family_ledger$families)
+  if (length(family_records) != 1L ||
+      !identical(triomics_canonical_json(family_records[[1L]]$family),
+                 triomics_canonical_json(claim$family))) {
+    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "A primary nomination's B family disagrees with the family ledger.",
+                     as.character(nomination$nomination_id))
+  }
+  feature_key <- as.character(nomination$feature_key)
+  if (!feature_key %in% triomics_d_route_character_values(claim$family$member_ids)) {
+    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "A primary nomination feature is not a member of its B family.",
+                     as.character(nomination$nomination_id))
+  }
+  matching_rows <- Filter(function(row) identical(as.character(row$feature_key), feature_key), claim$rows)
+  if (length(matching_rows) != 1L) {
+    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "A primary nomination does not resolve to exactly one tested feature row.",
+                     as.character(nomination$nomination_id))
+  }
+  row <- matching_rows[[1L]]
+  q_threshold <- nomination$q_threshold
+  effect_threshold <- nomination$effect_threshold
+  if (!identical(as.character(row$estimation_status), "estimated") ||
+      !is.numeric(q_threshold) || length(q_threshold) != 1L || is.na(q_threshold) ||
+      !is.finite(q_threshold) || q_threshold < 0 || q_threshold > 1 ||
+      !is.numeric(effect_threshold) || length(effect_threshold) != 1L || is.na(effect_threshold) ||
+      !is.finite(effect_threshold) || effect_threshold < 0 ||
+      !is.numeric(row$p) || length(row$p) != 1L || is.na(row$p) || !is.finite(row$p) ||
+      row$p < 0 || row$p > 1 ||
+      !is.numeric(row$q) || length(row$q) != 1L || is.na(row$q) || !is.finite(row$q) ||
+      !is.numeric(row$effect) || length(row$effect) != 1L || is.na(row$effect) || !is.finite(row$effect) ||
+      row$q > q_threshold || abs(row$effect) < effect_threshold ||
+      !identical(as.character(nomination$selection_rule),
+                 "valid_q_at_or_below_threshold_and_absolute_effect_at_or_above_reporting_threshold")) {
+    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "A primary nomination does not satisfy its producer selection rule and thresholds.",
+                     as.character(nomination$nomination_id))
+  }
+  expected_value <- list(p = row$p, q = row$q, effect = row$effect, effect_unit = row$effect_unit)
+  if (!identical(triomics_canonical_json(nomination$selection_value),
+                 triomics_canonical_json(expected_value))) {
+    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "A primary nomination's selected statistics differ from its immutable B result row.",
+                     as.character(nomination$nomination_id))
+  }
+  list(claim = claim, family_record = family_records[[1L]], row = row)
+}
+
+triomics_d_resolve_integration_nomination <- function(integration_evidence, nomination) {
+  reference <- nomination$result_ref
+  integration_id <- as.character(reference$integration_id %||% "")
+  integrations <- integration_evidence$integrations
+  matches <- Filter(function(item) identical(as.character(item$integration_id), integration_id), integrations)
+  if (length(matches) != 1L || !identical(as.character(matches[[1L]]$status), "complete") ||
+      !is.list(matches[[1L]]$selection)) {
+    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "An integration nomination does not resolve to one complete native selection.",
+                     as.character(nomination$nomination_id))
+  }
+  integration <- matches[[1L]]
+  selection <- integration$selection
+  block_id <- as.character(reference$block_id %||% "")
+  feature_key <- as.character(nomination$feature_key)
+  selected_features <- triomics_d_route_character_values(selection$selected[[block_id]])
+  selected_values <- selection$selected_values[[block_id]]
+  component_ids <- triomics_d_route_character_values(integration$common$scores$columns)
+  if (!feature_key %in% selected_features || !is.list(selected_values) ||
+      !feature_key %in% names(selected_values) || !is.list(integration$common$scores) ||
+      !length(component_ids)) {
+    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "An integration nomination is absent from the producer's selected values.",
+                     as.character(nomination$nomination_id))
+  }
+  selected_value <- selected_values[[feature_key]]
+  expected_ref <- list(
+    integration_id = as.character(integration$integration_id),
+    backend = as.character(integration$backend),
+    block_id = block_id,
+    component_ids = as.list(component_ids)
+  )
+  expected_value <- list(block_id = block_id,
+                         component_loadings = selected_value$component_loadings)
+  if (!identical(triomics_canonical_json(reference), triomics_canonical_json(expected_ref)) ||
+      !identical(as.character(nomination$selection_rule), as.character(selection$rule)) ||
+      !identical(triomics_canonical_json(nomination$selection_value),
+                 triomics_canonical_json(expected_value))) {
+    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "An integration nomination's selected value or producer reference was changed.",
+                     as.character(nomination$nomination_id))
+  }
+  list(integration = integration, selection = selection, selected_value = selected_value)
+}
+
 triomics_d_validate_nomination <- function(nomination, feature_registry) {
   if (!is.list(nomination) || !triomics_sha256_text(as.character(nomination$nomination_id)) ||
       !triomics_d_nonempty_string(as.character(nomination$feature_key)) ||
@@ -481,6 +767,13 @@ triomics_d_validate_nomination <- function(nomination, feature_registry) {
       !is.list(nomination$selection_value)) {
     triomics_d_abort("D_NOMINATION_INVALID", "A D nomination lacks a registered feature or full selection lineage.",
                      "candidate_nominations")
+  }
+  feature <- feature_registry[[as.character(nomination$feature_key)]]
+  block_id <- as.character(nomination$result_ref$block_id %||% "")
+  if (!triomics_d_nonempty_string(block_id) ||
+      !identical(as.character(feature$block_id), block_id)) {
+    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "A nomination feature key does not belong to its producer block.",
+                     as.character(nomination$nomination_id))
   }
   invisible(TRUE)
 }
@@ -515,7 +808,9 @@ triomics_d_build_evidence_bundle <- function(input) {
   study_id <- as.character(input$study_id)
   analysis_id <- as.character(input$analysis_id)
   sources <- triomics_d_validate_sources(input, study_id)
-  triomics_d_validate_feature_registry(input$feature_registry, sources)
+  feature_registry <- triomics_d_adapt_feature_registry(
+    input$feature_registry, input$routing_metadata, study_id, sources
+  )
   b <- input$b
   c <- input$c
   b_artifacts <- list(block_results = b$block_results, family_ledger = b$family_ledger,
@@ -534,6 +829,27 @@ triomics_d_build_evidence_bundle <- function(input) {
     triomics_d_same_identity(artifact, "study_id", study_id, paste0("C ", name))
     triomics_d_same_identity(artifact, "analysis_id", analysis_id, paste0("C ", name))
   }
+  context_id <- c$candidate_nominations$preparation_context_id
+  representation_id <- c$candidate_nominations$representation_id
+  if (!triomics_d_nonempty_string(context_id) || !triomics_d_nonempty_string(representation_id)) {
+    triomics_d_abort("D_IDENTITY_MISMATCH", "C-06 nominations require preparation and representation identities.",
+                     "candidate_nominations.context")
+  }
+  for (name in names(c_artifacts)) {
+    artifact <- c_artifacts[[name]]
+    triomics_d_same_identity(artifact, "preparation_context_id", context_id, paste0("C ", name))
+    triomics_d_same_identity(artifact, "representation_id", representation_id, paste0("C ", name))
+  }
+  triomics_d_same_identity(b$block_results, "preparation_context_id", context_id, "B block_results")
+  triomics_d_same_identity(b$block_results, "representation_id", representation_id, "B block_results")
+  if (!is.null(b$preparation_context_id) && !identical(b$preparation_context_id, context_id)) {
+    triomics_d_abort("D_IDENTITY_MISMATCH", "B-T07 and C-06 preparation contexts differ.",
+                     "B.bundle.preparation_context_id")
+  }
+  if (!is.null(b$representation_id) && !identical(b$representation_id, representation_id)) {
+    triomics_d_abort("D_IDENTITY_MISMATCH", "B-T07 and C-06 representations differ.",
+                     "B.bundle.representation_id")
+  }
   candidate_payload <- c$candidate_nominations
   primary_branch <- candidate_payload$branches$primary_statistics
   if (!is.list(candidate_payload$branches) || !is.list(primary_branch) ||
@@ -543,28 +859,36 @@ triomics_d_build_evidence_bundle <- function(input) {
   }
   b_nominations <- b$candidate_nominations$nominations
   primary_nominations <- primary_branch$nominations
-  if (!is.list(b_nominations) || !is.list(primary_nominations) ||
-      !setequal(vapply(b_nominations, function(item) as.character(item$nomination_id), character(1)),
-                vapply(primary_nominations, function(item) as.character(item$nomination_id), character(1)))) {
-    triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "C primary nominations do not match the immutable B nomination artifact.",
-                     "candidate_nominations.branches.primary_statistics")
-  }
+  integration_nominations <- candidate_payload$branches$integration_selection$nominations
+  triomics_d_reconcile_nominations(
+    b_nominations, primary_nominations, feature_registry,
+    "candidate_nominations.branches.primary_statistics"
+  )
+  triomics_d_reconcile_nominations(
+    c(primary_nominations, integration_nominations), candidate_payload$nominations,
+    feature_registry, "candidate_nominations.flattened"
+  )
   for (nomination in primary_nominations) {
     if (!identical(as.character(nomination$source_branch), "primary_statistics")) {
       triomics_d_abort("D_NOMINATION_INVALID", "A B nomination was assigned to the wrong C-06 branch.",
                        "candidate_nominations.branches.primary_statistics")
     }
+    triomics_d_resolve_primary_nomination(
+      b$block_results, b$family_ledger, nomination, analysis_id
+    )
   }
-  for (nomination in candidate_payload$branches$integration_selection$nominations) {
+  for (nomination in integration_nominations) {
     if (!identical(as.character(nomination$source_branch), "integration_selection")) {
       triomics_d_abort("D_NOMINATION_INVALID", "A C nomination was assigned to the wrong C-06 branch.",
                        "candidate_nominations.branches.integration_selection")
     }
+    triomics_d_resolve_integration_nomination(c$integration_evidence, nomination)
   }
-  triomics_d_validate_source_role_evidence(c$integration_evidence, sources, input$feature_registry)
+  triomics_d_validate_source_role_evidence(c$integration_evidence, sources, feature_registry)
   claims <- triomics_d_claim_records(b$block_results)
-  measured_rows <- triomics_d_tested_rows(claims, input$feature_registry)
-  nominations <- triomics_d_unique_nominations(candidate_payload$nominations, input$feature_registry)
+  tested_results <- triomics_d_tested_rows(claims, feature_registry)
+  measured_rows <- triomics_d_unique_measured_features(tested_results, feature_registry)
+  nominations <- triomics_d_unique_nominations(candidate_payload$nominations, feature_registry)
 
   imported <- input$imported_statistics %||% list()
   if (!is.list(imported)) {
@@ -581,14 +905,6 @@ triomics_d_build_evidence_bundle <- function(input) {
     record$status <- "display_only"
     record
   })
-  context_id <- as.character(c$candidate_nominations$preparation_context_id %||%
-                              c$integration_evidence$preparation_context_id %||% "")
-  representation_id <- as.character(c$candidate_nominations$representation_id %||%
-                                     c$integration_evidence$representation_id %||% "")
-  if (!nzchar(context_id) || !nzchar(representation_id)) {
-    triomics_d_abort("D_IDENTITY_MISMATCH", "D requires the C-06 preparation and representation identities.",
-                     "c06.context")
-  }
   family_records <- b$family_ledger$families
   if (!is.list(family_records) || !length(family_records)) {
     triomics_d_abort("D_B_EVIDENCE_INVALID", "The B family ledger does not account for tested claims.", "b.family_ledger.families")
@@ -598,7 +914,7 @@ triomics_d_build_evidence_bundle <- function(input) {
     study_id = study_id, analysis_id = analysis_id,
     preparation_context_id = context_id, representation_id = representation_id,
     source_manifests = unname(sources), source_by_id = sources,
-    feature_registry = input$feature_registry,
+    feature_registry = feature_registry,
     b = list(block_results = b$block_results, family_ledger = b$family_ledger,
              candidate_nominations = b$candidate_nominations),
     c = list(candidate_nominations = c$candidate_nominations,
@@ -607,12 +923,14 @@ triomics_d_build_evidence_bundle <- function(input) {
              evaluation_evidence = c$evaluation_evidence, stage_status = c$stage_status),
     nominations = nominations$nominations,
     tested_claims = claims,
+    tested_results = tested_results,
     measured_rows = measured_rows,
     imported_evidence = imported,
     accounting = list(
       nomination_count = as.integer(length(nominations$nominations)),
       duplicate_nomination_count = as.integer(nominations$duplicate_count),
       measured_row_count = as.integer(length(measured_rows)),
+      tested_result_count = as.integer(length(tested_results)),
       tested_claim_count = as.integer(length(claims)),
       family_count = as.integer(length(family_records))
     )
