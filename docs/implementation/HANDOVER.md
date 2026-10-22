@@ -16,11 +16,13 @@ fitted.
 
 Omar explicitly resumed Stage D on 2026-10-22. D-T01 is the only initially legal
 packet. Luna-max returned the bounded six-file candidate `98bf4c5` from base
-`57be42a`; its exact test suite passed 86 expectations with no failures,
-warnings, or skips. The required CLI remains intentionally unavailable until
-Sol-owned Stage D registration is integrated. Fresh read-only Sol-high reviewer
-`/root/d_t01_sol_review` is auditing the immutable range before integration.
-No private study data were read or delegated.
+`57be42a`; its exact test suite passed 86 expectations, but the fresh Sol-high
+review reproduced seven Important contract defects: lost provenance, discarded
+full B evidence, mutable nomination lineage, mismatched preparation identity,
+an ancestor-symlink escape, duplicate measured-feature counts, and an
+incompatible shared feature-registry boundary. Nothing was integrated. Bounded
+Luna repair 1 is active in `/root/d_t01_luna`, after which the same reviewer gets
+the single focused rereview. No private study data were read or delegated.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation

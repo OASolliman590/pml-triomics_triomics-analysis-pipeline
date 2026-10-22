@@ -36,29 +36,40 @@
   },
   "active_workers": [
     {
-      "agent": "/root/d_t01_sol_review",
-      "role": "fresh_read_only_packet_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
+      "agent": "/root/d_t01_luna",
+      "role": "luna_packet_repairer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
       "effective_settings_exposed": false,
       "packet": "D-T01",
-      "review_attempt": 1,
-      "base_commit": "57be42a9078d533885c01f3015ac54464f9a2d9f",
-      "candidate_commit": "98bf4c54a52cb8bab7fd3824fabb88deda579a23",
+      "repair_attempt": 1,
+      "base_commit": "98bf4c54a52cb8bab7fd3824fabb88deda579a23",
       "worktree": "/Users/megastore/.codex/worktrees/d-t01-evidence-routing/PML MultiOmics Analysis Pipeline",
-      "review_package": "/private/tmp/triomics-d-t01-review-package.diff",
-      "allowed_next_transition": "A clean review permits serial integration followed by an exclusively scoped shared-registration cycle and fresh integrated verification. Critical or Important findings permit bounded Luna repair 1. Do not start D-T02 or D-T03 before D-T01 acceptance.",
+      "review_ref": "/private/tmp/triomics-d-t01-sol-review.md",
+      "allowed_next_transition": "Repair return -> Sol inspection -> the single focused rereview by the same reviewer. A clean rereview permits serial integration and the exclusive shared-registration cycle. Do not start D-T02 or D-T03 before D-T01 acceptance.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "d_t01_initial_review_active",
+    "status": "d_t01_repair_1_active",
     "last_reconciled": "2026-10-22",
-    "active_handoffs": ["/root/d_t01_sol_review"],
+    "active_handoffs": ["/root/d_t01_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "D-T01 implementation attempt 1 returned one bounded six-file commit whose exact suite passed 86 expectations. A fresh read-only Sol-high reviewer is auditing the immutable range before any integration. The approved OpenCode free models remain reserved for later dependency-satisfied, file-disjoint public-synthetic packets; no private data may be sent to them."
+    "disposition": "The fresh D-T01 review failed with seven Important findings covering provenance retention, full B evidence, nomination and preparation identity, symlink containment, measured-row accounting and the shared feature-registry boundary. Bounded Luna repair 1 is active in the same isolated worktree; no integration occurred."
   },
   "orchestration_events": [
+    {
+      "event": "d_t01_initial_review_failed_repair1_dispatched",
+      "date": "2026-10-22",
+      "reviewer": "/root/d_t01_sol_review",
+      "worker": "/root/d_t01_luna",
+      "candidate_commit": "98bf4c54a52cb8bab7fd3824fabb88deda579a23",
+      "review_verdict": "fail; Critical 0, Important 7, Minor 0; ready_for_integration=false",
+      "findings": ["lost immutable-input provenance", "discarded full B evidence", "mutable nomination lineage", "mismatched B/C preparation and representation", "ancestor-symlink escape", "duplicate measured-feature accounting across contrasts", "incompatible shared feature-registry handling"],
+      "review_ref": "/private/tmp/triomics-d-t01-sol-review.md",
+      "allowed_next_transition": "Repair 1 result -> Sol inspection -> one focused rereview by the same Sol-high reviewer. A clean rereview permits serial integration and a separate shared-registration cycle.",
+      "disposition": "All seven defects were reproduced with public synthetic probes. No product, acceptance or shared-registration files were changed by the reviewer."
+    },
     {
       "event": "d_t01_implementation_returned_sol_review_dispatched",
       "date": "2026-10-22",
@@ -3420,8 +3431,8 @@
       "blockers": []
     },
     "D-T01": {
-      "status": "initial_review_active",
-      "attempts": 1,
+      "status": "repair_1_active",
+      "attempts": 2,
       "commit": "98bf4c54a52cb8bab7fd3824fabb88deda579a23",
       "acceptance_refs": [],
       "blockers": []
