@@ -16,6 +16,7 @@ Imports:
     MultiAssayExperiment,
     S4Vectors,
     SummarizedExperiment,
+    V8,
     yaml
 Suggests:
     BiocManager,
