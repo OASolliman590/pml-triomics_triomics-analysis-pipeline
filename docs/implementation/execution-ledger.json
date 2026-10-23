@@ -36,29 +36,42 @@
   },
   "active_workers": [
     {
-      "agent": "/root/m7_004_contract_luna",
-      "role": "bounded_luna_max_contract_foundation_repair_1",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/m7_004_spec_review",
+      "role": "focused_read_only_sol_high_spec_rereviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "effective_settings_exposed": false,
-      "packet": "M7-004 contract-foundation repair 1",
-      "candidate_commit": "65662bcaf67f59bd3fbf5440984dc7711444daca",
+      "packet": "M7-004 contract-foundation focused rereview",
+      "candidate_commit": "6c437d1",
+      "fixed_point": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
       "worktree": "/Users/megastore/.codex/worktrees/m7-004-contract-completion/PML MultiOmics Analysis Pipeline",
-      "allowed_files": ["R/provenance_contract.R", "inst/schema/stage-handoff-provenance.schema.json", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
-      "allowed_next_transition": "Repair commit and focused GREEN -> same Spec reviewer performs the single focused rereview. No integration before pass.",
+      "allowed_files": [],
+      "allowed_next_transition": "Pass -> serial integration and Sol-owned V8 registration review, then one combined source-suite gate; changes_required -> M7-004 remains blocked pending its last allowed repair.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "m7_004_repair_1_active_m7_005_integrated",
+    "status": "m7_004_focused_rereview_active_m7_005_integrated",
     "last_reconciled": "2026-10-23",
     "active_handoffs": [
-      "/root/m7_004_contract_luna"
+      "/root/m7_004_spec_review"
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M7-004 repair 1 is active. M7-005 candidate ef62066 passed fresh read-only Sol-high review with Critical 0, Important 0, Minor 0 and was integrated as 223546e. The one-file source-test baseline correction releases no product, scientific, M7, or downstream gate."
+    "disposition": "M7-004 repair 1 commit 6c437d1 is focused-green with zero failures, warnings, or skips; the same Spec reviewer is performing the single focused rereview. M7-005 is integrated as 223546e. No M7 or downstream gate is released."
   },
   "orchestration_events": [
+    {
+      "event": "m7_004_repair_1_focused_green_rereview_dispatched",
+      "date": "2026-10-23",
+      "worker": "/root/m7_004_contract_luna",
+      "repair_commit": "6c437d1",
+      "red": "three malformed public-validator profiles were accepted; 3 failed rejection expectations and 3 dependent errors, no warning or skip",
+      "green": "focused contract suite completed DONE with zero failures, warnings, or skips; positive multi-block, multi-method, and multi-route controls passed",
+      "reviewer": "/root/m7_004_spec_review",
+      "review_scope": ["complete required block/method scope coverage", "reverse evidence-to-declaration match by route kind, route_id, and full scope"],
+      "allowed_next_transition": "Pass -> serial integration and Sol-owned V8 registration review; changes_required -> one final bounded repair remains.",
+      "disposition": "Single focused read-only rereview; no full-suite rerun, integration, private data, M7 acceptance, or downstream release."
+    },
     {
       "event": "m7_005_c05_source_baseline_review_passed_integrated",
       "date": "2026-10-23",

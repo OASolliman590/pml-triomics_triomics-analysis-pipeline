@@ -179,9 +179,12 @@ The M7-004 Standards axis passed with no Critical/Important finding and one
 nonblocking duplicate-fixture branch. The Spec axis returned two Important
 reproduced fail-open paths: missing required block/method groups can be masked by
 other groups, and surplus evidence can reuse a route ID with the wrong route
-kind. Repair 1 is active with the same Luna-max worker. It must add negative
-fixtures first, enforce complete scope coverage and reverse route mapping, then
-return focused GREEN for the same Spec reviewer’s single focused rereview.
+kind. Repair 1 commit `6c437d1` reproduced all three malformed profiles as RED,
+then completed the focused suite with zero failures, warnings, or skips. It adds
+complete required block/method scope coverage, reverse route kind/ID/full-scope
+matching, and positive multi-block controls. The same Spec reviewer is now
+performing the single focused rereview; integration and the combined source
+suite remain pending.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
