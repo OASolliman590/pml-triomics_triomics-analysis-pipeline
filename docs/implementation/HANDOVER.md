@@ -182,9 +182,12 @@ other groups, and surplus evidence can reuse a route ID with the wrong route
 kind. Repair 1 commit `6c437d1` reproduced all three malformed profiles as RED,
 then completed the focused suite with zero failures, warnings, or skips. It adds
 complete required block/method scope coverage, reverse route kind/ID/full-scope
-matching, and positive multi-block controls. The same Spec reviewer is now
-performing the single focused rereview; integration and the combined source
-suite remain pending.
+matching, and positive multi-block controls. The single focused Spec rereview
+confirmed the route and repaired group checks, but returned one Important
+remaining scope gap: B method state can move to an unrelated method and
+normalized metadata can move to an unrelated analysis. Repair 2/2 is now active
+with the same Luna-max worker. This is the last permitted repair; integration
+and the combined source suite remain pending.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
