@@ -36,33 +36,55 @@
   },
   "active_workers": [
     {
-      "agent": "/root/m7_004_contract_luna",
-      "role": "fresh_bounded_luna_max_contract_foundation_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/m7_004_standards_review",
+      "role": "fresh_read_only_sol_high_standards_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "effective_settings_exposed": false,
-      "packet": "M7-004 contract-foundation completion",
-      "seed_commit": "8bc460bdfba1510d32eb2825bb460f480d75b483",
-      "accepted_review_base": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
-      "worktree": "/Users/megastore/.codex/worktrees/m7-004-contract-completion/PML MultiOmics Analysis Pipeline",
-      "allowed_files": ["R/provenance_contract.R", "inst/schema/stage-handoff-provenance.schema.json", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
-      "plan": "/private/tmp/triomics-m7-004-contract-completion-plan.md",
-      "brief": ".superpowers/sdd/triomics-m7-004-contract-completion-plan/task-1-brief.md",
-      "report": ".superpowers/sdd/triomics-m7-004-contract-completion-plan/task-1-implementer-report.md",
-      "allowed_next_transition": "Passing immutable commit -> Sol verifies exact diff/evidence -> parallel fresh Standards and Spec review. No integration before both axes pass.",
+      "packet": "M7-004 standards review",
+      "candidate_commit": "65662bcaf67f59bd3fbf5440984dc7711444daca",
+      "fixed_point": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
+      "allowed_files": [],
+      "allowed_next_transition": "Both review axes pass -> resolve the independent C-05 source-test baseline gate, then serial integration; any M7-004 finding -> bounded repair to the same Luna worker.",
+      "wait_cursor": null
+    },
+    {
+      "agent": "/root/m7_004_spec_review",
+      "role": "fresh_read_only_sol_high_spec_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "effective_settings_exposed": false,
+      "packet": "M7-004 specification review",
+      "candidate_commit": "65662bcaf67f59bd3fbf5440984dc7711444daca",
+      "fixed_point": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
+      "allowed_files": [],
+      "allowed_next_transition": "Both review axes pass -> resolve the independent C-05 source-test baseline gate, then serial integration; any M7-004 finding -> bounded repair to the same Luna worker.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "m7_004_contract_foundation_luna_active",
+    "status": "m7_004_candidate_two_axis_review_active",
     "last_reconciled": "2026-10-23",
     "active_handoffs": [
-      "/root/m7_004_contract_luna"
+      "/root/m7_004_standards_review",
+      "/root/m7_004_spec_review"
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Luna-max worker /root/m7_004_contract_luna is active in a fresh isolated worktree from the explicitly failing seed 8bc460b. It owns exactly four packet files and must reproduce RED, reach focused GREEN, run the full suite once, and return an immutable commit. No downstream seam or gate is released."
+    "disposition": "M7-004 candidate 65662bc is focused-green and immutable. Parallel fresh read-only Standards and Spec reviews are active. The source full suite still fails two pre-existing C-05 registration assertions outside the candidate diff; they are a separate gate and are not waived. No integration or downstream release has occurred."
   },
   "orchestration_events": [
+    {
+      "event": "m7_004_candidate_two_axis_review_dispatched",
+      "date": "2026-10-23",
+      "candidate_commit": "65662bcaf67f59bd3fbf5440984dc7711444daca",
+      "fixed_point": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
+      "focused_gate": "pass; zero failures, warnings, or skips",
+      "full_suite": "Candidate provenance tests passed; overall source suite failed two pre-existing C-05 registration assertions. Correct isolated MOFA runtime leaves those two failures plus the fourteen already dispositioned C-05 native warnings.",
+      "reviewers": ["/root/m7_004_standards_review", "/root/m7_004_spec_review"],
+      "brief": "docs/implementation/reviews/2026-10-23-m7-004-two-axis-review-brief.md",
+      "allowed_next_transition": "Both axes pass -> separately repair and review the stale C-05 source-test baseline before integration; M7 finding -> bounded Luna repair.",
+      "disposition": "Read-only review only; no acceptance, C-05 edit, integration, private data, or gate release."
+    },
     {
       "event": "m7_004_contract_foundation_luna_dispatched",
       "date": "2026-10-23",

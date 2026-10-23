@@ -163,6 +163,18 @@ accepted base `221df65`. The legal next transition is an immutable passing
 candidate followed by parallel Standards and Spec review; no integration occurs
 before both review axes pass.
 
+Luna returned immutable candidate `65662bc` with focused M7-003 GREEN and a
+clean allowlisted diff. Sol's permission-correct full-suite run traversed the
+new provenance tests successfully but exposed two pre-existing C-05 source-test
+assertions that still expect the now-accepted registration to be unaccepted.
+With the approved MOFA2/mofapy2 runtime, focused C-05 reduces to those two stale
+assertions plus the fourteen already dispositioned small-fixture warnings. The
+C-05 files do not differ between base `221df65` and candidate `65662bc`; the
+baseline still blocks overall acceptance and is not waived. Fresh read-only
+Standards and Spec reviewers are active on the M7-004 candidate. Integration
+remains prohibited until both axes pass and the independent baseline gate is
+resolved.
+
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
 lanes. They are not used for D-T01: only after D-T01 acceptance do the
