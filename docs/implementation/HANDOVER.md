@@ -68,7 +68,8 @@ valid `model_hash` contrast-ID collision in recursive collection, and a dangling
 D-output symlink rejected only after registry rollover. The candidate was not
 integrated or accepted. M7-001's single exceptional repair is consumed. D-T01
 and every direct or transitive Stage-D successor remain blocked, and no
-run-owned agent is active. No private study data were read or delegated.
+run-owned agent is active. The rejected M7-001 worktree is archived as a
+recoverable snapshot. No private study data were read or delegated.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation

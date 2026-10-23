@@ -40,7 +40,7 @@
     "last_reconciled": "2026-10-23",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The single authorized M7-001 repair candidate 1b44a84 passed the named suite but failed focused Sol-high rereview with five Important findings. It was not integrated or accepted. M7-001 is exhausted; D-T01 and every Stage-D successor remain closed. No run-owned agent is active."
+    "disposition": "The single authorized M7-001 repair candidate 1b44a84 passed the named suite but failed focused Sol-high rereview with five Important findings. It was not integrated or accepted. M7-001 is exhausted; D-T01 and every Stage-D successor remain closed. No run-owned agent is active; the rejected worktree is archived as a recoverable snapshot."
   },
   "orchestration_events": [
     {
@@ -53,7 +53,8 @@
       "review_ref": "docs/implementation/reviews/2026-10-23-m7-001-focused-sol-rereview.md",
       "verification": "Candidate exact D-T01 PASS 268, FAIL 0, WARN 0, SKIP 0; reviewer independently passed packet tests and diff check, then reproduced the five uncovered boundary defects.",
       "allowed_next_transition": "No product repair is authorized. D-T01 and all successors remain blocked unless Omar explicitly authorizes a new bounded change record after reviewing these five findings.",
-      "disposition": "Candidate not integrated; D-T01 not accepted; M7-001 consumed; no active handoff; no private data used."
+      "archived_worktree": "/Users/megastore/.codex/worktrees/m7-001-dt01-provenance/PML MultiOmics Analysis Pipeline",
+      "disposition": "Candidate not integrated; D-T01 not accepted; M7-001 consumed; no active handoff; rejected worktree archived recoverably; no private data used."
     },
     {
       "event": "m7_001_implementation_green_focused_sol_rereview_dispatched",
