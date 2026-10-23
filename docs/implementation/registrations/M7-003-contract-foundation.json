@@ -75,6 +75,31 @@
       "reason": "Parent instruction prohibits another full-suite run during repair 1. The prior full-suite result remains an invalid host-permission diagnostic, not product GREEN or a repair trigger. Sol must own one immutable rerun with correct filesystem permissions."
     }
   },
+  "repair_2": {
+    "base": "6c437d1",
+    "red": {
+      "command": "Rscript --vanilla -e 'testthat::test_local(filter = \"M7-003-provenance-contract\", reporter = \"summary\")'",
+      "exit_code": 1,
+      "issues": 4,
+      "errors": 2,
+      "failures": 2,
+      "warnings": 0,
+      "skips": 0,
+      "evidence": "The public validator accepted both malformed B profiles: method_state.method_id changed from producer-declared limma to unrelated-method, and normalized_metadata.analysis_id changed from analysis-1 to unrelated-analysis. Each fixture refreshed identity_sha256 before validation."
+    },
+    "green": {
+      "command": "Rscript --vanilla -e 'testthat::test_local(filter = \"M7-003-provenance-contract\", reporter = \"summary\")'",
+      "exit_code": 0,
+      "failures": 0,
+      "warnings": 0,
+      "skips": 0,
+      "evidence": "Focused M7-003 contract suite completed with DONE. Validator now requires method_state group coverage for every analysis context and producer-declared method and requires normalized_metadata to cover exactly the profile's analysis scopes. Existing positive multi-method, multiple-preprocessing-state, multiple-block, and multi-route fixtures passed."
+    },
+    "package_suite": {
+      "rerun": false,
+      "reason": "This final targeted repair authorizes only the focused M7-003 contract suite; no full-suite rerun was performed."
+    }
+  },
   "package_suite_verification": {
     "command": "Rscript --vanilla -e 'testthat::test_local(reporter = \"summary\")'",
     "exit_code": 1,

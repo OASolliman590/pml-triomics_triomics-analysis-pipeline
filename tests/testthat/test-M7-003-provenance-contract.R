@@ -712,3 +712,29 @@ testthat::test_that("route evidence must match the declared route kind and compl
   )
   m7_003_test_expect_invalid(profile)
 })
+
+testthat::test_that("method_state method IDs must cover the producer's declared methods", {
+  profile <- m7_003_test_profile("B")
+  testthat::expect_true(m7_003_test_validate(profile))
+  method_state_index <- which(vapply(
+    profile$identity$entities,
+    function(entity) identical(entity$scientific_role, "method_state"),
+    logical(1)
+  ))[[1L]]
+  profile$identity$entities[[method_state_index]]$method_id <- "unrelated-method"
+  profile <- m7_003_test_refresh_identity(profile)
+  m7_003_test_expect_invalid(profile)
+})
+
+testthat::test_that("normalized_metadata covers every profile analysis scope", {
+  profile <- m7_003_test_profile("B")
+  testthat::expect_true(m7_003_test_validate(profile))
+  metadata_index <- which(vapply(
+    profile$identity$entities,
+    function(entity) identical(entity$scientific_role, "normalized_metadata"),
+    logical(1)
+  ))[[1L]]
+  profile$identity$entities[[metadata_index]]$analysis_id <- "unrelated-analysis"
+  profile <- m7_003_test_refresh_identity(profile)
+  m7_003_test_expect_invalid(profile)
+})

@@ -591,6 +591,34 @@ triomics_provenance_validate_profile <- function(profile, frame_payload_id, fram
       triomics_provenance_exactly_one_per(entities, role, cardinalities[[role]])
     }
   }
+  method_state_groups <- triomics_provenance_exactly_one_per(
+    entities, "method_state", cardinalities$method_state
+  )
+  analysis_unit_maps <- Filter(function(entity) identical(entity$scientific_role, "analysis_unit_map"), entities)
+  declared_method_ids <- unlist(profile$producer$method_ids, use.names = FALSE)
+  expected_method_state_groups <- unlist(lapply(analysis_unit_maps, function(unit) {
+    vapply(declared_method_ids, function(method_id) {
+      triomics_provenance_group_key(list(
+        analysis_id = unit$analysis_id,
+        method_id = method_id,
+        preparation_context_id = unit$preparation_context_id,
+        representation_id = unit$representation_id
+      ), cardinalities$method_state)
+    }, character(1))
+  }), use.names = FALSE)
+  if (length(method_state_groups) != length(expected_method_state_groups) ||
+      !setequal(method_state_groups, expected_method_state_groups)) {
+    triomics_provenance_abort("method_state groups must cover every analysis context and producer method")
+  }
+  normalized_metadata <- Filter(function(entity) identical(entity$scientific_role, "normalized_metadata"), entities)
+  metadata_analysis_ids <- vapply(normalized_metadata, `[[`, character(1), "analysis_id")
+  other_analysis_entities <- Filter(function(entity) {
+    !identical(entity$scientific_role, "normalized_metadata") && !is.null(entity$analysis_id)
+  }, entities)
+  profile_analysis_ids <- unique(vapply(other_analysis_entities, `[[`, character(1), "analysis_id"))
+  if (!setequal(metadata_analysis_ids, profile_analysis_ids)) {
+    triomics_provenance_abort("normalized_metadata must cover every profile analysis scope exactly")
+  }
   preprocessing <- Filter(function(entity) identical(entity$scientific_role, "preprocessing_state"), entities)
   preprocessing_keys <- vapply(preprocessing, triomics_provenance_group_key, character(1),
                                fields = cardinalities$represented_matrix)
@@ -640,9 +668,6 @@ triomics_provenance_validate_profile <- function(profile, frame_payload_id, fram
   }
 
   if (profile$producer_stage == "C") {
-    method_state_groups <- triomics_provenance_exactly_one_per(
-      entities, "method_state", cardinalities$method_state
-    )
     integration_result_groups <- triomics_provenance_exactly_one_per(
       entities, "integration_result", cardinalities$integration_result
     )
