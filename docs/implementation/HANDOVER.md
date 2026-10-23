@@ -111,6 +111,16 @@ self-inventory exclusion for the provenance payload/envelope. M7-002 is blocked
 and not accepted; its repair and rereview allowance is exhausted. No product
 implementation is authorized, and no run-owned agent is active.
 
+Omar explicitly authorized successor specification record M7-003 on 2026-10-23.
+M7-003 changes only the three remaining provenance-schema defects: it gives the
+closed descriptor explicit block/method and ordered-identity scope fields,
+defines a total role/type/scope/cardinality table, and keeps each provenance
+payload and envelope outside its own inventory while allowing a later producer
+to bind their bytes as predecessors. The proposed delta, glossary terms, map,
+audit brief, and ledger are prepared for one fresh read-only Astra-low audit of
+an immutable snapshot. No product implementation, migration, or private-data
+access is authorized before Astra passes and Sol separately accepts the record.
+
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
 lanes. They are not used for D-T01: only after D-T01 acceptance do the
@@ -349,16 +359,16 @@ the first predictor block only; native component mismatch still fails closed.
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `execution-ledger.json`, this handover,
-`reviews/2026-10-23-m7-002-focused-astra-rereview.md`, and proposed change
-record M7-002. M6 is accepted and G6 is released. D-T01 remains unaccepted and
-blocks every Stage-D successor.
+`reviews/2026-10-23-m7-002-focused-astra-rereview.md`, proposed change record
+M7-002, and proposed successor M7-003. M6 is accepted and G6 is released. D-T01
+remains unaccepted and blocks every Stage-D successor.
 
-Do not integrate candidate `1b44a84`, resume its worker, implement M7-002, or
-start D-T02/D-T03. M7-001 and M7-002 have each exhausted their permitted repair
-and focused-review cycles. The only legal transition is Omar's explicit
-authorization of a new bounded change record that closes the remaining M7-002
-schema defect without weakening the already accepted legacy-proof and
-publication decisions. Without that authorization, keep Stage D blocked and
-perform no product edit.
+Do not integrate candidate `1b44a84`, resume its worker, implement M7-002 or
+M7-003, or start D-T02/D-T03. M7-001 and M7-002 have exhausted their permitted
+cycles. M7-003 is authorized only as a specification-and-audit cycle. The legal
+transition is the fresh Astra-low verdict: pass permits Sol acceptance and then
+contract-foundation implementation; changes required permits one documentation
+repair and one focused rereview. Until a pass and Sol acceptance, keep Stage D
+blocked and perform no product edit.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.

@@ -1,0 +1,204 @@
+# M7-003 — provenance schema closure
+
+- Date: 2026-10-23
+- Status: **proposed; fresh Astra-low audit pending**
+- User authority: Omar explicitly authorized M7-003 to close the three remaining
+  provenance-schema defects, followed by a fresh Astra-low audit, with no
+  implementation before that audit passes.
+- Frozen base specification hash:
+  `f0d482db62f16c8e4c802c99c1fd88e501f29959bc475d67f934b40c6f6ae5d2`
+- Predecessor records:
+  `M7-002-stage-handoff-provenance-amendment.md` and
+  `2026-10-23-m7-002-focused-astra-rereview.md`.
+
+## 1. Authority and narrow scope
+
+M7-002 remains historically blocked and is not silently repaired. If this
+record passes its independent audit and Sol accepts it, the normative candidate
+is the M7-002 contract with only the replacements and clarifications in this
+record. All other M7-002 provisions remain unchanged, including immutable
+producer proof, deterministic legacy packaging, producer regeneration,
+canonical hashing, pointer-rename publication semantics, test gates, scientific
+limits, and Sol-only shared registration.
+
+This record replaces M7-002 sections 1.2 and 1.3 and clarifies sections 1, 2.9,
+3, 6, 7, and 8 only where needed to close:
+
+1. the missing descriptor `block_id` and `method_id` scope fields;
+2. the missing closed `entity_type` registry and role/type mapping; and
+3. the missing exclusion that prevents a provenance payload or envelope from
+   inventorying itself.
+
+It changes no estimator, model, analysis population, family, threshold, seed,
+scientific claim, packet identity, dependency, or private-data policy. The
+B-T04 bound remains 0.08 and seeds remain 1001:1400.
+
+## 2. Closed Scientific Entity Descriptor
+
+Every `identity.entities` member is a closed `ScientificEntityDescriptor`. The
+following keys are always present; no other key is permitted:
+
+- identity and classification: `entity_id`, `entity_type`, `scientific_role`,
+  `schema_version`;
+- storage and content: `storage_form`, `media_type`, `digest_algorithm`,
+  `digest_kind`, `digest`, `size_bytes`, `canonical_schema_uri`, `artifact_id`,
+  `artifact_payload_sha256`;
+- graph: `generated_by_activity_id`, `derived_from_entity_ids`,
+  `member_of_entity_id`; and
+- scope: `study_id`, `analysis_id`, `block_id`, `method_id`,
+  `preparation_context_id`, `representation_id`, `row_identity_sha256`,
+  `column_identity_sha256`.
+
+Every key remains present even when its value is inapplicable. Inapplicable
+scalar keys have JSON null. Applicable identifiers are non-empty strings.
+`derived_from_entity_ids` is always a sorted unique array, including when empty.
+The two ordered-identity fields, when non-null, are full lowercase SHA-256
+digests of the canonical ordered row-key or column-key array used by that
+entity. They are content identities, not graph references.
+
+Storage conditions are exhaustive:
+
+- `storage_form=file` requires `digest_kind=bytes`, non-negative integer
+  `size_bytes`, and null `canonical_schema_uri`, `artifact_id`, and
+  `artifact_payload_sha256`;
+- `storage_form=enveloped_artifact` requires `digest_kind=bytes`, non-negative
+  integer `size_bytes`, non-null `artifact_id` and
+  `artifact_payload_sha256`, and null `canonical_schema_uri`; and
+- `storage_form=embedded_json` requires `digest_kind=rfc8785`, non-null
+  `canonical_schema_uri`, and null `size_bytes`, `artifact_id`, and
+  `artifact_payload_sha256`.
+
+`digest_algorithm` is always `sha256`; `digest` and every non-null SHA-256 field
+are 64-character lowercase hexadecimal values. Graph resolution, acyclicity,
+and generated/external-entity rules remain as specified by M7-002.
+`member_of_entity_id` is non-null only for a `predecessor_payload`, where it
+identifies that pair's `predecessor_envelope`; it is null for every other role.
+
+## 3. Closed role, type, scope, and cardinality registry
+
+`entity_type` is the provenance category below, not a replacement for an
+artifact payload's own `artifact_type` or schema. Payload type and schema remain
+bound by the envelope or `canonical_schema_uri`. Every scientific role has
+exactly one allowed provenance entity type:
+
+| `scientific_role` | required `entity_type` | required non-null scope beyond `study_id` | cardinality |
+|---|---|---|---|
+| `source_manifest` | `triomics.source_manifest` | none | one or more per profile |
+| `normalized_metadata` | `triomics.normalized_metadata` | `analysis_id`, row and column identity | exactly one per `analysis_id` |
+| `feature_registry` | `triomics.feature_registry` | `block_id`, row identity | exactly one per `block_id` |
+| `analysis_unit_map` | `triomics.analysis_unit_map` | `analysis_id`, `preparation_context_id`, `representation_id`, row identity | exactly one per `analysis_id` |
+| `resolved_analysis` | `triomics.resolved_analysis` | `analysis_id`, `preparation_context_id`, `representation_id`, row and column identity | exactly one per `analysis_id` |
+| `represented_matrix` | `triomics.represented_matrix` | `analysis_id`, `block_id`, `preparation_context_id`, `representation_id`, row and column identity | exactly one per `(analysis_id, block_id, representation_id)` |
+| `preprocessing_state` | `triomics.preprocessing_state` | `analysis_id`, `block_id`, `preparation_context_id`, `representation_id` | one or more per `(analysis_id, block_id, representation_id)` |
+| `method_state` | `triomics.method_state` | `analysis_id`, `method_id`, `preparation_context_id`, `representation_id` | exactly one per `(analysis_id, method_id)` |
+| `predecessor_envelope` | `triomics.predecessor_envelope` | `analysis_id`, `preparation_context_id`, `representation_id` | exactly one per accepted predecessor pair |
+| `predecessor_payload` | `triomics.predecessor_payload` | `analysis_id`, `preparation_context_id`, `representation_id` | exactly one per accepted predecessor pair |
+| `block_results` | `triomics.block_results` | `analysis_id`, `preparation_context_id`, `representation_id` | exactly one per exported B handoff |
+| `family_ledger` | `triomics.family_ledger` | `analysis_id`, `preparation_context_id`, `representation_id` | exactly one per exported B handoff |
+| `candidate_nominations` | `triomics.candidate_nominations` | `analysis_id`, `preparation_context_id`, `representation_id` | exactly one per exported B or C handoff |
+| `integration_result` | `triomics.integration_result` | `analysis_id`, `method_id`, `preparation_context_id`, `representation_id` | one or more per exported C handoff; exactly one per `(analysis_id, method_id)` |
+| `integration_state` | `triomics.integration_state` | `analysis_id`, `method_id`, `preparation_context_id`, `representation_id` | exactly one per matching `integration_result` |
+| `evaluation_evidence` | `triomics.evaluation_evidence` | `analysis_id`, `preparation_context_id`, `representation_id` | exactly one per exported C handoff |
+| `clinical_evidence` | `triomics.clinical_evidence` | `analysis_id`, `preparation_context_id`, `representation_id` | exactly one per declared clinical route, including typed unavailable |
+| `native_sidecar` | `triomics.native_sidecar` | `analysis_id`, `method_id`, `preparation_context_id`, `representation_id` | exactly one per declared native route, including typed unavailable |
+| `handoff_payload` | `triomics.handoff_payload` | `analysis_id`, `preparation_context_id`, `representation_id` | exactly one per scientific handoff payload |
+
+`study_id` is non-null for every descriptor. A scope key named in the table is
+non-null; every scope key not named for that row is null. "Row identity" and
+"column identity" mean non-null `row_identity_sha256` and
+`column_identity_sha256`. Cardinality grouping uses only the tuple explicitly
+named in that row's cardinality cell. Other required non-null scope fields are
+consistency constraints, not hidden grouping keys; a verifier must not invent
+an implicit grouping key.
+
+For a matching predecessor pair, the envelope descriptor has
+`storage_form=enveloped_artifact`; the payload descriptor has
+`storage_form=file`; the payload's `member_of_entity_id` equals the envelope's
+`entity_id`; their scope tuples are identical; and the payload `digest` equals
+the envelope's `artifact_payload_sha256`. For matching integration pairs, the
+result and state have the same scope tuple.
+Unknown roles or types, a non-table role/type pair, missing or surplus scope,
+null required scope, duplicate cardinality key, or unmet cardinality is
+`D_PROVENANCE_INVALID`.
+
+## 4. Provenance-frame self-exclusion
+
+The `StageHandoffProvenance` JSON payload and the ordinary artifact envelope
+whose `payload_sha256` binds that JSON are the provenance frame. They are not
+scientific entities described by their own `identity` object.
+
+For a profile P:
+
+- P's payload and envelope MUST NOT appear in P's `identity.entities`;
+- their IDs MUST NOT appear in P's activities' `used_entity_ids` or
+  `generated_entity_ids`;
+- they MUST NOT appear among P's `handoff_payload` descriptors or produced
+  handoff member inventory;
+- `handoff_artifact_id` identifies the scientific handoff payload, never P or
+  P's envelope; and
+- M7-002 lineage-closure item 9 means the scientific handoff payloads,
+  envelopes, and members only; it excludes P and P's envelope.
+
+This exclusion removes circular identity. P's `identity_sha256` is computed
+before the provenance payload is serialized; the enclosing envelope then binds
+the final provenance payload bytes. A later producer profile MAY describe P and
+P's envelope as accepted predecessor artifacts using exact byte digests. That
+later reference does not place them inside P's own identity graph.
+
+A descriptor or activity reference to the current profile's provenance payload
+or envelope is `D_PROVENANCE_INVALID`, even if its digest is otherwise correct.
+
+## 5. Required behavioral evidence
+
+Before the combined amendment can be implemented or accepted, its future
+contract tests must demonstrate at least:
+
+1. every descriptor contains the exact closed key set, including `block_id` and
+   `method_id`; unknown, missing, or surplus keys fail;
+2. every table row accepts its one role/type pair and rejects another role's
+   type;
+3. every required scope key rejects null, and every inapplicable scope key
+   rejects non-null;
+4. cardinality grouping changes when a required block or method changes and
+   never uses an undeclared field;
+5. every predecessor envelope/payload and integration result/state pair is
+   scope-consistent;
+6. the current provenance payload and envelope are rejected from their own
+   entities, activities, and inventories before D mutates output;
+7. a later producer may bind an earlier profile as an immutable predecessor
+   without creating self-reference; and
+8. all M7-002 behavioral tests and the previously closed pointer-rename and
+   Sol-ownership rules remain unchanged.
+
+These are specification requirements only in this record. No test or product
+code is authorized until the independent audit passes.
+
+## 6. Acceptance and implementation guard
+
+One fresh read-only Astra-low reviewer audits an immutable commit containing
+M7-002, M7-003, both M7-002 audit receipts, the glossary, ADR 0003, the
+Wayfinder map, handover, and ledger. The reviewer decides whether:
+
+- the three remaining schema defects are completely closed and mechanically
+  testable;
+- the new table is internally total and consistent with the unchanged lineage,
+  legacy, publication, and ownership contract;
+- no circular digest or hidden self-inventory remains;
+- no statistical or clinical claim changed; and
+- M7-001 and M7-002 history remains truthful.
+
+A pass permits Sol to accept the combined amendment and begin only the contract-
+foundation phase inherited from M7-002 section 7, now recorded as the M7-003
+implementation cycle. `changes_required` permits at most one documentation
+repair and one focused rereview. Astra does not edit, accept the amendment,
+release M7, dispatch workers, or implement.
+
+Until a pass and subsequent Sol acceptance are both recorded, D-T01, M7, and
+all Stage-D successors remain blocked. No implementation, migration, or private
+study-data access is authorized by this record.
+
+## Current disposition
+
+Proposed specification delta only. Fresh Astra-low audit pending. No product
+file, frozen `discovery/spec-v2` file, packet JSON, threshold, seed, method,
+lockfile, or private study input is changed.

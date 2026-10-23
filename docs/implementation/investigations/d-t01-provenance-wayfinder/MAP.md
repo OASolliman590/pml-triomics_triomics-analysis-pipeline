@@ -1,7 +1,7 @@
 # Scientific provenance boundary for Stage D
 
 Label: `wayfinder:map`  
-Status: blocked
+Status: m7_003_audit_pending
 
 ## Destination
 
@@ -53,14 +53,17 @@ Astra approval before any product implementation starts.
   is resolved by proposed change record M7-002. Its initial audit consumed one
   documentation repair, and the focused rereview still found one Important
   closed-contract defect. M7-002 is blocked and implementation is prohibited.
+- Omar authorized successor change record M7-003. It defines the exact closed
+  descriptor scope, total role/type/cardinality table, and provenance-frame
+  self-exclusion. It is a proposed specification delta awaiting a fresh
+  Astra-low audit; product implementation remains prohibited.
 
-## Blocker
+## Current gate
 
-- The immutable M7-002 repair snapshot still lacks descriptor fields needed by
-  its own cardinality rules, a closed entity-type/role mapping, and an explicit
-  self-inventory exclusion for the provenance payload and envelope. The sole
-  repair and focused rereview are exhausted. A future attempt needs Omar's
-  explicit authorization of a new bounded change record.
+- Fresh Astra-low audit of the immutable M7-003 candidate. A pass permits Sol to
+  accept the combined amendment and authorize only its contract-foundation
+  implementation phase. Until then, D-T01 and every Stage-D successor remain
+  blocked.
 
 ## Out of scope
 

@@ -34,15 +34,41 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m7_003_astra_audit",
+      "role": "fresh_read_only_astra_low_schema_amendment_auditor",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "effective_settings_exposed": false,
+      "packet": "M7-003 pre-implementation provenance schema closure",
+      "allowed_files": [],
+      "allowed_next_transition": "Pass -> Sol records acceptance and may authorize contract foundation. Changes required -> one documentation repair and one focused rereview. No product implementation before pass and Sol acceptance.",
+      "wait_cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_002_blocked_after_focused_astra_rereview",
+    "status": "m7_003_fresh_astra_audit_prepared",
     "last_reconciled": "2026-10-23",
-    "active_handoffs": [],
+    "active_handoffs": ["/root/m7_003_astra_audit"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The M7-002 focused Astra-low rereview returned changes_required with one Important closed-contract finding. The single documentation repair and focused rereview are exhausted. M7-002 is not accepted; no implementation is authorized; D-T01, M7, and every Stage-D successor remain blocked. No run-owned handoff is active."
+    "disposition": "Omar explicitly authorized M7-003 as a new specification-only change record closing the three remaining provenance-schema defects. One fresh read-only Astra-low audit is prepared on an immutable snapshot. No product implementation, migration, private-data access, D-T01 acceptance, M7 release, or Stage-D successor is authorized before an audit pass and Sol acceptance."
   },
   "orchestration_events": [
+    {
+      "event": "m7_003_schema_amendment_candidate_fresh_astra_audit_prepared",
+      "date": "2026-10-23",
+      "authority": "Omar: I authorize M7-003 to close the three remaining provenance-schema defects, followed by a fresh Astra-low audit. Do not implement until that audit passes.",
+      "reviewer": "/root/m7_003_astra_audit",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "change_record": "docs/implementation/change-records/M7-003-provenance-schema-closure.md",
+      "audit_brief": "docs/implementation/reviews/2026-10-23-m7-003-astra-audit-brief.md",
+      "candidate_commit": "the immutable commit containing this event",
+      "scope": ["explicit block_id and method_id descriptor scope", "closed total scientific_role-to-entity_type mapping with executable cardinality", "current provenance payload and envelope self-inventory exclusion"],
+      "allowed_next_transition": "Commit immutable documentation candidate -> fresh read-only Astra-low audit. Pass may permit Sol acceptance and contract-foundation authorization; changes_required permits one documentation repair and one focused rereview.",
+      "disposition": "Specification and audit only; no product code, frozen base spec, packet ID, statistical setting, private data, or gate release."
+    },
     {
       "event": "m7_002_focused_astra_rereview_failed_change_record_blocked",
       "date": "2026-10-23",

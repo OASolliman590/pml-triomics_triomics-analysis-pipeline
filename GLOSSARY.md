@@ -15,6 +15,16 @@ A typed identity for one scientifically material entity, including its role,
 content identity, and relationship to the producer activity.
 _Avoid_: Untyped hash, recursively discovered hash
 
+**Descriptor Scope**:
+The explicit study, analysis, block, method, preparation, representation, row,
+and column identity slots that place one Scientific Entity Descriptor.
+_Avoid_: Implicit scope, consumer-inferred scope
+
+**Provenance Frame**:
+The Stage Handoff Provenance payload and its binding envelope, kept outside that
+profile's own scientific-entity inventory to prevent circular identity.
+_Avoid_: Self-describing provenance entity, self-inventory
+
 **Lineage-Complete Handoff**:
 A stage handoff whose Stage Handoff Provenance accounts for every scientifically
 material input, method state, predecessor, and produced artifact.

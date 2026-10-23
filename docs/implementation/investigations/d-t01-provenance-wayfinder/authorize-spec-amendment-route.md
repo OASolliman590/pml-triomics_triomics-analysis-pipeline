@@ -25,3 +25,8 @@ returned `changes_required` with one Important closed-contract defect. That
 repair and rereview allowance is exhausted. M7-002 is blocked, implementation
 is prohibited, and Stage-D successors remain closed. A future attempt requires
 Omar's explicit authorization of a new bounded change record.
+
+Omar supplied that authorization for M7-003 on 2026-10-23. M7-003 is a narrow
+successor delta that closes only the missing descriptor scope fields, total
+role/type mapping, and provenance-frame self-exclusion. Its fresh Astra-low
+audit is pending. It does not authorize implementation by itself.
