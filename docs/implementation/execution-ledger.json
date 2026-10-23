@@ -34,27 +34,29 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_003_astra_audit",
-      "role": "fresh_read_only_astra_low_schema_amendment_auditor",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "effective_settings_exposed": false,
-      "packet": "M7-003 pre-implementation provenance schema closure",
-      "allowed_files": [],
-      "allowed_next_transition": "Focused rereview pass -> Sol records acceptance and may authorize contract foundation. Any remaining Critical or Important -> block M7-003. No further repair and no product implementation before pass and Sol acceptance.",
-      "wait_cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_003_documentation_repair_1_focused_rereview_prepared",
+    "status": "m7_003_accepted_contract_foundation_released",
     "last_reconciled": "2026-10-23",
-    "active_handoffs": ["/root/m7_003_astra_audit"],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The fresh M7-003 Astra-low audit returned changes_required with one Important cardinality finding. Documentation repair 1 adds a closed declared-route registry, route_id, executable pair/profile/route mappings, and distinct entity-uniqueness versus row-cardinality rules. The same read-only reviewer gets one focused rereview. No further repair or product implementation is authorized before a pass and Sol acceptance."
+    "disposition": "The M7-003 focused Astra-low rereview passed with Critical 0, Important 0, Minor 1, and Sol accepted the combined amendment. Only the new-file contract-foundation phase is released. Producer seams, D verification/publication, migration, shared registration, D-T01 acceptance, M7 release, and every Stage-D successor remain closed. No run-owned handoff is active at this acceptance boundary."
   },
   "orchestration_events": [
+    {
+      "event": "m7_003_focused_astra_pass_sol_acceptance_contract_foundation_released",
+      "date": "2026-10-23",
+      "reviewer": "/root/m7_003_astra_audit",
+      "repair_commit": "2ae1b6e1c1e0b9a47efcdf054da6f2e6f5791bff",
+      "focused_verdict": "pass; Critical 0, Important 0, Minor 1",
+      "minor_disposition": "Contract-foundation tests must reject a native route descriptor whose non-null method_id differs from its declaration with D_PROVENANCE_INVALID.",
+      "focused_review_ref": "docs/implementation/reviews/2026-10-23-m7-003-focused-astra-rereview.md",
+      "sol_acceptance_ref": "docs/implementation/reviews/2026-10-23-m7-003-sol-acceptance.md",
+      "accepted_scope": "Combined M7-002 plus M7-003 provenance amendment; only contract foundation released.",
+      "allowed_next_transition": "Create one fresh isolated worktree and dispatch one Luna-max implementer for new-file-only contract foundation, then fresh Sol-high review and serial integration.",
+      "closed_scope": ["B-T07 producer seam", "C-06 producer seam", "D verification and publication", "migration", "shared registration", "D-T01 acceptance", "M7 release", "every Stage-D successor"],
+      "disposition": "Specification accepted; no product implementation or private data in the audit cycle; Astra did not accept or release gates."
+    },
     {
       "event": "m7_003_astra_changes_required_documentation_repair_1_prepared",
       "date": "2026-10-23",

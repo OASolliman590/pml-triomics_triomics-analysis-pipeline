@@ -1,7 +1,7 @@
 # M7-003 — provenance schema closure
 
 - Date: 2026-10-23
-- Status: **proposed; documentation repair 1 applied; focused Astra-low rereview pending**
+- Status: **accepted by Sol after focused Astra-low pass; contract foundation released**
 - User authority: Omar explicitly authorized M7-003 to close the three remaining
   provenance-schema defects, followed by a fresh Astra-low audit, with no
   implementation before that audit passes.
@@ -257,13 +257,22 @@ and separate entity-uniqueness versus row-cardinality rules. The receipt is
 `docs/implementation/reviews/2026-10-23-m7-003-astra-audit.md`. No second repair
 is allowed after the focused rereview.
 
-Until a pass and subsequent Sol acceptance are both recorded, D-T01, M7, and
-all Stage-D successors remain blocked. No implementation, migration, or private
-study-data access is authorized by this record.
+The focused rereview of immutable repair
+`2ae1b6e1c1e0b9a47efcdf054da6f2e6f5791bff` returned `pass`: Critical 0,
+Important 0, Minor 1. The Minor requires an explicit future negative fixture for
+a native descriptor whose non-null `method_id` differs from its declared route;
+it is an evidence clarification under the existing mismatched-scope rule, not a
+contract repair. Sol's acceptance is recorded in
+`docs/implementation/reviews/2026-10-23-m7-003-sol-acceptance.md`.
+
+Sol acceptance releases only contract foundation. D-T01, M7, all Stage-D
+successors, producer-seam changes, D verification/publication, migration, and
+shared registration remain blocked. No private study-data access is authorized.
 
 ## Current disposition
 
-Proposed specification delta only. Documentation repair 1 awaits the single
-focused Astra-low rereview. No product file, frozen `discovery/spec-v2` file,
-packet JSON, threshold, seed, method, lockfile, or private study input is
-changed.
+Accepted specification delta. Only the contract-foundation implementation phase
+is released. Producer seams, D verification/publication, shared registration,
+migration, D-T01 acceptance, M7 release, and every Stage-D successor remain
+closed. No product file, frozen `discovery/spec-v2` file, packet JSON, threshold,
+seed, method, lockfile, or private study input was changed by this record.

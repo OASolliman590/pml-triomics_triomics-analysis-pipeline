@@ -124,9 +124,14 @@ that permitted multiple preprocessing states conflicted with a blanket duplicate
 rule, while multiple clinical/native routes had no executable route key.
 Documentation repair 1 adds a closed declared-route registry and descriptor
 `route_id`, exact pair/profile/route mappings, and separates entity uniqueness
-from row cardinality. The same reviewer now receives the single focused
-rereview. No product implementation, migration, or private-data access is
-authorized before a pass and separate Sol acceptance.
+from row cardinality. The focused Astra-low rereview of `2ae1b6e` passed:
+Critical 0, Important 0, Minor 1. Sol accepted the combined M7-002 plus M7-003
+amendment. The Minor is bound to contract-foundation evidence: a native route
+whose descriptor `method_id` differs from its declaration must fail
+`D_PROVENANCE_INVALID`. Only contract foundation is released. Producer seams,
+D verification/publication, migration, shared registration, D-T01 acceptance,
+M7 release, and every Stage-D successor remain closed. No private-data access
+is authorized.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
@@ -366,17 +371,14 @@ the first predictor block only; native component mismatch still fails closed.
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
 `execution-ledger.json`, this handover,
-`reviews/2026-10-23-m7-002-focused-astra-rereview.md`, proposed change record
-M7-002, and proposed successor M7-003. M6 is accepted and G6 is released. D-T01
-remains unaccepted and blocks every Stage-D successor.
+`reviews/2026-10-23-m7-003-focused-astra-rereview.md`, accepted change record
+M7-003, and its Sol acceptance receipt. M6 is accepted and G6 is released.
+D-T01 remains unaccepted and blocks every Stage-D successor.
 
-Do not integrate candidate `1b44a84`, resume its worker, implement M7-002 or
-M7-003, or start D-T02/D-T03. M7-001 and M7-002 have exhausted their permitted
-cycles. M7-003 is authorized only as a specification-and-audit cycle. The legal
-transition is the single focused Astra-low rereview of documentation repair 1:
-pass permits Sol acceptance and then contract-foundation implementation; any
-remaining Critical or Important finding blocks M7-003 because no further repair
-is authorized. Until a pass and Sol acceptance, keep Stage D blocked and perform
-no product edit.
+Do not integrate candidate `1b44a84`, resume its worker, edit producer/D/shared
+registration seams, or start D-T02/D-T03. M7-001 and M7-002 exhausted their
+permitted cycles; M7-003 is accepted. The only legal implementation transition
+is the new-file-only contract-foundation packet, followed by fresh Sol review
+and serial integration. D-T01, M7, and all successors stay closed meanwhile.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.

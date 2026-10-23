@@ -1,7 +1,7 @@
 # Scientific provenance boundary for Stage D
 
 Label: `wayfinder:map`  
-Status: m7_003_focused_rereview_pending
+Status: m7_003_accepted_contract_foundation_released
 
 ## Destination
 
@@ -56,16 +56,15 @@ Astra approval before any product implementation starts.
 - Omar authorized successor change record M7-003. It defines the exact closed
   descriptor scope, total role/type/cardinality table, and provenance-frame
   self-exclusion. Its fresh Astra-low audit found one Important cardinality
-  defect; documentation repair 1 is awaiting its single focused rereview.
-  Product implementation remains prohibited.
+  defect; documentation repair 1 closed it, the focused rereview passed, and Sol
+  accepted the combined amendment. Only contract foundation is released.
 
 ## Current gate
 
-- The fresh Astra-low audit found one Important cardinality defect. Documentation
-  repair 1 adds an explicit route registry and separates entity uniqueness from
-  allowed group multiplicity. The same reviewer now performs the single focused
-  rereview. Until it passes and Sol accepts the amendment, D-T01 and every
-  Stage-D successor remain blocked.
+- The focused Astra-low rereview passed with Critical 0, Important 0, Minor 1.
+  Contract-foundation tests must explicitly reject a native route whose
+  descriptor `method_id` differs from its declaration. Producer seams, D-T01,
+  M7, and every Stage-D successor remain closed.
 
 ## Out of scope
 

@@ -31,5 +31,6 @@ successor delta that closes only the missing descriptor scope fields, total
 role/type mapping, and provenance-frame self-exclusion. Its fresh Astra-low
 audit returned one Important cardinality finding. Documentation repair 1 adds
 an explicit declared-route registry and separates entity uniqueness from legal
-group multiplicity; its single focused rereview is pending. M7-003 does not
-authorize implementation by itself.
+group multiplicity. Its single focused rereview passed with no Critical or
+Important finding, and Sol accepted the combined amendment. Only contract
+foundation is released; downstream implementation remains gated.
