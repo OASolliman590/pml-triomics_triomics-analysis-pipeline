@@ -100,13 +100,16 @@ not rewrite the historical freeze. Implementation is prohibited until a fresh
 read-only Astra-low audit passes the immutable M7-002 snapshot. Stage D remains
 blocked; M7-001 remains exhausted. No private study data were read.
 
-Fresh read-only Astra-low reviewer `/root/m7_002_astra_audit` is the sole active
-handoff. Its initial audit of `81fdf77` returned `changes_required`: Critical 0,
-Important 3, Minor 0. It required a closed role/graph/manifest contract, truthful
-atomic-rename commit semantics, and Sol-only shared registration ownership.
-Documentation repair 1 addresses all three; the same read-only reviewer now gets
-the single focused rereview. It cannot edit, accept the amendment, release M7,
-or start implementation. Sol must reconcile its verdict before product work.
+Fresh read-only Astra-low reviewer `/root/m7_002_astra_audit` audited `81fdf77`
+and returned `changes_required`: Critical 0, Important 3, Minor 0. Documentation
+repair 1 was frozen as `366f284`. Its single focused rereview also returned
+`changes_required`: Critical 0, Important 1, Minor 0. Pointer-linearization and
+Sol-only shared-registration ownership are now sound, but the closed provenance
+contract still lacks descriptor `block_id`/`method_id` fields required by its
+cardinality rules, a closed entity-type/role mapping, and an explicit
+self-inventory exclusion for the provenance payload/envelope. M7-002 is blocked
+and not accepted; its repair and rereview allowance is exhausted. No product
+implementation is authorized, and no run-owned agent is active.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
@@ -345,14 +348,17 @@ the first predictor block only; native component mismatch still fails closed.
 ## Literal resume instruction
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
-`execution-ledger.json`, this handover, and
-`reviews/2026-10-23-m7-001-focused-sol-rereview.md`. M6 is accepted and G6 is
-released. D-T01 remains unaccepted and blocks every Stage-D successor.
+`execution-ledger.json`, this handover,
+`reviews/2026-10-23-m7-002-focused-astra-rereview.md`, and proposed change
+record M7-002. M6 is accepted and G6 is released. D-T01 remains unaccepted and
+blocks every Stage-D successor.
 
-Do not integrate candidate `1b44a84`, resume its worker, or start D-T02/D-T03.
-M7-001 authorized one exceptional repair; that repair failed focused review
-and is exhausted. The only legal product transition is a new, explicitly
-authorized bounded change record covering the five recorded Important defects.
-Without that authorization, keep Stage D blocked and perform no product edit.
+Do not integrate candidate `1b44a84`, resume its worker, implement M7-002, or
+start D-T02/D-T03. M7-001 and M7-002 have each exhausted their permitted repair
+and focused-review cycles. The only legal transition is Omar's explicit
+authorization of a new bounded change record that closes the remaining M7-002
+schema defect without weakening the already accepted legacy-proof and
+publication decisions. Without that authorization, keep Stage D blocked and
+perform no product edit.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.

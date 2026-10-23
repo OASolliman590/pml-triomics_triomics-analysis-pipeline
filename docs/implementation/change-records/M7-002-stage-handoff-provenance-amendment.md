@@ -1,7 +1,7 @@
 # M7-002 — Stage Handoff Provenance and atomic generation publication
 
 - Date: 2026-10-23
-- Status: **proposed; documentation repair 1 applied; focused Astra-low rereview pending**
+- Status: **blocked; focused Astra-low rereview returned `changes_required`**
 - User authority: Omar adopted the domain model and instructed Sol to define the
   legacy proof/regeneration rules, draft the amendment, and dispatch the audit.
 - Frozen base specification hash:
@@ -420,16 +420,26 @@ ownership. Astra does not edit, accept the amendment, release M7, or start work.
 The initial audit of commit `81fdf776f5bdfb9bccc0628c61b30fc7cb58643f`
 returned `changes_required` with three Important findings: incomplete closed
 role/graph/manifest definitions, an impossible post-rename rollback expectation,
-and shared-registration ownership drift. Documentation repair 1 closes those
-three points in sections 1, 3, 5, 6, and 7. No other repair is allowed.
+and shared-registration ownership drift. Documentation repair 1 changed
+sections 1, 3, 5, 6, and 7. The focused rereview confirmed that it closed the
+rename and ownership findings but only partially addressed the closed-contract
+finding. No other repair is allowed.
 
-The single focused rereview returns `pass` or `changes_required`. A pass permits
-Sol to mark this record accepted and begin phase 1. Any remaining Critical or
-Important finding blocks M7-002 and implementation remains prohibited.
+The single focused rereview of repair commit
+`366f284ba81bc595faa42f2017f00aa754ff8c6c` returned `changes_required`:
+Critical 0, Important 1, Minor 0. The pointer-linearization and Sol-ownership
+findings are closed, but the closed provenance contract still lacks descriptor
+`block_id`/`method_id` fields required by its cardinality rules, a closed
+`entity_type` and role/type mapping, and an explicit exclusion preventing the
+Stage Handoff Provenance payload/envelope from inventorying itself. The durable
+receipt is
+`docs/implementation/reviews/2026-10-23-m7-002-focused-astra-rereview.md`.
+The permitted repair and rereview are exhausted.
 
 ## Current disposition
 
-Proposed only; documentation repair 1 is awaiting its single focused rereview.
-D-T01, M7, and all Stage-D successors remain blocked. No product code, frozen
-spec file, packet JSON, threshold, seed, method, lockfile, or private study input
-is changed by this record.
+Blocked and not accepted. No implementation phase is authorized. D-T01, M7,
+and all Stage-D successors remain blocked. A future attempt requires Omar's
+explicit authorization of a new bounded change record; it is not another
+M7-002 repair. No product code, frozen spec file, packet JSON, threshold, seed,
+method, lockfile, or private study input is changed by this record.

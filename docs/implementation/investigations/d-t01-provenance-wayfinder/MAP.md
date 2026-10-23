@@ -1,7 +1,7 @@
 # Scientific provenance boundary for Stage D
 
 Label: `wayfinder:map`  
-Status: audit_pending
+Status: blocked
 
 ## Destination
 
@@ -50,12 +50,17 @@ Astra approval before any product implementation starts.
   is resolved: only immutable producer-complete lineage may migrate; missing
   proof fails closed and requires producer regeneration under unchanged science.
 - [Define the spec amendment and acceptance route](authorize-spec-amendment-route.md)
-  is resolved by proposed change record M7-002; implementation waits for the
-  fresh Astra-low audit of its immutable snapshot.
+  is resolved by proposed change record M7-002. Its initial audit consumed one
+  documentation repair, and the focused rereview still found one Important
+  closed-contract defect. M7-002 is blocked and implementation is prohibited.
 
-## Not yet specified
+## Blocker
 
-- Astra's independent verdict on the immutable M7-002 amendment candidate.
+- The immutable M7-002 repair snapshot still lacks descriptor fields needed by
+  its own cardinality rules, a closed entity-type/role mapping, and an explicit
+  self-inventory exclusion for the provenance payload and envelope. The sole
+  repair and focused rereview are exhausted. A future attempt needs Omar's
+  explicit authorization of a new bounded change record.
 
 ## Out of scope
 

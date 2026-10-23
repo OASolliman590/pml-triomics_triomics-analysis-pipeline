@@ -34,27 +34,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_002_astra_audit",
-      "role": "fresh_read_only_astra_low_amendment_auditor",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "effective_settings_exposed": false,
-      "packet": "M7-002 pre-implementation specification amendment",
-      "allowed_files": [],
-      "allowed_next_transition": "Pass -> Sol records acceptance and may begin contract-foundation implementation. Changes required -> one documentation repair and one focused rereview. No product implementation before pass.",
-      "wait_cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_002_focused_astra_rereview_prepared",
+    "status": "m7_002_blocked_after_focused_astra_rereview",
     "last_reconciled": "2026-10-23",
-    "active_handoffs": ["/root/m7_002_astra_audit"],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The initial M7-002 Astra audit returned changes_required with three Important findings. Documentation repair 1 is prepared for the single focused rereview by the same read-only reviewer. M7-001 remains exhausted and Stage D remains blocked. No implementation is authorized before a rereview pass."
+    "disposition": "The M7-002 focused Astra-low rereview returned changes_required with one Important closed-contract finding. The single documentation repair and focused rereview are exhausted. M7-002 is not accepted; no implementation is authorized; D-T01, M7, and every Stage-D successor remain blocked. No run-owned handoff is active."
   },
   "orchestration_events": [
+    {
+      "event": "m7_002_focused_astra_rereview_failed_change_record_blocked",
+      "date": "2026-10-23",
+      "reviewer": "/root/m7_002_astra_audit",
+      "repair_commit": "366f284ba81bc595faa42f2017f00aa754ff8c6c",
+      "verdict": "changes_required; Critical 0, Important 1, Minor 0",
+      "remaining_finding": ["ScientificEntityDescriptor omits block_id and method_id required by cardinality grouping", "entity_type registry and scientific_role-to-entity_type mapping are undefined", "Stage Handoff Provenance payload/envelope is not explicitly excluded from its own produced-handoff inventory"],
+      "closed_findings": ["atomic pointer rename is the publication linearization point with truthful ambiguous-acknowledgement recovery", "shared CLI/stage/package registration remains Sol-owned"],
+      "review_ref": "docs/implementation/reviews/2026-10-23-m7-002-focused-astra-rereview.md",
+      "allowed_next_transition": "Only Omar's explicit authorization of a new bounded change record may reopen specification work. Do not implement M7-002 or start any Stage-D packet.",
+      "disposition": "M7-002 not accepted; repair and rereview allowance exhausted; no active worker; no product code or frozen-spec edit; no private data accessed."
+    },
     {
       "event": "m7_002_astra_changes_required_documentation_repair_1_prepared",
       "date": "2026-10-23",

@@ -19,8 +19,9 @@ is the proposed normative change record. It layers on the approved frozen hash
 without rewriting historical freeze records, preserves all 41 packet IDs, and
 reopens only the B-T07/C-06 public handoff seams plus unaccepted D-T01.
 
-Implementation remains prohibited until one fresh read-only Astra-low audit of
-the immutable candidate returns `pass`. A pass lets Sol accept the change record
-and begin its bounded three-phase implementation route; changes required permit
-one documentation repair and one focused rereview only. Stage-D successors remain
-closed until D-T01 and M7 are accepted.
+The initial read-only Astra-low audit returned three Important findings. One
+documentation repair closed two findings, but the single focused rereview still
+returned `changes_required` with one Important closed-contract defect. That
+repair and rereview allowance is exhausted. M7-002 is blocked, implementation
+is prohibited, and Stage-D successors remain closed. A future attempt requires
+Omar's explicit authorization of a new bounded change record.
