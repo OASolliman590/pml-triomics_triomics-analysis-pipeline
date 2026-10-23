@@ -1,7 +1,7 @@
 # M7-001 — proposed D-T01 provenance-boundary repair exception
 
 - Date: 2026-10-23
-- Status: **authorized by Omar on 2026-10-23; execution gates remain mandatory**
+- Status: **authorized, executed once, and rejected by focused review; exception exhausted**
 - Authorization: Omar's exact instruction, `I authorize M7-001.`
 - Trigger: `docs/implementation/reviews/2026-10-22-d-t01-shared-sol-review.md`
 - Astra audit: `docs/implementation/reviews/2026-10-23-d-t01-blocker-astra-audit.md`
@@ -59,6 +59,15 @@ namespace, schema, dependency, lockfile, or private input may change.
 D-T01, M7, and every direct or transitive Stage-D successor remain closed until
 all gates pass. Synthetic software evidence cannot establish biological or
 clinical validity.
+
+## Final disposition
+
+The one authorized repair produced candidate `1b44a84e71139ca52b496bbe562e2e2a70142b2f`.
+Its exact D-T01 suite passed, but the single focused Sol-high rereview found five
+Important provenance/preflight defects and returned `ready_to_integrate: no`.
+See `docs/implementation/reviews/2026-10-23-m7-001-focused-sol-rereview.md`.
+The candidate was not integrated or accepted. This exception is consumed and
+does not authorize another product repair.
 
 ## Authorization phrase
 

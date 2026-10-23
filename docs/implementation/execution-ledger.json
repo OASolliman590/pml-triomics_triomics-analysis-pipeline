@@ -34,32 +34,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_001_sol_review",
-      "role": "m7_001_focused_read_only_rereviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "effective_settings_exposed": false,
-      "packet": "D-T01",
-      "exception": "M7-001",
-      "base_commit": "71c0a1b628c314c03112a4c2a27a760e9ab0d0a1",
-      "candidate_commit": "1b44a84e71139ca52b496bbe562e2e2a70142b2f",
-      "worktree": "/Users/megastore/.codex/worktrees/m7-001-dt01-provenance/PML MultiOmics Analysis Pipeline",
-      "mode": "read_only",
-      "review_package": "/private/tmp/triomics-m7-001-review-package.diff",
-      "allowed_next_transition": "Review pass -> serially integrate the reviewed candidate commits while skipping the already-integrated duplicate Stage-B dependency -> fresh exact integrated D-T01 verification -> acceptance decision. Any Critical or Important finding stops M7-001; no further repair is authorized.",
-      "wait_cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_001_focused_sol_rereview_active",
+    "status": "blocked_m7_001_exception_exhausted",
     "last_reconciled": "2026-10-23",
-    "active_handoffs": ["/root/m7_001_sol_review"],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Luna implementation 0d82e9f and Sol CLI implementation 1b44a84 complete the single authorized M7-001 repair in exactly four allowed files. Exact D-T01 verification passed 268 expectations with FAIL/WARN/SKIP 0. One fresh read-only Sol-high focused rereview is active on the immutable full diff. D-T01 and all successors remain closed."
+    "disposition": "The single authorized M7-001 repair candidate 1b44a84 passed the named suite but failed focused Sol-high rereview with five Important findings. It was not integrated or accepted. M7-001 is exhausted; D-T01 and every Stage-D successor remain closed. No run-owned agent is active."
   },
   "orchestration_events": [
+    {
+      "event": "m7_001_focused_rereview_rejected_exception_exhausted",
+      "date": "2026-10-23",
+      "reviewer": "/root/m7_001_sol_review",
+      "candidate_commit": "1b44a84e71139ca52b496bbe562e2e2a70142b2f",
+      "review_verdict": "ready_to_integrate: no; Critical 0, Important 5, Minor 0",
+      "important_findings": ["current FeatureRegistry semantics can drift beside stale predecessor evidence", "paired/repeated consumed metadata changes can preserve the guard hash", "DEqMS consumer identity disagrees with the producer for an unchanged supported lane", "recursive model-hash collection misreads a valid contrast ID named model_hash", "a dangling D output symlink is rejected only after registry rollover"],
+      "review_ref": "docs/implementation/reviews/2026-10-23-m7-001-focused-sol-rereview.md",
+      "verification": "Candidate exact D-T01 PASS 268, FAIL 0, WARN 0, SKIP 0; reviewer independently passed packet tests and diff check, then reproduced the five uncovered boundary defects.",
+      "allowed_next_transition": "No product repair is authorized. D-T01 and all successors remain blocked unless Omar explicitly authorizes a new bounded change record after reviewing these five findings.",
+      "disposition": "Candidate not integrated; D-T01 not accepted; M7-001 consumed; no active handoff; no private data used."
+    },
     {
       "event": "m7_001_implementation_green_focused_sol_rereview_dispatched",
       "date": "2026-10-23",
@@ -3597,14 +3592,16 @@
       "blockers": []
     },
     "D-T01": {
-      "status": "m7_001_exception_repair_active",
+      "status": "blocked_m7_001_exception_exhausted",
       "attempts": 2,
+      "exceptional_repair_attempts": 1,
       "commit": "88f1591",
       "candidate_commits": ["98bf4c54a52cb8bab7fd3824fabb88deda579a23", "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3"],
+      "m7_001_candidate_commits": ["0d82e9f6a3b78899ee1ccd2c389c01e273ba65cc", "1b44a84e71139ca52b496bbe562e2e2a70142b2f"],
       "integration_commits": ["d2db62d", "88f1591"],
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-22-d-t01-packet-review.md"],
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-22-d-t01-packet-review.md", "docs/implementation/reviews/2026-10-23-m7-001-focused-sol-rereview.md"],
       "blockers": [
-        "Fresh shared-registration review reproduced mutable-source lineage acceptance, registry ancestor-symlink escape, and conflicting B envelope identity acceptance. Initial plus two repairs are consumed; an explicit bounded repair-cap exception is required before more product edits."
+        "M7-001's single exceptional repair passed 268 named expectations but focused review reproduced five Important gaps: FeatureRegistry drift, incomplete paired/repeated metadata freshness, DEqMS producer/consumer identity mismatch, unsafe model-hash traversal for a valid contrast id, and D-leaf symlink failure after registry rollover. The candidate was not integrated. Initial plus two ordinary repairs and the one authorized exceptional repair are consumed; no further product edit is authorized."
       ]
     },
     "D-T02": {

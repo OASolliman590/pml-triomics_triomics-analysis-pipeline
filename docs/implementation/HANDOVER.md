@@ -60,10 +60,15 @@ for changed measurements and consumed metadata, registry symlink escape, B
 envelope identity conflicts, structured-key order, and invalid-config
 immutability are green. The exact uncapped D-T01 suite passed 268 expectations
 across 27 test blocks with FAIL 0, WARN 0, SKIP 0. Fresh read-only Sol-high
-reviewer `/root/m7_001_sol_review` is reviewing the immutable full diff. D-T01
-and every direct or transitive Stage-D successor remain closed through review,
-serial integration, fresh verification, and acceptance. No private study data
-were read or delegated.
+reviewer `/root/m7_001_sol_review` rejected the immutable candidate with zero
+Critical, five Important, and zero Minor findings. It reproduced unbound
+FeatureRegistry drift, paired/repeated consumed-metadata changes that preserve
+the guard hash, an unchanged two-group DEqMS producer/consumer hash mismatch, a
+valid `model_hash` contrast-ID collision in recursive collection, and a dangling
+D-output symlink rejected only after registry rollover. The candidate was not
+integrated or accepted. M7-001's single exceptional repair is consumed. D-T01
+and every direct or transitive Stage-D successor remain blocked, and no
+run-owned agent is active. No private study data were read or delegated.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
@@ -302,18 +307,14 @@ the first predictor block only; native component mismatch still fails closed.
 ## Literal resume instruction
 
 Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
-`execution-ledger.json`, and this handover. C-01 through C-05 and C-08 are
-accepted on public synthetic software evidence; G5 is released and M6 is in
-progress. C-09 packet and shared registration are integrated and verified at
-`40bc026`. C-06 packet and shared CLI/D-handoff code are integrated and
-verified at `3753be0`. Both remain M6-pending. No real study, biological
-endpoint validation or clinical association is claimed.
+`execution-ledger.json`, this handover, and
+`reviews/2026-10-23-m7-001-focused-sol-rereview.md`. M6 is accepted and G6 is
+released. D-T01 remains unaccepted and blocks every Stage-D successor.
 
-Resume in a separate repair cycle from the package-gate failure receipt. Add
-the missing public documentation for `triomics_c09_synthetic_inputs` without
-changing product behavior, review and integrate that bounded correction, then
-rerun the clean M6 package gate from a new immutable commit. Only an exact
-`Status: OK` with every testthat warning named permits one fresh Astra-low
-read-only M6 audit. Do not release G6 or Stage D before M6 acceptance. Do not
-loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
-`discovery/spec-v2` content, or read private study data.
+Do not integrate candidate `1b44a84`, resume its worker, or start D-T02/D-T03.
+M7-001 authorized one exceptional repair; that repair failed focused review
+and is exhausted. The only legal product transition is a new, explicitly
+authorized bounded change record covering the five recorded Important defects.
+Without that authorization, keep Stage D blocked and perform no product edit.
+Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
+`discovery/spec-v2` content, read private study data, or push to GitHub.
