@@ -193,6 +193,12 @@ reviewers and does not release a product gate. Its fresh isolated worktree is
 `/Users/megastore/.codex/worktrees/m7-005-c05-source-baseline/PML MultiOmics Analysis Pipeline`
 at base `29e7a36`.
 
+M7-005 candidate `ef62066` changes only the obsolete C-05 registration-state
+test block. Focused RED had the two stale assertions; focused GREEN had zero
+failures/errors/skips and preserved the fourteen named native warnings plus one
+intermittent correlated-factor QC warning already covered by the C-05 acceptance
+review. Fresh read-only Sol-high reviewer `/root/m7_005_c05_review` is active.
+
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
 lanes. They are not used for D-T01: only after D-T01 acceptance do the
