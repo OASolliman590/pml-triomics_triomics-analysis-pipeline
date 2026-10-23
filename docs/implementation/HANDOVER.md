@@ -41,11 +41,18 @@ gate with its already-authorized `per_unit_beta` fixture correction. Candidate
 `71c0a1b` is clean; its named suite passed 204 expectations and fresh Stage B,
 C, and D CLI runs exited 0/0/0. The D rerun refused with
 `D_OUTPUT_FINALIZED`, all 41 output hashes remained unchanged, and D left the B
-and C trees unchanged. Fresh read-only Sol-high reviewer
-`/root/d_t01_shared_sol_review` is auditing the eight-file D shared change. D
-will not invent an upstream identity or silently weaken the unit contract.
-D-T01 remains unaccepted pending review, integration, and fresh exact
-verification. No private study data were read or delegated.
+and C trees unchanged. Fresh read-only Sol-high review rejected the candidate
+with zero Critical, three Important, and two Minor findings. D can combine
+changed current source data with stale B/C results, write run registries outside
+the output root through a symlinked `registries` ancestor, and accept rehashed B
+envelopes with conflicting artifact/preparation/representation identities. The
+structured C rule comparison is also key-order-sensitive, and invalid config
+failure can mutate the current registry. D-T01's initial implementation plus
+two repairs are consumed, so no third repair is authorized. Fresh Astra-low
+auditor `/root/d_t01_blocker_astra` is independently deciding whether the frozen
+contract warrants a narrow repair-cap exception. D-T01 and every direct or
+transitive Stage-D successor remain closed. No private study data were read or
+delegated.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation

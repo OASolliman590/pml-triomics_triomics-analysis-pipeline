@@ -36,28 +36,43 @@
   },
   "active_workers": [
     {
-      "agent": "/root/d_t01_shared_sol_review",
-      "role": "fresh_read_only_shared_registration_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
+      "agent": "/root/d_t01_blocker_astra",
+      "role": "fresh_read_only_cross_cutting_blocker_auditor",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
       "effective_settings_exposed": false,
       "packet": "D-T01",
-      "shared_review_attempt": 1,
+      "blocker_audit_attempt": 1,
       "base_commit": "ae6762b",
       "candidate_commit": "71c0a1b628c314c03112a4c2a27a760e9ab0d0a1",
       "worktree": "/Users/megastore/.codex/worktrees/d-t01-shared-registration-2/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Review pass -> serial integration and fresh exact B/C/D CLI read-back. Critical/Important finding -> one bounded repair and one focused rereview. Do not accept D-T01 or start D-T02/D-T03 before those gates pass.",
+      "allowed_next_transition": "Astra confirms blocker -> record D-T01 blocked and prepare a narrowly scoped repair-cap exception for Omar's explicit decision. Astra disproves/reclassifies all Important findings -> Sol records the evidence before any integration decision. No implementation or acceptance by Astra.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "d_t01_shared_registration_review_active",
-    "last_reconciled": "2026-10-22",
-    "active_handoffs": ["/root/d_t01_shared_sol_review"],
+    "status": "d_t01_blocker_astra_audit_active",
+    "last_reconciled": "2026-10-23",
+    "active_handoffs": ["/root/d_t01_blocker_astra"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The D-T01 shared candidate returned clean at 71c0a1b after PASS 204 and a fresh B-to-C-to-D sequence with exits 0/0/0. A fresh read-only Sol-high reviewer is auditing the eight-file D shared change. D-T01 remains unaccepted."
+    "disposition": "Fresh Sol-high review rejected D-T01 candidate 71c0a1b with three reproduced Important fail-closed/provenance defects and two Minor issues despite PASS 204. The packet has consumed its initial attempt and two repairs. A user-authorized fresh Astra-low read-only blocker audit is deciding whether a narrow repair-cap exception is warranted. D-T01 and all successors remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "d_t01_shared_review_failed_astra_blocker_audit_dispatched",
+      "date": "2026-10-23",
+      "reviewer": "/root/d_t01_shared_sol_review",
+      "astra_auditor": "/root/d_t01_blocker_astra",
+      "candidate_commit": "71c0a1b628c314c03112a4c2a27a760e9ab0d0a1",
+      "review_verdict": "ready_to_integrate: no; Critical 0, Important 3, Minor 2",
+      "review_tests": "Exact D-T01 suite FAIL 0, WARN 0, SKIP 0, PASS 204; ordinary B/C/D path and rerun immutability pass, but adversarial boundary probes fail.",
+      "important_findings": ["mutable source changes accepted beside stale B/C results", "registry-directory symlink writes outside output root", "conflicting B envelope artifact/preparation/representation identities accepted after rehash"],
+      "minor_findings": ["structured selection comparison is key-order-sensitive", "invalid config mutates current registry before validation"],
+      "review_ref": "docs/implementation/reviews/2026-10-22-d-t01-shared-sol-review.md",
+      "repair_capacity": "Initial implementation plus two targeted repairs consumed; no third repair is authorized.",
+      "allowed_next_transition": "Astra confirmation -> record blocked and request explicit bounded exception from Omar. Do not integrate, accept D-T01, or start any Stage-D successor.",
+      "disposition": "Every remaining Stage-D packet depends directly or transitively on D-T01. No unrelated legal Stage-D work remains. No private study data were used."
+    },
     {
       "event": "d_t01_shared_candidate_returned_sol_review_dispatched",
       "date": "2026-10-22",
@@ -3530,13 +3545,15 @@
       "blockers": []
     },
     "D-T01": {
-      "status": "shared_registration_resumed_after_upstream_contract_repair",
+      "status": "blocked_pending_explicit_repair_cap_exception",
       "attempts": 2,
       "commit": "88f1591",
       "candidate_commits": ["98bf4c54a52cb8bab7fd3824fabb88deda579a23", "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3"],
       "integration_commits": ["d2db62d", "88f1591"],
       "acceptance_refs": ["docs/implementation/reviews/2026-10-22-d-t01-packet-review.md"],
-      "blockers": []
+      "blockers": [
+        "Fresh shared-registration review reproduced mutable-source lineage acceptance, registry ancestor-symlink escape, and conflicting B envelope identity acceptance. Initial plus two repairs are consumed; an explicit bounded repair-cap exception is required before more product edits."
+      ]
     },
     "D-T02": {
       "status": "not_started",
