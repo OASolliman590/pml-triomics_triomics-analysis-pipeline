@@ -36,28 +36,45 @@
   },
   "active_workers": [
     {
-      "agent": "/root/m7_001_luna",
-      "role": "m7_001_exception_evidence_and_red_test_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/m7_001_sol_review",
+      "role": "m7_001_focused_read_only_rereviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "effective_settings_exposed": false,
       "packet": "D-T01",
       "exception": "M7-001",
       "base_commit": "71c0a1b628c314c03112a4c2a27a760e9ab0d0a1",
+      "candidate_commit": "1b44a84e71139ca52b496bbe562e2e2a70142b2f",
       "worktree": "/Users/megastore/.codex/worktrees/m7-001-dt01-provenance/PML MultiOmics Analysis Pipeline",
-      "allowed_files": ["R/evidence_bundle.R", "tests/testthat/test-D-T01-shared.R", "tests/testthat/test-D-T01.R"],
-      "allowed_next_transition": "Luna segment result -> Sol inspects RED/GREEN evidence and applies only the authorized R/cli.R lifecycle repair in the same isolated worktree -> full GREEN -> focused Sol-high rereview. No integration or acceptance before review.",
+      "mode": "read_only",
+      "review_package": "/private/tmp/triomics-m7-001-review-package.diff",
+      "allowed_next_transition": "Review pass -> serially integrate the reviewed candidate commits while skipping the already-integrated duplicate Stage-B dependency -> fresh exact integrated D-T01 verification -> acceptance decision. Any Critical or Important finding stops M7-001; no further repair is authorized.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "m7_001_luna_segment_active",
+    "status": "m7_001_focused_sol_rereview_active",
     "last_reconciled": "2026-10-23",
-    "active_handoffs": ["/root/m7_001_luna"],
+    "active_handoffs": ["/root/m7_001_sol_review"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M7-001 fresh worktree is clean at candidate 71c0a1b and its exact D-T01 baseline exits zero. One Luna-max worker is implementing the evidence-boundary and behavioral RED-test segment under the three-file allowlist; Sol retains exclusive R/cli.R lifecycle repair ownership. D-T01 and all successors remain closed."
+    "disposition": "Luna implementation 0d82e9f and Sol CLI implementation 1b44a84 complete the single authorized M7-001 repair in exactly four allowed files. Exact D-T01 verification passed 268 expectations with FAIL/WARN/SKIP 0. One fresh read-only Sol-high focused rereview is active on the immutable full diff. D-T01 and all successors remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_001_implementation_green_focused_sol_rereview_dispatched",
+      "date": "2026-10-23",
+      "worker": "/root/m7_001_luna",
+      "reviewer": "/root/m7_001_sol_review",
+      "luna_commit": "0d82e9f6a3b78899ee1ccd2c389c01e273ba65cc",
+      "sol_cli_commit": "1b44a84e71139ca52b496bbe562e2e2a70142b2f",
+      "candidate_base": "71c0a1b628c314c03112a4c2a27a760e9ab0d0a1",
+      "changed_files": ["R/cli.R", "R/evidence_bundle.R", "tests/testthat/test-D-T01-shared.R", "tests/testthat/test-D-T01.R"],
+      "verification": "Exact uncapped D-T01 filter PASS 268 across 27 test blocks; FAIL 0, WARN 0, SKIP 0. Former RED probes and unchanged public B-to-C-to-D path passed; worktree clean.",
+      "review_package": "/private/tmp/triomics-m7-001-review-package.diff",
+      "review_package_sha256": "6909a7e1e514e8bf070845a84510d6390dd4b03630a05d54c2b7d5e336403c2b",
+      "allowed_next_transition": "Review pass -> serial integration -> fresh integrated verification -> D-T01 acceptance decision. Critical or Important finding -> stop M7-001; no second exceptional repair is authorized.",
+      "disposition": "No private study data, frozen contract, scientific estimator, threshold, seed, namespace, schema or lockfile changed."
+    },
     {
       "event": "m7_001_fresh_worktree_verified_luna_segment_dispatched",
       "date": "2026-10-23",

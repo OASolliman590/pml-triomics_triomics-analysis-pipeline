@@ -53,12 +53,17 @@ auditor `/root/d_t01_blocker_astra` independently confirmed all five findings
 and recommended one narrow repair-cap exception. Omar explicitly authorized
 M7-001 on 2026-10-23 with `I authorize M7-001.` Fresh isolated worktree
 `m7-001-dt01-provenance` is clean at candidate `71c0a1b`; the exact D-T01
-baseline exits zero. Luna-max worker `/root/m7_001_luna` is implementing the
-three-file evidence-boundary and behavioral RED-test segment. Sol retains the
-authorized `R/cli.R` lifecycle repair and will apply it only after the worker
-returns the failing tests. D-T01 and every direct or transitive Stage-D successor
-remain closed through repair, focused rereview, integration, and fresh
-verification. No private study data were read or delegated.
+baseline exits zero. Luna-max returned evidence/test commit `0d82e9f`; Sol
+applied the exclusive CLI lifecycle repair as `1b44a84`. The resulting clean
+candidate changes exactly the four M7-001-authorized files. Former RED probes
+for changed measurements and consumed metadata, registry symlink escape, B
+envelope identity conflicts, structured-key order, and invalid-config
+immutability are green. The exact uncapped D-T01 suite passed 268 expectations
+across 27 test blocks with FAIL 0, WARN 0, SKIP 0. Fresh read-only Sol-high
+reviewer `/root/m7_001_sol_review` is reviewing the immutable full diff. D-T01
+and every direct or transitive Stage-D successor remain closed through review,
+serial integration, fresh verification, and acceptance. No private study data
+were read or delegated.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
