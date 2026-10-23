@@ -568,7 +568,7 @@ triomics_provenance_validate_profile <- function(profile, frame_payload_id, fram
   required_by_role <- c("source_manifest", "normalized_metadata", "feature_registry",
                         "analysis_unit_map", "resolved_analysis", "represented_matrix",
                         "preprocessing_state", "method_state", "predecessor_envelope",
-                        "predecessor_payload", "candidate_nominations")
+                        "predecessor_payload", "candidate_nominations", "handoff_payload")
   if (profile$producer_stage == "B") required_by_role <- c(required_by_role, "block_results", "family_ledger")
   if (profile$producer_stage == "C") required_by_role <- c(required_by_role, "integration_result", "integration_state", "evaluation_evidence")
   for (role in required_by_role) {
@@ -643,6 +643,26 @@ triomics_provenance_validate_profile <- function(profile, frame_payload_id, fram
   )
   if (!setequal(unit_groups, resolved_groups)) {
     triomics_provenance_abort("analysis_unit_map and resolved_analysis groups must match")
+  }
+  analysis_context_fields <- c("analysis_id", "preparation_context_id", "representation_id")
+  method_state_entities <- Filter(function(entity) identical(entity$scientific_role, "method_state"), entities)
+  method_state_contexts <- unique(vapply(
+    method_state_entities, triomics_provenance_group_key, character(1),
+    fields = analysis_context_fields
+  ))
+  for (role in c("represented_matrix", "preprocessing_state")) {
+    role_entities <- if (identical(role, "represented_matrix")) represented else preprocessing
+    contexts <- unique(vapply(
+      role_entities, triomics_provenance_group_key, character(1),
+      fields = analysis_context_fields
+    ))
+    if (any(!contexts %in% unit_groups) ||
+        any(!contexts %in% resolved_groups) ||
+        any(!contexts %in% method_state_contexts)) {
+      triomics_provenance_abort(paste0(
+        role, " contexts must match analysis_unit_map, resolved_analysis, and method_state"
+      ))
+    }
   }
   profile_singletons <- c("handoff_payload", "candidate_nominations")
   if (profile$producer_stage == "B") profile_singletons <- c(profile_singletons, "block_results", "family_ledger")

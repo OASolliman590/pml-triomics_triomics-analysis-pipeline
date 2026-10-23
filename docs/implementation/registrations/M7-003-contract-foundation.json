@@ -1,7 +1,7 @@
 {
   "packet_id": "M7-003-contract-foundation",
   "request_type": "registration_request",
-  "status": "registration_requested",
+  "status": "candidate/review_pending",
   "implementation_base": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
   "failing_seed": "8bc460bdfba1510d32eb2825bb460f480d75b483",
   "accepted": false,
@@ -133,6 +133,54 @@
     ],
     "disposition": "Testthat reached its 10-failure cap and reported that additional results may be missing (the captured output ended with '... and 28 more'). Do not interpret this run as package GREEN or as a product defect. Sol must perform one immutable package-suite rerun with correct filesystem permissions; do not suppress these diagnostics."
   },
+  "m7_006_completeness_repair": {
+    "change_record": "docs/implementation/change-records/M7-006-provenance-completeness-repair.md",
+    "status": "candidate/review_pending",
+    "focused_command": "Rscript --vanilla -e 'testthat::test_local(filter = \"M7-003-provenance-contract\", reporter = \"summary\")'",
+    "context_coverage_red_initial": {
+      "exit_code": 1,
+      "issues": 2,
+      "failures": 1,
+      "errors": 1,
+      "warnings": 0,
+      "skips": 0,
+      "evidence": "The split-context profile was accepted, triggering the expected negative assertion; the existing helper then dereferenced result$code on the accepted logical result and produced a secondary error. The fixture was revised to capture the public validator result safely before recording the clean RED."
+    },
+    "context_coverage_red": {
+      "exit_code": 1,
+      "failures": 1,
+      "errors": 0,
+      "warnings": 0,
+      "skips": 0,
+      "evidence": "A valid B baseline and a valid fully covered prep-1/prep-2 profile passed. Moving represented_matrix and matching preprocessing_state to prep-2 while unit, resolved-analysis, and method-state evidence stayed at prep-1 was accepted by the public validator and failed the expected D_PROVENANCE_INVALID assertion."
+    },
+    "context_coverage_green": {
+      "exit_code": 0,
+      "failures": 0,
+      "warnings": 0,
+      "skips": 0,
+      "evidence": "The focused suite completed with DONE. The split context was rejected, while the valid two-context profile and existing multiple-block, multiple-method, multiple-preprocessing-state, and multiple-route profiles passed."
+    },
+    "migration_handoff_payload_red": {
+      "exit_code": 1,
+      "failures": 2,
+      "errors": 0,
+      "warnings": 0,
+      "skips": 0,
+      "evidence": "The complete B migration proof including handoff_payload=proven was rejected, while the same proof with handoff_payload omitted was accepted; both expected behavioral assertions failed."
+    },
+    "combined_green": {
+      "exit_code": 0,
+      "failures": 0,
+      "warnings": 0,
+      "skips": 0,
+      "evidence": "The final focused suite completed with DONE after both validation repairs. Complete migration proof passed, omission of handoff_payload failed closed, and valid multi-context plus existing multiple-block, multiple-method, multiple-preprocessing-state, and multiple-route profiles passed."
+    },
+    "limitations": [
+      "Public synthetic contract fixtures only; no private study data were accessed.",
+      "No full suite, producer wiring, D verification/publication, migration execution, integration, acceptance, or downstream gate was run or released."
+    ]
+  },
   "limitations": [
     "Only public synthetic fixtures were used; no private study data or paths were accessed.",
     "This is software-contract evidence only and is not scientific validation or packet acceptance.",
@@ -147,5 +195,5 @@
     "M7 release",
     "every Stage-D successor"
   ],
-  "next_gate": "Independent Standards and Spec review against accepted base 221df65a20e6a53bf523a4f5592a9ffe1e006ec8; Sol alone applies any reviewed shared V8 Imports registration."
+  "next_gate": "Sol review and two-axis code review against 5dcc25f; only after both pass may Sol integrate serially and prepare an immutable snapshot for the M7-004 acceptance audit. No gate is released by this candidate."
 }

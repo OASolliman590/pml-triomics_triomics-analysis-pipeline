@@ -738,3 +738,93 @@ testthat::test_that("normalized_metadata covers every profile analysis scope", {
   profile <- m7_003_test_refresh_identity(profile)
   m7_003_test_expect_invalid(profile)
 })
+
+testthat::test_that("represented and preprocessing contexts require matching analysis evidence", {
+  baseline <- m7_003_test_profile("B")
+  testthat::expect_true(m7_003_test_validate(baseline))
+
+  mismatched <- baseline
+  for (role in c("represented_matrix", "preprocessing_state")) {
+    index <- which(vapply(
+      mismatched$identity$entities,
+      function(entity) identical(entity$scientific_role, role),
+      logical(1)
+    ))[[1L]]
+    mismatched$identity$entities[[index]]$preparation_context_id <- "prep-2"
+  }
+  mismatched <- m7_003_test_refresh_identity(mismatched)
+  result <- tryCatch(m7_003_test_validate(mismatched), error = identity)
+  testthat::expect_s3_class(result, "triomics_error")
+  if (inherits(result, "triomics_error")) {
+    testthat::expect_identical(result$code, "D_PROVENANCE_INVALID")
+  }
+})
+
+testthat::test_that("multiple represented preparation contexts remain valid when fully covered", {
+  profile <- m7_003_test_profile("B")
+  context_roles <- c(
+    "analysis_unit_map", "resolved_analysis", "represented_matrix",
+    "preprocessing_state", "method_state"
+  )
+  extra_entities <- lapply(context_roles, function(role) {
+    index <- which(vapply(
+      profile$identity$entities,
+      function(entity) identical(entity$scientific_role, role),
+      logical(1)
+    ))[[1L]]
+    entity <- profile$identity$entities[[index]]
+    entity$entity_id <- paste0(entity$entity_id, "-prep-2")
+    entity$preparation_context_id <- "prep-2"
+    entity
+  })
+  entities <- c(profile$identity$entities, extra_entities)
+  entities <- entities[order(
+    vapply(entities, `[[`, character(1), "scientific_role"),
+    vapply(entities, `[[`, character(1), "entity_type"),
+    vapply(entities, `[[`, character(1), "entity_id"), method = "radix"
+  )]
+  profile$identity$entities <- I(entities)
+  generated_ids <- c(
+    unlist(profile$identity$activities[[1L]]$generated_entity_ids, use.names = FALSE),
+    vapply(extra_entities, `[[`, character(1), "entity_id")
+  )
+  profile$identity$activities[[1L]]$generated_entity_ids <- as.list(
+    sort(generated_ids, method = "radix")
+  )
+  testthat::expect_true(m7_003_test_validate(profile))
+})
+
+testthat::test_that("migration proofs require the handoff_payload role", {
+  profile <- m7_003_test_profile("B")
+  proof_roles <- c(
+    "source_manifest", "normalized_metadata", "feature_registry",
+    "analysis_unit_map", "resolved_analysis", "represented_matrix",
+    "preprocessing_state", "method_state", "predecessor_envelope",
+    "predecessor_payload", "candidate_nominations", "block_results",
+    "family_ledger", "handoff_payload"
+  )
+  profile$migration <- list(
+    mode = "deterministic_legacy_packaging",
+    source_artifacts = I(list(list(artifact_id = "legacy-b-handoff", sha256 = m7_003_test_digest))),
+    source_acceptance_commit = paste(rep("1", 40L), collapse = ""),
+    source_acceptance_receipt_refs = I(list("receipt")),
+    migration_software_commit = paste(rep("2", 40L), collapse = ""),
+    migration_software_version = "1",
+    proof_status_by_role = as.list(setNames(rep("proven", length(proof_roles)), proof_roles)),
+    numerical_payload_bytes_unchanged = TRUE
+  )
+
+  complete_result <- tryCatch(m7_003_test_validate(profile), error = identity)
+  testthat::expect_true(isTRUE(complete_result))
+
+  missing_handoff_proof <- profile
+  missing_handoff_proof$migration$proof_status_by_role <-
+    missing_handoff_proof$migration$proof_status_by_role[
+      setdiff(names(missing_handoff_proof$migration$proof_status_by_role), "handoff_payload")
+    ]
+  malformed_result <- tryCatch(m7_003_test_validate(missing_handoff_proof), error = identity)
+  testthat::expect_s3_class(malformed_result, "triomics_error")
+  if (inherits(malformed_result, "triomics_error")) {
+    testthat::expect_identical(malformed_result$code, "D_PROVENANCE_INVALID")
+  }
+})
