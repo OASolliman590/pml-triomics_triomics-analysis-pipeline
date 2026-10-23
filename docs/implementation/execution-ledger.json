@@ -36,13 +36,26 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_003_contract_foundation_blocked_attempts_exhausted",
+    "status": "m7_004_contract_foundation_completion_authorized",
     "last_reconciled": "2026-10-23",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The M7-003 contract-foundation initial implementation plus two targeted repairs exhausted their allowance with the focused gate still failing. No commit, registration request, Sol review, integration, or gate release occurred. Further implementation requires Omar's explicit authorization of a new bounded repair record. D-T01, M7, and every Stage-D successor remain closed."
+    "disposition": "Omar invoked the implement workflow and authorized completing the accepted specification. M7-004 reopens only the failed contract-foundation phase as one new bounded implementation plus at most two targeted repairs, followed by focused tests, one full suite, and independent Standards and Spec review. No downstream seam or gate is released yet."
   },
   "orchestration_events": [
+    {
+      "event": "m7_004_contract_foundation_completion_authorized",
+      "date": "2026-10-23",
+      "authority": "Omar invoked the implement skill and requested full specification implementation tested to a passing gate.",
+      "change_record": "docs/implementation/change-records/M7-004-contract-foundation-completion.md",
+      "predecessor_blocker": "docs/implementation/reviews/2026-10-23-m7-003-contract-foundation-blocker.md",
+      "scope": "Contract-foundation completion only; accepted M7-002 plus M7-003 semantics unchanged.",
+      "attempt_limit": "one implementation plus at most two targeted repairs",
+      "review_route": "focused GREEN -> one full suite -> immutable candidate -> parallel Standards and Spec review -> bounded repair or serial Sol integration",
+      "allowed_next_transition": "Preserve the failed M7-003 files as a non-acceptance seed, create a fresh isolated worktree, and dispatch one fresh Luna-max worker with the exact four-file allowlist.",
+      "closed_scope": ["B-T07 producer seam", "C-06 producer seam", "D verification and publication", "migration", "shared CLI/NAMESPACE registration", "D-T01 acceptance", "M7 release", "every Stage-D successor"],
+      "disposition": "Implementation exception only; no scientific-contract, threshold, seed, frozen-spec, private-data, or gate change."
+    },
     {
       "event": "m7_003_contract_foundation_blocked_attempts_exhausted",
       "date": "2026-10-23",

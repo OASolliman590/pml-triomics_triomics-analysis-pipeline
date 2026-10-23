@@ -146,6 +146,14 @@ allowlisted files are preserved in the worktree. The durable receipt is
 `reviews/2026-10-23-m7-003-contract-foundation-blocker.md`. Further product
 work requires Omar's explicit authorization of a new bounded repair record.
 
+Omar supplied that authority by invoking the `implement` workflow and asking to
+implement the accepted specification to a passing test gate. M7-004 is the new
+bounded completion record. It reopens only contract foundation for one fresh
+Luna-max implementation plus at most two targeted repairs, then one complete
+suite and independent Standards/Spec review. The three failing M7-003 files may
+be preserved only as an explicitly non-acceptance seed. No producer, D,
+migration, shared-registration, D-T01, M7, or successor gate is released yet.
+
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
 lanes. They are not used for D-T01: only after D-T01 acceptance do the
@@ -391,10 +399,11 @@ D-T01 remains unaccepted and blocks every Stage-D successor.
 Do not integrate candidate `1b44a84`, resume its worker, edit producer/D/shared
 registration seams, or start D-T02/D-T03. M7-001 and M7-002 exhausted their
 permitted cycles; M7-003 is accepted as a specification amendment, but its
-contract-foundation implementation packet is now exhausted and blocked. Do not
-resume `/root/m7_003_contract_luna`, integrate its uncommitted files, apply
-shared registration, or dispatch a reviewer as though a candidate exists. Only
-Omar's explicit authorization of a new bounded repair record may reopen this
-implementation. D-T01, M7, and all successors stay closed meanwhile.
+contract-foundation implementation packet is exhausted and remains historical.
+Do not resume `/root/m7_003_contract_luna` or integrate its files directly.
+Continue through M7-004: preserve the failed files as a non-acceptance seed,
+use one fresh isolated Luna-max worktree, require focused GREEN and one full
+suite, then run independent Standards and Spec reviews before serial
+integration. D-T01, M7, and all successors stay closed meanwhile.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.
