@@ -175,6 +175,14 @@ Standards and Spec reviewers are active on the M7-004 candidate. Integration
 remains prohibited until both axes pass and the independent baseline gate is
 resolved.
 
+M7-005 opens that independent baseline gate as a one-file source-test repair.
+Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
+`tests/testthat/test-C-05.R`: update the obsolete unaccepted-registration
+expectations to the already tracked accepted synthetic-only C-05 state, preserve
+all qualification assertions and the fourteen named native warnings, and return
+a clean commit for fresh Sol review. This lane is file-disjoint from both M7-004
+reviewers and does not release a product gate.
+
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
 lanes. They are not used for D-T01: only after D-T01 acceptance do the

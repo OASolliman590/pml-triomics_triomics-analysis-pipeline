@@ -60,6 +60,18 @@
       "allowed_files": [],
       "allowed_next_transition": "Both review axes pass -> resolve the independent C-05 source-test baseline gate, then serial integration; any M7-004 finding -> bounded repair to the same Luna worker.",
       "wait_cursor": null
+    },
+    {
+      "agent": "/root/m7_005_c05_luna",
+      "role": "fresh_bounded_luna_max_source_test_repair",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "packet": "M7-005 C-05 source-suite acceptance-state repair",
+      "base_commit": "0b76973f2c5eed00c69c3aa32faef484990cdc62",
+      "allowed_files": ["tests/testthat/test-C-05.R"],
+      "allowed_next_transition": "One-file commit -> fresh read-only Sol-high review -> serial integration only on pass.",
+      "wait_cursor": null
     }
   ],
   "orchestration_control": {
@@ -67,12 +79,24 @@
     "last_reconciled": "2026-10-23",
     "active_handoffs": [
       "/root/m7_004_standards_review",
-      "/root/m7_004_spec_review"
+      "/root/m7_004_spec_review",
+      "/root/m7_005_c05_luna"
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M7-004 candidate 65662bc is focused-green and immutable. Parallel fresh read-only Standards and Spec reviews are active. The source full suite still fails two pre-existing C-05 registration assertions outside the candidate diff; they are a separate gate and are not waived. No integration or downstream release has occurred."
+    "disposition": "M7-004 candidate 65662bc is under parallel Standards and Spec review. Independent M7-005 opens a one-file C-05 source-test repair for the two stale acceptance-state assertions, with the fourteen known native warnings preserved. No integration or downstream release has occurred."
   },
   "orchestration_events": [
+    {
+      "event": "m7_005_c05_source_baseline_repair_authorized",
+      "date": "2026-10-23",
+      "change_record": "docs/implementation/change-records/M7-005-c05-source-baseline-repair.md",
+      "worker": "/root/m7_005_c05_luna",
+      "base_commit": "0b76973f2c5eed00c69c3aa32faef484990cdc62",
+      "allowed_files": ["tests/testthat/test-C-05.R"],
+      "red": "Correct isolated MOFA runtime leaves exactly two stale registration-state failures plus fourteen already dispositioned native small-fixture warnings.",
+      "allowed_next_transition": "Fresh isolated Luna-max implementation -> one-file commit -> fresh read-only Sol-high review.",
+      "disposition": "Test-only baseline repair; no product, registration, scientific-contract, warning suppression, private-data, acceptance, or gate change."
+    },
     {
       "event": "m7_004_candidate_two_axis_review_dispatched",
       "date": "2026-10-23",
