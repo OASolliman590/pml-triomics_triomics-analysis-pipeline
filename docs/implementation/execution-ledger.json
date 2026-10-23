@@ -47,33 +47,31 @@
       "allowed_files": ["R/provenance_contract.R", "inst/schema/stage-handoff-provenance.schema.json", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
       "allowed_next_transition": "Repair commit and focused GREEN -> same Spec reviewer performs the single focused rereview. No integration before pass.",
       "wait_cursor": null
-    },
-    {
-      "agent": "/root/m7_005_c05_review",
-      "role": "fresh_read_only_sol_high_source_test_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "effective_settings_exposed": false,
-      "packet": "M7-005 C-05 source-suite acceptance-state review",
-      "candidate_commit": "ef62066",
-      "fixed_point": "29e7a36c858f954d2d15292132e2ba1738f3b79a",
-      "worktree": "/Users/megastore/.codex/worktrees/m7-005-c05-source-baseline/PML MultiOmics Analysis Pipeline",
-      "allowed_files": [],
-      "allowed_next_transition": "Pass -> serially integrate the one-file test repair; changes_required -> bounded repair to the same Luna worker.",
-      "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "m7_004_repair_1_and_m7_005_worker_active",
+    "status": "m7_004_repair_1_active_m7_005_integrated",
     "last_reconciled": "2026-10-23",
     "active_handoffs": [
-      "/root/m7_004_contract_luna",
-      "/root/m7_005_c05_review"
+      "/root/m7_004_contract_luna"
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M7-004 repair 1 is active. M7-005 candidate ef62066 is focused-green with no failures/errors/skips and the native warning inventory preserved; a fresh read-only Sol-high review is active. No integration or downstream release has occurred."
+    "disposition": "M7-004 repair 1 is active. M7-005 candidate ef62066 passed fresh read-only Sol-high review with Critical 0, Important 0, Minor 0 and was integrated as 223546e. The one-file source-test baseline correction releases no product, scientific, M7, or downstream gate."
   },
   "orchestration_events": [
+    {
+      "event": "m7_005_c05_source_baseline_review_passed_integrated",
+      "date": "2026-10-23",
+      "candidate_commit": "ef62066",
+      "fixed_point": "29e7a36c858f954d2d15292132e2ba1738f3b79a",
+      "reviewer": "/root/m7_005_c05_review",
+      "verdict": "ready_to_integrate; Critical 0, Important 0, Minor 0",
+      "independent_check": "16 of 16 registration-state expectations passed with no warning or skip",
+      "integration_commit": "223546ebcf4be5b81831ae607060875ad05ff1f7",
+      "review_ref": "docs/implementation/reviews/2026-10-23-m7-005-c05-source-baseline-review.md",
+      "allowed_next_transition": "Finish M7-004 repair and focused rereview, then integrate serially and run the combined source suite once with the accepted isolated MOFA runtime.",
+      "disposition": "One-file source-test baseline correction only; no product behavior, scientific claim, registration, warning suppression, M7 acceptance, or downstream release."
+    },
     {
       "event": "m7_005_c05_candidate_review_dispatched",
       "date": "2026-10-23",

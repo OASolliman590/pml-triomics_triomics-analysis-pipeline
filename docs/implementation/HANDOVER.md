@@ -197,7 +197,13 @@ M7-005 candidate `ef62066` changes only the obsolete C-05 registration-state
 test block. Focused RED had the two stale assertions; focused GREEN had zero
 failures/errors/skips and preserved the fourteen named native warnings plus one
 intermittent correlated-factor QC warning already covered by the C-05 acceptance
-review. Fresh read-only Sol-high reviewer `/root/m7_005_c05_review` is active.
+review. Fresh read-only Sol-high review passed with Critical 0, Important 0,
+Minor 0 and independently passed all 16 registration expectations. Sol
+integrated the one-file correction as `223546e`. The durable receipt is
+`reviews/2026-10-23-m7-005-c05-source-baseline-review.md`. This repairs only the
+source-suite baseline; M7-004, D-T01, M7, and every downstream gate remain
+closed pending the contract repair, focused rereview, integration, and combined
+source-suite gate.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
