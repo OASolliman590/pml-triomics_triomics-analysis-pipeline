@@ -101,9 +101,12 @@ read-only Astra-low audit passes the immutable M7-002 snapshot. Stage D remains
 blocked; M7-001 remains exhausted. No private study data were read.
 
 Fresh read-only Astra-low reviewer `/root/m7_002_astra_audit` is the sole active
-handoff for the immutable amendment snapshot. It may return `pass` or
-`changes_required`; it cannot edit, accept the amendment, release M7, or start
-implementation. Sol must reconcile its verdict before any product work.
+handoff. Its initial audit of `81fdf77` returned `changes_required`: Critical 0,
+Important 3, Minor 0. It required a closed role/graph/manifest contract, truthful
+atomic-rename commit semantics, and Sol-only shared registration ownership.
+Documentation repair 1 addresses all three; the same read-only reviewer now gets
+the single focused rereview. It cannot edit, accept the amendment, release M7,
+or start implementation. Sol must reconcile its verdict before product work.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation

@@ -1,7 +1,7 @@
 # M7-002 — Stage Handoff Provenance and atomic generation publication
 
 - Date: 2026-10-23
-- Status: **proposed; implementation prohibited pending fresh Astra-low audit**
+- Status: **proposed; documentation repair 1 applied; focused Astra-low rereview pending**
 - User authority: Omar adopted the domain model and instructed Sol to define the
   legacy proof/regeneration rules, draft the amendment, and dispatch the audit.
 - Frozen base specification hash:
@@ -64,7 +64,8 @@ different field names and MUST NOT be substituted for one another.
 ### 1.1 Canonical identity
 
 `identity` is a closed object containing `schema_uri`, `schema_version`,
-`handoff_role`, and an exhaustive `entities` array. It uses I-JSON values.
+`handoff_role`, exhaustive `activities` and `entities` arrays, and nothing else.
+It uses I-JSON values.
 Floating-point values, NaN, infinity, negative zero, and integers outside the
 exact IEEE-754 range MUST NOT appear in the canonical identity. Exact scientific
 numbers belong in typed immutable artifacts and are bound by descriptors; exact
@@ -85,12 +86,15 @@ conformance.
 Every `entities` member is a closed `ScientificEntityDescriptor` containing:
 
 - `entity_id`, `entity_type`, `scientific_role`, and entity `schema_version`;
-- `storage_form` and `media_type`;
+- `storage_form`, exactly `file`, `enveloped_artifact`, or `embedded_json`, and
+  `media_type`;
 - `digest_algorithm`, fixed to `sha256`;
 - `digest_kind`, exactly `bytes` or `rfc8785`;
 - `digest`, full 64-character lowercase hexadecimal SHA-256;
 - `size_bytes` as an exact non-negative integer when `digest_kind=bytes`;
-- `producer_activity_id`;
+- `canonical_schema_uri` when `digest_kind=rfc8785`;
+- `generated_by_activity_id`, null only for an external source entity;
+- sorted unique `derived_from_entity_ids` and optional `member_of_entity_id`;
 - `artifact_id` and `artifact_payload_sha256` when the entity is an enveloped
   artifact; and
 - applicable `study_id`, `analysis_id`, `preparation_context_id`,
@@ -99,6 +103,60 @@ Every `entities` member is a closed `ScientificEntityDescriptor` containing:
 User-controlled identifiers occur only as values at schema-defined paths. A
 contrast or entity ID equal to `model_hash`, `sha256`, or another reserved field
 name remains data and cannot satisfy a provenance requirement.
+
+Conditional fields are closed. `file` and `enveloped_artifact` require
+`digest_kind=bytes` and `size_bytes`; `embedded_json` requires
+`digest_kind=rfc8785` and `canonical_schema_uri` and forbids `size_bytes`.
+`enveloped_artifact` requires `artifact_id` and `artifact_payload_sha256`; the
+other storage forms forbid them. An applicable analysis, preparation,
+representation, block, row, or column identity cannot be null merely because a
+consumer does not need it.
+
+### 1.3 Activities, graph resolution, and role registry
+
+Every `activities` member is closed and contains `activity_id`, `stage`,
+`activity_type`, `method_id`, sorted unique `used_entity_ids`, and sorted unique
+`generated_entity_ids`. Allowed activity types are `analysis`, `integration`,
+`handoff_export`, and `deterministic_legacy_packaging`. Every entity reference
+MUST resolve to exactly one entity in the same identity object. Every generated
+entity has exactly one matching `generated_by_activity_id`; external source
+entities have null `generated_by_activity_id` and MUST be used by at least one
+activity. Every `derived_from_entity_ids` and `member_of_entity_id` reference
+resolves in the same graph. Derivation and membership graphs are acyclic. The
+root `producer_activity_id` is an `activities.activity_id` and generates the
+handoff artifacts.
+
+`scientific_role` is one of this closed registry:
+
+- `source_manifest`, `normalized_metadata`, `feature_registry`,
+  `analysis_unit_map`, `resolved_analysis`, `represented_matrix`,
+  `preprocessing_state`, `method_state`, `predecessor_envelope`,
+  `predecessor_payload`, `block_results`, `family_ledger`,
+  `candidate_nominations`, `integration_result`, `integration_state`,
+  `evaluation_evidence`, `clinical_evidence`, `native_sidecar`, or
+  `handoff_payload`.
+
+Cardinality is evaluated after grouping by the descriptor's applicable scope
+IDs. Both producer profiles require one or more `source_manifest` overall;
+exactly one `normalized_metadata`, `analysis_unit_map`, and `resolved_analysis`
+per `analysis_id`; exactly one `feature_registry` per `block_id`; exactly one
+`represented_matrix` and one or more `preprocessing_state` per
+`(analysis_id, block_id, representation_id)`; exactly one `method_state` per
+`(analysis_id, method_id)`; and one or more matching predecessor envelope/payload
+pairs and handoff payloads.
+
+The B profile additionally requires exactly one `block_results`, one
+`family_ledger`, and one `candidate_nominations` per exported B handoff.
+Applicable clinical and native sidecars are required as descriptors; when a
+declared route is unavailable, its typed unavailable payload is the descriptor
+target rather than omission.
+
+The C profile additionally requires one or more `integration_result` and
+matching `integration_state` descriptors, exactly one `candidate_nominations`,
+and exactly one `evaluation_evidence` descriptor per exported C handoff.
+Applicable clinical and native sidecars follow the same typed-unavailable rule.
+Extra roles, missing roles, role/type disagreement, or two descriptors where the
+registry says exactly one are `D_PROVENANCE_INVALID`.
 
 ## 2. Required lineage closure
 
@@ -160,7 +218,10 @@ Required stable failure classes are:
 - `D_LEGACY_INELIGIBLE` for an unprovable legacy handoff;
 - `D_OUTPUT_PATH_UNSAFE` for an unsafe publication path; and
 - `D_PUBLICATION_FAILED` for a failed prepare/publish operation that leaves the
-  prior generation current.
+  prior generation current; and
+- `D_PUBLICATION_STATUS_UNKNOWN` when pointer replacement may have committed but
+  acknowledgement/read-back cannot establish which complete generation is
+  current.
 
 ## 4. Legacy proof, migration, and regeneration
 
@@ -220,9 +281,20 @@ The writer MUST use this state machine:
 2. **Prepare:** create an exclusive temporary directory inside the final
    generation parent. Write all payloads/envelopes there. Validate every schema,
    size, digest, cross-reference, and required status.
-3. **Seal:** write a closed complete generation manifest containing typed
-   descriptors for every member. Canonicalize/hash it; the full digest is the
-   immutable `generation_id`.
+3. **Seal:** write a closed complete generation manifest. Its fields are
+   `profile` (literal `triomics.output-generation-manifest`), `profile_version`
+   (`1.0`), `study_id`, `run_id`, the validated B/C provenance artifact
+   descriptors, `producer` identity, `status`, `limitations`, and `members`.
+   Each member is a closed record containing normalized relative `path`,
+   `scientific_role`, `artifact_type`, `media_type`, `status`, `size_bytes`,
+   `digest_algorithm=sha256`, `digest`, and optional paired
+   `envelope_for_artifact_id`. Members are sorted uniquely by path. The manifest
+   lists every generation file except the manifest itself and excludes the
+   current pointer, lock, and temporary files. The Stage Handoff Provenance
+   documents are inputs named at the manifest root, not undisclosed members.
+   Canonicalize and hash the complete manifest file; its full byte SHA-256 is the
+   immutable `generation_id`. Neither `generation_id` nor a manifest self-
+   descriptor appears inside the manifest, so no circular digest exists.
 4. **Publish generation:** rename the temporary directory to the generation ID
    within the same parent. An existing generation ID is accepted only after
    complete byte-for-byte verification; conflicting content fails.
@@ -230,15 +302,24 @@ The writer MUST use this state machine:
    registry directory with `schema_version`, `study_id`, `run_id`,
    `generation_id`, and the generation-manifest descriptor.
 6. **Commit pointer last:** atomically rename the temporary pointer over the
-   current pointer within the same directory and verify the operation result.
+   current pointer within the same directory. Successful rename is the single
+   linearization point: the new complete generation is current from that point.
+   All validations occur before it. A pre-rename failure leaves the old pointer
+   current. If the rename result or subsequent acknowledgement/read-back is
+   ambiguous, recovery reads and validates the current pointer and the complete
+   generation it names. Recovery reports old-current or new-current when proven;
+   otherwise it returns `D_PUBLICATION_STATUS_UNKNOWN` and MUST NOT claim
+   rollback or delete either complete generation.
 7. **After commit:** prior generations remain immutable. An orphan unreferenced
    generation or temporary directory may be reported for later cleanup; cleanup
    is not part of scientific success and cannot invalidate the prior pointer.
 
 No current registry or prior generation is moved or archived before step 6.
-Every failure before step 6 leaves the prior pointer and generation bytes
-unchanged. A failed pointer replacement reports `D_PUBLICATION_FAILED` and does
-not claim the candidate current. Base-R path checks alone are sufficient only
+Every failure before the step-6 rename leaves the prior pointer and generation
+bytes unchanged. A definite failed rename reports `D_PUBLICATION_FAILED` and
+leaves the prior pointer current. A successful rename is committed even if later
+acknowledgement fails; recovery recognizes the pointer it can prove rather than
+pretending old bytes survived. Base-R path checks alone are sufficient only
 for the declared single-writer/static-hazard model; the implementation must not
 claim hostile-race or crash durability.
 
@@ -270,9 +351,13 @@ Public synthetic behavioral tests MUST demonstrate:
 9. Symlink and dangling-symlink probes at the output root, generation parent,
    registry directory, current pointer, temporary generation, and planned leaf
    fail before the current pointer changes.
-10. Forced failure at every preflight/prepare/seal/publish/pointer step leaves
-    the old pointer byte-identical. A failure after generation publication but
-    before pointer commit may leave only an unreferenced complete generation.
+10. Forced failure at every step before the pointer rename leaves the old pointer
+    byte-identical. A failure after generation publication but before pointer
+    commit may leave only an unreferenced complete generation. Fault injection
+    at rename acknowledgement/read-back must recover and validate whichever old
+    or new complete generation the pointer names, or return
+    `D_PUBLICATION_STATUS_UNKNOWN`; it must not assert that the old pointer was
+    preserved after a successful rename.
 11. A successful commit exposes one complete generation; every referenced
     member exists and matches type, size, and digest. A rerun cannot mutate it.
 12. Fresh public Stage B -> C -> D CLIs succeed with actual-byte read-back and
@@ -301,8 +386,16 @@ M7-002 implementation cycle with these dependency-ordered phases:
    workers may update only the B-T07 and C-06 public export/handoff code and
    their focused tests to emit native or deterministic-migration provenance.
 3. **D verification/publication:** after producer integration, one fresh
-   Luna-max worker may update the D-T01 evidence consumer, publication lifecycle,
-   shared CLI registration, and focused tests under one exclusive allowlist.
+   Luna-max worker may update only the D-T01 evidence consumer, D publication
+   lifecycle, D-owned fixtures/registration request, and focused tests under one
+   exclusive allowlist. The worker does not edit shared CLI, stage registration,
+   namespace, manuals, or package registration.
+
+Sol alone applies mechanical shared CLI/stage/package registration serially from
+the reviewed packet-owned handoff, as required by AGENTS hard rule 5. No shared
+implementation exception is granted here. If the handoff requires substantive
+shared behavior rather than mechanical registration, Sol stops and records a
+separate scoped change proposal before editing.
 
 Each phase has one initial attempt plus at most two targeted repairs, independent
 fresh Sol-high review, serial Sol integration, and exact affected tests. This is
@@ -324,13 +417,19 @@ legacy non-inference, all five M7-001 findings, publication failure semantics,
 scope/claim limits, affected acceptance, testability, and implementation
 ownership. Astra does not edit, accept the amendment, release M7, or start work.
 
-Verdict `pass` permits Sol to mark this record accepted and begin phase 1.
-`changes_required` permits one focused documentation repair and one focused
-rereview; implementation remains prohibited. A Critical or Important finding
-after that rereview blocks M7-002.
+The initial audit of commit `81fdf776f5bdfb9bccc0628c61b30fc7cb58643f`
+returned `changes_required` with three Important findings: incomplete closed
+role/graph/manifest definitions, an impossible post-rename rollback expectation,
+and shared-registration ownership drift. Documentation repair 1 closes those
+three points in sections 1, 3, 5, 6, and 7. No other repair is allowed.
+
+The single focused rereview returns `pass` or `changes_required`. A pass permits
+Sol to mark this record accepted and begin phase 1. Any remaining Critical or
+Important finding blocks M7-002 and implementation remains prohibited.
 
 ## Current disposition
 
-Proposed only. D-T01, M7, and all Stage-D successors remain blocked. No product
-code, frozen spec file, packet JSON, threshold, seed, method, lockfile, or private
-study input is changed by this record.
+Proposed only; documentation repair 1 is awaiting its single focused rereview.
+D-T01, M7, and all Stage-D successors remain blocked. No product code, frozen
+spec file, packet JSON, threshold, seed, method, lockfile, or private study input
+is changed by this record.

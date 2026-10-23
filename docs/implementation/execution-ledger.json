@@ -48,13 +48,25 @@
     }
   ],
   "orchestration_control": {
-    "status": "m7_002_astra_amendment_audit_active",
+    "status": "m7_002_focused_astra_rereview_prepared",
     "last_reconciled": "2026-10-23",
     "active_handoffs": ["/root/m7_002_astra_audit"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Legacy proof/migration and the explicit M7-002 amendment route are resolved. One fresh read-only Astra-low audit is the sole active handoff. M7-001 remains exhausted and Stage D remains blocked. No implementation is authorized before an audit pass."
+    "disposition": "The initial M7-002 Astra audit returned changes_required with three Important findings. Documentation repair 1 is prepared for the single focused rereview by the same read-only reviewer. M7-001 remains exhausted and Stage D remains blocked. No implementation is authorized before a rereview pass."
   },
   "orchestration_events": [
+    {
+      "event": "m7_002_astra_changes_required_documentation_repair_1_prepared",
+      "date": "2026-10-23",
+      "reviewer": "/root/m7_002_astra_audit",
+      "initial_candidate": "81fdf776f5bdfb9bccc0628c61b30fc7cb58643f",
+      "initial_verdict": "changes_required; Critical 0, Important 3, Minor 0",
+      "initial_review_ref": "docs/implementation/reviews/2026-10-23-m7-002-astra-amendment-audit.md",
+      "focused_brief": "docs/implementation/reviews/2026-10-23-m7-002-focused-astra-rereview-brief.md",
+      "repairs": ["closed role/type/cardinality, graph, conditional-field, and non-circular manifest definitions", "rename made the linearization point with truthful ambiguous-postcommit recovery", "shared CLI/stage/package registration restored to Sol-only ownership"],
+      "allowed_next_transition": "Commit immutable repair -> same read-only Astra reviewer performs the single focused rereview. Pass may authorize phase 1; any remaining Critical/Important blocks M7-002.",
+      "disposition": "Documentation repair only; no product implementation, private data, frozen base spec edit, or gate release."
+    },
     {
       "event": "m7_002_astra_amendment_audit_prepared",
       "date": "2026-10-23",
