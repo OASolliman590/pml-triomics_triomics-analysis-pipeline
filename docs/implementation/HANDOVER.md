@@ -71,6 +71,15 @@ and every direct or transitive Stage-D successor remain blocked, and no
 run-owned agent is active. The rejected M7-001 worktree is archived as a
 recoverable snapshot. No private study data were read or delegated.
 
+Omar then explicitly requested a Wayfinder plus primary-source research cycle
+to choose a scientifically citable repair before any spec amendment or new
+implementation. The planning-only map is
+`docs/implementation/investigations/d-t01-provenance-wayfinder/MAP.md`.
+Researchers `/root/provenance_research` and `/root/publication_research` are
+active on disjoint single-file notes covering scientific handoff identity and
+canonical digests/fail-safe publication. Stage D remains blocked; this research
+does not reopen M7-001 or authorize a frozen-spec or product edit.
+
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
 lanes. They are not used for D-T01: only after D-T01 acceptance do the
