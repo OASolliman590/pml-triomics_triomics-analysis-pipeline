@@ -36,13 +36,27 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "d_t01_wayfinder_research_complete_domain_model_frontier",
+    "status": "d_t01_wayfinder_domain_model_complete_legacy_frontier",
     "last_reconciled": "2026-10-23",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Both planning-only research tickets are closed with citable primary-source notes. The open frontier is the Stage D provenance domain-model decision. M7-001 remains exhausted and Stage D remains blocked. No frozen specification or product implementation change is authorized."
+    "disposition": "The Stage D provenance domain model is accepted and recorded in GLOSSARY.md and ADR 0003. The open frontier is legacy handoff proof and migration. M7-001 remains exhausted and Stage D remains blocked. No frozen specification or product implementation change is authorized."
   },
   "orchestration_events": [
+    {
+      "event": "d_t01_wayfinder_provenance_domain_model_accepted",
+      "date": "2026-10-23",
+      "authority": "Omar",
+      "decision_ticket": "docs/implementation/investigations/d-t01-provenance-wayfinder/select-provenance-domain-model.md",
+      "adr": "docs/adr/0003-stage-handoff-provenance-and-generation-publication.md",
+      "glossary": "GLOSSARY.md",
+      "decision": "Producer-owned triomics JSON Stage Handoff Provenance; typed complete scientific lineage; D verifies and never reconstructs producer identity; immutable Output Generations; a small Current Generation Pointer replaced last; Process-Failure Atomicity under one Single Pipeline Writer.",
+      "explicit_limits": "No hostile concurrent-mutation guarantee, no operating-system or power-loss durability promise, no statistical-method change, and no external-standard conformance claim.",
+      "legacy_constraint": "Reject legacy evidence unless immutable producer artifacts prove the complete required lineage.",
+      "next_frontier": "docs/implementation/investigations/d-t01-provenance-wayfinder/decide-legacy-migration.md",
+      "allowed_next_transition": "Resolve the exact legacy proof/migration route, then define the explicit spec-v2 amendment and fresh Astra audit route. Do not implement before that audit passes.",
+      "disposition": "Planning decision only; no active worker; no private data; no frozen-spec or product edit; D-T01 and Stage D remain blocked."
+    },
     {
       "event": "d_t01_wayfinder_primary_research_reconciled",
       "date": "2026-10-23",

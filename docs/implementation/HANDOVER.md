@@ -81,12 +81,19 @@ Run RO-Crate; a closed BagIt-style typed inventory; RFC 8785 canonical JSON and
 full SHA-256; and immutable output generations whose current registry pointer
 is atomically replaced only after complete validation. D verifies producer
 identity and never reconstructs it. No external-standard compliance claim is
-made. The open frontier is `Select the Stage D provenance domain model`, which
-must decide the threat model, durability promise, identity granularity, JCS
-implementation, and registry layout. Only after that can the legacy-migration
-and explicit spec-amendment tickets proceed. Stage D remains blocked; this
-research did not reopen M7-001 or authorize a frozen-spec or product edit. No
-run-owned agent is active and no private study data were read.
+made. Omar accepted the domain model on 2026-10-23: a producer-owned triomics
+JSON Stage Handoff Provenance, typed Scientific Entity Descriptors, immutable
+Output Generations, a small Current Generation Pointer replaced last, and
+Process-Failure Atomicity under a Single Pipeline Writer. This deliberately
+does not promise protection from hostile concurrent mutation, operating-system
+or power failure, or unsupported filesystem behavior. The terms are recorded in
+the root glossary and ADR 0003. The open frontier is now `Decide legacy handoff
+migration and compatibility`; Omar's binding constraint is that legacy evidence
+must be rejected unless immutable producer artifacts prove complete lineage.
+The exact proof/migration route and then the explicit spec-amendment/audit route
+remain to be resolved. Stage D remains blocked; this decision did not reopen
+M7-001 or authorize a frozen-spec or product edit. No run-owned agent is active
+and no private study data were read.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation

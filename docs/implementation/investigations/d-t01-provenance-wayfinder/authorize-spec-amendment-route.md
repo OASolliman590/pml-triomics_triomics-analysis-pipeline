@@ -3,7 +3,7 @@
 Label: `wayfinder:task`  
 Parent: [Scientific provenance boundary for Stage D](MAP.md)  
 Status: blocked  
-Blocked by: [Select the Stage D provenance domain model](select-provenance-domain-model.md); [Decide legacy handoff migration and compatibility](decide-legacy-migration.md)
+Blocked by: [Decide legacy handoff migration and compatibility](decide-legacy-migration.md)
 
 ## Question
 

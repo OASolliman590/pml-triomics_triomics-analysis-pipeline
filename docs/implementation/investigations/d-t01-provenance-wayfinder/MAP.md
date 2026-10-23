@@ -42,13 +42,16 @@ Astra approval before any product implementation starts.
 - This changes provenance validation and publication safety only. It does not
   change any estimator, analysis population, contrast, multiple-testing family,
   threshold, B-T04 bound, seed, integration method, or biological claim.
+- [Select the Stage D provenance domain model](select-provenance-domain-model.md)
+  is resolved: triomics owns a producer-issued JSON Stage Handoff Provenance;
+  D verifies lineage-complete handoffs and publishes immutable generations under
+  a single writer by replacing a small current-generation pointer last.
 
 ## Not yet specified
 
 - The exact versioned schema and digest boundary for the selected provenance
   object.
-- The supported threat model, crash-durability promise, registry-pointer layout,
-  and audited RFC 8785 implementation.
+- The audited RFC 8785 implementation and its conformance-vector evidence.
 - How legacy accepted B/C artifacts can migrate without accepting ambiguous
   lineage or refitting scientific models.
 - The complete validation and adversarial test matrix for the amended contract.
