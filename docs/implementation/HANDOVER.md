@@ -212,6 +212,14 @@ unit/design/method context and that migration proof coverage omits mandatory
 `reviews/2026-10-24-m7-004-astra-acceptance-audit.md`. M7-004 is not accepted.
 Its implementation and two repairs are consumed; no worker remains active.
 
+Omar then authorized M7-006 as a new bounded repair cycle for exactly those two
+findings. Its change record is
+`change-records/M7-006-provenance-completeness-repair.md`. The legal route is one
+fresh isolated Luna-max worker using public-validator TDD, focused GREEN,
+two-axis code review, serial Sol integration, one full source suite, and exactly
+one fresh read-only Astra-low acceptance audit. Downstream Stage D remains
+closed throughout.
+
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
 `tests/testthat/test-C-05.R`: update the obsolete unaccepted-registration
@@ -481,14 +489,14 @@ registration seams, or start D-T02/D-T03. M7-001 and M7-002 exhausted their
 permitted cycles; M7-003 is accepted as a specification amendment, but its
 contract-foundation implementation packet is exhausted and remains historical.
 Do not resume `/root/m7_003_contract_luna` or integrate its files directly.
-M7-004 final candidate `647192f` is integrated through snapshot `5dcc25f` and
-the focused plus combined source-suite gates are green, but the fresh Astra
-acceptance audit found two Important completeness defects. Do not rerun Luna or
-the full suite and do not accept M7-004. Only Omar's explicit authorization of a
-new bounded repair record may reopen it; that cycle must add RED fixtures for
-M7-004-ASTRA-01 and M7-004-ASTRA-02, reach focused GREEN, and receive a fresh
-read-only immutable acceptance audit. Do not start B-T07/C-06 producer
-provenance, D verification/publication, migration, D-T01 acceptance, M7 release,
-or any Stage-D successor.
+M7-006 is authorized for M7-004-ASTRA-01 and M7-004-ASTRA-02. Create a fresh
+managed worktree from the current authorized branch, dispatch one fresh Luna-max
+worker with the exact three-file allowlist in the M7-006 record, and require
+public-validator RED before implementation and focused GREEN afterward. Then
+run the two-axis code review, integrate only if both axes pass, run the full
+source suite once, and dispatch exactly one fresh read-only Astra-low audit of
+the immutable repaired snapshot. Do not start B-T07/C-06 producer provenance,
+D verification/publication, migration, D-T01 acceptance, M7 release, or any
+Stage-D successor before that audit passes.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.

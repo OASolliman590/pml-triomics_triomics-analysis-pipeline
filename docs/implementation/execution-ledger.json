@@ -34,15 +34,42 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "pending:/root/m7_006_provenance_luna",
+      "role": "fresh_bounded_luna_max_provenance_completeness_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "packet": "M7-006 provenance completeness repair",
+      "candidate_commit": null,
+      "fixed_point": "5dcc25f",
+      "worktree": "pending managed worktree",
+      "allowed_files": ["R/provenance_contract.R", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
+      "allowed_next_transition": "Focused GREEN and clean commit -> Sol inspection -> parallel Standards and Spec review. No integration or Stage-D work before both axes pass.",
+      "wait_cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_004_astra_changes_required_attempts_exhausted_blocked",
+    "status": "m7_006_authorized_worktree_dispatch_pending",
     "last_reconciled": "2026-10-24",
-    "active_handoffs": [],
+    "active_handoffs": ["pending:/root/m7_006_provenance_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Astra-low audit of immutable snapshot 5dcc25f returned changes_required: Critical 0, Important 2, Minor 0. Represented contexts are not joined to required analysis/method contexts, and migration proof coverage omits mandatory handoff_payload. M7-004 is not accepted; implementation plus two repairs are consumed; no worker is active and all downstream Stage-D work remains closed."
+    "disposition": "Omar authorized bounded M7-006 for the two Astra completeness findings. A fresh Luna-max worktree/dispatch is pending with a three-file allowlist and public-validator TDD. M7-004 remains unaccepted and all downstream Stage-D work remains closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_006_provenance_completeness_repair_authorized",
+      "date": "2026-10-24",
+      "authority": "Omar authorized a new bounded M7-006 repair cycle for M7-004-ASTRA-01 and M7-004-ASTRA-02, focused tests, and one fresh read-only Astra-low audit",
+      "change_record": "docs/implementation/change-records/M7-006-provenance-completeness-repair.md",
+      "fixed_point": "5dcc25f",
+      "worker": "pending:/root/m7_006_provenance_luna",
+      "allowlist": ["R/provenance_contract.R", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
+      "review_route": "focused RED/GREEN -> two-axis code review -> serial integration -> one full source suite -> one fresh read-only Astra-low acceptance audit",
+      "allowed_next_transition": "Create a fresh managed worktree and dispatch one fresh Luna-max implementer.",
+      "disposition": "No Stage-D work, private data, frozen-spec edit, scientific-method change, warning suppression, or gate release."
+    },
     {
       "event": "m7_004_fresh_astra_acceptance_audit_changes_required_blocked",
       "date": "2026-10-24",
