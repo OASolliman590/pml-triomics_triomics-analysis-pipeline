@@ -133,6 +133,16 @@ D verification/publication, migration, shared registration, D-T01 acceptance,
 M7 release, and every Stage-D successor remain closed. No private-data access
 is authorized.
 
+The released contract-foundation packet is now active in the isolated worktree
+`/Users/megastore/.codex/worktrees/m7-003-contract-foundation/PML MultiOmics Analysis Pipeline`
+from exact base `221df65`. Luna-max worker `/root/m7_003_contract_luna` owns
+exactly four new files: the R contract helper, JSON Schema, focused tests, and
+packet registration request. Strict RED/GREEN evidence and rejection of a
+native descriptor whose non-null `method_id` disagrees with its declared route
+are mandatory. The next legal transition is inspection of the worker commit and
+one fresh read-only Sol-high review; no integration or shared registration may
+occur before that review passes.
+
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
 lanes. They are not used for D-T01: only after D-T01 acceptance do the
@@ -377,8 +387,10 @@ D-T01 remains unaccepted and blocks every Stage-D successor.
 
 Do not integrate candidate `1b44a84`, resume its worker, edit producer/D/shared
 registration seams, or start D-T02/D-T03. M7-001 and M7-002 exhausted their
-permitted cycles; M7-003 is accepted. The only legal implementation transition
-is the new-file-only contract-foundation packet, followed by fresh Sol review
-and serial integration. D-T01, M7, and all successors stay closed meanwhile.
+permitted cycles; M7-003 is accepted. The new-file-only contract-foundation
+packet is active under `/root/m7_003_contract_luna`. On completion, inspect its
+exact four-file diff and evidence, then dispatch one fresh read-only Sol-high
+review. Do not integrate or apply shared registration before that review passes.
+D-T01, M7, and all successors stay closed meanwhile.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.

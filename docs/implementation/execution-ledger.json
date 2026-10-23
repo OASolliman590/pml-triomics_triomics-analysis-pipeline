@@ -34,15 +34,53 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m7_003_contract_luna",
+      "role": "bounded_luna_max_contract_foundation_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "packet": "M7-003 contract foundation",
+      "base_commit": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-003-contract-foundation/PML MultiOmics Analysis Pipeline",
+      "allowed_files": [
+        "R/provenance_contract.R",
+        "inst/schema/stage-handoff-provenance.schema.json",
+        "tests/testthat/test-M7-003-provenance-contract.R",
+        "docs/implementation/registrations/M7-003-contract-foundation.json"
+      ],
+      "plan": "/private/tmp/triomics-m7-003-contract-foundation-plan.md",
+      "brief": ".superpowers/sdd/triomics-m7-003-contract-foundation-plan/task-1-brief.md",
+      "report": ".superpowers/sdd/triomics-m7-003-contract-foundation-plan/task-1-implementer-report.md",
+      "allowed_next_transition": "Worker commit -> Sol inspects exact diff and test evidence -> fresh read-only Sol-high review. No integration before review pass.",
+      "wait_cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_003_accepted_contract_foundation_released",
+    "status": "m7_003_contract_foundation_luna_active",
     "last_reconciled": "2026-10-23",
-    "active_handoffs": [],
+    "active_handoffs": [
+      "/root/m7_003_contract_luna"
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The M7-003 focused Astra-low rereview passed with Critical 0, Important 0, Minor 1, and Sol accepted the combined amendment. Only the new-file contract-foundation phase is released. Producer seams, D verification/publication, migration, shared registration, D-T01 acceptance, M7 release, and every Stage-D successor remain closed. No run-owned handoff is active at this acceptance boundary."
+    "disposition": "The accepted new-file-only M7-003 contract-foundation packet is dispatched to one isolated Luna-max worker from exact base 221df65. Strict RED/GREEN evidence and the focused Astra method-mismatch probe are required. Producer seams, D verification/publication, migration, shared registration, D-T01 acceptance, M7 release, and every Stage-D successor remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_003_contract_foundation_luna_dispatched",
+      "date": "2026-10-23",
+      "worker": "/root/m7_003_contract_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "base_commit": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-003-contract-foundation/PML MultiOmics Analysis Pipeline",
+      "allowed_files": ["R/provenance_contract.R", "inst/schema/stage-handoff-provenance.schema.json", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
+      "plan": "/private/tmp/triomics-m7-003-contract-foundation-plan.md",
+      "allowed_next_transition": "Worker commit -> inspect exact diff and evidence -> fresh read-only Sol-high review. Pass may permit serial integration and Sol-owned registration; changes_required returns one bounded repair to the same worker.",
+      "closed_scope": ["B-T07 producer seam", "C-06 producer seam", "D verification and publication", "migration", "shared registration", "D-T01 acceptance", "M7 release", "every Stage-D successor"],
+      "disposition": "One isolated new-file-only contract-foundation implementation; no private data, producer wiring, D route wiring, shared-file edit, acceptance, or gate release."
+    },
     {
       "event": "m7_003_focused_astra_pass_sol_acceptance_contract_foundation_released",
       "date": "2026-10-23",
