@@ -202,6 +202,14 @@ acceptance audit needs explicit authorization; otherwise record M7-004 blocked.
 B-T07/C-06 producer provenance, D verification/publication, migration, D-T01
 acceptance, M7 release, and every Stage-D successor remain closed.
 
+On 2026-10-24 Omar authorized exactly one fresh read-only Astra-low acceptance
+audit of immutable snapshot `5dcc25f`. Reviewer
+`/root/m7_004_astra_acceptance_audit` is active under
+`reviews/2026-10-24-m7-004-astra-acceptance-audit-brief.md`. It may inspect the
+snapshot and recorded evidence only; it may not edit or rerun tests. A pass lets
+Sol accept only the contract foundation. No downstream Stage-D packet starts in
+this audit run.
+
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
 `tests/testthat/test-C-05.R`: update the obsolete unaccepted-registration

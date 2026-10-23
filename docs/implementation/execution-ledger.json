@@ -34,15 +34,42 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m7_004_astra_acceptance_audit",
+      "role": "fresh_read_only_astra_low_acceptance_auditor",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "effective_settings_exposed": false,
+      "packet": "M7-004 contract-foundation acceptance audit",
+      "candidate_commit": "5dcc25f",
+      "fixed_point": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
+      "worktree": null,
+      "allowed_files": [],
+      "allowed_next_transition": "Pass -> Sol records M7-004 contract-foundation acceptance only; changes_required -> record the blocker. No downstream Stage-D work in this audit run.",
+      "wait_cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "paused_m7_004_integrated_source_green_acceptance_review_pending",
-    "last_reconciled": "2026-10-23",
-    "active_handoffs": [],
+    "status": "m7_004_fresh_astra_acceptance_audit_active",
+    "last_reconciled": "2026-10-24",
+    "active_handoffs": ["/root/m7_004_astra_acceptance_audit"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M7-004 final repair candidate 647192f and Sol-owned V8 registration are integrated through 5dcc25f. Focused verification and the combined source suite are green; the suite has 0 failures/errors/skips and the same 14 named C-05 warnings. The single focused rereview was already consumed before repair 2, so acceptance review remains pending. No worker is active and no M7 or downstream gate is released."
+    "disposition": "Omar authorized one fresh read-only Astra-low acceptance audit of immutable M7-004 snapshot 5dcc25f. No test rerun, implementation, private-data access, M7 acceptance, or downstream Stage-D release is authorized during the audit."
   },
   "orchestration_events": [
+    {
+      "event": "m7_004_fresh_astra_acceptance_audit_dispatched",
+      "date": "2026-10-24",
+      "authority": "Omar authorized one fresh read-only acceptance audit of immutable M7-004 snapshot 5dcc25f",
+      "reviewer": "/root/m7_004_astra_acceptance_audit",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "snapshot": "5dcc25f",
+      "brief": "docs/implementation/reviews/2026-10-24-m7-004-astra-acceptance-audit-brief.md",
+      "allowed_next_transition": "Pass -> Sol accepts only M7-004 contract foundation; changes_required -> record blocker. Do not start downstream Stage-D work in this run.",
+      "disposition": "Read-only audit; no tests, edits, private data, gate release, or implementation."
+    },
     {
       "event": "m7_004_final_repair_integrated_source_suite_green_paused",
       "date": "2026-10-23",
