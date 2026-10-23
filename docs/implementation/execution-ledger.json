@@ -36,29 +36,16 @@
   },
   "active_workers": [
     {
-      "agent": "/root/m7_004_standards_review",
-      "role": "fresh_read_only_sol_high_standards_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
+      "agent": "/root/m7_004_contract_luna",
+      "role": "bounded_luna_max_contract_foundation_repair_1",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
       "effective_settings_exposed": false,
-      "packet": "M7-004 standards review",
+      "packet": "M7-004 contract-foundation repair 1",
       "candidate_commit": "65662bcaf67f59bd3fbf5440984dc7711444daca",
-      "fixed_point": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
-      "allowed_files": [],
-      "allowed_next_transition": "Both review axes pass -> resolve the independent C-05 source-test baseline gate, then serial integration; any M7-004 finding -> bounded repair to the same Luna worker.",
-      "wait_cursor": null
-    },
-    {
-      "agent": "/root/m7_004_spec_review",
-      "role": "fresh_read_only_sol_high_spec_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "effective_settings_exposed": false,
-      "packet": "M7-004 specification review",
-      "candidate_commit": "65662bcaf67f59bd3fbf5440984dc7711444daca",
-      "fixed_point": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
-      "allowed_files": [],
-      "allowed_next_transition": "Both review axes pass -> resolve the independent C-05 source-test baseline gate, then serial integration; any M7-004 finding -> bounded repair to the same Luna worker.",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-004-contract-completion/PML MultiOmics Analysis Pipeline",
+      "allowed_files": ["R/provenance_contract.R", "inst/schema/stage-handoff-provenance.schema.json", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
+      "allowed_next_transition": "Repair commit and focused GREEN -> same Spec reviewer performs the single focused rereview. No integration before pass.",
       "wait_cursor": null
     },
     {
@@ -76,17 +63,28 @@
     }
   ],
   "orchestration_control": {
-    "status": "m7_004_candidate_two_axis_review_active",
+    "status": "m7_004_repair_1_and_m7_005_worker_active",
     "last_reconciled": "2026-10-23",
     "active_handoffs": [
-      "/root/m7_004_standards_review",
-      "/root/m7_004_spec_review",
+      "/root/m7_004_contract_luna",
       "/root/m7_005_c05_luna"
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M7-004 candidate 65662bc is under parallel Standards and Spec review. Independent M7-005 opens a one-file C-05 source-test repair for the two stale acceptance-state assertions, with the fourteen known native warnings preserved. No integration or downstream release has occurred."
+    "disposition": "M7-004 Standards passed but Spec review reproduced two Important fail-open paths. Repair 1 is active with the same Luna worker. Independent M7-005 one-file C-05 source-test repair is also active. No integration or downstream release has occurred."
   },
   "orchestration_events": [
+    {
+      "event": "m7_004_two_axis_review_changes_required_repair_1_dispatched",
+      "date": "2026-10-23",
+      "candidate_commit": "65662bcaf67f59bd3fbf5440984dc7711444daca",
+      "standards": "pass; Critical 0, Important 0, Minor 1",
+      "spec": "changes_required; Critical 0, Important 2, Minor 0",
+      "findings": ["required block/method scope groups can be absent while unrelated groups remain", "extra evidence can reuse a declared route_id with the wrong route kind"],
+      "review_ref": "docs/implementation/reviews/2026-10-23-m7-004-two-axis-review.md",
+      "worker": "/root/m7_004_contract_luna",
+      "allowed_next_transition": "Repair commit and focused GREEN -> same Spec reviewer performs one focused rereview; pass then waits for independent C-05 baseline gate before integration.",
+      "disposition": "Bounded repair 1 only; no full-suite rerun, integration, private data, acceptance, or gate release."
+    },
     {
       "event": "m7_005_c05_source_baseline_repair_authorized",
       "date": "2026-10-23",

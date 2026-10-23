@@ -175,6 +175,14 @@ Standards and Spec reviewers are active on the M7-004 candidate. Integration
 remains prohibited until both axes pass and the independent baseline gate is
 resolved.
 
+The M7-004 Standards axis passed with no Critical/Important finding and one
+nonblocking duplicate-fixture branch. The Spec axis returned two Important
+reproduced fail-open paths: missing required block/method groups can be masked by
+other groups, and surplus evidence can reuse a route ID with the wrong route
+kind. Repair 1 is active with the same Luna-max worker. It must add negative
+fixtures first, enforce complete scope coverage and reverse route mapping, then
+return focused GREEN for the same Spec reviewer’s single focused rereview.
+
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
 `tests/testthat/test-C-05.R`: update the obsolete unaccepted-registration
