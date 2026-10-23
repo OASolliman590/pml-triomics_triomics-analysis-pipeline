@@ -36,28 +36,55 @@
   },
   "active_workers": [
     {
-      "agent": "/root/m7_006_provenance_luna",
-      "role": "fresh_bounded_luna_max_provenance_completeness_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
+      "agent": "/root/m7_006_standards_review",
+      "role": "fresh_read_only_sol_high_standards_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
       "effective_settings_exposed": false,
-      "packet": "M7-006 provenance completeness repair",
-      "candidate_commit": null,
+      "packet": "M7-006 Standards review",
+      "candidate_commit": "5242609518886b26e60ea76863aa9c0badfd360d",
       "fixed_point": "5dcc25f",
       "worktree": "/Users/megastore/.codex/worktrees/m7-006-provenance-completeness/PML MultiOmics Analysis Pipeline",
-      "allowed_files": ["R/provenance_contract.R", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
-      "allowed_next_transition": "Focused GREEN and clean commit -> Sol inspection -> parallel Standards and Spec review. No integration or Stage-D work before both axes pass.",
+      "allowed_files": [],
+      "allowed_next_transition": "Both review axes pass -> serial Sol integration; any correctness finding -> bounded repair or block.",
+      "wait_cursor": null
+    },
+    {
+      "agent": "/root/m7_006_spec_review",
+      "role": "fresh_read_only_sol_high_spec_reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "effective_settings_exposed": false,
+      "packet": "M7-006 Spec review",
+      "candidate_commit": "5242609518886b26e60ea76863aa9c0badfd360d",
+      "fixed_point": "5dcc25f",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-006-provenance-completeness/PML MultiOmics Analysis Pipeline",
+      "allowed_files": [],
+      "allowed_next_transition": "Both review axes pass -> serial Sol integration; any correctness finding -> bounded repair or block.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "m7_006_luna_implementation_active",
+    "status": "m7_006_parallel_two_axis_review_active",
     "last_reconciled": "2026-10-24",
-    "active_handoffs": ["/root/m7_006_provenance_luna"],
+    "active_handoffs": ["/root/m7_006_standards_review", "/root/m7_006_spec_review"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Luna-max worker /root/m7_006_provenance_luna is active in a managed isolated worktree from b306f14 with the exact three-file allowlist and public-validator TDD. M7-004 remains unaccepted and all downstream Stage-D work remains closed."
+    "disposition": "M7-006 candidate 5242609 is focused-green and changes only the three allowed files. Fresh read-only Standards and Spec reviewers are active in parallel. No integration, full-suite rerun, acceptance, or downstream Stage-D work has started."
   },
   "orchestration_events": [
+    {
+      "event": "m7_006_candidate_two_axis_review_dispatched",
+      "date": "2026-10-24",
+      "candidate_commit": "5242609518886b26e60ea76863aa9c0badfd360d",
+      "fixed_point": "5dcc25f",
+      "allowlist": ["R/provenance_contract.R", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
+      "red": "context slice: 1 failure, 0 errors after fixture correction; migration slice: 2 failures, 0 errors",
+      "green": "focused M7-003 contract suite exit 0; zero failures, warnings, or skips",
+      "reviewers": ["/root/m7_006_standards_review", "/root/m7_006_spec_review"],
+      "brief": "docs/implementation/reviews/2026-10-24-m7-006-two-axis-review-brief.md",
+      "allowed_next_transition": "Both axes pass -> serial integration and one full source-suite run; changes_required -> bounded repair or block.",
+      "disposition": "Read-only review only; no integration, private data, acceptance, gate release, or Stage-D work."
+    },
     {
       "event": "m7_006_fresh_luna_dispatched",
       "date": "2026-10-24",

@@ -224,8 +224,10 @@ Fresh Luna-max worker `/root/m7_006_provenance_luna` is active from commit
 `b306f14` in managed worktree
 `/Users/megastore/.codex/worktrees/m7-006-provenance-completeness/PML MultiOmics Analysis Pipeline`.
 Its exact three-file allowlist and RED/GREEN obligations are recorded in
-M7-006. The next legal transition is a clean focused-green commit followed by
-parallel read-only Standards and Spec review.
+M7-006. It returned focused-green candidate `5242609` after reproducing both
+defects as RED. Fresh read-only Standards and Spec reviewers are active in
+parallel under `reviews/2026-10-24-m7-006-two-axis-review-brief.md`. Both axes
+must pass before serial integration.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
