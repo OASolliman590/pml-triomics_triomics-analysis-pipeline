@@ -51,10 +51,13 @@ failure can mutate the current registry. D-T01's initial implementation plus
 two repairs are consumed, so no third repair is authorized. Fresh Astra-low
 auditor `/root/d_t01_blocker_astra` independently confirmed all five findings
 and recommended one narrow repair-cap exception. Omar explicitly authorized
-M7-001 on 2026-10-23 with `I authorize M7-001.` One fresh isolated exceptional
-repair cycle is being prepared from candidate `71c0a1b`; no worker is active
-until worktree setup completes. D-T01 and every direct or transitive Stage-D
-successor remain closed through repair, focused rereview, integration, and fresh
+M7-001 on 2026-10-23 with `I authorize M7-001.` Fresh isolated worktree
+`m7-001-dt01-provenance` is clean at candidate `71c0a1b`; the exact D-T01
+baseline exits zero. Luna-max worker `/root/m7_001_luna` is implementing the
+three-file evidence-boundary and behavioral RED-test segment. Sol retains the
+authorized `R/cli.R` lifecycle repair and will apply it only after the worker
+returns the failing tests. D-T01 and every direct or transitive Stage-D successor
+remain closed through repair, focused rereview, integration, and fresh
 verification. No private study data were read or delegated.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and

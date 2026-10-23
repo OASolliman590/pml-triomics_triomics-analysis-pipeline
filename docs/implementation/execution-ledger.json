@@ -34,15 +34,44 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m7_001_luna",
+      "role": "m7_001_exception_evidence_and_red_test_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "packet": "D-T01",
+      "exception": "M7-001",
+      "base_commit": "71c0a1b628c314c03112a4c2a27a760e9ab0d0a1",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-001-dt01-provenance/PML MultiOmics Analysis Pipeline",
+      "allowed_files": ["R/evidence_bundle.R", "tests/testthat/test-D-T01-shared.R", "tests/testthat/test-D-T01.R"],
+      "allowed_next_transition": "Luna segment result -> Sol inspects RED/GREEN evidence and applies only the authorized R/cli.R lifecycle repair in the same isolated worktree -> full GREEN -> focused Sol-high rereview. No integration or acceptance before review.",
+      "wait_cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_001_authorized_worktree_setup",
+    "status": "m7_001_luna_segment_active",
     "last_reconciled": "2026-10-23",
-    "active_handoffs": [],
+    "active_handoffs": ["/root/m7_001_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar explicitly authorized M7-001 on 2026-10-23. One fresh isolated exceptional repair cycle is being prepared from candidate 71c0a1b. No implementation worker is active until worktree setup completes. D-T01 and all successors remain closed through repair, focused rereview, integration, and fresh verification."
+    "disposition": "M7-001 fresh worktree is clean at candidate 71c0a1b and its exact D-T01 baseline exits zero. One Luna-max worker is implementing the evidence-boundary and behavioral RED-test segment under the three-file allowlist; Sol retains exclusive R/cli.R lifecycle repair ownership. D-T01 and all successors remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_001_fresh_worktree_verified_luna_segment_dispatched",
+      "date": "2026-10-23",
+      "worker": "/root/m7_001_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-001-dt01-provenance/PML MultiOmics Analysis Pipeline",
+      "base_commit": "71c0a1b628c314c03112a4c2a27a760e9ab0d0a1",
+      "baseline": "Exact D-T01 filter exit 0 with baseline-ok; prior immutable candidate count PASS 204, FAIL/WARN/SKIP 0.",
+      "brief": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/.superpowers/sdd/M7-001-d-t01-provenance-boundary-exception-proposal/task-1-brief.md",
+      "allowed_files": ["R/evidence_bundle.R", "tests/testthat/test-D-T01-shared.R", "tests/testthat/test-D-T01.R"],
+      "allowed_next_transition": "Worker commits evidence fix plus RED CLI tests -> Sol applies authorized R/cli.R repair -> exact suite GREEN -> focused immutable rereview.",
+      "disposition": "One exceptional repair only; no private data, frozen contract, scientific estimator, threshold, seed, namespace, schema, lockfile or adapter change."
+    },
     {
       "event": "m7_001_explicitly_authorized",
       "date": "2026-10-23",
@@ -3551,7 +3580,7 @@
       "blockers": []
     },
     "D-T01": {
-      "status": "m7_001_exception_authorized_worktree_setup",
+      "status": "m7_001_exception_repair_active",
       "attempts": 2,
       "commit": "88f1591",
       "candidate_commits": ["98bf4c54a52cb8bab7fd3824fabb88deda579a23", "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3"],
