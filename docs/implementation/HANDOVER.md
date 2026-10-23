@@ -181,7 +181,9 @@ Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
 expectations to the already tracked accepted synthetic-only C-05 state, preserve
 all qualification assertions and the fourteen named native warnings, and return
 a clean commit for fresh Sol review. This lane is file-disjoint from both M7-004
-reviewers and does not release a product gate.
+reviewers and does not release a product gate. Its fresh isolated worktree is
+`/Users/megastore/.codex/worktrees/m7-005-c05-source-baseline/PML MultiOmics Analysis Pipeline`
+at base `29e7a36`.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
