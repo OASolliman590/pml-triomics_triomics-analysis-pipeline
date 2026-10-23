@@ -34,40 +34,25 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/provenance_research",
-      "role": "wayfinder_primary_source_scientific_provenance_researcher",
-      "requested_model": "inherited_sol",
-      "requested_effort": "high",
-      "effective_settings_exposed": false,
-      "packet": "D-T01 planning only",
-      "map": "docs/implementation/investigations/d-t01-provenance-wayfinder/MAP.md",
-      "allowed_files": ["docs/implementation/investigations/2026-10-23-stage-handoff-scientific-provenance-research.md"],
-      "allowed_next_transition": "Research result -> verify primary citations and resolve the named research decision ticket -> update the Wayfinder map. Do not edit the frozen spec or product code.",
-      "wait_cursor": null
-    },
-    {
-      "agent": "/root/publication_research",
-      "role": "wayfinder_primary_source_digest_and_publication_researcher",
-      "requested_model": "inherited_sol",
-      "requested_effort": "high",
-      "effective_settings_exposed": false,
-      "packet": "D-T01 planning only",
-      "map": "docs/implementation/investigations/d-t01-provenance-wayfinder/MAP.md",
-      "allowed_files": ["docs/implementation/investigations/2026-10-23-canonical-digests-safe-publication-research.md"],
-      "allowed_next_transition": "Research result -> verify primary citations and resolve the named research decision ticket -> update the Wayfinder map. Do not edit the frozen spec or product code.",
-      "wait_cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "d_t01_wayfinder_primary_research_active",
+    "status": "d_t01_wayfinder_research_complete_domain_model_frontier",
     "last_reconciled": "2026-10-23",
-    "active_handoffs": ["/root/provenance_research", "/root/publication_research"],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M7-001 remains exhausted and Stage D remains blocked. A planning-only Wayfinder map is active with two primary-source research handoffs on scientific provenance identity and fail-safe artifact publication. No frozen specification or product implementation change is authorized in this research cycle."
+    "disposition": "Both planning-only research tickets are closed with citable primary-source notes. The open frontier is the Stage D provenance domain-model decision. M7-001 remains exhausted and Stage D remains blocked. No frozen specification or product implementation change is authorized."
   },
   "orchestration_events": [
+    {
+      "event": "d_t01_wayfinder_primary_research_reconciled",
+      "date": "2026-10-23",
+      "researchers": ["/root/provenance_research", "/root/publication_research"],
+      "research_outputs": ["docs/implementation/investigations/2026-10-23-stage-handoff-scientific-provenance-research.md", "docs/implementation/investigations/2026-10-23-canonical-digests-safe-publication-research.md"],
+      "outcome": "Primary sources support a producer-owned triomics handoff-provenance profile with closed typed lineage, RFC 8785 canonical JSON, algorithm-tagged SHA-256 descriptors, immutable complete generations, safe path preflight, and atomic registry replacement last.",
+      "next_frontier": "docs/implementation/investigations/d-t01-provenance-wayfinder/select-provenance-domain-model.md",
+      "allowed_next_transition": "Resolve the named domain-model decision with the user; then decide legacy migration and draft an explicit spec-v2 change record for user and fresh Astra review before implementation.",
+      "disposition": "Research tickets closed; no active handoff; no private data; no frozen-spec or product edit; D-T01 and Stage D remain blocked."
+    },
     {
       "event": "d_t01_wayfinder_map_charted_primary_research_dispatched",
       "date": "2026-10-23",

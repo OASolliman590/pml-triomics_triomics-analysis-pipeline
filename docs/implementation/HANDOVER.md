@@ -74,11 +74,19 @@ recoverable snapshot. No private study data were read or delegated.
 Omar then explicitly requested a Wayfinder plus primary-source research cycle
 to choose a scientifically citable repair before any spec amendment or new
 implementation. The planning-only map is
-`docs/implementation/investigations/d-t01-provenance-wayfinder/MAP.md`.
-Researchers `/root/provenance_research` and `/root/publication_research` are
-active on disjoint single-file notes covering scientific handoff identity and
-canonical digests/fail-safe publication. Stage D remains blocked; this research
-does not reopen M7-001 or authorize a frozen-spec or product edit.
+`docs/implementation/investigations/d-t01-provenance-wayfinder/MAP.md`. Both
+research tickets are now closed. Their notes recommend a producer-owned,
+versioned triomics handoff-provenance profile informed by W3C PROV and Workflow
+Run RO-Crate; a closed BagIt-style typed inventory; RFC 8785 canonical JSON and
+full SHA-256; and immutable output generations whose current registry pointer
+is atomically replaced only after complete validation. D verifies producer
+identity and never reconstructs it. No external-standard compliance claim is
+made. The open frontier is `Select the Stage D provenance domain model`, which
+must decide the threat model, durability promise, identity granularity, JCS
+implementation, and registry layout. Only after that can the legacy-migration
+and explicit spec-amendment tickets proceed. Stage D remains blocked; this
+research did not reopen M7-001 or authorize a frozen-spec or product edit. No
+run-owned agent is active and no private study data were read.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation

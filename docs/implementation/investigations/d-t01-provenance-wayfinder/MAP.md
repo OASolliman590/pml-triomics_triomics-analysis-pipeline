@@ -27,12 +27,28 @@ Astra approval before any product implementation starts.
 
 ## Decisions so far
 
-None.
+- [Scientific provenance identity for a stage handoff](scientific-provenance-identity.md)
+  is resolved by the primary-source research note: B/C producers must publish a
+  closed, versioned handoff provenance profile and D must verify it without
+  reconstructing producer-specific scientific identity.
+- [Canonical digests and fail-safe artifact publication](canonical-digests-and-publication.md)
+  is resolved by the primary-source research note: use a closed typed schema,
+  RFC 8785 canonical JSON plus full SHA-256, immutable content-addressed
+  generations, complete manifests, path preflight, and an atomic registry
+  replacement as the final publication operation.
+- W3C PROV, Workflow Run RO-Crate, BagIt, OCI descriptors, and SLSA are sources
+  of selected concepts. The future contract is a triomics application profile,
+  not a claim of conformance to those standards.
+- This changes provenance validation and publication safety only. It does not
+  change any estimator, analysis population, contrast, multiple-testing family,
+  threshold, B-T04 bound, seed, integration method, or biological claim.
 
 ## Not yet specified
 
 - The exact versioned schema and digest boundary for the selected provenance
   object.
+- The supported threat model, crash-durability promise, registry-pointer layout,
+  and audited RFC 8785 implementation.
 - How legacy accepted B/C artifacts can migrate without accepting ambiguous
   lineage or refitting scientific models.
 - The complete validation and adversarial test matrix for the amended contract.
