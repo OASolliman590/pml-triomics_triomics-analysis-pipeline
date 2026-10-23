@@ -1,0 +1,455 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:triomics:stage-handoff-provenance:1.0",
+  "title": "triomics Stage Handoff Provenance 1.0",
+  "type": "object",
+  "properties": {
+    "profile": { "const": "triomics.stage-handoff-provenance" },
+    "profile_version": { "const": "1.0" },
+    "producer_stage": { "enum": ["B", "C"] },
+    "study_id": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "handoff_artifact_id": { "type": "string", "minLength": 1 },
+    "producer_activity_id": { "type": "string", "minLength": 1 },
+    "identity": { "$ref": "#/$defs/identity" },
+    "identity_sha256": { "$ref": "#/$defs/sha256" },
+    "producer": { "$ref": "#/$defs/producer" },
+    "limitations": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "migration": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/migration" }
+      ]
+    }
+  },
+  "required": [
+    "profile", "profile_version", "producer_stage", "study_id", "run_id",
+    "handoff_artifact_id", "producer_activity_id", "identity", "identity_sha256",
+    "producer", "limitations", "migration"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": { "properties": { "producer_stage": { "const": "B" } }, "required": ["producer_stage"] },
+      "then": {
+        "properties": {
+          "identity": {
+            "properties": {
+              "entities": {
+                "items": {
+                  "not": {
+                    "properties": { "scientific_role": { "enum": ["integration_result", "integration_state", "evaluation_evidence"] } },
+                    "required": ["scientific_role"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "producer_stage": { "const": "C" } }, "required": ["producer_stage"] },
+      "then": {
+        "properties": {
+          "identity": {
+            "properties": {
+              "entities": {
+                "items": {
+                  "not": {
+                    "properties": { "scientific_role": { "enum": ["block_results", "family_ledger"] } },
+                    "required": ["scientific_role"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40,64}$"
+    },
+    "producer": {
+      "type": "object",
+      "properties": {
+        "package_version": { "type": "string", "minLength": 1 },
+        "repository_commit": { "$ref": "#/$defs/commit" },
+        "module_id": { "type": "string", "minLength": 1 },
+        "method_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "effective_configuration_sha256": { "$ref": "#/$defs/sha256" },
+        "runtime_backend_versions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/runtime_backend_version" }
+        }
+      },
+      "required": [
+        "package_version", "repository_commit", "module_id", "method_ids",
+        "effective_configuration_sha256", "runtime_backend_versions"
+      ],
+      "additionalProperties": false
+    },
+    "runtime_backend_version": {
+      "type": "object",
+      "properties": {
+        "component": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      },
+      "required": ["component", "version"],
+      "additionalProperties": false
+    },
+    "identity": {
+      "type": "object",
+      "properties": {
+        "schema_uri": { "type": "string", "minLength": 1 },
+        "schema_version": { "type": "string", "minLength": 1 },
+        "handoff_role": { "type": "string", "minLength": 1 },
+        "activities": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/activity" },
+          "minItems": 1
+        },
+        "entities": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/entity" },
+          "minItems": 1
+        },
+        "declared_routes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/route" }
+        }
+      },
+      "required": [
+        "schema_uri", "schema_version", "handoff_role", "activities", "entities",
+        "declared_routes"
+      ],
+      "additionalProperties": false
+    },
+    "activity": {
+      "type": "object",
+      "properties": {
+        "activity_id": { "type": "string", "minLength": 1 },
+        "stage": { "enum": ["B", "C"] },
+        "activity_type": {
+          "enum": ["analysis", "integration", "handoff_export", "deterministic_legacy_packaging"]
+        },
+        "method_id": { "type": "string", "minLength": 1 },
+        "used_entity_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "generated_entity_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "activity_id", "stage", "activity_type", "method_id", "used_entity_ids",
+        "generated_entity_ids"
+      ],
+      "additionalProperties": false
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "route_id": { "type": "string", "minLength": 1 },
+        "route_kind": { "enum": ["clinical", "native"] },
+        "analysis_id": { "type": "string", "minLength": 1 },
+        "preparation_context_id": { "type": "string", "minLength": 1 },
+        "representation_id": { "type": "string", "minLength": 1 },
+        "method_id": { "type": ["string", "null"], "minLength": 1 }
+      },
+      "required": [
+        "route_id", "route_kind", "analysis_id", "preparation_context_id",
+        "representation_id", "method_id"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "route_kind": { "const": "clinical" } }, "required": ["route_kind"] },
+          "then": { "properties": { "method_id": { "type": "null" } } }
+        },
+        {
+          "if": { "properties": { "route_kind": { "const": "native" } }, "required": ["route_kind"] },
+          "then": { "properties": { "method_id": { "type": "string", "minLength": 1 } } }
+        }
+      ]
+    },
+    "entity": {
+      "type": "object",
+      "properties": {
+        "entity_id": { "type": "string", "minLength": 1 },
+        "entity_type": {
+          "enum": [
+            "triomics.source_manifest", "triomics.normalized_metadata", "triomics.feature_registry",
+            "triomics.analysis_unit_map", "triomics.resolved_analysis", "triomics.represented_matrix",
+            "triomics.preprocessing_state", "triomics.method_state", "triomics.predecessor_envelope",
+            "triomics.predecessor_payload", "triomics.block_results", "triomics.family_ledger",
+            "triomics.candidate_nominations", "triomics.integration_result", "triomics.integration_state",
+            "triomics.evaluation_evidence", "triomics.clinical_evidence", "triomics.native_sidecar",
+            "triomics.handoff_payload"
+          ]
+        },
+        "scientific_role": {
+          "enum": [
+            "source_manifest", "normalized_metadata", "feature_registry", "analysis_unit_map",
+            "resolved_analysis", "represented_matrix", "preprocessing_state", "method_state",
+            "predecessor_envelope", "predecessor_payload", "block_results", "family_ledger",
+            "candidate_nominations", "integration_result", "integration_state", "evaluation_evidence",
+            "clinical_evidence", "native_sidecar", "handoff_payload"
+          ]
+        },
+        "schema_version": { "type": "string", "minLength": 1 },
+        "storage_form": { "enum": ["file", "enveloped_artifact", "embedded_json"] },
+        "media_type": { "type": "string", "minLength": 1 },
+        "digest_algorithm": { "const": "sha256" },
+        "digest_kind": { "enum": ["bytes", "rfc8785"] },
+        "digest": { "$ref": "#/$defs/sha256" },
+        "size_bytes": {
+          "oneOf": [
+            { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+            { "type": "null" }
+          ]
+        },
+        "canonical_schema_uri": { "type": ["string", "null"], "minLength": 1 },
+        "artifact_id": { "type": ["string", "null"], "minLength": 1 },
+        "artifact_payload_sha256": { "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] },
+        "generated_by_activity_id": { "type": ["string", "null"], "minLength": 1 },
+        "derived_from_entity_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "member_of_entity_id": { "type": ["string", "null"], "minLength": 1 },
+        "study_id": { "type": "string", "minLength": 1 },
+        "analysis_id": { "type": ["string", "null"], "minLength": 1 },
+        "block_id": { "type": ["string", "null"], "minLength": 1 },
+        "method_id": { "type": ["string", "null"], "minLength": 1 },
+        "preparation_context_id": { "type": ["string", "null"], "minLength": 1 },
+        "representation_id": { "type": ["string", "null"], "minLength": 1 },
+        "route_id": { "type": ["string", "null"], "minLength": 1 },
+        "row_identity_sha256": { "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] },
+        "column_identity_sha256": { "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] }
+      },
+      "required": [
+        "entity_id", "entity_type", "scientific_role", "schema_version", "storage_form",
+        "media_type", "digest_algorithm", "digest_kind", "digest", "size_bytes",
+        "canonical_schema_uri", "artifact_id", "artifact_payload_sha256", "generated_by_activity_id",
+        "derived_from_entity_ids", "member_of_entity_id", "study_id", "analysis_id", "block_id",
+        "method_id", "preparation_context_id", "representation_id", "route_id",
+        "row_identity_sha256", "column_identity_sha256"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "oneOf": [
+            { "properties": { "scientific_role": { "const": "source_manifest" }, "entity_type": { "const": "triomics.source_manifest" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "normalized_metadata" }, "entity_type": { "const": "triomics.normalized_metadata" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "feature_registry" }, "entity_type": { "const": "triomics.feature_registry" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "analysis_unit_map" }, "entity_type": { "const": "triomics.analysis_unit_map" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "resolved_analysis" }, "entity_type": { "const": "triomics.resolved_analysis" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "represented_matrix" }, "entity_type": { "const": "triomics.represented_matrix" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "preprocessing_state" }, "entity_type": { "const": "triomics.preprocessing_state" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "method_state" }, "entity_type": { "const": "triomics.method_state" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "predecessor_envelope" }, "entity_type": { "const": "triomics.predecessor_envelope" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "predecessor_payload" }, "entity_type": { "const": "triomics.predecessor_payload" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "block_results" }, "entity_type": { "const": "triomics.block_results" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "family_ledger" }, "entity_type": { "const": "triomics.family_ledger" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "candidate_nominations" }, "entity_type": { "const": "triomics.candidate_nominations" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "integration_result" }, "entity_type": { "const": "triomics.integration_result" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "integration_state" }, "entity_type": { "const": "triomics.integration_state" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "evaluation_evidence" }, "entity_type": { "const": "triomics.evaluation_evidence" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "clinical_evidence" }, "entity_type": { "const": "triomics.clinical_evidence" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "native_sidecar" }, "entity_type": { "const": "triomics.native_sidecar" } }, "required": ["scientific_role", "entity_type"] },
+            { "properties": { "scientific_role": { "const": "handoff_payload" }, "entity_type": { "const": "triomics.handoff_payload" } }, "required": ["scientific_role", "entity_type"] }
+          ]
+        },
+        {
+          "if": { "properties": { "scientific_role": { "const": "source_manifest" } }, "required": ["scientific_role"] },
+          "then": { "properties": {
+            "analysis_id": { "type": "null" }, "block_id": { "type": "null" }, "method_id": { "type": "null" },
+            "preparation_context_id": { "type": "null" }, "representation_id": { "type": "null" }, "route_id": { "type": "null" },
+            "row_identity_sha256": { "type": "null" }, "column_identity_sha256": { "type": "null" }
+          } }
+        },
+        {
+          "if": { "properties": { "scientific_role": { "const": "normalized_metadata" } }, "required": ["scientific_role"] },
+          "then": { "properties": {
+            "analysis_id": { "type": "string", "minLength": 1 }, "block_id": { "type": "null" }, "method_id": { "type": "null" },
+            "preparation_context_id": { "type": "null" }, "representation_id": { "type": "null" }, "route_id": { "type": "null" },
+            "row_identity_sha256": { "$ref": "#/$defs/sha256" }, "column_identity_sha256": { "$ref": "#/$defs/sha256" }
+          } }
+        },
+        {
+          "if": { "properties": { "scientific_role": { "const": "feature_registry" } }, "required": ["scientific_role"] },
+          "then": { "properties": {
+            "analysis_id": { "type": "null" }, "block_id": { "type": "string", "minLength": 1 }, "method_id": { "type": "null" },
+            "preparation_context_id": { "type": "null" }, "representation_id": { "type": "null" }, "route_id": { "type": "null" },
+            "row_identity_sha256": { "$ref": "#/$defs/sha256" }, "column_identity_sha256": { "type": "null" }
+          } }
+        },
+        {
+          "if": { "properties": { "scientific_role": { "const": "analysis_unit_map" } }, "required": ["scientific_role"] },
+          "then": { "properties": {
+            "analysis_id": { "type": "string", "minLength": 1 }, "block_id": { "type": "null" }, "method_id": { "type": "null" },
+            "preparation_context_id": { "type": "string", "minLength": 1 }, "representation_id": { "type": "string", "minLength": 1 }, "route_id": { "type": "null" },
+            "row_identity_sha256": { "$ref": "#/$defs/sha256" }, "column_identity_sha256": { "type": "null" }
+          } }
+        },
+        {
+          "if": { "properties": { "scientific_role": { "const": "resolved_analysis" } }, "required": ["scientific_role"] },
+          "then": { "properties": {
+            "analysis_id": { "type": "string", "minLength": 1 }, "block_id": { "type": "null" }, "method_id": { "type": "null" },
+            "preparation_context_id": { "type": "string", "minLength": 1 }, "representation_id": { "type": "string", "minLength": 1 }, "route_id": { "type": "null" },
+            "row_identity_sha256": { "$ref": "#/$defs/sha256" }, "column_identity_sha256": { "$ref": "#/$defs/sha256" }
+          } }
+        },
+        {
+          "if": { "properties": { "scientific_role": { "const": "represented_matrix" } }, "required": ["scientific_role"] },
+          "then": { "properties": {
+            "analysis_id": { "type": "string", "minLength": 1 }, "block_id": { "type": "string", "minLength": 1 }, "method_id": { "type": "null" },
+            "preparation_context_id": { "type": "string", "minLength": 1 }, "representation_id": { "type": "string", "minLength": 1 }, "route_id": { "type": "null" },
+            "row_identity_sha256": { "$ref": "#/$defs/sha256" }, "column_identity_sha256": { "$ref": "#/$defs/sha256" }
+          } }
+        },
+        {
+          "if": { "properties": { "scientific_role": { "const": "preprocessing_state" } }, "required": ["scientific_role"] },
+          "then": { "properties": {
+            "analysis_id": { "type": "string", "minLength": 1 }, "block_id": { "type": "string", "minLength": 1 }, "method_id": { "type": "null" },
+            "preparation_context_id": { "type": "string", "minLength": 1 }, "representation_id": { "type": "string", "minLength": 1 }, "route_id": { "type": "null" },
+            "row_identity_sha256": { "type": "null" }, "column_identity_sha256": { "type": "null" }
+          } }
+        },
+        {
+          "if": { "properties": { "scientific_role": { "enum": ["method_state", "integration_result", "integration_state"] } }, "required": ["scientific_role"] },
+          "then": { "properties": {
+            "analysis_id": { "type": "string", "minLength": 1 }, "block_id": { "type": "null" }, "method_id": { "type": "string", "minLength": 1 },
+            "preparation_context_id": { "type": "string", "minLength": 1 }, "representation_id": { "type": "string", "minLength": 1 }, "route_id": { "type": "null" },
+            "row_identity_sha256": { "type": "null" }, "column_identity_sha256": { "type": "null" }
+          } }
+        },
+        {
+          "if": { "properties": { "scientific_role": { "enum": ["predecessor_envelope", "predecessor_payload", "block_results", "family_ledger", "candidate_nominations", "evaluation_evidence", "handoff_payload"] } }, "required": ["scientific_role"] },
+          "then": { "properties": {
+            "analysis_id": { "type": "string", "minLength": 1 }, "block_id": { "type": "null" }, "method_id": { "type": "null" },
+            "preparation_context_id": { "type": "string", "minLength": 1 }, "representation_id": { "type": "string", "minLength": 1 }, "route_id": { "type": "null" },
+            "row_identity_sha256": { "type": "null" }, "column_identity_sha256": { "type": "null" }
+          } }
+        },
+        {
+          "if": { "properties": { "scientific_role": { "const": "clinical_evidence" } }, "required": ["scientific_role"] },
+          "then": { "properties": {
+            "analysis_id": { "type": "string", "minLength": 1 }, "block_id": { "type": "null" }, "method_id": { "type": "null" },
+            "preparation_context_id": { "type": "string", "minLength": 1 }, "representation_id": { "type": "string", "minLength": 1 }, "route_id": { "type": "string", "minLength": 1 },
+            "row_identity_sha256": { "type": "null" }, "column_identity_sha256": { "type": "null" }
+          } }
+        },
+        {
+          "if": { "properties": { "scientific_role": { "const": "native_sidecar" } }, "required": ["scientific_role"] },
+          "then": { "properties": {
+            "analysis_id": { "type": "string", "minLength": 1 }, "block_id": { "type": "null" }, "method_id": { "type": "string", "minLength": 1 },
+            "preparation_context_id": { "type": "string", "minLength": 1 }, "representation_id": { "type": "string", "minLength": 1 }, "route_id": { "type": "string", "minLength": 1 },
+            "row_identity_sha256": { "type": "null" }, "column_identity_sha256": { "type": "null" }
+          } }
+        },
+        {
+          "if": { "properties": { "storage_form": { "const": "file" } }, "required": ["storage_form"] },
+          "then": { "properties": {
+            "digest_kind": { "const": "bytes" }, "size_bytes": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+            "canonical_schema_uri": { "type": "null" }, "artifact_id": { "type": "null" },
+            "artifact_payload_sha256": { "type": "null" }
+          } }
+        },
+        {
+          "if": { "properties": { "storage_form": { "const": "enveloped_artifact" } }, "required": ["storage_form"] },
+          "then": { "properties": {
+            "digest_kind": { "const": "bytes" }, "size_bytes": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+            "canonical_schema_uri": { "type": "null" }, "artifact_id": { "type": "string", "minLength": 1 },
+            "artifact_payload_sha256": { "$ref": "#/$defs/sha256" }
+          } }
+        },
+        {
+          "if": { "properties": { "storage_form": { "const": "embedded_json" } }, "required": ["storage_form"] },
+          "then": { "properties": {
+            "digest_kind": { "const": "rfc8785" }, "size_bytes": { "type": "null" },
+            "canonical_schema_uri": { "type": "string", "minLength": 1 }, "artifact_id": { "type": "null" },
+            "artifact_payload_sha256": { "type": "null" }
+          } }
+        },
+        { "if": { "properties": { "scientific_role": { "const": "predecessor_envelope" } }, "required": ["scientific_role"] },
+          "then": { "properties": { "storage_form": { "const": "enveloped_artifact" } } } },
+        { "if": { "properties": { "scientific_role": { "const": "predecessor_payload" } }, "required": ["scientific_role"] },
+          "then": { "properties": { "storage_form": { "const": "file" }, "member_of_entity_id": { "type": "string", "minLength": 1 } } } },
+        { "if": { "properties": { "scientific_role": { "const": "integration_state" } }, "required": ["scientific_role"] },
+          "then": { "properties": { "member_of_entity_id": { "type": "string", "minLength": 1 } } } },
+        { "if": { "properties": { "scientific_role": { "const": "handoff_payload" } }, "required": ["scientific_role"] },
+          "then": { "properties": { "storage_form": { "const": "enveloped_artifact" }, "member_of_entity_id": { "type": "null" } } } },
+        { "if": { "properties": { "scientific_role": { "enum": ["predecessor_payload", "integration_state"] } }, "required": ["scientific_role"] },
+          "else": { "properties": { "member_of_entity_id": { "type": "null" } } } },
+        { "if": { "properties": { "scientific_role": { "const": "clinical_evidence" } }, "required": ["scientific_role"] },
+          "then": { "properties": { "method_id": { "type": "null" } } } }
+      ]
+    },
+    "migration_source_artifact": {
+      "type": "object",
+      "properties": {
+        "artifact_id": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      },
+      "required": ["artifact_id", "sha256"],
+      "additionalProperties": false
+    },
+    "migration": {
+      "type": "object",
+      "properties": {
+        "mode": { "const": "deterministic_legacy_packaging" },
+        "source_artifacts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/migration_source_artifact" },
+          "minItems": 1
+        },
+        "source_acceptance_commit": { "$ref": "#/$defs/commit" },
+        "source_acceptance_receipt_refs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "migration_software_commit": { "$ref": "#/$defs/commit" },
+        "migration_software_version": { "type": "string", "minLength": 1 },
+        "proof_status_by_role": {
+          "type": "object",
+          "patternProperties": {
+            "^(source_manifest|normalized_metadata|feature_registry|analysis_unit_map|resolved_analysis|represented_matrix|preprocessing_state|method_state|predecessor_envelope|predecessor_payload|block_results|family_ledger|candidate_nominations|integration_result|integration_state|evaluation_evidence|clinical_evidence|native_sidecar|handoff_payload)$": { "const": "proven" }
+          },
+          "minProperties": 1,
+          "additionalProperties": false
+        },
+        "numerical_payload_bytes_unchanged": { "const": true }
+      },
+      "required": [
+        "mode", "source_artifacts", "source_acceptance_commit", "source_acceptance_receipt_refs",
+        "migration_software_commit", "migration_software_version", "proof_status_by_role",
+        "numerical_payload_bytes_unchanged"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
