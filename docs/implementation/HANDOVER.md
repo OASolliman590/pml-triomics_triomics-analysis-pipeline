@@ -49,10 +49,14 @@ envelopes with conflicting artifact/preparation/representation identities. The
 structured C rule comparison is also key-order-sensitive, and invalid config
 failure can mutate the current registry. D-T01's initial implementation plus
 two repairs are consumed, so no third repair is authorized. Fresh Astra-low
-auditor `/root/d_t01_blocker_astra` is independently deciding whether the frozen
-contract warrants a narrow repair-cap exception. D-T01 and every direct or
+auditor `/root/d_t01_blocker_astra` independently confirmed all five findings
+and recommends one narrow repair-cap exception. Proposal M7-001 is recorded in
+`change-records/M7-001-d-t01-provenance-boundary-exception-proposal.md` but is
+not authorized. All run-owned agents are complete. D-T01 and every direct or
 transitive Stage-D successor remain closed. No private study data were read or
 delegated.
+
+Literal resume instruction: **I authorize M7-001.**
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation

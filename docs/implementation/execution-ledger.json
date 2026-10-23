@@ -34,30 +34,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/d_t01_blocker_astra",
-      "role": "fresh_read_only_cross_cutting_blocker_auditor",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "effective_settings_exposed": false,
-      "packet": "D-T01",
-      "blocker_audit_attempt": 1,
-      "base_commit": "ae6762b",
-      "candidate_commit": "71c0a1b628c314c03112a4c2a27a760e9ab0d0a1",
-      "worktree": "/Users/megastore/.codex/worktrees/d-t01-shared-registration-2/PML MultiOmics Analysis Pipeline",
-      "allowed_next_transition": "Astra confirms blocker -> record D-T01 blocked and prepare a narrowly scoped repair-cap exception for Omar's explicit decision. Astra disproves/reclassifies all Important findings -> Sol records the evidence before any integration decision. No implementation or acceptance by Astra.",
-      "wait_cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "d_t01_blocker_astra_audit_active",
+    "status": "blocked_waiting_omar_m7_001_authorization",
     "last_reconciled": "2026-10-23",
-    "active_handoffs": ["/root/d_t01_blocker_astra"],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Sol-high review rejected D-T01 candidate 71c0a1b with three reproduced Important fail-closed/provenance defects and two Minor issues despite PASS 204. The packet has consumed its initial attempt and two repairs. A user-authorized fresh Astra-low read-only blocker audit is deciding whether a narrow repair-cap exception is warranted. D-T01 and all successors remain closed."
+    "disposition": "Astra independently confirmed all three Important and two Minor D-T01 findings and recommends one explicit narrow repair-cap exception. Proposal M7-001 is recorded but not authorized. No run-owned worker remains active. D-T01 and all Stage-D successors remain closed until Omar explicitly authorizes M7-001."
   },
   "orchestration_events": [
+    {
+      "event": "d_t01_astra_blocker_audit_confirmed_exception_proposed",
+      "date": "2026-10-23",
+      "auditor": "/root/d_t01_blocker_astra",
+      "candidate_commit": "71c0a1b628c314c03112a4c2a27a760e9ab0d0a1",
+      "astra_verdict": "changes_required; I1-I3 Important valid; M1-M2 Minor valid",
+      "recommendation": "Keep D-T01 blocked under exhausted repair budget; one explicit narrowly scoped repair-cap exception is warranted but not granted by Astra.",
+      "review_ref": "docs/implementation/reviews/2026-10-23-d-t01-blocker-astra-audit.md",
+      "proposal_ref": "docs/implementation/change-records/M7-001-d-t01-provenance-boundary-exception-proposal.md",
+      "allowed_next_transition": "Only Omar's exact or unambiguous authorization of M7-001 permits one fresh Luna-max exceptional repair. Otherwise remain blocked; do not integrate or start successors.",
+      "disposition": "All run-owned agents are complete; no private study data were used. Literal resume instruction: I authorize M7-001."
+    },
     {
       "event": "d_t01_shared_review_failed_astra_blocker_audit_dispatched",
       "date": "2026-10-23",
