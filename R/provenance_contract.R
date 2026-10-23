@@ -374,6 +374,7 @@ triomics_provenance_list <- function(value, key) {
 
 triomics_provenance_assert_sorted_unique <- function(values, label, allow_empty = TRUE) {
   values <- unlist(values, use.names = FALSE)
+  if (is.null(values)) values <- character()
   if (!allow_empty && length(values) == 0L) triomics_provenance_abort(paste0(label, " must not be empty"))
   if (anyNA(values) || any(!nzchar(values))) triomics_provenance_abort(paste0(label, " contains an empty value"))
   if (!identical(values, sort(unique(values), method = "radix"))) {
@@ -517,7 +518,8 @@ triomics_provenance_validate_profile <- function(profile, frame_payload_id, fram
     triomics_provenance_abort("current provenance payload or envelope is self-inventoried")
   }
   for (entity in entities) {
-    if (entity$artifact_id %in% c(frame_payload_id, frame_envelope_id)) {
+    if (!is.null(entity$artifact_id) &&
+        entity$artifact_id %in% c(frame_payload_id, frame_envelope_id)) {
       triomics_provenance_abort("current provenance frame is named by an artifact descriptor")
     }
   }
@@ -596,6 +598,12 @@ triomics_provenance_validate_profile <- function(profile, frame_payload_id, fram
   represented <- Filter(function(entity) identical(entity$scientific_role, "represented_matrix"), entities)
   represented_keys <- vapply(represented, triomics_provenance_group_key, character(1),
                              fields = cardinalities$represented_matrix)
+  feature_registry <- Filter(function(entity) identical(entity$scientific_role, "feature_registry"), entities)
+  feature_registry_blocks <- vapply(feature_registry, `[[`, character(1), "block_id")
+  represented_blocks <- unique(vapply(represented, `[[`, character(1), "block_id"))
+  if (!setequal(feature_registry_blocks, represented_blocks)) {
+    triomics_provenance_abort("feature_registry block coverage must match represented_matrix block coverage")
+  }
   if (any(!represented_keys %in% preprocessing_keys)) {
     triomics_provenance_abort("every represented_matrix group requires preprocessing_state")
   }
@@ -632,6 +640,15 @@ triomics_provenance_validate_profile <- function(profile, frame_payload_id, fram
   }
 
   if (profile$producer_stage == "C") {
+    method_state_groups <- triomics_provenance_exactly_one_per(
+      entities, "method_state", cardinalities$method_state
+    )
+    integration_result_groups <- triomics_provenance_exactly_one_per(
+      entities, "integration_result", cardinalities$integration_result
+    )
+    if (!setequal(method_state_groups, integration_result_groups)) {
+      triomics_provenance_abort("C method_state groups must match integration_result groups")
+    }
     integration_results <- Filter(function(entity) identical(entity$scientific_role, "integration_result"), entities)
     integration_states <- Filter(function(entity) identical(entity$scientific_role, "integration_state"), entities)
     if (length(integration_results) == 0L || length(integration_results) != length(integration_states)) {
@@ -673,8 +690,17 @@ triomics_provenance_validate_profile <- function(profile, frame_payload_id, fram
   }
   route_descriptors <- Filter(function(entity) entity$scientific_role %in% c("clinical_evidence", "native_sidecar"), entities)
   for (descriptor in route_descriptors) {
-    if (!descriptor$route_id %in% vapply(routes, `[[`, character(1), "route_id")) {
-      triomics_provenance_abort("route evidence descriptor is undeclared")
+    route_kind <- if (identical(descriptor$scientific_role, "clinical_evidence")) "clinical" else "native"
+    matching <- Filter(function(route) identical(route$route_kind, route_kind) &&
+                         identical(route$route_id, descriptor$route_id), routes)
+    if (length(matching) != 1L) {
+      triomics_provenance_abort("route evidence descriptor must match exactly one declaration by kind and route_id")
+    }
+    route <- matching[[1L]]
+    fields <- c("analysis_id", "preparation_context_id", "representation_id", "method_id")
+    if (!identical(lapply(fields, function(field) descriptor[[field]]),
+                   lapply(fields, function(field) route[[field]]))) {
+      triomics_provenance_abort("route evidence descriptor scope or method_id differs from its declaration")
     }
   }
 

@@ -517,7 +517,7 @@ testthat::test_that("producer stage, predecessor pairs, integration pairs, and h
     },
     function(x) {
       i <- which(vapply(x$identity$entities, `[[`, character(1), "scientific_role") == "integration_state")[[1L]]
-      x$identity$entities[[i]]$member_of_entity_id <- "integration_result-1"; x
+      x$identity$entities[[i]]$member_of_entity_id <- "integration_result-2"; x
     },
     function(x) {
       i <- which(vapply(x$identity$entities, `[[`, character(1), "scientific_role") == "handoff_payload")
@@ -559,14 +559,19 @@ testthat::test_that("activity graph, sorting, acyclicity, producer activity, and
 
   later <- m7_003_test_profile("C")
   predecessor_index <- which(vapply(later$identity$entities, `[[`, character(1), "scientific_role") == "predecessor_envelope")
+  previous_envelope_id <- later$identity$entities[[predecessor_index]]$entity_id
+  previous_payload_id <- later$identity$entities[[predecessor_index + 1L]]$entity_id
+  later$identity$entities[[predecessor_index]]$entity_id <- "prior-provenance-envelope"
   later$identity$entities[[predecessor_index]]$artifact_id <- "prior-provenance-envelope"
   later$identity$entities[[predecessor_index + 1L]]$entity_id <- "prior-provenance-payload"
   later$identity$entities[[predecessor_index + 1L]]$member_of_entity_id <-
-    later$identity$entities[[predecessor_index]]$entity_id
-  later$identity$activities[[1L]]$used_entity_ids <- as.list(sort(c(
-    unlist(later$identity$activities[[1L]]$used_entity_ids), "prior-provenance-envelope",
-    "prior-provenance-payload"
-  ), method = "radix"))
+    "prior-provenance-envelope"
+  used_entity_ids <- unlist(later$identity$activities[[1L]]$used_entity_ids, use.names = FALSE)
+  used_entity_ids <- c(
+    setdiff(used_entity_ids, c(previous_envelope_id, previous_payload_id)),
+    "prior-provenance-envelope", "prior-provenance-payload"
+  )
+  later$identity$activities[[1L]]$used_entity_ids <- as.list(sort(used_entity_ids, method = "radix"))
   testthat::expect_true(m7_003_test_validate(later))
 })
 
@@ -593,7 +598,7 @@ testthat::test_that("storage form, size, canonical schema, and digest fields are
   index <- which(vapply(embedded$identity$entities, `[[`, character(1), "scientific_role") == "method_state")[[1L]]
   embedded$identity$entities[[index]]$storage_form <- "embedded_json"
   embedded$identity$entities[[index]]$digest_kind <- "rfc8785"
-  embedded$identity$entities[[index]]$size_bytes <- NULL
+  embedded$identity$entities[[index]]["size_bytes"] <- list(NULL)
   embedded$identity$entities[[index]]$canonical_schema_uri <- "urn:triomics:method-state:1"
   testthat::expect_true(m7_003_test_validate(embedded))
 })
@@ -616,4 +621,94 @@ testthat::test_that("profile identity digest is verified and malformed raw ident
   ), error = identity)
   testthat::expect_s3_class(result, "triomics_error")
   testthat::expect_identical(result$code, "D_PROVENANCE_INVALID")
+})
+
+testthat::test_that("multiple represented blocks accept matching feature registries", {
+  profile <- m7_003_test_profile("B")
+  extra_entities <- list(
+    m7_003_test_entity("feature_registry", "feature_registry-2", "B",
+                       derived_from = "source_manifest-1"),
+    m7_003_test_entity("represented_matrix", "represented_matrix-2", "B",
+                       derived_from = "source_manifest-1"),
+    m7_003_test_entity("preprocessing_state", "preprocessing_state-2", "B",
+                       derived_from = "source_manifest-1")
+  )
+  for (index in seq_along(extra_entities)) extra_entities[[index]]$block_id <- "block-2"
+  entities <- c(profile$identity$entities, extra_entities)
+  entities <- entities[order(
+    vapply(entities, `[[`, character(1), "scientific_role"),
+    vapply(entities, `[[`, character(1), "entity_type"),
+    vapply(entities, `[[`, character(1), "entity_id"), method = "radix"
+  )]
+  profile$identity$entities <- I(entities)
+  generated_ids <- c(
+    unlist(profile$identity$activities[[1L]]$generated_entity_ids, use.names = FALSE),
+    vapply(extra_entities, `[[`, character(1), "entity_id")
+  )
+  profile$identity$activities[[1L]]$generated_entity_ids <- as.list(
+    sort(generated_ids, method = "radix")
+  )
+  testthat::expect_true(m7_003_test_validate(profile))
+})
+
+testthat::test_that("every represented block has its required feature registry", {
+  profile <- m7_003_test_profile("B")
+  testthat::expect_true(m7_003_test_validate(profile))
+  registry_index <- which(vapply(
+    profile$identity$entities,
+    function(entity) identical(entity$scientific_role, "feature_registry"),
+    logical(1)
+  ))[[1L]]
+  profile$identity$entities[[registry_index]]$block_id <- "unrelated-block"
+  m7_003_test_expect_invalid(profile)
+})
+
+testthat::test_that("every integration method group has its required method state", {
+  profile <- m7_003_test_profile("C", extra_integrations = TRUE)
+  testthat::expect_true(m7_003_test_validate(profile))
+  method_state_index <- which(vapply(
+    profile$identity$entities,
+    function(entity) identical(entity$scientific_role, "method_state") &&
+      identical(entity$method_id, "block.spls"),
+    logical(1)
+  ))[[1L]]
+  missing_state_id <- profile$identity$entities[[method_state_index]]$entity_id
+  profile$identity$entities <- I(Filter(
+    function(entity) !identical(entity$entity_id, missing_state_id),
+    profile$identity$entities
+  ))
+  generated_ids <- unlist(profile$identity$activities[[1L]]$generated_entity_ids, use.names = FALSE)
+  profile$identity$activities[[1L]]$generated_entity_ids <- as.list(
+    sort(setdiff(generated_ids, missing_state_id), method = "radix")
+  )
+  m7_003_test_expect_invalid(profile)
+})
+
+testthat::test_that("route evidence must match the declared route kind and complete scope", {
+  route <- list(
+    route_id = "native-only",
+    route_kind = "native",
+    analysis_id = "analysis-1",
+    preparation_context_id = "prep-1",
+    representation_id = "representation-1",
+    method_id = "limma"
+  )
+  profile <- m7_003_test_profile("C", routes = list(route))
+  testthat::expect_true(m7_003_test_validate(profile))
+  extra_clinical <- m7_003_test_entity(
+    "clinical_evidence", "clinical-evidence-surplus", "C", method_id = NULL,
+    route_id = "native-only", derived_from = "source_manifest-1"
+  )
+  entities <- c(profile$identity$entities, list(extra_clinical))
+  entities <- entities[order(
+    vapply(entities, `[[`, character(1), "scientific_role"),
+    vapply(entities, `[[`, character(1), "entity_type"),
+    vapply(entities, `[[`, character(1), "entity_id"), method = "radix"
+  )]
+  profile$identity$entities <- I(entities)
+  generated_ids <- unlist(profile$identity$activities[[1L]]$generated_entity_ids, use.names = FALSE)
+  profile$identity$activities[[1L]]$generated_entity_ids <- as.list(
+    sort(c(generated_ids, extra_clinical$entity_id), method = "radix")
+  )
+  m7_003_test_expect_invalid(profile)
 })

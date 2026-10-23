@@ -1,0 +1,126 @@
+{
+  "packet_id": "M7-003-contract-foundation",
+  "request_type": "registration_request",
+  "status": "registration_requested",
+  "implementation_base": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
+  "failing_seed": "8bc460bdfba1510d32eb2825bb460f480d75b483",
+  "accepted": false,
+  "synthetic_software_only": true,
+  "local_files": [
+    "R/provenance_contract.R",
+    "inst/schema/stage-handoff-provenance.schema.json",
+    "tests/testthat/test-M7-003-provenance-contract.R",
+    "docs/implementation/registrations/M7-003-contract-foundation.json"
+  ],
+  "internal_apis": [
+    "triomics_jcs_canonicalize_json(json)",
+    "triomics_provenance_identity_sha256(identity)",
+    "triomics_validate_stage_handoff_provenance(profile, provenance_payload_id, provenance_envelope_id)"
+  ],
+  "package_registration": {
+    "namespace_edits": false,
+    "description_edits": false,
+    "dependency_requests": [
+      {
+        "package": "V8",
+        "target": "Imports",
+        "owner": "Sol",
+        "status": "requested",
+        "reason": "The RFC 8785 canonicalization boundary uses the embedded JavaScript runtime and fails closed when V8 is unavailable."
+      }
+    ]
+  },
+  "red_green_cycle": {
+    "red": {
+      "command": "Rscript --vanilla -e 'testthat::test_local(filter = \"M7-003-provenance-contract\", reporter = \"summary\")'",
+      "exit_code": 1,
+      "issues": 8,
+      "errors": 6,
+      "failures": 2,
+      "warnings": 0,
+      "skips": 0,
+      "evidence": "Empty derived_from_entity_ids triggered sort(NULL, method = \"radix\"); one negative profile probe leaked a base simpleError at that empty-set boundary; the embedded_json fixture omitted the required size_bytes JSON null member."
+    },
+    "green": {
+      "command": "Rscript --vanilla -e 'testthat::test_local(filter = \"M7-003-provenance-contract\", reporter = \"summary\")'",
+      "exit_code": 0,
+      "failures": 0,
+      "warnings": 0,
+      "skips": 0,
+      "evidence": "Focused file completed with DONE after the empty-array validator fix, JSON-null fixture correction, null artifact_id guard, and repairs to two ineffective fixture mutations."
+    }
+  },
+  "repair_1": {
+    "review_receipt": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/docs/implementation/reviews/2026-10-23-m7-004-two-axis-review.md",
+    "red": {
+      "command": "Rscript --vanilla -e 'testthat::test_local(filter = \"M7-003-provenance-contract\", reporter = \"summary\")'",
+      "exit_code": 1,
+      "issues": 6,
+      "errors": 3,
+      "failures": 3,
+      "warnings": 0,
+      "skips": 0,
+      "evidence": "All three requested public-validator probes were accepted by candidate 65662bc: a represented block after its feature registry was moved to an unrelated block; a C block.spls integration result after its method_state was removed; and surplus clinical_evidence sharing a native route_id. The identity hash was refreshed for each mutated profile."
+    },
+    "green": {
+      "command": "Rscript --vanilla -e 'testthat::test_local(filter = \"M7-003-provenance-contract\", reporter = \"summary\")'",
+      "exit_code": 0,
+      "failures": 0,
+      "warnings": 0,
+      "skips": 0,
+      "evidence": "Focused M7-003 contract suite completed with DONE. Added complete required-scope coverage checks for represented_matrix/feature_registry blocks and C integration_result/method_state groups; route descriptors now require exactly one declaration matching kind, route_id, and full scope. Positive multi-block, multi-method, and multi-route fixtures passed."
+    },
+    "package_suite": {
+      "rerun": false,
+      "reason": "Parent instruction prohibits another full-suite run during repair 1. The prior full-suite result remains an invalid host-permission diagnostic, not product GREEN or a repair trigger. Sol must own one immutable rerun with correct filesystem permissions."
+    }
+  },
+  "package_suite_verification": {
+    "command": "Rscript --vanilla -e 'testthat::test_local(reporter = \"summary\")'",
+    "exit_code": 1,
+    "warnings_visible": 10,
+    "errors_visible": 10,
+    "failure_cap": 10,
+    "status": "invalid_host_permission_diagnostic",
+    "warning_details": [
+      {"test": "A-T09 Stage A rejects disabled clinical objectives", "location": "test-A-T09.R:648", "message": "cannot open file 'inst/examples/tickets/.A-T09-stage-config-689c45497494.yaml': Operation not permitted."},
+      {"test": "A-T09 Stage A skips clinical sources when disabled without objectives", "location": "test-A-T09.R:656", "message": "cannot open file 'inst/examples/tickets/.A-T09-stage-config-689c76e0ee8a.yaml': Operation not permitted."},
+      {"test": "A-T09 Stage A labels real private clinical artifacts sensitive", "location": "test-A-T09.R:666", "message": "cannot open file 'inst/examples/tickets/.A-T09-stage-config-689c387d7357.yaml': Operation not permitted."},
+      {"test": "A-T09 Stage A fails closed for aggregate audience without disclosure policy", "location": "test-A-T09.R:679", "message": "cannot open file 'inst/examples/tickets/.A-T09-stage-config-689c2ae75977.yaml': Operation not permitted."},
+      {"test": "the stage B fixture envelope matches limma on predecessor matrices", "location": "test-B-T01.R:594", "message": "cannot open file 'inst/examples/tickets/b-t01-refused-689c41703117.yaml': Operation not permitted."},
+      {"test": "CLI startup routes qualified absolute-path DEqMS and explicit fallback", "location": "test-B-T05.R:417", "message": "cannot open file 'inst/examples/tickets/b-t05-cli-689c2a106b1.yaml': Operation not permitted."},
+      {"test": "M4-005A serializes unavailable DEqMS without fallback", "location": "test-M4-005-B-T05-integration.R:103", "message": "cannot open file 'inst/examples/tickets/m4-005-b-t05-689c217cba9b.yaml': Operation not permitted."},
+      {"test": "M4-005A serializes complete explicit limma fallback", "location": "test-M4-005-B-T05-integration.R:118", "message": "cannot open file 'inst/examples/tickets/m4-005-b-t05-689c203dd49a.yaml': Operation not permitted."},
+      {"test": "M4-005A serializes partial explicit limma fallback", "location": "test-M4-005-B-T05-integration.R:138", "message": "cannot open file 'inst/examples/tickets/m4-005-b-t05-partial-689c3d076b0a.tsv': Operation not permitted."},
+      {"test": "M4-005A leaves ordinary limma and DEqMS provenance clean", "location": "test-M4-005-B-T05-integration.R:156", "message": "cannot open file 'inst/examples/tickets/m4-005-b-t05-689c10b62647.yaml': Operation not permitted."}
+    ],
+    "visible_error_details": [
+      {"test": "A-T09 Stage A rejects disabled clinical objectives", "location": "test-A-T09.R:648", "message": "file(con, \"w\"): cannot open the connection; temporary YAML write was Operation not permitted."},
+      {"test": "A-T09 Stage A skips clinical sources when disabled without objectives", "location": "test-A-T09.R:656", "message": "file(con, \"w\"): cannot open the connection; temporary YAML write was Operation not permitted."},
+      {"test": "A-T09 Stage A labels real private clinical artifacts sensitive", "location": "test-A-T09.R:666", "message": "file(con, \"w\"): cannot open the connection; temporary YAML write was Operation not permitted."},
+      {"test": "A-T09 Stage A fails closed for aggregate audience without disclosure policy", "location": "test-A-T09.R:679", "message": "file(con, \"w\"): cannot open the connection; temporary YAML write was Operation not permitted."},
+      {"test": "the stage B fixture envelope matches limma on predecessor matrices", "location": "test-B-T01.R:594", "message": "file(con, \"w\"): cannot open the connection; temporary YAML write was Operation not permitted."},
+      {"test": "CLI startup routes qualified absolute-path DEqMS and explicit fallback", "location": "test-B-T05.R:417", "message": "file(con, \"w\"): cannot open the connection; temporary YAML write was Operation not permitted."},
+      {"test": "B-T07 AC1 exports full public bundles without", "location": "test-B-T07.R:317", "message": "normalizePath(path, winslash = \"/\", mustWork = TRUE): path was missing: artifacts/acceptance/B-T07/testthat/ac1-689c5dcef796."},
+      {"test": "B-T07 AC2 independent and paired CLI smokes", "location": "test-B-T07.R:349", "message": "normalizePath(path, winslash = \"/\", mustWork = TRUE): path was missing: artifacts/acceptance/B-T07/testthat/ac2-independent-689c76ead6c6."},
+      {"test": "B-T07 AC3 validates the matrix hash and block", "location": "test-B-T07.R:412", "message": "normalizePath(path, winslash = \"/\", mustWork = TRUE): path was missing: artifacts/acceptance/B-T07/testthat/ac3-unverified-689c36098d08."},
+      {"test": "B-T07 integrated CLI writes a verified same-run handoff", "location": "test-B-T07.R:475", "message": "normalizePath(path, winslash = \"/\", mustWork = TRUE): path was missing: artifacts/acceptance/B-T07/testthat/integrated-cli-689c7ffc661c."}
+    ],
+    "disposition": "Testthat reached its 10-failure cap and reported that additional results may be missing (the captured output ended with '... and 28 more'). Do not interpret this run as package GREEN or as a product defect. Sol must perform one immutable package-suite rerun with correct filesystem permissions; do not suppress these diagnostics."
+  },
+  "limitations": [
+    "Only public synthetic fixtures were used; no private study data or paths were accessed.",
+    "This is software-contract evidence only and is not scientific validation or packet acceptance.",
+    "No producer wiring, D verification/publication, migration, CLI or namespace registration, D-T01 acceptance, or M7 release is included."
+  ],
+  "closed_phases": [
+    "B-T07 and C-06 producer seams",
+    "D verification and Output Generation publication",
+    "legacy migration",
+    "shared CLI, NAMESPACE, DESCRIPTION and lockfile registration",
+    "D-T01 acceptance",
+    "M7 release",
+    "every Stage-D successor"
+  ],
+  "next_gate": "Independent Standards and Spec review against accepted base 221df65a20e6a53bf523a4f5592a9ffe1e006ec8; Sol alone applies any reviewed shared V8 Imports registration."
+}
