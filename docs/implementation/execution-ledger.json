@@ -34,39 +34,30 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_003_contract_luna",
-      "role": "bounded_luna_max_contract_foundation_implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "effective_settings_exposed": false,
-      "packet": "M7-003 contract foundation",
-      "base_commit": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
-      "worktree": "/Users/megastore/.codex/worktrees/m7-003-contract-foundation/PML MultiOmics Analysis Pipeline",
-      "allowed_files": [
-        "R/provenance_contract.R",
-        "inst/schema/stage-handoff-provenance.schema.json",
-        "tests/testthat/test-M7-003-provenance-contract.R",
-        "docs/implementation/registrations/M7-003-contract-foundation.json"
-      ],
-      "plan": "/private/tmp/triomics-m7-003-contract-foundation-plan.md",
-      "brief": ".superpowers/sdd/triomics-m7-003-contract-foundation-plan/task-1-brief.md",
-      "report": ".superpowers/sdd/triomics-m7-003-contract-foundation-plan/task-1-implementer-report.md",
-      "allowed_next_transition": "Worker commit -> Sol inspects exact diff and test evidence -> fresh read-only Sol-high review. No integration before review pass.",
-      "wait_cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_003_contract_foundation_luna_active",
+    "status": "m7_003_contract_foundation_blocked_attempts_exhausted",
     "last_reconciled": "2026-10-23",
-    "active_handoffs": [
-      "/root/m7_003_contract_luna"
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The accepted new-file-only M7-003 contract-foundation packet is dispatched to one isolated Luna-max worker from exact base 221df65. Strict RED/GREEN evidence and the focused Astra method-mismatch probe are required. Producer seams, D verification/publication, migration, shared registration, D-T01 acceptance, M7 release, and every Stage-D successor remain closed."
+    "disposition": "The M7-003 contract-foundation initial implementation plus two targeted repairs exhausted their allowance with the focused gate still failing. No commit, registration request, Sol review, integration, or gate release occurred. Further implementation requires Omar's explicit authorization of a new bounded repair record. D-T01, M7, and every Stage-D successor remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_003_contract_foundation_blocked_attempts_exhausted",
+      "date": "2026-10-23",
+      "worker": "/root/m7_003_contract_luna",
+      "base_and_head": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
+      "candidate_commit": null,
+      "focused_gate": "Initial implementation and two targeted repair runs each exited 1; final run had 2 failures and 6 errors.",
+      "remaining_defects": ["empty derived_from_entity_ids reaches sort(NULL, method=radix)", "embedded-JSON fixture removes size_bytes instead of retaining JSON null"],
+      "registration_request": "not created",
+      "full_suite": "not run because focused gate failed; an immediately started run was interrupted before producing a result",
+      "review": "not dispatched because there is no passing immutable candidate",
+      "receipt": "docs/implementation/reviews/2026-10-23-m7-003-contract-foundation-blocker.md",
+      "allowed_next_transition": "Only Omar's explicit authorization of a new bounded repair record may reopen contract-foundation implementation. Do not resume this exhausted packet or open downstream seams.",
+      "disposition": "Uncommitted allowlisted work preserved in the isolated worktree; no integration, acceptance, private-data access, or gate release."
+    },
     {
       "event": "m7_003_contract_foundation_luna_dispatched",
       "date": "2026-10-23",
