@@ -279,7 +279,7 @@ testthat::test_that("C-05 seed sensitivity is JSON-safe at the shared CLI bounda
   testthat::expect_no_error(jsonlite::toJSON(payload, auto_unbox = TRUE, null = "null"))
 })
 
-testthat::test_that("C-05 registration request records the applied but unaccepted route", {
+testthat::test_that("C-05 registration records the accepted synthetic-software-only route", {
   registration_path <- testthat::test_path(
     "..", "..", "docs", "implementation", "registrations", "C-05.json"
   )
@@ -295,14 +295,21 @@ testthat::test_that("C-05 registration request records the applied but unaccepte
   registration <- jsonlite::read_json(registration_path, simplifyVector = TRUE)
 
   testthat::expect_identical(registration$packet_id, "C-05")
-  testthat::expect_false(registration$accepted)
+  testthat::expect_true(registration$accepted)
   testthat::expect_true(registration$applied_to_shared_files)
   testthat::expect_true(registration$cli_registration$enabled)
+  testthat::expect_true(registration$cli_registration$requested_enabled)
+  testthat::expect_identical(registration$cli_registration$gate, "passed")
   testthat::expect_identical(registration$integration_backends$method, "mofa2")
   testthat::expect_identical(registration$dependencies$package, c("MOFA2", "mofapy2"))
-  testthat::expect_match(registration$implementation_status, "AC2-AC4 adapter behavior implemented")
+  testthat::expect_match(registration$implementation_status, "accepted on synthetic software evidence")
+  testthat::expect_match(registration$implementation_status, "No real-study or biological validation is claimed")
   testthat::expect_match(registration$integration_backends$status, "implemented_registered")
   testthat::expect_true(any(grepl("synthetic software evidence only", registration$known_gaps, fixed = TRUE)))
+  testthat::expect_true(any(grepl(
+    "private-study validation and biological factor interpretation remain unperformed",
+    registration$known_gaps, fixed = TRUE
+  )))
   testthat::expect_true(any(grepl("enrichment execution was not performed", registration$known_gaps, fixed = TRUE)))
   testthat::expect_false(any(grepl("not implemented", registration$known_gaps, fixed = TRUE)))
 })
