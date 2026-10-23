@@ -34,31 +34,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_004_contract_luna",
-      "role": "bounded_luna_max_contract_foundation_repair_2",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "effective_settings_exposed": false,
-      "packet": "M7-004 contract-foundation repair 2 of 2",
-      "candidate_commit": "6c437d1",
-      "worktree": "/Users/megastore/.codex/worktrees/m7-004-contract-completion/PML MultiOmics Analysis Pipeline",
-      "allowed_files": ["R/provenance_contract.R", "inst/schema/stage-handoff-provenance.schema.json", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
-      "allowed_next_transition": "Focused GREEN -> coordinator verifies the last repair and obtains a final narrow disposition of the remaining Important finding; any remaining defect blocks M7-004 because repairs are exhausted.",
-      "wait_cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_004_repair_2_of_2_active_m7_005_integrated",
+    "status": "paused_m7_004_integrated_source_green_acceptance_review_pending",
     "last_reconciled": "2026-10-23",
-    "active_handoffs": [
-      "/root/m7_004_contract_luna"
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The single focused M7-004 rereview resolved route matching but retained one Important required-scope finding. Final repair 2/2 is active for method-state method scope and normalized-metadata analysis scope. M7-005 is integrated as 223546e. No M7 or downstream gate is released."
+    "disposition": "M7-004 final repair candidate 647192f and Sol-owned V8 registration are integrated through 5dcc25f. Focused verification and the combined source suite are green; the suite has 0 failures/errors/skips and the same 14 named C-05 warnings. The single focused rereview was already consumed before repair 2, so acceptance review remains pending. No worker is active and no M7 or downstream gate is released."
   },
   "orchestration_events": [
+    {
+      "event": "m7_004_final_repair_integrated_source_suite_green_paused",
+      "date": "2026-10-23",
+      "final_candidate": "647192f",
+      "integration_commits": ["8b8c3cd", "fe34495", "1cb9daf", "5dcc25f"],
+      "focused_sol_verification": "exit 0; DONE; zero failures, warnings, or skips",
+      "combined_source_suite": "exit 0; DONE; failures 0, errors 0, skips 0, warnings 14; summary reporter emitted no numeric PASS total",
+      "warning_set": "the same named C-05 native MOFA small-fixture diagnostics; none suppressed",
+      "review_ref": "docs/implementation/reviews/2026-10-23-m7-004-integration-verification.md",
+      "allowed_next_transition": "Omar may authorize one fresh read-only acceptance audit of immutable snapshot 5dcc25f or direct that M7-004 be recorded blocked; do not start producer or D seams meanwhile.",
+      "disposition": "Implementation/test gate green, acceptance governance pending; no active worker, private-data access, M7 acceptance, or downstream release."
+    },
     {
       "event": "m7_004_focused_rereview_changes_required_repair_2_dispatched",
       "date": "2026-10-23",

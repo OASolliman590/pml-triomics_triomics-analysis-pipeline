@@ -184,10 +184,23 @@ then completed the focused suite with zero failures, warnings, or skips. It adds
 complete required block/method scope coverage, reverse route kind/ID/full-scope
 matching, and positive multi-block controls. The single focused Spec rereview
 confirmed the route and repaired group checks, but returned one Important
-remaining scope gap: B method state can move to an unrelated method and
-normalized metadata can move to an unrelated analysis. Repair 2/2 is now active
-with the same Luna-max worker. This is the last permitted repair; integration
-and the combined source suite remain pending.
+remaining scope gap: B method state could move to an unrelated method and
+normalized metadata could move to an unrelated analysis. The same Luna-max
+worker used final repair 2/2 to close those two paths.
+
+Repair 2/2 returned final candidate `647192f`. Sol independently reran its
+focused suite: exit 0, `DONE`, no failure, warning, or skip. The exact candidate
+blobs were integrated as `8b8c3cd`, `fe34495`, and `1cb9daf`; Sol registered V8
+in Imports as `5dcc25f`. The combined source suite then exited 0 with no failure,
+error, or skip and the same fourteen named C-05 native MOFA small-fixture
+warnings. The summary reporter emitted no numeric PASS total. The durable
+receipt is `reviews/2026-10-23-m7-004-integration-verification.md`.
+
+M7-004 is not yet accepted: its single focused Spec rereview was consumed before
+the final repair. The run is paused with no active worker. A fresh immutable
+acceptance audit needs explicit authorization; otherwise record M7-004 blocked.
+B-T07/C-06 producer provenance, D verification/publication, migration, D-T01
+acceptance, M7 release, and every Stage-D successor remain closed.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
@@ -458,9 +471,12 @@ registration seams, or start D-T02/D-T03. M7-001 and M7-002 exhausted their
 permitted cycles; M7-003 is accepted as a specification amendment, but its
 contract-foundation implementation packet is exhausted and remains historical.
 Do not resume `/root/m7_003_contract_luna` or integrate its files directly.
-Continue through M7-004: preserve the failed files as a non-acceptance seed,
-use one fresh isolated Luna-max worktree, require focused GREEN and one full
-suite, then run independent Standards and Spec reviews before serial
-integration. D-T01, M7, and all successors stay closed meanwhile.
+M7-004 final candidate `647192f` is integrated through snapshot `5dcc25f` and
+the focused plus combined source-suite gates are green. Do not rerun Luna or the
+full suite. The next transition requires Omar to authorize one fresh read-only
+acceptance audit of immutable snapshot `5dcc25f`; absent that authorization,
+record M7-004 blocked because the prior single focused rereview was consumed.
+Do not start B-T07/C-06 producer provenance, D verification/publication,
+migration, D-T01 acceptance, M7 release, or any Stage-D successor.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.
