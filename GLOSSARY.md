@@ -20,6 +20,11 @@ The explicit study, analysis, block, method, preparation, representation, row,
 and column identity slots that place one Scientific Entity Descriptor.
 _Avoid_: Implicit scope, consumer-inferred scope
 
+**Declared Route**:
+A producer-configured clinical or native evidence route whose identity requires
+exactly one matching evidence descriptor, including a typed unavailable result.
+_Avoid_: Inferred route, implicit applicability
+
 **Provenance Frame**:
 The Stage Handoff Provenance payload and its binding envelope, kept outside that
 profile's own scientific-entity inventory to prevent circular identity.

@@ -117,9 +117,16 @@ closed descriptor explicit block/method and ordered-identity scope fields,
 defines a total role/type/scope/cardinality table, and keeps each provenance
 payload and envelope outside its own inventory while allowing a later producer
 to bind their bytes as predecessors. The proposed delta, glossary terms, map,
-audit brief, and ledger are prepared for one fresh read-only Astra-low audit of
-an immutable snapshot. No product implementation, migration, or private-data
-access is authorized before Astra passes and Sol separately accepts the record.
+audit brief, and ledger were frozen as `0e128c3`. Fresh read-only Astra-low audit
+returned `changes_required`: Critical 0, Important 1, Minor 0. It confirmed the
+closed descriptor, role/type mapping, and provenance-frame exclusion but found
+that permitted multiple preprocessing states conflicted with a blanket duplicate
+rule, while multiple clinical/native routes had no executable route key.
+Documentation repair 1 adds a closed declared-route registry and descriptor
+`route_id`, exact pair/profile/route mappings, and separates entity uniqueness
+from row cardinality. The same reviewer now receives the single focused
+rereview. No product implementation, migration, or private-data access is
+authorized before a pass and separate Sol acceptance.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
@@ -366,9 +373,10 @@ remains unaccepted and blocks every Stage-D successor.
 Do not integrate candidate `1b44a84`, resume its worker, implement M7-002 or
 M7-003, or start D-T02/D-T03. M7-001 and M7-002 have exhausted their permitted
 cycles. M7-003 is authorized only as a specification-and-audit cycle. The legal
-transition is the fresh Astra-low verdict: pass permits Sol acceptance and then
-contract-foundation implementation; changes required permits one documentation
-repair and one focused rereview. Until a pass and Sol acceptance, keep Stage D
-blocked and perform no product edit.
+transition is the single focused Astra-low rereview of documentation repair 1:
+pass permits Sol acceptance and then contract-foundation implementation; any
+remaining Critical or Important finding blocks M7-003 because no further repair
+is authorized. Until a pass and Sol acceptance, keep Stage D blocked and perform
+no product edit.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.

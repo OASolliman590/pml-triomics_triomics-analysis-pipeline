@@ -29,4 +29,7 @@ Omar's explicit authorization of a new bounded change record.
 Omar supplied that authorization for M7-003 on 2026-10-23. M7-003 is a narrow
 successor delta that closes only the missing descriptor scope fields, total
 role/type mapping, and provenance-frame self-exclusion. Its fresh Astra-low
-audit is pending. It does not authorize implementation by itself.
+audit returned one Important cardinality finding. Documentation repair 1 adds
+an explicit declared-route registry and separates entity uniqueness from legal
+group multiplicity; its single focused rereview is pending. M7-003 does not
+authorize implementation by itself.
