@@ -1,7 +1,8 @@
 # M7-001 — proposed D-T01 provenance-boundary repair exception
 
 - Date: 2026-10-23
-- Status: **proposed; explicit Omar authorization required**
+- Status: **authorized by Omar on 2026-10-23; execution gates remain mandatory**
+- Authorization: Omar's exact instruction, `I authorize M7-001.`
 - Trigger: `docs/implementation/reviews/2026-10-22-d-t01-shared-sol-review.md`
 - Astra audit: `docs/implementation/reviews/2026-10-23-d-t01-blocker-astra-audit.md`
 - Attempt accounting: D-T01's initial implementation and two targeted repairs
