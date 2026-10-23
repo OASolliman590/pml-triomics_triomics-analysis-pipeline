@@ -34,44 +34,25 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_006_standards_review",
-      "role": "fresh_read_only_sol_high_standards_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "effective_settings_exposed": false,
-      "packet": "M7-006 Standards review",
-      "candidate_commit": "5242609518886b26e60ea76863aa9c0badfd360d",
-      "fixed_point": "5dcc25f",
-      "worktree": "/Users/megastore/.codex/worktrees/m7-006-provenance-completeness/PML MultiOmics Analysis Pipeline",
-      "allowed_files": [],
-      "allowed_next_transition": "Both review axes pass -> serial Sol integration; any correctness finding -> bounded repair or block.",
-      "wait_cursor": null
-    },
-    {
-      "agent": "/root/m7_006_spec_review",
-      "role": "fresh_read_only_sol_high_spec_reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "effective_settings_exposed": false,
-      "packet": "M7-006 Spec review",
-      "candidate_commit": "5242609518886b26e60ea76863aa9c0badfd360d",
-      "fixed_point": "5dcc25f",
-      "worktree": "/Users/megastore/.codex/worktrees/m7-006-provenance-completeness/PML MultiOmics Analysis Pipeline",
-      "allowed_files": [],
-      "allowed_next_transition": "Both review axes pass -> serial Sol integration; any correctness finding -> bounded repair or block.",
-      "wait_cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_006_parallel_two_axis_review_active",
+    "status": "m7_006_two_axis_review_passed_integration_pending",
     "last_reconciled": "2026-10-24",
-    "active_handoffs": ["/root/m7_006_standards_review", "/root/m7_006_spec_review"],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M7-006 candidate 5242609 is focused-green and changes only the three allowed files. Fresh read-only Standards and Spec reviewers are active in parallel. No integration, full-suite rerun, acceptance, or downstream Stage-D work has started."
+    "disposition": "Both independent M7-006 review axes passed candidate 5242609 with Critical 0, Important 0, Minor 0 and ready_to_integrate yes. Serial integration and one full source-suite run are the next legal transitions; M7-004 remains unaccepted and Stage D remains closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_006_two_axis_review_passed",
+      "date": "2026-10-24",
+      "candidate_commit": "5242609518886b26e60ea76863aa9c0badfd360d",
+      "standards": "pass; Critical 0, Important 0, Minor 0; ready_to_integrate yes",
+      "spec": "pass; Critical 0, Important 0, Minor 0; ready_to_integrate yes",
+      "review_ref": "docs/implementation/reviews/2026-10-24-m7-006-two-axis-review.md",
+      "allowed_next_transition": "Serially integrate candidate 5242609, verify exact three-file result, then run the full source suite once.",
+      "disposition": "Review pass only; no acceptance, gate release, private data, or Stage-D work."
+    },
     {
       "event": "m7_006_candidate_two_axis_review_dispatched",
       "date": "2026-10-24",

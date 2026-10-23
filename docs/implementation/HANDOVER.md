@@ -227,7 +227,10 @@ Its exact three-file allowlist and RED/GREEN obligations are recorded in
 M7-006. It returned focused-green candidate `5242609` after reproducing both
 defects as RED. Fresh read-only Standards and Spec reviewers are active in
 parallel under `reviews/2026-10-24-m7-006-two-axis-review-brief.md`. Both axes
-must pass before serial integration.
+passed with Critical 0, Important 0, Minor 0 and `ready_to_integrate: yes`. The
+durable receipt is `reviews/2026-10-24-m7-006-two-axis-review.md`. Serial
+integration and one full source-suite run are next; no acceptance or Stage-D
+gate has been released.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
