@@ -34,15 +34,50 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m7_002_astra_audit",
+      "role": "fresh_read_only_astra_low_amendment_auditor",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "effective_settings_exposed": false,
+      "packet": "M7-002 pre-implementation specification amendment",
+      "allowed_files": [],
+      "allowed_next_transition": "Pass -> Sol records acceptance and may begin contract-foundation implementation. Changes required -> one documentation repair and one focused rereview. No product implementation before pass.",
+      "wait_cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "d_t01_wayfinder_domain_model_complete_legacy_frontier",
+    "status": "m7_002_astra_amendment_audit_active",
     "last_reconciled": "2026-10-23",
-    "active_handoffs": [],
+    "active_handoffs": ["/root/m7_002_astra_audit"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The Stage D provenance domain model is accepted and recorded in GLOSSARY.md and ADR 0003. The open frontier is legacy handoff proof and migration. M7-001 remains exhausted and Stage D remains blocked. No frozen specification or product implementation change is authorized."
+    "disposition": "Legacy proof/migration and the explicit M7-002 amendment route are resolved. One fresh read-only Astra-low audit is the sole active handoff. M7-001 remains exhausted and Stage D remains blocked. No implementation is authorized before an audit pass."
   },
   "orchestration_events": [
+    {
+      "event": "m7_002_astra_amendment_audit_prepared",
+      "date": "2026-10-23",
+      "reviewer": "/root/m7_002_astra_audit",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "audit_brief": "docs/implementation/reviews/2026-10-23-m7-002-astra-amendment-audit-brief.md",
+      "candidate_commit": "the immutable commit containing this event",
+      "allowed_next_transition": "Pass -> record Sol acceptance and authorize phase 1 only; changes_required -> bounded documentation repair and single focused rereview; implementation remains prohibited until pass.",
+      "disposition": "Read-only audit only; no product code, private data, gate release, or implementation authorization."
+    },
+    {
+      "event": "m7_002_amendment_candidate_drafted",
+      "date": "2026-10-23",
+      "authority": "Omar resume instruction",
+      "change_record": "docs/implementation/change-records/M7-002-stage-handoff-provenance-amendment.md",
+      "audit_brief": "docs/implementation/reviews/2026-10-23-m7-002-astra-amendment-audit-brief.md",
+      "wayfinder_map": "docs/implementation/investigations/d-t01-provenance-wayfinder/MAP.md",
+      "legacy_decision": "Only immutable producer-complete lineage may migrate without numerical recomputation; missing proof requires unchanged-science producer regeneration.",
+      "affected_seams": ["B-T07 public handoff", "C-06 public handoff", "D-T01 verifier and publication lifecycle"],
+      "allowed_next_transition": "Commit immutable documentation candidate -> dispatch one fresh read-only Astra-low amendment audit. Implementation prohibited until pass.",
+      "disposition": "Proposed normative amendment only; no product code, frozen base spec, packet IDs, methods, thresholds, seeds, or private inputs changed."
+    },
     {
       "event": "d_t01_wayfinder_provenance_domain_model_accepted",
       "date": "2026-10-23",

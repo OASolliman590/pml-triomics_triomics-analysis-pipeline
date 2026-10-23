@@ -1,7 +1,7 @@
 # Scientific provenance boundary for Stage D
 
 Label: `wayfinder:map`  
-Status: open
+Status: audit_pending
 
 ## Destination
 
@@ -46,17 +46,16 @@ Astra approval before any product implementation starts.
   is resolved: triomics owns a producer-issued JSON Stage Handoff Provenance;
   D verifies lineage-complete handoffs and publishes immutable generations under
   a single writer by replacing a small current-generation pointer last.
+- [Decide legacy handoff migration and compatibility](decide-legacy-migration.md)
+  is resolved: only immutable producer-complete lineage may migrate; missing
+  proof fails closed and requires producer regeneration under unchanged science.
+- [Define the spec amendment and acceptance route](authorize-spec-amendment-route.md)
+  is resolved by proposed change record M7-002; implementation waits for the
+  fresh Astra-low audit of its immutable snapshot.
 
 ## Not yet specified
 
-- The exact versioned schema and digest boundary for the selected provenance
-  object.
-- The audited RFC 8785 implementation and its conformance-vector evidence.
-- How legacy accepted B/C artifacts can migrate without accepting ambiguous
-  lineage or refitting scientific models.
-- The complete validation and adversarial test matrix for the amended contract.
-- The exact spec-v2 files, acceptance records, and affected gates that a future
-  change record must reopen.
+- Astra's independent verdict on the immutable M7-002 amendment candidate.
 
 ## Out of scope
 

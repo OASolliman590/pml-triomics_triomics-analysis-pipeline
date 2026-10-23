@@ -90,10 +90,20 @@ or power failure, or unsupported filesystem behavior. The terms are recorded in
 the root glossary and ADR 0003. The open frontier is now `Decide legacy handoff
 migration and compatibility`; Omar's binding constraint is that legacy evidence
 must be rejected unless immutable producer artifacts prove complete lineage.
-The exact proof/migration route and then the explicit spec-amendment/audit route
-remain to be resolved. Stage D remains blocked; this decision did not reopen
-M7-001 or authorize a frozen-spec or product edit. No run-owned agent is active
-and no private study data were read.
+The legacy route is now resolved: only complete immutable producer evidence may
+be packaged deterministically, with numerical payload bytes unchanged; a missing
+proof class fails closed and requires producer regeneration under unchanged
+science. Proposed normative change record M7-002 defines the exact JSON profile,
+required lineage, legacy route, D preflight, immutable generations, atomic pointer
+commit, behavioral matrix, and bounded three-phase implementation route. It does
+not rewrite the historical freeze. Implementation is prohibited until a fresh
+read-only Astra-low audit passes the immutable M7-002 snapshot. Stage D remains
+blocked; M7-001 remains exhausted. No private study data were read.
+
+Fresh read-only Astra-low reviewer `/root/m7_002_astra_audit` is the sole active
+handoff for the immutable amendment snapshot. It may return `pass` or
+`changes_required`; it cannot edit, accept the amendment, release M7, or start
+implementation. Sol must reconcile its verdict before any product work.
 
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
