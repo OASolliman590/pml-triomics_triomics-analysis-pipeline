@@ -34,15 +34,48 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m7_004_contract_luna",
+      "role": "fresh_bounded_luna_max_contract_foundation_implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "packet": "M7-004 contract-foundation completion",
+      "seed_commit": "8bc460bdfba1510d32eb2825bb460f480d75b483",
+      "accepted_review_base": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-004-contract-completion/PML MultiOmics Analysis Pipeline",
+      "allowed_files": ["R/provenance_contract.R", "inst/schema/stage-handoff-provenance.schema.json", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
+      "plan": "/private/tmp/triomics-m7-004-contract-completion-plan.md",
+      "brief": ".superpowers/sdd/triomics-m7-004-contract-completion-plan/task-1-brief.md",
+      "report": ".superpowers/sdd/triomics-m7-004-contract-completion-plan/task-1-implementer-report.md",
+      "allowed_next_transition": "Passing immutable commit -> Sol verifies exact diff/evidence -> parallel fresh Standards and Spec review. No integration before both axes pass.",
+      "wait_cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_004_contract_foundation_completion_authorized",
+    "status": "m7_004_contract_foundation_luna_active",
     "last_reconciled": "2026-10-23",
-    "active_handoffs": [],
+    "active_handoffs": [
+      "/root/m7_004_contract_luna"
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar invoked the implement workflow and authorized completing the accepted specification. M7-004 reopens only the failed contract-foundation phase as one new bounded implementation plus at most two targeted repairs, followed by focused tests, one full suite, and independent Standards and Spec review. No downstream seam or gate is released yet."
+    "disposition": "Fresh Luna-max worker /root/m7_004_contract_luna is active in a fresh isolated worktree from the explicitly failing seed 8bc460b. It owns exactly four packet files and must reproduce RED, reach focused GREEN, run the full suite once, and return an immutable commit. No downstream seam or gate is released."
   },
   "orchestration_events": [
+    {
+      "event": "m7_004_contract_foundation_luna_dispatched",
+      "date": "2026-10-23",
+      "worker": "/root/m7_004_contract_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "seed_commit": "8bc460bdfba1510d32eb2825bb460f480d75b483",
+      "accepted_review_base": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-004-contract-completion/PML MultiOmics Analysis Pipeline",
+      "allowed_files": ["R/provenance_contract.R", "inst/schema/stage-handoff-provenance.schema.json", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
+      "allowed_next_transition": "Passing immutable commit -> coordinator inspection -> parallel Standards and Spec review; changes_required -> at most two targeted repairs to the same worker.",
+      "disposition": "Fresh bounded implementation only; no private data, shared-file edit, downstream wiring, integration, acceptance, or gate release."
+    },
     {
       "event": "m7_004_contract_foundation_completion_authorized",
       "date": "2026-10-23",

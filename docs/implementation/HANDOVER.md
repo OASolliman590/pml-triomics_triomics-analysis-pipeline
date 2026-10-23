@@ -154,6 +154,15 @@ suite and independent Standards/Spec review. The three failing M7-003 files may
 be preserved only as an explicitly non-acceptance seed. No producer, D,
 migration, shared-registration, D-T01, M7, or successor gate is released yet.
 
+Fresh Luna-max worker `/root/m7_004_contract_luna` is now active in the fresh
+isolated worktree
+`/Users/megastore/.codex/worktrees/m7-004-contract-completion/PML MultiOmics Analysis Pipeline`
+from failing seed `8bc460b`. It owns exactly the R contract helper, JSON Schema,
+focused test file, and packet registration request. The review fixed point is
+accepted base `221df65`. The legal next transition is an immutable passing
+candidate followed by parallel Standards and Spec review; no integration occurs
+before both review axes pass.
+
 Omar also approved `opencode/deepseek-v4.1-flash-free` and
 `opencode/glm-5.3-flash-free` as additional public-synthetic implementation
 lanes. They are not used for D-T01: only after D-T01 acceptance do the
