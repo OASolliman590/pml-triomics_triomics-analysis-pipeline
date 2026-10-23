@@ -220,6 +220,13 @@ two-axis code review, serial Sol integration, one full source suite, and exactly
 one fresh read-only Astra-low acceptance audit. Downstream Stage D remains
 closed throughout.
 
+Fresh Luna-max worker `/root/m7_006_provenance_luna` is active from commit
+`b306f14` in managed worktree
+`/Users/megastore/.codex/worktrees/m7-006-provenance-completeness/PML MultiOmics Analysis Pipeline`.
+Its exact three-file allowlist and RED/GREEN obligations are recorded in
+M7-006. The next legal transition is a clean focused-green commit followed by
+parallel read-only Standards and Spec review.
+
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
 `tests/testthat/test-C-05.R`: update the obsolete unaccepted-registration

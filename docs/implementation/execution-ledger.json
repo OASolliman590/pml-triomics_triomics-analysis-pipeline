@@ -36,7 +36,7 @@
   },
   "active_workers": [
     {
-      "agent": "pending:/root/m7_006_provenance_luna",
+      "agent": "/root/m7_006_provenance_luna",
       "role": "fresh_bounded_luna_max_provenance_completeness_implementer",
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
@@ -44,20 +44,33 @@
       "packet": "M7-006 provenance completeness repair",
       "candidate_commit": null,
       "fixed_point": "5dcc25f",
-      "worktree": "pending managed worktree",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-006-provenance-completeness/PML MultiOmics Analysis Pipeline",
       "allowed_files": ["R/provenance_contract.R", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
       "allowed_next_transition": "Focused GREEN and clean commit -> Sol inspection -> parallel Standards and Spec review. No integration or Stage-D work before both axes pass.",
       "wait_cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "m7_006_authorized_worktree_dispatch_pending",
+    "status": "m7_006_luna_implementation_active",
     "last_reconciled": "2026-10-24",
-    "active_handoffs": ["pending:/root/m7_006_provenance_luna"],
+    "active_handoffs": ["/root/m7_006_provenance_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar authorized bounded M7-006 for the two Astra completeness findings. A fresh Luna-max worktree/dispatch is pending with a three-file allowlist and public-validator TDD. M7-004 remains unaccepted and all downstream Stage-D work remains closed."
+    "disposition": "Fresh Luna-max worker /root/m7_006_provenance_luna is active in a managed isolated worktree from b306f14 with the exact three-file allowlist and public-validator TDD. M7-004 remains unaccepted and all downstream Stage-D work remains closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_006_fresh_luna_dispatched",
+      "date": "2026-10-24",
+      "worker": "/root/m7_006_provenance_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "base_commit": "b306f14",
+      "fixed_point": "5dcc25f",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-006-provenance-completeness/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["R/provenance_contract.R", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
+      "allowed_next_transition": "Focused GREEN and clean commit -> Sol inspection -> parallel Standards and Spec review.",
+      "disposition": "No full suite, integration, private data, frozen-spec edit, gate release, or Stage-D work in the worker turn."
+    },
     {
       "event": "m7_006_provenance_completeness_repair_authorized",
       "date": "2026-10-24",
