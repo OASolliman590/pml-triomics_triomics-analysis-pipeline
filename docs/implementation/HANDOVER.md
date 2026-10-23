@@ -204,11 +204,13 @@ acceptance, M7 release, and every Stage-D successor remain closed.
 
 On 2026-10-24 Omar authorized exactly one fresh read-only Astra-low acceptance
 audit of immutable snapshot `5dcc25f`. Reviewer
-`/root/m7_004_astra_acceptance_audit` is active under
-`reviews/2026-10-24-m7-004-astra-acceptance-audit-brief.md`. It may inspect the
-snapshot and recorded evidence only; it may not edit or rerun tests. A pass lets
-Sol accept only the contract foundation. No downstream Stage-D packet starts in
-this audit run.
+`/root/m7_004_astra_acceptance_audit` returned `changes_required`: Critical 0,
+Important 2, Minor 0. It confirmed all five old probes are closed, but found that
+represented-matrix/preprocessing contexts are not required to join the
+unit/design/method context and that migration proof coverage omits mandatory
+`handoff_payload`. The durable receipt is
+`reviews/2026-10-24-m7-004-astra-acceptance-audit.md`. M7-004 is not accepted.
+Its implementation and two repairs are consumed; no worker remains active.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
@@ -480,11 +482,13 @@ permitted cycles; M7-003 is accepted as a specification amendment, but its
 contract-foundation implementation packet is exhausted and remains historical.
 Do not resume `/root/m7_003_contract_luna` or integrate its files directly.
 M7-004 final candidate `647192f` is integrated through snapshot `5dcc25f` and
-the focused plus combined source-suite gates are green. Do not rerun Luna or the
-full suite. The next transition requires Omar to authorize one fresh read-only
-acceptance audit of immutable snapshot `5dcc25f`; absent that authorization,
-record M7-004 blocked because the prior single focused rereview was consumed.
-Do not start B-T07/C-06 producer provenance, D verification/publication,
-migration, D-T01 acceptance, M7 release, or any Stage-D successor.
+the focused plus combined source-suite gates are green, but the fresh Astra
+acceptance audit found two Important completeness defects. Do not rerun Luna or
+the full suite and do not accept M7-004. Only Omar's explicit authorization of a
+new bounded repair record may reopen it; that cycle must add RED fixtures for
+M7-004-ASTRA-01 and M7-004-ASTRA-02, reach focused GREEN, and receive a fresh
+read-only immutable acceptance audit. Do not start B-T07/C-06 producer
+provenance, D verification/publication, migration, D-T01 acceptance, M7 release,
+or any Stage-D successor.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.

@@ -34,30 +34,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_004_astra_acceptance_audit",
-      "role": "fresh_read_only_astra_low_acceptance_auditor",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "effective_settings_exposed": false,
-      "packet": "M7-004 contract-foundation acceptance audit",
-      "candidate_commit": "5dcc25f",
-      "fixed_point": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
-      "worktree": null,
-      "allowed_files": [],
-      "allowed_next_transition": "Pass -> Sol records M7-004 contract-foundation acceptance only; changes_required -> record the blocker. No downstream Stage-D work in this audit run.",
-      "wait_cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_004_fresh_astra_acceptance_audit_active",
+    "status": "m7_004_astra_changes_required_attempts_exhausted_blocked",
     "last_reconciled": "2026-10-24",
-    "active_handoffs": ["/root/m7_004_astra_acceptance_audit"],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar authorized one fresh read-only Astra-low acceptance audit of immutable M7-004 snapshot 5dcc25f. No test rerun, implementation, private-data access, M7 acceptance, or downstream Stage-D release is authorized during the audit."
+    "disposition": "Fresh Astra-low audit of immutable snapshot 5dcc25f returned changes_required: Critical 0, Important 2, Minor 0. Represented contexts are not joined to required analysis/method contexts, and migration proof coverage omits mandatory handoff_payload. M7-004 is not accepted; implementation plus two repairs are consumed; no worker is active and all downstream Stage-D work remains closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_004_fresh_astra_acceptance_audit_changes_required_blocked",
+      "date": "2026-10-24",
+      "reviewer": "/root/m7_004_astra_acceptance_audit",
+      "snapshot": "5dcc25f",
+      "verdict": "changes_required; Critical 0, Important 2, Minor 0; ready_for_sol_acceptance no",
+      "confirmed": ["all five previously reproduced fail-open paths are closed", "positive multi-block/method/preprocessing/route fixtures remain", "four candidate blobs equal the integrated snapshot", "V8 Imports registration is present"],
+      "findings": ["represented-matrix/preprocessing context is not required to join the unit/design/method context", "migration proof coverage omits mandatory handoff_payload"],
+      "review_ref": "docs/implementation/reviews/2026-10-24-m7-004-astra-acceptance-audit.md",
+      "allowed_next_transition": "Only Omar's explicit authorization of a new bounded repair record may reopen M7-004; require RED fixtures, focused GREEN, and a fresh immutable acceptance audit.",
+      "disposition": "M7-004 not accepted; no test rerun, code edit, private data, M7 acceptance, gate release, or downstream Stage-D work."
+    },
     {
       "event": "m7_004_fresh_astra_acceptance_audit_dispatched",
       "date": "2026-10-24",
