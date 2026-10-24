@@ -277,8 +277,17 @@ warning, or skip. The uninterrupted full source suite also exited 0 with
 failures 0, errors 0, skips 0 and exactly the same fourteen named C-05 native
 small-fixture warnings. The durable receipt is
 `reviews/2026-10-24-m7-007-integration-verification.md`. Exactly one fresh
-read-only Astra-low acceptance auditor `/root/m7_007_astra_acceptance_audit` is
-active on immutable snapshot `b29c3aa`. Stage D remains closed.
+read-only Astra-low acceptance auditor `/root/m7_007_astra_acceptance_audit`
+passed immutable snapshot `b29c3aa`: Critical 0, Important 0, Minor 0,
+`ready_for_sol_acceptance: yes`. It closed `M7-006-ASTRA-01` and found no
+regression in the prior provenance controls. Sol accepted the combined
+M7-004/M7-006/M7-007 public synthetic provenance contract foundation. The
+durable audit and acceptance receipts are
+`reviews/2026-10-24-m7-007-astra-acceptance-audit.md` and
+`reviews/2026-10-24-m7-007-sol-acceptance.md`. The audited worker registration
+remains unchanged as a candidate handoff; no post-audit product mutation was
+made. D-T01, M7, producer wiring, migration execution, D verification/publication,
+and every Stage-D successor remain closed in this run.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
@@ -549,16 +558,14 @@ registration seams, or start D-T02/D-T03. M7-001 and M7-002 exhausted their
 permitted cycles; M7-003 is accepted as a specification amendment, but its
 contract-foundation implementation packet is exhausted and remains historical.
 Do not resume `/root/m7_003_contract_luna` or integrate its files directly.
-M7-006 candidate `5242609` is integrated and verified as immutable snapshot
-`e4aed59`, but its only fresh Astra audit returned `changes_required`. M7-007 is
-now authorized solely for `M7-006-ASTRA-01`. Candidate `b34df9f` is integrated
-and verified as immutable snapshot `b29c3aa`. Resume by reconciling the single
-fresh read-only Astra-low audit `/root/m7_007_astra_acceptance_audit` using
-`reviews/2026-10-24-m7-007-astra-acceptance-audit-brief.md`. If it passes, Sol
-may accept only the repaired contract foundation in this run; if it returns
-`changes_required`, record the blocker with no automatic rereview. Do not start
-B-T07/C-06 producer provenance, D verification/publication, migration, D-T01
-acceptance, M7 release, or any Stage-D successor before the future immutable
-Astra audit passes.
+M7-007 immutable snapshot `b29c3aa` passed its single fresh Astra-low audit with
+Critical 0, Important 0, Minor 0. Sol accepted only the combined
+M7-004/M7-006/M7-007 public synthetic provenance contract foundation. No worker
+or handoff is active. Resume only on Omar's explicit authorization of a new
+bounded cycle; reconcile the accepted contract foundation before selecting the
+next legal producer-provenance or migration step. Do not start B-T07/C-06
+producer provenance, D verification/publication, migration execution, D-T01
+acceptance, M7 release, or any Stage-D successor as part of the completed
+M7-007 run.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.

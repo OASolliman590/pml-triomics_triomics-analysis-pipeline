@@ -34,30 +34,28 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "worker": "/root/m7_007_astra_acceptance_audit",
-      "role": "fresh read-only Astra-low acceptance auditor",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "snapshot": "b29c3aa5693b29ac232f26344987877e4e79511d",
-      "scope": "M7-006-ASTRA-01 closure plus regression review; no edits or tests"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_007_astra_acceptance_audit_active",
+    "status": "m7_007_contract_foundation_accepted_stage_d_closed",
     "last_reconciled": "2026-10-24",
-    "active_handoffs": [
-      {
-        "worker": "/root/m7_007_astra_acceptance_audit",
-        "snapshot": "b29c3aa5693b29ac232f26344987877e4e79511d",
-        "brief": "docs/implementation/reviews/2026-10-24-m7-007-astra-acceptance-audit-brief.md"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M7-007 candidate b34df9f is integrated as immutable snapshot b29c3aa. Exact blobs match; focused verification and the uninterrupted full source suite passed, with failures 0, errors 0, skips 0, and the same fourteen named C-05 warnings. Exactly one fresh read-only Astra-low audit is active. M7-004/M7-006/M7-007 remain unaccepted and Stage D remains closed."
+    "disposition": "Fresh Astra-low passed snapshot b29c3aa with Critical 0, Important 0, Minor 0 and closed M7-006-ASTRA-01. Sol accepted only the combined M7-004/M7-006/M7-007 public synthetic provenance contract foundation. No run-owned worker or handoff remains active. D-T01, M7 and all Stage-D work remain closed in this run."
   },
   "orchestration_events": [
+    {
+      "event": "m7_007_astra_pass_contract_foundation_accepted_stage_d_closed",
+      "date": "2026-10-24",
+      "reviewer": "/root/m7_007_astra_acceptance_audit",
+      "snapshot": "b29c3aa5693b29ac232f26344987877e4e79511d",
+      "verdict": "pass; Critical 0, Important 0, Minor 0; ready_for_sol_acceptance yes",
+      "closed": "M7-006-ASTRA-01: collision-free ordered UTF-8 tuple encoding plus public negative and positive fixtures",
+      "review_ref": "docs/implementation/reviews/2026-10-24-m7-007-astra-acceptance-audit.md",
+      "acceptance_ref": "docs/implementation/reviews/2026-10-24-m7-007-sol-acceptance.md",
+      "sol_decision": "Accept the combined M7-004/M7-006/M7-007 public synthetic provenance contract foundation only.",
+      "allowed_next_transition": "Stop this run. Any producer provenance, migration execution, D verification/publication, D-T01, M7, or Stage-D work requires a later explicitly authorized cycle.",
+      "disposition": "No active worker, private-data access, post-audit product mutation, D-T01/M7 acceptance, gate release, or downstream Stage-D work."
+    },
     {
       "event": "m7_007_integrated_verified_astra_audit_dispatched",
       "date": "2026-10-24",
