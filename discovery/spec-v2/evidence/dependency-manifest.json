@@ -1,0 +1,83 @@
+{
+  "status": "specification_allowlist_not_installed_lock",
+  "preferred_release_family": {
+    "R": "4.6.x",
+    "Bioconductor": "3.23"
+  },
+  "existing_compatible_environment_policy": "A coherent older approved R/Bioconductor environment can be used only with a documented compatibility decision and rerun capability matrix; no silent mixed releases.",
+  "metadata_observations": [
+    {
+      "package": "limma",
+      "observed_version": "3.68.4",
+      "source_id": "W01",
+      "installed_version": null
+    },
+    {
+      "package": "DEqMS",
+      "observed_version": "1.30.0",
+      "source_id": "W02",
+      "installed_version": null
+    },
+    {
+      "package": "mixOmics",
+      "observed_version": "6.36.0",
+      "source_id": "W03",
+      "installed_version": null
+    },
+    {
+      "package": "MOFA2",
+      "observed_version": "1.22.0",
+      "source_id": "W05",
+      "installed_version": null
+    }
+  ],
+  "core_R": [
+    "yaml",
+    "optparse",
+    "jsonlite",
+    "digest",
+    "SummarizedExperiment",
+    "MultiAssayExperiment",
+    "limma"
+  ],
+  "development": [
+    "renv",
+    "testthat",
+    "BiocManager"
+  ],
+  "requested_scientific": [
+    "DEqMS",
+    "mixOmics",
+    "MOFA2",
+    "lipidr"
+  ],
+  "conditional": [
+    "vsn",
+    "imputeLCMD",
+    "qualified kNN/RF backend",
+    "resource-specific clients only after manifest review"
+  ],
+  "python": [
+    "mofapy2 and its exact transitive/environment dependencies when C-05 is provisioned"
+  ],
+  "report": [
+    "Quarto executable and its actual required R rendering dependencies"
+  ],
+  "forbidden_shortcuts": [
+    "fabricated renv.lock",
+    "unbounded install.packages of guessed dependencies",
+    "rcmdcheck addition",
+    "global Python/R replacement",
+    "unapproved administrator installation",
+    "claim all optional methods installed because R exists"
+  ],
+  "required_runtime_evidence": [
+    "exact R/Bioc/sessionInfo",
+    "actual direct/transitive versions and licenses",
+    "renv.lock and restore outcome",
+    "Python interpreter/lock/pip-or-conda manifest",
+    "Quarto version",
+    "native fit/predict capability cells",
+    "CPU/memory/fit budget"
+  ]
+}

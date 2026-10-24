@@ -1,0 +1,334 @@
+{
+  "note": "Nine documentation packets do not renumber or replace the 41 implementation tickets. Draft in parallel, finalize only against actual accepted/blocked dispositions.",
+  "packets": [
+    {
+      "id": "DOC-M1",
+      "role": "terra",
+      "requested_effort": "max",
+      "milestone": "M1",
+      "draft_requires_gate": "G0",
+      "finalize_dependencies": [
+        "A-T01"
+      ],
+      "files_allowed": [
+        "docs/implementation/milestones/M1.md"
+      ],
+      "files_forbidden": [
+        "R/**",
+        "tests/**",
+        "discovery/**",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "NAMESPACE",
+        "DESCRIPTION",
+        "renv.lock",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**"
+      ],
+      "acceptance": [
+        "Describe implemented interfaces, actual tests/commit and reproducible commands; distinguish draft text from executed evidence.",
+        "List conditional/unrun/blocked work and privacy/resource limits without inventing results or changing scope.",
+        "Use receipt paths and concise evidence summaries; do not reread or copy complete logs."
+      ],
+      "output_budget_words": 900,
+      "repair_budget": 1,
+      "status": "not_started"
+    },
+    {
+      "id": "DOC-M2",
+      "role": "terra",
+      "requested_effort": "max",
+      "milestone": "M2",
+      "draft_requires_gate": "G1",
+      "finalize_dependencies": [
+        "A-T02",
+        "A-T03",
+        "A-T09"
+      ],
+      "files_allowed": [
+        "docs/implementation/milestones/M2.md"
+      ],
+      "files_forbidden": [
+        "R/**",
+        "tests/**",
+        "discovery/**",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "NAMESPACE",
+        "DESCRIPTION",
+        "renv.lock",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**"
+      ],
+      "acceptance": [
+        "Describe implemented interfaces, actual tests/commit and reproducible commands; distinguish draft text from executed evidence.",
+        "List conditional/unrun/blocked work and privacy/resource limits without inventing results or changing scope.",
+        "Use receipt paths and concise evidence summaries; do not reread or copy complete logs."
+      ],
+      "output_budget_words": 900,
+      "repair_budget": 1,
+      "status": "not_started"
+    },
+    {
+      "id": "DOC-M3",
+      "role": "terra",
+      "requested_effort": "max",
+      "milestone": "M3",
+      "draft_requires_gate": "G2",
+      "finalize_dependencies": [
+        "A-T04",
+        "A-T05",
+        "A-T06",
+        "A-T07",
+        "A-T08"
+      ],
+      "files_allowed": [
+        "docs/implementation/milestones/M3.md"
+      ],
+      "files_forbidden": [
+        "R/**",
+        "tests/**",
+        "discovery/**",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "NAMESPACE",
+        "DESCRIPTION",
+        "renv.lock",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**"
+      ],
+      "acceptance": [
+        "Describe implemented interfaces, actual tests/commit and reproducible commands; distinguish draft text from executed evidence.",
+        "List conditional/unrun/blocked work and privacy/resource limits without inventing results or changing scope.",
+        "Use receipt paths and concise evidence summaries; do not reread or copy complete logs."
+      ],
+      "output_budget_words": 900,
+      "repair_budget": 1,
+      "status": "not_started"
+    },
+    {
+      "id": "DOC-M4",
+      "role": "terra",
+      "requested_effort": "max",
+      "milestone": "M4",
+      "draft_requires_gate": "G3",
+      "finalize_dependencies": [
+        "B-T01",
+        "B-T02",
+        "B-T03",
+        "B-T04",
+        "B-T05",
+        "B-T06",
+        "B-T08",
+        "B-T09",
+        "B-T07"
+      ],
+      "files_allowed": [
+        "docs/implementation/milestones/M4.md"
+      ],
+      "files_forbidden": [
+        "R/**",
+        "tests/**",
+        "discovery/**",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "NAMESPACE",
+        "DESCRIPTION",
+        "renv.lock",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**"
+      ],
+      "acceptance": [
+        "Describe implemented interfaces, actual tests/commit and reproducible commands; distinguish draft text from executed evidence.",
+        "List conditional/unrun/blocked work and privacy/resource limits without inventing results or changing scope.",
+        "Use receipt paths and concise evidence summaries; do not reread or copy complete logs."
+      ],
+      "output_budget_words": 900,
+      "repair_budget": 1,
+      "status": "not_started"
+    },
+    {
+      "id": "DOC-M5",
+      "role": "terra",
+      "requested_effort": "max",
+      "milestone": "M5",
+      "draft_requires_gate": "G4",
+      "finalize_dependencies": [
+        "C-01",
+        "C-02"
+      ],
+      "files_allowed": [
+        "docs/implementation/milestones/M5.md"
+      ],
+      "files_forbidden": [
+        "R/**",
+        "tests/**",
+        "discovery/**",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "NAMESPACE",
+        "DESCRIPTION",
+        "renv.lock",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**"
+      ],
+      "acceptance": [
+        "Describe implemented interfaces, actual tests/commit and reproducible commands; distinguish draft text from executed evidence.",
+        "List conditional/unrun/blocked work and privacy/resource limits without inventing results or changing scope.",
+        "Use receipt paths and concise evidence summaries; do not reread or copy complete logs."
+      ],
+      "output_budget_words": 900,
+      "repair_budget": 1,
+      "status": "not_started"
+    },
+    {
+      "id": "DOC-M6",
+      "role": "terra",
+      "requested_effort": "max",
+      "milestone": "M6",
+      "draft_requires_gate": "G5",
+      "finalize_dependencies": [
+        "C-03",
+        "C-04",
+        "C-05",
+        "C-08",
+        "C-09",
+        "C-06"
+      ],
+      "files_allowed": [
+        "docs/implementation/milestones/M6.md"
+      ],
+      "files_forbidden": [
+        "R/**",
+        "tests/**",
+        "discovery/**",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "NAMESPACE",
+        "DESCRIPTION",
+        "renv.lock",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**"
+      ],
+      "acceptance": [
+        "Describe implemented interfaces, actual tests/commit and reproducible commands; distinguish draft text from executed evidence.",
+        "List conditional/unrun/blocked work and privacy/resource limits without inventing results or changing scope.",
+        "Use receipt paths and concise evidence summaries; do not reread or copy complete logs."
+      ],
+      "output_budget_words": 900,
+      "repair_budget": 1,
+      "status": "not_started"
+    },
+    {
+      "id": "DOC-M7",
+      "role": "terra",
+      "requested_effort": "max",
+      "milestone": "M7",
+      "draft_requires_gate": "G6",
+      "finalize_dependencies": [
+        "D-T01",
+        "D-T02",
+        "D-T03",
+        "D-T04",
+        "D-T05",
+        "D-T06",
+        "D-T07",
+        "D-T10",
+        "D-T11",
+        "D-T12",
+        "D-T14"
+      ],
+      "files_allowed": [
+        "docs/implementation/milestones/M7.md"
+      ],
+      "files_forbidden": [
+        "R/**",
+        "tests/**",
+        "discovery/**",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "NAMESPACE",
+        "DESCRIPTION",
+        "renv.lock",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**"
+      ],
+      "acceptance": [
+        "Describe implemented interfaces, actual tests/commit and reproducible commands; distinguish draft text from executed evidence.",
+        "List conditional/unrun/blocked work and privacy/resource limits without inventing results or changing scope.",
+        "Use receipt paths and concise evidence summaries; do not reread or copy complete logs."
+      ],
+      "output_budget_words": 900,
+      "repair_budget": 1,
+      "status": "not_started"
+    },
+    {
+      "id": "DOC-M8",
+      "role": "terra",
+      "requested_effort": "max",
+      "milestone": "M8",
+      "draft_requires_gate": "G7",
+      "finalize_dependencies": [
+        "D-T08",
+        "D-T13",
+        "D-T15"
+      ],
+      "files_allowed": [
+        "docs/implementation/milestones/M8.md"
+      ],
+      "files_forbidden": [
+        "R/**",
+        "tests/**",
+        "discovery/**",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "NAMESPACE",
+        "DESCRIPTION",
+        "renv.lock",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**"
+      ],
+      "acceptance": [
+        "Describe implemented interfaces, actual tests/commit and reproducible commands; distinguish draft text from executed evidence.",
+        "List conditional/unrun/blocked work and privacy/resource limits without inventing results or changing scope.",
+        "Use receipt paths and concise evidence summaries; do not reread or copy complete logs."
+      ],
+      "output_budget_words": 900,
+      "repair_budget": 1,
+      "status": "not_started"
+    },
+    {
+      "id": "DOC-M9",
+      "role": "terra",
+      "requested_effort": "max",
+      "milestone": "M9",
+      "draft_requires_gate": "G8",
+      "finalize_dependencies": [
+        "D-T09"
+      ],
+      "files_allowed": [
+        "docs/implementation/milestones/M9.md"
+      ],
+      "files_forbidden": [
+        "R/**",
+        "tests/**",
+        "discovery/**",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "NAMESPACE",
+        "DESCRIPTION",
+        "renv.lock",
+        "docs/implementation/execution-ledger.json",
+        "docs/implementation/reviews/**"
+      ],
+      "acceptance": [
+        "Describe implemented interfaces, actual tests/commit and reproducible commands; distinguish draft text from executed evidence.",
+        "List conditional/unrun/blocked work and privacy/resource limits without inventing results or changing scope.",
+        "Use receipt paths and concise evidence summaries; do not reread or copy complete logs."
+      ],
+      "output_budget_words": 900,
+      "repair_budget": 1,
+      "status": "not_started"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+sample_id	subject	visit
+SYN_01_baseline	SYN_SUBJ_01	baseline
+SYN_01_followup	SYN_SUBJ_01	followup
+SYN_02_baseline	SYN_SUBJ_02	baseline
+SYN_02_followup	SYN_SUBJ_02	followup
+SYN_03_baseline	SYN_SUBJ_03	baseline
+SYN_03_followup	SYN_SUBJ_03	followup
+SYN_04_baseline	SYN_SUBJ_04	baseline
+SYN_04_followup	SYN_SUBJ_04	followup
+SYN_05_baseline	SYN_SUBJ_05	baseline
+SYN_05_followup	SYN_SUBJ_05	followup
+SYN_06_baseline	SYN_SUBJ_06	baseline
+SYN_06_followup	SYN_SUBJ_06	followup

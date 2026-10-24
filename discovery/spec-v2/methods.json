@@ -1,0 +1,142 @@
+{
+  "schema_version": "2.0",
+  "registry_status": "specified_not_runtime_qualified",
+  "methods": [
+    {
+      "method_id": "none",
+      "stage": "all",
+      "input_output": "identity",
+      "parameters": {},
+      "mode_support": "fit_apply",
+      "eligibility": "explicit no-op"
+    },
+    {
+      "method_id": "log2",
+      "stage": "transform",
+      "input_output": "positive linear -> log2",
+      "parameters": {
+        "zero_policy": "error|declared_replacement",
+        "zero_value": "positive number only when declared"
+      },
+      "mode_support": "fit_apply",
+      "eligibility": "replacement rationale/units recorded; no double log"
+    },
+    {
+      "method_id": "clr",
+      "stage": "transform",
+      "input_output": "positive linear parts -> declared-base log ratio",
+      "parameters": {
+        "reference_set": "fixed hashed parent set",
+        "log_base": "explicit >1",
+        "zero_policy": "explicit"
+      },
+      "mode_support": "fit_apply",
+      "eligibility": "reference/zero policy; not an abundance estimand"
+    },
+    {
+      "method_id": "median_shift",
+      "stage": "normalisation",
+      "input_output": "log2 -> log2",
+      "parameters": {
+        "reference": "training_median"
+      },
+      "mode_support": "fit_apply",
+      "eligibility": "sample median offset to frozen training median; no hidden outcome fitting"
+    },
+    {
+      "method_id": "pqn",
+      "stage": "normalisation",
+      "input_output": "positive linear -> positive linear",
+      "parameters": {
+        "reference": "training_median|supplied",
+        "reference_file": "required when supplied"
+      },
+      "mode_support": "fit_apply",
+      "eligibility": "freeze reference vector; per sample median valid positive ratio; zero/invalid denominators fail"
+    },
+    {
+      "method_id": "sample_amount",
+      "stage": "normalisation",
+      "input_output": "linear -> per-amount linear",
+      "parameters": {
+        "metadata_column": "verified positive amount with units"
+      },
+      "mode_support": "fit_apply",
+      "eligibility": "no clinical variable chosen automatically"
+    },
+    {
+      "method_id": "internal_standard",
+      "stage": "normalisation",
+      "input_output": "linear -> declared normalized quantity",
+      "parameters": {
+        "standards_map": "analyte-to-standard mapping/units/calibration"
+      },
+      "mode_support": "fit_apply_qualified",
+      "eligibility": "do not imply absolute molarity without calibration"
+    },
+    {
+      "method_id": "vsn",
+      "stage": "normalisation",
+      "input_output": "linear -> variance_stabilized",
+      "parameters": {
+        "qualification_ref": "pinned fit/predict methods and options"
+      },
+      "mode_support": "fit_apply_qualified",
+      "eligibility": "coupled transform; transform.method must be none"
+    },
+    {
+      "method_id": "training_median",
+      "stage": "imputation",
+      "input_output": "same input/output scale",
+      "parameters": {},
+      "mode_support": "fit_apply",
+      "eligibility": "explicit baseline; per feature use only training observed median; no median for all-missing feature"
+    },
+    {
+      "method_id": "minprob",
+      "stage": "imputation",
+      "input_output": "qualified continuous scale",
+      "parameters": {
+        "tail_probability": "explicit (0,1)",
+        "scale_multiplier": "positive",
+        "qualification_ref": "API/seed/distribution mapping"
+      },
+      "mode_support": "qualified",
+      "eligibility": "left-censoring evidence required; no unsupported inductive claim"
+    },
+    {
+      "method_id": "qrilc",
+      "stage": "imputation",
+      "input_output": "qualified continuous scale",
+      "parameters": {
+        "scale_multiplier": "positive",
+        "qualification_ref": "API/seed/distribution mapping"
+      },
+      "mode_support": "qualified",
+      "eligibility": "left-censoring evidence required; cell vs sample fitting verified"
+    },
+    {
+      "method_id": "knn",
+      "stage": "imputation",
+      "input_output": "declared scale",
+      "parameters": {
+        "k": "positive integer",
+        "qualification_ref": "training donor selection/weights/apply signature"
+      },
+      "mode_support": "qualified",
+      "eligibility": "test samples cannot become training donors; no automatic transductive prediction"
+    },
+    {
+      "method_id": "rf",
+      "stage": "imputation",
+      "input_output": "declared scale",
+      "parameters": {
+        "trees": "positive integer",
+        "qualification_ref": "stored fitted forests, predictor roles, iterations, seed/apply"
+      },
+      "mode_support": "qualified",
+      "eligibility": "no silent joint train-test missForest fitting"
+    }
+  ],
+  "rule": "No string-to-eval dispatch. Every enabled method resolves to a fixed wrapper; qualified methods require a version-bound MethodQualification artifact, exact native APIs, tests and supported contexts. Unknown options fail."
+}

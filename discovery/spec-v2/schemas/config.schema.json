@@ -1,0 +1,1684 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:triomics:config:2.0",
+  "title": "triomics canonical configuration 2.0",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "study_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "data_class": {
+      "enum": [
+        "synthetic",
+        "real"
+      ]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      },
+      "minItems": 1
+    },
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/block"
+      },
+      "minItems": 1
+    },
+    "analyses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/analysis"
+      },
+      "minItems": 1
+    },
+    "clinical": {
+      "$ref": "#/$defs/clinical"
+    },
+    "annotation": {
+      "$ref": "#/$defs/annotation"
+    },
+    "target_investigation": {
+      "$ref": "#/$defs/target_investigation"
+    },
+    "execution": {
+      "$ref": "#/$defs/execution"
+    }
+  },
+  "required": [
+    "schema_version",
+    "study_id",
+    "data_class",
+    "sources",
+    "metadata",
+    "blocks",
+    "analyses",
+    "clinical",
+    "annotation",
+    "target_investigation",
+    "execution"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "source": {
+      "type": "object",
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "format": {
+          "enum": [
+            "tsv",
+            "csv"
+          ]
+        },
+        "role": {
+          "enum": [
+            "measurement_matrix",
+            "clinical_metadata",
+            "sample_metadata",
+            "feature_metadata",
+            "imported_result",
+            "reference_evidence"
+          ]
+        },
+        "selection_history": {
+          "enum": [
+            "full_unselected",
+            "prespecified_panel",
+            "outcome_selected",
+            "unknown"
+          ]
+        },
+        "selection_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "conversion_manifest": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "source_id",
+        "file",
+        "format",
+        "role",
+        "selection_history",
+        "selection_evidence"
+      ],
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sample_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "column_types": {
+          "type": "object",
+          "additionalProperties": {
+            "enum": [
+              "string",
+              "factor",
+              "numeric",
+              "logical"
+            ]
+          }
+        },
+        "factor_levels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          }
+        },
+        "sample_role_column": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "file",
+        "sample_id",
+        "subject_id",
+        "column_types",
+        "factor_levels"
+      ],
+      "additionalProperties": false
+    },
+    "measurement": {
+      "type": "object",
+      "properties": {
+        "quantity": {
+          "enum": [
+            "intensity",
+            "concentration",
+            "fraction",
+            "molar_fraction"
+          ]
+        },
+        "scale": {
+          "enum": [
+            "linear",
+            "log2",
+            "ln",
+            "clr_ln",
+            "clr_log2",
+            "variance_stabilized"
+          ]
+        },
+        "units": {
+          "type": "string",
+          "minLength": 1
+        },
+        "acquisition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "missingness_assumption": {
+          "enum": [
+            "unknown",
+            "mcar",
+            "mar",
+            "mnar_left_censored",
+            "mixed"
+          ]
+        },
+        "missingness_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "upstream_steps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "original_mask_status": {
+          "enum": [
+            "known",
+            "partly_known",
+            "unknown"
+          ]
+        },
+        "denominator_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "quantity",
+        "scale",
+        "units",
+        "acquisition",
+        "missingness_assumption",
+        "missingness_evidence",
+        "upstream_steps",
+        "original_mask_status",
+        "denominator_ref"
+      ],
+      "additionalProperties": false
+    },
+    "filter": {
+      "type": "object",
+      "properties": {
+        "prevalence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_observed": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "scope": {
+          "enum": [
+            "global",
+            "stratum"
+          ]
+        },
+        "stratum": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "selection_justification": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "prevalence",
+        "min_observed",
+        "scope",
+        "stratum",
+        "selection_justification"
+      ],
+      "additionalProperties": false
+    },
+    "transform": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "enum": [
+            "none",
+            "log2",
+            "clr"
+          ]
+        },
+        "zero_policy": {
+          "enum": [
+            "error",
+            "declared_replacement"
+          ]
+        },
+        "zero_value": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "reference_set": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "log_base": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 1
+        }
+      },
+      "required": [
+        "method",
+        "zero_policy",
+        "zero_value",
+        "reference_set",
+        "log_base"
+      ],
+      "additionalProperties": false
+    },
+    "normalisation": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "enum": [
+            "none",
+            "median_shift",
+            "pqn",
+            "sample_amount",
+            "internal_standard",
+            "vsn"
+          ]
+        },
+        "reference": {
+          "enum": [
+            "none",
+            "training_median",
+            "supplied"
+          ]
+        },
+        "reference_file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "metadata_column": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "standards_map": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "qualification_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "method",
+        "reference",
+        "reference_file",
+        "metadata_column",
+        "standards_map",
+        "qualification_ref"
+      ],
+      "additionalProperties": false
+    },
+    "imputation": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "enum": [
+            "none",
+            "training_median",
+            "minprob",
+            "qrilc",
+            "knn",
+            "rf"
+          ]
+        },
+        "tail_probability": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0,
+          "exclusiveMaximum": 1
+        },
+        "scale_multiplier": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "k": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "trees": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "qualification_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "method",
+        "tail_probability",
+        "scale_multiplier",
+        "k",
+        "trees",
+        "qualification_ref"
+      ],
+      "additionalProperties": false
+    },
+    "derive": {
+      "type": "object",
+      "properties": {
+        "endpoint_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method": {
+          "enum": [
+            "class_sum",
+            "weighted_carbons",
+            "weighted_double_bonds",
+            "molar_fraction",
+            "saturated_unsaturated_ratio"
+          ]
+        },
+        "parent_set_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "quantity_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "missing_parent_policy": {
+          "enum": [
+            "unavailable",
+            "partial",
+            "qualified_estimate"
+          ]
+        },
+        "definition_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "endpoint_id",
+        "method",
+        "parent_set_ref",
+        "quantity_rule",
+        "missing_parent_policy",
+        "definition_ref"
+      ],
+      "additionalProperties": false
+    },
+    "preprocessing": {
+      "type": "object",
+      "properties": {
+        "filter": {
+          "$ref": "#/$defs/filter"
+        },
+        "transform": {
+          "$ref": "#/$defs/transform"
+        },
+        "normalisation": {
+          "$ref": "#/$defs/normalisation"
+        },
+        "imputation": {
+          "$ref": "#/$defs/imputation"
+        },
+        "derive": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/derive"
+          },
+          "minItems": 0
+        },
+        "context_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "feature_qc_rule_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "filter",
+        "transform",
+        "normalisation",
+        "imputation",
+        "derive",
+        "context_id"
+      ],
+      "additionalProperties": false
+    },
+    "block": {
+      "type": "object",
+      "properties": {
+        "block_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile": {
+          "enum": [
+            "proteomics",
+            "lipidomics",
+            "metabolomics",
+            "registered_extension"
+          ]
+        },
+        "profile_spec_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "feature_id_column": {
+          "type": "string",
+          "minLength": 1
+        },
+        "id_namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "feature_metadata": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "sample_map": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "missing_tokens": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        },
+        "measurement": {
+          "$ref": "#/$defs/measurement"
+        },
+        "preprocessing": {
+          "$ref": "#/$defs/preprocessing"
+        },
+        "annotation_route": {
+          "enum": [
+            "none",
+            "gene_reaction",
+            "lipid_ontology",
+            "registered_route"
+          ]
+        },
+        "technical_replicate_spec_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "block_id",
+        "name",
+        "profile",
+        "profile_spec_ref",
+        "file",
+        "feature_id_column",
+        "id_namespace",
+        "feature_metadata",
+        "source_refs",
+        "sample_map",
+        "missing_tokens",
+        "measurement",
+        "preprocessing",
+        "annotation_route"
+      ],
+      "additionalProperties": false
+    },
+    "covariate": {
+      "type": "object",
+      "properties": {
+        "variable": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "enum": [
+            "technical_nuisance",
+            "confounder",
+            "modifier",
+            "descriptive"
+          ]
+        },
+        "form": {
+          "enum": [
+            "level",
+            "delta",
+            "within",
+            "between"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "variable",
+        "role",
+        "form",
+        "rationale"
+      ],
+      "additionalProperties": false
+    },
+    "contrast": {
+      "type": "object",
+      "properties": {
+        "contrast_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "weights": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "interpretation": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "contrast_id",
+        "weights",
+        "interpretation"
+      ],
+      "additionalProperties": false
+    },
+    "design": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "independent",
+            "paired",
+            "multivisit",
+            "trajectory"
+          ]
+        },
+        "condition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "condition_type": {
+          "enum": [
+            "factor",
+            "continuous"
+          ]
+        },
+        "subject_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "repeated": {
+          "type": "boolean"
+        },
+        "representation": {
+          "enum": [
+            "levels",
+            "delta",
+            "mean",
+            "subject_centered"
+          ]
+        },
+        "reference_level": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "target_level": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "between_group": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "visit_column": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reference_visit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "target_visit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "covariates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/covariate"
+          },
+          "minItems": 0
+        },
+        "missing_visits": {
+          "enum": [
+            "error",
+            "complete_pairs_per_contrast"
+          ]
+        },
+        "time_column": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "time_unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "time_origin": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "spline_knots": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 0
+        },
+        "spline_boundary": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 0
+        },
+        "residual_contract_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mean_weights": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "interactions": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 2
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "kind",
+        "condition",
+        "condition_type",
+        "subject_id",
+        "repeated",
+        "representation",
+        "reference_level",
+        "target_level",
+        "between_group",
+        "visit_column",
+        "reference_visit",
+        "target_visit",
+        "covariates",
+        "missing_visits",
+        "time_column",
+        "time_unit",
+        "time_origin",
+        "spline_knots",
+        "spline_boundary",
+        "residual_contract_ref"
+      ],
+      "additionalProperties": false
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "enum": [
+            "limma",
+            "deqms"
+          ]
+        },
+        "contrasts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contrast"
+          },
+          "minItems": 1
+        },
+        "trend": {
+          "const": false
+        },
+        "robust": {
+          "type": "boolean"
+        },
+        "q_threshold": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "effect_threshold": {
+          "type": "number",
+          "minimum": 0
+        },
+        "effect_unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "family_scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selection_validity": {
+          "enum": [
+            "qualified",
+            "descriptive_only",
+            "unverified"
+          ]
+        },
+        "selection_justification": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dependence_justification": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rank_sensitivity": {
+          "type": "boolean"
+        },
+        "count_metadata": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fallback": {
+          "enum": [
+            "none",
+            "explicit_limma"
+          ]
+        },
+        "method_qualification_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "method",
+        "contrasts",
+        "trend",
+        "robust",
+        "q_threshold",
+        "effect_threshold",
+        "effect_unit",
+        "family_scope",
+        "selection_validity",
+        "selection_justification",
+        "dependence_justification",
+        "rank_sensitivity",
+        "count_metadata",
+        "fallback"
+      ],
+      "additionalProperties": false
+    },
+    "selection": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "enum": [
+            "none",
+            "sparse_support",
+            "top_k",
+            "absolute_loading"
+          ]
+        },
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "required": [
+        "method",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "evaluation": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "exploratory",
+            "nested_cv"
+          ]
+        },
+        "generalization_unit": {
+          "enum": [
+            "sample",
+            "subject"
+          ]
+        },
+        "outer_folds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "inner_folds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "repeats": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "stratification": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "temporal_rule_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "primary_metric": {
+          "enum": [
+            "none",
+            "balanced_error",
+            "rmse"
+          ]
+        },
+        "max_fits": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "uncertainty_protocol_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "mode",
+        "generalization_unit",
+        "outer_folds",
+        "inner_folds",
+        "repeats",
+        "stratification",
+        "temporal_rule_ref",
+        "primary_metric",
+        "max_fits",
+        "uncertainty_protocol_ref"
+      ],
+      "additionalProperties": false
+    },
+    "integration": {
+      "type": "object",
+      "properties": {
+        "integration_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method": {
+          "enum": [
+            "concat_pca",
+            "concat_plsda",
+            "concat_pls",
+            "mixomics_diablo",
+            "mixomics_block_spls",
+            "mofa2"
+          ]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "outcome": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "n_components": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "scale_features": {
+          "type": "boolean"
+        },
+        "block_scaling": {
+          "enum": [
+            "none",
+            "inverse_sqrt_p"
+          ]
+        },
+        "score_definition": {
+          "enum": [
+            "native",
+            "consensus_mean"
+          ]
+        },
+        "design_matrix": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "keepX": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minItems": 1
+          }
+        },
+        "keepY": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "tuning_grid_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prediction_rule": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mofa_convergence": {
+          "enum": [
+            "not_applicable",
+            "fast",
+            "medium",
+            "slow"
+          ]
+        },
+        "mofa_seed_repeats": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "native_options_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "selection": {
+          "$ref": "#/$defs/selection"
+        },
+        "evaluation": {
+          "$ref": "#/$defs/evaluation"
+        }
+      },
+      "required": [
+        "integration_id",
+        "method",
+        "required",
+        "outcome",
+        "n_components",
+        "scale_features",
+        "block_scaling",
+        "score_definition",
+        "design_matrix",
+        "keepX",
+        "keepY",
+        "tuning_grid_ref",
+        "prediction_rule",
+        "mofa_convergence",
+        "mofa_seed_repeats",
+        "native_options_ref",
+        "selection",
+        "evaluation"
+      ],
+      "additionalProperties": false
+    },
+    "analysis": {
+      "type": "object",
+      "properties": {
+        "analysis_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "block_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "preparation_context_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "design": {
+          "$ref": "#/$defs/design"
+        },
+        "statistics": {
+          "$ref": "#/$defs/statistics"
+        },
+        "integration": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/integration"
+          },
+          "minItems": 0
+        },
+        "completeness": {
+          "enum": [
+            "strict",
+            "allow_declared_optional"
+          ]
+        }
+      },
+      "required": [
+        "analysis_id",
+        "block_ids",
+        "preparation_context_id",
+        "design",
+        "statistics",
+        "integration",
+        "completeness"
+      ],
+      "additionalProperties": false
+    },
+    "objective": {
+      "type": "object",
+      "properties": {
+        "objective_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "analysis_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mode": {
+          "enum": [
+            "between_person",
+            "within_person",
+            "baseline_to_later",
+            "effect_modification",
+            "prediction"
+          ]
+        },
+        "response_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "predictor_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "endpoint_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adjustments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/covariate"
+          },
+          "minItems": 0
+        },
+        "time_window_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "missingness_policy": {
+          "enum": [
+            "complete_case",
+            "qualified_method"
+          ]
+        },
+        "family_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hypothesis_status": {
+          "enum": [
+            "exploratory",
+            "prospectively_declared",
+            "independent_validation"
+          ]
+        },
+        "protocol_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "objective_id",
+        "analysis_id",
+        "mode",
+        "response_ref",
+        "predictor_ref",
+        "endpoint_ref",
+        "adjustments",
+        "time_window_ref",
+        "missingness_policy",
+        "family_ref",
+        "hypothesis_status",
+        "protocol_ref"
+      ],
+      "additionalProperties": false
+    },
+    "clinical": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "dictionary_file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "observations_file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "links_file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "objectives": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/objective"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "enabled",
+        "dictionary_file",
+        "observations_file",
+        "links_file",
+        "objectives"
+      ],
+      "additionalProperties": false
+    },
+    "resource": {
+      "type": "object",
+      "properties": {
+        "resource_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "local_file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "terms_url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rights_status": {
+          "enum": [
+            "verified",
+            "unverified",
+            "restricted"
+          ]
+        },
+        "permitted_operation": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "redistribution": {
+          "enum": [
+            "allowed",
+            "prohibited",
+            "unverified"
+          ]
+        }
+      },
+      "required": [
+        "resource_id",
+        "source_url",
+        "version",
+        "sha256",
+        "local_file",
+        "terms_url",
+        "rights_status",
+        "permitted_operation",
+        "redistribution"
+      ],
+      "additionalProperties": false
+    },
+    "annotation_request": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "analysis_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "route": {
+          "enum": [
+            "gene_reaction",
+            "lipid_ontology",
+            "ora",
+            "mofa_native",
+            "biopan"
+          ]
+        },
+        "resource_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "protocol_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "request_id",
+        "analysis_id",
+        "route",
+        "resource_ids",
+        "required",
+        "protocol_ref"
+      ],
+      "additionalProperties": false
+    },
+    "annotation": {
+      "type": "object",
+      "properties": {
+        "resources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/resource"
+          },
+          "minItems": 0
+        },
+        "requests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/annotation_request"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "resources",
+        "requests"
+      ],
+      "additionalProperties": false
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "taxon_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "entity_type": {
+          "enum": [
+            "protein",
+            "complex",
+            "pathway",
+            "other_declared"
+          ]
+        }
+      },
+      "required": [
+        "namespace",
+        "id",
+        "taxon_id",
+        "entity_type"
+      ],
+      "additionalProperties": false
+    },
+    "target_investigation": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "mode": {
+          "enum": [
+            "assess",
+            "compare",
+            "discover"
+          ]
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/target"
+          },
+          "minItems": 0
+        },
+        "drug_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "context_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "universe_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "external_evidence_file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mechanism_file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "protocol_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "quantitative_method_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "enabled",
+        "mode",
+        "targets",
+        "drug_ref",
+        "context_ref",
+        "universe_ref",
+        "external_evidence_file",
+        "mechanism_file",
+        "protocol_ref",
+        "quantitative_method_ref",
+        "required"
+      ],
+      "additionalProperties": false
+    },
+    "execution": {
+      "type": "object",
+      "properties": {
+        "seed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "network_policy": {
+          "enum": [
+            "offline",
+            "approved_reference_fetch_only"
+          ]
+        },
+        "workers": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "cpu_limit": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "memory_gib": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "max_fits": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "audience": {
+          "enum": [
+            "synthetic_demo",
+            "private_research",
+            "approved_aggregate"
+          ]
+        },
+        "disclosure_policy_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "seed",
+        "network_policy",
+        "workers",
+        "cpu_limit",
+        "memory_gib",
+        "max_fits",
+        "audience",
+        "disclosure_policy_ref"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
