@@ -36,23 +36,52 @@
   },
   "active_workers": [
     {
-      "worker": "/root/m7_007_context_key_luna",
-      "role": "fresh isolated Luna-max implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "base_commit": "dfceea7",
-      "worktree": "/Users/megastore/.codex/worktrees/m7-007-collision-free-context/PML MultiOmics Analysis Pipeline",
-      "allowlist": ["R/provenance_contract.R", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"]
+      "worker": "/root/m7_007_standards_review",
+      "role": "fresh read-only Sol-high Standards reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "candidate_commit": "b34df9f5d93ca60d74f690a2e86e5f416547fec6"
+    },
+    {
+      "worker": "/root/m7_007_spec_review",
+      "role": "fresh read-only Sol-high Spec reviewer",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "candidate_commit": "b34df9f5d93ca60d74f690a2e86e5f416547fec6"
     }
   ],
   "orchestration_control": {
-    "status": "m7_007_luna_active",
+    "status": "m7_007_two_axis_review_active",
     "last_reconciled": "2026-10-24",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "worker": "/root/m7_007_standards_review",
+        "candidate_commit": "b34df9f5d93ca60d74f690a2e86e5f416547fec6",
+        "brief": "docs/implementation/reviews/2026-10-24-m7-007-two-axis-review-brief.md"
+      },
+      {
+        "worker": "/root/m7_007_spec_review",
+        "candidate_commit": "b34df9f5d93ca60d74f690a2e86e5f416547fec6",
+        "brief": "docs/implementation/reviews/2026-10-24-m7-007-two-axis-review-brief.md"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh isolated Luna-max worker /root/m7_007_context_key_luna is active from authorization commit dfceea7 with the exact three-file allowlist. It must reproduce the escaped-U+001C collision through the public validator as RED, implement collision-free tuple encoding, and return focused GREEN. M7-004/M7-006/M7-007 remain unaccepted and Stage D remains closed."
+    "disposition": "M7-007 candidate b34df9f is focused-green and clean after one registration-only repair. Fresh independent Standards and Spec reviewers are active against product fixed point e4aed59. No integration or acceptance occurs unless both axes pass; Stage D remains closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_007_candidate_two_axis_review_dispatched",
+      "date": "2026-10-24",
+      "candidate_commits": ["0b1fcbdbb321a8e6caa002d19e769d693d53d2bd", "b34df9f5d93ca60d74f690a2e86e5f416547fec6"],
+      "product_fixed_point": "e4aed594877ef53ace6958d9a757cffb471ba53a",
+      "red": "focused M7-003 suite exit 1; one failure, zero errors/warnings/skips; schema-valid escaped-U+001C collision accepted",
+      "green": "focused M7-003 suite exit 0; DONE; zero failures/warnings/skips; collision rejects and legal escaped multi-context profile passes",
+      "repair_1": "registration-only stale next_gate correction; JSON parse and diff check passed; no product/test rerun",
+      "reviewers": ["/root/m7_007_standards_review", "/root/m7_007_spec_review"],
+      "brief": "docs/implementation/reviews/2026-10-24-m7-007-two-axis-review-brief.md",
+      "allowed_next_transition": "Both axes pass -> serial integration, focused Sol verification, and one full source suite; changes_required -> bounded repair or block.",
+      "disposition": "Read-only review only; no private data, integration, acceptance, gate release, or Stage-D work."
+    },
     {
       "event": "m7_007_fresh_luna_dispatched",
       "date": "2026-10-24",
