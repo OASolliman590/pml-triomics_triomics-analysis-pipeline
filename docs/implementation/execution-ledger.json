@@ -34,15 +34,44 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "worker": "/root/m7_007_astra_acceptance_audit",
+      "role": "fresh read-only Astra-low acceptance auditor",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "snapshot": "b29c3aa5693b29ac232f26344987877e4e79511d",
+      "scope": "M7-006-ASTRA-01 closure plus regression review; no edits or tests"
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_007_two_axis_review_passed_integration_pending",
+    "status": "m7_007_astra_acceptance_audit_active",
     "last_reconciled": "2026-10-24",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "worker": "/root/m7_007_astra_acceptance_audit",
+        "snapshot": "b29c3aa5693b29ac232f26344987877e4e79511d",
+        "brief": "docs/implementation/reviews/2026-10-24-m7-007-astra-acceptance-audit-brief.md"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Both M7-007 review axes passed candidate b34df9f. Standards: Critical 0, Important 0, Minor 1 nonblocking duplicated test setup; Spec: Critical 0, Important 0, Minor 0. Both return ready_to_integrate yes. Serial integration, focused Sol verification, and one full source suite are next; Stage D remains closed."
+    "disposition": "M7-007 candidate b34df9f is integrated as immutable snapshot b29c3aa. Exact blobs match; focused verification and the uninterrupted full source suite passed, with failures 0, errors 0, skips 0, and the same fourteen named C-05 warnings. Exactly one fresh read-only Astra-low audit is active. M7-004/M7-006/M7-007 remain unaccepted and Stage D remains closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_007_integrated_verified_astra_audit_dispatched",
+      "date": "2026-10-24",
+      "candidate_commits": ["0b1fcbdbb321a8e6caa002d19e769d693d53d2bd", "b34df9f5d93ca60d74f690a2e86e5f416547fec6"],
+      "integration_commits": ["ea1407b", "b29c3aa"],
+      "snapshot": "b29c3aa5693b29ac232f26344987877e4e79511d",
+      "focused_gate": "exit 0; DONE; zero failures, warnings, or skips",
+      "full_source_suite": "exit 0; DONE; failures 0, errors 0, skips 0, warnings 14; summary reporter emitted no numeric PASS total",
+      "warning_set": "same fourteen named C-05 native MOFA small-fixture diagnostics; none suppressed; no new warning name",
+      "reviewer": "/root/m7_007_astra_acceptance_audit",
+      "review_ref": "docs/implementation/reviews/2026-10-24-m7-007-astra-acceptance-audit-brief.md",
+      "allowed_next_transition": "Astra pass -> Sol may accept only the repaired contract foundation; changes_required -> record blocker. No automatic rereview and no downstream Stage-D work.",
+      "disposition": "No private data, M7 acceptance, gate release, or downstream Stage-D implementation."
+    },
     {
       "event": "m7_007_two_axis_review_passed",
       "date": "2026-10-24",
