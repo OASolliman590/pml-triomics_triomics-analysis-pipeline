@@ -310,9 +310,19 @@ WARN 5, SKIP 0, PASS 224 because strict matrix-key equality treated names as
 content and list-form retained unit maps were not normalized. B-T03 passed; the
 two B-T01 product failures were the same unit-map defect, while its third error
 was the known managed-worktree inability to write a temporary fixture beneath
-`inst/examples/tickets`. Targeted repair 1/2 is active with the same worker and
-four-file allowlist. It may fix only those identity-normalization defects and
-their dependent expectations.
+`inst/examples/tickets`. Targeted repair 1/2 produced clean candidate
+`39b49f7`: it fixed both original identity-normalization defects, but complete
+profile construction exposed the next narrow mismatch.
+`triomics_b07_prov_artifact_entity()` does not accept
+`row_identity_sha256` and `column_identity_sha256`, although the
+`represented_matrix` caller supplies both and the underlying entity helper
+supports them. The exact B-T07 suite now reports FAIL 9, WARN 5, SKIP 0,
+PASS 231; both public B-T02 CLI identities pass the prior unit-map and matrix
+checks before reaching that same constructor error. Targeted repair 2/2 is
+active with the same worker and four-file allowlist. It may add and forward
+those two digests and repair only directly exposed profile-construction or
+validator defects. Any remaining product failure exhausts the repair budget and
+blocks M7-008.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
@@ -588,11 +598,13 @@ Critical 0, Important 0, Minor 0. Sol accepted only the combined
 M7-004/M7-006/M7-007 public synthetic provenance contract foundation. No worker
 or handoff from M7-007 remains active. M7-008 worker
 `/root/m7_008_bt07_provenance_luna` is active for the B-T07 native producer seam
-in the managed worktree recorded above, now on targeted repair 1/2 after initial
-candidate `62f33c4` remained RED. Resume by reconciling that worker's repair
-turn; on focused GREEN inspect the exact four-file diff and dispatch fresh
-parallel Standards and Spec reviews. If a new product failure remains, stop
-before repair 2 for Sol disposition. Do not start C-06 provenance, D
+in the managed worktree recorded above, now on final targeted repair 2/2 after
+repair-1 candidate `39b49f7` closed the original identity defects but exposed
+the represented-matrix digest constructor mismatch. Resume by reconciling that
+worker's final repair turn; on focused GREEN inspect the exact four-file diff
+and dispatch fresh parallel Standards and Spec reviews. If any product failure
+remains, record M7-008 blocked because its repair budget is exhausted. Do not
+start C-06 provenance, D
 verification/publication, migration execution, D-T01 acceptance, M7 release,
 or any Stage-D successor in parallel.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen

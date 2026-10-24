@@ -42,11 +42,11 @@
       "requested_effort": "max",
       "base_commit": "0d96c57",
       "worktree": "/Users/megastore/.codex/worktrees/m7-008-bt07-provenance/PML MultiOmics Analysis Pipeline",
-      "scope": "M7-008 targeted repair 1/2 on the same four-file allowlist; no full suite or downstream work"
+      "scope": "M7-008 targeted repair 2/2 on the same four-file allowlist; no full suite or downstream work"
     }
   ],
   "orchestration_control": {
-    "status": "m7_008_b_t07_targeted_repair_1_active",
+    "status": "m7_008_b_t07_targeted_repair_2_active",
     "last_reconciled": "2026-10-24",
     "active_handoffs": [
       {
@@ -54,13 +54,25 @@
         "base_commit": "0d96c57",
         "worktree": "/Users/megastore/.codex/worktrees/m7-008-bt07-provenance/PML MultiOmics Analysis Pipeline",
         "brief": "docs/implementation/change-records/M7-008-b-t07-native-provenance-producer-seam.md",
-        "allowed_next_transition": "Repair-1 focused GREEN and a clean commit -> Sol inspection -> two-axis read-only review; remaining product failure -> stop before repair 2."
+        "allowed_next_transition": "Repair-2 focused GREEN and a clean commit -> Sol inspection -> two-axis read-only review; remaining product failure -> block M7-008 because the repair budget is exhausted."
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Initial candidate 62f33c4 remained RED because named-versus-unnamed matrix keys failed strict comparison and a retained list-form unit map was not normalized. Targeted repair 1/2 is active in the same Luna worktree. The managed-worktree B-T01 fixture-write permission error is not a product repair target. D-T01, M7 and all Stage-D work remain closed."
+    "disposition": "Repair 1 commit 39b49f7 closed the matrix-key names-attribute and retained list-form unit-map defects, but complete profile construction exposed a narrow artifact-entity constructor mismatch: represented_matrix supplies row_identity_sha256 and column_identity_sha256 while triomics_b07_prov_artifact_entity() lacks those formals. Targeted repair 2/2 is active in the same Luna worktree. The managed-worktree B-T01 fixture-write permission error is not a product repair target. D-T01, M7 and all Stage-D work remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_008_repair_1_partial_green_repair_2_dispatched",
+      "date": "2026-10-24",
+      "worker": "/root/m7_008_bt07_provenance_luna",
+      "candidate_commit": "39b49f7",
+      "repair_1": "Strict ordered matrix identity now ignores irrelevant names attributes and list-form retained unit maps are normalized deterministically while preserving fields and order.",
+      "focused_result": "B-T07 FAIL 9, WARN 5, SKIP 0, PASS 231; both public B-T02 CLI identities pass the previous unit-map and matrix checks but stop at the same newly exposed constructor error.",
+      "remaining_root_cause": "triomics_b07_prov_artifact_entity() does not accept row_identity_sha256 and column_identity_sha256 although the represented_matrix caller supplies both and the underlying triomics_b07_prov_entity() supports them.",
+      "repair_scope": "Final repair 2/2 adds and forwards those two nullable identity digests, then may address only directly exposed profile-construction or validator defects within the existing four-file allowlist.",
+      "allowed_next_transition": "Repair-2 focused GREEN and clean commit -> Sol inspection and two-axis read-only review; any remaining product failure -> block M7-008.",
+      "disposition": "No integration, full suite, private data, C/D edit, migration, acceptance, gate release, or Stage-D work."
+    },
     {
       "event": "m7_008_initial_candidate_red_repair_1_dispatched",
       "date": "2026-10-24",
