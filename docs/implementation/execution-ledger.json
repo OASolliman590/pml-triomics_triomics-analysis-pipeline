@@ -34,30 +34,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "worker": "/root/m7_006_astra_acceptance_audit",
-      "role": "fresh read-only Astra-low acceptance auditor",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "snapshot": "e4aed594877ef53ace6958d9a757cffb471ba53a",
-      "scope": "M7-004-ASTRA-01 and M7-004-ASTRA-02 closure plus regression review; no edits or tests"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_006_astra_acceptance_audit_active",
+    "status": "m7_006_astra_changes_required_blocked",
     "last_reconciled": "2026-10-24",
-    "active_handoffs": [
-      {
-        "worker": "/root/m7_006_astra_acceptance_audit",
-        "snapshot": "e4aed594877ef53ace6958d9a757cffb471ba53a",
-        "brief": "docs/implementation/reviews/2026-10-24-m7-006-astra-acceptance-audit-brief.md"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M7-006 candidate 5242609 is integrated as immutable snapshot e4aed59. Focused verification and the valid uninterrupted full source suite passed; the latter has failures 0, errors 0, skips 0, and the same fourteen named C-05 native warnings. Exactly one fresh read-only Astra-low audit is active. M7-004 remains unaccepted and Stage D remains closed."
+    "disposition": "The single fresh M7-006 Astra-low audit returned changes_required: Critical 0, Important 1, Minor 0, ready_for_sol_acceptance no. Migration proof now covers handoff_payload, but delimiter-joined context keys can collide when identifiers contain escaped U+001C. No automatic rereview is authorized. M7-004/M7-006 remain unaccepted and Stage D remains closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_006_astra_acceptance_audit_changes_required_blocked",
+      "date": "2026-10-24",
+      "reviewer": "/root/m7_006_astra_acceptance_audit",
+      "snapshot": "e4aed594877ef53ace6958d9a757cffb471ba53a",
+      "verdict": "changes_required; Critical 0, Important 1, Minor 0; ready_for_sol_acceptance no",
+      "closed": ["M7-004-ASTRA-02: migration proof requires handoff_payload and complete proof remains valid"],
+      "finding": "M7-006-ASTRA-01: raw U+001C delimiter joining permits collisions between distinct analysis/preparation/representation tuples, so represented/preprocessing context closure remains partially fail-open",
+      "review_ref": "docs/implementation/reviews/2026-10-24-m7-006-astra-acceptance-audit.md",
+      "allowed_next_transition": "Only Omar's explicit authorization of a new bounded repair record may reopen the context-key defect; require collision RED fixtures, focused GREEN, review, and a fresh immutable acceptance audit.",
+      "disposition": "M7-004 and M7-006 not accepted; no automatic rereview, private data, gate release, or downstream Stage-D work."
+    },
     {
       "event": "m7_006_integrated_verified_astra_audit_dispatched",
       "date": "2026-10-24",

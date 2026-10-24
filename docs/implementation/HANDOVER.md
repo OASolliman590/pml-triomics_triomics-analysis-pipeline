@@ -235,10 +235,17 @@ expired temporary MOFA runtime in fresh isolated prefixes, one uninterrupted
 full source suite exited 0 with failures 0, errors 0, skips 0 and the same
 fourteen named C-05 native small-fixture warnings. No new warning appeared and
 none was suppressed. The durable receipt is
-`reviews/2026-10-24-m7-006-integration-verification.md`. Exactly one fresh
-read-only Astra-low acceptance auditor `/root/m7_006_astra_acceptance_audit` is
-active on snapshot `e4aed59`. M7-004/M7-006 remain unaccepted and no Stage-D
-gate has been released.
+`reviews/2026-10-24-m7-006-integration-verification.md`. The single fresh
+read-only Astra-low acceptance auditor `/root/m7_006_astra_acceptance_audit`
+returned `changes_required`: Critical 0, Important 1, Minor 0,
+`ready_for_sol_acceptance: no`. It confirmed the migration proof now requires
+`handoff_payload`, but found that the raw U+001C delimiter used to join context
+tuple fields can collide when that escaped character appears inside permitted
+identifiers. Sol confirmed the cited immutable construction and schema. The
+durable receipt is
+`reviews/2026-10-24-m7-006-astra-acceptance-audit.md`. M7-004/M7-006 remain
+unaccepted, no automatic rereview is authorized, no worker is active, and no
+Stage-D gate has been released.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
@@ -510,14 +517,15 @@ permitted cycles; M7-003 is accepted as a specification amendment, but its
 contract-foundation implementation packet is exhausted and remains historical.
 Do not resume `/root/m7_003_contract_luna` or integrate its files directly.
 M7-006 candidate `5242609` is integrated and verified as immutable snapshot
-`e4aed59`. Resume by reconciling the single fresh read-only Astra-low audit
-`/root/m7_006_astra_acceptance_audit` using
-`reviews/2026-10-24-m7-006-astra-acceptance-audit-brief.md`. Do not rerun Luna,
-the focused suite, or the full suite. If Astra passes, Sol may accept only the
-repaired contract foundation and must record the receipt; if it returns
-`changes_required`, record the blocker because no automatic rereview is
-authorized. Do not start B-T07/C-06 producer provenance, D
+`e4aed59`, but its only fresh Astra audit returned `changes_required`. Do not
+accept M7-004/M7-006, rerun Luna, or dispatch an automatic rereview. Resume only
+after Omar explicitly authorizes a new bounded repair record for
+`M7-006-ASTRA-01`: replace ambiguous delimiter-joined tuple keys with a
+collision-free representation, reproduce the escaped-U+001C collision through
+the public validator as RED, preserve valid multiple-context behavior, then
+require focused GREEN, independent review, integration verification, and a new
+immutable acceptance audit. Do not start B-T07/C-06 producer provenance, D
 verification/publication, migration, D-T01 acceptance, M7 release, or any
-Stage-D successor in this run.
+Stage-D successor before that future audit passes.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.
