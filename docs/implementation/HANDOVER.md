@@ -257,7 +257,11 @@ U+001C tuple collision as RED, implement collision-free component encoding
 without banning legal identifier values, preserve a valid U+001C multi-context
 positive, and return focused GREEN. Independent two-axis review, Sol integration
 verification, one full source suite, and one fresh Astra-low audit remain
-mandatory. No worker is active yet; Stage D remains closed.
+mandatory. Fresh Luna-max worker `/root/m7_007_context_key_luna` is active from
+authorization commit `dfceea7` in managed worktree
+`/Users/megastore/.codex/worktrees/m7-007-collision-free-context/PML MultiOmics Analysis Pipeline`.
+Its next legal transition is a clean focused-green candidate for independent
+two-axis review. Stage D remains closed.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
@@ -530,10 +534,10 @@ contract-foundation implementation packet is exhausted and remains historical.
 Do not resume `/root/m7_003_contract_luna` or integrate its files directly.
 M7-006 candidate `5242609` is integrated and verified as immutable snapshot
 `e4aed59`, but its only fresh Astra audit returned `changes_required`. M7-007 is
-now authorized solely for `M7-006-ASTRA-01`. Create a fresh managed worktree from
-the current authorization commit and dispatch one fresh Luna-max worker using
-the exact three-file allowlist and public RED/GREEN obligations in the M7-007
-record. Do not accept M7-004/M7-006/M7-007, reuse an old worker, or start
+now authorized solely for `M7-006-ASTRA-01`. Resume by reconciling fresh worker
+`/root/m7_007_context_key_luna`; inspect its exact three-file candidate and
+dispatch parallel Standards/Spec review only after focused GREEN and a clean
+worktree. Do not accept M7-004/M7-006/M7-007, reuse an old worker, or start
 B-T07/C-06 producer provenance, D verification/publication, migration, D-T01
 acceptance, M7 release, or any Stage-D successor before the future immutable
 Astra audit passes.

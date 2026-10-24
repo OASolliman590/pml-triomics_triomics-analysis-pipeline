@@ -34,15 +34,38 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "worker": "/root/m7_007_context_key_luna",
+      "role": "fresh isolated Luna-max implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "base_commit": "dfceea7",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-007-collision-free-context/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["R/provenance_contract.R", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"]
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_007_authorized_worktree_pending",
+    "status": "m7_007_luna_active",
     "last_reconciled": "2026-10-24",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar instructed Sol to continue, authorizing bounded successor M7-007 for the single M7-006-ASTRA-01 tuple-key collision. Create a fresh isolated Luna-max worktree from the recorded base, require public-validator RED/GREEN, then independent review. M7-004/M7-006/M7-007 remain unaccepted and Stage D remains closed."
+    "disposition": "Fresh isolated Luna-max worker /root/m7_007_context_key_luna is active from authorization commit dfceea7 with the exact three-file allowlist. It must reproduce the escaped-U+001C collision through the public validator as RED, implement collision-free tuple encoding, and return focused GREEN. M7-004/M7-006/M7-007 remain unaccepted and Stage D remains closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_007_fresh_luna_dispatched",
+      "date": "2026-10-24",
+      "worker": "/root/m7_007_context_key_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "base_commit": "dfceea7",
+      "product_fixed_point": "e4aed594877ef53ace6958d9a757cffb471ba53a",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-007-collision-free-context/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["R/provenance_contract.R", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
+      "allowed_next_transition": "Focused GREEN and a clean commit -> Sol inspection -> parallel Standards and Spec review.",
+      "disposition": "No full suite, integration, private data, schema/frozen-spec edit, acceptance, gate release, or Stage-D work in the worker turn."
+    },
     {
       "event": "m7_007_collision_free_context_key_repair_authorized",
       "date": "2026-10-24",
