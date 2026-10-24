@@ -220,16 +220,24 @@ two-axis code review, serial Sol integration, one full source suite, and exactly
 one fresh read-only Astra-low acceptance audit. Downstream Stage D remains
 closed throughout.
 
-Fresh Luna-max worker `/root/m7_006_provenance_luna` is active from commit
-`b306f14` in managed worktree
+Fresh Luna-max worker `/root/m7_006_provenance_luna` ran from commit `b306f14`
+in managed worktree
 `/Users/megastore/.codex/worktrees/m7-006-provenance-completeness/PML MultiOmics Analysis Pipeline`.
 Its exact three-file allowlist and RED/GREEN obligations are recorded in
 M7-006. It returned focused-green candidate `5242609` after reproducing both
 defects as RED. Fresh read-only Standards and Spec reviewers are active in
 parallel under `reviews/2026-10-24-m7-006-two-axis-review-brief.md`. Both axes
 passed with Critical 0, Important 0, Minor 0 and `ready_to_integrate: yes`. The
-durable receipt is `reviews/2026-10-24-m7-006-two-axis-review.md`. Serial
-integration and one full source-suite run are next; no acceptance or Stage-D
+durable receipt is `reviews/2026-10-24-m7-006-two-axis-review.md`. Sol integrated
+the exact three candidate blobs as immutable snapshot `e4aed59`; the integrated
+focused suite exited 0 with no failure, warning, or skip. After rebuilding the
+expired temporary MOFA runtime in fresh isolated prefixes, one uninterrupted
+full source suite exited 0 with failures 0, errors 0, skips 0 and the same
+fourteen named C-05 native small-fixture warnings. No new warning appeared and
+none was suppressed. The durable receipt is
+`reviews/2026-10-24-m7-006-integration-verification.md`. Exactly one fresh
+read-only Astra-low acceptance auditor `/root/m7_006_astra_acceptance_audit` is
+active on snapshot `e4aed59`. M7-004/M7-006 remain unaccepted and no Stage-D
 gate has been released.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
@@ -501,14 +509,15 @@ registration seams, or start D-T02/D-T03. M7-001 and M7-002 exhausted their
 permitted cycles; M7-003 is accepted as a specification amendment, but its
 contract-foundation implementation packet is exhausted and remains historical.
 Do not resume `/root/m7_003_contract_luna` or integrate its files directly.
-M7-006 is authorized for M7-004-ASTRA-01 and M7-004-ASTRA-02. Create a fresh
-managed worktree from the current authorized branch, dispatch one fresh Luna-max
-worker with the exact three-file allowlist in the M7-006 record, and require
-public-validator RED before implementation and focused GREEN afterward. Then
-run the two-axis code review, integrate only if both axes pass, run the full
-source suite once, and dispatch exactly one fresh read-only Astra-low audit of
-the immutable repaired snapshot. Do not start B-T07/C-06 producer provenance,
-D verification/publication, migration, D-T01 acceptance, M7 release, or any
-Stage-D successor before that audit passes.
+M7-006 candidate `5242609` is integrated and verified as immutable snapshot
+`e4aed59`. Resume by reconciling the single fresh read-only Astra-low audit
+`/root/m7_006_astra_acceptance_audit` using
+`reviews/2026-10-24-m7-006-astra-acceptance-audit-brief.md`. Do not rerun Luna,
+the focused suite, or the full suite. If Astra passes, Sol may accept only the
+repaired contract foundation and must record the receipt; if it returns
+`changes_required`, record the blocker because no automatic rereview is
+authorized. Do not start B-T07/C-06 producer provenance, D
+verification/publication, migration, D-T01 acceptance, M7 release, or any
+Stage-D successor in this run.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.

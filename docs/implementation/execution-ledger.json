@@ -34,15 +34,44 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "worker": "/root/m7_006_astra_acceptance_audit",
+      "role": "fresh read-only Astra-low acceptance auditor",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "snapshot": "e4aed594877ef53ace6958d9a757cffb471ba53a",
+      "scope": "M7-004-ASTRA-01 and M7-004-ASTRA-02 closure plus regression review; no edits or tests"
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_006_two_axis_review_passed_integration_pending",
+    "status": "m7_006_astra_acceptance_audit_active",
     "last_reconciled": "2026-10-24",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "worker": "/root/m7_006_astra_acceptance_audit",
+        "snapshot": "e4aed594877ef53ace6958d9a757cffb471ba53a",
+        "brief": "docs/implementation/reviews/2026-10-24-m7-006-astra-acceptance-audit-brief.md"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Both independent M7-006 review axes passed candidate 5242609 with Critical 0, Important 0, Minor 0 and ready_to_integrate yes. Serial integration and one full source-suite run are the next legal transitions; M7-004 remains unaccepted and Stage D remains closed."
+    "disposition": "M7-006 candidate 5242609 is integrated as immutable snapshot e4aed59. Focused verification and the valid uninterrupted full source suite passed; the latter has failures 0, errors 0, skips 0, and the same fourteen named C-05 native warnings. Exactly one fresh read-only Astra-low audit is active. M7-004 remains unaccepted and Stage D remains closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_006_integrated_verified_astra_audit_dispatched",
+      "date": "2026-10-24",
+      "candidate_commit": "5242609518886b26e60ea76863aa9c0badfd360d",
+      "snapshot": "e4aed594877ef53ace6958d9a757cffb471ba53a",
+      "focused_gate": "exit 0; DONE; zero failures, warnings, or skips",
+      "full_source_suite": "exit 0; DONE; failures 0, errors 0, skips 0, warnings 14; summary reporter emitted no numeric PASS total",
+      "warning_set": "same fourteen named C-05 native MOFA small-fixture diagnostics; none suppressed; no new warning name",
+      "runtime": "MOFA2 1.22.1 in /tmp/triomics-mofa-lib-m7-006 and mofapy2 0.7.5 through /tmp/triomics-mofa-py-m7-006/bin/python",
+      "reviewer": "/root/m7_006_astra_acceptance_audit",
+      "review_ref": "docs/implementation/reviews/2026-10-24-m7-006-astra-acceptance-audit-brief.md",
+      "allowed_next_transition": "Astra pass -> Sol may accept only the repaired contract foundation; changes_required -> record blocker. No automatic rereview and no downstream Stage-D work.",
+      "disposition": "No private data, warning suppression, M7 acceptance, gate release, or downstream Stage-D implementation."
+    },
     {
       "event": "m7_006_two_axis_review_passed",
       "date": "2026-10-24",
