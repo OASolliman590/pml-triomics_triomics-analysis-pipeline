@@ -36,13 +36,26 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_007_contract_foundation_accepted_stage_d_closed",
+    "status": "m7_008_b_t07_native_provenance_authorized",
     "last_reconciled": "2026-10-24",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Astra-low passed snapshot b29c3aa with Critical 0, Important 0, Minor 0 and closed M7-006-ASTRA-01. Sol accepted only the combined M7-004/M7-006/M7-007 public synthetic provenance contract foundation. No run-owned worker or handoff remains active. D-T01, M7 and all Stage-D work remain closed in this run."
+    "disposition": "Omar authorized a new bounded cycle. Sol selected B-T07 native producer provenance as the earliest legal seam and rejected legacy migration for the current historical B handoff because complete immutable proof is absent. Worktree and Luna dispatch are pending. D-T01, M7 and all Stage-D work remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_008_b_t07_native_provenance_authorized",
+      "date": "2026-10-24",
+      "authority": "Omar authorized a bounded cycle to select and implement the next legal producer-provenance or migration seam.",
+      "selection": "B-T07 native Stage Handoff Provenance producer seam",
+      "rejected_route": "Deterministic migration is ineligible because the historical B handoff lacks complete immutable proof for required metadata, unit/design, preprocessing, and method-state roles.",
+      "fixed_point": "3c11c9c735fc8c86397d9680c10cb147cd2da00f",
+      "change_record": "docs/implementation/change-records/M7-008-b-t07-native-provenance-producer-seam.md",
+      "allowlist": ["R/results_b.R", "R/export_b.R", "tests/testthat/test-B-T07.R", "docs/implementation/registrations/B-T07.json"],
+      "review_route": "public CLI and post-stage RED/GREEN -> two-axis Sol-high review -> serial integration -> focused B tests -> one full source suite",
+      "allowed_next_transition": "Create one fresh managed worktree and dispatch one fresh Luna-max implementer.",
+      "disposition": "No private data, migration, C/D edit, shared registration, acceptance, gate release, or Stage-D work."
+    },
     {
       "event": "m7_007_astra_pass_contract_foundation_accepted_stage_d_closed",
       "date": "2026-10-24",

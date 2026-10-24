@@ -289,6 +289,18 @@ remains unchanged as a candidate handoff; no post-audit product mutation was
 made. D-T01, M7, producer wiring, migration execution, D verification/publication,
 and every Stage-D successor remain closed in this run.
 
+Omar then authorized a new bounded cycle to select and implement the next legal
+producer-provenance or migration seam. Sol selected B-T07 native provenance as
+M7-008. The historical public B handoff is not eligible for deterministic
+migration because it lacks complete immutable proof for required metadata,
+unit/design, preprocessing, and method-state roles; D may not reconstruct those
+facts. The authorized route is native regeneration from exact same-run public
+synthetic objects. The change record is
+`change-records/M7-008-b-t07-native-provenance-producer-seam.md`. One fresh
+isolated Luna-max worker may edit only `R/results_b.R`, `R/export_b.R`, the
+B-T07 focused test file, and its registration request. C-06, migration, D
+verification/publication, D-T01, M7, and every Stage-D successor remain closed.
+
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
 `tests/testthat/test-C-05.R`: update the obsolete unaccepted-registration
@@ -561,11 +573,11 @@ Do not resume `/root/m7_003_contract_luna` or integrate its files directly.
 M7-007 immutable snapshot `b29c3aa` passed its single fresh Astra-low audit with
 Critical 0, Important 0, Minor 0. Sol accepted only the combined
 M7-004/M7-006/M7-007 public synthetic provenance contract foundation. No worker
-or handoff is active. Resume only on Omar's explicit authorization of a new
-bounded cycle; reconcile the accepted contract foundation before selecting the
-next legal producer-provenance or migration step. Do not start B-T07/C-06
-producer provenance, D verification/publication, migration execution, D-T01
-acceptance, M7 release, or any Stage-D successor as part of the completed
-M7-007 run.
+or handoff is active. M7-008 is authorized for the B-T07 native producer seam.
+Resume by creating one fresh managed worktree at authorization commit and
+dispatching one fresh Luna-max worker against
+`change-records/M7-008-b-t07-native-provenance-producer-seam.md`. Do not start
+C-06 provenance, D verification/publication, migration execution, D-T01
+acceptance, M7 release, or any Stage-D successor in parallel.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.
