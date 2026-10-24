@@ -220,5 +220,5 @@
     "M7 release",
     "every Stage-D successor"
   ],
-  "next_gate": "Sol review and two-axis code review against 5dcc25f; only after both pass may Sol integrate serially and prepare an immutable snapshot for the M7-004 acceptance audit. No gate is released by this candidate."
+  "next_gate": "Sol performs the two-axis review of the M7-007 candidate against product fixed point e4aed59. Only after both axes pass may Sol integrate serially, run focused verification and one full source suite, then prepare an immutable snapshot for one fresh, read-only Astra-low acceptance audit. No gate is released by this candidate."
 }
