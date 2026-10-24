@@ -34,41 +34,25 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "worker": "/root/m7_007_standards_review",
-      "role": "fresh read-only Sol-high Standards reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "candidate_commit": "b34df9f5d93ca60d74f690a2e86e5f416547fec6"
-    },
-    {
-      "worker": "/root/m7_007_spec_review",
-      "role": "fresh read-only Sol-high Spec reviewer",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "candidate_commit": "b34df9f5d93ca60d74f690a2e86e5f416547fec6"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_007_two_axis_review_active",
+    "status": "m7_007_two_axis_review_passed_integration_pending",
     "last_reconciled": "2026-10-24",
-    "active_handoffs": [
-      {
-        "worker": "/root/m7_007_standards_review",
-        "candidate_commit": "b34df9f5d93ca60d74f690a2e86e5f416547fec6",
-        "brief": "docs/implementation/reviews/2026-10-24-m7-007-two-axis-review-brief.md"
-      },
-      {
-        "worker": "/root/m7_007_spec_review",
-        "candidate_commit": "b34df9f5d93ca60d74f690a2e86e5f416547fec6",
-        "brief": "docs/implementation/reviews/2026-10-24-m7-007-two-axis-review-brief.md"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M7-007 candidate b34df9f is focused-green and clean after one registration-only repair. Fresh independent Standards and Spec reviewers are active against product fixed point e4aed59. No integration or acceptance occurs unless both axes pass; Stage D remains closed."
+    "disposition": "Both M7-007 review axes passed candidate b34df9f. Standards: Critical 0, Important 0, Minor 1 nonblocking duplicated test setup; Spec: Critical 0, Important 0, Minor 0. Both return ready_to_integrate yes. Serial integration, focused Sol verification, and one full source suite are next; Stage D remains closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_007_two_axis_review_passed",
+      "date": "2026-10-24",
+      "candidate_commits": ["0b1fcbdbb321a8e6caa002d19e769d693d53d2bd", "b34df9f5d93ca60d74f690a2e86e5f416547fec6"],
+      "standards": "pass; Critical 0, Important 0, Minor 1 nonblocking duplicated-test-setup smell; ready_to_integrate yes",
+      "spec": "pass; Critical 0, Important 0, Minor 0; ready_to_integrate yes",
+      "review_ref": "docs/implementation/reviews/2026-10-24-m7-007-two-axis-review.md",
+      "allowed_next_transition": "Serially integrate both candidate commits, verify exact three-file result, rerun the focused suite, then run one full source suite.",
+      "disposition": "Review pass only; no private data, acceptance, gate release, or Stage-D work."
+    },
     {
       "event": "m7_007_candidate_two_axis_review_dispatched",
       "date": "2026-10-24",
