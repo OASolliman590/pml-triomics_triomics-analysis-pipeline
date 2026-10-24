@@ -55,6 +55,7 @@
       "residual_failure": "B-T07 AC3 direct caller_matrix_unverified export is fail-closed with reason partial while the existing assertion expects incomplete.",
       "review": "not dispatched because focused GREEN was not achieved",
       "integration": "not performed",
+      "worktree": "archived with a recoverable snapshot at /Users/megastore/.codex/worktrees/m7-008-bt07-provenance/PML MultiOmics Analysis Pipeline",
       "blocker_ref": "docs/implementation/reviews/2026-10-24-m7-008-b-t07-producer-blocker.md",
       "allowed_next_transition": "A later explicitly authorized change record must adjudicate the AC3 partial-versus-incomplete contract before another implementation cycle.",
       "disposition": "M7-008 blocked; C-06 provenance, migration, D verification/publication, D-T01, M7, G7, and all Stage-D work remain closed."

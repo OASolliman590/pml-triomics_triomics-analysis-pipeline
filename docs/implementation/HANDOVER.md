@@ -331,6 +331,8 @@ fail-closed with reason `partial`, while the existing assertion expects
 targeted repairs are consumed, so M7-008 is blocked without independent review
 or integration. See
 `reviews/2026-10-24-m7-008-b-t07-producer-blocker.md`.
+The managed M7-008 worktree was archived with its recoverable candidate
+snapshot after the blocker receipt was committed.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
@@ -609,7 +611,8 @@ unintegrated and blocked after the initial implementation plus both permitted
 repairs. Native B provenance and its envelope validate, but B-T07 remains red
 on the AC3 `partial` versus `incomplete` state label. No Standards/Spec review
 was dispatched because focused GREEN was not achieved. No run-owned worker or
-handoff remains active. Literal resume instruction: reconcile M7-008 blocker
+handoff remains active; the managed M7-008 worktree is archived. Literal resume
+instruction: reconcile M7-008 blocker
 `8745f22` by explicitly adjudicating the AC3 `partial` versus `incomplete`
 contract in a newly authorized change record before any new implementation; do
 not integrate this candidate or start C-06 provenance, D
