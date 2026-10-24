@@ -34,15 +34,45 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "worker": "/root/m7_008_bt07_provenance_luna",
+      "role": "fresh isolated Luna-max B-T07 native provenance implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "base_commit": "0d96c57",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-008-bt07-provenance/PML MultiOmics Analysis Pipeline",
+      "scope": "four-file M7-008 allowlist; public-seam TDD; no full suite or downstream work"
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_008_b_t07_native_provenance_authorized",
+    "status": "m7_008_b_t07_native_provenance_implementation_active",
     "last_reconciled": "2026-10-24",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "worker": "/root/m7_008_bt07_provenance_luna",
+        "base_commit": "0d96c57",
+        "worktree": "/Users/megastore/.codex/worktrees/m7-008-bt07-provenance/PML MultiOmics Analysis Pipeline",
+        "brief": "docs/implementation/change-records/M7-008-b-t07-native-provenance-producer-seam.md",
+        "allowed_next_transition": "Clean focused-green candidate -> Sol inspection -> two-axis read-only review."
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar authorized a new bounded cycle. Sol selected B-T07 native producer provenance as the earliest legal seam and rejected legacy migration for the current historical B handoff because complete immutable proof is absent. Worktree and Luna dispatch are pending. D-T01, M7 and all Stage-D work remain closed."
+    "disposition": "Fresh isolated Luna-max worker /root/m7_008_bt07_provenance_luna is active on the four-file M7-008 B-T07 native provenance seam from base 0d96c57. D-T01, M7 and all Stage-D work remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_008_b_t07_luna_dispatched",
+      "date": "2026-10-24",
+      "worker": "/root/m7_008_bt07_provenance_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "base_commit": "0d96c57",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-008-bt07-provenance/PML MultiOmics Analysis Pipeline",
+      "allowlist": ["R/results_b.R", "R/export_b.R", "tests/testthat/test-B-T07.R", "docs/implementation/registrations/B-T07.json"],
+      "allowed_next_transition": "Focused GREEN and a clean commit -> Sol inspection -> parallel Standards and Spec review.",
+      "disposition": "No full suite, private data, schema/contract edit, C/D change, shared registration, acceptance, gate release, or Stage-D work in the worker turn."
+    },
     {
       "event": "m7_008_b_t07_native_provenance_authorized",
       "date": "2026-10-24",

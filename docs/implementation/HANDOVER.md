@@ -300,6 +300,11 @@ synthetic objects. The change record is
 isolated Luna-max worker may edit only `R/results_b.R`, `R/export_b.R`, the
 B-T07 focused test file, and its registration request. C-06, migration, D
 verification/publication, D-T01, M7, and every Stage-D successor remain closed.
+Worker `/root/m7_008_bt07_provenance_luna` is active from base `0d96c57` in
+managed worktree
+`/Users/megastore/.codex/worktrees/m7-008-bt07-provenance/PML MultiOmics Analysis Pipeline`.
+Its next legal transition is a clean focused-green candidate followed by Sol
+inspection and the two-axis read-only review; it cannot accept or integrate.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
@@ -573,11 +578,12 @@ Do not resume `/root/m7_003_contract_luna` or integrate its files directly.
 M7-007 immutable snapshot `b29c3aa` passed its single fresh Astra-low audit with
 Critical 0, Important 0, Minor 0. Sol accepted only the combined
 M7-004/M7-006/M7-007 public synthetic provenance contract foundation. No worker
-or handoff is active. M7-008 is authorized for the B-T07 native producer seam.
-Resume by creating one fresh managed worktree at authorization commit and
-dispatching one fresh Luna-max worker against
-`change-records/M7-008-b-t07-native-provenance-producer-seam.md`. Do not start
-C-06 provenance, D verification/publication, migration execution, D-T01
-acceptance, M7 release, or any Stage-D successor in parallel.
+or handoff from M7-007 remains active. M7-008 worker
+`/root/m7_008_bt07_provenance_luna` is active for the B-T07 native producer seam
+in the managed worktree recorded above. Resume by reconciling that worker's
+turn; on focused GREEN inspect the exact four-file diff and dispatch fresh
+parallel Standards and Spec reviews. Do not start C-06 provenance, D
+verification/publication, migration execution, D-T01 acceptance, M7 release,
+or any Stage-D successor in parallel.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.
