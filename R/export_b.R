@@ -619,7 +619,8 @@ triomics_b07_prov_embedded_entity <- function(role, entity_id, value, study_id, 
 triomics_b07_prov_artifact_entity <- function(role, entity_id, payload_path, envelope_path,
                                               study_id, scope = list(), generated_by_activity_id,
                                               derived_from_entity_ids = character(),
-                                              storage_form = "enveloped_artifact", member_of_entity_id = NULL) {
+                                              storage_form = "enveloped_artifact", member_of_entity_id = NULL,
+                                              row_identity_sha256 = NULL, column_identity_sha256 = NULL) {
   if (!file.exists(payload_path) || !file.exists(envelope_path) ||
       !isTRUE(triomics_validate_envelope(envelope_path))) {
     triomics_b07_abort("B_EXPORT_INCOMPLETE", "A required B provenance artifact lacks verified persisted bytes.",
@@ -641,7 +642,9 @@ triomics_b07_prov_artifact_entity <- function(role, entity_id, payload_path, env
       size_bytes = file.info(payload_path)$size,
       generated_by_activity_id = generated_by_activity_id,
       derived_from_entity_ids = derived_from_entity_ids,
-      member_of_entity_id = member_of_entity_id
+      member_of_entity_id = member_of_entity_id,
+      row_identity_sha256 = row_identity_sha256,
+      column_identity_sha256 = column_identity_sha256
     ))
   }
   triomics_b07_prov_entity(
@@ -654,7 +657,9 @@ triomics_b07_prov_artifact_entity <- function(role, entity_id, payload_path, env
     artifact_payload_sha256 = payload_sha256,
     generated_by_activity_id = generated_by_activity_id,
     derived_from_entity_ids = derived_from_entity_ids,
-    member_of_entity_id = member_of_entity_id
+    member_of_entity_id = member_of_entity_id,
+    row_identity_sha256 = row_identity_sha256,
+    column_identity_sha256 = column_identity_sha256
   )
 }
 
@@ -828,6 +833,7 @@ triomics_b07_build_provenance_profile <- function(context, config_sha256, bundle
     entity_id <- triomics_b07_prov_entity_id("source_manifest", list(source_id = source_id, sha256 = source_file$sha256))
     add_entity(triomics_b07_prov_embedded_entity(
       "source_manifest", entity_id, manifest_value, study_id,
+      triomics_b07_prov_scope(study_id),
       generated_by_activity_id = NULL, schema_uri = "urn:triomics:source-manifest:identity:1.0"
     ))
   }
@@ -886,8 +892,10 @@ triomics_b07_build_provenance_profile <- function(context, config_sha256, bundle
     block <- resolved$blocks[[block_id]]
     assay <- block$assay
     if (!is.matrix(assay) || is.null(rownames(assay)) || is.null(colnames(assay)) ||
-        !identical(rownames(assay), as.character(block$feature_keys)) ||
-        !identical(colnames(assay), as.character(block$sample_ids))) {
+        !identical(unname(as.character(rownames(assay))),
+                   unname(as.character(block$feature_keys))) ||
+        !identical(unname(as.character(colnames(assay))),
+                   unname(as.character(block$sample_ids)))) {
       triomics_b07_abort("B_EXPORT_INCOMPLETE", "A resolved matrix has no complete keyed same-run identity.",
                          block_id, "Preserve the exact resolved feature and unit keys from the fit.")
     }

@@ -508,6 +508,58 @@ testthat::test_that("B-T07 integrated CLI writes a verified same-run matrix hand
   testthat::expect_true(isTRUE(triomics_validate_envelope(acceptance_envelope_path)))
 })
 
+testthat::test_that("B provenance preserves retained list-of-records unit identity", {
+  records <- list(
+    list(unit_id = "unit-b", unit_type = "sample", source_sample_ids = c("sample-b", "sample-b-extra"),
+         subject_id = "subject-b", representation_id = "levels"),
+    list(unit_id = "unit-a", unit_type = "sample", source_sample_ids = "sample-a",
+         subject_id = "subject-a", representation_id = "levels")
+  )
+  normalized <- triomics_b_provenance_unit_map(
+    ingested = NULL, analysis = NULL, resolved = list(unit_map = records)
+  )
+  testthat::expect_s3_class(normalized, "data.frame")
+  if (!is.data.frame(normalized)) return(invisible(NULL))
+
+  testthat::expect_setequal(names(normalized), c(
+    "unit_id", "unit_type", "source_sample_ids", "subject_id", "representation_id"
+  ))
+  testthat::expect_identical(as.character(normalized$unit_id), c("unit-b", "unit-a"))
+  testthat::expect_identical(as.character(normalized$representation_id), c("levels", "levels"))
+  testthat::expect_identical(as.character(normalized$unit_type), c("sample", "sample"))
+  testthat::expect_identical(as.character(normalized$subject_id), c("subject-b", "subject-a"))
+  testthat::expect_identical(lapply(normalized$source_sample_ids, as.character),
+                             list(c("sample-b", "sample-b-extra"), "sample-a"))
+})
+
+testthat::test_that("B provenance artifact entities retain ordered matrix identity digests", {
+  root <- t07_test_root("artifact-matrix-identity")
+  payload <- list(study_id = "synthetic-study", value = "public fixture")
+  config_sha256 <- triomics_hash_text("synthetic B-T07 artifact config")
+  row_identity_sha256 <- paste(rep("a", 64L), collapse = "")
+  column_identity_sha256 <- paste(rep("b", 64L), collapse = "")
+
+  entities <- lapply(c("enveloped_artifact", "file"), function(storage_form) {
+    path <- file.path(root, paste0(storage_form, ".json"))
+    t07_write_artifact(payload, path, "block_results",
+                       paste0("synthetic-", storage_form), config_sha256)
+    triomics_b07_prov_artifact_entity(
+      role = "represented_matrix", entity_id = paste0("matrix-", storage_form),
+      payload_path = path, envelope_path = sub("\\.json$", ".envelope.json", path),
+      study_id = "synthetic-study", scope = list(analysis_id = "synthetic-analysis"),
+      generated_by_activity_id = "synthetic-export",
+      storage_form = storage_form,
+      row_identity_sha256 = row_identity_sha256,
+      column_identity_sha256 = column_identity_sha256
+    )
+  })
+
+  testthat::expect_true(all(vapply(entities, function(entity) {
+    identical(entity$row_identity_sha256, row_identity_sha256) &&
+      identical(entity$column_identity_sha256, column_identity_sha256)
+  }, logical(1L))))
+})
+
 testthat::test_that("B-T07 exact CLI emits a validated native StageHandoffProvenance frame", {
   root <- t07_test_root("native-provenance-cli")
   run <- t07_cli_smoke(t07_ticket("B-T07.yaml"), root)

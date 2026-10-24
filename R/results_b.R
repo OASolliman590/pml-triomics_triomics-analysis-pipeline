@@ -304,7 +304,38 @@ triomics_b_finalize_public_result_identity <- function(payload) {
 }
 
 triomics_b_provenance_unit_map <- function(ingested, analysis, resolved) {
-  if (!is.null(resolved$unit_map)) return(resolved$unit_map)
+  unit_map <- resolved$unit_map
+  if (!is.null(unit_map)) {
+    if (is.data.frame(unit_map)) return(unit_map)
+    valid_records <- is.list(unit_map) && length(unit_map) > 0L &&
+      all(vapply(unit_map, function(record) {
+        is.list(record) && !is.null(names(record)) && length(names(record)) > 0L &&
+          !anyNA(names(record)) && all(nzchar(names(record))) && !anyDuplicated(names(record))
+      }, logical(1L)))
+    if (!valid_records) {
+      triomics_b_abort("B_PROVENANCE_UNIT_MAP", "The resolved analysis unit map is not a keyed record list.",
+                       "analysis_unit_map", "Preserve a data-frame unit map or the exact named records returned by the resolved fit.")
+    }
+    field_names <- sort(unique(unlist(lapply(unit_map, names), use.names = FALSE)), method = "radix")
+    if (!all(c("unit_id", "representation_id") %in% field_names)) {
+      triomics_b_abort("B_PROVENANCE_UNIT_MAP", "The resolved analysis unit map omits a required identity field.",
+                       "analysis_unit_map", "Preserve unit_id and representation_id from the exact resolved fit.")
+    }
+    columns <- stats::setNames(lapply(field_names, function(field) {
+      present <- vapply(unit_map, function(record) field %in% names(record), logical(1L))
+      values <- lapply(unit_map, function(record) {
+        if (field %in% names(record)) record[[field]] else NULL
+      })
+      scalar_atomic <- all(present) && all(vapply(values, function(value) {
+        is.atomic(value) && !is.object(value) && is.null(dim(value)) &&
+          length(value) == 1L && is.null(names(value))
+      }, logical(1L))) && length(unique(vapply(values, typeof, character(1L)))) == 1L
+      if (scalar_atomic) unname(unlist(values, recursive = FALSE, use.names = FALSE)) else I(values)
+    }), field_names)
+    normalized <- as.data.frame(columns, stringsAsFactors = FALSE, optional = TRUE)
+    rownames(normalized) <- NULL
+    return(normalized)
+  }
 
   metadata <- ingested$sample_metadata
   sample_ids <- as.character(metadata$sample_id)

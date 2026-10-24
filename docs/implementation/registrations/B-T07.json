@@ -75,7 +75,7 @@
     "file": "R/cli.R",
     "entrypoint": "triomics_b07_cli_after_stage_b(args, stage_b_result)",
     "ordering": "After a successful non-validation Stage B run and after the registered B-T09 and B-T08 output hooks, so the B-T07 bundle can verify all requested clinical artifacts.",
-    "current_blocker": "The exact B-T07 post-B CLI path is present, but the initial native producer attempt fails closed with B_EXPORT_INCOMPLETE: A resolved matrix has no complete keyed same-run identity. The hook therefore emits neither native provenance file. R/cli.R remains outside this packet's edit allowlist."
+    "current_blocker": "Repair 2 forwards nullable ordered row/column identity digests through both artifact storage branches and supplies the required study/scope fields on source_manifest entities. The exact B-T07 CLI now writes and validates its native provenance profile and envelope. The one remaining B-T07 assertion mismatch is AC3: its direct caller_matrix_unverified export has no same-run provenance_context, so the candidate is correctly fail-closed as partial while the test expects incomplete. No expectation change was made because this scenario does not produce a fully constructed native profile proving a product-semantic defect."
   },
   "matrix_provenance": {
     "required_in_memory_field": "stage_b_result$resolved_matrices",
@@ -106,13 +106,13 @@
   "acceptance_blockers": [
     {
       "criterion": "B-T07-AC3",
-      "status": "blocked_initial_candidate_failure",
-      "evidence": "The first native producer candidate does not pass the exact CLI: matrix identity validation aborts before either provenance file is written. The current run proves no complete matrix handoff."
+      "status": "candidate_review_pending_ac3_expectation_mismatch",
+      "evidence": "Exact B-T07 CLI and same-run native profile checks pass after repair 2. The residual AC3 direct-export assertion expects resume reason incomplete, but unverified matrix input has no native provenance_context and the missing frame correctly yields partial/fail-closed reuse."
     },
     {
       "criterion": "B-T07-CLI",
-      "status": "blocked_initial_candidate_failure",
-      "evidence": "The exact B-T07 CLI reaches the post-B hook but exits 2 with B_EXPORT_INCOMPLETE before the native provenance payload/envelope are created."
+      "status": "candidate_review_pending",
+      "evidence": "The exact B-T07 CLI exits 0, emits the native StageHandoffProvenance payload and envelope, passes the public provenance/envelope validators, and retains ordered matrix identity and method-state bindings."
     }
   ],
   "implementation_evidence": {
@@ -126,12 +126,12 @@
       ]
     },
     "green": {
-      "state": "not_achieved",
-      "attempt": "single initial implementation; no repair attempted",
+      "state": "candidate_with_one_residual_ac3_expectation_failure",
+      "attempt": "final authorized repair 2 of 2",
       "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'",
-      "summary": {"fail": 9, "warn": 5, "skip": 0, "pass": 224},
-      "blocking_error": "B_EXPORT_INCOMPLETE: A resolved matrix has no complete keyed same-run identity.",
-      "failed_behavior": "The exact B-T07 CLI did not emit the native profile or envelope. The same matrix identity failure also blocks integrated CLI smoke assertions; the model_hash contrast-ID test consequently finds no profile. One AC3 resume-reason expectation differs (partial observed versus incomplete expected)."
+      "summary": {"fail": 1, "warn": 0, "skip": 0, "pass": 261},
+      "blocking_error": "One AC3 assertion expects same$reason == incomplete but observes partial.",
+      "failed_behavior": "The exact same-run B-T07 CLI, native profile/envelope, matrix/method identity, source mutation, tamper/missing-evidence and model_hash contrast-id checks pass. The remaining AC3 test calls direct export with caller_matrix_unverified input and no same-run provenance_context; missing native provenance keeps the candidate non-reusable and partial. The test still expects incomplete, and its expected status was not changed."
     },
     "directly_affected_stage_b_source_tests": [
       {
@@ -146,9 +146,87 @@
     ],
     "limitations": [
       "All evidence uses public synthetic fixtures only; no scientific-validity claim is established.",
-      "No native profile/envelope was accepted; matrix/method binding, source mutation refusal, missing/tampered provenance reuse refusal, and ordinary model_hash contrast-id behavior remain unverified by a successful CLI run.",
-      "No repairs were attempted after the first post-implementation test run."
+      "The exact same-run B-T07 CLI emits a valid native profile/envelope and passes matrix/method binding, source-mutation refusal, missing/tampered-evidence refusal and ordinary model_hash contrast-id behavior.",
+      "The caller_matrix_unverified AC3 path has no same-run provenance_context and stays fail-closed as partial; its test expects incomplete. No further repair is authorized. The managed-worktree B-T01 write diagnostic remains an environment issue and was not changed."
     ]
+    ,
+    "repair_1": {
+      "red": {
+        "unit_map_regression": {
+          "command": "Rscript --vanilla -e 'pkgload::load_all(\".\", quiet = TRUE); ... testthat::expect_s3_class(normalized, \"data.frame\")'",
+          "summary": {"fail": 1, "warn": 0, "skip": 0, "pass": 0},
+          "cause": "The exact retained resolved$unit_map list was returned as a list rather than normalized to a data frame."
+        },
+        "matrix_identity": {
+          "prior_public_cli_red": "At candidate 62f33c4, the exact B-T07 CLI exited 2 with B_EXPORT_INCOMPLETE: A resolved matrix has no complete keyed same-run identity.",
+          "cause": "Ordered key values matched, but names on the feature-key vectors differed."
+        }
+      },
+      "changes": [
+        "Matrix identity now compares unname(as.character(actual)) and unname(as.character(expected)) with identical(), preserving order and rejecting reordering.",
+        "A non-NULL list of named unit records is converted deterministically to columns, retaining input record order and every field; vector-valued fields remain list columns. The B-T07 fallback remains based only on captured ingested/resolved objects."
+      ],
+      "verification": {
+        "focused_unit_map_check": "The list-record assertions passed after normalization and also ran in test-B-T07.R.",
+        "test_B_T07": {
+          "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'",
+          "summary": {"fail": 9, "warn": 5, "skip": 0, "pass": 231},
+          "first_remaining_product_failure": "A_INTERNAL: unused arguments (row_identity_sha256 = ..., column_identity_sha256 = ...) from triomics_b07_prov_artifact_entity() while creating represented_matrix. That function signature does not accept these arguments. The native profile and envelope are not written.",
+          "other_observed_failure": "The AC3 resume-reason assertion still observes partial where the test expects incomplete; profile creation did not complete, so no semantics relaxation was made."
+        },
+        "public_B_T02_identity_cli": {
+          "commands": 2,
+          "exit_codes": [1, 1],
+          "summary": {"fail": 2, "warn": 2, "skip": 0, "pass": 0},
+          "cause": "Both public B-T02 CLI runs now pass the prior unit-map rejection and reach the same represented_matrix unused-arguments error."
+        }
+      },
+      "status": "blocked_at_first_separate_product_failure",
+      "repairs_remaining_in_this_attempt": 0,
+      "limitations": [
+        "The requested B-T07 full suite remains red; no native profile/envelope was accepted.",
+        "The B-T02 CLI identity outputs remain unsuccessful due to the separate represented_matrix entity-constructor error.",
+        "The managed-worktree write failure at test-B-T01.R:594 remains an environment diagnostic and was not changed."
+      ]
+    },
+    "repair_2": {
+      "red": {
+        "focused_artifact_identity_regression": {
+          "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\", desc = \"B provenance artifact entities retain ordered matrix identity digests\")'",
+          "summary": {"fail": 1, "warn": 0, "skip": 0, "pass": 0},
+          "cause": "triomics_b07_prov_artifact_entity() rejected the represented-matrix caller's row_identity_sha256 and column_identity_sha256 arguments as unused."
+        },
+        "first_full_suite_after_forwarding": "Native profile construction reached the accepted public JSON Schema validator; it rejected both source_manifest entities because the producer omitted study_id and nullable scope fields."
+      },
+      "changes": [
+        "Added nullable row_identity_sha256 and column_identity_sha256 formals to triomics_b07_prov_artifact_entity() and forwarded them to triomics_b07_prov_entity() in both file and enveloped-artifact branches.",
+        "Source-manifest entities now carry triomics_b07_prov_scope(study_id), satisfying the closed public entity schema without inventing role-specific scope values."
+      ],
+      "verification": {
+        "focused_artifact_identity_regression": {"fail": 0, "warn": 0, "skip": 0, "pass": 1},
+        "test_B_T07": {
+          "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'",
+          "summary": {"fail": 1, "warn": 0, "skip": 0, "pass": 261},
+          "passing_behavior": "Exact B-T07 CLI produces a valid provenance payload and envelope; required roles, ordered matrix identities, method identities, predecessor bytes, missing/tampered evidence rejection, post-fit source mutation rejection, model_hash contrast-id treatment and unchanged block-results serialization pass.",
+          "residual_failure": "AC3 direct caller_matrix_unverified export has no same-run provenance_context and therefore no native provenance frame; candidate resume reason is partial (fail-closed) while the assertion expects incomplete. The expectation was not changed because this scenario does not provide a fully constructed valid same-run profile proving current semantics wrong."
+        },
+        "public_B_T02_identity_cli": {
+          "commands": 2,
+          "exit_codes": [0, 0],
+          "test_warnings": 0,
+          "skips": 0,
+          "stdout_notes": ["Coefficients not estimable: condition.unobserved"]
+        },
+        "test_B_T03": {"command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T03.R\")'", "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 286}, "stdout_notes": ["Coefficients not estimable: between_group.unobserved"]}
+      },
+      "status": "candidate_review_pending_with_ac3_expectation_mismatch",
+      "repairs_remaining_in_this_attempt": 0,
+      "limitations": [
+        "All verification used public synthetic fixtures; no scientific-validity claim is established.",
+        "One B-T07 assertion remains red as documented; no further repair, test-expectation relaxation, integration, acceptance or push is authorized.",
+        "The B-T01 fixture write failure under inst/examples/tickets remains an existing managed-worktree permission diagnostic and was not edited or counted as product GREEN."
+      ]
+    }
   },
-  "request": "Sol owns shared CLI/registration files. This single candidate's exact B-T07 CLI run fails closed at same-run matrix identity validation before native provenance files are accepted. Correct that producer failure only in a separately authorized implementation attempt, preserve public block-results serialization, and rerun the acceptance suite. Do not enable C, D, report or all; use public synthetic fixtures only; no private-data access, new dependency or scientific-validity claim is authorized."
+  "request": "Final authorized repair 2 forwards ordered matrix identity digests and supplies source-manifest scope required by the accepted schema. Keep candidate/review_pending with accepted=false; preserve the residual AC3 partial-versus-incomplete assertion evidence. No further repairs, integration, acceptance, C/D/migration work, private data access or push."
 }
