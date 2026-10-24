@@ -181,6 +181,31 @@
       "No full suite, producer wiring, D verification/publication, migration execution, integration, acceptance, or downstream gate was run or released."
     ]
   },
+  "m7_007_collision_free_context_repair": {
+    "change_record": "docs/implementation/change-records/M7-007-collision-free-provenance-context-keys.md",
+    "red": {
+      "command": "Rscript --vanilla -e 'testthat::test_local(filter = \"M7-003-provenance-contract\", reporter = \"summary\")'",
+      "exit_code": 1,
+      "failures": 1,
+      "errors": 0,
+      "warnings": 0,
+      "skips": 0,
+      "evidence": "The valid-schema public B profile split unit/resolved/method context (preparation p\\u001cq, representation r) from represented_matrix/preprocessing_state (preparation p, representation q\\u001cr), then refreshed identity_sha256. The validator accepted it; the expected triomics_error assertion was the only failure. The positive fully covered escaped-identifier context case passed."
+    },
+    "green": {
+      "command": "Rscript --vanilla -e 'testthat::test_local(filter = \"M7-003-provenance-contract\", reporter = \"summary\")'",
+      "exit_code": 0,
+      "failures": 0,
+      "warnings": 0,
+      "skips": 0,
+      "evidence": "Focused M7-003 contract suite completed with DONE. The delimiter-colliding context profile rejected with D_PROVENANCE_INVALID; a fully covered multi-context profile with escaped U+001C remained valid. Existing context, migration, route, cardinality, and canonicalization tests passed."
+    },
+    "limitations": [
+      "Public synthetic contract fixtures only; no private study data or paths were accessed.",
+      "Focused M7-003 suite only; no full suite, producer wiring, D verification/publication, migration execution, integration, acceptance, or downstream Stage-D work was run or released.",
+      "This is software-contract evidence only, not scientific validation or packet acceptance."
+    ]
+  },
   "limitations": [
     "Only public synthetic fixtures were used; no private study data or paths were accessed.",
     "This is software-contract evidence only and is not scientific validation or packet acceptance.",

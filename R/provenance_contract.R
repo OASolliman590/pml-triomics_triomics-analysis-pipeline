@@ -385,7 +385,9 @@ triomics_provenance_assert_sorted_unique <- function(values, label, allow_empty 
 
 triomics_provenance_group_key <- function(entity, fields) {
   if (length(fields) == 0L) return("profile")
-  paste(vapply(fields, function(field) as.character(entity[[field]]), character(1)), collapse = "\034")
+  values <- enc2utf8(vapply(fields, function(field) as.character(entity[[field]]), character(1)))
+  encoded_values <- paste0(nchar(values, type = "bytes"), ":", values)
+  paste0(length(values), ":", paste0(encoded_values, collapse = ""))
 }
 
 triomics_provenance_exactly_one_per <- function(entities, role, fields, required = TRUE) {

@@ -275,6 +275,41 @@ m7_003_test_expect_invalid <- function(profile, payload_id = "provenance-payload
   invisible(result)
 }
 
+m7_003_test_add_covered_context <- function(profile, preparation_context_id,
+                                            representation_id, suffix) {
+  context_roles <- c(
+    "analysis_unit_map", "resolved_analysis", "represented_matrix",
+    "preprocessing_state", "method_state"
+  )
+  extra_entities <- lapply(context_roles, function(role) {
+    index <- which(vapply(
+      profile$identity$entities,
+      function(entity) identical(entity$scientific_role, role),
+      logical(1)
+    ))[[1L]]
+    entity <- profile$identity$entities[[index]]
+    entity$entity_id <- paste0(entity$entity_id, "-", suffix)
+    entity$preparation_context_id <- preparation_context_id
+    entity$representation_id <- representation_id
+    entity
+  })
+  entities <- c(profile$identity$entities, extra_entities)
+  entities <- entities[order(
+    vapply(entities, `[[`, character(1), "scientific_role"),
+    vapply(entities, `[[`, character(1), "entity_type"),
+    vapply(entities, `[[`, character(1), "entity_id"), method = "radix"
+  )]
+  profile$identity$entities <- I(entities)
+  generated_ids <- c(
+    unlist(profile$identity$activities[[1L]]$generated_entity_ids, use.names = FALSE),
+    vapply(extra_entities, `[[`, character(1), "entity_id")
+  )
+  profile$identity$activities[[1L]]$generated_entity_ids <- as.list(
+    sort(generated_ids, method = "radix")
+  )
+  profile
+}
+
 testthat::test_that("JCS matches the RFC 8785 canonical sample and selected Appendix B boundaries", {
   sample <- '{"numbers":[333333333.33333329,1E30,4.50,2e-3,0.000000000000000000000000001],"string":"€$\\u000f\\nA\'B\\\"\\\\\\\"/","literals":[null,true,false]}'
   expected <- '{"literals":[null,true,false],"numbers":[333333333.3333333,1e+30,4.5,0.002,1e-27],"string":"€$\\u000f\\nA\'B\\\"\\\\\\\"/"}'
@@ -758,6 +793,62 @@ testthat::test_that("represented and preprocessing contexts require matching ana
   if (inherits(result, "triomics_error")) {
     testthat::expect_identical(result$code, "D_PROVENANCE_INVALID")
   }
+})
+
+testthat::test_that("delimiter-colliding context tuples are rejected", {
+  profile <- m7_003_test_profile("B")
+  for (role in c("analysis_unit_map", "resolved_analysis", "method_state")) {
+    index <- which(vapply(
+      profile$identity$entities,
+      function(entity) identical(entity$scientific_role, role),
+      logical(1)
+    ))[[1L]]
+    profile$identity$entities[[index]]$preparation_context_id <- "p\u001cq"
+    profile$identity$entities[[index]]$representation_id <- "r"
+  }
+  for (role in c("represented_matrix", "preprocessing_state")) {
+    index <- which(vapply(
+      profile$identity$entities,
+      function(entity) identical(entity$scientific_role, role),
+      logical(1)
+    ))[[1L]]
+    profile$identity$entities[[index]]$preparation_context_id <- "p"
+    profile$identity$entities[[index]]$representation_id <- "q\u001cr"
+  }
+  profile <- m7_003_test_refresh_identity(profile)
+  testthat::expect_true(isTRUE(m7_003_test_schema_valid(profile)))
+
+  result <- tryCatch(
+    triomics_validate_stage_handoff_provenance(
+      profile, "provenance-payload-current", "provenance-envelope-current"
+    ),
+    error = identity
+  )
+  testthat::expect_s3_class(result, "triomics_error")
+  if (inherits(result, "triomics_error")) {
+    testthat::expect_identical(result$code, "D_PROVENANCE_INVALID")
+  }
+})
+
+testthat::test_that("escaped identifiers remain valid across fully covered contexts", {
+  profile <- m7_003_test_profile("B")
+  for (role in c(
+    "analysis_unit_map", "resolved_analysis", "represented_matrix",
+    "preprocessing_state", "method_state"
+  )) {
+    index <- which(vapply(
+      profile$identity$entities,
+      function(entity) identical(entity$scientific_role, role),
+      logical(1)
+    ))[[1L]]
+    profile$identity$entities[[index]]$preparation_context_id <- "p\u001cq"
+    profile$identity$entities[[index]]$representation_id <- "r"
+  }
+  profile <- m7_003_test_add_covered_context(
+    profile, "p", "r", "plain"
+  )
+  testthat::expect_true(isTRUE(m7_003_test_schema_valid(profile)))
+  testthat::expect_true(m7_003_test_validate(profile))
 })
 
 testthat::test_that("multiple represented preparation contexts remain valid when fully covered", {
