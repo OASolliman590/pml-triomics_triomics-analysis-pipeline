@@ -1,6 +1,7 @@
 {
   "packet_id": "B-T07",
-  "status": "registration_requested",
+  "status": "candidate/review_pending",
+  "accepted": false,
   "package": {
     "name": "triomics",
     "version": "0.1.0",
@@ -74,7 +75,7 @@
     "file": "R/cli.R",
     "entrypoint": "triomics_b07_cli_after_stage_b(args, stage_b_result)",
     "ordering": "After a successful non-validation Stage B run and after the registered B-T09 and B-T08 output hooks, so the B-T07 bundle can verify all requested clinical artifacts.",
-    "current_blocker": "R/cli.R currently discards the return value of triomics_execute_stage_b() and has no B-T07 post-B hook. The Stage B return object does not expose the resolved matrices. Consequently the exact B-T07 --stage B CLI command currently writes block-results.json only and cannot create a verified matrix handoff or reproduction record."
+    "current_blocker": "The exact B-T07 post-B CLI path is present, but the initial native producer attempt fails closed with B_EXPORT_INCOMPLETE: A resolved matrix has no complete keyed same-run identity. The hook therefore emits neither native provenance file. R/cli.R remains outside this packet's edit allowlist."
   },
   "matrix_provenance": {
     "required_in_memory_field": "stage_b_result$resolved_matrices",
@@ -88,11 +89,7 @@
       "Hashing an unkeyed matrix or dropping failed/unavailable feature rows"
     ]
   },
-  "integration_changes_requested": [
-    "In R/results_b.R, retain the same-run resolved matrices in the in-memory result as a named resolved_matrices list, without serializing native model objects or changing the public Stage B result artifact.",
-    "In R/cli.R, assign the return value of triomics_execute_stage_b(), run the accepted B-T09 and B-T08 hooks, then call triomics_b07_cli_after_stage_b(args, stage_b_result).",
-    "Export the two packet-owned entrypoints from NAMESPACE. Keep R/stage_registry.R, DESCRIPTION, the configuration schema, and renv.lock unchanged; no new dependency or stage is requested."
-  ],
+  "integration_changes_requested": [],
   "fixture": {
     "path": "inst/examples/tickets/B-T07.yaml",
     "data_class": "synthetic",
@@ -109,14 +106,49 @@
   "acceptance_blockers": [
     {
       "criterion": "B-T07-AC3",
-      "status": "blocked_pending_Sol_hook",
-      "evidence": "The packet cannot prove that a matrix passed to Stage C is the same resolved object used by the B fit until the runner returns that object through the shared post-B hook. Packet tests validate the handoff/hash API and changed-hash refusal using public synthetic inputs only."
+      "status": "blocked_initial_candidate_failure",
+      "evidence": "The first native producer candidate does not pass the exact CLI: matrix identity validation aborts before either provenance file is written. The current run proves no complete matrix handoff."
     },
     {
       "criterion": "B-T07-CLI",
-      "status": "blocked_pending_Sol_hook",
-      "evidence": "The exact B-T07 CLI command has no registered call to triomics_b07_cli_after_stage_b(). The current CLI only writes the Stage B block-results artifact (plus registered predecessor outputs where applicable)."
+      "status": "blocked_initial_candidate_failure",
+      "evidence": "The exact B-T07 CLI reaches the post-B hook but exits 2 with B_EXPORT_INCOMPLETE before the native provenance payload/envelope are created."
     }
   ],
-  "request": "Sol owns NAMESPACE, R/cli.R, R/results_b.R, R/stage_registry.R, DESCRIPTION, shared schemas, manuals and renv.lock. After a successful non-validation Stage B execution and the accepted B-T09/B-T08 output hooks, call triomics_b07_cli_after_stage_b(args, stage_b_result) using the unchanged config/output arguments. Pass resolved_matrices only from resolved$blocks[[block_id]]$assay retained by that same triomics_execute_stage_b() fit run. Its exact public hash is triomics_b_assay_hash(block_id, assay); retain model_hash and representation_hash from public Stage B result rows. Do not re-ingest, refit, reconstruct or synthesize matrices, and do not inspect private/native model objects. The current CLI discards the Stage B return and supplies no resolved matrices, so AC3 and the packet CLI handoff remain blocked until this integration lands and the exact command is rerun. Do not enable stages C, D, report or all; no new dependency or stage registration is requested."
+  "implementation_evidence": {
+    "red": {
+      "stage": "pre-implementation public-seam RED at base 0d96c578a2144c58cf298905aa87c10f78bf3eea",
+      "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'",
+      "summary": {"fail": 2, "warn": 8, "skip": 0, "pass": 218},
+      "assertions": [
+        "Exact B-T07 CLI emits no native stage-handoff-provenance.json payload.",
+        "Exact B-T07 CLI emits no native stage-handoff-provenance.envelope.json envelope."
+      ]
+    },
+    "green": {
+      "state": "not_achieved",
+      "attempt": "single initial implementation; no repair attempted",
+      "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'",
+      "summary": {"fail": 9, "warn": 5, "skip": 0, "pass": 224},
+      "blocking_error": "B_EXPORT_INCOMPLETE: A resolved matrix has no complete keyed same-run identity.",
+      "failed_behavior": "The exact B-T07 CLI did not emit the native profile or envelope. The same matrix identity failure also blocks integrated CLI smoke assertions; the model_hash contrast-ID test consequently finds no profile. One AC3 resume-reason expectation differs (partial observed versus incomplete expected)."
+    },
+    "directly_affected_stage_b_source_tests": [
+      {
+        "file": "tests/testthat/test-B-T01.R",
+        "summary": {"fail": 3, "warn": 3, "skip": 0, "pass": 574},
+        "evidence": "Two B-T02 CLI identity tests fail because the exporter reports that the Stage B runner omitted the exact same-run analysis unit map. A fixture test also cannot write into inst/examples/tickets because the managed worktree is read-only at that path."
+      },
+      {
+        "file": "tests/testthat/test-B-T03.R",
+        "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 286}
+      }
+    ],
+    "limitations": [
+      "All evidence uses public synthetic fixtures only; no scientific-validity claim is established.",
+      "No native profile/envelope was accepted; matrix/method binding, source mutation refusal, missing/tampered provenance reuse refusal, and ordinary model_hash contrast-id behavior remain unverified by a successful CLI run.",
+      "No repairs were attempted after the first post-implementation test run."
+    ]
+  },
+  "request": "Sol owns shared CLI/registration files. This single candidate's exact B-T07 CLI run fails closed at same-run matrix identity validation before native provenance files are accepted. Correct that producer failure only in a separately authorized implementation attempt, preserve public block-results serialization, and rerun the acceptance suite. Do not enable C, D, report or all; use public synthetic fixtures only; no private-data access, new dependency or scientific-validity claim is authorized."
 }

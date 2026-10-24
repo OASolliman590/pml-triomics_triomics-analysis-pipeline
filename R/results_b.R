@@ -303,13 +303,129 @@ triomics_b_finalize_public_result_identity <- function(payload) {
   payload
 }
 
+triomics_b_provenance_unit_map <- function(ingested, analysis, resolved) {
+  if (!is.null(resolved$unit_map)) return(resolved$unit_map)
+
+  metadata <- ingested$sample_metadata
+  sample_ids <- as.character(metadata$sample_id)
+  resolved_block_ids <- names(resolved$blocks)
+  represented_blocks <- lapply(sample_ids, function(sample_id) {
+    resolved_block_ids[vapply(resolved$blocks, function(block) sample_id %in% block$sample_ids,
+                              logical(1))]
+  })
+  names(represented_blocks) <- sample_ids
+  registry <- ingested$sample_registry
+  registry_index <- match(sample_ids, as.character(registry$sample_id))
+  subject_ids <- if (!is.null(analysis$design$subject_id) &&
+                     analysis$design$subject_id %in% names(metadata)) {
+    as.character(metadata[[analysis$design$subject_id]])
+  } else if ("subject_id" %in% names(registry)) {
+    as.character(registry$subject_id[registry_index])
+  } else {
+    rep(NA_character_, length(sample_ids))
+  }
+  visit_ids <- if (!is.null(analysis$design$visit_column) &&
+                   analysis$design$visit_column %in% names(metadata)) {
+    as.character(metadata[[analysis$design$visit_column]])
+  } else if ("visit_id" %in% names(registry)) {
+    as.character(registry$visit_id[registry_index])
+  } else {
+    rep(NA_character_, length(sample_ids))
+  }
+  condition_values <- if (!is.null(analysis$design$condition) &&
+                          analysis$design$condition %in% names(metadata)) {
+    as.character(metadata[[analysis$design$condition]])
+  } else {
+    rep(NA_character_, length(sample_ids))
+  }
+  data.frame(
+    unit_id = sample_ids,
+    representation_id = as.character(analysis$design$representation),
+    subject_id = subject_ids,
+    visit_id = visit_ids,
+    condition = condition_values,
+    eligible = lengths(represented_blocks) > 0L,
+    exclusion_reason = ifelse(lengths(represented_blocks) > 0L, NA_character_,
+                              "absent_from_all_analysis_blocks"),
+    source_sample_ids = I(lapply(sample_ids, identity)),
+    represented_blocks = I(represented_blocks),
+    stringsAsFactors = FALSE
+  )
+}
+
+triomics_b_provenance_source_files <- function(config, config_path) {
+  references <- triomics_check_config_references(config, config_path)
+  inputs <- list()
+  for (source in config$sources) {
+    path <- references$sources[[as.character(source$source_id)]]
+    if (is.null(path) || !file.exists(path)) {
+      triomics_b_abort("B_PROVENANCE_SOURCE", "A configured source file is unavailable before Stage B.",
+                       "sources", "Preserve each declared source file through the Stage B post-stage hook.")
+    }
+    inputs[[length(inputs) + 1L]] <- list(
+      source_id = as.character(source$source_id),
+      role = as.character(source$role),
+      format = as.character(source$format),
+      local_ref = normalizePath(path, winslash = "/", mustWork = TRUE),
+      sha256 = triomics_sha256(path),
+      selection_history = as.character(source$selection_history),
+      selection_evidence_sha256 = triomics_hash_text(as.character(source$selection_evidence))
+    )
+    conversion_ref <- source$conversion_manifest
+    if (!is.null(conversion_ref)) {
+      conversion_path <- triomics_resolve_declared_input(
+        conversion_ref, paste0("sources.", source$source_id, ".conversion_manifest"), references$root
+      )
+      inputs[[length(inputs) + 1L]] <- list(
+        source_id = paste0(as.character(source$source_id), ".conversion_manifest"),
+        role = "conversion_manifest",
+        format = "json",
+        local_ref = normalizePath(conversion_path, winslash = "/", mustWork = TRUE),
+        sha256 = triomics_sha256(conversion_path),
+        selection_history = "not_applicable",
+        selection_evidence_sha256 = triomics_hash_text("conversion_manifest_bytes")
+      )
+    }
+  }
+  metadata_path <- references$metadata
+  if (!any(vapply(inputs, function(input) identical(input$local_ref, metadata_path), logical(1L)))) {
+    inputs[[length(inputs) + 1L]] <- list(
+      source_id = "metadata_file",
+      role = "sample_metadata",
+      format = "configured_metadata",
+      local_ref = normalizePath(metadata_path, winslash = "/", mustWork = TRUE),
+      sha256 = triomics_sha256(metadata_path),
+      selection_history = "not_applicable",
+      selection_evidence_sha256 = triomics_hash_text("metadata_file_bytes")
+    )
+  }
+  if (!length(inputs)) {
+    triomics_b_abort("B_PROVENANCE_SOURCE", "Stage B has no captured source-file evidence.",
+                     "sources", "Preserve source byte hashes from the same Stage B run.")
+  }
+  inputs
+}
+
 triomics_execute_stage_b <- function(config_path, output) {
   if (!is.character(output) || length(output) != 1L || is.na(output) || !nzchar(output)) {
     triomics_b_abort("B_DESIGN_UNSUPPORTED", "Stage B output must be a directory path.", key = "output")
   }
   config <- triomics_read_config(config_path)
   triomics_b_identity_preparation(config)
+  source_files <- triomics_b_provenance_source_files(config, config_path)
   ingested <- triomics_ingest_configured_study(config, config_path)
+  captured_source_hashes <- stats::setNames(
+    vapply(source_files, function(input) as.character(input$sha256), character(1L)),
+    vapply(source_files, function(input) as.character(input$source_id), character(1L))
+  )
+  for (source in ingested$source_manifests) {
+    captured <- captured_source_hashes[[as.character(source$source_id)]]
+    if (is.null(captured) || !identical(as.character(captured), as.character(source$sha256))) {
+      triomics_b_abort("B_PROVENANCE_SOURCE", "A source changed while Stage B was ingesting it.",
+                       as.character(source$source_id),
+                       "Rerun Stage B with unchanged source bytes; provenance cannot rebind a changed input.")
+    }
+  }
   n_fits <- 0L
   for (analysis in config$analyses) {
     block_ids <- triomics_b_characters(analysis$block_ids, "block_ids")
@@ -382,6 +498,42 @@ triomics_execute_stage_b <- function(config_path, output) {
     privacy_class = if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive"
   )
   triomics_write_envelope(envelope, file.path(output, "B", "block-results.envelope.json"))
+  provenance_context <- list(
+    config = config,
+    analysis_spec = analysis,
+    source_manifests = ingested$source_manifests,
+    source_files = source_files,
+    sample_metadata = ingested$sample_metadata,
+    sample_registry = ingested$sample_registry,
+    declared_factor_levels = ingested$declared_factor_levels,
+    feature_registry = ingested$feature_registry,
+    analysis_unit_map = triomics_b_provenance_unit_map(ingested, analysis, resolved),
+    resolved_analysis = resolved,
+    statistics_spec = analysis$statistics,
+    method_state = list(
+      requested_method = if (is.null(analysis$statistics$method)) NULL else as.character(analysis$statistics$method),
+      method = if (is.null(method_metadata$method)) NULL else as.character(method_metadata$method),
+      method_status = as.character(fit$status),
+      unavailable_reason = if (is.null(method_metadata$unavailable_reason)) NULL else method_metadata$unavailable_reason,
+      deqms_status = if (is.null(method_metadata$deqms_status)) NULL else method_metadata$deqms_status,
+      deqms_version = if (is.null(method_metadata$deqms_version)) NULL else as.character(method_metadata$deqms_version),
+      limma_version = if (is.null(fit$limma_version)) NULL else as.character(fit$limma_version),
+      fallback_applied = if (is.null(method_metadata$fallback_applied)) FALSE else isTRUE(method_metadata$fallback_applied),
+      fallback_provenance = if (is.null(method_metadata$fallback_provenance)) NULL else method_metadata$fallback_provenance
+    ),
+    block_results = payload,
+    block_results_path = payload_path,
+    block_results_envelope_path = file.path(output, "B", "block-results.envelope.json"),
+    block_results_sha256 = triomics_sha256(payload_path),
+    block_results_envelope_sha256 = triomics_sha256(file.path(output, "B", "block-results.envelope.json")),
+    run_id = as.character(envelope$run_id),
+    producer_method_ids = unique(c(as.character(analysis$statistics$method),
+                                   as.character(method_metadata$method)))
+  )
+  provenance_context$producer_method_ids <- provenance_context$producer_method_ids[
+    !is.na(provenance_context$producer_method_ids) & nzchar(provenance_context$producer_method_ids)
+  ]
+  provenance_context$producer_method_ids <- sort(unique(provenance_context$producer_method_ids), method = "radix")
   triomics_write_json_atomic(list(
     schema_version = "2.0",
     run_id = "b-t01",
@@ -393,5 +545,5 @@ triomics_execute_stage_b <- function(config_path, output) {
        payload_path = payload_path, limma_version = fit$limma_version,
        resolved_matrices = stats::setNames(lapply(block_ids, function(block_id) {
          resolved$blocks[[block_id]]$assay
-       }), block_ids))
+       }), block_ids), provenance_context = provenance_context)
 }

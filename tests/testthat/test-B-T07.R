@@ -1,6 +1,5 @@
 t07_test_root <- function(label) {
-  project_root <- normalizePath(file.path(getwd(), "../.."), winslash = "/", mustWork = TRUE)
-  base <- file.path(project_root, "artifacts", "acceptance", "B-T07", "testthat")
+  base <- file.path(tempdir(), "triomics-acceptance", "B-T07", "testthat")
   dir.create(base, recursive = TRUE, showWarnings = FALSE)
   path <- tempfile(pattern = paste0(label, "-"), tmpdir = base)
   dir.create(path, recursive = TRUE, showWarnings = FALSE)
@@ -509,6 +508,143 @@ testthat::test_that("B-T07 integrated CLI writes a verified same-run matrix hand
   testthat::expect_true(isTRUE(triomics_validate_envelope(acceptance_envelope_path)))
 })
 
+testthat::test_that("B-T07 exact CLI emits a validated native StageHandoffProvenance frame", {
+  root <- t07_test_root("native-provenance-cli")
+  run <- t07_cli_smoke(t07_ticket("B-T07.yaml"), root)
+  testthat::expect_identical(run$status, 0L, info = paste(run$output, collapse = "\n"))
+
+  handoff_root <- file.path(root, "B", "handoffs")
+  handoff_dirs <- if (dir.exists(handoff_root)) {
+    list.dirs(handoff_root, recursive = FALSE, full.names = TRUE)
+  } else {
+    character()
+  }
+  testthat::expect_length(handoff_dirs, 1L)
+  if (length(handoff_dirs) != 1L) return(invisible(NULL))
+
+  provenance_path <- file.path(handoff_dirs[[1L]], "stage-handoff-provenance.json")
+  provenance_envelope_path <- file.path(handoff_dirs[[1L]], "stage-handoff-provenance.envelope.json")
+  testthat::expect_true(file.exists(provenance_path),
+                        info = "The exact B-T07 CLI emitted no native provenance payload.")
+  testthat::expect_true(file.exists(provenance_envelope_path),
+                        info = "The exact B-T07 CLI emitted no native provenance envelope.")
+  if (!all(file.exists(c(provenance_path, provenance_envelope_path)))) return(invisible(NULL))
+
+  profile <- t07_read_json_safe(provenance_path)
+  envelope <- t07_read_json_safe(provenance_envelope_path)
+  bundle <- t07_read_json_safe(file.path(handoff_dirs[[1L]], "bundle.json"))
+  testthat::expect_true(isTRUE(triomics_validate_stage_handoff_provenance(
+    profile, "b-t07-stage-handoff-provenance", "b-t07-stage-handoff-provenance-envelope"
+  )))
+  testthat::expect_true(isTRUE(triomics_validate_envelope(provenance_envelope_path)))
+  testthat::expect_identical(envelope$payload_sha256, triomics_sha256(provenance_path))
+  testthat::expect_identical(profile$handoff_artifact_id, as.character(bundle$artifact_id))
+  roles <- vapply(profile$identity$entities, `[[`, character(1L), "scientific_role")
+  required_roles <- c(
+    "source_manifest", "normalized_metadata", "feature_registry", "analysis_unit_map",
+    "resolved_analysis", "represented_matrix", "preprocessing_state", "method_state",
+    "predecessor_envelope", "predecessor_payload", "block_results", "family_ledger",
+    "candidate_nominations", "handoff_payload"
+  )
+  testthat::expect_true(all(required_roles %in% roles))
+  testthat::expect_length(profile$identity$declared_routes, 0L)
+  testthat::expect_true(all(vapply(bundle$members, function(member) {
+    is.null(member$path) || !grepl("stage-handoff-provenance", as.character(member$path), fixed = TRUE)
+  }, logical(1L))))
+  matrix_values_path <- file.path(handoff_dirs[[1L]], "stage-c-matrix-values.rds")
+  matrix_values_envelope_path <- file.path(handoff_dirs[[1L]], "stage-c-matrix-values.envelope.json")
+  matrix_values <- readRDS(matrix_values_path)
+  represented <- Filter(function(entity) identical(entity$scientific_role, "represented_matrix"),
+                        profile$identity$entities)
+  testthat::expect_length(represented, 1L)
+  if (length(represented) == 1L) {
+    testthat::expect_identical(represented[[1L]]$digest, triomics_sha256(matrix_values_envelope_path))
+    testthat::expect_identical(represented[[1L]]$artifact_payload_sha256, triomics_sha256(matrix_values_path))
+    testthat::expect_identical(represented[[1L]]$row_identity_sha256,
+                               triomics_b07_prov_ordered_ids_sha256(rownames(matrix_values[["block_1"]])))
+    testthat::expect_identical(represented[[1L]]$column_identity_sha256,
+                               triomics_b07_prov_ordered_ids_sha256(colnames(matrix_values[["block_1"]])))
+  }
+  methods <- Filter(function(entity) identical(entity$scientific_role, "method_state"),
+                    profile$identity$entities)
+  testthat::expect_setequal(vapply(methods, `[[`, character(1L), "method_id"),
+                            unlist(profile$producer$method_ids, use.names = FALSE))
+  block_payload_path <- file.path(root, "B", "block-results.json")
+  block_envelope_path <- file.path(root, "B", "block-results.envelope.json")
+  predecessor <- Filter(function(entity) identical(entity$scientific_role, "predecessor_envelope"),
+                        profile$identity$entities)
+  testthat::expect_identical(predecessor[[1L]]$digest, triomics_sha256(block_envelope_path))
+  testthat::expect_identical(predecessor[[1L]]$artifact_payload_sha256, triomics_sha256(block_payload_path))
+
+  profile_bytes <- readBin(provenance_path, what = "raw", n = file.info(provenance_path)$size)
+  envelope_bytes <- readBin(provenance_envelope_path, what = "raw", n = file.info(provenance_envelope_path)$size)
+  on.exit({
+    writeBin(profile_bytes, provenance_path)
+    writeBin(envelope_bytes, provenance_envelope_path)
+  }, add = TRUE)
+  file.remove(provenance_envelope_path)
+  missing_candidate <- triomics_b07_resume_candidate(file.path(handoff_dirs[[1L]], "bundle.json"))
+  testthat::expect_false(isTRUE(missing_candidate$envelope_present))
+  missing_resume <- t07_attempt_export(
+    output = root, config_path = t07_ticket("B-T07.yaml"), matrices = matrix_values,
+    matrix_source = "stage_b_resolved_blocks", resume = TRUE
+  )
+  testthat::expect_s3_class(missing_resume, "triomics_error")
+  testthat::expect_identical(missing_resume$code, "B_EXPORT_INCOMPLETE")
+  writeBin(envelope_bytes, provenance_envelope_path)
+  writeBin(c(profile_bytes, as.raw(0L)), provenance_path)
+  tampered_candidate <- triomics_b07_resume_candidate(file.path(handoff_dirs[[1L]], "bundle.json"))
+  testthat::expect_false(isTRUE(tampered_candidate$envelope_present))
+  tampered_resume <- t07_attempt_export(
+    output = root, config_path = t07_ticket("B-T07.yaml"), matrices = matrix_values,
+    matrix_source = "stage_b_resolved_blocks", resume = TRUE
+  )
+  testthat::expect_s3_class(tampered_resume, "triomics_error")
+  testthat::expect_identical(tampered_resume$code, "B_EXPORT_INCOMPLETE")
+})
+
+testthat::test_that("B-T07 post-fit source mutation cannot be rebound at the handoff seam", {
+  config_path <- t07_ticket("B-T07.yaml")
+  root <- t07_test_root("source-mutation-after-fit")
+  stage_b_result <- triomics_execute_stage_b(config_path, root)
+  measurement <- Filter(function(source) identical(source$role, "measurement_matrix"),
+                        stage_b_result$provenance_context$source_files)[[1L]]
+  original <- readBin(measurement$local_ref, what = "raw", n = file.info(measurement$local_ref)$size)
+  on.exit(writeBin(original, measurement$local_ref), add = TRUE)
+  writeBin(c(original, as.raw(10L)), measurement$local_ref)
+
+  attempted <- tryCatch(triomics_b07_cli_after_stage_b(
+    args = c("--config", config_path, "--stage", "B", "--output", root),
+    stage_b_result = stage_b_result
+  ), error = function(error) error)
+  testthat::expect_s3_class(attempted, "triomics_error")
+  testthat::expect_identical(attempted$code, "B_EXPORT_SOURCE_CHANGED")
+  testthat::expect_false(dir.exists(file.path(root, "B", "handoffs")))
+})
+
+testthat::test_that("B-T07 treats model_hash as an ordinary legal contrast id", {
+  config_path <- t07_ticket("B-T07.yaml")
+  lines <- readLines(config_path, warn = FALSE)
+  changed <- gsub("contrast_id: treatment_minus_control", "contrast_id: model_hash", lines, fixed = TRUE)
+  testthat::expect_false(identical(lines, changed))
+  writeLines(changed, config_path, useBytes = TRUE)
+  root <- t07_test_root("contrast-id-model-hash")
+  run <- t07_cli_smoke(config_path, root)
+  testthat::expect_identical(run$status, 0L, info = paste(run$output, collapse = "\n"))
+  payload <- t07_read_json_safe(file.path(root, "B", "block-results.json"))
+  testthat::expect_true("model_hash" %in% names(payload$blocks$block_1$contrasts))
+  rows <- t07_item(payload$blocks$block_1$contrasts$model_hash$rows)
+  testthat::expect_identical(as.character(rows$contrast_id), "model_hash")
+  handoff_dirs <- list.dirs(file.path(root, "B", "handoffs"), recursive = FALSE, full.names = TRUE)
+  testthat::expect_length(handoff_dirs, 1L)
+  if (length(handoff_dirs) == 1L) {
+    profile <- t07_read_json_safe(file.path(handoff_dirs[[1L]], "stage-handoff-provenance.json"))
+    testthat::expect_true(isTRUE(triomics_validate_stage_handoff_provenance(
+      profile, "b-t07-stage-handoff-provenance", "b-t07-stage-handoff-provenance-envelope"
+    )))
+  }
+})
+
 testthat::test_that("B-T07 Stage B returns the same-run keyed matrices without serializing them", {
   root <- tempfile("b-t07-same-run-matrices-")
   dir.create(root)
@@ -528,6 +664,10 @@ testthat::test_that("B-T07 Stage B returns the same-run keyed matrices without s
     "preparation_refit", "matrix_origin", "filter_applied", "runtime",
     "blocks", "method_status"
   ))
+  testthat::expect_true(is.list(stage_b_result$provenance_context))
+  testthat::expect_false("provenance_context" %in% names(payload))
+  testthat::expect_false(any(grepl("native_model|fit_model|limma_fit", names(payload), ignore.case = TRUE)))
+  testthat::expect_false("provenance_context" %in% names(payload$blocks))
   result_ids <- character()
   for (block_id in names(payload$blocks)) {
     block <- payload$blocks[[block_id]]

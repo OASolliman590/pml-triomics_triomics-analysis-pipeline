@@ -510,6 +510,842 @@ triomics_b07_resume_decision <- function(candidate, expected_key) {
   triomics_export_resume_decision(candidate, expected_key)
 }
 
+triomics_b07_prov_canonical_value <- function(value) {
+  json <- as.character(jsonlite::toJSON(
+    value, auto_unbox = TRUE, null = "null", digits = NA, pretty = FALSE, force = TRUE
+  ))
+  triomics_jcs_canonicalize_json(json)
+}
+
+triomics_b07_prov_value_sha256 <- function(value) {
+  digest::digest(charToRaw(enc2utf8(triomics_b07_prov_canonical_value(value))),
+                 algo = "sha256", serialize = FALSE)
+}
+
+triomics_b07_prov_ordered_ids_sha256 <- function(values) {
+  values <- as.character(values)
+  if (anyNA(values) || any(!nzchar(values))) {
+    triomics_b07_abort("B_EXPORT_INCOMPLETE", "Provenance ordered identities contain empty values.",
+                       "provenance", "Regenerate the profile from complete keyed same-run objects.")
+  }
+  triomics_b07_prov_value_sha256(unname(as.list(values)))
+}
+
+triomics_b07_prov_entity_id <- function(role, scope_key) {
+  paste0(role, "-", substr(triomics_b07_prov_value_sha256(scope_key), 1L, 20L))
+}
+
+triomics_b07_prov_scope <- function(study_id, analysis_id = NULL, block_id = NULL,
+                                    method_id = NULL, preparation_context_id = NULL,
+                                    representation_id = NULL, route_id = NULL) {
+  list(
+    study_id = as.character(study_id),
+    analysis_id = if (is.null(analysis_id)) NULL else as.character(analysis_id),
+    block_id = if (is.null(block_id)) NULL else as.character(block_id),
+    method_id = if (is.null(method_id)) NULL else as.character(method_id),
+    preparation_context_id = if (is.null(preparation_context_id)) NULL else as.character(preparation_context_id),
+    representation_id = if (is.null(representation_id)) NULL else as.character(representation_id),
+    route_id = if (is.null(route_id)) NULL else as.character(route_id)
+  )
+}
+
+triomics_b07_prov_entity <- function(role, entity_id, study_id, digest,
+                                    scope = list(), storage_form = "embedded_json",
+                                    media_type = "application/json", size_bytes = NULL,
+                                    canonical_schema_uri = "urn:triomics:b-t07:embedded-identity:1.0",
+                                    artifact_id = NULL, artifact_payload_sha256 = NULL,
+                                    generated_by_activity_id = NULL,
+                                    derived_from_entity_ids = character(), member_of_entity_id = NULL,
+                                    row_identity_sha256 = NULL, column_identity_sha256 = NULL) {
+  types <- c(
+    source_manifest = "triomics.source_manifest",
+    normalized_metadata = "triomics.normalized_metadata",
+    feature_registry = "triomics.feature_registry",
+    analysis_unit_map = "triomics.analysis_unit_map",
+    resolved_analysis = "triomics.resolved_analysis",
+    represented_matrix = "triomics.represented_matrix",
+    preprocessing_state = "triomics.preprocessing_state",
+    method_state = "triomics.method_state",
+    predecessor_envelope = "triomics.predecessor_envelope",
+    predecessor_payload = "triomics.predecessor_payload",
+    block_results = "triomics.block_results",
+    family_ledger = "triomics.family_ledger",
+    candidate_nominations = "triomics.candidate_nominations",
+    clinical_evidence = "triomics.clinical_evidence",
+    handoff_payload = "triomics.handoff_payload"
+  )
+  if (!role %in% names(types)) {
+    triomics_b07_abort("B_EXPORT_INCOMPLETE", "The B provenance producer received an unsupported entity role.",
+                       "provenance", "Keep the B-T07 identity within the accepted M7-003 role contract.")
+  }
+  c(list(
+    entity_id = as.character(entity_id),
+    entity_type = unname(types[[role]]),
+    scientific_role = role,
+    schema_version = "1.0",
+    storage_form = storage_form,
+    media_type = media_type,
+    digest_algorithm = "sha256",
+    digest_kind = if (identical(storage_form, "embedded_json")) "rfc8785" else "bytes",
+    digest = as.character(digest),
+    size_bytes = if (identical(storage_form, "embedded_json")) NULL else as.numeric(size_bytes),
+    canonical_schema_uri = if (identical(storage_form, "embedded_json")) canonical_schema_uri else NULL,
+    artifact_id = if (is.null(artifact_id)) NULL else as.character(artifact_id),
+    artifact_payload_sha256 = if (is.null(artifact_payload_sha256)) NULL else as.character(artifact_payload_sha256),
+    generated_by_activity_id = if (is.null(generated_by_activity_id)) NULL else as.character(generated_by_activity_id),
+    derived_from_entity_ids = as.list(sort(unique(as.character(derived_from_entity_ids)), method = "radix")),
+    member_of_entity_id = if (is.null(member_of_entity_id)) NULL else as.character(member_of_entity_id)
+  ), scope, list(
+    row_identity_sha256 = if (is.null(row_identity_sha256)) NULL else as.character(row_identity_sha256),
+    column_identity_sha256 = if (is.null(column_identity_sha256)) NULL else as.character(column_identity_sha256)
+  ))
+}
+
+triomics_b07_prov_embedded_entity <- function(role, entity_id, value, study_id, scope = list(),
+                                              generated_by_activity_id, derived_from_entity_ids = character(),
+                                              row_identity_sha256 = NULL, column_identity_sha256 = NULL,
+                                              schema_uri = "urn:triomics:b-t07:embedded-identity:1.0") {
+  triomics_b07_prov_entity(
+    role = role, entity_id = entity_id, study_id = study_id,
+    digest = triomics_b07_prov_value_sha256(value), scope = scope,
+    generated_by_activity_id = generated_by_activity_id,
+    derived_from_entity_ids = derived_from_entity_ids,
+    row_identity_sha256 = row_identity_sha256,
+    column_identity_sha256 = column_identity_sha256,
+    canonical_schema_uri = schema_uri
+  )
+}
+
+triomics_b07_prov_artifact_entity <- function(role, entity_id, payload_path, envelope_path,
+                                              study_id, scope = list(), generated_by_activity_id,
+                                              derived_from_entity_ids = character(),
+                                              storage_form = "enveloped_artifact", member_of_entity_id = NULL) {
+  if (!file.exists(payload_path) || !file.exists(envelope_path) ||
+      !isTRUE(triomics_validate_envelope(envelope_path))) {
+    triomics_b07_abort("B_EXPORT_INCOMPLETE", "A required B provenance artifact lacks verified persisted bytes.",
+                       role, "Recreate the artifact and ordinary envelope from their accepted producer.")
+  }
+  envelope <- triomics_b07_read_json(envelope_path, paste0(role, ".envelope"))
+  payload_sha256 <- triomics_sha256(payload_path)
+  if (!identical(as.character(envelope$payload_sha256), payload_sha256)) {
+    triomics_b07_abort("B_EXPORT_INCOMPLETE", "A persisted B provenance artifact differs from its envelope.",
+                       role, "Recreate the payload and envelope together from the accepted producer.")
+  }
+  is_envelope <- identical(storage_form, "enveloped_artifact")
+  path <- if (is_envelope) envelope_path else payload_path
+  if (identical(storage_form, "file")) {
+    return(triomics_b07_prov_entity(
+      role = role, entity_id = entity_id, study_id = study_id,
+      digest = payload_sha256, scope = scope,
+      storage_form = "file", media_type = "application/json",
+      size_bytes = file.info(payload_path)$size,
+      generated_by_activity_id = generated_by_activity_id,
+      derived_from_entity_ids = derived_from_entity_ids,
+      member_of_entity_id = member_of_entity_id
+    ))
+  }
+  triomics_b07_prov_entity(
+    role = role, entity_id = entity_id, study_id = study_id,
+    digest = triomics_sha256(path), scope = scope,
+    storage_form = storage_form,
+    media_type = if (grepl("\\.rds$", payload_path)) "application/x-r-serialized" else "application/json",
+    size_bytes = file.info(path)$size,
+    artifact_id = as.character(envelope$artifact_id),
+    artifact_payload_sha256 = payload_sha256,
+    generated_by_activity_id = generated_by_activity_id,
+    derived_from_entity_ids = derived_from_entity_ids,
+    member_of_entity_id = member_of_entity_id
+  )
+}
+
+triomics_b07_validate_provenance_context <- function(context, config_sha256, artifact,
+                                                     matrices = NULL) {
+  required <- c("config", "analysis_spec", "source_manifests", "source_files",
+                "sample_metadata", "sample_registry", "declared_factor_levels",
+                "feature_registry", "analysis_unit_map", "resolved_analysis",
+                "statistics_spec", "method_state", "block_results",
+                "block_results_path", "block_results_envelope_path",
+                "block_results_sha256", "block_results_envelope_sha256", "run_id",
+                "producer_method_ids")
+  if (!is.list(context) || !all(required %in% names(context)) ||
+      !is.list(context$analysis_spec) || !is.list(context$resolved_analysis) ||
+      !length(context$source_files) || !length(context$producer_method_ids)) {
+    triomics_b07_abort("B_EXPORT_INCOMPLETE", "The Stage B runner did not retain its complete same-run provenance context.",
+                       "provenance_context", "Pass only the context returned by the successful Stage B fit.")
+  }
+  if (!identical(as.character(attr(context$config, "config_sha256")), as.character(config_sha256)) ||
+      !identical(as.character(context$block_results_sha256), as.character(artifact$payload_sha256)) ||
+      !identical(as.character(context$block_results_envelope_sha256), as.character(artifact$envelope_sha256)) ||
+      !identical(as.character(context$run_id), as.character(artifact$envelope$run_id)) ||
+      !identical(normalizePath(context$block_results_path, winslash = "/", mustWork = TRUE), artifact$payload_path) ||
+      !identical(normalizePath(context$block_results_envelope_path, winslash = "/", mustWork = TRUE), artifact$envelope_path)) {
+    triomics_b07_abort("B_EXPORT_INCOMPLETE", "The retained Stage B context conflicts with persisted configuration or predecessor bytes.",
+                       "provenance_context", "Use the exact Stage B payload and envelope from the same fit run.")
+  }
+  for (source in context$source_files) {
+    if (!is.list(source) || !triomics_b_string(as.character(source$local_ref)) ||
+        !file.exists(source$local_ref) || dir.exists(source$local_ref) ||
+        triomics_is_symlink(source$local_ref) ||
+        !identical(triomics_sha256(source$local_ref), as.character(source$sha256))) {
+      triomics_b07_abort("B_EXPORT_SOURCE_CHANGED", "A declared Stage B source changed after the fit and before handoff export.",
+                         "source_manifest", "Restore the exact same-run source bytes or rerun Stage B before exporting.")
+    }
+  }
+  if (!is.null(matrices)) {
+    expected <- stats::setNames(lapply(names(context$resolved_analysis$blocks), function(block_id) {
+      context$resolved_analysis$blocks[[block_id]]$assay
+    }), names(context$resolved_analysis$blocks))
+    if (!identical(matrices, expected)) {
+      triomics_b07_abort("B_EXPORT_MATRIX", "The matrix handoff differs from the exact resolved B fit object.",
+                         "matrices", "Pass the unchanged resolved$blocks[[block_id]]$assay values from this fit run.")
+    }
+  }
+  if (!identical(triomics_b07_prov_value_sha256(context$block_results),
+                 triomics_b07_prov_value_sha256(artifact$payload))) {
+    triomics_b07_abort("B_EXPORT_INCOMPLETE", "The in-memory Stage B result context differs from its persisted predecessor payload.",
+                       "block_results", "Regenerate the handoff using the same unmodified Stage B return object.")
+  }
+  invisible(TRUE)
+}
+
+triomics_b07_prov_safe_manifest <- function(source_file, manifest = NULL) {
+  value <- list(
+    source_id = as.character(source_file$source_id),
+    study_id = if (is.null(manifest$study_id)) NULL else as.character(manifest$study_id),
+    role = as.character(source_file$role),
+    format = as.character(source_file$format),
+    source_bytes_sha256 = as.character(source_file$sha256),
+    selection_history = as.character(source_file$selection_history),
+    selection_evidence_sha256 = as.character(source_file$selection_evidence_sha256),
+    conversion_manifest_sha256 = NULL
+  )
+  if (!is.null(manifest)) {
+    conversion <- manifest$conversion_evidence
+    value$manifest = list(
+      source_id = as.character(manifest$source_id),
+      study_id = as.character(manifest$study_id),
+      role = as.character(manifest$role),
+      format = as.character(manifest$format),
+      source_sha256 = as.character(manifest$sha256),
+      original_sha256 = if (is.null(manifest$original_sha256)) NULL else as.character(manifest$original_sha256),
+      original_ref_sha256 = if (is.null(manifest$original_ref)) NULL else triomics_hash_text(as.character(manifest$original_ref)),
+      sheet = if (is.null(manifest$sheet)) NULL else as.character(manifest$sheet),
+      region = if (is.null(manifest$region)) NULL else manifest$region,
+      header_role = if (is.null(manifest$header_role)) NULL else as.character(manifest$header_role),
+      column_roles_sha256 = if (is.null(manifest$column_roles)) NULL else triomics_b07_prov_value_sha256(manifest$column_roles),
+      conversion_evidence = list(
+        mode = if (is.null(conversion$mode)) NULL else as.character(conversion$mode),
+        original_sha256 = if (is.null(conversion$original_sha256)) NULL else as.character(conversion$original_sha256),
+        canonical_sha256 = if (is.null(conversion$canonical_sha256)) NULL else as.character(conversion$canonical_sha256),
+        converter = if (is.null(conversion$converter)) NULL else as.character(conversion$converter),
+        converter_version = if (is.null(conversion$converter_version)) NULL else as.character(conversion$converter_version),
+        sheet = if (is.null(conversion$sheet)) NULL else as.character(conversion$sheet),
+        region = if (is.null(conversion$region)) NULL else conversion$region,
+        formula_derived = if (is.null(conversion$formula_derived)) FALSE else isTRUE(conversion$formula_derived),
+        selection_evidence_sha256 = if (is.null(manifest$selection_evidence_ref)) NULL else
+          triomics_hash_text(as.character(manifest$selection_evidence_ref))
+      )
+    )
+  }
+  value
+}
+
+triomics_b07_prov_result_rows <- function(block_results) {
+  entries <- triomics_b07_claim_entries(block_results)
+  rows <- list()
+  for (entry in entries) {
+    claim <- block_results$blocks[[entry$block_id]]$contrasts[[entry$claim_id]]
+    if (is.null(claim)) claim <- block_results$blocks[[entry$block_id]]$joint_claims[[entry$claim_id]]
+    for (row in entry$rows) {
+      rows[[length(rows) + 1L]] <- list(
+        block_id = as.character(entry$block_id),
+        claim_id = as.character(entry$claim_id),
+        claim_type = as.character(entry$claim_type),
+        contrast_id = if (is.null(row$contrast_id)) NULL else as.character(row$contrast_id),
+        feature_key = if (is.null(row$feature_key)) NULL else as.character(row$feature_key),
+        result_id = if (is.null(row$result_id)) NULL else as.character(row$result_id),
+        model_hash = if (is.null(row$model_hash)) NULL else as.character(row$model_hash),
+        representation_hash = if (is.null(row$representation_hash)) NULL else as.character(row$representation_hash),
+        source_hash = if (is.null(row$source_hash)) NULL else as.character(row$source_hash),
+        count_prior_status = if (!is.null(row$count_prior_status)) as.character(row$count_prior_status) else
+          if (is.null(claim$count_prior_status)) NULL else as.character(claim$count_prior_status),
+        count_prior_ref = if (is.null(row$count_prior_ref)) NULL else triomics_b07_prov_value_sha256(row$count_prior_ref)
+      )
+    }
+  }
+  rows[order(vapply(rows, function(row) paste(row$block_id, row$claim_id, row$feature_key, sep = "\034"), character(1L)),
+             method = "radix")]
+}
+
+triomics_b07_prov_runtime_versions <- function() {
+  components <- c("DEqMS", "R", "V8", "digest", "jsonlite", "limma", "triomics")
+  lapply(components, function(component) {
+    version <- if (identical(component, "R")) {
+      paste(R.version$major, R.version$minor, sep = ".")
+    } else {
+      tryCatch(as.character(utils::packageVersion(component)), error = function(error) "not-installed")
+    }
+    list(component = component, version = version)
+  })
+}
+
+triomics_b07_build_provenance_profile <- function(context, config_sha256, bundle, bundle_path,
+                                                   bundle_envelope_path, block_artifact,
+                                                   family_artifact, nominations_artifact,
+                                                   matrix_artifact, matrix_bindings,
+                                                   clinical_artifacts, clinical_dispositions,
+                                                   repository_commit) {
+  analysis <- context$analysis_spec
+  resolved <- context$resolved_analysis
+  study_id <- as.character(context$block_results$study_id)
+  analysis_id <- as.character(analysis$analysis_id)
+  preparation_context_id <- as.character(analysis$preparation_context_id)
+  representation_id <- as.character(analysis$design$representation)
+  if (is.null(matrix_artifact) || !triomics_b_string(as.character(repository_commit)) ||
+      !grepl("^[0-9a-f]{40,64}$", as.character(repository_commit))) {
+    triomics_b07_abort("B_EXPORT_INCOMPLETE", "Native B provenance requires the exact persisted matrix and repository revision.",
+                       "provenance", "Run the B-T07 producer from a Git revision and preserve its complete matrix handoff.")
+  }
+  source_ids <- character()
+  entities <- list()
+  add_entity <- function(entity) {
+    entities[[length(entities) + 1L]] <<- entity
+    invisible(entity$entity_id)
+  }
+  source_files <- context$source_files
+  for (source_file in source_files) {
+    source_id <- as.character(source_file$source_id)
+    source_ids <- c(source_ids, source_id)
+    hit <- which(vapply(context$source_manifests, function(manifest) {
+      identical(as.character(manifest$source_id), source_id)
+    }, logical(1L)))
+    manifest <- if (length(hit) == 1L) context$source_manifests[[hit[[1L]]]] else NULL
+    if (!is.null(manifest) && !identical(as.character(manifest$sha256), as.character(source_file$sha256))) {
+      triomics_b07_abort("B_EXPORT_SOURCE_CHANGED", "The retained source manifest does not match the Stage B source bytes.",
+                         source_id, "Rerun Stage B with unchanged source bytes before provenance export.")
+    }
+    manifest_value <- triomics_b07_prov_safe_manifest(source_file, manifest)
+    entity_id <- triomics_b07_prov_entity_id("source_manifest", list(source_id = source_id, sha256 = source_file$sha256))
+    add_entity(triomics_b07_prov_embedded_entity(
+      "source_manifest", entity_id, manifest_value, study_id,
+      generated_by_activity_id = NULL, schema_uri = "urn:triomics:source-manifest:identity:1.0"
+    ))
+  }
+  source_ids <- sort(unique(source_ids), method = "radix")
+  analysis_activity <- "b-t07-stage-b-fit"
+  export_activity <- "b-t07-handoff-export"
+  source_entity_ids <- vapply(Filter(function(entity) identical(entity$scientific_role, "source_manifest"), entities),
+                              `[[`, character(1L), "entity_id")
+  provenance_scope <- triomics_b07_prov_scope(study_id, analysis_id = analysis_id,
+                                              preparation_context_id = preparation_context_id,
+                                              representation_id = representation_id)
+  metadata_value <- list(
+    sample_metadata = context$sample_metadata,
+    sample_registry = context$sample_registry,
+    declared_factor_levels = context$declared_factor_levels
+  )
+  metadata_entity_id <- triomics_b07_prov_entity_id("normalized_metadata", analysis_id)
+  add_entity(triomics_b07_prov_embedded_entity(
+    "normalized_metadata", metadata_entity_id, metadata_value, study_id,
+    triomics_b07_prov_scope(study_id, analysis_id = analysis_id),
+    generated_by_activity_id = analysis_activity,
+    derived_from_entity_ids = source_entity_ids,
+    row_identity_sha256 = triomics_b07_prov_ordered_ids_sha256(context$sample_metadata$sample_id),
+    column_identity_sha256 = triomics_b07_prov_ordered_ids_sha256(names(context$sample_metadata)),
+    schema_uri = "urn:triomics:normalized-metadata:identity:1.0"
+  ))
+  unit_map <- context$analysis_unit_map
+  if (!is.data.frame(unit_map) || !"unit_id" %in% names(unit_map)) {
+    triomics_b07_abort("B_EXPORT_INCOMPLETE", "The Stage B runner omitted the exact same-run analysis unit map.",
+                       "analysis_unit_map", "Preserve the resolved unit map in the Stage B fit context.")
+  }
+  unit_entity_id <- triomics_b07_prov_entity_id("analysis_unit_map", list(
+    analysis_id = analysis_id, preparation_context_id = preparation_context_id,
+    representation_id = representation_id
+  ))
+  add_entity(triomics_b07_prov_embedded_entity(
+    "analysis_unit_map", unit_entity_id, unit_map, study_id, provenance_scope,
+    generated_by_activity_id = analysis_activity,
+    derived_from_entity_ids = c(source_entity_ids, metadata_entity_id),
+    row_identity_sha256 = triomics_b07_prov_ordered_ids_sha256(unit_map$unit_id),
+    schema_uri = "urn:triomics:analysis-unit-map:identity:1.0"
+  ))
+  block_ids <- names(resolved$blocks)
+  if (!length(block_ids) || !identical(sort(block_ids, method = "radix"),
+                                        sort(names(matrix_bindings), method = "radix"))) {
+    triomics_b07_abort("B_EXPORT_INCOMPLETE", "Resolved Stage B blocks and persisted matrix bindings disagree.",
+                       "represented_matrix", "Preserve every and only same-run resolved matrix block.")
+  }
+  feature_entities <- list()
+  preprocessing_entities <- list()
+  matrix_entities <- list()
+  config_blocks <- config_blocks_by_id <- context$config$blocks
+  config_block_ids <- vapply(config_blocks_by_id, function(block) as.character(block$block_id), character(1L))
+  names(config_blocks_by_id) <- config_block_ids
+  for (block_id in sort(block_ids, method = "radix")) {
+    block <- resolved$blocks[[block_id]]
+    assay <- block$assay
+    if (!is.matrix(assay) || is.null(rownames(assay)) || is.null(colnames(assay)) ||
+        !identical(rownames(assay), as.character(block$feature_keys)) ||
+        !identical(colnames(assay), as.character(block$sample_ids))) {
+      triomics_b07_abort("B_EXPORT_INCOMPLETE", "A resolved matrix has no complete keyed same-run identity.",
+                         block_id, "Preserve the exact resolved feature and unit keys from the fit.")
+    }
+    registry <- context$feature_registry[as.character(context$feature_registry$block_id) == block_id, , drop = FALSE]
+    if (!nrow(registry) || !setequal(as.character(registry$feature_key), rownames(assay))) {
+      triomics_b07_abort("B_EXPORT_INCOMPLETE", "The FeatureRegistry does not cover the resolved matrix rows.",
+                         block_id, "Preserve the exact same-run FeatureRegistry rows for this block.")
+    }
+    feature_id <- triomics_b07_prov_entity_id("feature_registry", block_id)
+    feature_entities[[block_id]] <- feature_id
+    add_entity(triomics_b07_prov_embedded_entity(
+      "feature_registry", feature_id, registry, study_id,
+      triomics_b07_prov_scope(study_id, block_id = block_id),
+      generated_by_activity_id = analysis_activity,
+      derived_from_entity_ids = c(source_entity_ids, metadata_entity_id),
+      row_identity_sha256 = triomics_b07_prov_ordered_ids_sha256(registry$feature_key),
+      schema_uri = "urn:triomics:feature-registry:identity:1.0"
+    ))
+    cfg_block <- config_blocks_by_id[[block_id]]
+    if (is.null(cfg_block) || is.null(cfg_block$preprocessing) || is.null(cfg_block$measurement)) {
+      triomics_b07_abort("B_EXPORT_INCOMPLETE", "The declared B preprocessing or measurement state is missing.",
+                         block_id, "Preserve the validated configuration state used by the same-run Stage B fit.")
+    }
+    preprocessing_value <- list(
+      block_id = block_id,
+      preparation_context_id = preparation_context_id,
+      measurement = cfg_block$measurement,
+      preprocessing = cfg_block$preprocessing,
+      resolved_feature_scales = stats::setNames(as.list(as.character(block$scales)), as.character(block$feature_keys)),
+      matrix_hash = triomics_b07_matrix_hash(block_id, assay)
+    )
+    preprocessing_id <- triomics_b07_prov_entity_id("preprocessing_state", list(
+      analysis_id = analysis_id, block_id = block_id,
+      preparation_context_id = preparation_context_id, representation_id = representation_id
+    ))
+    preprocessing_entities[[block_id]] <- preprocessing_id
+    add_entity(triomics_b07_prov_embedded_entity(
+      "preprocessing_state", preprocessing_id, preprocessing_value, study_id,
+      triomics_b07_prov_scope(study_id, analysis_id, block_id,
+                              preparation_context_id = preparation_context_id,
+                              representation_id = representation_id),
+      generated_by_activity_id = analysis_activity,
+      derived_from_entity_ids = c(source_entity_ids, metadata_entity_id, feature_id),
+      schema_uri = "urn:triomics:preprocessing-state:identity:1.0"
+    ))
+    matrix_envelope_path <- matrix_artifact$envelope_path
+    matrix_id <- triomics_b07_prov_entity_id("represented_matrix", list(
+      analysis_id = analysis_id, block_id = block_id,
+      preparation_context_id = preparation_context_id, representation_id = representation_id
+    ))
+    matrix_entities[[block_id]] <- matrix_id
+    add_entity(triomics_b07_prov_artifact_entity(
+      "represented_matrix", matrix_id, matrix_artifact$path, matrix_envelope_path,
+      study_id, triomics_b07_prov_scope(study_id, analysis_id, block_id,
+                                        preparation_context_id = preparation_context_id,
+                                        representation_id = representation_id),
+      generated_by_activity_id = export_activity,
+      derived_from_entity_ids = c(feature_id, unit_entity_id, preprocessing_id),
+      row_identity_sha256 = triomics_b07_prov_ordered_ids_sha256(rownames(assay)),
+      column_identity_sha256 = triomics_b07_prov_ordered_ids_sha256(colnames(assay))
+    ))
+  }
+  resolved_row_ids <- unlist(lapply(sort(block_ids, method = "radix"), function(block_id) {
+    paste0(block_id, "::", as.character(resolved$blocks[[block_id]]$feature_keys))
+  }), use.names = FALSE)
+  resolved_column_ids <- sort(unique(unlist(lapply(resolved$blocks, function(block) {
+    as.character(block$sample_ids)
+  }), use.names = FALSE)), method = "radix")
+  resolved_value <- list(
+    study_id = resolved$study_id,
+    analysis_id = resolved$analysis_id,
+    preparation_context_id = resolved$preparation_context_id,
+    representation = resolved$representation,
+    model_plan = resolved$model_plan,
+    blocks = lapply(sort(block_ids, method = "radix"), function(block_id) {
+      block <- resolved$blocks[[block_id]]
+      list(block_id = block_id, feature_keys = as.list(as.character(block$feature_keys)),
+           sample_ids = as.list(as.character(block$sample_ids)),
+           groups = as.list(as.character(block$groups)), scales = as.list(as.character(block$scales)),
+           source_hash = as.character(block$source_hash))
+    })
+  )
+  resolved_entity_id <- triomics_b07_prov_entity_id("resolved_analysis", list(
+    analysis_id = analysis_id, preparation_context_id = preparation_context_id,
+    representation_id = representation_id
+  ))
+  add_entity(triomics_b07_prov_embedded_entity(
+    "resolved_analysis", resolved_entity_id, resolved_value, study_id, provenance_scope,
+    generated_by_activity_id = analysis_activity,
+    derived_from_entity_ids = c(source_entity_ids, metadata_entity_id, unit_entity_id,
+                                unlist(feature_entities, use.names = FALSE)),
+    row_identity_sha256 = triomics_b07_prov_ordered_ids_sha256(resolved_row_ids),
+    column_identity_sha256 = triomics_b07_prov_ordered_ids_sha256(resolved_column_ids),
+    schema_uri = "urn:triomics:resolved-analysis:identity:1.0"
+  ))
+  method_ids <- sort(unique(as.character(context$producer_method_ids)), method = "radix")
+  row_identity <- triomics_b07_prov_result_rows(context$block_results)
+  method_entities <- list()
+  for (method_id in method_ids) {
+    method_value <- list(
+      method_id = method_id,
+      method_state = context$method_state,
+      statistics_spec = context$statistics_spec,
+      deqms_status = context$block_results$deqms_status,
+      result_row_identities = row_identity,
+      represented_matrix_bindings = lapply(sort(names(matrix_bindings), method = "radix"), function(block_id) {
+        binding <- matrix_bindings[[block_id]]
+        list(block_id = block_id, representation_id = binding$representation_id,
+             matrix_hash = binding$matrix_hash, binding_hash = binding$binding_hash,
+             feature_bindings = lapply(binding$feature_bindings, function(feature) {
+               list(feature_key = feature$feature_key, fitted_claims = feature$fitted_claims)
+             }))
+      }),
+      count_metadata_identity = if (is.null(context$statistics_spec$count_metadata)) NULL else
+        triomics_b07_prov_value_sha256(context$statistics_spec$count_metadata)
+    )
+    method_id_entity <- triomics_b07_prov_entity_id("method_state", list(
+      analysis_id = analysis_id, method_id = method_id,
+      preparation_context_id = preparation_context_id, representation_id = representation_id
+    ))
+    method_entities[[method_id]] <- method_id_entity
+    add_entity(triomics_b07_prov_embedded_entity(
+      "method_state", method_id_entity, method_value, study_id,
+      triomics_b07_prov_scope(study_id, analysis_id = analysis_id, method_id = method_id,
+                              preparation_context_id = preparation_context_id,
+                              representation_id = representation_id),
+      generated_by_activity_id = analysis_activity,
+      derived_from_entity_ids = c(source_entity_ids, metadata_entity_id, unit_entity_id,
+                                  resolved_entity_id),
+      schema_uri = "urn:triomics:method-state:identity:1.0"
+    ))
+  }
+  block_envelope_entity_id <- triomics_b07_prov_entity_id("predecessor_envelope", "stage-b-block-results")
+  predecessor_payload_entity_id <- triomics_b07_prov_entity_id("predecessor_payload", "stage-b-block-results")
+  block_results_entity_id <- triomics_b07_prov_entity_id("block_results", "stage-b-block-results")
+  block_scope <- provenance_scope
+  add_entity(triomics_b07_prov_artifact_entity(
+    "predecessor_envelope", block_envelope_entity_id, block_artifact$payload_path,
+    block_artifact$envelope_path, study_id, block_scope,
+    generated_by_activity_id = analysis_activity,
+    derived_from_entity_ids = c(source_entity_ids, metadata_entity_id, resolved_entity_id,
+                                unlist(method_entities, use.names = FALSE))
+  ))
+  add_entity(triomics_b07_prov_artifact_entity(
+    "predecessor_payload", predecessor_payload_entity_id, block_artifact$payload_path,
+    block_artifact$envelope_path, study_id, block_scope,
+    generated_by_activity_id = analysis_activity,
+    derived_from_entity_ids = c(source_entity_ids, resolved_entity_id),
+    storage_form = "file", member_of_entity_id = block_envelope_entity_id
+  ))
+  add_entity(triomics_b07_prov_artifact_entity(
+    "block_results", block_results_entity_id, block_artifact$payload_path,
+    block_artifact$envelope_path, study_id, block_scope,
+    generated_by_activity_id = analysis_activity,
+    derived_from_entity_ids = c(source_entity_ids, resolved_entity_id,
+                                unlist(method_entities, use.names = FALSE))
+  ))
+  family_entity_id <- triomics_b07_prov_entity_id("family_ledger", "b-t07-family-ledger")
+  nominations_entity_id <- triomics_b07_prov_entity_id("candidate_nominations", "b-t07-candidate-nominations")
+  add_entity(triomics_b07_prov_artifact_entity(
+    "family_ledger", family_entity_id, family_artifact$path, family_artifact$envelope_path,
+    study_id, block_scope, generated_by_activity_id = export_activity,
+    derived_from_entity_ids = c(block_results_entity_id, predecessor_payload_entity_id)
+  ))
+  add_entity(triomics_b07_prov_artifact_entity(
+    "candidate_nominations", nominations_entity_id, nominations_artifact$path,
+    nominations_artifact$envelope_path, study_id, block_scope,
+    generated_by_activity_id = export_activity,
+    derived_from_entity_ids = c(block_results_entity_id, predecessor_payload_entity_id)
+  ))
+  declared_routes <- list()
+  route_entity_ids <- character()
+  objectives <- if (is.list(context$config$clinical)) context$config$clinical$objectives else list()
+  if (is.null(objectives)) objectives <- list()
+  for (objective in objectives) {
+    route_id <- if (is.null(objective$objective_id)) NULL else as.character(objective$objective_id)
+    if (!triomics_b_string(route_id)) {
+      triomics_b07_abort("B_EXPORT_INCOMPLETE", "A declared clinical objective has no stable route id.",
+                         "clinical.objectives", "Keep the route ids declared in the validated producer configuration.")
+    }
+    matched_artifacts <- list()
+    route_status <- if (!isTRUE(context$config$clinical$enabled)) "not_requested" else "unavailable"
+    for (name in names(clinical_artifacts)) {
+      item <- clinical_artifacts[[name]]
+      result_hits <- if (is.list(item$payload$results)) Filter(function(result) {
+        identical(as.character(result$objective_id), route_id)
+      }, item$payload$results) else list()
+      if (length(result_hits)) {
+        matched_artifacts[[name]] <- list(
+          artifact_id = as.character(item$envelope$artifact_id),
+          payload_sha256 = as.character(item$payload_sha256),
+          envelope_sha256 = as.character(item$envelope_sha256),
+          status = as.character(item$status),
+          result_sha256 = triomics_b07_prov_value_sha256(result_hits)
+        )
+        route_status <- as.character(item$status)
+      }
+    }
+    disposition_value <- list(
+      route_id = route_id,
+      route_kind = "clinical",
+      analysis_id = analysis_id,
+      preparation_context_id = preparation_context_id,
+      representation_id = representation_id,
+      objective_declaration = objective,
+      requested = isTRUE(context$config$clinical$enabled),
+      status = route_status,
+      evidence = matched_artifacts,
+      declared_artifact_dispositions = clinical_dispositions
+    )
+    declared_routes[[length(declared_routes) + 1L]] <- list(
+      route_id = route_id, route_kind = "clinical", analysis_id = analysis_id,
+      preparation_context_id = preparation_context_id,
+      representation_id = representation_id, method_id = NULL
+    )
+    route_entity_id <- triomics_b07_prov_entity_id("clinical_evidence", route_id)
+    route_entity_ids <- c(route_entity_ids, route_entity_id)
+    add_entity(triomics_b07_prov_embedded_entity(
+      "clinical_evidence", route_entity_id, disposition_value, study_id,
+      triomics_b07_prov_scope(study_id, analysis_id = analysis_id,
+                              preparation_context_id = preparation_context_id,
+                              representation_id = representation_id, route_id = route_id),
+      generated_by_activity_id = export_activity,
+      derived_from_entity_ids = c(source_entity_ids, block_results_entity_id),
+      schema_uri = "urn:triomics:clinical-route-evidence:1.0"
+    ))
+  }
+  declared_routes <- declared_routes[order(
+    vapply(declared_routes, `[[`, character(1L), "route_kind"),
+    vapply(declared_routes, `[[`, character(1L), "route_id"), method = "radix"
+  )]
+  bundle_entity_id <- triomics_b07_prov_entity_id("handoff_payload", as.character(bundle$artifact_id))
+  handoff_derived <- c(block_results_entity_id, predecessor_payload_entity_id, family_entity_id,
+                       nominations_entity_id, unlist(feature_entities, use.names = FALSE),
+                       unlist(preprocessing_entities, use.names = FALSE),
+                       unlist(matrix_entities, use.names = FALSE),
+                       unlist(method_entities, use.names = FALSE), route_entity_ids)
+  add_entity(triomics_b07_prov_artifact_entity(
+    "handoff_payload", bundle_entity_id, bundle_path, bundle_envelope_path,
+    study_id, block_scope, generated_by_activity_id = export_activity,
+    derived_from_entity_ids = handoff_derived
+  ))
+  fit_generated <- vapply(Filter(function(entity) identical(entity$generated_by_activity_id, analysis_activity), entities),
+                          `[[`, character(1L), "entity_id")
+  export_generated <- vapply(Filter(function(entity) identical(entity$generated_by_activity_id, export_activity), entities),
+                             `[[`, character(1L), "entity_id")
+  analysis_used <- source_entity_ids
+  export_used <- setdiff(vapply(entities, `[[`, character(1L), "entity_id"),
+                         c(source_entity_ids, export_generated))
+  activities <- list(
+    list(activity_id = analysis_activity, stage = "B", activity_type = "analysis",
+         method_id = method_ids[[1L]], used_entity_ids = as.list(sort(analysis_used, method = "radix")),
+         generated_entity_ids = as.list(sort(fit_generated, method = "radix"))),
+    list(activity_id = export_activity, stage = "B", activity_type = "handoff_export",
+         method_id = method_ids[[1L]], used_entity_ids = as.list(sort(unique(export_used), method = "radix")),
+         generated_entity_ids = as.list(sort(export_generated, method = "radix")))
+  )
+  entities <- entities[order(
+    vapply(entities, `[[`, character(1L), "scientific_role"),
+    vapply(entities, `[[`, character(1L), "entity_type"),
+    vapply(entities, `[[`, character(1L), "entity_id"), method = "radix"
+  )]
+  profile <- list(
+    profile = "triomics.stage-handoff-provenance",
+    profile_version = "1.0",
+    producer_stage = "B",
+    study_id = study_id,
+    run_id = as.character(context$run_id),
+    handoff_artifact_id = as.character(bundle$artifact_id),
+    producer_activity_id = export_activity,
+    identity = list(
+      schema_uri = "urn:triomics:stage-handoff-provenance:identity",
+      schema_version = "1.0",
+      handoff_role = "stage-b-handoff",
+      activities = activities,
+      entities = entities,
+      declared_routes = declared_routes
+    ),
+    producer = list(
+      package_version = as.character(utils::packageVersion("triomics")),
+      repository_commit = as.character(repository_commit),
+      module_id = "B-T07",
+      method_ids = as.list(method_ids),
+      effective_configuration_sha256 = as.character(config_sha256),
+      runtime_backend_versions = triomics_b07_prov_runtime_versions()
+    ),
+    limitations = list(
+      "Native same-run B producer provenance; synthetic software evidence is not scientific validation.",
+      "The profile inventories the handoff and predecessor bytes; C/D verification and publication remain out of scope."
+    ),
+    migration = NULL
+  )
+  profile$identity_sha256 <- triomics_provenance_identity_sha256(profile$identity)
+  profile
+}
+
+triomics_b07_write_provenance <- function(context, config_sha256, bundle, bundle_path,
+                                          bundle_envelope_path, block_artifact,
+                                          family_artifact, nominations_artifact,
+                                          matrix_artifact, matrix_bindings,
+                                          clinical_artifacts, clinical_dispositions,
+                                          repository_commit, privacy_class) {
+  handoff_dir <- dirname(bundle_path)
+  profile_path <- file.path(handoff_dir, "stage-handoff-provenance.json")
+  profile_envelope_path <- file.path(handoff_dir, "stage-handoff-provenance.envelope.json")
+  if (file.exists(profile_path) || file.exists(profile_envelope_path)) {
+    triomics_b07_abort("B_EXPORT_CACHE", "A native provenance frame already exists for this handoff.",
+                       "provenance", "Reuse only a fully revalidated frame or write a new handoff identity.")
+  }
+  finalized <- FALSE
+  on.exit(if (!finalized) unlink(c(profile_path, profile_envelope_path), force = TRUE), add = TRUE)
+  profile <- triomics_b07_build_provenance_profile(
+    context, config_sha256, bundle, bundle_path, bundle_envelope_path, block_artifact,
+    family_artifact, nominations_artifact, matrix_artifact, matrix_bindings,
+    clinical_artifacts, clinical_dispositions, repository_commit
+  )
+  valid <- tryCatch(isTRUE(triomics_validate_stage_handoff_provenance(
+    profile, "b-t07-stage-handoff-provenance", "b-t07-stage-handoff-provenance-envelope"
+  )), error = function(error) FALSE)
+  if (!valid) {
+    triomics_b07_abort("B_EXPORT_INCOMPLETE", "The native B provenance profile failed the accepted public validator.",
+                       "provenance", "Do not accept a partial or schema-invalid provenance frame.")
+  }
+  triomics_write_json_atomic(profile, profile_path)
+  profile_envelope <- triomics_artifact_envelope(
+    artifact_type = "stage_handoff_provenance",
+    artifact_id = "b-t07-stage-handoff-provenance",
+    study_id = as.character(profile$study_id),
+    run_id = as.character(profile$run_id),
+    status = "complete",
+    config_sha256 = as.character(config_sha256),
+    payload = profile_path,
+    producer_commit = as.character(repository_commit),
+    inputs = list(list(artifact_id = as.character(bundle$artifact_id),
+                       sha256 = triomics_sha256(bundle_path))),
+    reason_codes = character(),
+    privacy_class = as.character(privacy_class)
+  )
+  triomics_write_envelope(profile_envelope, profile_envelope_path)
+  readback <- tryCatch(jsonlite::read_json(profile_path, simplifyVector = FALSE), error = function(error) NULL)
+  envelope_ok <- isTRUE(triomics_validate_envelope(profile_envelope_path))
+  profile_ok <- is.list(readback) && tryCatch(isTRUE(triomics_validate_stage_handoff_provenance(
+    readback, "b-t07-stage-handoff-provenance", "b-t07-stage-handoff-provenance-envelope"
+  )), error = function(error) FALSE)
+  if (!envelope_ok || !profile_ok ||
+      !identical(triomics_sha256(profile_path), as.character(profile_envelope$payload_sha256))) {
+    triomics_b07_abort("B_EXPORT_INCOMPLETE", "The native B provenance payload/envelope failed exact-byte read-back validation.",
+                       "provenance", "Do not accept a frame without both successful validator and envelope read-back checks.")
+  }
+  finalized <- TRUE
+  list(path = profile_path, envelope_path = profile_envelope_path,
+       payload_sha256 = triomics_sha256(profile_path),
+       envelope_sha256 = triomics_sha256(profile_envelope_path), profile = profile)
+}
+
+triomics_b07_provenance_entities <- function(profile, role) {
+  Filter(function(entity) identical(as.character(entity$scientific_role), role), profile$identity$entities)
+}
+
+triomics_b07_profile_artifact_matches <- function(entity, payload_path, envelope_path, artifact_id) {
+  if (is.null(entity) || !file.exists(payload_path) || !file.exists(envelope_path) ||
+      !isTRUE(triomics_validate_envelope(envelope_path))) return(FALSE)
+  envelope <- tryCatch(jsonlite::read_json(envelope_path, simplifyVector = FALSE), error = function(error) NULL)
+  is.list(envelope) &&
+    identical(as.character(entity$artifact_id), as.character(artifact_id)) &&
+    identical(as.character(envelope$artifact_id), as.character(artifact_id)) &&
+    identical(as.character(entity$digest), triomics_sha256(envelope_path)) &&
+    identical(as.character(entity$artifact_payload_sha256), triomics_sha256(payload_path)) &&
+    identical(as.character(envelope$payload_sha256), triomics_sha256(payload_path))
+}
+
+triomics_b07_validate_provenance_artifacts <- function(bundle, bundle_path, bundle_envelope_path) {
+  handoff_dir <- dirname(bundle_path)
+  profile_path <- file.path(handoff_dir, "stage-handoff-provenance.json")
+  profile_envelope_path <- file.path(handoff_dir, "stage-handoff-provenance.envelope.json")
+  if (any(!file.exists(c(profile_path, profile_envelope_path))) ||
+      any(dir.exists(c(profile_path, profile_envelope_path))) ||
+      any(vapply(c(profile_path, profile_envelope_path), triomics_is_symlink, logical(1L))) ||
+      !isTRUE(triomics_validate_envelope(profile_envelope_path))) return(FALSE)
+  profile <- tryCatch(jsonlite::read_json(profile_path, simplifyVector = FALSE), error = function(error) NULL)
+  envelope <- tryCatch(jsonlite::read_json(profile_envelope_path, simplifyVector = FALSE), error = function(error) NULL)
+  if (!is.list(profile) || !is.list(envelope) ||
+      !identical(as.character(envelope$artifact_type), "stage_handoff_provenance") ||
+      !identical(as.character(envelope$artifact_id), "b-t07-stage-handoff-provenance") ||
+      !identical(as.character(profile$producer_stage), "B") ||
+      !identical(as.character(profile$handoff_artifact_id), as.character(bundle$artifact_id)) ||
+      !identical(as.character(profile$study_id), as.character(bundle$study_id)) ||
+      !identical(as.character(profile$producer$effective_configuration_sha256), as.character(bundle$config_sha256)) ||
+      !identical(as.character(envelope$config_sha256), as.character(bundle$config_sha256)) ||
+      !identical(as.character(envelope$run_id), as.character(profile$run_id)) ||
+      !tryCatch(isTRUE(triomics_validate_stage_handoff_provenance(
+        profile, "b-t07-stage-handoff-provenance", "b-t07-stage-handoff-provenance-envelope"
+      )), error = function(error) FALSE)) return(FALSE)
+  handoff <- triomics_b07_provenance_entities(profile, "handoff_payload")
+  if (length(handoff) != 1L ||
+      !triomics_b07_profile_artifact_matches(handoff[[1L]], bundle_path, bundle_envelope_path,
+                                             as.character(bundle$artifact_id))) return(FALSE)
+  root <- tryCatch(normalizePath(file.path(handoff_dir, "..", "..", ".."), winslash = "/", mustWork = TRUE),
+                   error = function(error) NULL)
+  if (is.null(root)) return(FALSE)
+  block_path <- file.path(root, "B", "block-results.json")
+  block_envelope_path <- file.path(root, "B", "block-results.envelope.json")
+  block_entity <- triomics_b07_provenance_entities(profile, "block_results")
+  predecessor_envelope <- triomics_b07_provenance_entities(profile, "predecessor_envelope")
+  predecessor_payload <- triomics_b07_provenance_entities(profile, "predecessor_payload")
+  if (length(block_entity) != 1L || length(predecessor_envelope) != 1L || length(predecessor_payload) != 1L ||
+      !triomics_b07_profile_artifact_matches(block_entity[[1L]], block_path, block_envelope_path,
+                                             "stage-b-block-results") ||
+      !triomics_b07_profile_artifact_matches(predecessor_envelope[[1L]], block_path, block_envelope_path,
+                                             "stage-b-block-results") ||
+      !identical(as.character(predecessor_payload[[1L]]$digest), triomics_sha256(block_path)) ||
+      !identical(as.character(predecessor_payload[[1L]]$member_of_entity_id),
+                 as.character(predecessor_envelope[[1L]]$entity_id))) return(FALSE)
+  member_path <- function(artifact_id) {
+    hits <- Filter(function(member) identical(as.character(member$artifact_id), artifact_id), bundle$members)
+    if (length(hits) != 1L || is.null(hits[[1L]]$path) || is.null(hits[[1L]]$envelope_path)) return(NULL)
+    list(payload = file.path(root, as.character(hits[[1L]]$path)),
+         envelope = file.path(root, as.character(hits[[1L]]$envelope_path)),
+         artifact_id = if (identical(artifact_id, "family_ledger")) "b-t07-family-ledger" else
+           if (identical(artifact_id, "candidate_nominations")) "b-t07-candidate-nominations" else NULL)
+  }
+  for (role in c("family_ledger", "candidate_nominations")) {
+    entities <- triomics_b07_provenance_entities(profile, role)
+    paths <- member_path(role)
+    if (length(entities) != 1L || is.null(paths) ||
+        !triomics_b07_profile_artifact_matches(entities[[1L]], paths$payload, paths$envelope, paths$artifact_id)) return(FALSE)
+  }
+  matrix_member <- member_path("stage_c_matrix_values")
+  matrix_entities <- triomics_b07_provenance_entities(profile, "represented_matrix")
+  if (is.null(matrix_member) || !length(matrix_entities)) return(FALSE)
+  matrix_envelope <- tryCatch(jsonlite::read_json(matrix_member$envelope, simplifyVector = FALSE),
+                              error = function(error) NULL)
+  matrices <- tryCatch(readRDS(matrix_member$payload), error = function(error) NULL)
+  if (!is.list(matrix_envelope) || !is.list(matrices) ||
+      !identical(as.character(matrix_envelope$artifact_id), "b-t07-stage-c-input-matrices") ||
+      any(!vapply(matrix_entities, function(entity) {
+        block_id <- as.character(entity$block_id)
+        is.matrix(matrices[[block_id]]) &&
+          identical(as.character(entity$artifact_id), as.character(matrix_envelope$artifact_id)) &&
+          identical(as.character(entity$digest), triomics_sha256(matrix_member$envelope)) &&
+          identical(as.character(entity$artifact_payload_sha256), triomics_sha256(matrix_member$payload)) &&
+          identical(as.character(entity$row_identity_sha256),
+                    triomics_b07_prov_ordered_ids_sha256(rownames(matrices[[block_id]]))) &&
+          identical(as.character(entity$column_identity_sha256),
+                    triomics_b07_prov_ordered_ids_sha256(colnames(matrices[[block_id]])))
+      }, logical(1L)))) return(FALSE)
+  matrix_manifest_member <- member_path("stage_c_matrices")
+  matrix_manifest <- if (is.null(matrix_manifest_member)) NULL else
+    tryCatch(jsonlite::read_json(matrix_manifest_member$payload, simplifyVector = FALSE), error = function(error) NULL)
+  if (!is.list(matrix_manifest) || !identical(as.character(matrix_manifest$status), "complete") ||
+      any(!vapply(names(matrices), function(block_id) {
+        is.list(matrix_manifest$blocks[[block_id]]) &&
+          identical(as.character(matrix_manifest$blocks[[block_id]]$matrix_hash),
+                    triomics_b07_matrix_hash(block_id, matrices[[block_id]]))
+      }, logical(1L)))) return(FALSE)
+  TRUE
+}
+
 triomics_b07_resume_candidate <- function(bundle_path) {
   if (!is.character(bundle_path) || length(bundle_path) != 1L || is.na(bundle_path) || !nzchar(bundle_path)) {
     triomics_b07_abort("B_EXPORT_CACHE", "A bundle path is required for restart validation.", "bundle_path",
@@ -545,7 +1381,10 @@ triomics_b07_validate_late_artifacts <- function(bundle, bundle_path, bundle_env
   reproduction_envelope_path <- file.path(handoff_dir, "reproduction.envelope.json")
   record_path <- file.path(handoff_dir, "acceptance-record.json")
   record_envelope_path <- file.path(handoff_dir, "acceptance-record.envelope.json")
-  paths <- c(reproduction_path, reproduction_envelope_path, record_path, record_envelope_path)
+  provenance_path <- file.path(handoff_dir, "stage-handoff-provenance.json")
+  provenance_envelope_path <- file.path(handoff_dir, "stage-handoff-provenance.envelope.json")
+  paths <- c(reproduction_path, reproduction_envelope_path, record_path, record_envelope_path,
+             provenance_path, provenance_envelope_path)
   if (any(!file.exists(paths) | dir.exists(paths) | vapply(paths, triomics_is_symlink, logical(1)))) {
     return(FALSE)
   }
@@ -607,7 +1446,8 @@ triomics_b07_validate_late_artifacts <- function(bundle, bundle_path, bundle_env
     any(readLines(reproduction_path, warn = FALSE) == "# B-T07 reproduction record") &&
     any(vapply(record$acceptance, function(item) {
       identical(as.character(item$id), "AC4") && identical(as.character(item$verdict), "pass")
-    }, logical(1)))
+    }, logical(1))) &&
+    isTRUE(triomics_b07_validate_provenance_artifacts(bundle, bundle_path, bundle_envelope_path))
 }
 
 triomics_b07_validate_bundle_members <- function(bundle, bundle_path) {
@@ -900,7 +1740,7 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
                                          smoke_runs = NULL, command = NULL,
                                          working_ref = NULL, cli_exit_code = NULL,
                                          resume = FALSE, qualifications = NULL,
-                                         matrix_source = NULL) {
+                                         matrix_source = NULL, provenance_context = NULL) {
   root <- triomics_b07_output_root(output, create = TRUE)
   if (!is.character(config_path) || length(config_path) != 1L || is.na(config_path) ||
       !nzchar(config_path) || !file.exists(config_path)) {
@@ -912,6 +1752,15 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
   artifact <- triomics_b07_verified_artifact(
     root, "B/block-results.json", "block_results", config_sha256 = config_sha256
   )
+  if (!is.null(provenance_context)) {
+    triomics_b07_validate_provenance_context(
+      provenance_context, config_sha256, artifact, matrices = matrices
+    )
+    if (!identical(matrix_source, "stage_b_resolved_blocks")) {
+      triomics_b07_abort("B_EXPORT_MATRIX", "Native B provenance requires the exact same-run matrix source designation.",
+                         "matrix_source", "Use only matrices returned by this Stage B fit run.")
+    }
+  }
   block_results <- artifact$payload
   entries <- triomics_b07_claim_entries(block_results)
   ledger <- triomics_b07_family_ledger(block_results)
@@ -1232,7 +2081,7 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
     study_id = as.character(block_results$study_id),
     status = if (all(vapply(acceptance, function(item) identical(item$verdict, "pass"), logical(1)))) "software_handoff_evidence_complete" else "partial",
     command = if (is.null(command)) "not recorded" else as.character(command),
-    working_ref = if (is.null(working_ref)) triomics_b07_git_ref(root) else as.character(working_ref),
+    working_ref = if (is.null(working_ref)) triomics_b07_git_ref(getwd()) else as.character(working_ref),
     cli_exit_code = if (is.null(cli_exit_code)) NULL else as.integer(cli_exit_code),
     runtime = runtime,
     environment_sha256 = triomics_hash_text(triomics_canonical_json(runtime)),
@@ -1333,10 +2182,27 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
     privacy_class = as.character(artifact$envelope$privacy_class)
   )
   triomics_write_envelope(record_envelope, record_envelope_path)
+  provenance_artifact <- NULL
+  if (!is.null(provenance_context)) {
+    provenance_artifact <- triomics_b07_write_provenance(
+      provenance_context, config_sha256, bundle, bundle_path, bundle_envelope_path,
+      artifact, family_artifact, nominations_artifact, matrix_artifact, matrix_bindings,
+      clinical_artifacts, clinical_dispositions,
+      repository_commit = if (is.null(working_ref)) triomics_b07_git_ref(getwd()) else working_ref,
+      privacy_class = as.character(artifact$envelope$privacy_class)
+    )
+  }
   candidate_after_write <- triomics_b07_resume_candidate(bundle_path)
-  if (!isTRUE(candidate_after_write$envelope_present) ||
-      !identical(candidate_after_write$cache_key, cache_key) ||
-      !identical(candidate_after_write$payload_sha256, candidate_after_write$manifest_payload_sha256)) {
+  bundle_envelope_readback <- tryCatch(jsonlite::read_json(bundle_envelope_path, simplifyVector = FALSE),
+                                       error = function(error) NULL)
+  candidate_valid <- if (!is.null(provenance_context)) {
+    isTRUE(candidate_after_write$envelope_present) &&
+      identical(candidate_after_write$payload_sha256, candidate_after_write$manifest_payload_sha256)
+  } else {
+    is.list(bundle_envelope_readback) && isTRUE(triomics_validate_envelope(bundle_envelope_path)) &&
+      identical(as.character(bundle_envelope_readback$payload_sha256), triomics_sha256(bundle_path))
+  }
+  if (!candidate_valid || !identical(candidate_after_write$cache_key, cache_key)) {
     triomics_b07_abort("B_EXPORT_INCOMPLETE", "The finalized B handoff failed its restart verification.", "bundle",
                        "Do not publish a bundle whose manifest, late artifacts or member hashes fail read-back verification.")
   }
@@ -1352,6 +2218,8 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
     reproduction_path = reproduction_path,
     acceptance_record_path = record_path,
     acceptance_record_envelope_path = record_envelope_path,
+    provenance_path = if (is.null(provenance_artifact)) NULL else provenance_artifact$path,
+    provenance_envelope_path = if (is.null(provenance_artifact)) NULL else provenance_artifact$envelope_path,
     acceptance = stats::setNames(acceptance, vapply(acceptance, `[[`, character(1), "id")),
     matrix_bindings = matrix_bindings,
     member_accounting = accounting
@@ -1417,6 +2285,13 @@ triomics_b07_cli_after_stage_b <- function(args, stage_b_result, smoke_runs = NU
       )
     )
   }
+  if (!is.list(stage_b_result$provenance_context)) {
+    triomics_b07_abort(
+      "B_EXPORT_INCOMPLETE", "The Stage B runner did not supply its same-run native provenance context.",
+      "provenance_context",
+      "The B-T07 post-stage hook must receive the in-memory provenance context from triomics_execute_stage_b()."
+    )
+  }
   command <- paste(c("Rscript --vanilla inst/exec/triomics", vapply(args, shQuote, character(1))),
                    collapse = " ")
   triomics_b07_export_handoff(
@@ -1425,8 +2300,9 @@ triomics_b07_cli_after_stage_b <- function(args, stage_b_result, smoke_runs = NU
     matrices = matrices,
     smoke_runs = smoke_runs,
     command = command,
-    working_ref = triomics_b07_git_ref(options$output),
+    working_ref = triomics_b07_git_ref(getwd()),
     cli_exit_code = 0L,
-    matrix_source = "stage_b_resolved_blocks"
+    matrix_source = "stage_b_resolved_blocks",
+    provenance_context = stage_b_result$provenance_context
   )
 }
