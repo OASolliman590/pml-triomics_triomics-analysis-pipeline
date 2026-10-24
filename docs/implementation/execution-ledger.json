@@ -36,13 +36,25 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_006_astra_changes_required_blocked",
+    "status": "m7_007_authorized_worktree_pending",
     "last_reconciled": "2026-10-24",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The single fresh M7-006 Astra-low audit returned changes_required: Critical 0, Important 1, Minor 0, ready_for_sol_acceptance no. Migration proof now covers handoff_payload, but delimiter-joined context keys can collide when identifiers contain escaped U+001C. No automatic rereview is authorized. M7-004/M7-006 remain unaccepted and Stage D remains closed."
+    "disposition": "Omar instructed Sol to continue, authorizing bounded successor M7-007 for the single M7-006-ASTRA-01 tuple-key collision. Create a fresh isolated Luna-max worktree from the recorded base, require public-validator RED/GREEN, then independent review. M7-004/M7-006/M7-007 remain unaccepted and Stage D remains closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_007_collision_free_context_key_repair_authorized",
+      "date": "2026-10-24",
+      "authority": "Omar instructed the coordinator to continue from the recorded M7-006 blocker",
+      "change_record": "docs/implementation/change-records/M7-007-collision-free-provenance-context-keys.md",
+      "product_base": "e4aed594877ef53ace6958d9a757cffb471ba53a",
+      "finding": "M7-006-ASTRA-01",
+      "allowlist": ["R/provenance_contract.R", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
+      "review_route": "public-validator RED/GREEN -> two-axis code review -> serial integration -> focused suite -> one full source suite -> one fresh read-only Astra-low acceptance audit",
+      "allowed_next_transition": "Create a fresh managed worktree and dispatch one fresh Luna-max implementer.",
+      "disposition": "No scientific-contract/schema change, private data, acceptance, gate release, or downstream Stage-D work."
+    },
     {
       "event": "m7_006_astra_acceptance_audit_changes_required_blocked",
       "date": "2026-10-24",

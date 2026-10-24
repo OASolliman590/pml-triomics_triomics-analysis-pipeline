@@ -247,6 +247,18 @@ durable receipt is
 unaccepted, no automatic rereview is authorized, no worker is active, and no
 Stage-D gate has been released.
 
+Omar then instructed Sol to continue, authorizing bounded successor M7-007 for
+the single remaining `M7-006-ASTRA-01` collision. Its change record is
+`change-records/M7-007-collision-free-provenance-context-keys.md`. The public
+seam remains `triomics_validate_stage_handoff_provenance()`. One fresh isolated
+Luna-max worker may change only the contract helper, its focused public tests,
+and the contract-foundation registration request. It must reproduce the escaped
+U+001C tuple collision as RED, implement collision-free component encoding
+without banning legal identifier values, preserve a valid U+001C multi-context
+positive, and return focused GREEN. Independent two-axis review, Sol integration
+verification, one full source suite, and one fresh Astra-low audit remain
+mandatory. No worker is active yet; Stage D remains closed.
+
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
 `tests/testthat/test-C-05.R`: update the obsolete unaccepted-registration
@@ -517,15 +529,13 @@ permitted cycles; M7-003 is accepted as a specification amendment, but its
 contract-foundation implementation packet is exhausted and remains historical.
 Do not resume `/root/m7_003_contract_luna` or integrate its files directly.
 M7-006 candidate `5242609` is integrated and verified as immutable snapshot
-`e4aed59`, but its only fresh Astra audit returned `changes_required`. Do not
-accept M7-004/M7-006, rerun Luna, or dispatch an automatic rereview. Resume only
-after Omar explicitly authorizes a new bounded repair record for
-`M7-006-ASTRA-01`: replace ambiguous delimiter-joined tuple keys with a
-collision-free representation, reproduce the escaped-U+001C collision through
-the public validator as RED, preserve valid multiple-context behavior, then
-require focused GREEN, independent review, integration verification, and a new
-immutable acceptance audit. Do not start B-T07/C-06 producer provenance, D
-verification/publication, migration, D-T01 acceptance, M7 release, or any
-Stage-D successor before that future audit passes.
+`e4aed59`, but its only fresh Astra audit returned `changes_required`. M7-007 is
+now authorized solely for `M7-006-ASTRA-01`. Create a fresh managed worktree from
+the current authorization commit and dispatch one fresh Luna-max worker using
+the exact three-file allowlist and public RED/GREEN obligations in the M7-007
+record. Do not accept M7-004/M7-006/M7-007, reuse an old worker, or start
+B-T07/C-06 producer provenance, D verification/publication, migration, D-T01
+acceptance, M7 release, or any Stage-D successor before the future immutable
+Astra audit passes.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.
