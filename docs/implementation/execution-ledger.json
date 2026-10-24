@@ -42,11 +42,11 @@
       "requested_effort": "max",
       "base_commit": "0d96c57",
       "worktree": "/Users/megastore/.codex/worktrees/m7-008-bt07-provenance/PML MultiOmics Analysis Pipeline",
-      "scope": "four-file M7-008 allowlist; public-seam TDD; no full suite or downstream work"
+      "scope": "M7-008 targeted repair 1/2 on the same four-file allowlist; no full suite or downstream work"
     }
   ],
   "orchestration_control": {
-    "status": "m7_008_b_t07_native_provenance_implementation_active",
+    "status": "m7_008_b_t07_targeted_repair_1_active",
     "last_reconciled": "2026-10-24",
     "active_handoffs": [
       {
@@ -54,13 +54,26 @@
         "base_commit": "0d96c57",
         "worktree": "/Users/megastore/.codex/worktrees/m7-008-bt07-provenance/PML MultiOmics Analysis Pipeline",
         "brief": "docs/implementation/change-records/M7-008-b-t07-native-provenance-producer-seam.md",
-        "allowed_next_transition": "Clean focused-green candidate -> Sol inspection -> two-axis read-only review."
+        "allowed_next_transition": "Repair-1 focused GREEN and a clean commit -> Sol inspection -> two-axis read-only review; remaining product failure -> stop before repair 2."
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh isolated Luna-max worker /root/m7_008_bt07_provenance_luna is active on the four-file M7-008 B-T07 native provenance seam from base 0d96c57. D-T01, M7 and all Stage-D work remain closed."
+    "disposition": "Initial candidate 62f33c4 remained RED because named-versus-unnamed matrix keys failed strict comparison and a retained list-form unit map was not normalized. Targeted repair 1/2 is active in the same Luna worktree. The managed-worktree B-T01 fixture-write permission error is not a product repair target. D-T01, M7 and all Stage-D work remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_008_initial_candidate_red_repair_1_dispatched",
+      "date": "2026-10-24",
+      "worker": "/root/m7_008_bt07_provenance_luna",
+      "candidate_commit": "62f33c48f80b525b6a434e8981ed4ddf7610d9eb",
+      "red": "pre-implementation B-T07: FAIL 2, WARN 8, SKIP 0, PASS 218; native provenance payload and envelope absent",
+      "post_implementation": "B-T07 FAIL 9, WARN 5, SKIP 0, PASS 224; B-T01 FAIL 3, WARN 3, SKIP 0, PASS 574; B-T03 FAIL 0, WARN 0, SKIP 0, PASS 286",
+      "product_root_causes": ["strict matrix-key equality included irrelevant names attributes despite identical ordered values", "retained list-form analysis unit map was passed through although exporter requires normalized keyed records"],
+      "environment_diagnostic": "B-T01 test-B-T01.R:594 cannot write a temporary fixture under inst/examples/tickets in the managed worktree; not a product repair target",
+      "repair_scope": "Only normalize exact retained matrix/unit identities and their dependent expectations; same four-file allowlist.",
+      "allowed_next_transition": "Repair-1 focused GREEN and clean commit -> Sol inspection; remaining product failure -> stop before repair 2.",
+      "disposition": "No integration, full suite, private data, C/D edit, migration, acceptance, gate release, or Stage-D work."
+    },
     {
       "event": "m7_008_b_t07_luna_dispatched",
       "date": "2026-10-24",

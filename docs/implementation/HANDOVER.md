@@ -305,6 +305,14 @@ managed worktree
 `/Users/megastore/.codex/worktrees/m7-008-bt07-provenance/PML MultiOmics Analysis Pipeline`.
 Its next legal transition is a clean focused-green candidate followed by Sol
 inspection and the two-axis read-only review; it cannot accept or integrate.
+Initial candidate `62f33c4` remained RED: the exact B-T07 suite reported FAIL 9,
+WARN 5, SKIP 0, PASS 224 because strict matrix-key equality treated names as
+content and list-form retained unit maps were not normalized. B-T03 passed; the
+two B-T01 product failures were the same unit-map defect, while its third error
+was the known managed-worktree inability to write a temporary fixture beneath
+`inst/examples/tickets`. Targeted repair 1/2 is active with the same worker and
+four-file allowlist. It may fix only those identity-normalization defects and
+their dependent expectations.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
@@ -580,9 +588,11 @@ Critical 0, Important 0, Minor 0. Sol accepted only the combined
 M7-004/M7-006/M7-007 public synthetic provenance contract foundation. No worker
 or handoff from M7-007 remains active. M7-008 worker
 `/root/m7_008_bt07_provenance_luna` is active for the B-T07 native producer seam
-in the managed worktree recorded above. Resume by reconciling that worker's
+in the managed worktree recorded above, now on targeted repair 1/2 after initial
+candidate `62f33c4` remained RED. Resume by reconciling that worker's repair
 turn; on focused GREEN inspect the exact four-file diff and dispatch fresh
-parallel Standards and Spec reviews. Do not start C-06 provenance, D
+parallel Standards and Spec reviews. If a new product failure remains, stop
+before repair 2 for Sol disposition. Do not start C-06 provenance, D
 verification/publication, migration execution, D-T01 acceptance, M7 release,
 or any Stage-D successor in parallel.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
