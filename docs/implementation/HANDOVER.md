@@ -321,8 +321,16 @@ PASS 231; both public B-T02 CLI identities pass the prior unit-map and matrix
 checks before reaching that same constructor error. Targeted repair 2/2 is
 active with the same worker and four-file allowlist. It may add and forward
 those two digests and repair only directly exposed profile-construction or
-validator defects. Any remaining product failure exhausts the repair budget and
-blocks M7-008.
+validator defects. Final repair candidate `8745f22` successfully emits and
+validates the native B provenance payload/envelope; both public B-T02 identity
+CLIs exit 0 and B-T03 passes 286 expectations. The exact B-T07 suite reaches
+FAIL 1, WARN 0, SKIP 0, PASS 261. Its only remaining failure is AC3: a direct
+`caller_matrix_unverified` export without same-run `provenance_context` remains
+fail-closed with reason `partial`, while the existing assertion expects
+`incomplete`. The assertion was not relaxed. The initial attempt and both
+targeted repairs are consumed, so M7-008 is blocked without independent review
+or integration. See
+`reviews/2026-10-24-m7-008-b-t07-producer-blocker.md`.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
@@ -596,15 +604,15 @@ Do not resume `/root/m7_003_contract_luna` or integrate its files directly.
 M7-007 immutable snapshot `b29c3aa` passed its single fresh Astra-low audit with
 Critical 0, Important 0, Minor 0. Sol accepted only the combined
 M7-004/M7-006/M7-007 public synthetic provenance contract foundation. No worker
-or handoff from M7-007 remains active. M7-008 worker
-`/root/m7_008_bt07_provenance_luna` is active for the B-T07 native producer seam
-in the managed worktree recorded above, now on final targeted repair 2/2 after
-repair-1 candidate `39b49f7` closed the original identity defects but exposed
-the represented-matrix digest constructor mismatch. Resume by reconciling that
-worker's final repair turn; on focused GREEN inspect the exact four-file diff
-and dispatch fresh parallel Standards and Spec reviews. If any product failure
-remains, record M7-008 blocked because its repair budget is exhausted. Do not
-start C-06 provenance, D
+or handoff from M7-007 remains active. M7-008 final candidate `8745f22` remains
+unintegrated and blocked after the initial implementation plus both permitted
+repairs. Native B provenance and its envelope validate, but B-T07 remains red
+on the AC3 `partial` versus `incomplete` state label. No Standards/Spec review
+was dispatched because focused GREEN was not achieved. No run-owned worker or
+handoff remains active. Literal resume instruction: reconcile M7-008 blocker
+`8745f22` by explicitly adjudicating the AC3 `partial` versus `incomplete`
+contract in a newly authorized change record before any new implementation; do
+not integrate this candidate or start C-06 provenance, D
 verification/publication, migration execution, D-T01 acceptance, M7 release,
 or any Stage-D successor in parallel.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen

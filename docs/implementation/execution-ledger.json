@@ -34,33 +34,31 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "worker": "/root/m7_008_bt07_provenance_luna",
-      "role": "fresh isolated Luna-max B-T07 native provenance implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "base_commit": "0d96c57",
-      "worktree": "/Users/megastore/.codex/worktrees/m7-008-bt07-provenance/PML MultiOmics Analysis Pipeline",
-      "scope": "M7-008 targeted repair 2/2 on the same four-file allowlist; no full suite or downstream work"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_008_b_t07_targeted_repair_2_active",
+    "status": "m7_008_blocked_repair_budget_exhausted",
     "last_reconciled": "2026-10-24",
-    "active_handoffs": [
-      {
-        "worker": "/root/m7_008_bt07_provenance_luna",
-        "base_commit": "0d96c57",
-        "worktree": "/Users/megastore/.codex/worktrees/m7-008-bt07-provenance/PML MultiOmics Analysis Pipeline",
-        "brief": "docs/implementation/change-records/M7-008-b-t07-native-provenance-producer-seam.md",
-        "allowed_next_transition": "Repair-2 focused GREEN and a clean commit -> Sol inspection -> two-axis read-only review; remaining product failure -> block M7-008 because the repair budget is exhausted."
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Repair 1 commit 39b49f7 closed the matrix-key names-attribute and retained list-form unit-map defects, but complete profile construction exposed a narrow artifact-entity constructor mismatch: represented_matrix supplies row_identity_sha256 and column_identity_sha256 while triomics_b07_prov_artifact_entity() lacks those formals. Targeted repair 2/2 is active in the same Luna worktree. The managed-worktree B-T01 fixture-write permission error is not a product repair target. D-T01, M7 and all Stage-D work remain closed."
+    "disposition": "Final candidate 8745f22 passes native provenance construction, both public B-T02 identity CLIs, B-T03, and 261 B-T07 expectations, but one AC3 state-label assertion remains red: fail-closed direct export reports partial while the test expects incomplete. The initial attempt and both repairs are consumed. M7-008 is blocked without review or integration. A later explicitly authorized contract adjudication is required before new implementation. D-T01, M7 and all Stage-D work remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_008_final_repair_red_packet_blocked",
+      "date": "2026-10-24",
+      "worker": "/root/m7_008_bt07_provenance_luna",
+      "candidate_commits": ["62f33c48f80b525b6a434e8981ed4ddf7610d9eb", "39b49f7ef354f3a1f16c82978bec9dd622dd22c7", "8745f22a2fddaef9a98a49ce646efe57b1f40245"],
+      "focused_regression": "FAIL 0, WARN 0, SKIP 0, PASS 1",
+      "b_t07": "FAIL 1, WARN 0, SKIP 0, PASS 261",
+      "b_t02_identity_cli": "two public CLI runs, both exit 0",
+      "b_t03": "FAIL 0, WARN 0, SKIP 0, PASS 286",
+      "residual_failure": "B-T07 AC3 direct caller_matrix_unverified export is fail-closed with reason partial while the existing assertion expects incomplete.",
+      "review": "not dispatched because focused GREEN was not achieved",
+      "integration": "not performed",
+      "blocker_ref": "docs/implementation/reviews/2026-10-24-m7-008-b-t07-producer-blocker.md",
+      "allowed_next_transition": "A later explicitly authorized change record must adjudicate the AC3 partial-versus-incomplete contract before another implementation cycle.",
+      "disposition": "M7-008 blocked; C-06 provenance, migration, D verification/publication, D-T01, M7, G7, and all Stage-D work remain closed."
+    },
     {
       "event": "m7_008_repair_1_partial_green_repair_2_dispatched",
       "date": "2026-10-24",
