@@ -334,6 +334,15 @@ or integration. See
 The managed M7-008 worktree was archived with its recoverable candidate
 snapshot after the blocker receipt was committed.
 
+On 2026-10-25 Omar authorized M7-009 to adjudicate the sole remaining B-T07
+AC3 resume reason before any repair. The proposed change record is
+`change-records/M7-009-resume-reason-vocabulary.md`. It preserves `partial` for
+a physically interrupted payload/envelope pair and `incomplete` for a present
+finalized candidate whose declared status or required provenance evidence is
+not complete. The existing AC3 expectation remains `incomplete`; no product
+code has been changed. The restored M7-008 candidate remains at `8745f22` and
+must receive a fresh read-only audit of this decision before any repair.
+
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
 `tests/testthat/test-C-05.R`: update the obsolete unaccepted-registration
@@ -611,11 +620,12 @@ unintegrated and blocked after the initial implementation plus both permitted
 repairs. Native B provenance and its envelope validate, but B-T07 remains red
 on the AC3 `partial` versus `incomplete` state label. No Standards/Spec review
 was dispatched because focused GREEN was not achieved. No run-owned worker or
-handoff remains active; the managed M7-008 worktree is archived. Literal resume
-instruction: reconcile M7-008 blocker
-`8745f22` by explicitly adjudicating the AC3 `partial` versus `incomplete`
-contract in a newly authorized change record before any new implementation; do
-not integrate this candidate or start C-06 provenance, D
+handoff remains active. M7-009 now has explicit authority for the contract
+adjudication only. Literal resume instruction: audit
+`change-records/M7-009-resume-reason-vocabulary.md`; if and only if the fresh
+read-only audit passes, repair the restored M7-008 candidate `8745f22` through
+the public B-T07 seam and verify it. Do not integrate the candidate or start
+C-06 provenance, D
 verification/publication, migration execution, D-T01 acceptance, M7 release,
 or any Stage-D successor in parallel.
 Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen

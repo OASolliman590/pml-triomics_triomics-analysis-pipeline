@@ -36,13 +36,24 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_008_blocked_repair_budget_exhausted",
-    "last_reconciled": "2026-10-24",
+    "status": "m7_009_contract_audit_pending",
+    "last_reconciled": "2026-10-25",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Final candidate 8745f22 passes native provenance construction, both public B-T02 identity CLIs, B-T03, and 261 B-T07 expectations, but one AC3 state-label assertion remains red: fail-closed direct export reports partial while the test expects incomplete. The initial attempt and both repairs are consumed. M7-008 is blocked without review or integration. A later explicitly authorized contract adjudication is required before new implementation. D-T01, M7 and all Stage-D work remain closed."
+    "disposition": "Omar authorized M7-009 to adjudicate the B-T07 AC3 partial-versus-incomplete vocabulary. The proposed contract preserves partial for a physically interrupted payload/envelope pair and incomplete for a finalized but non-complete or provenance-ineligible candidate. A fresh read-only audit is required before any product edit. M7-008 remains unintegrated and downstream work remains closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_009_resume_reason_contract_audit_authorized",
+      "date": "2026-10-25",
+      "authority": "Omar authorized M7-009 to define partial versus incomplete, audit the change, and only if approved repair and verify the remaining B-T07 AC3 expectation.",
+      "candidate": "8745f22a2fddaef9a98a49ce646efe57b1f40245",
+      "change_record": "docs/implementation/change-records/M7-009-resume-reason-vocabulary.md",
+      "decision": "partial means payload present with companion envelope physically absent; incomplete means both files exist but the candidate is declared non-complete or lacks valid required evidence; both refuse reuse",
+      "public_test_seam": "tests/testthat/test-B-T07.R through triomics_b07_resume_candidate() and triomics_b07_resume_decision()",
+      "allowed_next_transition": "Commit the immutable proposed record and dispatch one fresh read-only audit; implement only after audit_pass yes.",
+      "disposition": "No product edit, integration, private-data access, C-06 provenance, migration, M7/G7 release, or Stage-D work before audit."
+    },
     {
       "event": "m7_008_final_repair_red_packet_blocked",
       "date": "2026-10-24",
