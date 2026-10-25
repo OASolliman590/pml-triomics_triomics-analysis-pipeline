@@ -365,6 +365,16 @@ and its registration. Required evidence includes the existing AC3 RED, ordered
 reason precedence, overlapping hash/evidence failure, complete-claim post-write
 failure, exact B-T07, affected B-T02/B-T03, and Stage-A non-regression. No
 integration or downstream work is authorized before focused GREEN and review.
+Luna-max returned candidate `762a0a0`; its exact B-T07 suite passed 298
+expectations and focused B-T02, B-T03 and A-T08 checks passed. The fresh Spec
+axis passed with no finding. The Standards axis found one Important defect:
+hash-mismatch inspection writes a temporary schema probe beside the finalized
+artifact, so a readable non-writable artifact directory can be misclassified as
+`incomplete`. Candidate `762a0a0` is not ready to integrate. One bounded repair
+is active with the same Luna worker and the same three-file allowlist; it must
+make inspection read-only, preserve `hash_mismatch`, add a public-seam
+regression and receive focused rereview. See
+`reviews/2026-10-25-m7-009-two-axis-review.md`.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only

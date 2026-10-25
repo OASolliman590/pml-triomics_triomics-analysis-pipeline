@@ -34,15 +34,35 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "worker": "/root/m7_009_bt07_luna",
+      "role": "bounded repair implementer",
+      "scope": "Remove artifact-tree writes from B-T07 resume inspection and preserve hash_mismatch in a readable non-writable artifact directory.",
+      "allowlist": ["R/export_b.R", "tests/testthat/test-B-T07.R", "docs/implementation/registrations/B-T07.json"]
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_009_implementation_authorized",
+    "status": "m7_009_review_repair_active",
     "last_reconciled": "2026-10-25",
-    "active_handoffs": [],
+    "active_handoffs": ["/root/m7_009_bt07_luna"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Astra-low final audit of snapshot 8d12c67 passed with Critical 0, Important 0, Minor 0. One bounded three-file B-T07 implementation repair is now authorized on restored candidate 8745f22, followed by focused verification and independent review. No integration or downstream work is authorized yet."
+    "disposition": "Candidate 762a0a0 is focused-green and passed the Spec axis, but Standards found one Important read-only-inspection defect. The same Luna worker is performing one bounded repair in the original three-file allowlist. No integration or downstream work is authorized yet."
   },
   "orchestration_events": [
+    {
+      "event": "m7_009_two_axis_review_repair_dispatched",
+      "date": "2026-10-25",
+      "candidate": "762a0a09104fb70c920784f3c0897f3e96565567",
+      "standards_verdict": "changes_required; Critical 0, Important 1, Minor 1",
+      "spec_verdict": "pass; Critical 0, Important 0, Minor 0; ready_to_integrate yes for Spec axis only",
+      "finding": "Resume inspection writes a temporary schema probe beside the finalized artifact, so a readable non-writable directory can turn hash_mismatch into incomplete.",
+      "review_ref": "docs/implementation/reviews/2026-10-25-m7-009-two-axis-review.md",
+      "worker": "/root/m7_009_bt07_luna",
+      "repair_scope": "Make inspection read-only and prove through the public B-T07 seam that hash_mismatch remains stable for a readable non-writable artifact directory.",
+      "allowed_next_transition": "Focused RED/GREEN and supporting B-T02/B-T03/A-T08 checks -> immutable repair commit -> focused read-only rereview; no integration before both axes pass.",
+      "disposition": "No integration, private-data access, C-06 provenance, migration, M7/G7 release, or Stage-D work."
+    },
     {
       "event": "m7_009_astra_final_audit_pass_implementation_unlocked",
       "date": "2026-10-25",
