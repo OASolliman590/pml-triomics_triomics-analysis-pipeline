@@ -867,6 +867,32 @@ testthat::test_that("B-T04 producer returns a complete same-run synthetic lineag
     }
   )
   for (name in names(mutations)) reject_mutation(name, mutations[[name]])
+
+  root <- triomics_b07_output_root(output, create = FALSE)
+  artifact <- triomics_b07_verified_artifact(
+    root, "B/block-results.json", "block_results",
+    config_sha256 = as.character(attr(context$config, "config_sha256"))
+  )
+  reject_descriptor_mutation <- function(name, mutate) {
+    candidate <- mutate(context)
+    error <- tryCatch(triomics_b07_validate_provenance_context(
+      candidate, as.character(attr(context$config, "config_sha256")), artifact,
+      matrices = result$resolved_matrices
+    ), error = identity)
+    testthat::expect_s3_class(error, "triomics_error")
+    if (inherits(error, "triomics_error")) {
+      testthat::expect_identical(error$code, "B_EXPORT_INCOMPLETE", info = name)
+    }
+  }
+  reject_descriptor_mutation("changed_source_manifest_descriptor", function(value) {
+    value$source_manifests[[1L]]$original_sha256 <- paste(rep("0", 64L), collapse = "")
+    value
+  })
+  reject_descriptor_mutation("changed_source_selection_descriptor", function(value) {
+    value$source_files[[1L]]$selection_history <- "selected_subset"
+    value
+  })
+
   changed_handoff_matrix <- result$resolved_matrices
   changed_handoff_matrix$block_1[1L, 1L] <- 99
   matrix_error <- tryCatch(triomics_b07_export_handoff(
@@ -881,6 +907,104 @@ testthat::test_that("B-T04 producer returns a complete same-run synthetic lineag
   testthat::expect_s3_class(matrix_error, "triomics_error")
   testthat::expect_identical(matrix_error$code, "B_EXPORT_MATRIX")
   testthat::expect_false(dir.exists(file.path(output, "B", "handoffs")))
+})
+
+testthat::test_that("B-T04 same-run validation reports missing calibration as B_EXPORT_INCOMPLETE", {
+  config <- b04_fixture_config_for_context()
+  output <- tempfile(pattern = "b-t04-missing-calibration-")
+  on.exit(unlink(c(config, output), recursive = TRUE), add = TRUE)
+
+  result <- triomics_execute_stage_b(config, output)
+  context <- result$provenance_context
+  testthat::expect_type(context, "list")
+  if (!is.list(context)) return(invisible(NULL))
+
+  root <- triomics_b07_output_root(output, create = FALSE)
+  artifact <- triomics_b07_verified_artifact(
+    root, "B/block-results.json", "block_results",
+    config_sha256 = as.character(attr(context$config, "config_sha256"))
+  )
+  unlink(file.path(output, "calibration.json"))
+
+  error <- tryCatch(triomics_b07_validate_provenance_context(
+    context, as.character(attr(context$config, "config_sha256")), artifact,
+    matrices = result$resolved_matrices
+  ), error = identity)
+  testthat::expect_s3_class(error, "triomics_error")
+  if (inherits(error, "triomics_error")) {
+    testthat::expect_identical(error$code, "B_EXPORT_INCOMPLETE")
+  }
+})
+
+testthat::test_that("B-T04 context-free restart revalidates persisted protocol and calibration bytes", {
+  config <- b04_fixture_config_for_context()
+  output <- tempfile(pattern = "b-t04-resume-evidence-")
+  on.exit(unlink(c(config, output), recursive = TRUE), add = TRUE)
+
+  result <- triomics_execute_stage_b(config, output)
+  testthat::expect_type(result$provenance_context, "list")
+  if (!is.list(result$provenance_context)) return(invisible(NULL))
+
+  handoff <- triomics_b07_export_handoff(
+    output = output,
+    config_path = config,
+    matrices = result$resolved_matrices,
+    working_ref = triomics_b07_git_ref(getwd()),
+    cli_exit_code = 0L,
+    matrix_source = "stage_b_resolved_blocks",
+    provenance_context = result$provenance_context
+  )
+
+  protocol_path <- file.path(output, "B", "b-t04-synthetic-protocol.json")
+  calibration_path <- file.path(output, "calibration.json")
+  bundle_envelope <- jsonlite::read_json(handoff$envelope_path, simplifyVector = FALSE)
+  has_bundle_input <- function(artifact_id, path) {
+    any(vapply(bundle_envelope$inputs, function(input) {
+      identical(as.character(input$artifact_id), artifact_id) &&
+        identical(as.character(input$sha256), triomics_sha256(path))
+    }, logical(1L)))
+  }
+  testthat::expect_true(has_bundle_input("b-t04-synthetic-protocol-v1", protocol_path))
+  testthat::expect_true(has_bundle_input("b-t04-calibration", calibration_path))
+
+  resume_without_private_context <- function() {
+    triomics_b07_export_handoff(
+      output = output,
+      config_path = config,
+      matrices = result$resolved_matrices,
+      working_ref = triomics_b07_git_ref(getwd()),
+      cli_exit_code = 0L,
+      resume = TRUE,
+      matrix_source = "stage_b_resolved_blocks",
+      provenance_context = NULL
+    )
+  }
+  intact <- resume_without_private_context()
+  testthat::expect_identical(intact$status, "reused")
+  testthat::expect_true(isTRUE(intact$reused))
+
+  protocol_bytes <- readBin(protocol_path, what = "raw", n = file.info(protocol_path)$size)
+  calibration_bytes <- readBin(calibration_path, what = "raw", n = file.info(calibration_path)$size)
+  expect_resume_rejected <- function(label) {
+    error <- tryCatch(resume_without_private_context(), error = identity)
+    testthat::expect_s3_class(error, "triomics_error")
+    if (inherits(error, "triomics_error")) {
+      testthat::expect_identical(error$code, "B_EXPORT_INCOMPLETE", info = label)
+    }
+  }
+
+  writeBin(c(protocol_bytes, as.raw(0x20)), protocol_path)
+  expect_resume_rejected("changed protocol")
+  writeBin(protocol_bytes, protocol_path)
+  unlink(protocol_path)
+  expect_resume_rejected("missing protocol")
+  writeBin(protocol_bytes, protocol_path)
+
+  writeBin(c(calibration_bytes, as.raw(0x20)), calibration_path)
+  expect_resume_rejected("changed calibration")
+  writeBin(calibration_bytes, calibration_path)
+  unlink(calibration_path)
+  expect_resume_rejected("missing calibration")
 })
 
 testthat::test_that("B-T04 CLI fixture fits the qualified linear trajectory", {

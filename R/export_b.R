@@ -853,15 +853,34 @@ triomics_b07_validate_b04_synthetic_context <- function(context, config_sha256, 
     incomplete("synthetic_protocol", "The persisted B-T04 protocol is not the retained immutable canonical byte sequence.")
   }
   protocol_id <- as.character(expected_protocol$protocol_id)
+  expected_source_file <- list(
+    source_id = protocol_id,
+    role = "synthetic_protocol",
+    format = "application/json",
+    local_ref = normalizePath(expected_protocol_path, winslash = "/", mustWork = TRUE),
+    sha256 = protocol_sha256,
+    selection_history = "full_unselected",
+    selection_evidence_sha256 = triomics_hash_text(
+      "B-T04 synthetic protocol is the sole response-generating source."
+    )
+  )
+  expected_source_manifest <- list(
+    source_id = protocol_id,
+    study_id = as.character(expected_protocol$study_id),
+    role = "synthetic_protocol",
+    format = "application/json",
+    sha256 = protocol_sha256,
+    original_sha256 = NULL,
+    original_ref = NULL,
+    sheet = NULL,
+    region = NULL,
+    header_role = NULL,
+    column_roles = NULL,
+    conversion_evidence = NULL
+  )
   if (length(context$source_files) != 1L || length(context$source_manifests) != 1L ||
-      !identical(as.character(context$source_files[[1L]]$source_id), protocol_id) ||
-      !identical(as.character(context$source_files[[1L]]$role), "synthetic_protocol") ||
-      !identical(as.character(context$source_files[[1L]]$format), "application/json") ||
-      !identical(as.character(context$source_files[[1L]]$local_ref), normalizePath(expected_protocol_path, winslash = "/", mustWork = TRUE)) ||
-      !identical(as.character(context$source_files[[1L]]$sha256), protocol_sha256) ||
-      !identical(as.character(context$source_manifests[[1L]]$source_id), protocol_id) ||
-      !identical(as.character(context$source_manifests[[1L]]$role), "synthetic_protocol") ||
-      !identical(as.character(context$source_manifests[[1L]]$sha256), protocol_sha256) ||
+      !identical(context$source_files[[1L]], expected_source_file) ||
+      !identical(context$source_manifests[[1L]], expected_source_manifest) ||
       length(artifact$envelope$inputs) != 1L ||
       !identical(as.character(artifact$envelope$inputs[[1L]]$artifact_id), protocol_id) ||
       !identical(as.character(artifact$envelope$inputs[[1L]]$sha256), protocol_sha256)) {
@@ -1081,11 +1100,8 @@ triomics_b07_validate_b04_synthetic_context <- function(context, config_sha256, 
   calibration <- synthetic$calibration
   expected_calibration_protocol <- triomics_b04_protocol()
   expected_calibration_path <- file.path(dirname(dirname(artifact$payload_path)), "calibration.json")
-  calibration_payload <- if (file.exists(expected_calibration_path)) {
-    triomics_b07_read_json(expected_calibration_path, "calibration.json")
-  } else {
-    NULL
-  }
+  calibration_payload <- triomics_b07_read_json(expected_calibration_path, "calibration.json")
+  expected_calibration_path <- normalizePath(expected_calibration_path, winslash = "/", mustWork = TRUE)
   if (!is.list(calibration) || !identical(as.character(calibration$status), "pass") ||
       !isTRUE(calibration$executed) || isTRUE(calibration$skipped) ||
       !identical(calibration$protocol, expected_calibration_protocol) ||
@@ -1686,6 +1702,103 @@ triomics_b07_profile_artifact_matches <- function(entity, payload_path, envelope
     identical(as.character(envelope$payload_sha256), triomics_sha256(payload_path))
 }
 
+triomics_b07_validate_b04_persisted_evidence <- function(bundle, bundle_path,
+                                                         bundle_envelope_path, profile) {
+  if (!identical(as.character(bundle$study_id), "triomics_b_t04_fixture")) return(TRUE)
+  fail <- function() FALSE
+  root <- tryCatch(
+    normalizePath(file.path(dirname(bundle_path), "..", "..", ".."),
+                  winslash = "/", mustWork = TRUE),
+    error = function(error) NULL
+  )
+  if (is.null(root)) return(fail())
+  protocol_path <- file.path(root, "B", "b-t04-synthetic-protocol.json")
+  block_envelope_path <- file.path(root, "B", "block-results.envelope.json")
+  calibration_path <- file.path(root, "calibration.json")
+  paths <- c(protocol_path, block_envelope_path, calibration_path, bundle_envelope_path)
+  if (any(!file.exists(paths) | dir.exists(paths)) ||
+      any(vapply(paths, triomics_is_symlink, logical(1L)))) return(fail())
+
+  expected_protocol <- tryCatch(
+    triomics_b04_synthetic_protocol(as.character(bundle$config_sha256)),
+    error = function(error) NULL
+  )
+  if (!is.list(expected_protocol)) return(fail())
+  expected_protocol_bytes <- tryCatch(
+    charToRaw(enc2utf8(triomics_b07_prov_canonical_value(expected_protocol))),
+    error = function(error) NULL
+  )
+  protocol_bytes <- tryCatch(
+    readBin(protocol_path, what = "raw", n = file.info(protocol_path)$size),
+    error = function(error) NULL
+  )
+  if (is.null(expected_protocol_bytes) || is.null(protocol_bytes) ||
+      !identical(protocol_bytes, expected_protocol_bytes)) return(fail())
+  protocol_sha256 <- tryCatch(triomics_sha256(protocol_path), error = function(error) NULL)
+  calibration_sha256 <- tryCatch(triomics_sha256(calibration_path), error = function(error) NULL)
+  if (!triomics_sha256_text(protocol_sha256) || !triomics_sha256_text(calibration_sha256)) return(fail())
+
+  calibration <- tryCatch(
+    jsonlite::read_json(calibration_path, simplifyVector = FALSE),
+    error = function(error) NULL
+  )
+  expected_calibration_protocol <- triomics_b04_protocol()
+  if (!is.list(calibration) ||
+      !identical(as.character(calibration$status), "pass") ||
+      !isTRUE(calibration$executed) || isTRUE(calibration$skipped) ||
+      !is.list(calibration$protocol) ||
+      !identical(triomics_b07_prov_value_sha256(calibration$protocol),
+                 triomics_b07_prov_value_sha256(expected_calibration_protocol)) ||
+      !identical(as.character(calibration$protocol$seeds), as.character(1001:1400))) {
+    return(fail())
+  }
+
+  block_envelope <- tryCatch(
+    jsonlite::read_json(block_envelope_path, simplifyVector = FALSE),
+    error = function(error) NULL
+  )
+  bundle_envelope <- tryCatch(
+    jsonlite::read_json(bundle_envelope_path, simplifyVector = FALSE),
+    error = function(error) NULL
+  )
+  has_input <- function(envelope, artifact_id, sha256) {
+    is.list(envelope) && is.list(envelope$inputs) && any(vapply(envelope$inputs, function(input) {
+      is.list(input) && identical(as.character(input$artifact_id), artifact_id) &&
+        identical(as.character(input$sha256), sha256)
+    }, logical(1L)))
+  }
+  protocol_id <- as.character(expected_protocol$protocol_id)
+  if (!has_input(block_envelope, protocol_id, protocol_sha256) ||
+      !has_input(bundle_envelope, protocol_id, protocol_sha256) ||
+      !has_input(bundle_envelope, "b-t04-calibration", calibration_sha256)) return(fail())
+
+  source_entities <- triomics_b07_provenance_entities(profile, "source_manifest")
+  resolved_entities <- triomics_b07_provenance_entities(profile, "resolved_analysis")
+  method_entities <- triomics_b07_provenance_entities(profile, "method_state")
+  expected_source_entity_id <- triomics_b07_prov_entity_id("source_manifest", list(
+    source_id = protocol_id, sha256 = protocol_sha256
+  ))
+  expected_resolved_entity_id <- triomics_b07_prov_entity_id("resolved_analysis", list(
+    analysis_id = as.character(bundle$analysis_id),
+    preparation_context_id = as.character(bundle$preparation_context_id),
+    representation_id = as.character(bundle$representation_id)
+  ))
+  expected_method_entity_id <- triomics_b07_prov_entity_id("method_state", list(
+    analysis_id = as.character(bundle$analysis_id), method_id = "limma",
+    preparation_context_id = as.character(bundle$preparation_context_id),
+    representation_id = as.character(bundle$representation_id)
+  ))
+  if (length(source_entities) != 1L || length(resolved_entities) != 1L ||
+      length(method_entities) != 1L ||
+      !identical(as.character(source_entities[[1L]]$entity_id), expected_source_entity_id) ||
+      !identical(as.character(resolved_entities[[1L]]$entity_id), expected_resolved_entity_id) ||
+      !identical(as.character(method_entities[[1L]]$entity_id), expected_method_entity_id) ||
+      !triomics_sha256_text(as.character(source_entities[[1L]]$digest)) ||
+      !triomics_sha256_text(as.character(resolved_entities[[1L]]$digest)) ||
+      !triomics_sha256_text(as.character(method_entities[[1L]]$digest))) return(fail())
+  TRUE
+}
+
 triomics_b07_validate_provenance_artifacts <- function(bundle, bundle_path, bundle_envelope_path) {
   handoff_dir <- dirname(bundle_path)
   profile_path <- file.path(handoff_dir, "stage-handoff-provenance.json")
@@ -1708,6 +1821,9 @@ triomics_b07_validate_provenance_artifacts <- function(bundle, bundle_path, bund
       !tryCatch(isTRUE(triomics_validate_stage_handoff_provenance(
         profile, "b-t07-stage-handoff-provenance", "b-t07-stage-handoff-provenance-envelope"
       )), error = function(error) FALSE)) return(FALSE)
+  if (!isTRUE(triomics_b07_validate_b04_persisted_evidence(
+    bundle, bundle_path, bundle_envelope_path, profile
+  ))) return(FALSE)
   handoff <- triomics_b07_provenance_entities(profile, "handoff_payload")
   if (length(handoff) != 1L ||
       !triomics_b07_profile_artifact_matches(handoff[[1L]], bundle_path, bundle_envelope_path,
@@ -2495,6 +2611,20 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
   bundle_inputs <- lapply(dependency_pairs, function(pair) {
     list(artifact_id = as.character(pair$artifact_id), sha256 = as.character(pair$sha256))
   })
+  if (identical(as.character(block_results$study_id), "triomics_b_t04_fixture") &&
+      is.list(provenance_context$synthetic_producer)) {
+    calibration_path <- triomics_b07_child_path(root, "calibration.json")
+    calibration_sha256 <- triomics_sha256(calibration_path)
+    if (!identical(as.character(provenance_context$synthetic_producer$calibration$payload_sha256),
+                   calibration_sha256)) {
+      triomics_b07_abort("B_EXPORT_INCOMPLETE", "The retained B-T04 calibration bytes changed before bundle finalization.",
+                         "calibration", "Rerun the native B-T04 producer and preserve the exact calibration payload bytes.")
+    }
+    bundle_inputs <- c(bundle_inputs, list(list(
+      artifact_id = "b-t04-calibration",
+      sha256 = calibration_sha256
+    )))
+  }
   if (length(bundle_inputs)) {
     ids <- vapply(bundle_inputs, `[[`, character(1), "artifact_id")
     shas <- vapply(bundle_inputs, `[[`, character(1), "sha256")

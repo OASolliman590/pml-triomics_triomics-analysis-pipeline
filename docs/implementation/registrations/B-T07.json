@@ -370,7 +370,74 @@
         "All verification used public synthetic fixtures; no scientific-validity claim is established.",
         "No schema, calibration, seed, 0.08 bound, statistics, matrix, or Stage D behavior was changed.",
         "Independent implementation review, coordinator full-source-suite gate, and Sol acceptance/integration remain pending."
-      ]
+      ],
+      "fix_round_1": {
+        "reviewed_commit": "52a5dfe7f75ca780e451f9a510240396d24ba6fc",
+        "red": {
+          "descriptor_metadata_command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T04.R\", desc = \"B-T04 producer returns a complete same-run synthetic lineage context\")'",
+          "descriptor_metadata_summary": {"fail": 2, "warn": 0, "skip": 0, "error": 0, "pass": 87},
+          "public_resume_command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T04.R\", desc = \"B-T04 context-free restart revalidates persisted protocol and calibration bytes\")'",
+          "public_resume_summary": {"fail": 5, "warn": 0, "skip": 0, "error": 0, "pass": 4},
+          "verified_red": [
+            "Changing source_manifests[[1]]$original_sha256 or source_files[[1]]$selection_history was accepted by same-run context validation.",
+            "The protocol hash was already present in bundle evidence, but the calibration hash was not.",
+            "Context-free restart reused after changed or missing protocol and calibration bytes."
+          ]
+        },
+        "green": {
+          "commands": [
+            "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T04.R\")'",
+            "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-M4-005-stage-b-composition.R\")'",
+            "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'"
+          ],
+          "summaries": {
+            "B-T04": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 427},
+            "M4-005-stage-b-composition": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 94},
+            "B-T07": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 315}
+          },
+          "verified_behavior": [
+            "The full approved source file and manifest descriptors are included in the synthetic context seal and exactly validated before export.",
+            "A complete B-T04 bundle envelope binds the exact protocol and calibration file hashes; public restart checks both hashes and the approved protocol/calibration contents without private provenance_context.",
+            "Intact context-free resume reuses; changed or missing protocol/calibration bytes refuse reuse as B_EXPORT_INCOMPLETE.",
+            "The provenance profile schema and bundle payload schema remain unchanged; paired TSVs remain ticket schema fixtures only."
+          ],
+          "warnings": [],
+          "skips": []
+        },
+        "status": "candidate_review_pending",
+        "accepted": false,
+        "limitations": [
+          "Verification uses public synthetic fixtures and does not establish scientific validity.",
+          "Independent repair review, coordinator full-source-suite gate, and Sol acceptance/integration remain pending."
+        ]
+      },
+      "final_review_fix": {
+        "reviewed_commit": "970694533453834c709f496240e0160cca32ecc0",
+        "finding": "When calibration.json was missing during same-run B-T04 validation, normalizePath(..., mustWork=TRUE) ran before the missing-file guard and exposed a plain simpleError rather than B_EXPORT_INCOMPLETE.",
+        "red": {
+          "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T04.R\", desc = \"B-T04 same-run validation reports missing calibration as B_EXPORT_INCOMPLETE\")'",
+          "summary": {"fail": 1, "warn": 0, "skip": 0, "error": 0, "pass": 1},
+          "observed": "Deleting calibration.json produced simpleError where the regression expected a triomics_error with code B_EXPORT_INCOMPLETE."
+        },
+        "green": {
+          "named_regression_command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T04.R\", desc = \"B-T04 same-run validation reports missing calibration as B_EXPORT_INCOMPLETE\")'",
+          "named_regression_summary": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 3},
+          "focused_b_t04_command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T04.R\")'",
+          "focused_b_t04_summary": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 430},
+          "verified_behavior": [
+            "Missing calibration.json is rejected by triomics_b07_read_json() as a structured B_EXPORT_INCOMPLETE before normalizePath() runs.",
+            "The same-run B-T04 regression observes triomics_error with code B_EXPORT_INCOMPLETE after deleting the persisted calibration file."
+          ],
+          "warnings": [],
+          "skips": []
+        },
+        "status": "candidate_review_pending",
+        "accepted": false,
+        "limitations": [
+          "Verification used only public synthetic fixtures and does not establish scientific validity.",
+          "No full source suite or B-T07 test suite was rerun for this B-T04-specific guard-order fix; coordinator integration and acceptance remain pending."
+        ]
+      }
     }
   },
   "request": "M7-009 implementation and focused verification are complete in the bounded candidate. Keep status candidate/review_pending and accepted=false pending independent implementation review and Sol's acceptance/integration decision. No C/D/migration work, private data access or push."

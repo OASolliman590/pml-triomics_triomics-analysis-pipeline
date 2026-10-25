@@ -110,13 +110,8 @@ triomics_b04_synthetic_context_sha256 <- function(context) {
   })
   triomics_b07_prov_value_sha256(list(
     effective_configuration_sha256 = as.character(attr(context$config, "config_sha256")),
-    source_manifest_ids = lapply(context$source_manifests, function(source) {
-      list(source_id = as.character(source$source_id), sha256 = as.character(source$sha256))
-    }),
-    source_file_ids = lapply(context$source_files, function(source) {
-      list(source_id = as.character(source$source_id), sha256 = as.character(source$sha256),
-           local_ref = as.character(source$local_ref))
-    }),
+    source_manifests = context$source_manifests,
+    source_files = context$source_files,
     protocol = list(
       value = synthetic$protocol$value,
       bytes = synthetic$protocol$bytes,
