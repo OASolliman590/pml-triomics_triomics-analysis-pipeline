@@ -342,6 +342,14 @@ finalized candidate whose declared status or required provenance evidence is
 not complete. The existing AC3 expectation remains `incomplete`; no product
 code has been changed. The restored M7-008 candidate remains at `8745f22` and
 must receive a fresh read-only audit of this decision before any repair.
+The initial Astra-low audit of snapshot `b4d43c5` returned changes required:
+failure precedence was ambiguous, physical envelope presence could weaken the
+post-write validation guard, and the draft overstated uniform Stage-A reader
+behavior. The M7-009 record now preserves `hash_mismatch` precedence for a
+readable envelope binding different bytes, separates physical presence from
+base-envelope and required-evidence validation, protects resume and post-write
+finalization, and remains bounded to B-T07. One fresh focused re-audit is
+pending; implementation is still prohibited.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only

@@ -36,13 +36,25 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_009_contract_audit_pending",
+    "status": "m7_009_contract_reaudit_pending",
     "last_reconciled": "2026-10-25",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Omar authorized M7-009 to adjudicate the B-T07 AC3 partial-versus-incomplete vocabulary. The proposed contract preserves partial for a physically interrupted payload/envelope pair and incomplete for a finalized but non-complete or provenance-ineligible candidate. A fresh read-only audit is required before any product edit. M7-008 remains unintegrated and downstream work remains closed."
+    "disposition": "The initial M7-009 Astra audit returned changes_required with two Important and one Minor finding. The contract now defines refusal precedence, separates physical envelope presence from base-envelope and required-evidence validation, and protects both resume and post-write finalization. One fresh focused re-audit is required before any product edit. M7-008 remains unintegrated and downstream work remains closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_009_astra_changes_required_contract_clarified",
+      "date": "2026-10-25",
+      "reviewer": "/root/m7_009_astra_audit",
+      "snapshot": "b4d43c5",
+      "verdict": "changes_required; Critical 0, Important 2, Minor 1; audit_pass no",
+      "findings": ["overlapping hash and evidence failures lacked precedence", "physical envelope presence could weaken the post-write full-validation guard", "Stage A filesystem behavior was overstated"],
+      "clarification": "Define ordered refusal precedence; preserve hash_mismatch for a readable envelope binding different payload bytes; track physical presence, base-envelope validity and required-evidence completeness separately; require both resume and post-write finalization regressions; keep scope bounded to B-T07.",
+      "review_ref": "docs/implementation/reviews/2026-10-25-m7-009-astra-audit.md",
+      "allowed_next_transition": "Commit the clarified contract and dispatch one fresh read-only focused re-audit; no implementation before audit_pass yes.",
+      "disposition": "No product edit, integration, private-data access, C-06 provenance, migration, M7/G7 release, or Stage-D work."
+    },
     {
       "event": "m7_009_resume_reason_contract_audit_authorized",
       "date": "2026-10-25",
