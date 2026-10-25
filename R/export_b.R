@@ -507,7 +507,25 @@ triomics_b07_cache_key <- function(config_sha256, dependency_hashes, matrices = 
 }
 
 triomics_b07_resume_decision <- function(candidate, expected_key) {
-  triomics_export_resume_decision(candidate, expected_key)
+  absent <- triomics_export_resume_decision(NULL, expected_key)
+  if (is.null(candidate) || !isTRUE(candidate$payload_present)) return(absent)
+  if (!isTRUE(candidate$envelope_present)) {
+    return(list(reuse = FALSE, reason = "partial"))
+  }
+  if (!isTRUE(candidate$payload_readable) || !isTRUE(candidate$base_envelope_valid) ||
+      !identical(candidate$status, "complete")) {
+    return(list(reuse = FALSE, reason = "incomplete"))
+  }
+
+  decision <- triomics_export_resume_decision(candidate, expected_key)
+  if (!identical(decision$reason, "complete_match")) return(decision)
+  if (!isTRUE(candidate$payload_hash_matches)) {
+    return(list(reuse = FALSE, reason = "hash_mismatch"))
+  }
+  if (!isTRUE(candidate$required_evidence_complete)) {
+    return(list(reuse = FALSE, reason = "incomplete"))
+  }
+  decision
 }
 
 triomics_b07_prov_canonical_value <- function(value) {
@@ -1361,25 +1379,72 @@ triomics_b07_resume_candidate <- function(bundle_path) {
   }
   envelope_path <- sub("\\.json$", ".envelope.json", bundle_path)
   payload_present <- file.exists(bundle_path) && !dir.exists(bundle_path)
-  envelope_ok <- file.exists(envelope_path) && isTRUE(triomics_validate_envelope(envelope_path))
-  payload <- if (payload_present) tryCatch(jsonlite::read_json(bundle_path, simplifyVector = FALSE),
-                                            error = function(error) NULL) else NULL
-  member_ok <- is.list(payload) && isTRUE(triomics_b07_validate_bundle_members(payload, bundle_path))
-  if (!member_ok) envelope_ok <- FALSE
-  if (isTRUE(envelope_ok)) {
-    envelope_ok <- isTRUE(triomics_b07_validate_late_artifacts(payload, bundle_path, envelope_path))
+  envelope_present <- file.exists(envelope_path) && !dir.exists(envelope_path)
+  payload_sha256 <- if (payload_present) {
+    tryCatch(triomics_sha256(bundle_path), error = function(error) NULL)
+  } else {
+    NULL
   }
-  manifest_payload_sha <- if (envelope_ok) {
-    envelope <- triomics_b07_read_json(envelope_path, "bundle.envelope.json")
+  payload <- if (payload_present && !triomics_is_symlink(bundle_path)) {
+    tryCatch(jsonlite::read_json(bundle_path, simplifyVector = FALSE), error = function(error) NULL)
+  } else {
+    NULL
+  }
+  payload_readable <- is.list(payload) && !is.null(names(payload))
+  envelope <- if (envelope_present && !triomics_is_symlink(envelope_path)) {
+    tryCatch(jsonlite::read_json(envelope_path, simplifyVector = FALSE), error = function(error) NULL)
+  } else {
+    NULL
+  }
+  manifest_payload_sha <- if (is.list(envelope) && !is.null(envelope$payload_sha256)) {
     as.character(envelope$payload_sha256)
-  } else NULL
+  } else {
+    NULL
+  }
+  payload_hash_matches <- length(payload_sha256) == 1L && length(manifest_payload_sha) == 1L &&
+    !is.na(payload_sha256) && !is.na(manifest_payload_sha) &&
+    identical(payload_sha256, manifest_payload_sha)
+
+  base_envelope_valid <- FALSE
+  if (envelope_present && is.list(envelope) && !is.null(names(envelope)) &&
+      payload_present && !triomics_is_symlink(bundle_path) &&
+      length(payload_sha256) == 1L && !is.na(payload_sha256) &&
+      length(manifest_payload_sha) == 1L && !is.na(manifest_payload_sha) &&
+      isTRUE(triomics_sha256_text(manifest_payload_sha))) {
+    if (isTRUE(payload_hash_matches)) {
+      base_envelope_valid <- isTRUE(triomics_validate_envelope(envelope_path))
+    } else {
+      schema_probe_path <- tempfile(
+        pattern = ".b-t07-envelope-schema-",
+        tmpdir = dirname(envelope_path),
+        fileext = ".json"
+      )
+      on.exit(if (file.exists(schema_probe_path)) unlink(schema_probe_path), add = TRUE)
+      schema_probe <- envelope
+      schema_probe$payload_sha256 <- payload_sha256
+      base_envelope_valid <- tryCatch({
+        jsonlite::write_json(schema_probe, schema_probe_path, auto_unbox = TRUE,
+                             null = "null", pretty = TRUE, digits = NA)
+        isTRUE(triomics_validate_envelope(schema_probe_path))
+      }, error = function(error) FALSE)
+    }
+  }
+
+  member_evidence_valid <- is.list(payload) &&
+    isTRUE(triomics_b07_validate_bundle_members(payload, bundle_path))
+  late_evidence_valid <- is.list(payload) && envelope_present &&
+    isTRUE(triomics_b07_validate_late_artifacts(payload, bundle_path, envelope_path))
   list(
     status = if (is.list(payload) && !is.null(payload$status)) as.character(payload$status) else NULL,
     cache_key = if (is.list(payload) && !is.null(payload$cache_key)) as.character(payload$cache_key) else NULL,
-    payload_sha256 = if (payload_present) triomics_sha256(bundle_path) else NULL,
+    payload_sha256 = payload_sha256,
     manifest_payload_sha256 = manifest_payload_sha,
     payload_present = payload_present,
-    envelope_present = envelope_ok
+    envelope_present = envelope_present,
+    payload_readable = payload_readable,
+    base_envelope_valid = base_envelope_valid,
+    payload_hash_matches = payload_hash_matches,
+    required_evidence_complete = isTRUE(member_evidence_valid) && isTRUE(late_evidence_valid)
   )
 }
 
@@ -2201,15 +2266,14 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
     )
   }
   candidate_after_write <- triomics_b07_resume_candidate(bundle_path)
-  bundle_envelope_readback <- tryCatch(jsonlite::read_json(bundle_envelope_path, simplifyVector = FALSE),
-                                       error = function(error) NULL)
-  candidate_valid <- if (!is.null(provenance_context)) {
+  candidate_valid <- isTRUE(candidate_after_write$payload_present) &&
+    isTRUE(candidate_after_write$payload_readable) &&
     isTRUE(candidate_after_write$envelope_present) &&
-      identical(candidate_after_write$payload_sha256, candidate_after_write$manifest_payload_sha256)
-  } else {
-    is.list(bundle_envelope_readback) && isTRUE(triomics_validate_envelope(bundle_envelope_path)) &&
-      identical(as.character(bundle_envelope_readback$payload_sha256), triomics_sha256(bundle_path))
-  }
+    isTRUE(candidate_after_write$base_envelope_valid) &&
+    isTRUE(candidate_after_write$payload_hash_matches) &&
+    identical(candidate_after_write$status, bundle_status) &&
+    (!identical(bundle_status, "complete") ||
+       isTRUE(candidate_after_write$required_evidence_complete))
   if (!candidate_valid || !identical(candidate_after_write$cache_key, cache_key)) {
     triomics_b07_abort("B_EXPORT_INCOMPLETE", "The finalized B handoff failed its restart verification.", "bundle",
                        "Do not publish a bundle whose manifest, late artifacts or member hashes fail read-back verification.")

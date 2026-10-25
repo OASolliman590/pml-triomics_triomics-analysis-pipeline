@@ -75,7 +75,7 @@
     "file": "R/cli.R",
     "entrypoint": "triomics_b07_cli_after_stage_b(args, stage_b_result)",
     "ordering": "After a successful non-validation Stage B run and after the registered B-T09 and B-T08 output hooks, so the B-T07 bundle can verify all requested clinical artifacts.",
-    "current_blocker": "Repair 2 forwards nullable ordered row/column identity digests through both artifact storage branches and supplies the required study/scope fields on source_manifest entities. The exact B-T07 CLI now writes and validates its native provenance profile and envelope. The one remaining B-T07 assertion mismatch is AC3: its direct caller_matrix_unverified export has no same-run provenance_context, so the candidate is correctly fail-closed as partial while the test expects incomplete. No expectation change was made because this scenario does not produce a fully constructed native profile proving a product-semantic defect."
+    "current_blocker": "M7-009 implements the audited resume-reason order. The caller_matrix_unverified diagnostic publishes only as a self-consistent partial bundle and resumes as incomplete; complete/reusable claims require valid base envelope, payload binding, and all required member, late, and provenance evidence. Focused verification is recorded under implementation_evidence.m7_009. Independent review and acceptance remain pending."
   },
   "matrix_provenance": {
     "required_in_memory_field": "stage_b_result$resolved_matrices",
@@ -106,8 +106,8 @@
   "acceptance_blockers": [
     {
       "criterion": "B-T07-AC3",
-      "status": "candidate_review_pending_ac3_expectation_mismatch",
-      "evidence": "Exact B-T07 CLI and same-run native profile checks pass after repair 2. The residual AC3 direct-export assertion expects resume reason incomplete, but unverified matrix input has no native provenance_context and the missing frame correctly yields partial/fail-closed reuse."
+      "status": "candidate_review_pending_m7_009",
+      "evidence": "M7-009 retains the AC3 expectation and repairs classification: the physically present declared-partial caller_matrix_unverified pair resumes as incomplete with reuse refused. Its implementation is a candidate pending independent review and acceptance."
     },
     {
       "criterion": "B-T07-CLI",
@@ -226,7 +226,64 @@
         "One B-T07 assertion remains red as documented; no further repair, test-expectation relaxation, integration, acceptance or push is authorized.",
         "The B-T01 fixture write failure under inst/examples/tickets remains an existing managed-worktree permission diagnostic and was not edited or counted as product GREEN."
       ]
+    },
+    "m7_009": {
+      "authority": "docs/implementation/change-records/M7-009-resume-reason-vocabulary.md",
+      "audit_receipt": "docs/implementation/reviews/2026-10-25-m7-009-astra-final-audit.md",
+      "red": {
+        "stage": "public B-T07 seam RED before implementation",
+        "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'",
+        "summary": {"fail": 28, "warn": 0, "skip": 0, "pass": 270},
+        "assertions": [
+          "A physically present but invalid envelope and an unreadable payload were incorrectly classified as partial.",
+          "A readable base envelope with a mismatched payload hash and bad late evidence was not classified as hash_mismatch.",
+          "A declared-partial present pair, matching-base candidates with missing or invalid provenance, and a complete post-write claim without provenance did not meet the audited refusal behavior.",
+          "The existing AC3 caller_matrix_unverified fixture observed partial instead of incomplete."
+        ]
+      },
+      "changes": [
+        "Separated physical envelope presence, payload readability, base-envelope validation, payload hash binding, and required member/late/provenance evidence in the B-T07 resume candidate.",
+        "Applied the audited precedence while preserving absent, partial, incomplete, invalidated, hash_mismatch, and complete_match outcomes.",
+        "Made post-write verification require complete evidence for complete-status bundles while permitting a self-consistent explicitly partial caller_matrix_unverified diagnostic bundle.",
+        "Kept AC3's incomplete expectation and supplied captured same-run provenance context in the complete AC2 test fixture."
+      ],
+      "green": {
+        "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'",
+        "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 298},
+        "warnings": [],
+        "verified_behavior": [
+          "No payload is absent; payload without a physical bundle envelope is partial; a present declared-partial pair is incomplete.",
+          "Unreadable payloads and invalid base envelopes are incomplete; a readable base-envelope payload hash mismatch remains hash_mismatch even with failed late evidence.",
+          "Matching complete base pairs with missing or invalid late/provenance evidence are incomplete and not reusable.",
+          "Only a complete matching candidate with all required evidence is reusable; a complete-status post-write claim with missing native provenance raises B_EXPORT_INCOMPLETE.",
+          "The self-consistent caller_matrix_unverified diagnostic finalizes only as partial and resumes as incomplete."
+        ]
+      },
+      "focused_crosschecks": {
+        "public_B_T02_identity_cli": {
+          "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T01.R\", desc = \"Stage B CLI writes unique, deterministic BlockResult identities across contrasts\")'",
+          "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 266},
+          "stdout_notes": []
+        },
+        "test_B_T03": {
+          "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T03.R\")'",
+          "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 286},
+          "stdout_notes": ["Coefficients not estimable: between_group.unobserved"],
+          "warnings": []
+        },
+        "test_A_T08": {
+          "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-A-T08.R\")'",
+          "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 284},
+          "warnings": []
+        }
+      },
+      "status": "candidate_review_pending",
+      "accepted": false,
+      "limitations": [
+        "All verification used public synthetic fixtures; no scientific-validity claim is established.",
+        "This candidate is not independently reviewed or accepted and is not integrated."
+      ]
     }
   },
-  "request": "Final authorized repair 2 forwards ordered matrix identity digests and supplies source-manifest scope required by the accepted schema. Keep candidate/review_pending with accepted=false; preserve the residual AC3 partial-versus-incomplete assertion evidence. No further repairs, integration, acceptance, C/D/migration work, private data access or push."
+  "request": "M7-009 implementation and focused verification are complete in the bounded candidate. Keep status candidate/review_pending and accepted=false pending independent implementation review and Sol's acceptance/integration decision. No C/D/migration work, private data access or push."
 }

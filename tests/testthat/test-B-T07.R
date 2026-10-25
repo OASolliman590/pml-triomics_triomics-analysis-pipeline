@@ -383,6 +383,7 @@ testthat::test_that("B-T07 AC2 independent and paired CLI smokes retain signed e
     output = consolidated_root, config_path = independent_config,
     matrices = same_run_stage_result$resolved_matrices,
     matrix_source = "stage_b_resolved_blocks",
+    provenance_context = same_run_stage_result$provenance_context,
     smoke_runs = list(independent = independent_root, paired = paired_root,
                       unavailable_method = unavailable_root),
     command = "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/B-T07.yaml --stage B --output artifacts/acceptance/B-T07"
@@ -468,6 +469,38 @@ testthat::test_that("B-T07 AC3 validates the matrix hash and blocks unverified p
   )
   testthat::expect_s3_class(changed_export, "triomics_error")
   testthat::expect_identical(changed_export$code, "B_EXPORT_MATRIX")
+})
+
+testthat::test_that("B-T07 complete-status export refuses missing native provenance after write", {
+  root <- t07_test_root("complete-without-provenance")
+  config_path <- t07_ticket("B-T07.yaml")
+  stage_b_result <- triomics_execute_stage_b(config_path, root)
+  testthat::expect_identical(stage_b_result$status, "complete")
+
+  attempted <- t07_attempt_export(
+    output = root,
+    config_path = config_path,
+    matrices = stage_b_result$resolved_matrices,
+    matrix_source = "stage_b_resolved_blocks"
+  )
+  testthat::expect_s3_class(attempted, "triomics_error")
+  testthat::expect_identical(attempted$code, "B_EXPORT_INCOMPLETE")
+
+  handoff_dirs <- list.dirs(file.path(root, "B", "handoffs"),
+                            recursive = FALSE, full.names = TRUE)
+  testthat::expect_length(handoff_dirs, 1L)
+  if (length(handoff_dirs) == 1L) {
+    bundle_path <- file.path(handoff_dirs[[1L]], "bundle.json")
+    candidate <- triomics_b07_resume_candidate(bundle_path)
+    decision <- t07_attempt_resume(candidate, candidate$cache_key)
+    testthat::expect_identical(candidate$status, "complete")
+    testthat::expect_true(candidate$envelope_present)
+    testthat::expect_true(candidate$base_envelope_valid)
+    testthat::expect_true(candidate$payload_hash_matches)
+    testthat::expect_false(candidate$required_evidence_complete)
+    testthat::expect_false(isTRUE(decision$reuse))
+    testthat::expect_identical(decision$reason, "incomplete")
+  }
 })
 
 testthat::test_that("B-T07 integrated CLI writes a verified same-run matrix handoff", {
@@ -576,6 +609,8 @@ testthat::test_that("B-T07 exact CLI emits a validated native StageHandoffProven
 
   provenance_path <- file.path(handoff_dirs[[1L]], "stage-handoff-provenance.json")
   provenance_envelope_path <- file.path(handoff_dirs[[1L]], "stage-handoff-provenance.envelope.json")
+  bundle_path <- file.path(handoff_dirs[[1L]], "bundle.json")
+  bundle_envelope_path <- file.path(handoff_dirs[[1L]], "bundle.envelope.json")
   testthat::expect_true(file.exists(provenance_path),
                         info = "The exact B-T07 CLI emitted no native provenance payload.")
   testthat::expect_true(file.exists(provenance_envelope_path),
@@ -584,7 +619,7 @@ testthat::test_that("B-T07 exact CLI emits a validated native StageHandoffProven
 
   profile <- t07_read_json_safe(provenance_path)
   envelope <- t07_read_json_safe(provenance_envelope_path)
-  bundle <- t07_read_json_safe(file.path(handoff_dirs[[1L]], "bundle.json"))
+  bundle <- t07_read_json_safe(bundle_path)
   testthat::expect_true(isTRUE(triomics_validate_stage_handoff_provenance(
     profile, "b-t07-stage-handoff-provenance", "b-t07-stage-handoff-provenance-envelope"
   )))
@@ -628,6 +663,46 @@ testthat::test_that("B-T07 exact CLI emits a validated native StageHandoffProven
   testthat::expect_identical(predecessor[[1L]]$digest, triomics_sha256(block_envelope_path))
   testthat::expect_identical(predecessor[[1L]]$artifact_payload_sha256, triomics_sha256(block_payload_path))
 
+  bundle_bytes <- readBin(bundle_path, what = "raw", n = file.info(bundle_path)$size)
+  bundle_envelope_bytes <- readBin(bundle_envelope_path, what = "raw",
+                                   n = file.info(bundle_envelope_path)$size)
+  on.exit({
+    writeBin(bundle_bytes, bundle_path)
+    writeBin(bundle_envelope_bytes, bundle_envelope_path)
+  }, add = TRUE)
+
+  file.remove(bundle_envelope_path)
+  no_envelope_candidate <- triomics_b07_resume_candidate(bundle_path)
+  no_envelope_decision <- t07_attempt_resume(no_envelope_candidate, bundle$cache_key)
+  testthat::expect_true(no_envelope_candidate$payload_present)
+  testthat::expect_false(no_envelope_candidate$envelope_present)
+  testthat::expect_identical(no_envelope_decision$reason, "partial")
+  writeBin(bundle_envelope_bytes, bundle_envelope_path)
+
+  writeLines("{ invalid envelope", bundle_envelope_path, useBytes = TRUE)
+  invalid_envelope_candidate <- triomics_b07_resume_candidate(bundle_path)
+  invalid_envelope_decision <- t07_attempt_resume(invalid_envelope_candidate, bundle$cache_key)
+  testthat::expect_true(invalid_envelope_candidate$envelope_present)
+  testthat::expect_false(invalid_envelope_candidate$base_envelope_valid)
+  testthat::expect_identical(invalid_envelope_decision$reason, "incomplete")
+  writeBin(bundle_envelope_bytes, bundle_envelope_path)
+
+  writeLines("{ invalid payload", bundle_path, useBytes = TRUE)
+  unreadable_payload_candidate <- triomics_b07_resume_candidate(bundle_path)
+  unreadable_payload_decision <- t07_attempt_resume(unreadable_payload_candidate, bundle$cache_key)
+  testthat::expect_false(unreadable_payload_candidate$payload_readable)
+  testthat::expect_identical(unreadable_payload_decision$reason, "incomplete")
+  writeBin(bundle_bytes, bundle_path)
+
+  writeBin(c(bundle_bytes, as.raw(32L)), bundle_path)
+  mismatched_payload_candidate <- triomics_b07_resume_candidate(bundle_path)
+  mismatched_payload_decision <- t07_attempt_resume(mismatched_payload_candidate, bundle$cache_key)
+  testthat::expect_true(mismatched_payload_candidate$base_envelope_valid)
+  testthat::expect_false(mismatched_payload_candidate$payload_hash_matches)
+  testthat::expect_false(mismatched_payload_candidate$required_evidence_complete)
+  testthat::expect_identical(mismatched_payload_decision$reason, "hash_mismatch")
+  writeBin(bundle_bytes, bundle_path)
+
   profile_bytes <- readBin(provenance_path, what = "raw", n = file.info(provenance_path)$size)
   envelope_bytes <- readBin(provenance_envelope_path, what = "raw", n = file.info(provenance_envelope_path)$size)
   on.exit({
@@ -635,8 +710,14 @@ testthat::test_that("B-T07 exact CLI emits a validated native StageHandoffProven
     writeBin(envelope_bytes, provenance_envelope_path)
   }, add = TRUE)
   file.remove(provenance_envelope_path)
-  missing_candidate <- triomics_b07_resume_candidate(file.path(handoff_dirs[[1L]], "bundle.json"))
-  testthat::expect_false(isTRUE(missing_candidate$envelope_present))
+  missing_candidate <- triomics_b07_resume_candidate(bundle_path)
+  missing_decision <- t07_attempt_resume(missing_candidate, bundle$cache_key)
+  testthat::expect_true(isTRUE(missing_candidate$envelope_present))
+  testthat::expect_true(isTRUE(missing_candidate$base_envelope_valid))
+  testthat::expect_true(isTRUE(missing_candidate$payload_hash_matches))
+  testthat::expect_false(isTRUE(missing_candidate$required_evidence_complete))
+  testthat::expect_false(isTRUE(missing_decision$reuse))
+  testthat::expect_identical(missing_decision$reason, "incomplete")
   missing_resume <- t07_attempt_export(
     output = root, config_path = t07_ticket("B-T07.yaml"), matrices = matrix_values,
     matrix_source = "stage_b_resolved_blocks", resume = TRUE
@@ -645,8 +726,14 @@ testthat::test_that("B-T07 exact CLI emits a validated native StageHandoffProven
   testthat::expect_identical(missing_resume$code, "B_EXPORT_INCOMPLETE")
   writeBin(envelope_bytes, provenance_envelope_path)
   writeBin(c(profile_bytes, as.raw(0L)), provenance_path)
-  tampered_candidate <- triomics_b07_resume_candidate(file.path(handoff_dirs[[1L]], "bundle.json"))
-  testthat::expect_false(isTRUE(tampered_candidate$envelope_present))
+  tampered_candidate <- triomics_b07_resume_candidate(bundle_path)
+  tampered_decision <- t07_attempt_resume(tampered_candidate, bundle$cache_key)
+  testthat::expect_true(isTRUE(tampered_candidate$envelope_present))
+  testthat::expect_true(isTRUE(tampered_candidate$base_envelope_valid))
+  testthat::expect_true(isTRUE(tampered_candidate$payload_hash_matches))
+  testthat::expect_false(isTRUE(tampered_candidate$required_evidence_complete))
+  testthat::expect_false(isTRUE(tampered_decision$reuse))
+  testthat::expect_identical(tampered_decision$reason, "incomplete")
   tampered_resume <- t07_attempt_export(
     output = root, config_path = t07_ticket("B-T07.yaml"), matrices = matrix_values,
     matrix_source = "stage_b_resolved_blocks", resume = TRUE
@@ -803,32 +890,48 @@ testthat::test_that("B-T07 Stage B returns the same-run keyed matrices without s
   }
 })
 
-testthat::test_that("B-T07 AC3 rejects partial or hash-mismatched restart candidates", {
-  expected <- triomics_hash_text("complete cache key")
-  complete <- list(payload_present = TRUE, envelope_present = TRUE,
-                   status = "complete", cache_key = expected,
-                   payload_sha256 = expected, manifest_payload_sha256 = expected)
-  partial <- list(payload_present = TRUE, envelope_present = FALSE,
-                  status = "complete", cache_key = expected,
-                  payload_sha256 = expected, manifest_payload_sha256 = expected)
-  mismatch <- list(payload_present = TRUE, envelope_present = TRUE,
-                   status = "complete", cache_key = expected,
-                   payload_sha256 = triomics_hash_text("payload"),
-                   manifest_payload_sha256 = triomics_hash_text("manifest"))
-  partial_decision <- t07_attempt_resume(partial, expected)
-  mismatch_decision <- t07_attempt_resume(mismatch, expected)
-  same_decision <- t07_attempt_resume(complete, expected)
-  changed_dependency_decision <- t07_attempt_resume(complete, triomics_hash_text("changed dependency key"))
-  testthat::expect_false(inherits(partial_decision, "error"))
-  testthat::expect_false(inherits(mismatch_decision, "error"))
-  testthat::expect_true(isTRUE(same_decision$reuse))
-  testthat::expect_identical(changed_dependency_decision$reason, "invalidated")
-  if (!inherits(partial_decision, "error")) {
-    testthat::expect_identical(partial_decision, list(reuse = FALSE, reason = "partial"))
+testthat::test_that("B-T07 resume reason follows the seven-rule refusal precedence", {
+  expected <- triomics_hash_text("resume precedence cache key")
+  payload_hash <- triomics_hash_text("readable bundle payload")
+  candidate <- function(payload_present = TRUE, envelope_present = TRUE,
+                        payload_readable = TRUE, base_envelope_valid = TRUE,
+                        payload_hash_matches = TRUE, required_evidence_complete = TRUE,
+                        status = "complete", cache_key = expected,
+                        payload_sha256 = payload_hash,
+                        manifest_payload_sha256 = payload_hash) {
+    list(
+      payload_present = payload_present,
+      envelope_present = envelope_present,
+      payload_readable = payload_readable,
+      base_envelope_valid = base_envelope_valid,
+      payload_hash_matches = payload_hash_matches,
+      required_evidence_complete = required_evidence_complete,
+      status = status,
+      cache_key = cache_key,
+      payload_sha256 = payload_sha256,
+      manifest_payload_sha256 = manifest_payload_sha256
+    )
   }
-  if (!inherits(mismatch_decision, "error")) {
-    testthat::expect_identical(mismatch_decision, list(reuse = FALSE, reason = "hash_mismatch"))
+  expect_reason <- function(candidate_value, reason) {
+    decision <- t07_attempt_resume(candidate_value, expected)
+    testthat::expect_identical(decision, list(reuse = FALSE, reason = reason))
   }
+
+  expect_reason(candidate(payload_present = FALSE), "absent")
+  expect_reason(candidate(envelope_present = FALSE), "partial")
+  expect_reason(candidate(status = "partial", required_evidence_complete = FALSE), "incomplete")
+  expect_reason(candidate(payload_readable = FALSE), "incomplete")
+  expect_reason(candidate(base_envelope_valid = FALSE), "incomplete")
+  expect_reason(candidate(cache_key = triomics_hash_text("changed cache key"),
+                          required_evidence_complete = FALSE), "invalidated")
+  expect_reason(candidate(payload_hash_matches = FALSE,
+                          payload_sha256 = triomics_hash_text("changed payload"),
+                          required_evidence_complete = FALSE), "hash_mismatch")
+  expect_reason(candidate(required_evidence_complete = FALSE), "incomplete")
+  testthat::expect_identical(
+    t07_attempt_resume(candidate(), expected),
+    list(reuse = TRUE, reason = "complete_match")
+  )
 })
 
 testthat::test_that("B-T07 AC4 records reproduction evidence and explicit limits", {
