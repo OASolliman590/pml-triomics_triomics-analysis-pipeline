@@ -277,6 +277,46 @@
           "warnings": []
         }
       },
+      "standards_axis_repair": {
+        "fixed_point": "762a0a09104fb70c920784f3c0897f3e96565567",
+        "review_basis": "Spec axis passed; standards axis required one Important repair because resume inspection wrote its schema probe under the finalized artifact directory.",
+        "red": {
+          "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\", desc = \"B-T07 resume inspects hash-mismatched bundles without probing the handoff directory\")'",
+          "summary": {"fail": 2, "warn": 1, "skip": 0, "pass": 10},
+          "warning": "Permission denied while attempting to write the schema probe beneath the read-only handoff directory."
+        },
+        "change": "Resume inspection now validates a temporary schema probe in the system temporary directory, copying the readable bundle payload beside it so the existing envelope validator still checks exact payload bytes. The artifact tree remains untouched.",
+        "green": {
+          "focused_regression": {
+            "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\", desc = \"B-T07 resume inspects hash-mismatched bundles without probing the handoff directory\")'",
+            "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 17},
+            "verified_behavior": "The exported handoff resume path captures the unmodified candidate before the shared exported classifier; a readable complete-status bundle with a mismatched payload and incomplete evidence is classified hash_mismatch. The test chmod-protects the handoff and verifies no tempfile probe targets its tree."
+          },
+          "test_B_T07": {
+            "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'",
+            "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 315},
+            "warnings": []
+          },
+          "public_B_T02_identity_cli": {
+            "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T01.R\", desc = \"Stage B CLI writes unique, deterministic BlockResult identities across contrasts\")'",
+            "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 266},
+            "warnings": []
+          },
+          "test_B_T03": {
+            "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T03.R\")'",
+            "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 286},
+            "stdout_notes": ["Coefficients not estimable: between_group.unobserved"],
+            "warnings": []
+          },
+          "test_A_T08": {
+            "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-A-T08.R\")'",
+            "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 284},
+            "warnings": []
+          }
+        },
+        "status": "candidate_review_pending",
+        "accepted": false
+      },
       "status": "candidate_review_pending",
       "accepted": false,
       "limitations": [

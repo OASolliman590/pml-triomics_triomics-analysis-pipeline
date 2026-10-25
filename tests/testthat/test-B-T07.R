@@ -503,6 +503,113 @@ testthat::test_that("B-T07 complete-status export refuses missing native provena
   }
 })
 
+testthat::test_that("B-T07 resume inspects hash-mismatched bundles without probing the handoff directory", {
+  root <- t07_test_root("readonly-hash-mismatch")
+  config_path <- t07_ticket("B-T07.yaml")
+  stage_b_result <- triomics_execute_stage_b(config_path, root)
+  testthat::expect_identical(stage_b_result$status, "complete")
+
+  attempted <- t07_attempt_export(
+    output = root,
+    config_path = config_path,
+    matrices = stage_b_result$resolved_matrices,
+    matrix_source = "stage_b_resolved_blocks"
+  )
+  testthat::expect_s3_class(attempted, "triomics_error")
+  testthat::expect_identical(attempted$code, "B_EXPORT_INCOMPLETE")
+
+  handoff_dirs <- list.dirs(file.path(root, "B", "handoffs"),
+                            recursive = FALSE, full.names = TRUE)
+  testthat::expect_length(handoff_dirs, 1L)
+  if (length(handoff_dirs) != 1L) return(invisible(NULL))
+
+  handoff_dir <- handoff_dirs[[1L]]
+  bundle_path <- file.path(handoff_dir, "bundle.json")
+  envelope_path <- file.path(handoff_dir, "bundle.envelope.json")
+  bundle_bytes <- readBin(bundle_path, what = "raw", n = file.info(bundle_path)$size)
+  envelope_bytes <- readBin(envelope_path, what = "raw", n = file.info(envelope_path)$size)
+  original_mode <- sprintf("%04o", bitwAnd(as.integer(file.info(handoff_dir)$mode), 4095L))
+  old_candidate_trace <- getOption(".m7_009_resume_candidates")
+  old_decision_trace <- getOption(".m7_009_resume_decisions")
+  old_tempdir_trace <- getOption(".m7_009_resume_tempdirs")
+  candidate_trace_active <- FALSE
+  tempfile_trace_active <- FALSE
+  on.exit({
+    if (tempfile_trace_active) base::untrace("tempfile", where = baseenv())
+    if (candidate_trace_active) {
+      base::untrace("triomics_export_resume_decision", where = asNamespace("triomics"))
+    }
+    options(.m7_009_resume_candidates = old_candidate_trace,
+            .m7_009_resume_decisions = old_decision_trace,
+            .m7_009_resume_tempdirs = old_tempdir_trace)
+    Sys.chmod(handoff_dir, mode = original_mode)
+    writeBin(bundle_bytes, bundle_path)
+    writeBin(envelope_bytes, envelope_path)
+  }, add = TRUE)
+
+  testthat::expect_true(isTRUE(triomics_validate_envelope(envelope_path)))
+  writeBin(c(bundle_bytes, as.raw(32L)), bundle_path)
+  testthat::expect_identical(t07_read_json_safe(bundle_path)$status, "complete")
+  testthat::expect_false(isTRUE(triomics_validate_envelope(envelope_path)))
+  Sys.chmod(handoff_dir, mode = "0555")
+
+  options(.m7_009_resume_candidates = list(),
+          .m7_009_resume_decisions = list(),
+          .m7_009_resume_tempdirs = character())
+  base::trace(
+    "triomics_export_resume_decision",
+    where = asNamespace("triomics"),
+    tracer = quote(options(
+      .m7_009_resume_candidates = c(getOption(".m7_009_resume_candidates"), list(candidate))
+    )),
+    exit = quote(options(
+      .m7_009_resume_decisions = c(getOption(".m7_009_resume_decisions"), list(returnValue()))
+    )),
+    print = FALSE
+  )
+  candidate_trace_active <- TRUE
+  base::trace(
+    "tempfile",
+    where = baseenv(),
+    tracer = quote(options(
+      .m7_009_resume_tempdirs = c(getOption(".m7_009_resume_tempdirs"), as.character(tmpdir))
+    )),
+    print = FALSE
+  )
+  tempfile_trace_active <- TRUE
+
+  resumed <- t07_attempt_export(
+    output = root,
+    config_path = config_path,
+    matrices = stage_b_result$resolved_matrices,
+    matrix_source = "stage_b_resolved_blocks",
+    resume = TRUE
+  )
+  observed_candidates <- getOption(".m7_009_resume_candidates")
+  observed_decisions <- getOption(".m7_009_resume_decisions")
+  observed_tempdirs <- getOption(".m7_009_resume_tempdirs")
+  observed_candidates <- Filter(Negate(is.null), observed_candidates)
+  normalized_handoff <- normalizePath(handoff_dir, winslash = "/", mustWork = TRUE)
+  normalized_tempdirs <- normalizePath(observed_tempdirs, winslash = "/", mustWork = FALSE)
+
+  testthat::expect_s3_class(resumed, "triomics_error")
+  testthat::expect_identical(resumed$code, "B_EXPORT_INCOMPLETE")
+  testthat::expect_length(observed_candidates, 1L)
+  if (length(observed_candidates) == 1L) {
+    candidate <- observed_candidates[[1L]]
+    decision <- observed_decisions[[length(observed_decisions)]]
+    testthat::expect_identical(candidate$status, "complete")
+    testthat::expect_true(isTRUE(candidate$base_envelope_valid))
+    testthat::expect_false(isTRUE(candidate$payload_hash_matches))
+    testthat::expect_false(isTRUE(candidate$required_evidence_complete))
+    testthat::expect_identical(decision, list(reuse = FALSE, reason = "hash_mismatch"))
+  }
+  testthat::expect_true(length(normalized_tempdirs) > 0L)
+  testthat::expect_false(any(normalized_tempdirs == normalized_handoff |
+                               startsWith(normalized_tempdirs,
+                                          paste0(normalized_handoff, .Platform$file.sep))))
+})
+
 testthat::test_that("B-T07 integrated CLI writes a verified same-run matrix handoff", {
   root <- t07_test_root("integrated-cli")
   run <- t07_cli_smoke(t07_ticket("B-T07.yaml"), root)

@@ -1414,19 +1414,23 @@ triomics_b07_resume_candidate <- function(bundle_path) {
     if (isTRUE(payload_hash_matches)) {
       base_envelope_valid <- isTRUE(triomics_validate_envelope(envelope_path))
     } else {
-      schema_probe_path <- tempfile(
-        pattern = ".b-t07-envelope-schema-",
-        tmpdir = dirname(envelope_path),
-        fileext = ".json"
-      )
-      on.exit(if (file.exists(schema_probe_path)) unlink(schema_probe_path), add = TRUE)
-      schema_probe <- envelope
-      schema_probe$payload_sha256 <- payload_sha256
-      base_envelope_valid <- tryCatch({
-        jsonlite::write_json(schema_probe, schema_probe_path, auto_unbox = TRUE,
-                             null = "null", pretty = TRUE, digits = NA)
-        isTRUE(triomics_validate_envelope(schema_probe_path))
-      }, error = function(error) FALSE)
+      schema_probe_dir <- tempfile(pattern = ".b-t07-envelope-schema-", tmpdir = tempdir())
+      if (dir.create(schema_probe_dir, recursive = FALSE, showWarnings = FALSE)) {
+        on.exit(unlink(schema_probe_dir, recursive = TRUE), add = TRUE)
+        schema_probe_path <- file.path(schema_probe_dir, basename(envelope_path))
+        schema_probe_payload_path <- file.path(schema_probe_dir, basename(bundle_path))
+        schema_probe <- envelope
+        schema_probe$payload_sha256 <- payload_sha256
+        base_envelope_valid <- tryCatch({
+          if (!isTRUE(file.copy(bundle_path, schema_probe_payload_path))) {
+            FALSE
+          } else {
+            jsonlite::write_json(schema_probe, schema_probe_path, auto_unbox = TRUE,
+                                 null = "null", pretty = TRUE, digits = NA)
+            isTRUE(triomics_validate_envelope(schema_probe_path))
+          }
+        }, error = function(error) FALSE)
+      }
     }
   }
 
