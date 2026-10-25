@@ -323,6 +323,54 @@
         "All verification used public synthetic fixtures; no scientific-validity claim is established.",
         "This candidate is not independently reviewed or accepted and is not integrated."
       ]
+    },
+    "m7_010": {
+      "authority": "docs/implementation/change-records/M7-010-b-t04-synthetic-producer-lineage.md",
+      "immutable_base": "b3671143683ae22a247e43229fd136c3e6f91adb",
+      "red": {
+        "commands": [
+          "Rscript --vanilla -e 'testthat::test_local(filter = \"B-T04\", reporter = \"summary\")'",
+          "Rscript --vanilla -e 'testthat::test_local(filter = \"M4-005-stage-b-composition\", reporter = \"summary\")'"
+        ],
+        "summaries": {
+          "B-T04": {"fail": 1, "warn": 1, "skip": 0, "error": 0, "pass": 291},
+          "M4-005-stage-b-composition": {"fail": 2, "warn": 0, "skip": 0, "error": 0, "pass": 57}
+        },
+        "cause": "Both immutable-base slices failed at the documented B_EXPORT_INCOMPLETE seam because the custom B-T04 executor omitted same-run native provenance_context."
+      },
+      "green": {
+        "summary_commands": [
+          "Rscript --vanilla -e 'testthat::test_local(filter = \"B-T04\", reporter = \"summary\")'",
+          "Rscript --vanilla -e 'testthat::test_local(filter = \"M4-005-stage-b-composition\", reporter = \"summary\")'",
+          "Rscript --vanilla -e 'testthat::test_local(filter = \"B-T07\", reporter = \"summary\")'"
+        ],
+        "count_commands": [
+          "Rscript --vanilla -e 'testthat::test_local(filter = \"B-T04\", reporter = \"check\")'",
+          "Rscript --vanilla -e 'testthat::test_local(filter = \"M4-005-stage-b-composition\", reporter = \"check\")'",
+          "Rscript --vanilla -e 'testthat::test_local(filter = \"B-T07\", reporter = \"check\")'"
+        ],
+        "summaries": {
+          "B-T04": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 410},
+          "M4-005-stage-b-composition": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 94},
+          "B-T07": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 315}
+        },
+        "verified_behavior": [
+          "The B-T04 producer returns its complete same-run synthetic context and retains the uncentered matrix unchanged for Stage C.",
+          "The canonical B-T04 protocol is the only source root and block-results envelope input; paired TSV digests are absent from provenance and envelope ancestry.",
+          "The profile binds generated metadata, SampleRegistry, FeatureRegistry, AnalysisUnitMap, ordered 12-by-5 design, subject/time identity, centered-response digest, method state and calibration identity.",
+          "Mutations or omissions across protocol, metadata/registries/unit map/design, centering/method/calibration, response matrix and predecessor evidence fail closed before a complete handoff.",
+          "The public block-results artifact retains the existing shape and excludes private context, matrices and model objects; effects remain 1.5 and -0.25 with ordinary df 7 and design rank 5."
+        ],
+        "warnings": [],
+        "skips": []
+      },
+      "status": "candidate_review_pending",
+      "accepted": false,
+      "limitations": [
+        "All verification used public synthetic fixtures; no scientific-validity claim is established.",
+        "No schema, calibration, seed, 0.08 bound, statistics, matrix, or Stage D behavior was changed.",
+        "Independent implementation review, coordinator full-source-suite gate, and Sol acceptance/integration remain pending."
+      ]
     }
   },
   "request": "M7-009 implementation and focused verification are complete in the bounded candidate. Keep status candidate/review_pending and accepted=false pending independent implementation review and Sol's acceptance/integration decision. No C/D/migration work, private data access or push."

@@ -696,6 +696,9 @@ triomics_b07_validate_provenance_context <- function(context, config_sha256, art
     triomics_b07_abort("B_EXPORT_INCOMPLETE", "The Stage B runner did not retain its complete same-run provenance context.",
                        "provenance_context", "Pass only the context returned by the successful Stage B fit.")
   }
+  if (identical(as.character(context$block_results$study_id), "triomics_b_t04_fixture")) {
+    triomics_b07_validate_b04_synthetic_context(context, config_sha256, artifact)
+  }
   if (!identical(as.character(attr(context$config, "config_sha256")), as.character(config_sha256)) ||
       !identical(as.character(context$block_results_sha256), as.character(artifact$payload_sha256)) ||
       !identical(as.character(context$block_results_envelope_sha256), as.character(artifact$envelope_sha256)) ||
@@ -810,6 +813,351 @@ triomics_b07_prov_runtime_versions <- function() {
     }
     list(component = component, version = version)
   })
+}
+
+triomics_b07_validate_b04_synthetic_context <- function(context, config_sha256, artifact) {
+  incomplete <- function(key, message = "The same-run B-T04 synthetic lineage is incomplete or inconsistent.") {
+    triomics_b07_abort(
+      "B_EXPORT_INCOMPLETE", message, key,
+      "Rerun the native B-T04 producer and preserve its protocol, generated records, fit identities, and predecessor bytes."
+    )
+  }
+  synthetic <- context$synthetic_producer
+  required <- c(
+    "protocol", "raw_response", "centered_response", "ordered_design",
+    "subject_time_identity", "centering_rule", "method_state", "calibration",
+    "lineage_identity_sha256"
+  )
+  if (!is.list(synthetic) || !all(required %in% names(synthetic))) {
+    incomplete("synthetic_producer", "The B-T04 producer omitted a required synthetic lineage identity.")
+  }
+
+  expected_protocol <- triomics_b04_synthetic_protocol(config_sha256)
+  expected_protocol_bytes <- triomics_b07_prov_canonical_value(expected_protocol)
+  protocol <- synthetic$protocol
+  expected_protocol_path <- file.path(dirname(artifact$payload_path), "b-t04-synthetic-protocol.json")
+  if (!is.list(protocol) || !all(c("path", "bytes", "sha256", "value") %in% names(protocol)) ||
+      !file.exists(expected_protocol_path) || dir.exists(expected_protocol_path) ||
+      triomics_is_symlink(expected_protocol_path) ||
+      !identical(as.character(protocol$path), normalizePath(expected_protocol_path, winslash = "/", mustWork = TRUE)) ||
+      !identical(as.character(protocol$bytes), expected_protocol_bytes) ||
+      !identical(triomics_b07_prov_canonical_value(protocol$value), expected_protocol_bytes)) {
+    incomplete("synthetic_protocol", "The canonical B-T04 protocol bytes or identity do not match the approved synthetic contract.")
+  }
+  actual_protocol_bytes <- readBin(expected_protocol_path, what = "raw", n = file.info(expected_protocol_path)$size)
+  expected_protocol_raw <- charToRaw(enc2utf8(expected_protocol_bytes))
+  protocol_sha256 <- triomics_sha256(expected_protocol_path)
+  if (!identical(actual_protocol_bytes, expected_protocol_raw) ||
+      !identical(as.character(protocol$sha256), protocol_sha256) ||
+      !identical(protocol_sha256, digest::digest(expected_protocol_raw, algo = "sha256", serialize = FALSE))) {
+    incomplete("synthetic_protocol", "The persisted B-T04 protocol is not the retained immutable canonical byte sequence.")
+  }
+  protocol_id <- as.character(expected_protocol$protocol_id)
+  if (length(context$source_files) != 1L || length(context$source_manifests) != 1L ||
+      !identical(as.character(context$source_files[[1L]]$source_id), protocol_id) ||
+      !identical(as.character(context$source_files[[1L]]$role), "synthetic_protocol") ||
+      !identical(as.character(context$source_files[[1L]]$format), "application/json") ||
+      !identical(as.character(context$source_files[[1L]]$local_ref), normalizePath(expected_protocol_path, winslash = "/", mustWork = TRUE)) ||
+      !identical(as.character(context$source_files[[1L]]$sha256), protocol_sha256) ||
+      !identical(as.character(context$source_manifests[[1L]]$source_id), protocol_id) ||
+      !identical(as.character(context$source_manifests[[1L]]$role), "synthetic_protocol") ||
+      !identical(as.character(context$source_manifests[[1L]]$sha256), protocol_sha256) ||
+      length(artifact$envelope$inputs) != 1L ||
+      !identical(as.character(artifact$envelope$inputs[[1L]]$artifact_id), protocol_id) ||
+      !identical(as.character(artifact$envelope$inputs[[1L]]$sha256), protocol_sha256)) {
+    incomplete("source_manifest", "B-T04 response ancestry must have the protocol as its only source root.")
+  }
+  normalized_or_null <- function(path) {
+    tryCatch(normalizePath(path, winslash = "/", mustWork = TRUE), error = function(error) NULL)
+  }
+  if (!identical(normalized_or_null(context$block_results_path), artifact$payload_path) ||
+      !identical(normalized_or_null(context$block_results_envelope_path), artifact$envelope_path) ||
+      !identical(as.character(context$block_results_sha256), as.character(artifact$payload_sha256)) ||
+      !identical(as.character(context$block_results_envelope_sha256), as.character(artifact$envelope_sha256)) ||
+      !identical(as.character(context$run_id), as.character(artifact$envelope$run_id))) {
+    incomplete("block_results", "The B-T04 same-run predecessor payload or envelope identity changed.")
+  }
+
+  subjects <- unlist(expected_protocol$ordered_subjects, use.names = FALSE)
+  times <- as.numeric(unlist(expected_protocol$ordered_times$values, use.names = FALSE))
+  visits_by_time <- unlist(expected_protocol$ordered_times$visit_labels, use.names = FALSE)
+  features <- unlist(expected_protocol$feature_ids, use.names = FALSE)
+  sample_ids <- unlist(lapply(subjects, function(subject) paste0(subject, "_", visits_by_time)), use.names = FALSE)
+  sample_subjects <- rep(subjects, each = length(times))
+  sample_times <- rep(times, times = length(subjects))
+  sample_visits <- rep(visits_by_time, times = length(subjects))
+  if (!is.data.frame(context$sample_metadata) ||
+      !identical(names(context$sample_metadata), c("sample_id", "subject", "visit", "time", "time_unit", "time_origin")) ||
+      nrow(context$sample_metadata) != 12L ||
+      !identical(as.character(context$sample_metadata$sample_id), sample_ids) ||
+      !identical(as.character(context$sample_metadata$subject), sample_subjects) ||
+      !identical(as.character(context$sample_metadata$visit), sample_visits) ||
+      !identical(as.numeric(context$sample_metadata$time), sample_times) ||
+      !identical(as.character(context$sample_metadata$time_unit), rep("synthetic_step", 12L)) ||
+      !identical(as.numeric(context$sample_metadata$time_origin), rep(0, 12L))) {
+    incomplete("normalized_metadata", "The ordered generated metadata do not match the B-T04 protocol.")
+  }
+  sample_registry <- context$sample_registry
+  sample_registry_columns <- c(
+    "study_id", "sample_id", "subject_id", "visit_id", "time", "time_unit", "time_origin",
+    "source_id", "source_row", "sample_role"
+  )
+  if (!is.data.frame(sample_registry) || !identical(names(sample_registry), sample_registry_columns) ||
+      nrow(sample_registry) != 12L ||
+      !identical(as.character(sample_registry$study_id), rep(as.character(expected_protocol$study_id), 12L)) ||
+      !identical(as.character(sample_registry$sample_id), sample_ids) ||
+      !identical(as.character(sample_registry$subject_id), sample_subjects) ||
+      !identical(as.character(sample_registry$visit_id), sample_visits) ||
+      !identical(as.numeric(sample_registry$time), sample_times) ||
+      !identical(as.character(sample_registry$time_unit), rep("synthetic_step", 12L)) ||
+      !identical(as.numeric(sample_registry$time_origin), rep(0, 12L)) ||
+      !identical(as.character(sample_registry$source_id), rep(protocol_id, 12L)) ||
+      !identical(as.character(sample_registry$source_row), as.character(seq_len(12L))) ||
+      !identical(as.character(sample_registry$sample_role), rep("synthetic_generated", 12L))) {
+    incomplete("sample_registry", "The generated SampleRegistry does not cover the exact twelve protocol units.")
+  }
+  feature_registry <- context$feature_registry
+  feature_registry_columns <- c(
+    "study_id", "block_id", "feature_key", "canonical_id", "original_id", "id_namespace",
+    "source_id", "source_row", "measured_or_derived", "quantity", "scale", "units",
+    "structural_resolution", "alias_refs", "parent_refs", "annotation_route"
+  )
+  if (!is.data.frame(feature_registry) || !identical(names(feature_registry), feature_registry_columns) ||
+      nrow(feature_registry) != 2L ||
+      !identical(as.character(feature_registry$study_id), rep(as.character(expected_protocol$study_id), 2L)) ||
+      !identical(as.character(feature_registry$block_id), rep("block_1", 2L)) ||
+      !identical(as.character(feature_registry$feature_key), features) ||
+      !identical(as.character(feature_registry$canonical_id), features) ||
+      !identical(as.character(feature_registry$original_id), features) ||
+      !identical(as.character(feature_registry$id_namespace), rep("synthetic", 2L)) ||
+      !identical(as.character(feature_registry$source_id), rep(protocol_id, 2L)) ||
+      !identical(as.character(feature_registry$source_row), as.character(seq_len(2L))) ||
+      !identical(as.character(feature_registry$measured_or_derived), rep("derived", 2L)) ||
+      !identical(as.character(feature_registry$quantity), rep("intensity", 2L)) ||
+      !identical(as.character(feature_registry$scale), rep("linear", 2L)) ||
+      !identical(as.character(feature_registry$units), rep("synthetic_arbitrary_units", 2L)) ||
+      !identical(as.character(feature_registry$structural_resolution), rep("unknown", 2L)) ||
+      !identical(as.character(feature_registry$alias_refs), rep("", 2L)) ||
+      !identical(as.character(feature_registry$parent_refs), rep("", 2L)) ||
+      !identical(as.character(feature_registry$annotation_route), rep("none", 2L))) {
+    incomplete("feature_registry", "The generated FeatureRegistry is incomplete or differs from the protocol features.")
+  }
+
+  unit_map <- context$analysis_unit_map
+  unit_map_columns <- c(
+    "study_id", "analysis_id", "preparation_context_id", "unit_id", "unit_type",
+    "representation_id", "source_sample_ids", "subject_id", "visit_id", "condition",
+    "time", "time_unit", "time_origin", "eligible", "exclusion_reason", "represented_blocks"
+  )
+  unit_lists_valid <- is.data.frame(unit_map) &&
+    is.list(unit_map$source_sample_ids) && length(unit_map$source_sample_ids) == 12L &&
+    is.list(unit_map$represented_blocks) && length(unit_map$represented_blocks) == 12L
+  if (!unit_lists_valid || !identical(names(unit_map), unit_map_columns) || nrow(unit_map) != 12L ||
+      !identical(as.character(unit_map$study_id), rep(as.character(expected_protocol$study_id), 12L)) ||
+      !identical(as.character(unit_map$analysis_id), rep(as.character(context$analysis_spec$analysis_id), 12L)) ||
+      !identical(as.character(unit_map$preparation_context_id), rep(as.character(context$analysis_spec$preparation_context_id), 12L)) ||
+      !identical(as.character(unit_map$unit_id), sample_ids) ||
+      !identical(as.character(unit_map$unit_type), rep("sample", 12L)) ||
+      !identical(as.character(unit_map$representation_id), rep("subject_centered", 12L)) ||
+      !identical(as.character(unit_map$subject_id), sample_subjects) ||
+      !identical(as.character(unit_map$visit_id), sample_visits) ||
+      !identical(as.character(unit_map$condition), as.character(sample_times)) ||
+      !identical(as.numeric(unit_map$time), sample_times) ||
+      !identical(as.character(unit_map$time_unit), rep("synthetic_step", 12L)) ||
+      !identical(as.numeric(unit_map$time_origin), rep(0, 12L)) ||
+      !all(unit_map$eligible) || !all(is.na(unit_map$exclusion_reason)) ||
+      !all(vapply(seq_len(12L), function(index) {
+        identical(as.character(unit_map$source_sample_ids[[index]]), sample_ids[[index]]) &&
+          identical(as.character(unit_map$represented_blocks[[index]]), "block_1")
+      }, logical(1L)))) {
+    incomplete("analysis_unit_map", "The generated AnalysisUnitMap does not bind all ordered subject-centered units.")
+  }
+
+  intercepts <- as.numeric(unlist(expected_protocol$subject_intercepts[subjects], use.names = FALSE))
+  slopes <- as.numeric(unlist(expected_protocol$feature_slopes[features], use.names = FALSE))
+  names(slopes) <- features
+  residual <- rep(as.numeric(unlist(expected_protocol$residual_pattern$values, use.names = FALSE)),
+                  times = length(subjects))
+  raw_expected <- do.call(rbind, lapply(features, function(feature) {
+    rep(intercepts, each = length(times)) + slopes[[feature]] * sample_times + residual
+  }))
+  rownames(raw_expected) <- features
+  colnames(raw_expected) <- sample_ids
+  design_expected <- cbind(
+    `subject.sub0001` = as.numeric(sample_subjects == "sub0001"),
+    `subject.sub0002` = as.numeric(sample_subjects == "sub0002"),
+    `subject.sub0003` = as.numeric(sample_subjects == "sub0003"),
+    `subject.sub0004` = as.numeric(sample_subjects == "sub0004"),
+    `time.linear` = sample_times
+  )
+  rownames(design_expected) <- sample_ids
+  analysis <- context$analysis_spec
+  resolved <- context$resolved_analysis
+  if (!identical(analysis, context$config$analyses[[1L]]) ||
+      !identical(context$statistics_spec, analysis$statistics) ||
+      !identical(as.character(resolved$study_id), as.character(expected_protocol$study_id)) ||
+      !identical(as.character(resolved$analysis_id), as.character(analysis$analysis_id)) ||
+      !identical(as.character(resolved$preparation_context_id), as.character(analysis$preparation_context_id)) ||
+      !identical(as.character(resolved$representation_id), "subject_centered") ||
+      !identical(names(resolved$blocks), "block_1") ||
+      !identical(resolved$blocks$block_1$assay, raw_expected) ||
+      !identical(as.character(resolved$blocks$block_1$sample_ids), sample_ids) ||
+      !identical(as.character(resolved$blocks$block_1$subject_ids), sample_subjects) ||
+      !identical(as.character(resolved$blocks$block_1$feature_keys), features) ||
+      !identical(as.character(resolved$blocks$block_1$scales), rep("linear", 2L)) ||
+      !identical(resolved$blocks$block_1$design, design_expected) ||
+      !identical(resolved$unit_map, unit_map) ||
+      !identical(as.character(resolved$model_plan$column_ids),
+                 c("subject.sub0001", "subject.sub0002", "subject.sub0003", "subject.sub0004", "time.linear")) ||
+      !identical(as.character(resolved$model_plan$formula), "~0 + subject + time.linear") ||
+      !isTRUE(resolved$model_plan$subject_terms_retained) ||
+      !identical(resolved$model_plan$duplicate_correlation_applied, FALSE) ||
+      !identical(as.character(resolved$model_plan$time_unit), "synthetic_step") ||
+      !identical(as.character(resolved$model_plan$time_origin), "0")) {
+    incomplete("resolved_analysis", "The resolved B-T04 design or matrix does not match the ordered protocol context.")
+  }
+  centered_expected <- raw_expected
+  for (feature_index in seq_len(nrow(raw_expected))) {
+    centered_expected[feature_index, ] <- triomics_b04_center_vector(
+      as.numeric(raw_expected[feature_index, ]), sample_subjects
+    )
+  }
+  raw_response <- synthetic$raw_response
+  centered_response <- synthetic$centered_response
+  raw_identity <- list(
+    block_id = "block_1", feature_ids = as.list(features), sample_ids = as.list(sample_ids),
+    values = raw_expected
+  )
+  centered_identity <- list(
+    block_id = "block_1", feature_ids = as.list(features), sample_ids = as.list(sample_ids),
+    values = centered_expected
+  )
+  if (!is.list(raw_response) || !identical(raw_response$matrix, raw_expected) ||
+      !identical(as.character(raw_response$assay_sha256), triomics_b_assay_hash("block_1", raw_expected)) ||
+      !identical(as.character(raw_response$identity_sha256), triomics_b07_prov_value_sha256(raw_identity)) ||
+      !identical(as.character(raw_response$row_identity_sha256), triomics_b07_prov_ordered_ids_sha256(features)) ||
+      !identical(as.character(raw_response$column_identity_sha256), triomics_b07_prov_ordered_ids_sha256(sample_ids)) ||
+      !is.list(centered_response) || !identical(centered_response$matrix, centered_expected) ||
+      !identical(as.character(centered_response$assay_sha256), triomics_b_assay_hash("block_1", centered_expected)) ||
+      !identical(as.character(centered_response$identity_sha256), triomics_b07_prov_value_sha256(centered_identity)) ||
+      !identical(as.character(centered_response$row_identity_sha256), triomics_b07_prov_ordered_ids_sha256(features)) ||
+      !identical(as.character(centered_response$column_identity_sha256), triomics_b07_prov_ordered_ids_sha256(sample_ids))) {
+    incomplete("synthetic_response", "The uncentered handoff matrix or centered fitted-response identity changed.")
+  }
+  design_identity <- synthetic$ordered_design
+  expected_design_sha <- triomics_b07_prov_value_sha256(list(
+    row_ids = as.list(sample_ids),
+    column_ids = as.list(colnames(design_expected)),
+    matrix = design_expected
+  ))
+  if (!is.list(design_identity) || !identical(design_identity$row_ids, as.list(sample_ids)) ||
+      !identical(design_identity$column_ids, as.list(colnames(design_expected))) ||
+      !identical(design_identity$matrix, design_expected) ||
+      !identical(as.character(design_identity$sha256), expected_design_sha)) {
+    incomplete("ordered_design", "The exact twelve-by-five ordered design identity is missing or changed.")
+  }
+  subject_time <- synthetic$subject_time_identity
+  expected_subject_time <- list(
+    sample_ids = as.list(sample_ids), subject_ids = as.list(sample_subjects),
+    visit_ids = as.list(sample_visits), time_values = as.list(sample_times),
+    time_unit = "synthetic_step", time_origin = 0
+  )
+  expected_subject_time$sha256 <- triomics_b07_prov_value_sha256(expected_subject_time)
+  if (!identical(subject_time, expected_subject_time)) {
+    incomplete("subject_time_identity", "The ordered subject, visit, time, unit, or origin identity changed.")
+  }
+  expected_centering_rule <- list(
+    rule_id = "b-t04-within-subject-arithmetic-centering-v1",
+    representation = "subject_centered",
+    operation = "subtract_each_subject_feature_mean_from_each_finite_response",
+    grouping_identity = "ordered_subject_time_identity",
+    missing_value_rule = "exclude_nonfinite_values_from_subject_mean_and_preserve_missing_values",
+    randomness = "none"
+  )
+  if (!identical(synthetic$centering_rule, expected_centering_rule)) {
+    incomplete("centering_rule", "The fitted response lacks the approved deterministic subject-centering rule.")
+  }
+
+  calibration <- synthetic$calibration
+  expected_calibration_protocol <- triomics_b04_protocol()
+  expected_calibration_path <- file.path(dirname(dirname(artifact$payload_path)), "calibration.json")
+  calibration_payload <- if (file.exists(expected_calibration_path)) {
+    triomics_b07_read_json(expected_calibration_path, "calibration.json")
+  } else {
+    NULL
+  }
+  if (!is.list(calibration) || !identical(as.character(calibration$status), "pass") ||
+      !isTRUE(calibration$executed) || isTRUE(calibration$skipped) ||
+      !identical(calibration$protocol, expected_calibration_protocol) ||
+      !identical(as.character(calibration$protocol_sha256),
+                 triomics_b07_prov_value_sha256(expected_calibration_protocol)) ||
+      !identical(as.character(calibration$result_sha256),
+                 triomics_b07_prov_value_sha256(calibration$result)) ||
+      !identical(as.character(calibration$result$protocol$seeds), as.character(1001:1400)) ||
+      !identical(as.character(calibration$payload_path), normalizePath(expected_calibration_path, winslash = "/", mustWork = TRUE)) ||
+      !file.exists(expected_calibration_path) ||
+      !identical(as.character(calibration$payload_sha256), triomics_sha256(expected_calibration_path)) ||
+      !identical(triomics_b07_prov_value_sha256(calibration_payload),
+                 as.character(calibration$result_sha256))) {
+    incomplete("calibration", "The B-T04 calibration protocol, unchanged result, or persisted bytes are not bound.")
+  }
+  method_state <- synthetic$method_state
+  contrast <- analysis$statistics$contrasts[[1L]]
+  expected_method_version <- as.character(utils::packageVersion("limma"))
+  if (!is.list(method_state) ||
+      !identical(as.character(method_state$requested_method), "limma") ||
+      !identical(as.character(method_state$method), "limma") ||
+      !identical(as.character(method_state$method_status), as.character(context$block_results$status)) ||
+      !identical(as.character(method_state$limma$version), expected_method_version) ||
+      !identical(as.character(method_state$limma$fit), "limma::lmFit") ||
+      !identical(as.character(method_state$limma$contrast), "limma::contrasts.fit") ||
+      !identical(as.character(method_state$limma$moderation), "limma::eBayes") ||
+      !identical(method_state$limma$trend, FALSE) || !identical(method_state$limma$robust, FALSE) ||
+      !identical(method_state$limma$duplicate_correlation_applied, FALSE) ||
+      !identical(method_state$retained_subject_columns,
+                 as.list(c("subject.sub0001", "subject.sub0002", "subject.sub0003", "subject.sub0004"))) ||
+      !identical(method_state$design_rank, 5L) ||
+      !identical(method_state$residual_df_rule,
+                 "n_observed_minus_rank_of_full_retained_subject_and_time_design") ||
+      !identical(method_state$residual_df, 7L) ||
+      !identical(as.character(method_state$contrast$contrast_id), "per_synthetic_step") ||
+      !identical(method_state$contrast$weights, as.list(contrast$weights)) ||
+      !identical(method_state$moderation_settings, list(
+        trend = FALSE, robust = FALSE, multiplicity = "BH",
+        p_value_source = "moderated$p.value", effective_df_source = "moderated$df.total"
+      )) ||
+      !identical(as.character(method_state$calibration_protocol_sha256),
+                 as.character(calibration$protocol_sha256)) ||
+      !identical(as.character(method_state$calibration_result_sha256),
+                 as.character(calibration$result_sha256))) {
+    incomplete("method_state", "The limma settings, retained columns, contrast, rank, residual rule, or calibration identity changed.")
+  }
+  result_rows <- context$block_results$blocks$block_1$contrasts$per_synthetic_step$rows
+  if (!is.list(result_rows) || length(result_rows) != 2L ||
+      !identical(as.character(vapply(result_rows, `[[`, character(1L), "feature_key")), features) ||
+      !triomics_b_close(as.numeric(result_rows[[1L]]$effect), 1.5) ||
+      !triomics_b_close(as.numeric(result_rows[[2L]]$effect), -0.25) ||
+      !all(vapply(result_rows, function(row) identical(as.integer(row$ordinary_df), 7L), logical(1L))) ||
+      !all(vapply(result_rows, function(row) identical(as.integer(row$design_rank), 5L), logical(1L))) ||
+      !all(vapply(result_rows, function(row) identical(as.character(row$source_hash), raw_response$assay_sha256), logical(1L)))) {
+    incomplete("block_results", "The B-T04 public effect, rank, df, or raw matrix identity changed.")
+  }
+  forbidden_public_names <- c(
+    "provenance_context", "synthetic_producer", "resolved_matrices", "assay", "assays",
+    "fit", "native_model", "model_object", "lmFit", "MArrayLM"
+  )
+  public_names <- function(value) {
+    if (!is.list(value)) return(character())
+    c(names(value), unlist(lapply(value, public_names), use.names = FALSE))
+  }
+  if (any(forbidden_public_names %in% public_names(artifact$payload))) {
+    incomplete("block_results", "Private B-T04 fit context or matrix/model objects were serialized in block results.")
+  }
+  expected_context_sha256 <- triomics_b04_synthetic_context_sha256(context)
+  if (!identical(as.character(synthetic$lineage_identity_sha256), expected_context_sha256)) {
+    incomplete("synthetic_producer", "The retained B-T04 same-run context identity digest does not verify.")
+  }
+  invisible(TRUE)
 }
 
 triomics_b07_build_provenance_profile <- function(context, config_sha256, bundle, bundle_path,
@@ -945,6 +1293,18 @@ triomics_b07_build_provenance_profile <- function(context, config_sha256, bundle
       resolved_feature_scales = stats::setNames(as.list(as.character(block$scales)), as.character(block$feature_keys)),
       matrix_hash = triomics_b07_matrix_hash(block_id, assay)
     )
+    if (!is.null(context$synthetic_producer)) {
+      synthetic <- context$synthetic_producer
+      preprocessing_value$synthetic_response_identity <- list(
+        exported_representation = "uncentered_generated_response",
+        raw_response_assay_sha256 = synthetic$raw_response$assay_sha256,
+        raw_response_identity_sha256 = synthetic$raw_response$identity_sha256,
+        centered_response_assay_sha256 = synthetic$centered_response$assay_sha256,
+        centered_response_identity_sha256 = synthetic$centered_response$identity_sha256,
+        centering_rule = synthetic$centering_rule,
+        subject_time_identity_sha256 = synthetic$subject_time_identity$sha256
+      )
+    }
     preprocessing_id <- triomics_b07_prov_entity_id("preprocessing_state", list(
       analysis_id = analysis_id, block_id = block_id,
       preparation_context_id = preparation_context_id, representation_id = representation_id
@@ -996,6 +1356,29 @@ triomics_b07_build_provenance_profile <- function(context, config_sha256, bundle
            source_hash = as.character(block$source_hash))
     })
   )
+  if (!is.null(context$synthetic_producer)) {
+    synthetic <- context$synthetic_producer
+    resolved_value$synthetic_producer_identity <- list(
+      protocol_artifact_id = as.character(synthetic$protocol$value$protocol_id),
+      protocol_sha256 = as.character(synthetic$protocol$sha256),
+      effective_configuration_sha256 = as.character(config_sha256),
+      ordered_design = list(
+        row_ids = synthetic$ordered_design$row_ids,
+        column_ids = synthetic$ordered_design$column_ids,
+        matrix = synthetic$ordered_design$matrix,
+        sha256 = synthetic$ordered_design$sha256
+      ),
+      subject_time_identity = synthetic$subject_time_identity,
+      raw_response_identity = synthetic$raw_response[c(
+        "assay_sha256", "identity_sha256", "row_identity_sha256", "column_identity_sha256"
+      )],
+      centered_response_identity = synthetic$centered_response[c(
+        "assay_sha256", "identity_sha256", "row_identity_sha256", "column_identity_sha256"
+      )],
+      centering_rule = synthetic$centering_rule,
+      lineage_identity_sha256 = as.character(synthetic$lineage_identity_sha256)
+    )
+  }
   resolved_entity_id <- triomics_b07_prov_entity_id("resolved_analysis", list(
     analysis_id = analysis_id, preparation_context_id = preparation_context_id,
     representation_id = representation_id
@@ -1030,6 +1413,24 @@ triomics_b07_build_provenance_profile <- function(context, config_sha256, bundle
       count_metadata_identity = if (is.null(context$statistics_spec$count_metadata)) NULL else
         triomics_b07_prov_value_sha256(context$statistics_spec$count_metadata)
     )
+    if (!is.null(context$synthetic_producer)) {
+      synthetic <- context$synthetic_producer
+      method_value$synthetic_producer_state <- list(
+        method_state = synthetic$method_state,
+        centering_rule = synthetic$centering_rule,
+        raw_response_identity = synthetic$raw_response[c(
+          "assay_sha256", "identity_sha256", "row_identity_sha256", "column_identity_sha256"
+        )],
+        centered_response_identity = synthetic$centered_response[c(
+          "assay_sha256", "identity_sha256", "row_identity_sha256", "column_identity_sha256"
+        )],
+        subject_time_identity = synthetic$subject_time_identity,
+        calibration_identity = synthetic$calibration[c(
+          "status", "executed", "skipped", "protocol_sha256", "result_sha256", "payload_sha256"
+        )],
+        lineage_identity_sha256 = as.character(synthetic$lineage_identity_sha256)
+      )
+    }
     method_id_entity <- triomics_b07_prov_entity_id("method_state", list(
       analysis_id = analysis_id, method_id = method_id,
       preparation_context_id = preparation_context_id, representation_id = representation_id

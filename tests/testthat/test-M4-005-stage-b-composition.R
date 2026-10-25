@@ -61,6 +61,21 @@ m4_005b_assert_b04_result <- function(run) {
   testthat::expect_identical(names(resolved_matrices), "block_1")
   testthat::expect_identical(resolved_matrices$block_1, expected_matrix)
   testthat::expect_identical(row$source_hash, assay_hash)
+  provenance_context <- run$result$provenance_context
+  testthat::expect_type(provenance_context, "list")
+  if (!is.list(provenance_context)) return(invisible(NULL))
+  testthat::expect_identical(
+    provenance_context$synthetic_producer$raw_response$matrix,
+    expected_matrix
+  )
+  testthat::expect_identical(
+    provenance_context$synthetic_producer$raw_response$assay_sha256,
+    assay_hash
+  )
+  testthat::expect_identical(
+    provenance_context$synthetic_producer$protocol$sha256,
+    triomics_sha256(provenance_context$synthetic_producer$protocol$path)
+  )
   testthat::expect_false(any(c(
     "resolved_matrices", "assay", "assays", "fit", "native_model", "model_object",
     "lmFit", "MArrayLM"
@@ -278,7 +293,7 @@ testthat::test_that("M4-005B installed composition preserves B-T04 trajectory fi
 testthat::test_that("M4-005B source composition preserves B-T04 stage execution", {
   run <- m4_005b_source_cli_b04()
   if (!identical(run$status, 0L)) {
-    testthat::expect_match(paste(run$lines, collapse = "\n"), "triomics A_ID_REFERENCE:")
+    testthat::expect_match(paste(run$lines, collapse = "\n"), "B_EXPORT_INCOMPLETE")
   }
   testthat::expect_identical(run$status, 0L, info = paste(run$lines, collapse = "\n"))
   if (!identical(run$status, 0L)) return(invisible(NULL))
@@ -300,16 +315,32 @@ testthat::test_that("M4-005B source composition preserves B-T04 stage execution"
   testthat::expect_true(isTRUE(triomics_validate_envelope(
     file.path(run$output, "B", "block-results.envelope.json")
   )))
-
-  handoff_root <- file.path(run$output, "B", "handoffs")
-  handoff_dirs <- if (dir.exists(handoff_root)) {
-    list.dirs(handoff_root, recursive = FALSE, full.names = TRUE)
-  } else {
-    character()
-  }
+  handoff_dirs <- list.dirs(file.path(run$output, "B", "handoffs"), recursive = FALSE, full.names = TRUE)
   testthat::expect_length(handoff_dirs, 1L)
   if (length(handoff_dirs) != 1L) return(invisible(NULL))
+  protocol_path <- file.path(run$output, "B", "b-t04-synthetic-protocol.json")
+  profile_path <- file.path(handoff_dirs[[1L]], "stage-handoff-provenance.json")
+  profile_envelope_path <- file.path(handoff_dirs[[1L]], "stage-handoff-provenance.envelope.json")
+  testthat::expect_true(all(file.exists(c(protocol_path, profile_path, profile_envelope_path))))
+  if (!all(file.exists(c(protocol_path, profile_path, profile_envelope_path)))) return(invisible(NULL))
+  profile <- m4_005b_read_json(profile_path)
+  profile_envelope <- m4_005b_read_json(profile_envelope_path)
+  testthat::expect_true(isTRUE(triomics_validate_stage_handoff_provenance(
+    profile, "b-t07-stage-handoff-provenance", "b-t07-stage-handoff-provenance-envelope"
+  )))
+  testthat::expect_true(isTRUE(triomics_validate_envelope(profile_envelope_path)))
+  testthat::expect_identical(profile_envelope$payload_sha256, triomics_sha256(profile_path))
+  source_entities <- Filter(function(entity) identical(entity$scientific_role, "source_manifest"),
+                            profile$identity$entities)
+  testthat::expect_length(source_entities, 1L)
+  testthat::expect_identical(
+    source_entities[[1L]]$entity_id,
+    triomics_b07_prov_entity_id("source_manifest", list(
+      source_id = "b-t04-synthetic-protocol-v1", sha256 = triomics_sha256(protocol_path)
+    ))
+  )
 
+  handoff_root <- file.path(run$output, "B", "handoffs")
   handoff_dir <- handoff_dirs[[1L]]
   bundle_path <- file.path(handoff_dir, "bundle.json")
   bundle_envelope_path <- file.path(handoff_dir, "bundle.envelope.json")

@@ -19,6 +19,142 @@ triomics_b04_protocol <- function() {
   )
 }
 
+triomics_b04_synthetic_protocol <- function(config_sha256) {
+  subjects <- sprintf("sub%04d", 1:4)
+  times <- c(0, 1, 2)
+  features <- c("F1", "F2")
+  list(
+    protocol_id = "b-t04-synthetic-protocol-v1",
+    protocol_version = "1.0.0",
+    generator_id = "triomics_b04_execute_fixture",
+    generator_protocol_version = "1.0.0",
+    study_id = "triomics_b_t04_fixture",
+    ordered_subjects = as.list(subjects),
+    ordered_times = list(
+      values = as.list(times),
+      visit_labels = as.list(paste0("t", times)),
+      unit = "synthetic_step",
+      origin = 0
+    ),
+    feature_ids = as.list(features),
+    subject_intercepts = stats::setNames(as.list(c(5, 7, 9, 11)), subjects),
+    feature_slopes = stats::setNames(as.list(c(1.5, -0.25)), features),
+    residual_pattern = list(
+      time_values = as.list(times),
+      values = as.list(c(0.2, -0.4, 0.2)),
+      repeated_per_subject = TRUE
+    ),
+    measurement = list(
+      quantity = "intensity",
+      scale = "linear",
+      units = "synthetic_arbitrary_units"
+    ),
+    generation = list(
+      method = "deterministic_closed_form",
+      randomness = "none",
+      uses_rng = FALSE
+    ),
+    effective_configuration_sha256 = as.character(config_sha256),
+    non_ancestral_source_declaration = paste(
+      "The configured two-visit TSVs are ticket schema fixtures only.",
+      "Their bytes, digests, and source IDs do not generate this response, design, fit, or result."
+    )
+  )
+}
+
+triomics_b04_write_synthetic_protocol <- function(protocol, output) {
+  path <- file.path(output, "B", "b-t04-synthetic-protocol.json")
+  if (file.exists(path) || dir.exists(path)) {
+    triomics_b_abort(
+      "B_EXPORT_INCOMPLETE",
+      "The immutable B-T04 synthetic protocol already exists in this output root.",
+      "synthetic_protocol",
+      "Use a fresh output root and preserve the protocol bytes from one producer invocation."
+    )
+  }
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  bytes <- triomics_b07_prov_canonical_value(protocol)
+  temporary <- tempfile(pattern = ".b-t04-synthetic-protocol-", tmpdir = dirname(path))
+  on.exit(if (file.exists(temporary)) unlink(temporary), add = TRUE)
+  writeBin(charToRaw(enc2utf8(bytes)), temporary)
+  if (!file.rename(temporary, path)) {
+    triomics_b_abort(
+      "B_EXPORT_INCOMPLETE",
+      "The canonical B-T04 synthetic protocol could not be finalized.",
+      "synthetic_protocol",
+      "Use a local output directory that supports atomic file renames."
+    )
+  }
+  list(
+    path = normalizePath(path, winslash = "/", mustWork = TRUE),
+    bytes = bytes,
+    sha256 = triomics_sha256(path),
+    value = protocol
+  )
+}
+
+triomics_b04_synthetic_context_sha256 <- function(context) {
+  synthetic <- context$synthetic_producer
+  resolved_blocks <- lapply(names(context$resolved_analysis$blocks), function(block_id) {
+    block <- context$resolved_analysis$blocks[[block_id]]
+    list(
+      block_id = block_id,
+      assay = block$assay,
+      sample_ids = as.list(as.character(block$sample_ids)),
+      subject_ids = as.list(as.character(block$subject_ids)),
+      feature_keys = as.list(as.character(block$feature_keys)),
+      scales = as.list(as.character(block$scales)),
+      source_hash = as.character(block$source_hash),
+      design = block$design
+    )
+  })
+  triomics_b07_prov_value_sha256(list(
+    effective_configuration_sha256 = as.character(attr(context$config, "config_sha256")),
+    source_manifest_ids = lapply(context$source_manifests, function(source) {
+      list(source_id = as.character(source$source_id), sha256 = as.character(source$sha256))
+    }),
+    source_file_ids = lapply(context$source_files, function(source) {
+      list(source_id = as.character(source$source_id), sha256 = as.character(source$sha256),
+           local_ref = as.character(source$local_ref))
+    }),
+    protocol = list(
+      value = synthetic$protocol$value,
+      bytes = synthetic$protocol$bytes,
+      sha256 = synthetic$protocol$sha256
+    ),
+    sample_metadata = context$sample_metadata,
+    sample_registry = context$sample_registry,
+    declared_factor_levels = context$declared_factor_levels,
+    feature_registry = context$feature_registry,
+    analysis_unit_map = context$analysis_unit_map,
+    resolved_analysis = list(
+      lane = as.character(context$resolved_analysis$lane),
+      study_id = as.character(context$resolved_analysis$study_id),
+      analysis_id = as.character(context$resolved_analysis$analysis_id),
+      preparation_context_id = as.character(context$resolved_analysis$preparation_context_id),
+      representation_id = as.character(context$resolved_analysis$representation_id),
+      model_plan = context$resolved_analysis$model_plan,
+      unit_map = context$resolved_analysis$unit_map,
+      blocks = resolved_blocks
+    ),
+    statistics_spec = context$statistics_spec,
+    method_state = context$method_state,
+    raw_response = synthetic$raw_response,
+    centered_response = synthetic$centered_response,
+    ordered_design = synthetic$ordered_design,
+    subject_time_identity = synthetic$subject_time_identity,
+    centering_rule = synthetic$centering_rule,
+    synthetic_method_state = synthetic$method_state,
+    calibration = synthetic$calibration[c(
+      "status", "executed", "skipped", "protocol_sha256", "result_sha256", "payload_sha256"
+    )],
+    block_results_sha256 = as.character(context$block_results_sha256),
+    block_results_envelope_sha256 = as.character(context$block_results_envelope_sha256),
+    run_id = as.character(context$run_id),
+    producer_method_ids = as.list(as.character(context$producer_method_ids))
+  ))
+}
+
 triomics_b04_supported_patterns <- function() {
   c(
     "balanced_complete_visits",
@@ -1004,41 +1140,104 @@ triomics_b04_execute_fixture <- function(config_path, output) {
   if (!is.numeric(max_fits) || length(max_fits) != 1L || is.na(max_fits) || n_fits > max_fits) {
     triomics_b_abort("B_DESIGN_BUDGET", "The declared feature-contrast fits exceed max_fits.", key = "execution.max_fits")
   }
-  subjects <- sprintf("sub%04d", 1:4)
-  times <- c(0, 1, 2)
-  sample_ids <- unlist(lapply(subjects, function(subject) paste0(subject, "_t", times)), use.names = FALSE)
-  subject_col <- rep(subjects, each = 3)
-  time_col <- rep(times, times = 4)
-  visits <- rep(paste0("t", times), times = 4)
-  intercept <- rep(c(5, 7, 9, 11), each = 3)
-  residual <- rep(c(0.2, -0.4, 0.2), 4)
-  assay <- rbind(
-    intercept + 1.5 * time_col + residual,
-    intercept - 0.25 * time_col + residual
-  )
-  rownames(assay) <- c("F1", "F2")
+  config_sha256 <- as.character(attr(config, "config_sha256"))
+  protocol <- triomics_b04_synthetic_protocol(config_sha256)
+  protocol_artifact <- triomics_b04_write_synthetic_protocol(protocol, output)
+  protocol_id <- as.character(protocol$protocol_id)
+  subjects <- unlist(protocol$ordered_subjects, use.names = FALSE)
+  times <- as.numeric(unlist(protocol$ordered_times$values, use.names = FALSE))
+  visit_levels <- unlist(protocol$ordered_times$visit_labels, use.names = FALSE)
+  feature_ids <- unlist(protocol$feature_ids, use.names = FALSE)
+  subject_intercepts <- as.numeric(unlist(protocol$subject_intercepts[subjects], use.names = FALSE))
+  feature_slopes <- as.numeric(unlist(protocol$feature_slopes[feature_ids], use.names = FALSE))
+  names(feature_slopes) <- feature_ids
+  residual_pattern <- as.numeric(unlist(protocol$residual_pattern$values, use.names = FALSE))
+  sample_ids <- unlist(lapply(subjects, function(subject) paste0(subject, "_", visit_levels)),
+                       use.names = FALSE)
+  subject_col <- rep(subjects, each = length(times))
+  time_col <- rep(times, times = length(subjects))
+  visits <- rep(visit_levels, times = length(subjects))
+  intercept <- rep(subject_intercepts, each = length(times))
+  residual <- rep(residual_pattern, times = length(subjects))
+  assay <- do.call(rbind, lapply(feature_ids, function(feature_id) {
+    intercept + feature_slopes[[feature_id]] * time_col + residual
+  }))
+  rownames(assay) <- feature_ids
   colnames(assay) <- sample_ids
+  study_id <- as.character(protocol$study_id)
+  time_unit <- as.character(protocol$ordered_times$unit)
+  time_origin <- as.numeric(protocol$ordered_times$origin)
+  measurement <- protocol$measurement
+  sample_metadata <- data.frame(
+    sample_id = sample_ids,
+    subject = subject_col,
+    visit = visits,
+    time = time_col,
+    time_unit = rep(time_unit, length(sample_ids)),
+    time_origin = rep(time_origin, length(sample_ids)),
+    stringsAsFactors = FALSE
+  )
+  sample_registry <- data.frame(
+    study_id = rep(study_id, length(sample_ids)),
+    sample_id = sample_ids,
+    subject_id = subject_col,
+    visit_id = visits,
+    time = time_col,
+    time_unit = rep(time_unit, length(sample_ids)),
+    time_origin = rep(time_origin, length(sample_ids)),
+    source_id = rep(protocol_id, length(sample_ids)),
+    source_row = as.character(seq_along(sample_ids)),
+    sample_role = rep("synthetic_generated", length(sample_ids)),
+    stringsAsFactors = FALSE
+  )
+  feature_registry <- data.frame(
+    study_id = rep(study_id, length(feature_ids)),
+    block_id = rep("block_1", length(feature_ids)),
+    feature_key = feature_ids,
+    canonical_id = feature_ids,
+    original_id = feature_ids,
+    id_namespace = rep("synthetic", length(feature_ids)),
+    source_id = rep(protocol_id, length(feature_ids)),
+    source_row = as.character(seq_along(feature_ids)),
+    measured_or_derived = rep("derived", length(feature_ids)),
+    quantity = rep(as.character(measurement$quantity), length(feature_ids)),
+    scale = rep(as.character(measurement$scale), length(feature_ids)),
+    units = rep(as.character(measurement$units), length(feature_ids)),
+    structural_resolution = rep("unknown", length(feature_ids)),
+    alias_refs = rep("", length(feature_ids)),
+    parent_refs = rep("", length(feature_ids)),
+    annotation_route = rep("none", length(feature_ids)),
+    stringsAsFactors = FALSE
+  )
+  unit_map <- data.frame(
+    study_id = rep(study_id, length(sample_ids)),
+    analysis_id = rep(as.character(analysis$analysis_id), length(sample_ids)),
+    preparation_context_id = rep(as.character(analysis$preparation_context_id), length(sample_ids)),
+    unit_id = sample_ids,
+    unit_type = rep("sample", length(sample_ids)),
+    representation_id = rep("subject_centered", length(sample_ids)),
+    source_sample_ids = I(lapply(sample_ids, identity)),
+    subject_id = subject_col,
+    visit_id = visits,
+    condition = as.character(time_col),
+    time = time_col,
+    time_unit = rep(time_unit, length(sample_ids)),
+    time_origin = rep(time_origin, length(sample_ids)),
+    eligible = rep(TRUE, length(sample_ids)),
+    exclusion_reason = rep(NA_character_, length(sample_ids)),
+    represented_blocks = I(rep(list("block_1"), length(sample_ids))),
+    stringsAsFactors = FALSE
+  )
   study <- list(
-    study_id = config$study_id,
+    study_id = study_id,
     preparation_context_id = analysis$preparation_context_id,
-    sample_metadata = data.frame(
-      sample_id = sample_ids,
-      subject = subject_col,
-      visit = visits,
-      time = time_col,
-      stringsAsFactors = FALSE
-    ),
-    sample_registry = NULL,
-    declared_factor_levels = list(visit = c("t0", "t1", "t2")),
-    feature_registry = data.frame(
-      feature_key = rownames(assay),
-      block_id = "block_1",
-      scale = "linear",
-      stringsAsFactors = FALSE
-    ),
+    sample_metadata = sample_metadata,
+    sample_registry = sample_registry,
+    declared_factor_levels = list(visit = visit_levels),
+    feature_registry = feature_registry,
     assays = list(block_1 = assay),
     assay_hashes = NULL,
-    analysis_unit_map = NULL
+    analysis_unit_map = unit_map
   )
   calibration <- triomics_b04_calibrate()
   if (!identical(calibration$status, "pass")) {
@@ -1074,12 +1273,14 @@ triomics_b04_execute_fixture <- function(config_path, output) {
     )
   }
   resolved <- triomics_resolve_analysis(study, analysis)
+  resolved$unit_map <- unit_map
+  analysis_unit_map <- triomics_b_provenance_unit_map(
+    list(sample_metadata = sample_metadata, sample_registry = sample_registry),
+    analysis,
+    resolved
+  )
   fit <- triomics_fit_block_models(resolved, analysis$statistics)
-  root <- dirname(normalizePath(config_path, winslash = "/", mustWork = TRUE))
-  inputs <- unname(lapply(config$sources, function(source) {
-    path <- triomics_resolve_declared_input(source$file, source$source_id, root)
-    list(artifact_id = source$source_id, sha256 = triomics_sha256(path))
-  }))
+  inputs <- list(list(artifact_id = protocol_id, sha256 = protocol_artifact$sha256))
   row <- fit$blocks$block_1$contrasts$per_synthetic_step$rows[[1L]]
   calibration <- triomics_b04_calibrate()
   plan <- resolved$model_plan
@@ -1174,11 +1375,190 @@ triomics_b04_execute_fixture <- function(config_path, output) {
       key = "design"
     )
   }
+  raw_response <- resolved$blocks$block_1$assay
+  centered_response <- raw_response
+  for (feature_index in seq_len(nrow(raw_response))) {
+    centered_response[feature_index, ] <- triomics_b04_center_vector(
+      as.numeric(raw_response[feature_index, ]), resolved$blocks$block_1$subject_ids
+    )
+  }
+  design_matrix <- resolved$blocks$block_1$design
+  ordered_design <- list(
+    row_ids = as.list(as.character(rownames(design_matrix))),
+    column_ids = as.list(as.character(colnames(design_matrix))),
+    matrix = design_matrix,
+    sha256 = triomics_b07_prov_value_sha256(list(
+      row_ids = as.list(as.character(rownames(design_matrix))),
+      column_ids = as.list(as.character(colnames(design_matrix))),
+      matrix = design_matrix
+    ))
+  )
+  subject_time_identity <- list(
+    sample_ids = as.list(as.character(sample_metadata$sample_id)),
+    subject_ids = as.list(as.character(sample_metadata$subject)),
+    visit_ids = as.list(as.character(sample_metadata$visit)),
+    time_values = as.list(as.numeric(sample_metadata$time)),
+    time_unit = time_unit,
+    time_origin = time_origin
+  )
+  subject_time_identity$sha256 <- triomics_b07_prov_value_sha256(subject_time_identity)
+  raw_response_identity <- list(
+    block_id = "block_1",
+    feature_ids = as.list(as.character(rownames(raw_response))),
+    sample_ids = as.list(as.character(colnames(raw_response))),
+    values = raw_response
+  )
+  centered_response_identity <- list(
+    block_id = "block_1",
+    feature_ids = as.list(as.character(rownames(centered_response))),
+    sample_ids = as.list(as.character(colnames(centered_response))),
+    values = centered_response
+  )
+  raw_response_record <- list(
+    matrix = raw_response,
+    assay_sha256 = triomics_b_assay_hash("block_1", raw_response),
+    identity_sha256 = triomics_b07_prov_value_sha256(raw_response_identity),
+    row_identity_sha256 = triomics_b07_prov_ordered_ids_sha256(rownames(raw_response)),
+    column_identity_sha256 = triomics_b07_prov_ordered_ids_sha256(colnames(raw_response))
+  )
+  centered_response_record <- list(
+    matrix = centered_response,
+    assay_sha256 = triomics_b_assay_hash("block_1", centered_response),
+    identity_sha256 = triomics_b07_prov_value_sha256(centered_response_identity),
+    row_identity_sha256 = triomics_b07_prov_ordered_ids_sha256(rownames(centered_response)),
+    column_identity_sha256 = triomics_b07_prov_ordered_ids_sha256(colnames(centered_response))
+  )
+  centering_rule <- list(
+    rule_id = "b-t04-within-subject-arithmetic-centering-v1",
+    representation = "subject_centered",
+    operation = "subtract_each_subject_feature_mean_from_each_finite_response",
+    grouping_identity = "ordered_subject_time_identity",
+    missing_value_rule = "exclude_nonfinite_values_from_subject_mean_and_preserve_missing_values",
+    randomness = "none"
+  )
+  calibration_path <- normalizePath(file.path(output, "calibration.json"),
+                                    winslash = "/", mustWork = TRUE)
+  calibration_protocol <- triomics_b04_protocol()
+  calibration_record <- list(
+    status = as.character(calibration$status),
+    executed = isTRUE(calibration$executed),
+    skipped = isTRUE(calibration$skipped),
+    protocol = calibration_protocol,
+    protocol_sha256 = triomics_b07_prov_value_sha256(calibration_protocol),
+    result_sha256 = triomics_b07_prov_value_sha256(calibration),
+    payload_path = calibration_path,
+    payload_sha256 = triomics_sha256(calibration_path),
+    result = calibration
+  )
+  plan <- resolved$model_plan
+  contrast_spec <- analysis$statistics$contrasts[[1L]]
+  method_state <- list(
+    requested_method = as.character(analysis$statistics$method),
+    method = "limma",
+    method_status = as.character(fit$status),
+    limma = list(
+      version = as.character(fit$limma_version),
+      fit = "limma::lmFit",
+      contrast = "limma::contrasts.fit",
+      moderation = "limma::eBayes",
+      trend = isTRUE(analysis$statistics$trend),
+      robust = isTRUE(analysis$statistics$robust),
+      duplicate_correlation_applied = FALSE
+    ),
+    retained_subject_columns = as.list(as.character(plan$column_ids[grepl("^subject\\.", plan$column_ids)])),
+    design_rank = as.integer(qr(design_matrix)$rank),
+    residual_df_rule = "n_observed_minus_rank_of_full_retained_subject_and_time_design",
+    residual_df = as.integer(nrow(design_matrix) - qr(design_matrix)$rank),
+    contrast = list(
+      contrast_id = as.character(contrast_spec$contrast_id),
+      weights = as.list(contrast_spec$weights)
+    ),
+    moderation_settings = list(
+      trend = FALSE,
+      robust = FALSE,
+      multiplicity = "BH",
+      p_value_source = "moderated$p.value",
+      effective_df_source = "moderated$df.total"
+    ),
+    calibration_protocol_sha256 = calibration_record$protocol_sha256,
+    calibration_result_sha256 = calibration_record$result_sha256
+  )
+  protocol_source_file <- list(
+    source_id = protocol_id,
+    role = "synthetic_protocol",
+    format = "application/json",
+    local_ref = protocol_artifact$path,
+    sha256 = protocol_artifact$sha256,
+    selection_history = "full_unselected",
+    selection_evidence_sha256 = triomics_hash_text(
+      "B-T04 synthetic protocol is the sole response-generating source."
+    )
+  )
+  protocol_source_manifest <- list(
+    source_id = protocol_id,
+    study_id = study_id,
+    role = "synthetic_protocol",
+    format = "application/json",
+    sha256 = protocol_artifact$sha256,
+    original_sha256 = NULL,
+    original_ref = NULL,
+    sheet = NULL,
+    region = NULL,
+    header_role = NULL,
+    column_roles = NULL,
+    conversion_evidence = NULL
+  )
+  synthetic_producer <- list(
+    protocol = protocol_artifact,
+    raw_response = raw_response_record,
+    centered_response = centered_response_record,
+    ordered_design = ordered_design,
+    subject_time_identity = subject_time_identity,
+    centering_rule = centering_rule,
+    method_state = method_state,
+    calibration = calibration_record
+  )
+  provenance_context <- list(
+    config = config,
+    analysis_spec = analysis,
+    source_manifests = list(protocol_source_manifest),
+    source_files = list(protocol_source_file),
+    sample_metadata = sample_metadata,
+    sample_registry = sample_registry,
+    declared_factor_levels = study$declared_factor_levels,
+    feature_registry = feature_registry,
+    analysis_unit_map = analysis_unit_map,
+    resolved_analysis = resolved,
+    statistics_spec = analysis$statistics,
+    method_state = list(
+      requested_method = as.character(analysis$statistics$method),
+      method = "limma",
+      method_status = as.character(fit$status),
+      unavailable_reason = NULL,
+      deqms_status = NULL,
+      deqms_version = NULL,
+      limma_version = as.character(fit$limma_version),
+      fallback_applied = FALSE,
+      fallback_provenance = NULL
+    ),
+    block_results = payload,
+    block_results_path = normalizePath(payload_path, winslash = "/", mustWork = TRUE),
+    block_results_envelope_path = normalizePath(file.path(output, "B", "block-results.envelope.json"),
+                                                 winslash = "/", mustWork = TRUE),
+    block_results_sha256 = triomics_sha256(payload_path),
+    block_results_envelope_sha256 = triomics_sha256(file.path(output, "B", "block-results.envelope.json")),
+    run_id = as.character(envelope$run_id),
+    producer_method_ids = "limma",
+    synthetic_producer = synthetic_producer
+  )
+  provenance_context$synthetic_producer$lineage_identity_sha256 <-
+    triomics_b04_synthetic_context_sha256(provenance_context)
   list(
     status = fit$status,
     payload_path = payload_path,
     limma_version = fit$limma_version,
-    resolved_matrices = list(block_1 = resolved$blocks$block_1$assay)
+    resolved_matrices = list(block_1 = resolved$blocks$block_1$assay),
+    provenance_context = provenance_context
   )
 }
 

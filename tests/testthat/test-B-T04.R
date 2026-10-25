@@ -681,6 +681,208 @@ testthat::test_that("B-T04 stage dispatch owns its fixture and delegates other s
   testthat::expect_identical(delegated$output, "ordinary-output")
 })
 
+b04_fixture_config_for_context <- function() {
+  fixture <- triomics_test_resource("examples", "tickets", "B-T04.yaml")
+  metadata <- triomics_test_resource("examples", "data", "paired", "metadata.tsv")
+  proteomics <- triomics_test_resource("examples", "data", "paired", "proteomics.tsv")
+  lines <- readLines(fixture, warn = FALSE)
+  lines <- gsub(
+    "../../../discovery/spec-v2/examples/paired/metadata.tsv",
+    paste0("\"", metadata, "\""), lines, fixed = TRUE
+  )
+  lines <- gsub(
+    "../../../discovery/spec-v2/examples/paired/proteomics.tsv",
+    paste0("\"", proteomics, "\""), lines, fixed = TRUE
+  )
+  path <- tempfile(pattern = "b-t04-context-config-", fileext = ".yaml")
+  writeLines(lines, path, useBytes = TRUE)
+  path
+}
+
+testthat::test_that("B-T04 producer returns a complete same-run synthetic lineage context", {
+  config <- b04_fixture_config_for_context()
+  output <- tempfile(pattern = "b-t04-context-")
+  on.exit(unlink(c(config, output), recursive = TRUE), add = TRUE)
+
+  result <- triomics_execute_stage_b(config, output)
+  context <- result$provenance_context
+  testthat::expect_type(context, "list")
+  if (!is.list(context)) return(invisible(NULL))
+
+  synthetic <- context$synthetic_producer
+  testthat::expect_type(synthetic, "list")
+  if (!is.list(synthetic)) return(invisible(NULL))
+  subjects <- sprintf("sub%04d", 1:4)
+  times <- rep(as.numeric(0:2), times = 4L)
+  samples <- unlist(lapply(subjects, function(subject) paste0(subject, "_t", 0:2)), use.names = FALSE)
+  expected_raw <- rbind(
+    F1 = c(5.2, 6.1, 8.2, 7.2, 8.1, 10.2, 9.2, 10.1, 12.2, 11.2, 12.1, 14.2),
+    F2 = c(5.2, 4.35, 4.7, 7.2, 6.35, 6.7, 9.2, 8.35, 8.7, 11.2, 10.35, 10.7)
+  )
+  colnames(expected_raw) <- samples
+  expected_centered <- rbind(
+    F1 = rep(c(-1.3, -0.4, 1.7), 4L),
+    F2 = rep(c(0.45, -0.4, -0.05), 4L)
+  )
+  colnames(expected_centered) <- samples
+  expected_design <- cbind(
+    `subject.sub0001` = as.numeric(rep(subjects, each = 3L) == "sub0001"),
+    `subject.sub0002` = as.numeric(rep(subjects, each = 3L) == "sub0002"),
+    `subject.sub0003` = as.numeric(rep(subjects, each = 3L) == "sub0003"),
+    `subject.sub0004` = as.numeric(rep(subjects, each = 3L) == "sub0004"),
+    `time.linear` = times
+  )
+  rownames(expected_design) <- samples
+
+  testthat::expect_identical(context$source_files[[1L]]$source_id, "b-t04-synthetic-protocol-v1")
+  testthat::expect_length(context$source_files, 1L)
+  testthat::expect_identical(context$block_results$study_id, "triomics_b_t04_fixture")
+  testthat::expect_identical(context$sample_metadata$sample_id, samples)
+  testthat::expect_identical(context$sample_metadata$subject, rep(subjects, each = 3L))
+  testthat::expect_identical(context$sample_metadata$visit, rep(paste0("t", 0:2), times = 4L))
+  testthat::expect_identical(context$sample_metadata$time, times)
+  testthat::expect_true(all(context$sample_metadata$time_unit == "synthetic_step"))
+  testthat::expect_true(all(context$sample_metadata$time_origin == 0))
+  testthat::expect_true(all(c(
+    "study_id", "subject_id", "visit_id", "time", "time_unit", "time_origin"
+  ) %in% names(context$sample_registry)))
+  testthat::expect_identical(context$feature_registry$feature_key, c("F1", "F2"))
+  testthat::expect_true(all(c(
+    "study_id", "block_id", "original_id", "canonical_id", "id_namespace", "source_row",
+    "quantity", "units", "scale", "structural_resolution", "alias_refs", "parent_refs",
+    "annotation_route"
+  ) %in% names(context$feature_registry)))
+  testthat::expect_identical(context$analysis_unit_map$unit_id, samples)
+  testthat::expect_identical(context$analysis_unit_map$representation_id, rep("subject_centered", 12L))
+  testthat::expect_identical(context$analysis_unit_map$subject_id, rep(subjects, each = 3L))
+  testthat::expect_identical(context$analysis_unit_map$visit_id, rep(paste0("t", 0:2), times = 4L))
+  testthat::expect_identical(context$analysis_unit_map$time, times)
+  testthat::expect_true(all(context$analysis_unit_map$time_origin == 0))
+  testthat::expect_true(all(context$analysis_unit_map$eligible))
+  testthat::expect_true(all(vapply(seq_along(samples), function(index) {
+    identical(context$analysis_unit_map$source_sample_ids[[index]], samples[[index]]) &&
+      identical(context$analysis_unit_map$represented_blocks[[index]], "block_1")
+  }, logical(1L))))
+  testthat::expect_identical(context$resolved_analysis$blocks$block_1$assay, expected_raw)
+  testthat::expect_identical(context$resolved_analysis$blocks$block_1$design, expected_design)
+  testthat::expect_identical(synthetic$raw_response$matrix, expected_raw)
+  testthat::expect_equal(synthetic$centered_response$matrix, expected_centered, tolerance = 1e-14)
+  testthat::expect_identical(
+    synthetic$raw_response$assay_sha256,
+    triomics_b_assay_hash("block_1", expected_raw)
+  )
+  testthat::expect_identical(
+    synthetic$centered_response$assay_sha256,
+    triomics_b_assay_hash("block_1", synthetic$centered_response$matrix)
+  )
+  testthat::expect_identical(synthetic$ordered_design$matrix, expected_design)
+  testthat::expect_identical(unlist(synthetic$ordered_design$row_ids, use.names = FALSE), samples)
+  testthat::expect_identical(unlist(synthetic$ordered_design$column_ids, use.names = FALSE), colnames(expected_design))
+  testthat::expect_identical(synthetic$centering_rule$representation, "subject_centered")
+  testthat::expect_identical(synthetic$method_state$limma$trend, FALSE)
+  testthat::expect_identical(synthetic$method_state$limma$robust, FALSE)
+  testthat::expect_identical(synthetic$method_state$residual_df, 7L)
+  testthat::expect_identical(synthetic$method_state$design_rank, 5L)
+  testthat::expect_identical(synthetic$calibration$status, "pass")
+  testthat::expect_true(isTRUE(synthetic$calibration$executed))
+  testthat::expect_false(isTRUE(synthetic$calibration$skipped))
+  testthat::expect_true(file.exists(synthetic$protocol$path))
+  testthat::expect_identical(
+    synthetic$protocol$sha256,
+    digest::digest(charToRaw(synthetic$protocol$bytes), algo = "sha256", serialize = FALSE)
+  )
+  testthat::expect_identical(result$resolved_matrices$block_1, expected_raw)
+  testthat::expect_false("provenance_context" %in% names(context$block_results))
+  testthat::expect_false("resolved_matrices" %in% names(context$block_results))
+  result_rows <- context$block_results$blocks$block_1$contrasts$per_synthetic_step$rows
+  testthat::expect_equal(vapply(result_rows, `[[`, numeric(1L), "effect"), c(1.5, -0.25))
+
+  reject_mutation <- function(name, mutate, expected_code = "B_EXPORT_INCOMPLETE") {
+    candidate <- mutate(context)
+    error <- tryCatch(triomics_b07_export_handoff(
+      output = output,
+      config_path = config,
+      matrices = result$resolved_matrices,
+      working_ref = triomics_b07_git_ref(getwd()),
+      cli_exit_code = 0L,
+      matrix_source = "stage_b_resolved_blocks",
+      provenance_context = candidate
+    ), error = identity)
+    testthat::expect_s3_class(error, "triomics_error")
+    testthat::expect_identical(error$code, expected_code, info = name)
+    testthat::expect_false(dir.exists(file.path(output, "B", "handoffs")), info = name)
+  }
+  mutations <- list(
+    missing_protocol = function(value) {
+      value$synthetic_producer$protocol <- NULL
+      value
+    },
+    changed_protocol_bytes = function(value) {
+      value$synthetic_producer$protocol$bytes <- paste0(value$synthetic_producer$protocol$bytes, " ")
+      value
+    },
+    changed_metadata = function(value) {
+      value$sample_metadata$time[[1L]] <- 99
+      value
+    },
+    missing_sample_registry = function(value) {
+      value$sample_registry <- NULL
+      value
+    },
+    changed_feature_registry = function(value) {
+      value$feature_registry$source_row[[1L]] <- "9"
+      value
+    },
+    missing_unit_map = function(value) {
+      value$analysis_unit_map <- NULL
+      value
+    },
+    changed_ordered_design = function(value) {
+      value$synthetic_producer$ordered_design$matrix[1L, 1L] <- 0
+      value
+    },
+    changed_centering = function(value) {
+      value$synthetic_producer$centering_rule$operation <- "center_by_visit"
+      value
+    },
+    changed_method = function(value) {
+      value$synthetic_producer$method_state$limma$robust <- TRUE
+      value
+    },
+    changed_calibration = function(value) {
+      value$synthetic_producer$calibration$result_sha256 <- paste(rep("0", 64L), collapse = "")
+      value
+    },
+    changed_response_matrix = function(value) {
+      value$synthetic_producer$raw_response$matrix[1L, 1L] <- 99
+      value
+    },
+    changed_predecessor_path = function(value) {
+      value$block_results_path <- file.path(output, "B", "missing-block-results.json")
+      value
+    },
+    changed_predecessor_hash = function(value) {
+      value$block_results_sha256 <- paste(rep("0", 64L), collapse = "")
+      value
+    }
+  )
+  for (name in names(mutations)) reject_mutation(name, mutations[[name]])
+  changed_handoff_matrix <- result$resolved_matrices
+  changed_handoff_matrix$block_1[1L, 1L] <- 99
+  matrix_error <- tryCatch(triomics_b07_export_handoff(
+    output = output,
+    config_path = config,
+    matrices = changed_handoff_matrix,
+    working_ref = triomics_b07_git_ref(getwd()),
+    cli_exit_code = 0L,
+    matrix_source = "stage_b_resolved_blocks",
+    provenance_context = context
+  ), error = identity)
+  testthat::expect_s3_class(matrix_error, "triomics_error")
+  testthat::expect_identical(matrix_error$code, "B_EXPORT_MATRIX")
+  testthat::expect_false(dir.exists(file.path(output, "B", "handoffs")))
+})
+
 testthat::test_that("B-T04 CLI fixture fits the qualified linear trajectory", {
   cli <- triomics_test_resource("exec", "triomics")
   config <- triomics_test_resource("examples", "tickets", "B-T04.yaml")
@@ -718,11 +920,11 @@ testthat::test_that("B-T04 CLI fixture fits the qualified linear trajectory", {
   status_code <- attr(lines, "status")
   if (is.null(status_code)) status_code <- 0L
   if (!identical(status_code, 0L)) {
-    cat(paste(lines, collapse = "\n"), "\n")
-    testthat::expect_identical(status_code, 0L)
+    testthat::expect_match(paste(lines, collapse = "\n"), "B_EXPORT_INCOMPLETE")
+    testthat::expect_identical(status_code, 0L, info = paste(lines, collapse = "\n"))
     return(invisible(NULL))
   }
-  testthat::expect_identical(status_code, 0L)
+  testthat::expect_identical(status_code, 0L, info = paste(lines, collapse = "\n"))
   payload <- jsonlite::fromJSON(file.path(output, "B", "block-results.json"), simplifyVector = FALSE)
   row <- payload$blocks$block_1$contrasts$per_synthetic_step$rows[[1L]]
   expect_close(row$effect, 1.5)
@@ -737,4 +939,52 @@ testthat::test_that("B-T04 CLI fixture fits the qualified linear trajectory", {
   acceptance <- jsonlite::fromJSON(file.path(output, "acceptance-record.json"), simplifyVector = FALSE)
   verdicts <- vapply(acceptance$acceptance, function(item) item$verdict, character(1))
   testthat::expect_true(all(verdicts == "pass"))
+  handoff_dirs <- list.dirs(file.path(output, "B", "handoffs"), recursive = FALSE, full.names = TRUE)
+  testthat::expect_length(handoff_dirs, 1L)
+  if (length(handoff_dirs) != 1L) return(invisible(NULL))
+  protocol_path <- file.path(output, "B", "b-t04-synthetic-protocol.json")
+  profile_path <- file.path(handoff_dirs[[1L]], "stage-handoff-provenance.json")
+  profile_envelope_path <- file.path(handoff_dirs[[1L]], "stage-handoff-provenance.envelope.json")
+  testthat::expect_true(file.exists(protocol_path))
+  testthat::expect_true(file.exists(profile_path))
+  testthat::expect_true(file.exists(profile_envelope_path))
+  if (!all(file.exists(c(protocol_path, profile_path, profile_envelope_path)))) return(invisible(NULL))
+  protocol_bytes <- readBin(protocol_path, what = "raw", n = file.info(protocol_path)$size)
+  protocol <- jsonlite::fromJSON(rawToChar(protocol_bytes), simplifyVector = FALSE)
+  profile <- jsonlite::read_json(profile_path, simplifyVector = FALSE)
+  profile_envelope <- jsonlite::read_json(profile_envelope_path, simplifyVector = FALSE)
+  testthat::expect_identical(protocol$protocol_id, "b-t04-synthetic-protocol-v1")
+  testthat::expect_identical(protocol$ordered_subjects, as.list(sprintf("sub%04d", 1:4)))
+  testthat::expect_identical(protocol$ordered_times$values, as.list(0:2))
+  testthat::expect_identical(protocol$measurement$units, "synthetic_arbitrary_units")
+  testthat::expect_identical(protocol$generation$randomness, "none")
+  testthat::expect_identical(protocol$effective_configuration_sha256, triomics_sha256(runnable_config))
+  testthat::expect_true(isTRUE(triomics_validate_stage_handoff_provenance(
+    profile, "b-t07-stage-handoff-provenance", "b-t07-stage-handoff-provenance-envelope"
+  )))
+  testthat::expect_true(isTRUE(triomics_validate_envelope(profile_envelope_path)))
+  testthat::expect_identical(profile_envelope$payload_sha256, triomics_sha256(profile_path))
+  source_entities <- Filter(function(entity) identical(entity$scientific_role, "source_manifest"),
+                            profile$identity$entities)
+  testthat::expect_length(source_entities, 1L)
+  protocol_source_id <- "b-t04-synthetic-protocol-v1"
+  protocol_source_entity_id <- triomics_b07_prov_entity_id("source_manifest", list(
+    source_id = protocol_source_id, sha256 = triomics_sha256(protocol_path)
+  ))
+  testthat::expect_identical(source_entities[[1L]]$entity_id, protocol_source_entity_id)
+  block_envelope <- jsonlite::read_json(file.path(output, "B", "block-results.envelope.json"),
+                                        simplifyVector = FALSE)
+  testthat::expect_length(block_envelope$inputs, 1L)
+  testthat::expect_identical(block_envelope$inputs[[1L]]$artifact_id, protocol_source_id)
+  testthat::expect_identical(block_envelope$inputs[[1L]]$sha256, triomics_sha256(protocol_path))
+  paired_metadata <- triomics_test_resource("examples", "data", "paired", "metadata.tsv")
+  paired_matrix <- triomics_test_resource("examples", "data", "paired", "proteomics.tsv")
+  forbidden <- c(triomics_sha256(paired_metadata), triomics_sha256(paired_matrix))
+  profile_text <- paste(readLines(profile_path, warn = FALSE), collapse = "")
+  envelope_text <- paste(readLines(file.path(output, "B", "block-results.envelope.json"), warn = FALSE), collapse = "")
+  testthat::expect_false(any(vapply(forbidden, grepl, logical(1L), x = profile_text, fixed = TRUE)))
+  testthat::expect_false(any(vapply(forbidden, grepl, logical(1L), x = envelope_text, fixed = TRUE)))
+  testthat::expect_false(grepl("provenance_context", paste(readLines(file.path(
+    output, "B", "block-results.json"
+  ), warn = FALSE), collapse = ""), fixed = TRUE))
 })
