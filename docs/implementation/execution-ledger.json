@@ -34,22 +34,30 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "worker": "/root/m7_009_bt07_luna",
-      "role": "bounded repair implementer",
-      "scope": "Remove artifact-tree writes from B-T07 resume inspection and preserve hash_mismatch in a readable non-writable artifact directory.",
-      "allowlist": ["R/export_b.R", "tests/testthat/test-B-T07.R", "docs/implementation/registrations/B-T07.json"]
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_009_review_repair_active",
+    "status": "m7_009_verified_awaiting_integration_authority",
     "last_reconciled": "2026-10-25",
-    "active_handoffs": ["/root/m7_009_bt07_luna"],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Candidate 762a0a0 is focused-green and passed the Spec axis, but Standards found one Important read-only-inspection defect. The same Luna worker is performing one bounded repair in the original three-file allowlist. No integration or downstream work is authorized yet."
+    "disposition": "M7-009 repair candidate 2eb483a passed focused verification and fresh Standards/Spec rereview with Critical 0, Important 0, Minor 0. It remains candidate/review_pending, accepted=false and unintegrated. No run-owned agent is active; serial integration requires explicit authority and downstream work remains closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_009_repair_verified_rereviews_passed",
+      "date": "2026-10-25",
+      "repair_candidate": "2eb483ac7bcf5aa1919b8d72b9b8c8b239235861",
+      "fixed_point": "762a0a09104fb70c920784f3c0897f3e96565567",
+      "focused_red": "FAIL 2, WARN 1, SKIP 0, PASS 10; expected denied artifact-tree probe write",
+      "focused_green": "FAIL 0, WARN 0, SKIP 0, PASS 17",
+      "verification": "B-T07 PASS 315; focused B-T02 PASS 266; B-T03 PASS 286; A-T08 PASS 284; zero failures, test warnings or skips",
+      "sol_independent_rerun": "Focused exported-resume regression PASS 17, FAIL 0, WARN 0, SKIP 0; worktree clean",
+      "standards_verdict": "pass; Critical 0, Important 0, Minor 0; original finding fully addressed",
+      "spec_verdict": "pass; Critical 0, Important 0, Minor 0; seven-rule precedence unchanged",
+      "review_ref": "docs/implementation/reviews/2026-10-25-m7-009-repair-rereview.md",
+      "allowed_next_transition": "Only an explicitly authorized serial integration may apply candidate 2eb483a, verify exact blobs, rerun focused gates and decide B-T07 registration; no downstream work in parallel.",
+      "disposition": "Candidate verified but unintegrated and unaccepted; no active worker, private-data access, C-06 provenance, migration, M7/G7 release, or Stage-D work."
+    },
     {
       "event": "m7_009_two_axis_review_repair_dispatched",
       "date": "2026-10-25",

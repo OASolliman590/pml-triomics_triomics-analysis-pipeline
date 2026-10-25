@@ -375,6 +375,20 @@ is active with the same Luna worker and the same three-file allowlist; it must
 make inspection read-only, preserve `hash_mismatch`, add a public-seam
 regression and receive focused rereview. See
 `reviews/2026-10-25-m7-009-two-axis-review.md`.
+Luna repair `2eb483a` moved the schema probe to a unique process-temporary
+directory and added a public exported-resume regression over a read-only
+handoff. Focused RED reproduced two failures and the denied artifact-tree write;
+GREEN passed 17 expectations. Exact B-T07 passed 315, and focused B-T02, B-T03
+and A-T08 passed 266, 286 and 284 expectations, with no failures, test warnings
+or skips. Sol independently reran the focused regression at the immutable
+repair commit: 17 passed. Fresh focused Standards and Spec rereviews both
+passed with Critical 0, Important 0, Minor 0. The original Standards finding is
+fully addressed and the seven-rule M7-009 contract is unchanged. Candidate
+`2eb483a` is verified but remains unintegrated and unaccepted; registration is
+still `candidate/review_pending`, `accepted: false`. See
+`reviews/2026-10-25-m7-009-repair-rereview.md`. No run-owned agent or handoff is
+active. A later serial integration requires explicit authority; all downstream
+Stage-D work remains closed.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
