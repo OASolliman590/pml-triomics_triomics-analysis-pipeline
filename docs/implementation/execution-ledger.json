@@ -40,9 +40,21 @@
     "last_reconciled": "2026-10-25",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The initial M7-009 Astra audit returned changes_required with two Important and one Minor finding. The contract now defines refusal precedence, separates physical envelope presence from base-envelope and required-evidence validation, and protects both resume and post-write finalization. One fresh focused re-audit is required before any product edit. M7-008 remains unintegrated and downstream work remains closed."
+    "disposition": "The first focused M7-009 re-audit accepted the precedence and independent validation facts but found one Important contradiction between intentional diagnostic partial publication and complete reusable finalization. The contract now permits a self-consistent declared-partial diagnostic bundle to finalize while permanently refusing reuse, and requires full evidence or B_EXPORT_INCOMPLETE for any complete/reusable claim. Another fresh focused read-only audit is required before product edits."
   },
   "orchestration_events": [
+    {
+      "event": "m7_009_focused_reaudit_changes_required_diagnostic_boundary_clarified",
+      "date": "2026-10-25",
+      "reviewer": "/root/m7_009_astra_reaudit",
+      "snapshot": "87d79c9",
+      "verdict": "changes_required; Critical 0, Important 1, Minor 0; audit_pass no",
+      "finding": "The post-write rule incorrectly prohibited intentional diagnostic partial publication even though AC3 requires that export to succeed before reuse is refused.",
+      "clarification": "Allow a self-consistent base pair to finalize only as an explicitly partial diagnostic bundle; it remains non-reusable and resumes as incomplete. Require full member/late/provenance validation for complete or reusable claims, otherwise B_EXPORT_INCOMPLETE.",
+      "review_ref": "docs/implementation/reviews/2026-10-25-m7-009-astra-reaudit.md",
+      "allowed_next_transition": "Commit the clarified diagnostic-versus-complete boundary and dispatch another fresh focused read-only audit; no implementation before audit_pass yes.",
+      "disposition": "No product edit, integration, private-data access, C-06 provenance, migration, M7/G7 release, or Stage-D work."
+    },
     {
       "event": "m7_009_astra_changes_required_contract_clarified",
       "date": "2026-10-25",

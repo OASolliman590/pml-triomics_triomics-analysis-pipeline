@@ -84,18 +84,38 @@ The repair is limited to the restored M7-008 candidate and these files:
 The implementation must keep at least three independent facts: physical
 envelope presence, base-envelope/hash validity, and complete required-evidence
 validation. `envelope_present` must not stand in for the latter two. Both the
-resume decision and the post-write finalization guard must consume the explicit
-validation facts; a physically present but incomplete/invalid candidate must
-never become reusable or pass finalization. The public B-T07 seam must prove at
-least:
+resume decision and the post-write guard must consume the explicit validation
+facts.
+
+B-T07 has two deliberately different publication outcomes:
+
+- An intentionally diagnostic export may finalize a self-consistent base
+  payload/envelope pair only when it explicitly declares `status = "partial"`.
+  It may record that same-run provenance is unavailable, as in the
+  `caller_matrix_unverified` AC3 fixture. It is never reusable; a later resume
+  decision reports `incomplete`.
+- A handoff claiming `status = "complete"` or eligibility for reuse must pass
+  base-envelope/hash validation and every required member, late-artifact, and
+  provenance check. Missing or invalid required evidence raises the existing
+  `B_EXPORT_INCOMPLETE` during post-write verification and cannot be published
+  as a complete/reusable candidate.
+
+A present but invalid evidence artifact is not the same as an intentionally
+absent provenance frame in a declared-partial diagnostic export. The former
+must fail post-write verification whenever the handoff claims completeness;
+the latter may finalize only as partial and remains permanently ineligible for
+reuse. The public B-T07 seam must prove at least:
 
 - payload present plus envelope absent -> `partial`, reuse refused;
 - payload and envelope present plus declared partial status -> `incomplete`,
   reuse refused;
 - payload and envelope present plus missing required provenance/late evidence ->
   `incomplete`, reuse refused;
-- payload and envelope present plus invalid required provenance/late evidence ->
-  `incomplete`, reuse refused, and post-write finalization raises the existing
+- an intentionally diagnostic `caller_matrix_unverified` bundle with no
+  provenance frame finalizes only with declared status `partial`, then resumes
+  as `incomplete` with reuse refused;
+- a handoff claiming complete/reusable status with missing or invalid required
+  provenance/late evidence fails post-write verification with the existing
   `B_EXPORT_INCOMPLETE` error rather than treating physical presence as proof;
 - complete, matching, fully validated candidate -> `complete_match`, reuse
   permitted;

@@ -350,6 +350,14 @@ readable envelope binding different bytes, separates physical presence from
 base-envelope and required-evidence validation, protects resume and post-write
 finalization, and remains bounded to B-T07. One fresh focused re-audit is
 pending; implementation is still prohibited.
+That focused re-audit accepted those repairs but found one Important wording
+conflict: AC3 intentionally publishes a self-consistent diagnostic bundle with
+declared status `partial`, so the contract cannot prohibit all incomplete
+artifacts from finalizing. The record now distinguishes diagnostic partial
+publication, which may finalize but is never reusable and resumes as
+`incomplete`, from a complete/reusable claim, which requires every evidence
+check or fails with `B_EXPORT_INCOMPLETE`. A new fresh focused audit is pending;
+product code remains unchanged.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
