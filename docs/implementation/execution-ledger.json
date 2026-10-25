@@ -36,13 +36,25 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_010_audit_passed_implementation_unlocked",
-    "last_reconciled": "2026-10-25",
+    "status": "m7_010_paused_at_user_request_full_gate_incomplete",
+    "last_reconciled": "2026-10-26",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M7-010 immutable amendment 083df95 passed a fresh read-only Astra-low audit with Critical 0, Important 0 and Minor 0. Bounded implementation is unlocked under the five-file allowlist and test-first plan. B-T07 remains candidate/review_pending and unaccepted; G7 and downstream Stage D remain closed."
+    "disposition": "Final Astra rereview passed bf41f10 with zero findings. Integrated at 0afe2c5 with all five blobs identical to the approved candidate. Integrated focused gate passed 839 expectations (B-T04 430, B-T07 315, composition 94), zero failures/warnings/skips/errors. Full source gate interrupted at user request during B-T01, exit 1, no final counts. Three earlier A-T01 diagnostics remain unclassified. No active workers or gate. B-T07/M7 acceptance, G7 and Stage D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_010_integrated_focused_pass_full_gate_paused",
+      "date": "2026-10-26",
+      "candidate": "bf41f10d423888fa8191fe1ac84d9b4e8e32e311",
+      "integrated_snapshot": "0afe2c533c49684f914f62d2a93169f122b73053",
+      "final_astra_verdict": "ADDRESSED; pass; ready_to_integrate yes; Critical 0, Important 0, Minor 0",
+      "focused_gate": "FAIL 0, WARN 0, SKIP 0, ERROR 0, PASS 839; 39 test blocks",
+      "full_source_gate": "Interrupted at explicit user request during B-T01; exit 1; no final totals; three A-T01 diagnostics unresolved",
+      "review_ref": "docs/implementation/reviews/2026-10-26-m7-010-integration-gate.md",
+      "allowed_next_transition": "Paused. On authorization to resume, inspect the unresolved A-T01 diagnostics and complete one fresh full source gate. Do not rerun Luna repairs or completed reviews.",
+      "disposition": "No active worker or gate; B-T07/M7 acceptance, G7 and Stage D closed; no private-data access or push."
+    },
     {
       "event": "m7_010_astra_audit_pass_implementation_unlocked",
       "date": "2026-10-25",

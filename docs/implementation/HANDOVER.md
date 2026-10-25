@@ -1,5 +1,30 @@
 # Implementation handover
 
+## Current checkpoint — 26 October 2026
+
+M7-010 final candidate `bf41f10` passed the scoped Astra-low rereview with
+Critical 0, Important 0, Minor 0. Both initial review findings were repaired
+and passed the Spec and Standards rereviews. The final structured-error
+regression passed 3 expectations; Luna's completed B-T04 suite passed 430,
+with zero failures, warnings, skips or errors.
+
+The approved changes are integrated at `0afe2c5`; all five allowlisted file
+blobs match `bf41f10` exactly. The integrated focused gate passed B-T04 430,
+B-T07 315 and composition 94 (839 total), with no failures/warnings/skips/errors.
+The full source gate was interrupted at the user's request during B-T01
+(`the stage B fixture envelope matches limma on predecessor matrices`), exit 1.
+It is incomplete, not passed. Three numbered A-T01 diagnostics appeared before
+interruption; their types and names were not emitted and remain unresolved.
+No final full-suite counts exist. No run-owned worker or gate remains active.
+Evidence is preserved in `reviews/evidence/2026-10-26-m7-010/`.
+Do not resume Luna or repeat the completed reviews. The durable receipt is
+`reviews/2026-10-26-m7-010-integration-gate.md`.
+
+B-T07 remains `candidate/review_pending`, `accepted=false`. B-T07/M7 acceptance,
+G7 and Stage D remain closed. No private study data were read or fitted and no
+GitHub push occurred. The historical sections below do not override this
+checkpoint or the current execution ledger.
+
 Run `triomics-20260920-sol-01` continues on branch
 `spec/harden-v2-20260920`. The clean archive package gate remains the accepted
 historical result at implementation snapshot `76fe5e2`: `Status: OK`, FAIL 0,
@@ -676,32 +701,16 @@ the first predictor block only; native component mismatch still fails closed.
 
 ## Literal resume instruction
 
-Read `AGENTS.md`, `discovery/spec-v2/README.md`, the master Sol prompt,
-`execution-ledger.json`, this handover,
-`reviews/2026-10-23-m7-003-focused-astra-rereview.md`, accepted change record
-M7-003, and its Sol acceptance receipt. M6 is accepted and G6 is released.
-D-T01 remains unaccepted and blocks every Stage-D successor.
-
-Do not integrate candidate `1b44a84`, resume its worker, edit producer/D/shared
-registration seams, or start D-T02/D-T03. M7-001 and M7-002 exhausted their
-permitted cycles; M7-003 is accepted as a specification amendment, but its
-contract-foundation implementation packet is exhausted and remains historical.
-Do not resume `/root/m7_003_contract_luna` or integrate its files directly.
-M7-007 immutable snapshot `b29c3aa` passed its single fresh Astra-low audit with
-Critical 0, Important 0, Minor 0. Sol accepted only the combined
-M7-004/M7-006/M7-007 public synthetic provenance contract foundation. No worker
-or handoff from M7-007 remains active. M7-008 final candidate `8745f22` remains
-unintegrated and blocked after the initial implementation plus both permitted
-repairs. Native B provenance and its envelope validate, but B-T07 remains red
-on the AC3 `partial` versus `incomplete` state label. No Standards/Spec review
-was dispatched because focused GREEN was not achieved. No run-owned worker or
-handoff remains active. M7-009 now has explicit authority for the contract
-adjudication only. Literal resume instruction: audit
-`change-records/M7-009-resume-reason-vocabulary.md`; if and only if the fresh
-read-only audit passes, repair the restored M7-008 candidate `8745f22` through
-the public B-T07 seam and verify it. Do not integrate the candidate or start
-C-06 provenance, D
-verification/publication, migration execution, D-T01 acceptance, M7 release,
-or any Stage-D successor in parallel.
-Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
+Read the current checkpoint above, `execution-ledger.json`, M7-010's change
+record and `reviews/2026-10-26-m7-010-integration-gate.md`. Reconcile the
+recorded stopped gate before launching work. M7-009 is integrated; its
+B-T04 producer-context blocker is addressed by the reviewed M7-010 code at
+`0afe2c5`, with focused verification passed and full verification incomplete.
+Work is paused at the user's request. On authorization to resume, inspect the
+three unresolved A-T01 diagnostics and run one fresh full source gate; the
+interrupted R process cannot resume. Do not rerun Luna repairs or the completed
+reviews. Record every warning by test name and update this checkpoint.
+M6/G6 and the accepted public synthetic contract foundation remain historical
+accepted results. B-T07/M7 acceptance, G7 and Stage D remain closed in this
+cycle. Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.
