@@ -389,6 +389,25 @@ still `candidate/review_pending`, `accepted: false`. See
 `reviews/2026-10-25-m7-009-repair-rereview.md`. No run-owned agent or handoff is
 active. A later serial integration requires explicit authority; all downstream
 Stage-D work remains closed.
+Omar then directed the serial integration. The reviewed final blobs were
+integrated as `0fa320c`, `fced7eb`, `5ca5012`, and `0f139a4`; they equal
+candidate `2eb483a` exactly. Fresh integrated focused gates passed B-T07 315,
+B-T02 266, B-T03 286 and A-T08 284 expectations with zero failures, test
+warnings or skips. The required full source suite then reached `DONE` but exited
+1 with three failures and fifteen warnings. Fourteen warnings are the existing
+C-05 native small-fixture diagnostics. The new warning and all failures come
+from B-T04: its custom synthetic Stage-B executor returns exact matrices but no
+same-run `provenance_context`, so the universal B-T07 post-stage hook refuses
+with `B_EXPORT_INCOMPLETE`. Focused B-T04 and source-composition reproductions
+confirm the same boundary. This is not a B-T04 numerical/calibration failure;
+the 0.08 bound and seeds 1001:1400 are unchanged. The unused two-visit fixture
+matrix cannot truthfully be relabelled as ancestry for B-T04's generated
+closed-form response. See
+`reviews/2026-10-25-m7-009-integration-gate.md`. B-T07 remains integrated but
+unaccepted and `candidate/review_pending`. A new explicitly authorized bounded
+record must select and audit truthful B-T04 producer lineage or an explicit
+no-handoff disposition before repair. No run-owned agent is active and all
+downstream Stage-D work remains closed.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only

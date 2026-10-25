@@ -36,13 +36,29 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_009_verified_awaiting_integration_authority",
+    "status": "m7_009_integrated_full_gate_failed",
     "last_reconciled": "2026-10-25",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M7-009 repair candidate 2eb483a passed focused verification and fresh Standards/Spec rereview with Critical 0, Important 0, Minor 0. It remains candidate/review_pending, accepted=false and unintegrated. No run-owned agent is active; serial integration requires explicit authority and downstream work remains closed."
+    "disposition": "Reviewed candidate 2eb483a is integrated through snapshot 0f139a4 and its focused gates pass, but the full source suite fails at the custom B-T04 producer because it omits same-run provenance context. B-T07 remains candidate/review_pending and unaccepted. No run-owned agent is active; a new bounded audited repair record requires explicit authority and downstream work remains closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_009_integrated_full_source_gate_failed_b_t04_producer_context",
+      "date": "2026-10-25",
+      "candidate": "2eb483ac7bcf5aa1919b8d72b9b8c8b239235861",
+      "integration_commits": ["0fa320c", "fced7eb", "5ca5012", "0f139a4"],
+      "integrated_snapshot": "0f139a49fb5e6471a6529c830e27bd7616431e34",
+      "blob_identity": "R/export_b.R, R/results_b.R, tests/testthat/test-B-T07.R and B-T07 registration equal candidate 2eb483a exactly",
+      "focused_gate": "B-T07 PASS 315; focused B-T02 PASS 266; B-T03 PASS 286; A-T08 PASS 284; zero failures, test warnings or skips",
+      "full_source_gate": "exit 1 after DONE; failures 3; warnings 15; no skip section reported",
+      "warning_set": "fourteen existing C-05 native small-fixture diagnostics plus one new B-T04 command-status warning",
+      "root_cause": "triomics_b04_execute_fixture is the only custom Stage-B producer and returns resolved_matrices without provenance_context; the universal B-T07 post-stage hook correctly rejects the unproven handoff",
+      "scientific_constraint": "B-T04's closed-form trajectory explicitly does not use the ticket's two-visit matrix as response, so those unused files cannot be presented as derivation ancestry",
+      "review_ref": "docs/implementation/reviews/2026-10-25-m7-009-integration-gate.md",
+      "allowed_next_transition": "Only a newly authorized bounded record may audit and implement truthful B-T04 synthetic-producer lineage or an explicit fail-closed no-handoff disposition, then repeat focused and full gates.",
+      "disposition": "B-T07 integrated but candidate/review_pending and unaccepted; no active worker, private-data access, C-06 provenance, migration, M7/G7 release, or downstream Stage-D work."
+    },
     {
       "event": "m7_009_repair_verified_rereviews_passed",
       "date": "2026-10-25",
