@@ -358,6 +358,13 @@ publication, which may finalize but is never reusable and resumes as
 `incomplete`, from a complete/reusable claim, which requires every evidence
 check or fails with `B_EXPORT_INCOMPLETE`. A new fresh focused audit is pending;
 product code remains unchanged.
+Fresh final Astra-low audit of immutable snapshot `8d12c67` then passed with
+Critical 0, Important 0, Minor 0. M7-009 product work is unlocked only on the
+restored candidate `8745f22`, limited to `R/export_b.R`, the B-T07 focused test,
+and its registration. Required evidence includes the existing AC3 RED, ordered
+reason precedence, overlapping hash/evidence failure, complete-claim post-write
+failure, exact B-T07, affected B-T02/B-T03, and Stage-A non-regression. No
+integration or downstream work is authorized before focused GREEN and review.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only

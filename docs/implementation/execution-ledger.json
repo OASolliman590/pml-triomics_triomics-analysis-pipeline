@@ -36,13 +36,25 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_009_contract_reaudit_pending",
+    "status": "m7_009_implementation_authorized",
     "last_reconciled": "2026-10-25",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "The first focused M7-009 re-audit accepted the precedence and independent validation facts but found one Important contradiction between intentional diagnostic partial publication and complete reusable finalization. The contract now permits a self-consistent declared-partial diagnostic bundle to finalize while permanently refusing reuse, and requires full evidence or B_EXPORT_INCOMPLETE for any complete/reusable claim. Another fresh focused read-only audit is required before product edits."
+    "disposition": "Fresh Astra-low final audit of snapshot 8d12c67 passed with Critical 0, Important 0, Minor 0. One bounded three-file B-T07 implementation repair is now authorized on restored candidate 8745f22, followed by focused verification and independent review. No integration or downstream work is authorized yet."
   },
   "orchestration_events": [
+    {
+      "event": "m7_009_astra_final_audit_pass_implementation_unlocked",
+      "date": "2026-10-25",
+      "reviewer": "/root/m7_009_astra_final_audit",
+      "snapshot": "8d12c67",
+      "candidate": "8745f22a2fddaef9a98a49ce646efe57b1f40245",
+      "verdict": "pass; Critical 0, Important 0, Minor 0; audit_pass yes",
+      "review_ref": "docs/implementation/reviews/2026-10-25-m7-009-astra-final-audit.md",
+      "allowlist": ["R/export_b.R", "tests/testthat/test-B-T07.R", "docs/implementation/registrations/B-T07.json"],
+      "allowed_next_transition": "Dispatch one fresh bounded implementer; require public-seam RED/GREEN, exact B-T07, affected B-T02/B-T03 and Stage-A non-regression evidence, then independent review before any integration.",
+      "disposition": "No integration, private-data access, C-06 provenance, migration, M7/G7 release, or Stage-D work."
+    },
     {
       "event": "m7_009_focused_reaudit_changes_required_diagnostic_boundary_clarified",
       "date": "2026-10-25",
