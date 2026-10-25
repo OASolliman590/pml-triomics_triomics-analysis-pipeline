@@ -36,13 +36,27 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_009_integrated_full_gate_failed",
+    "status": "m7_010_audit_passed_implementation_unlocked",
     "last_reconciled": "2026-10-25",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Reviewed candidate 2eb483a is integrated through snapshot 0f139a4 and its focused gates pass, but the full source suite fails at the custom B-T04 producer because it omits same-run provenance context. B-T07 remains candidate/review_pending and unaccepted. No run-owned agent is active; a new bounded audited repair record requires explicit authority and downstream work remains closed."
+    "disposition": "M7-010 immutable amendment 083df95 passed a fresh read-only Astra-low audit with Critical 0, Important 0 and Minor 0. Bounded implementation is unlocked under the five-file allowlist and test-first plan. B-T07 remains candidate/review_pending and unaccepted; G7 and downstream Stage D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_010_astra_audit_pass_implementation_unlocked",
+      "date": "2026-10-25",
+      "authority": "Omar authorized M7-010 definition, audit, and implementation only after audit approval.",
+      "snapshot": "083df956212d",
+      "reviewer": "/root/m7_010_astra_audit",
+      "verdict": "pass; Critical 0, Important 0, Minor 0; audit_pass yes",
+      "decision": "Use one immutable B-T04 synthetic protocol as the source root; exclude both unused paired TSVs from ancestry and block-envelope inputs; bind the uncentered exported matrix separately from the centered fitted response and exact ordered design.",
+      "change_record": "docs/implementation/change-records/M7-010-b-t04-synthetic-producer-lineage.md",
+      "review_ref": "docs/implementation/reviews/2026-10-25-m7-010-astra-audit.md",
+      "plan_ref": "docs/superpowers/plans/2026-10-25-m7-010-b-t04-synthetic-lineage.md",
+      "allowed_next_transition": "Dispatch one fresh isolated Luna-max implementer under the five-file allowlist; require public RED/GREEN and exact B-T04, composition and B-T07 gates, then fresh two-axis review before integration.",
+      "disposition": "No private-data access, schema/frozen-spec change, B-T07/M7 acceptance, G7 release, Stage-D work or push."
+    },
     {
       "event": "m7_009_integrated_full_source_gate_failed_b_t04_producer_context",
       "date": "2026-10-25",

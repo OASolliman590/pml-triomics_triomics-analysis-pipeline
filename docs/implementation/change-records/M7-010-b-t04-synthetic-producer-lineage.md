@@ -1,8 +1,7 @@
 # M7-010 — truthful B-T04 synthetic-producer lineage
 
 - Date: 2026-10-25
-- Status: **authorized for definition and audit; implementation prohibited until
-  a fresh read-only Astra-low audit passes**
+- Status: **fresh Astra-low audit passed; bounded implementation unlocked**
 - Product base: `5c95359567fd`
 - Trigger:
   `docs/implementation/reviews/2026-10-25-m7-009-integration-gate.md`
@@ -11,6 +10,8 @@
 - User authority: Omar selected the truthful native synthetic-producer route,
   explicitly excluded the unused two-visit matrix from response ancestry, and
   authorized implementation and verification only after the amendment audit.
+- Audit: `docs/implementation/reviews/2026-10-25-m7-010-astra-audit.md`
+  (`audit_pass: yes`; Critical 0, Important 0, Minor 0)
 
 ## Purpose and selected approach
 

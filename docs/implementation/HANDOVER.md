@@ -408,6 +408,15 @@ unaccepted and `candidate/review_pending`. A new explicitly authorized bounded
 record must select and audit truthful B-T04 producer lineage or an explicit
 no-handoff disposition before repair. No run-owned agent is active and all
 downstream Stage-D work remains closed.
+M7-010 then selected the truthful native B-T04 synthetic-producer route. The
+immutable amendment at `083df95` requires a versioned synthetic protocol as the
+only analysis source root, excludes the two configured paired-example TSVs from
+both provenance and block-envelope inputs, and binds the uncentered matrix handed
+downstream separately from the subject-centered response fitted by limma. A
+fresh read-only Astra-low audit passed with Critical 0, Important 0, Minor 0 and
+`audit_pass: yes`. Bounded test-first implementation is unlocked under
+`docs/superpowers/plans/2026-10-25-m7-010-b-t04-synthetic-lineage.md`; B-T07/M7,
+G7 and downstream Stage D remain closed.
 
 M7-005 opens that independent baseline gate as a one-file source-test repair.
 Fresh Luna-max worker `/root/m7_005_c05_luna` may change only
