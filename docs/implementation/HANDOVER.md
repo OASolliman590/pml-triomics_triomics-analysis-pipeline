@@ -1,5 +1,16 @@
 # Implementation handover
 
+## Active M7-014 — authorized completion
+
+User expanded fixture-label authority; do not repeat the M7-013 audit.
+Fresh worker `/root/m7_014_luna` (gpt-6-luna/max, no commits) at `79003fd`
+in `/Users/megastore/.codex/worktrees/m7-014-c-provenance-completion/PML MultiOmics Analysis Pipeline`.
+Record `change-records/M7-014-c-provenance-completion.md` governs this run.
+Reconcile this worker, review actual diff and independently prove native C02 B,
+C08 endpoint-only and C06 same-root provenance before integration. At most two
+reproduced-failure repairs to this same worker. Old cycles stay incomplete.
+M7/G7/Stage D closed; no private data or push.
+
 ## Current M7-013 checkpoint — blocked, not integrated
 
 M7-013 record `4e5ad08` passed fresh Astra-low audit with zero findings; no
