@@ -3,9 +3,10 @@
 ## Current checkpoint — 26 October 2026, M7-011 defined
 
 Omar authorized the next bounded cycle. M7-011 defines the C-06 native
-provenance producer seam and is awaiting one fresh read-only Astra-low audit.
-No product code has changed. Implementation stays closed until that audit
-passes. M7, G7, and Stage D remain closed.
+provenance producer seam. Fresh Astra-low audit of `721153c` passed with
+Critical 0, Important 0, and Minor 0 (`01a17731-3170-7953-8a10-d7c8ad038bfe`).
+One Luna-max worker may now implement only the three-file allowlist. M7, G7,
+and Stage D remain closed.
 
 M7-010's resumed full source gate remains the prior result: **FAIL 0 / WARN 14 /
 SKIP 0 / ERROR 0 / PASS 5893**, 352 test blocks, exit 0 after `DONE`, against
