@@ -3,9 +3,11 @@
 ## Active M7-013 — publication split
 
 M7-013 record frozen at `4e5ad08` passed fresh Astra-low audit, zero findings.
-Receipt: `reviews/2026-10-26-m7-013-astra-audit.md`. Next: one fresh Luna-max
-no-commit worktree on the seven-file allowlist; inspect, rerun both named suites
-and validate real B-to-C bytes before integration. M7-011/M7-012 stay blocked.
+Receipt: `reviews/2026-10-26-m7-013-astra-audit.md`. Active fresh worker
+`/root/m7_013_luna`, gpt-6-luna/max, no commits, base `425455b`, worktree
+`/Users/megastore/.codex/worktrees/m7-013-c-publication-split/PML MultiOmics Analysis Pipeline`.
+Reconcile its returned seven-file diff; Sol reruns both named suites and
+validates real B-to-C bytes before integration. Do not redispatch a duplicate. M7-011/M7-012 stay blocked.
 M7/G7 and Stage D stay closed. No doc repair was used.
 
 ## Current checkpoint — 26 October 2026, M7-011 and M7-012 blocked

@@ -34,15 +34,31 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "id": "/root/m7_013_luna",
+      "role": "implementer",
+      "model": "gpt-6-luna",
+      "effort": "max",
+      "allowed_next_transition": "Fresh Luna-max no-commit worker at 425455b in /Users/megastore/.codex/worktrees/m7-013-c-publication-split/PML MultiOmics Analysis Pipeline. Seven-file allowlist; stop outside scope. Sol diff review, C08-shared/C06 reruns and native B-to-C byte read-back required before integration. M7/G7/Stage D closed."
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_013_astra_pass",
+    "status": "m7_013_luna_running",
     "last_reconciled": "2026-10-26",
-    "active_handoffs": [],
+    "active_handoffs": [
+      "/root/m7_013_luna"
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Astra audit_pass yes at 4e5ad08; zero findings; no doc repair used. Next: one fresh Luna-max no-commit seven-file worker in a new worktree; no implementation acceptance. M7/G7/Stage D closed."
+    "disposition": "Fresh Luna-max no-commit worker at 425455b in /Users/megastore/.codex/worktrees/m7-013-c-publication-split/PML MultiOmics Analysis Pipeline. Seven-file allowlist; stop outside scope. Sol diff review, C08-shared/C06 reruns and native B-to-C byte read-back required before integration. M7/G7/Stage D closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_013_luna_running",
+      "date": "2026-10-26",
+      "worker": "/root/m7_013_luna",
+      "disposition": "Fresh Luna-max no-commit worker at 425455b in /Users/megastore/.codex/worktrees/m7-013-c-publication-split/PML MultiOmics Analysis Pipeline. Seven-file allowlist; stop outside scope. Sol diff review, C08-shared/C06 reruns and native B-to-C byte read-back required before integration. M7/G7/Stage D closed."
+    },
     {
       "event": "m7_013_astra_pass",
       "date": "2026-10-26",
