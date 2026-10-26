@@ -2,6 +2,12 @@
 
 ## Current checkpoint — 26 October 2026, M7-011 blocked; M7-012 authorized
 
+M7-012 record is frozen at `db96c5e` (SHA-256
+`f80b723984094e4d5f0986e304b536946792cde1cfb5a3b6d588ad5781f64ebb`).
+Fresh read-only reviewer `/root/m7_012_astra_audit` is active. Implementation
+remains closed until audit_pass yes. Reconcile that reviewer before dispatch;
+do not launch a duplicate audit or resume the old M7-011 worker.
+
 M7-011's audit passed, but its Luna-max worker stopped before implementation:
 the exact Stage C output lacks the required native B predecessor frame. Sol
 inspected the worktree and preserved its sole registration change. The old

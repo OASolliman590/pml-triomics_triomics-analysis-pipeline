@@ -34,15 +34,16 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [{"id":"/root/m7_012_astra_audit","role":"read_only_auditor","model":"gpt-6-astra","effort":"low","snapshot":"db96c5ed5f1b33b822aa4acadc03b269cadb386a","allowed_next_transition":"Record verdict; implementation only after audit_pass yes; at most one documentation repair and focused rereview."}],
   "orchestration_control": {
-    "status": "m7_011_blocked_m7_012_definition_authorized",
+    "status": "m7_012_frozen_astra_audit_open",
     "last_reconciled": "2026-10-26",
-    "active_handoffs": [],
+    "active_handoffs": ["/root/m7_012_astra_audit: read-only audit of db96c5ed5f1b33b822aa4acadc03b269cadb386a"],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Sol inspected completed Luna session 01a17732-ef8f-70c1-bd83-f7cf391d2961: registration-only blocker at c03756d, no product edit; M7-011 blocked_before_implementation and not complete. Old suite PASS 290; CLI exit 0 lacks B/provenance files. M7-012 definition and audit authorized before one fresh no-commit implementer. M7/G7 and Stage D remain closed."
+    "disposition": "M7-011 blocker preserved in 71d74ff. M7-012 record frozen at db96c5e, SHA256 f80b723984094e4d5f0986e304b536946792cde1cfb5a3b6d588ad5781f64ebb. Fresh Astra-low audit open; no implementation or product changes. M7/G7 and Stage D remain closed."
   },
   "orchestration_events": [
+    {"event":"m7_012_frozen_audit_dispatched","date":"2026-10-26","snapshot":"db96c5ed5f1b33b822aa4acadc03b269cadb386a","record_sha256":"f80b723984094e4d5f0986e304b536946792cde1cfb5a3b6d588ad5781f64ebb","reviewer":"/root/m7_012_astra_audit","requested_model":"gpt-6-astra","requested_effort":"low","allowed_next_transition":"Audit receipt first; one documentation repair/rereview if required; one fresh no-commit Luna-max worker only after audit_pass yes.","disposition":"No product edit; M7/G7 and Stage D closed."},
     {
       "event": "m7_011_blocker_reconciled_m7_012_authorized",
       "date": "2026-10-26",
