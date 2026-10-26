@@ -1,0 +1,34 @@
+══ Warnings ════════════════════════════════════════════════════════════════════
+1. C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes ('test-C-05.R:469:3') - Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....
+
+2. C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes ('test-C-05.R:469:3') - Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.
+
+
+3. C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes ('test-C-05.R:469:3') - no non-missing arguments to max; returning -Inf
+
+4. C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes ('test-C-05.R:469:3') - Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.
+
+
+5. C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes ('test-C-05.R:469:3') - no non-missing arguments to max; returning -Inf
+
+6. C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes ('test-C-05.R:469:3') - Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....
+
+7. C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes ('test-C-05.R:469:3') - Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.
+
+
+8. C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes ('test-C-05.R:469:3') - no non-missing arguments to max; returning -Inf
+
+9. C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes ('test-C-05.R:469:3') - Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....
+
+10. C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes ('test-C-05.R:469:3') - Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.
+
+
+11. C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes ('test-C-05.R:469:3') - no non-missing arguments to max; returning -Inf
+
+12. C-05 real MOFA2 fits and extracts a missing sample-view capability cell ('test-C-05.R:542:3') - Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....
+
+13. C-05 real MOFA2 fits and extracts a missing sample-view capability cell ('test-C-05.R:542:3') - All 2 factors were found to explain little or no variance so remove_inactive_factors option has been disabled.
+
+14. C-05 real MOFA2 fits and extracts a missing sample-view capability cell ('test-C-05.R:542:3') - All 2 factors were found to explain little or no variance so remove_inactive_factors option has been disabled.
+
+══ DONE ════════════════════════════════════════════════════════════════════════

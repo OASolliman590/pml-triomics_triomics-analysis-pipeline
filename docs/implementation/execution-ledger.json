@@ -36,13 +36,25 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_010_paused_at_user_request_full_gate_incomplete",
+    "status": "m7_010_full_source_verified_stage_d_closed",
     "last_reconciled": "2026-10-26",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Final Astra rereview passed bf41f10 with zero findings. Integrated at 0afe2c5 with all five blobs identical to the approved candidate. Integrated focused gate passed 839 expectations (B-T04 430, B-T07 315, composition 94), zero failures/warnings/skips/errors. Full source gate interrupted at user request during B-T01, exit 1, no final counts. Three earlier A-T01 diagnostics remain unclassified. No active workers or gate. B-T07/M7 acceptance, G7 and Stage D remain closed."
+    "disposition": "M7-010 full source gate at 2a8e5d5 completed: FAIL 0, WARN 14, SKIP 0, ERROR 0, PASS 5893 across 352 test blocks; exit 0 after DONE. All warnings match the existing named C-05 source set. A-T01 PASS 61 alone and in full suite; prior diagnostics did not recur, cause unproven. No product change, repeated review, active worker or gate. Separate spec-validator tooling remains blocked by missing Python dependencies. B-T07/M7 acceptance, G7 and Stage D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_010_resumed_full_source_gate_passed",
+      "date": "2026-10-26",
+      "source_snapshot": "2a8e5d50f8fd165a79f3767d1a42d11bdb92bfa3",
+      "product_snapshot": "0afe2c533c49684f914f62d2a93169f122b73053",
+      "a_t01_diagnostic": "FAIL 0, WARN 0, SKIP 0, ERROR 0, PASS 61; historical diagnostics did not reproduce",
+      "full_source_gate": "exit 0 after DONE; FAIL 0, WARN 14, SKIP 0, ERROR 0, PASS 5893; 352 test blocks",
+      "warning_comparison": "Same fourteen C-05 warnings as the M7-006 source baseline, matching file, test name, message with whitespace normalized and multiplicity; no new warning",
+      "review_ref": "docs/implementation/reviews/2026-10-26-m7-010-resumed-source-gate.md",
+      "allowed_next_transition": "This verification cycle is complete. A next producer-provenance or migration cycle requires its own bounded authority and applicable audit. Do not repeat completed repairs or reviews.",
+      "disposition": "No acceptance or downstream release. B-T07 remains candidate/review_pending; M7/G7 and Stage D closed. No private-data access, product edit, package-gate repeat or push."
+    },
     {
       "event": "m7_010_integrated_focused_pass_full_gate_paused",
       "date": "2026-10-26",

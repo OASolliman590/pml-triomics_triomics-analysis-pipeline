@@ -1,0 +1,7 @@
+{
+  "baseline_warning_count": 14,
+  "current_condition_count": 14,
+  "all_current_conditions_are_warnings": true,
+  "same_named_multiset": true,
+  "comparison": "file, exact test name and message with whitespace normalized; multiplicity retained"
+}

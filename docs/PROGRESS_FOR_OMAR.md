@@ -1,27 +1,29 @@
 # Tri-omics progress
 
-**Goal:** Build a reproducible multi-omics pipeline while keeping each study
-separate.
+**Goal:** Build a reproducible multi-omics pipeline while keeping the fasting,
+diabetic-treatment and organophosphate studies and all three assay profiles
+distinct.
 
-**Works now:** Stages A and B are accepted on synthetic software evidence.
-Stage C includes leakage-safe evaluation, DIABLO, block.spls, exploratory
-MOFA2, score-endpoint machinery, C-06 comparison/handoff, and C-09's declared
-synthetic clinical-only, molecular-only and combined prediction comparison.
+**Works now — tested on fixtures only:** Earlier analysis and integration
+components remain available. M7-010 now records the true synthetic source of
+the repeated-measures results. Unused two-visit input files are not claimed as
+their ancestors.
 
-**Changed:** The corrected clean archive gate at `76fe5e2` finished `Status:
-OK`: 4,787 checks passed, none failed or skipped, and the same 22 named warnings
-were retained. The missing M6 evidence document was added and reviewed. A fresh
-Astra rereview of immutable commit `2150b4d` passed with its only finding
-addressed and no new blocker. Sol accepted M6 and released G6.
+**Changed — reviewed and verified:** The reviewed repair is integrated. The
+uninterrupted full source suite passed 5,893 checks, with zero failures, errors
+or skips. Its fourteen warnings exactly match the named C-05 small-fixture
+warning set. A-T01 passed alone and in the full run; the earlier interrupted-run
+diagnostics did not recur, but their cause is not proven.
 
-**Not established:** No private study was fitted. There is no biological
-validation, real clinical performance estimate, executed C-07 comparison, or
-real C-09 endpoint/deployment qualification. C-09 remains a synthetic-only
-conditional fixture without packet completion credit.
+**Not established:** This is software evidence, not biological validation.
+No private study was fitted. C-09 remains synthetic-only and conditional, with
+no real clinical-performance or deployment claim. The newer B-T07 provenance
+revision is not accepted. M7/G7 and Stage D remain closed.
 
-**Next:** Stage D remains intentionally closed. Continue only after Omar asks to
-start the next stage; do not repeat the accepted M6 gate or reviews.
+**Next milestone:** Define the next bounded producer-provenance or migration
+step and obtain its required audit. Restore missing Python dependencies before
+claiming a fresh spec-consistency check.
 
-**Needs Omar:** A later explicit instruction to begin Stage D.
+**Needs Omar:** Authorization for that next bounded cycle.
 
-**Sync:** Local Git is authoritative. No new GitHub or Notion sync is claimed.
+**Sync:** Local records updated. No GitHub push or Notion sync performed.

@@ -1,0 +1,9 @@
+GATE: diagnostic 
+COMMIT: 2a8e5d50f8fd165a79f3767d1a42d11bdb92bfa3 
+MOFA2: 1.22.1 
+PYTHON: /tmp/triomics-mofa-py-m7-006/bin/python 
+A-T01: .............................................................
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+
+EXACT_TOTALS: {"fail":0,"warn":0,"skip":0,"error":0,"pass":61,"test_blocks":12} 

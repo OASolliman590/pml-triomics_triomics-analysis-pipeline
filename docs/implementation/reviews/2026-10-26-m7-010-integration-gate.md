@@ -1,5 +1,9 @@
 # M7-010 review and integration receipt
 
+Follow-up: the later uninterrupted source gate passed. See
+`2026-10-26-m7-010-resumed-source-gate.md` for the decisive result. The interrupted
+run below remains historical evidence, not a passing gate.
+
 ## Scope and immutable candidates
 
 Authorization: resume the running B-T04 test, finish the final Astra rereview,

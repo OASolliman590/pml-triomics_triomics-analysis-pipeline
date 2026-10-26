@@ -1,0 +1,11 @@
+{
+  "totals": {
+    "fail": 0,
+    "warn": 0,
+    "skip": 0,
+    "error": 0,
+    "pass": 61,
+    "test_blocks": 12
+  },
+  "conditions": []
+}

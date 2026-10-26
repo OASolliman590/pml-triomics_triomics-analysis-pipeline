@@ -2,6 +2,15 @@
 
 ## Current checkpoint — 26 October 2026
 
+M7-010's resumed full source gate is complete: **FAIL 0 / WARN 14 / SKIP 0 /
+ERROR 0 / PASS 5893**, 352 test blocks, exit 0 after `DONE`, against snapshot
+`2a8e5d5` with product files unchanged from `0afe2c5`. All fourteen conditions
+match the previously dispositioned C-05 source warning set by file, test name,
+message (whitespace normalized), and multiplicity. No new warning appeared.
+A-T01 passed 61 expectations both alone and inside the full suite; the earlier
+interrupted-run diagnostics did not recur and their cause remains unproven.
+No worker, review or test run remains active.
+
 M7-010 final candidate `bf41f10` passed the scoped Astra-low rereview with
 Critical 0, Important 0, Minor 0. Both initial review findings were repaired
 and passed the Spec and Standards rereviews. The final structured-error
@@ -11,14 +20,15 @@ with zero failures, warnings, skips or errors.
 The approved changes are integrated at `0afe2c5`; all five allowlisted file
 blobs match `bf41f10` exactly. The integrated focused gate passed B-T04 430,
 B-T07 315 and composition 94 (839 total), with no failures/warnings/skips/errors.
-The full source gate was interrupted at the user's request during B-T01
-(`the stage B fixture envelope matches limma on predecessor matrices`), exit 1.
-It is incomplete, not passed. Three numbered A-T01 diagnostics appeared before
-interruption; their types and names were not emitted and remain unresolved.
-No final full-suite counts exist. No run-owned worker or gate remains active.
-Evidence is preserved in `reviews/evidence/2026-10-26-m7-010/`.
-Do not resume Luna or repeat the completed reviews. The durable receipt is
-`reviews/2026-10-26-m7-010-integration-gate.md`.
+The prior interrupted run remains historical, not a passing result. Its receipt
+is `reviews/2026-10-26-m7-010-integration-gate.md`. The decisive uninterrupted
+source result and named warning inventory are in
+`reviews/2026-10-26-m7-010-resumed-source-gate.md` and
+`reviews/evidence/2026-10-26-m7-010-resumed/`. This is source-suite verification,
+not a new clean package check or milestone acceptance. The separate spec
+validator remains blocked by missing Python dependencies; no fresh spec
+consistency pass is claimed. Do not repeat completed repairs, reviews or this
+source gate merely to recover context.
 
 B-T07 remains `candidate/review_pending`, `accepted=false`. B-T07/M7 acceptance,
 G7 and Stage D remain closed. No private study data were read or fitted and no
@@ -701,15 +711,15 @@ the first predictor block only; native component mismatch still fails closed.
 
 ## Literal resume instruction
 
-Read the current checkpoint above, `execution-ledger.json`, M7-010's change
-record and `reviews/2026-10-26-m7-010-integration-gate.md`. Reconcile the
-recorded stopped gate before launching work. M7-009 is integrated; its
-B-T04 producer-context blocker is addressed by the reviewed M7-010 code at
-`0afe2c5`, with focused verification passed and full verification incomplete.
-Work is paused at the user's request. On authorization to resume, inspect the
-three unresolved A-T01 diagnostics and run one fresh full source gate; the
-interrupted R process cannot resume. Do not rerun Luna repairs or the completed
-reviews. Record every warning by test name and update this checkpoint.
+Read the current checkpoint, `execution-ledger.json`, M7-010's change record,
+and `reviews/2026-10-26-m7-010-resumed-source-gate.md`. M7-010 is reviewed,
+integrated and verified by the completed full source suite. No worker or gate
+needs resuming. Preserve the completed repairs/reviews/source evidence. Any
+next producer-provenance or migration seam needs its own bounded scope and
+applicable audit before implementation; this run did not authorize it. Restore
+the isolated spec-validator dependencies before claiming fresh specification
+consistency validation. The three old A-T01 diagnostics did not recur; do not
+invent their cause or claim a code fix.
 M6/G6 and the accepted public synthetic contract foundation remain historical
 accepted results. B-T07/M7 acceptance, G7 and Stage D remain closed in this
 cycle. Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen

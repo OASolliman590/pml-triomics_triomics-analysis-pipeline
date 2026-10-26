@@ -1,0 +1,96 @@
+{
+  "totals": {
+    "fail": 0,
+    "warn": 14,
+    "skip": 0,
+    "error": 0,
+    "pass": 5893,
+    "test_blocks": 352
+  },
+  "conditions": [
+    {
+      "file": "test-C-05.R",
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "type": "expectation_warning",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)...."
+    },
+    {
+      "file": "test-C-05.R",
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "type": "expectation_warning",
+      "message": "Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.\n"
+    },
+    {
+      "file": "test-C-05.R",
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "type": "expectation_warning",
+      "message": "no non-missing arguments to max; returning -Inf"
+    },
+    {
+      "file": "test-C-05.R",
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "type": "expectation_warning",
+      "message": "Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.\n"
+    },
+    {
+      "file": "test-C-05.R",
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "type": "expectation_warning",
+      "message": "no non-missing arguments to max; returning -Inf"
+    },
+    {
+      "file": "test-C-05.R",
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "type": "expectation_warning",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)...."
+    },
+    {
+      "file": "test-C-05.R",
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "type": "expectation_warning",
+      "message": "Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.\n"
+    },
+    {
+      "file": "test-C-05.R",
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "type": "expectation_warning",
+      "message": "no non-missing arguments to max; returning -Inf"
+    },
+    {
+      "file": "test-C-05.R",
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "type": "expectation_warning",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)...."
+    },
+    {
+      "file": "test-C-05.R",
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "type": "expectation_warning",
+      "message": "Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.\n"
+    },
+    {
+      "file": "test-C-05.R",
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "type": "expectation_warning",
+      "message": "no non-missing arguments to max; returning -Inf"
+    },
+    {
+      "file": "test-C-05.R",
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "type": "expectation_warning",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)...."
+    },
+    {
+      "file": "test-C-05.R",
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "type": "expectation_warning",
+      "message": "All 2 factors were found to explain little or no variance so remove_inactive_factors option has been disabled."
+    },
+    {
+      "file": "test-C-05.R",
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "type": "expectation_warning",
+      "message": "All 2 factors were found to explain little or no variance so remove_inactive_factors option has been disabled."
+    }
+  ]
+}
