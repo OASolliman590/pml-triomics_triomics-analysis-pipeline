@@ -36,13 +36,22 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_010_full_source_verified_stage_d_closed",
+    "status": "m7_011_defined_astra_audit_pending",
     "last_reconciled": "2026-10-26",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M7-010 full source gate at 2a8e5d5 completed: FAIL 0, WARN 14, SKIP 0, ERROR 0, PASS 5893 across 352 test blocks; exit 0 after DONE. All warnings match the existing named C-05 source set. A-T01 PASS 61 alone and in full suite; prior diagnostics did not recur, cause unproven. No product change, repeated review, active worker or gate. Separate spec-validator tooling remains blocked by missing Python dependencies. B-T07/M7 acceptance, G7 and Stage D remain closed."
+    "disposition": "M7-011 defines the C-06 native provenance producer seam at base a93a754. Astra-low audit is the next transition. No product code changed. M7/G7 and Stage D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_011_c06_provenance_seam_defined_audit_pending",
+      "date": "2026-10-26",
+      "authority": "Omar authorized the next bounded producer cycle through delegation.",
+      "base_snapshot": "a93a754",
+      "change_record": "docs/implementation/change-records/M7-011-c06-native-provenance-producer-seam.md",
+      "allowed_next_transition": "One fresh read-only Astra-low audit of this immutable record. Implementation stays closed until audit_pass yes.",
+      "disposition": "No product edit, private-data access, D-T01 work, M7/G7 release, or push. B-T07 remains candidate/review_pending."
+    },
     {
       "event": "m7_010_resumed_full_source_gate_passed",
       "date": "2026-10-26",
