@@ -2,6 +2,13 @@
 
 ## Current checkpoint — 26 October 2026, M7-011 blocked; M7-012 authorized
 
+Active M7-012 worker: `/root/m7_012_luna`, requested gpt-6-luna/max, no commits,
+new worktree `/Users/megastore/.codex/worktrees/m7-012-c06-predecessor/PML MultiOmics Analysis Pipeline`
+at `4bdda74`. It must assess the known C-08 caller boundary before editing.
+Reconcile this worker rather than dispatch a duplicate. Sol review/reruns are
+required before any product integration; stop if real predecessor supply or
+compatibility needs outside files. No second implementation repair is allowed.
+
 M7-012's single documentation repair is frozen at `e37f334` (SHA-256
 `6cd3447e918272f9cde9dbaabceb6fa829fda4b3c41044779aea0bc72944c0e7`).
 Fresh Astra-low audit required a C-08 shared-caller compatibility stop condition;
