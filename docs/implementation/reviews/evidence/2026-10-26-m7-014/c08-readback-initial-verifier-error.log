@@ -1,0 +1,2 @@
+Error: !dir.exists(file.path(root, "B")) is not TRUE
+Execution halted

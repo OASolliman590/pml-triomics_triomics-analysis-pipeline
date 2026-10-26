@@ -34,25 +34,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "id": "/root/m7_014_luna",
-      "role": "implementer",
-      "model": "gpt-6-luna",
-      "effort": "max",
-      "allowed_next_transition": "Fresh Luna-max no-commit worker at79003fd in /Users/megastore/.codex/worktrees/m7-014-c-provenance-completion/PML MultiOmics Analysis Pipeline. Eight initial files including authorized C02/C06 label fixes. Extra same-label fixture/test entries recorded before edit. Sol review plus three independent proofs, maximum two same-worker repairs; M7/G7/StageD closed."
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_014_luna_running",
+    "status": "m7_014_verified_integrated_closed",
     "last_reconciled": "2026-10-26",
-    "active_handoffs": [
-      "/root/m7_014_luna"
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Luna-max no-commit worker at79003fd in /Users/megastore/.codex/worktrees/m7-014-c-provenance-completion/PML MultiOmics Analysis Pipeline. Eight initial files including authorized C02/C06 label fixes. Extra same-label fixture/test entries recorded before edit. Sol review plus three independent proofs, maximum two same-worker repairs; M7/G7/StageD closed."
+    "disposition": "Sol independently proved immutable18b6e90: C02 nativeB valid; C08-shared PASS64 all failure/warn/skip/error0 and fresh endpoint-only proof; C06 PASS347 all0, nativeB/C exit0/0, four B hashes unchanged and equal validated C predecessors. MissingB exit2 no partial frame. Integrated identical eight blobs at359a1d0. Receipt reviews/2026-10-26-m7-014-sol-integration-receipt.md. No post-return repairs. C06acceptedfalse C07not_run C09unqualified; M7/G7/StageD closed. No workers/processes active; stop."
   },
   "orchestration_events": [
+    {
+      "event": "m7_014_verified_integrated_closed",
+      "date": "2026-10-26",
+      "worker": null,
+      "disposition": "Sol independently proved immutable18b6e90: C02 nativeB valid; C08-shared PASS64 all failure/warn/skip/error0 and fresh endpoint-only proof; C06 PASS347 all0, nativeB/C exit0/0, four B hashes unchanged and equal validated C predecessors. MissingB exit2 no partial frame. Integrated identical eight blobs at359a1d0. Receipt reviews/2026-10-26-m7-014-sol-integration-receipt.md. No post-return repairs. C06acceptedfalse C07not_run C09unqualified; M7/G7/StageD closed. No workers/processes active; stop."
+    },
+    {
+      "event": "m7_014_sol_verification_running",
+      "date": "2026-10-26",
+      "worker": null,
+      "disposition": "Luna finished; Sol reviewed eight-file diff and committed isolated candidate18b6e9042d1df606bc9d239ef63250638385dd93. No integration. Independent serial proofs running at /tmp/triomics-m7-014-sol/proof-18b6e90: C02 B+readback, C08 suite+fresh endpoint root, C06 suite+same-root B/C exact digest readback. Worker reported347/64 passes; not substituted for Sol results. No repairs dispatched after return. M7/G7/StageD closed."
+    },
     {
       "event": "m7_014_shared_run_record_disposition",
       "date": "2026-10-26",

@@ -513,7 +513,7 @@
     "receipt": "docs/implementation/reviews/2026-10-26-m7-013-publication-split-receipt.md"
   },
   "m7_014_c_provenance_completion_attempt": {
-    "status": "implemented_unaccepted_local_candidate",
+    "status": "verified_integrated_not_accepted",
     "accepted": false,
     "worker_base": "79003fd166c7aa96c0af270c6fb775cc1178834f",
     "worker_commit": null,
@@ -574,7 +574,10 @@
           "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-06.yaml --stage B --output /tmp/triomics-m7-014-luna/native-bc-final2",
           "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-06.yaml --stage C --output /tmp/triomics-m7-014-luna/native-bc-final2"
         ],
-        "exit_codes": [0, 0],
+        "exit_codes": [
+          0,
+          0
+        ],
         "output_root": "/private/tmp/triomics-m7-014-luna/native-bc-final2",
         "readback_log": "/tmp/triomics-m7-014-luna/native-bc-final2-readback.log",
         "readback": "B required evidence and provenance validated; C provenance profile, C envelope and D manifest envelope validated; exactly four B predecessor file hashes match; two C-generated preparation-state entities are present; B and C run records were read back."
@@ -613,8 +616,38 @@
       "C-07 controls were not run; D aggregate remains partial. C-09 remains not_started and unqualified.",
       "The auto-review rejection prohibited an added source-file reread/hash helper. C validation uses the persisted exact B predecessor bytes, already-ingested C source hashes, and canonical C metadata/sample-registry/factor-level equality to B normalized_metadata; it does not claim an independent C-side raw metadata byte rehash.",
       "M7-014 remains accepted=false. Sol must inspect this dirty candidate, independently rerun the named tests/native proofs, and own integration and acceptance. No commit or shared integration was made by this worker."
-    ]
+    ],
+    "sol_verification": {
+      "candidate_commit": "18b6e9042d1df606bc9d239ef63250638385dd93",
+      "integration_commit": "359a1d0e53bfcf2fa2e836434e63222e9641a679",
+      "candidate_blobs_match_integration": true,
+      "C-06": {
+        "FAIL": 0,
+        "WARN": 0,
+        "SKIP": 0,
+        "ERROR": 0,
+        "PASS": 347
+      },
+      "C-08-shared": {
+        "FAIL": 0,
+        "WARN": 0,
+        "SKIP": 0,
+        "ERROR": 0,
+        "PASS": 64
+      },
+      "native_c02_b_exit": 0,
+      "native_c06_b_c_exits": [
+        0,
+        0
+      ],
+      "missing_b_exit": 2,
+      "four_b_predecessor_hashes_unchanged_and_matched": true,
+      "c_provenance_and_envelope_valid": true,
+      "C07": "not_run",
+      "C09": "unqualified",
+      "receipt": "docs/implementation/reviews/2026-10-26-m7-014-sol-integration-receipt.md"
+    }
   },
   "acceptance_ref": "discovery/spec-v2/packets/C-06.md",
-  "next_action": "M7-014 local candidate ready for Sol review. Keep accepted=false until Sol independently verifies and integrates it; the preceding M7-011 through M7-013 attempt records remain preserved above."
+  "next_action": "M7-014 seam independently verified and integrated at359a1d0; C-06 accepted=false. M7/G7/StageD remain closed. Preserve old incomplete cycles; next milestone/downstream work requires separate authority."
 }

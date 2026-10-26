@@ -1,0 +1,26 @@
+✔ | F W  S  OK | Context
+
+⠏ |          0 | C-08-shared                                                    
+⠋ |          1 | C-08-shared                                                    
+⠹ |         13 | C-08-shared                                                    
+⠼ |         15 | C-08-shared                                                    
+⠴ |         16 | C-08-shared                                                    Design matrix has changed to include Y; each block will be
+            linked to Y.
+
+⠧ |         18 | C-08-shared                                                    
+⠴ |         26 | C-08-shared                                                    
+⠦ |         27 | C-08-shared                                                    
+⠙ |         32 | C-08-shared                                                    
+⠹ |         43 | C-08-shared                                                    
+⠸ |         54 | C-08-shared                                                    
+⠼ |         55 | C-08-shared                                                    
+⠇ |         59 | C-08-shared                                                    
+⠋ |         61 | C-08-shared                                                    
+✔ |         64 | C-08-shared [13.7s]
+
+══ Results ═════════════════════════════════════════════════════════════════════
+Duration: 13.7 s
+
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 64 ]
+
+SOL COUNTS: FAIL 0 WARN 0 SKIP 0 ERROR 0 PASS 64 

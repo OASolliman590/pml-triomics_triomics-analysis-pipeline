@@ -1,0 +1,35 @@
+args <- commandArgs(trailingOnly=TRUE)
+pkgload::load_all('.', quiet=TRUE)
+root <- normalizePath(args[[1]], mustWork=TRUE)
+mode <- args[[2]]
+receipt <- args[[3]]
+profiles <- list.files(file.path(root,'B'), pattern='^stage-handoff-provenance.json$', recursive=TRUE, full.names=TRUE)
+stopifnot(length(profiles)==1L)
+bdir <- dirname(profiles[[1]])
+bpaths <- file.path(bdir,c('bundle.json','bundle.envelope.json','stage-handoff-provenance.json','stage-handoff-provenance.envelope.json'))
+stopifnot(all(file.exists(bpaths)))
+bhashes <- setNames(vapply(bpaths,triomics_sha256,character(1)),bpaths)
+bundle <- jsonlite::read_json(bpaths[[1]],simplifyVector=FALSE)
+stopifnot(triomics_validate_envelope(bpaths[[2]]),triomics_validate_envelope(bpaths[[4]]),triomics_b07_validate_provenance_artifacts(bundle,bpaths[[1]],bpaths[[2]]))
+if (identical(mode,'before')) {
+ jsonlite::write_json(as.list(bhashes),receipt,auto_unbox=TRUE,pretty=TRUE)
+ print(bhashes)
+} else {
+ before <- unlist(jsonlite::read_json(receipt,simplifyVector=FALSE))
+ stopifnot(identical(before,bhashes))
+ cp <- file.path(root,'D','stage-handoff-provenance.json')
+ ce <- file.path(root,'D','stage-handoff-provenance.envelope.json')
+ stopifnot(file.exists(cp),file.exists(ce))
+ profile <- jsonlite::read_json(cp,simplifyVector=FALSE)
+ env <- jsonlite::read_json(ce,simplifyVector=FALSE)
+ stopifnot(triomics_validate_envelope(ce))
+ # Public validator accepts the byte text, validating JSON and the entire profile.
+ stopifnot(triomics_validate_stage_handoff_provenance(paste(readLines(cp,warn=TRUE),collapse='\n'),env$artifact_id,paste0(env$artifact_id,'-envelope')))
+ entities <- Filter(function(x)x$scientific_role %in% c('predecessor_payload','predecessor_envelope'),profile$identity$entities)
+ hashes <- vapply(entities,function(x)x$digest,character(1))
+ stopifnot(all(bhashes %in% hashes),identical(profile$producer_stage,'C'))
+ out <- c(as.list(bhashes),setNames(as.list(vapply(c(cp,ce),triomics_sha256,character(1))),c(cp,ce)))
+ jsonlite::write_json(out,paste0(receipt,'.verified.json'),auto_unbox=TRUE,pretty=TRUE)
+ print(out)
+ cat('READBACK PASS: native B four-file hashes unchanged and bound in validated C profile; C envelope valid.\n')
+}

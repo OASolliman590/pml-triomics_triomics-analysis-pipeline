@@ -1,0 +1,6 @@
+args <- commandArgs(trailingOnly=TRUE)
+testthat::set_max_fails(Inf)
+r <- testthat::test_local(filter=args[[1]],stop_on_failure=FALSE)
+d <- as.data.frame(r)
+cat('\nSOL COUNTS: FAIL',sum(d$failed),'WARN',sum(d$warning),'SKIP',sum(d$skipped),'ERROR',sum(d$error),'PASS',sum(d$passed),'\n')
+quit(status=if(any(d$failed>0L | d$error | d$skipped)) 1L else 0L)

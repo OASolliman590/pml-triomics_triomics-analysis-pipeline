@@ -1,0 +1,3 @@
+ENDPOINT /private/tmp/triomics-m7-014-sol/proof-18b6e90/c08-only/C/score-endpoints/integration-01.json 0363219499c17053cf6e7ea90feee1ed5a1dafcd60181bcc5eb3a02ac3eab7f6 
+REQUEST /private/tmp/triomics-m7-014-sol/proof-18b6e90/c08-only/B/clinical-score-association-requests/request-01.json e4f7fa2d6b93a6f7de4caf40e110fd6d4b9be3ee8c6ea362d4e68c5bb26fb445 
+READBACK PASS: endpoints and scheduled B request only; no B results, B handoff, C provenance or D handoff manifest.

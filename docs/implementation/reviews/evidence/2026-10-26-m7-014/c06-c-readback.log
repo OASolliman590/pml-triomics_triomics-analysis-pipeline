@@ -1,0 +1,19 @@
+$`/private/tmp/triomics-m7-014-sol/proof-18b6e90/c06-bc/B/handoffs/a69080febe9558c754f28b83c9b10d157f5fe6d78eeeb3a0cd9213a088b38b88/bundle.json`
+[1] "932a6e25f3cfc3abf7f99f9dce9e3f0e69fd87cd8559522ada7ed0868ff92e98"
+
+$`/private/tmp/triomics-m7-014-sol/proof-18b6e90/c06-bc/B/handoffs/a69080febe9558c754f28b83c9b10d157f5fe6d78eeeb3a0cd9213a088b38b88/bundle.envelope.json`
+[1] "372a2eeecc571e79aa6dcc604ab905afa382cac5c29ee12c2793bda7e84fc37b"
+
+$`/private/tmp/triomics-m7-014-sol/proof-18b6e90/c06-bc/B/handoffs/a69080febe9558c754f28b83c9b10d157f5fe6d78eeeb3a0cd9213a088b38b88/stage-handoff-provenance.json`
+[1] "c8584706b3e4a2b960ac131fde921b705308b72dc35766035976766e6771a788"
+
+$`/private/tmp/triomics-m7-014-sol/proof-18b6e90/c06-bc/B/handoffs/a69080febe9558c754f28b83c9b10d157f5fe6d78eeeb3a0cd9213a088b38b88/stage-handoff-provenance.envelope.json`
+[1] "02ea6d4fae2672e70d0fa2482ede980b38118c2d83504cf36f61dbd13e142853"
+
+$`/private/tmp/triomics-m7-014-sol/proof-18b6e90/c06-bc/D/stage-handoff-provenance.json`
+[1] "75e83c37328136d80273b3347a725564a164d54739293ca87a84934f2b41bcfa"
+
+$`/private/tmp/triomics-m7-014-sol/proof-18b6e90/c06-bc/D/stage-handoff-provenance.envelope.json`
+[1] "d0e7dfb29f0af4e50d2da99abac42f9e71d43fdd8c5019ebaeb54c37a4b66ea9"
+
+READBACK PASS: native B four-file hashes unchanged and bound in validated C profile; C envelope valid.

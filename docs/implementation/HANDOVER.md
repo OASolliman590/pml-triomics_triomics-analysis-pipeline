@@ -1,15 +1,33 @@
 # Implementation handover
 
-## Active M7-014 — authorized completion
+## Current M7-014 checkpoint — verified and integrated; milestone closed
 
-User expanded fixture-label authority; do not repeat the M7-013 audit.
-Fresh worker `/root/m7_014_luna` (gpt-6-luna/max, no commits) at `79003fd`
-in `/Users/megastore/.codex/worktrees/m7-014-c-provenance-completion/PML MultiOmics Analysis Pipeline`.
-Record `change-records/M7-014-c-provenance-completion.md` governs this run.
-Reconcile this worker, review actual diff and independently prove native C02 B,
-C08 endpoint-only and C06 same-root provenance before integration. At most two
-reproduced-failure repairs to this same worker. Old cycles stay incomplete.
-M7/G7/Stage D closed; no private data or push.
+The C publication seam is integrated at `359a1d0`, with all eight candidate
+file blobs matching independently verified snapshot `18b6e90`. Existing Astra
+PASS at `4e5ad08` was reused as instructed; no repeat audit. Fresh Luna worker
+finished and Sol used no post-return repair slots. No worker or proof process
+remains active. Full receipt: `reviews/2026-10-26-m7-014-sol-integration-receipt.md`.
+
+Sol independently verified: native C02 Stage B exit0 with valid provenance;
+C08-shared FAIL0/WARN0/SKIP0/ERROR0/PASS64 and a fresh endpoint-only run with
+only scheduled B requests, no B results/handoff or C provenance; C06
+FAIL0/WARN0/SKIP0/ERROR0/PASS347 and native B-to-C exits0/0 with validated C
+profile/envelope and four exact unchanged B predecessor hashes. Missing B exits2
+and leaves no C provenance pair or D manifest. Artifact paths/full hashes and
+raw logs are in the receipt/evidence directory. No full-source/package pass inferred.
+
+The authorized C02 preparation label, C06 effect/contrast column labels and
+C-specific run-C.json resolve the earlier blockers without changing methods,
+numerical expectations, schema, D consumer, B-T04 bound or seeds. C metadata is
+compared from ingested values to validated B normalized metadata, not claimed
+as an independent raw metadata-file rehash. Source/prepared matrices are checked
+using their existing distinct hash conventions; C preparation state is bound.
+
+C-06 accepted=false. C-07 remains not_run, C-09 unqualified, D aggregate partial.
+M7, G7 and Stage D remain closed. M7-011/M7-012/M7-013 stay incomplete.
+No private study data, GitHub push or Notion sync. Retain the proof worktree:
+`/Users/megastore/.codex/worktrees/m7-014-c-provenance-completion/PML MultiOmics Analysis Pipeline`.
+Earlier checkpoints below are history and do not reopen completed work.
 
 ## Current M7-013 checkpoint — blocked, not integrated
 
@@ -769,13 +787,13 @@ the first predictor block only; native component mismatch still fails closed.
 
 ## Literal resume instruction
 
-Read the current M7-013 checkpoint, its receipt and execution ledger.
-M7-013 stopped blocked after independent RED verification; no worker or test
-process needs resuming. Preserve its dirty test worktree and recorded patch.
-A new explicit bounded disposition must resolve the nested C-02 caller's native
-B preparation identity before further implementation. Do not repeat the audit,
-reopen M7-011/M7-012, or call their old tests provenance GREEN. M7/G7/Stage D
-remain closed. No private data, threshold/seed changes or push.
+Read the current M7-014 checkpoint, integration receipt and execution ledger.
+The authorized seam is verified and integrated at359a1d0; no worker or proof
+process needs resuming. Preserve candidate18b6e90 and its exact artifact/hash
+receipt. Do not repeat the M7-013 audit, known label repairs or focused proofs
+merely to recover context, and do not mark M7-011/M7-012/M7-013 complete.
+C-06 accepted=false; M7/G7/Stage D remain closed. Any next acceptance/downstream
+transition requires its own authority. No private data or push.
 The older resume guidance below is historical and does not override this scope.
 
 Read the current checkpoint, `execution-ledger.json`, M7-010's change record,

@@ -1,0 +1,49 @@
+✔ | F W  S  OK | Context
+
+⠏ |          0 | C-06-shared                                                    
+⠋ |          1 | C-06-shared                                                    
+⠴ |          6 | C-06-shared                                                    
+⠦ |          7 | C-06-shared                                                    
+⠧ |          8 | C-06-shared                                                    
+⠏ |         30 | C-06-shared                                                    
+⠙ |         52 | C-06-shared                                                    
+⠙ |         62 | C-06-shared                                                    
+⠇ |         79 | C-06-shared                                                    
+⠸ |         94 | C-06-shared                                                    
+⠙ |        102 | C-06-shared                                                    
+⠇ |        119 | C-06-shared                                                    
+⠹ |        133 | C-06-shared                                                    
+⠴ |        146 | C-06-shared                                                    
+⠋ |        151 | C-06-shared                                                    
+⠙ |        152 | C-06-shared                                                    
+⠹ |        153 | C-06-shared                                                    
+⠸ |        154 | C-06-shared                                                    
+⠼ |        155 | C-06-shared                                                    
+⠇ |        159 | C-06-shared                                                    
+⠏ |        160 | C-06-shared                                                    
+⠧ |        168 | C-06-shared                                                    
+⠙ |        172 | C-06-shared                                                    
+⠸ |        174 | C-06-shared                                                    
+⠏ |        180 | C-06-shared                                                    
+⠸ |        204 | C-06-shared                                                    
+⠦ |        227 | C-06-shared                                                    
+⠏ |        250 | C-06-shared                                                    
+✔ |        260 | C-06-shared [225.2s]
+
+⠏ |          0 | C-06                                                           
+⠋ |          1 | C-06                                                           
+⠏ |         20 | C-06                                                           
+⠸ |         34 | C-06                                                           
+⠇ |         49 | C-06                                                           
+⠧ |         58 | C-06                                                           
+⠸ |         64 | C-06                                                           
+⠏ |         70 | C-06                                                           
+⠼ |         75 | C-06                                                           
+✔ |         87 | C-06 [1.4s]
+
+══ Results ═════════════════════════════════════════════════════════════════════
+Duration: 226.6 s
+
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 347 ]
+
+SOL COUNTS: FAIL 0 WARN 0 SKIP 0 ERROR 0 PASS 347 
