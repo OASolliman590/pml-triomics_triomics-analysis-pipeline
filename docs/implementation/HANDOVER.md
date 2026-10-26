@@ -1,14 +1,24 @@
 # Implementation handover
 
-## Active M7-013 — publication split
+## Current M7-013 checkpoint — blocked, not integrated
 
-M7-013 record frozen at `4e5ad08` passed fresh Astra-low audit, zero findings.
-Receipt: `reviews/2026-10-26-m7-013-astra-audit.md`. Active fresh worker
-`/root/m7_013_luna`, gpt-6-luna/max, no commits, base `425455b`, worktree
+M7-013 record `4e5ad08` passed fresh Astra-low audit with zero findings; no
+repair/rereview used. Fresh Luna-max `/root/m7_013_luna` finished at `425455b`
+with only three dirty test files, no product edits or commits. Worktree retained:
 `/Users/megastore/.codex/worktrees/m7-013-c-publication-split/PML MultiOmics Analysis Pipeline`.
-Reconcile its returned seven-file diff; Sol reruns both named suites and
-validates real B-to-C bytes before integration. Do not redispatch a duplicate. M7-011/M7-012 stay blocked.
-M7/G7 and Stage D stay closed. No doc repair was used.
+No run-owned worker remains active. Sol inspected the patch and independently
+reran: C-08-shared FAIL 2 / WARN 0 / SKIP 0 / PASS 60; C-06 FAIL 10 / WARN 0 /
+SKIP 0 / ERROR 0 / PASS 106. These are RED diagnostics, not provenance GREEN.
+
+The nested C-02 caller in the C-06 suite requires D artifacts, but native B on
+its unchanged ticket fails B_DESIGN_PREPARATION: block context c02_fixture,
+analysis context c01_fixture. C-02.yaml/B code are outside the allowlist. No
+bypass, relabeling, excluded-file repair or second attempt was performed.
+No B/C provenance frame or hash receipt exists. Only documentation/evidence
+is integrated. Receipt: `reviews/2026-10-26-m7-013-publication-split-receipt.md`.
+C-06 accepted=false; C-07 not_run; C-09 unqualified. M7/G7/Stage D closed.
+The completed audit is not proof of feasibility. A new bounded disposition for
+the nested caller/fixture identity is needed; preserve M7-011/M7-012 as blocked.
 
 ## Current checkpoint — 26 October 2026, M7-011 and M7-012 blocked
 
@@ -748,13 +758,13 @@ the first predictor block only; native component mismatch still fails closed.
 
 ## Literal resume instruction
 
-M7-012 has reached its bounded stop. Read the current checkpoint and
-`reviews/2026-10-26-m7-012-preflight-blocker.md`. Preserve both worker receipts
-and the M7-011 RED evidence. The audit and fresh worker are finished; do not
-repeat them or claim completion. A new explicit bounded decision must reconcile
-standalone C-08 endpoints with mandatory B-backed C-to-D handoff, including the
-affected callers/tests and audit. No further implementation is authorized by
-this cycle. M7/G7 and Stage D remain closed; no private data or push.
+Read the current M7-013 checkpoint, its receipt and execution ledger.
+M7-013 stopped blocked after independent RED verification; no worker or test
+process needs resuming. Preserve its dirty test worktree and recorded patch.
+A new explicit bounded disposition must resolve the nested C-02 caller's native
+B preparation identity before further implementation. Do not repeat the audit,
+reopen M7-011/M7-012, or call their old tests provenance GREEN. M7/G7/Stage D
+remain closed. No private data, threshold/seed changes or push.
 The older resume guidance below is historical and does not override this scope.
 
 Read the current checkpoint, `execution-ledger.json`, M7-010's change record,

@@ -1,0 +1,59 @@
+✔ | F W  S  OK | Context
+
+⠏ |          0 | C-08-shared                                                    
+⠋ |          1 | C-08-shared                                                    
+⠏ |         10 | C-08-shared                                                    
+⠹ |         13 | C-08-shared                                                    
+⠼ |         15 | C-08-shared                                                    
+⠴ |         16 | C-08-shared                                                    Design matrix has changed to include Y; each block will be
+            linked to Y.
+
+⠧ |         18 | C-08-shared                                                    
+⠸ |         24 | C-08-shared                                                    
+⠦ |         27 | C-08-shared                                                    
+⠙ |         32 | C-08-shared                                                    
+⠴ |         36 | C-08-shared                                                    
+⠴ | 1       45 | C-08-shared                                                    
+⠋ | 1       50 | C-08-shared                                                    
+⠙ | 1       51 | C-08-shared                                                    
+⠸ | 1       53 | C-08-shared                                                    
+⠦ | 1       56 | C-08-shared                                                    
+✖ | 2       60 | C-08-shared [35.3s]
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-C-08-shared.R:522:3'): Stage C writes immutable C-08 endpoints and schedules, but does not execute, B work
+Expected `file.exists(file.path(output_dir, "D", "handoff-manifest.json"))` to be FALSE.
+Differences:
+`actual`:   TRUE 
+`expected`: FALSE
+
+
+Failure ('test-C-08-shared.R:564:3'): Stage C propagates outcome-selected ancestry as withheld and descriptive-only
+Expected `file.exists(file.path(output_dir, "D", "handoff-manifest.json"))` to be FALSE.
+Differences:
+`actual`:   TRUE 
+`expected`: FALSE
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+Duration: 35.5 s
+
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-C-08-shared.R:522:3'): Stage C writes immutable C-08 endpoints and schedules, but does not execute, B work
+Expected `file.exists(file.path(output_dir, "D", "handoff-manifest.json"))` to be FALSE.
+Differences:
+`actual`:   TRUE 
+`expected`: FALSE
+
+
+Failure ('test-C-08-shared.R:564:3'): Stage C propagates outcome-selected ancestry as withheld and descriptive-only
+Expected `file.exists(file.path(output_dir, "D", "handoff-manifest.json"))` to be FALSE.
+Differences:
+`actual`:   TRUE 
+`expected`: FALSE
+
+
+[ FAIL 2 | WARN 0 | SKIP 0 | PASS 60 ]
+Error:
+! Test failures.
+Execution halted

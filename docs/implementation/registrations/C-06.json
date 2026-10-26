@@ -483,6 +483,35 @@
     },
     "scope_note": "No product or test files were edited. The prior m7_011_native_provenance_attempt and accepted=false state are preserved. No M7 acceptance or Stage-D release is implied."
   },
+  "m7_013_publication_split_attempt": {
+    "status": "blocked_before_product_implementation",
+    "accepted": false,
+    "change_record": "docs/implementation/change-records/M7-013-c-publication-split.md",
+    "record_commit": "4e5ad08b608c9787355403df5370d34e57640883",
+    "record_sha256": "a50af758c28b2bb77dde6d6608d022b7ecb7e85cc32d7ea30d59b4c346df30a7",
+    "audit_pass": true,
+    "worker_base": "425455b481329da95718b522edd879cf8c4793f9",
+    "worker_commit": null,
+    "worker_diff": "Three test files only; preserved as RED patch, not integrated",
+    "sol_c08_shared": {
+      "fail": 2,
+      "warn": 0,
+      "skip": 0,
+      "pass": 60,
+      "exit_code": 1
+    },
+    "sol_c06": {
+      "fail": 10,
+      "warn": 0,
+      "skip": 0,
+      "error": 0,
+      "pass": 106,
+      "exit_code": 1
+    },
+    "blocker": "Existing nested C02 caller requires D handoff; unchanged C02 ticket preparation identities mismatch; native B exits 2 B_DESIGN_PREPARATION. C02.yaml/B code outside scope. No missing-B bypass or endpoint-only downgrade.",
+    "provenance_artifacts": [],
+    "receipt": "docs/implementation/reviews/2026-10-26-m7-013-publication-split-receipt.md"
+  },
   "acceptance_ref": "discovery/spec-v2/packets/C-06.md",
-  "next_action": "Sol directly inspects and verifies the repair-2 candidate, then pauses; no second rereview or packet acceptance is requested."
+  "next_action": "M7-013 blocked; new bounded disposition for the existing nested C02 caller/fixture identity required. No product integration or milestone acceptance."
 }

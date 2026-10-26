@@ -1,0 +1,162 @@
+✔ | F W  S  OK | Context
+
+⠏ |          0 | C-06-shared                                                    
+⠋ | 1        0 | C-06-shared                                                    
+⠸ | 4        0 | C-06-shared                                                    
+⠇ | 7        2 | C-06-shared                                                    
+⠏ | 7        3 | C-06-shared                                                    
+⠋ | 7        4 | C-06-shared                                                    
+✖ | 7        4 | C-06-shared [35.7s]
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-C-06-shared.R:47:3'): Stage C consumes the verified B nomination artifact and preserves its lineage
+Expected `b_cli$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics B_DESIGN_EFFECT_UNIT: The effect unit does not match the declared measurement scale and coefficient.
+
+Failure ('test-C-06-shared.R:49:3'): Stage C consumes the verified B nomination artifact and preserves its lineage
+Expected `b_frame$bundle_paths` to have length 1.
+Actual length: 0.
+
+Failure ('test-C-06-shared.R:51:5'): Stage C consumes the verified B nomination artifact and preserves its lineage
+Expected `b_frame$paths` to have length 4.
+Actual length: 0.
+
+Failure ('test-C-06-shared.R:279:3'): Stage C C-06 request fails closed without a native same-root B frame
+Expected `identical(cli$status, 0L)` to be FALSE.
+Differences:
+`actual`:   TRUE 
+`expected`: FALSE
+
+
+
+Failure ('test-C-06-shared.R:280:3'): Stage C C-06 request fails closed without a native same-root B frame
+Expected `paste(cli$output, collapse = "\n")` to match regexp "C_PROVENANCE_PREDECESSOR_REQUIRED".
+Actual text:
+x | 
+
+Failure ('test-C-06-shared.R:281:3'): Stage C C-06 request fails closed without a native same-root B frame
+Expected `file.exists(file.path(output_root, "D", "handoff-manifest.json"))` to be FALSE.
+Differences:
+`actual`:   TRUE 
+`expected`: FALSE
+
+
+Failure ('test-C-06-shared.R:292:3'): nested C-02 Stage-C evaluation retains verified units for its unrun D controls
+Expected `b_cli$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics B_DESIGN_PREPARATION: Stage B reads the declared measurement matrix and does not refit preparation.
+────────────────────────────────────────────────────────────────────────────────
+
+⠏ |          0 | C-06                                                           
+⠋ |          1 | C-06                                                           
+⠋ |         11 | C-06                                                           
+⠴ |         16 | C-06                                                           
+⠋ |         21 | C-06                                                           
+⠼ |         35 | C-06                                                           
+⠼ |         45 | C-06                                                           
+⠴ |         46 | C-06                                                           
+⠹ |         53 | C-06                                                           
+⠴ | 1       55 | C-06                                                           
+⠋ | 3       58 | C-06                                                           
+⠹ | 3       60 | C-06                                                           
+⠼ | 3       72 | C-06                                                           
+⠙ | 3       79 | C-06                                                           
+⠧ | 3       85 | C-06                                                           
+⠹ | 3       90 | C-06                                                           
+⠋ | 3       98 | C-06                                                           
+✖ | 3      102 | C-06 [4.2s]
+────────────────────────────────────────────────────────────────────────────────
+Failure ('test-C-06.R:493:3'): direct C-06 handoff publication requires a native same-root B frame
+Expected `error` to be an S3 object.
+Actual OO type: none.
+
+Failure ('test-C-06.R:494:3'): direct C-06 handoff publication requires a native same-root B frame
+Expected `if (inherits(error, "triomics_error")) error$code else NULL` to be identical to "C_PROVENANCE_PREDECESSOR_REQUIRED".
+Differences:
+`actual` is NULL
+`expected` is a character vector ('C_PROVENANCE_PREDECESSOR_REQUIRED')
+
+
+Failure ('test-C-06.R:498:3'): direct C-06 handoff publication requires a native same-root B frame
+Expected `file.exists(file.path(output_root, "D", "handoff-manifest.json"))` to be FALSE.
+Differences:
+`actual`:   TRUE 
+`expected`: FALSE
+
+────────────────────────────────────────────────────────────────────────────────
+
+══ Results ═════════════════════════════════════════════════════════════════════
+Duration: 40.4 s
+
+── Failed tests ────────────────────────────────────────────────────────────────
+Failure ('test-C-06-shared.R:47:3'): Stage C consumes the verified B nomination artifact and preserves its lineage
+Expected `b_cli$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics B_DESIGN_EFFECT_UNIT: The effect unit does not match the declared measurement scale and coefficient.
+
+Failure ('test-C-06-shared.R:49:3'): Stage C consumes the verified B nomination artifact and preserves its lineage
+Expected `b_frame$bundle_paths` to have length 1.
+Actual length: 0.
+
+Failure ('test-C-06-shared.R:51:5'): Stage C consumes the verified B nomination artifact and preserves its lineage
+Expected `b_frame$paths` to have length 4.
+Actual length: 0.
+
+Failure ('test-C-06-shared.R:279:3'): Stage C C-06 request fails closed without a native same-root B frame
+Expected `identical(cli$status, 0L)` to be FALSE.
+Differences:
+`actual`:   TRUE 
+`expected`: FALSE
+
+
+
+Failure ('test-C-06-shared.R:280:3'): Stage C C-06 request fails closed without a native same-root B frame
+Expected `paste(cli$output, collapse = "\n")` to match regexp "C_PROVENANCE_PREDECESSOR_REQUIRED".
+Actual text:
+x | 
+
+Failure ('test-C-06-shared.R:281:3'): Stage C C-06 request fails closed without a native same-root B frame
+Expected `file.exists(file.path(output_root, "D", "handoff-manifest.json"))` to be FALSE.
+Differences:
+`actual`:   TRUE 
+`expected`: FALSE
+
+
+Failure ('test-C-06-shared.R:292:3'): nested C-02 Stage-C evaluation retains verified units for its unrun D controls
+Expected `b_cli$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics B_DESIGN_PREPARATION: Stage B reads the declared measurement matrix and does not refit preparation.
+
+Failure ('test-C-06.R:493:3'): direct C-06 handoff publication requires a native same-root B frame
+Expected `error` to be an S3 object.
+Actual OO type: none.
+
+Failure ('test-C-06.R:494:3'): direct C-06 handoff publication requires a native same-root B frame
+Expected `if (inherits(error, "triomics_error")) error$code else NULL` to be identical to "C_PROVENANCE_PREDECESSOR_REQUIRED".
+Differences:
+`actual` is NULL
+`expected` is a character vector ('C_PROVENANCE_PREDECESSOR_REQUIRED')
+
+
+Failure ('test-C-06.R:498:3'): direct C-06 handoff publication requires a native same-root B frame
+Expected `file.exists(file.path(output_root, "D", "handoff-manifest.json"))` to be FALSE.
+Differences:
+`actual`:   TRUE 
+`expected`: FALSE
+
+
+[ FAIL 10 | WARN 0 | SKIP 0 | PASS 106 ]
+
+SOL COUNTS: FAIL 10 WARN 0 SKIP 0 ERROR 0 PASS 106 

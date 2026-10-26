@@ -34,25 +34,21 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "id": "/root/m7_013_luna",
-      "role": "implementer",
-      "model": "gpt-6-luna",
-      "effort": "max",
-      "allowed_next_transition": "Fresh Luna-max no-commit worker at 425455b in /Users/megastore/.codex/worktrees/m7-013-c-publication-split/PML MultiOmics Analysis Pipeline. Seven-file allowlist; stop outside scope. Sol diff review, C08-shared/C06 reruns and native B-to-C byte read-back required before integration. M7/G7/Stage D closed."
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_013_luna_running",
+    "status": "m7_013_blocked_after_red",
     "last_reconciled": "2026-10-26",
-    "active_handoffs": [
-      "/root/m7_013_luna"
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Luna-max no-commit worker at 425455b in /Users/megastore/.codex/worktrees/m7-013-c-publication-split/PML MultiOmics Analysis Pipeline. Seven-file allowlist; stop outside scope. Sol diff review, C08-shared/C06 reruns and native B-to-C byte read-back required before integration. M7/G7/Stage D closed."
+    "disposition": "Astra passed 4e5ad08, zero findings. Luna returned test-only RED patch at 425455b, no commit/product edits. Sol reruns: C08-shared FAIL2 WARN0 SKIP0 PASS60; C06 FAIL10 WARN0 SKIP0 ERROR0 PASS106. Native C02 B exits2 B_DESIGN_PREPARATION. Existing nested caller needs out-of-scope fixture/contract disposition. No provenance written or product integration. Receipt reviews/2026-10-26-m7-013-publication-split-receipt.md. M7/G7/Stage D closed; no active workers."
   },
   "orchestration_events": [
+    {
+      "event": "m7_013_blocked_after_red",
+      "date": "2026-10-26",
+      "worker": null,
+      "disposition": "Astra passed 4e5ad08, zero findings. Luna returned test-only RED patch at 425455b, no commit/product edits. Sol reruns: C08-shared FAIL2 WARN0 SKIP0 PASS60; C06 FAIL10 WARN0 SKIP0 ERROR0 PASS106. Native C02 B exits2 B_DESIGN_PREPARATION. Existing nested caller needs out-of-scope fixture/contract disposition. No provenance written or product integration. Receipt reviews/2026-10-26-m7-013-publication-split-receipt.md. M7/G7/Stage D closed; no active workers."
+    },
     {
       "event": "m7_013_luna_running",
       "date": "2026-10-26",

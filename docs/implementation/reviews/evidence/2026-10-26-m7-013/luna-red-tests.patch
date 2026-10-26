@@ -1,0 +1,262 @@
+diff --git a/tests/testthat/test-C-06-shared.R b/tests/testthat/test-C-06-shared.R
+index ba4e710..7cf4c5e 100644
+--- a/tests/testthat/test-C-06-shared.R
++++ b/tests/testthat/test-C-06-shared.R
+@@ -17,80 +17,41 @@ c06_shared_cli_run <- function(output_root, stage = "C", config_path = NULL) {
+   list(status = as.integer(status), output = output)
+ }
+ 
+-c06_seed_primary_nominations <- function(output_root) {
+-  config_path <- triomics_test_resource("examples", "tickets", "C-06.yaml")
+-  config <- triomics_read_config(config_path)
+-  analysis <- config$analyses[[1L]]
+-  b_root <- file.path(output_root, "B")
+-  block_results_path <- file.path(b_root, "block-results.json")
+-  block_results <- list(
+-    schema_version = "2.0",
+-    artifact_type = "block_results",
+-    study_id = config$study_id,
+-    analysis_id = analysis$analysis_id,
+-    preparation_context_id = analysis$preparation_context_id,
+-    representation_id = analysis$design$representation,
+-    status = "complete",
+-    config_sha256 = attr(config, "config_sha256"),
+-    blocks = list()
+-  )
+-  triomics_write_json_atomic(block_results, block_results_path)
+-  block_results_envelope <- triomics_artifact_envelope(
+-    artifact_type = "block_results",
+-    artifact_id = "stage-b-block-results",
+-    study_id = config$study_id,
+-    run_id = "b-t01",
+-    status = "complete",
+-    config_sha256 = attr(config, "config_sha256"),
+-    payload = block_results_path,
+-    producer_commit = "synthetic-test-input",
+-    inputs = list(),
+-    reason_codes = character(),
+-    privacy_class = "synthetic"
+-  )
+-  block_results_envelope$analysis_id <- analysis$analysis_id
+-  block_results_envelope$preparation_context_id <- analysis$preparation_context_id
+-  block_results_envelope$representation_id <- analysis$design$representation
+-  triomics_write_envelope(
+-    block_results_envelope,
+-    file.path(b_root, "block-results.envelope.json")
+-  )
+-  nomination_payload <- list(
+-    schema_version = "2.0",
+-    artifact_type = "candidate_nominations",
+-    study_id = config$study_id,
+-    analysis_id = analysis$analysis_id,
+-    status = "complete",
+-    source_artifact_id = "stage-b-block-results",
+-    n_nominations = 0L,
+-    nominations = list()
+-  )
+-  nomination_path <- file.path(
+-    b_root, "handoffs", "synthetic-c06", "candidate-nominations.json"
++c06_native_b_frame <- function(output_root) {
++  bundle_paths <- list.files(
++    file.path(output_root, "B", "handoffs"),
++    pattern = "^bundle[.]json$",
++    recursive = TRUE,
++    full.names = TRUE
+   )
+-  triomics_b07_write_enveloped_json(
+-    nomination_payload,
+-    nomination_path,
+-    artifact_type = "candidate_nominations",
+-    artifact_id = "b-t07-candidate-nominations",
+-    study_id = config$study_id,
+-    config_sha256 = attr(config, "config_sha256"),
+-    inputs = list(list(
+-      artifact_id = "stage-b-block-results",
+-      sha256 = triomics_sha256(block_results_path)
+-    )),
+-    status = "complete",
+-    producer_commit = "synthetic-test-input",
+-    privacy_class = "synthetic"
++  if (length(bundle_paths) != 1L) return(list(bundle_paths = bundle_paths))
++  bundle_path <- bundle_paths[[1L]]
++  handoff_dir <- dirname(bundle_path)
++  list(
++    bundle_paths = bundle_paths,
++    paths = c(
++      bundle_path,
++      sub("[.]json$", ".envelope.json", bundle_path),
++      file.path(handoff_dir, "stage-handoff-provenance.json"),
++      file.path(handoff_dir, "stage-handoff-provenance.envelope.json")
++    ),
++    nominations_path = file.path(handoff_dir, "candidate-nominations.json")
+   )
+-  nomination_path
+ }
+ 
+ testthat::test_that("Stage C consumes the verified B nomination artifact and preserves its lineage", {
+   output_root <- tempfile("triomics-c06-shared-cli-")
+   on.exit(unlink(output_root, recursive = TRUE), add = TRUE)
+ 
+-  nomination_path <- c06_seed_primary_nominations(output_root)
++  b_cli <- c06_shared_cli_run(output_root, stage = "B")
++  testthat::expect_identical(b_cli$status, 0L, info = paste(b_cli$output, collapse = "\n"))
++  b_frame <- c06_native_b_frame(output_root)
++  testthat::expect_length(b_frame$bundle_paths, 1L)
++  if (length(b_frame$paths) != 4L) {
++    testthat::expect_length(b_frame$paths, 4L)
++    return(invisible(NULL))
++  }
++  nomination_path <- b_frame$nominations_path
+   nomination_paths <- list.files(
+     file.path(output_root, "B", "handoffs"),
+     pattern = "^candidate-nominations[.]json$",
+@@ -99,6 +60,7 @@ testthat::test_that("Stage C consumes the verified B nomination artifact and pre
+   )
+   testthat::expect_length(nomination_paths, 1L)
+   testthat::expect_identical(nomination_paths, nomination_path)
++  b_hashes_before <- vapply(b_frame$paths, triomics_sha256, character(1L))
+   nomination_envelope_path <- sub("[.]json$", ".envelope.json", nomination_path)
+   testthat::expect_true(triomics_validate_envelope(nomination_envelope_path))
+   nomination_payload <- jsonlite::read_json(nomination_path, simplifyVector = FALSE)
+@@ -274,19 +236,51 @@ testthat::test_that("Stage C consumes the verified B nomination artifact and pre
+   testthat::expect_identical(status_payload$clinical_prediction$packet_id, "C-09")
+   run_record <- jsonlite::read_json(file.path(output_root, "registries", "run.json"), simplifyVector = FALSE)
+   testthat::expect_identical(run_record$status, "complete")
++
++  c_provenance_path <- file.path(d_root, "stage-handoff-provenance.json")
++  c_provenance_envelope_path <- file.path(d_root, "stage-handoff-provenance.envelope.json")
++  testthat::expect_true(file.exists(c_provenance_path))
++  testthat::expect_true(file.exists(c_provenance_envelope_path))
++  c_profile <- jsonlite::read_json(c_provenance_path, simplifyVector = FALSE)
++  testthat::expect_true(isTRUE(triomics_validate_stage_handoff_provenance(
++    c_profile, "c06-stage-handoff-provenance", "c06-stage-handoff-provenance-envelope"
++  )))
++  testthat::expect_true(triomics_validate_envelope(c_provenance_envelope_path))
++  testthat::expect_identical(c_profile$producer_stage, "C")
++  testthat::expect_false(any(vapply(c_profile$identity$entities, function(entity) {
++    entity$scientific_role %in% c("block_results", "family_ledger")
++  }, logical(1L))))
++  predecessor_payloads <- Filter(function(entity) {
++    identical(entity$scientific_role, "predecessor_payload")
++  }, c_profile$identity$entities)
++  predecessor_envelopes <- Filter(function(entity) {
++    identical(entity$scientific_role, "predecessor_envelope")
++  }, c_profile$identity$entities)
++  testthat::expect_length(predecessor_payloads, 2L)
++  testthat::expect_length(predecessor_envelopes, 2L)
++  testthat::expect_setequal(
++    vapply(predecessor_payloads, `[[`, character(1L), "digest"),
++    b_hashes_before[c(1L, 3L)]
++  )
++  testthat::expect_setequal(
++    vapply(predecessor_envelopes, `[[`, character(1L), "digest"),
++    b_hashes_before[c(2L, 4L)]
++  )
++  testthat::expect_identical(vapply(b_frame$paths, triomics_sha256, character(1L)), b_hashes_before)
++  c_envelope <- jsonlite::read_json(c_provenance_envelope_path, simplifyVector = FALSE)
++  testthat::expect_identical(c_envelope$payload_sha256, triomics_sha256(c_provenance_path))
+ })
+ 
+-testthat::test_that("Stage C keeps an absent primary nomination source explicitly not requested", {
++testthat::test_that("Stage C C-06 request fails closed without a native same-root B frame", {
+   output_root <- tempfile("triomics-c06-no-primary-")
+   on.exit(unlink(output_root, recursive = TRUE), add = TRUE)
+ 
+   cli <- c06_shared_cli_run(output_root)
+-  testthat::expect_identical(cli$status, 0L, info = paste(cli$output, collapse = "\n"))
+-  payload <- jsonlite::read_json(
+-    file.path(output_root, "D", "candidate-nominations.json"), simplifyVector = FALSE
+-  )
+-  testthat::expect_identical(payload$branches$primary_statistics$status, "not_requested")
+-  testthat::expect_true(is.null(payload$branches$primary_statistics$source_artifact_ref))
++  testthat::expect_false(identical(cli$status, 0L), info = paste(cli$output, collapse = "\n"))
++  testthat::expect_match(paste(cli$output, collapse = "\n"), "C_PROVENANCE_PREDECESSOR_REQUIRED")
++  testthat::expect_false(file.exists(file.path(output_root, "D", "handoff-manifest.json")))
++  testthat::expect_false(file.exists(file.path(output_root, "D", "stage-handoff-provenance.json")))
++  testthat::expect_false(file.exists(file.path(output_root, "D", "stage-handoff-provenance.envelope.json")))
+ })
+ 
+ testthat::test_that("nested C-02 Stage-C evaluation retains verified units for its unrun D controls", {
+@@ -294,6 +288,9 @@ testthat::test_that("nested C-02 Stage-C evaluation retains verified units for i
+   on.exit(unlink(output_root, recursive = TRUE), add = TRUE)
+   config <- triomics_test_resource("examples", "tickets", "C-02.yaml")
+ 
++  b_cli <- c06_shared_cli_run(output_root, stage = "B", config_path = config)
++  testthat::expect_identical(b_cli$status, 0L, info = paste(b_cli$output, collapse = "\n"))
++  if (!identical(b_cli$status, 0L)) return(invisible(NULL))
+   cli <- c06_shared_cli_run(output_root, config_path = config)
+   testthat::expect_identical(cli$status, 0L, info = paste(cli$output, collapse = "\n"))
+   testthat::expect_false(any(grepl("C_EVAL_EVIDENCE_INVALID", cli$output, fixed = TRUE)))
+diff --git a/tests/testthat/test-C-06.R b/tests/testthat/test-C-06.R
+index bddeec7..06d8d61 100644
+--- a/tests/testthat/test-C-06.R
++++ b/tests/testthat/test-C-06.R
+@@ -472,6 +472,34 @@ testthat::test_that("C-06 D envelopes require and propagate the authoritative pr
+   unlink(output_root, recursive = TRUE)
+ })
+ 
++testthat::test_that("direct C-06 handoff publication requires a native same-root B frame", {
++  handoff <- triomics_c06_build_handoff(
++    primary_nominations = c06_primary_nominations(),
++    integration_runs = list(c06_run()),
++    evaluation_evidence = list(controls = c06_unrun_controls()),
++    backend_statuses = list(mixomics_diablo = list(status = "complete")),
++    clinical_prediction = list(status = "not_started", completion_policy = "conditional", packet_id = "C-09")
++  )
++  output_root <- tempfile("triomics-c06-direct-missing-b-")
++  on.exit(unlink(output_root, recursive = TRUE), add = TRUE)
++
++  error <- testthat::capture_error(triomics_c06_write_handoff(
++    handoff, output_root,
++    config_sha256 = paste(rep("d", 64), collapse = ""),
++    producer_commit = "c06-test",
++    privacy_class = "synthetic"
++  ))
++
++  testthat::expect_s3_class(error, "triomics_error")
++  testthat::expect_identical(
++    if (inherits(error, "triomics_error")) error$code else NULL,
++    "C_PROVENANCE_PREDECESSOR_REQUIRED"
++  )
++  testthat::expect_false(file.exists(file.path(output_root, "D", "handoff-manifest.json")))
++  testthat::expect_false(file.exists(file.path(output_root, "D", "stage-handoff-provenance.json")))
++  testthat::expect_false(file.exists(file.path(output_root, "D", "stage-handoff-provenance.envelope.json")))
++})
++
+ testthat::test_that("C-06 envelopes bind context and immutable nomination, evaluation and native lineage", {
+   handoff <- triomics_c06_build_handoff(
+     primary_nominations = c06_primary_nominations(),
+diff --git a/tests/testthat/test-C-08-shared.R b/tests/testthat/test-C-08-shared.R
+index 1a366df..8e83af5 100644
+--- a/tests/testthat/test-C-08-shared.R
++++ b/tests/testthat/test-C-08-shared.R
+@@ -519,6 +519,15 @@ testthat::test_that("Stage C writes immutable C-08 endpoints and schedules, but
+   testthat::expect_identical(
+     request$source_endpoint_bundle_sha256, endpoint_bundle$payload_sha256
+   )
++  testthat::expect_false(file.exists(file.path(output_dir, "D", "handoff-manifest.json")))
++  testthat::expect_false(file.exists(file.path(output_dir, "D", "stage-handoff-provenance.json")))
++  testthat::expect_false(file.exists(file.path(output_dir, "D", "stage-handoff-provenance.envelope.json")))
++  testthat::expect_false(file.exists(file.path(output_dir, "B", "block-results.json")))
++  testthat::expect_length(list.files(
++    file.path(output_dir, "B", "handoffs"),
++    pattern = "^bundle[.]json$",
++    recursive = TRUE
++  ), 0L)
+   testthat::expect_error(
+     triomics_execute_stage_c(config_path, output_dir),
+     class = "triomics_error"
+@@ -552,4 +561,13 @@ testthat::test_that("Stage C propagates outcome-selected ancestry as withheld an
+   testthat::expect_identical(endpoint$selection$validity, "withheld")
+   testthat::expect_identical(endpoint$inference_status, "descriptive_only")
+   testthat::expect_identical(endpoint$selection$source_selection$block_1$inference_gate, "withheld")
++  testthat::expect_false(file.exists(file.path(output_dir, "D", "handoff-manifest.json")))
++  testthat::expect_false(file.exists(file.path(output_dir, "D", "stage-handoff-provenance.json")))
++  testthat::expect_false(file.exists(file.path(output_dir, "D", "stage-handoff-provenance.envelope.json")))
++  testthat::expect_false(file.exists(file.path(output_dir, "B", "block-results.json")))
++  testthat::expect_length(list.files(
++    file.path(output_dir, "B", "handoffs"),
++    pattern = "^bundle[.]json$",
++    recursive = TRUE
++  ), 0L)
+ })

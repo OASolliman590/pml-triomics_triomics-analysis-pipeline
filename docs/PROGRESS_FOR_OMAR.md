@@ -1,29 +1,25 @@
 # Tri-omics progress
 
-**Goal:** Build a reproducible multi-omics pipeline while keeping the fasting,
-diabetic-treatment and organophosphate studies and all three assay profiles
-distinct.
+**Goal:** Build a reproducible pipeline while keeping the fasting,
+diabetic-treatment and organophosphate studies, and their assay profiles,
+distinct. Every published handoff must identify the evidence it actually used.
 
-**Works now — tested on fixtures only:** Earlier analysis and integration
-components remain available. M7-010 now records the true synthetic source of
-the repeated-measures results. Unused two-visit input files are not claimed as
-their ancestors.
+**Works now — tested on fixtures only:** Earlier analysis components and the
+reviewed B-lineage repair remain integrated. M7-010's historical full source
+suite passed 5,893 checks; that result does not verify the new publication split.
 
-**Changed — reviewed and verified:** The reviewed B-lineage repair is integrated.
-The uninterrupted full source suite passed 5,893 checks, with zero failures,
-errors or skips. Its fourteen warnings exactly match the named C-05
-small-fixture warning set.
+**Changed — reviewed decision, blocked implementation:** Astra approved M7-013's
+separation of standalone C-08 endpoints from a B-backed C-06 handoff. Luna added
+failing tests but made no product changes. Sol independently reproduced two
+C-08 failures and ten C-06 failures. The evidence is saved, not integrated as
+working code.
 
-**Next:** M7-011 is defined. It asks the stage C handoff to record the exact
-stage B result it consumed. A read-only audit must pass before any code change.
-Stage D stays closed.
+**Not established:** No new provenance frame, biological validation or private
+study analysis. C-06 remains unaccepted for this work; C-07 is not run and C-09
+remains unqualified. M7/G7 and Stage D stay closed.
 
-**Not established:** This is software evidence, not biological validation.
-No private study was fitted. C-09 remains synthetic-only and conditional, with
-no real clinical-performance or deployment claim. The newer B-T07 provenance
-revision is not accepted. M7/G7 and Stage D remain closed.
+**Next / Needs Omar:** A bounded disposition for the existing nested C-02
+fixture: its preparation identities disagree, and native B rejects it. We did
+not bypass that check or change the excluded ticket.
 
-**Needs Omar:** Nothing for this audit. Implementation starts only after the
-audit passes.
-
-**Sync:** Local records updated. No GitHub push or Notion sync performed.
+**Sync:** Local receipt, ledger and handover updated. No GitHub push or Notion sync.
