@@ -1,12 +1,15 @@
 # Implementation handover
 
-## Current checkpoint — 26 October 2026, M7-011 defined
+## Current checkpoint — 26 October 2026, M7-011 blocked; M7-012 authorized
 
-Omar authorized the next bounded cycle. M7-011 defines the C-06 native
-provenance producer seam. Fresh Astra-low audit of `721153c` passed with
-Critical 0, Important 0, and Minor 0 (`01a17731-3170-7953-8a10-d7c8ad038bfe`).
-One Luna-max worker may now implement only the three-file allowlist. M7, G7,
-and Stage D remain closed.
+M7-011's audit passed, but its Luna-max worker stopped before implementation:
+the exact Stage C output lacks the required native B predecessor frame. Sol
+inspected the worktree and preserved its sole registration change. The old
+C-06 suite passed 290 expectations; that is not new provenance GREEN.
+See `reviews/2026-10-26-m7-011-predecessor-blocker.md`. M7-011 is not complete.
+Omar authorized M7-012: freeze and audit the bounded same-root B predecessor
+supply record before a fresh Luna-max implementation. No active M7-011 worker
+remains. C-06 accepted=false; M7, G7 and Stage D remain closed.
 
 M7-010's resumed full source gate remains the prior result: **FAIL 0 / WARN 14 /
 SKIP 0 / ERROR 0 / PASS 5893**, 352 test blocks, exit 0 after `DONE`, against
@@ -714,6 +717,15 @@ is not applied, and C-03 is not accepted. The rank guard currently measures
 the first predictor block only; native component mismatch still fails closed.
 
 ## Literal resume instruction
+
+Current authority: M7-012 only. Read the current checkpoint and
+`reviews/2026-10-26-m7-011-predecessor-blocker.md`; preserve the M7-011 RED and
+do not restart its worker. Freeze the M7-012 predecessor-supply record, obtain
+the single fresh Astra-low audit (one documentation repair/rereview maximum),
+then dispatch one fresh no-commit Luna-max worker on the six-file allowlist
+only if audit_pass yes. Stop if a real B frame cannot be bound. No second
+implementation repair, M7/G7 acceptance, Stage D, private data or push.
+The older resume guidance below is historical and does not override this scope.
 
 Read the current checkpoint, `execution-ledger.json`, M7-010's change record,
 and `reviews/2026-10-26-m7-010-resumed-source-gate.md`. M7-010 is reviewed,

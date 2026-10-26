@@ -416,6 +416,31 @@
     "The conditional C-09 clinical-prediction route remains not_started; its optional status is not presented as completed.",
     "Independent milestone review and Sol's packet acceptance remain pending."
   ],
+  "m7_011_native_provenance_attempt": {
+    "status": "blocked_before_implementation",
+    "accepted": false,
+    "audit_ref": "docs/implementation/reviews/2026-10-26-m7-011-astra-audit.md",
+    "red_cli": {
+      "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-06.yaml --stage C --output artifacts/acceptance/C-06",
+      "exit_code": 0,
+      "output_root": "artifacts/acceptance/C-06",
+      "d_handoff_written": true,
+      "b_output_directory_present": false,
+      "provenance_payload_written": false,
+      "provenance_envelope_written": false
+    },
+    "testthat_baseline": {
+      "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\"",
+      "exit_code": 0,
+      "failures": 0,
+      "warnings": 0,
+      "skips": 0,
+      "expectations_passed": 290,
+      "scope_note": "Existing baseline suite only; no M7-011 assertion was added because the same-run B predecessor frame is absent from the exact Stage-C output and shared fixture."
+    },
+    "blocker": "The C writer receives no exact same-run B handoff payload, B envelope, B provenance payload, or B provenance envelope in the tested output root. The shared C-06 CLI fixture seeds only B block-results and candidate nominations. Reconstructing or synthesizing the missing predecessor would violate M7-011.",
+    "required_next_step": "Authorize same-output-root B handoff/provenance preparation and the corresponding shared C-06 fixture or caller seam before reopening this producer packet. No allowlist expansion was made by this attempt."
+  },
   "acceptance_ref": "discovery/spec-v2/packets/C-06.md",
   "next_action": "Sol directly inspects and verifies the repair-2 candidate, then pauses; no second rereview or packet acceptance is requested."
 }

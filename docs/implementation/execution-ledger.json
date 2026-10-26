@@ -36,13 +36,23 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_011_luna_implementation_running",
+    "status": "m7_011_blocked_m7_012_definition_authorized",
     "last_reconciled": "2026-10-26",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Luna-max is implementing the M7-011 three-file allowlist in draft/m7-011-c06 from c03756d. No integration yet. M7/G7 and Stage D remain closed."
+    "disposition": "Sol inspected completed Luna session 01a17732-ef8f-70c1-bd83-f7cf391d2961: registration-only blocker at c03756d, no product edit; M7-011 blocked_before_implementation and not complete. Old suite PASS 290; CLI exit 0 lacks B/provenance files. M7-012 definition and audit authorized before one fresh no-commit implementer. M7/G7 and Stage D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_011_blocker_reconciled_m7_012_authorized",
+      "date": "2026-10-26",
+      "worker_session": "01a17732-ef8f-70c1-bd83-f7cf391d2961",
+      "worker_base": "c03756d46738b58d3c2c350cb58242fd767a8947",
+      "review_ref": "docs/implementation/reviews/2026-10-26-m7-011-predecessor-blocker.md",
+      "evidence": "Only C-06 registration dirty; accepted=false; blocked_before_implementation. Baseline FAIL 0 WARN 0 SKIP 0 PASS 290. Exact Stage C output has D handoff, no B directory or provenance pair; shared fixture fabricates B inputs.",
+      "allowed_next_transition": "Define/freeze M7-012 and dispatch one fresh Astra-low audit. No implementation until audit_pass yes.",
+      "disposition": "M7-011 not complete; no active worker; M7/G7 and Stage D closed."
+    },
     {
       "event": "m7_011_luna_implementation_dispatched",
       "date": "2026-10-26",
