@@ -34,15 +34,32 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [{"id":"/root/m7_012_luna","role":"implementer","model":"gpt-6-luna","effort":"max","base":"4bdda740dd1ad558cccc070635ad5836fa4f9231","worktree":"/Users/megastore/.codex/worktrees/m7-012-c06-predecessor/PML MultiOmics Analysis Pipeline","commit_permission":false,"allowed_next_transition":"Assess C08 compatibility before edits; return bounded dirty diff or blocker; Sol inspects and verifies before integration."}],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_012_luna_preflight_or_implementation_running",
+    "status": "m7_012_blocked_before_implementation",
     "last_reconciled": "2026-10-26",
-    "active_handoffs": ["/root/m7_012_luna: fresh no-commit six-file worker at 4bdda74; stop if known C08 boundary cannot be satisfied"],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Luna-max /root/m7_012_luna dispatched in a new worktree at 4bdda74 after audit_pass yes. Pre-edit feasibility check for C08 compatibility required; no missing-B bypass or scope expansion, no worker commit or second implementation repair. M7/G7 and Stage D closed."
+    "disposition": "Astra approved the stop disposition; fresh Luna-max confirmed C08 caller incompatibility outside six-file scope. Registration-only dirty receipt (+42 lines), no product edits or commit. C08-shared pre-edit baseline FAIL 0 WARN 0 SKIP 0 PASS 52 (worker-reported). No new provenance or acceptance gates. New bounded caller-contract decision required. M7/G7 and Stage D closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_012_blocked_before_implementation",
+      "date": "2026-10-26",
+      "worker": "/root/m7_012_luna",
+      "base": "4bdda740dd1ad558cccc070635ad5836fa4f9231",
+      "worker_commit": null,
+      "dirty_diff": "C-06 registration only, +42 lines; Sol inspected",
+      "test_counts": {
+        "FAIL": 0,
+        "WARN": 0,
+        "SKIP": 0,
+        "PASS": 52
+      },
+      "test_scope": "worker-reported unchanged C-08-shared baseline; not acceptance",
+      "review_ref": "docs/implementation/reviews/2026-10-26-m7-012-preflight-blocker.md",
+      "allowed_next_transition": "Stop; new explicitly bounded caller-contract decision required. No second implementation repair. M7/G7 and Stage D closed."
+    },
     {"event":"m7_012_luna_dispatched","date":"2026-10-26","worker":"/root/m7_012_luna","model":"gpt-6-luna","effort":"max","base":"4bdda740dd1ad558cccc070635ad5836fa4f9231","worktree":"/Users/megastore/.codex/worktrees/m7-012-c06-predecessor/PML MultiOmics Analysis Pipeline","commit_permission":false,"allowed_next_transition":"Sol inspects returned diff. Stop on scope/real-B binding blocker; otherwise independently run C06, C08-shared, B-T07 and fresh B-to-C command/readback gates before integration."},
     {"event":"m7_012_focused_astra_pass","date":"2026-10-26","snapshot":"e37f334b5208b52c00144b4758a9e060663dd76c","record_sha256":"6cd3447e918272f9cde9dbaabceb6fa829fda4b3c41044779aea0bc72944c0e7","reviewer":"/root/m7_012_astra_audit","verdict":"pass; audit_pass yes; Critical 0 Important 0 Minor 0; stop disposition approved, not implementation feasibility","review_ref":"docs/implementation/reviews/2026-10-26-m7-012-astra-audit.md","allowed_next_transition":"One fresh Luna-max no-commit worker in a new worktree; six-file allowlist; assess C08 compatibility before editing; stop if scope insufficient. No second implementation repair."},
     {"event":"m7_012_frozen_audit_dispatched","date":"2026-10-26","snapshot":"db96c5ed5f1b33b822aa4acadc03b269cadb386a","record_sha256":"f80b723984094e4d5f0986e304b536946792cde1cfb5a3b6d588ad5781f64ebb","reviewer":"/root/m7_012_astra_audit","requested_model":"gpt-6-astra","requested_effort":"low","allowed_next_transition":"Audit receipt first; one documentation repair/rereview if required; one fresh no-commit Luna-max worker only after audit_pass yes.","disposition":"No product edit; M7/G7 and Stage D closed."},

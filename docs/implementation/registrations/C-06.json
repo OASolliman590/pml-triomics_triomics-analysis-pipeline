@@ -441,6 +441,48 @@
     "blocker": "The C writer receives no exact same-run B handoff payload, B envelope, B provenance payload, or B provenance envelope in the tested output root. The shared C-06 CLI fixture seeds only B block-results and candidate nominations. Reconstructing or synthesizing the missing predecessor would violate M7-011.",
     "required_next_step": "Authorize same-output-root B handoff/provenance preparation and the corresponding shared C-06 fixture or caller seam before reopening this producer packet. No allowlist expansion was made by this attempt."
   },
+  "m7_012_same_run_b_predecessor_attempt": {
+    "status": "blocked_before_implementation",
+    "accepted": false,
+    "change_record": "docs/implementation/change-records/M7-012-c06-same-run-b-predecessor.md",
+    "change_record_sha256": "6cd3447e918272f9cde9dbaabceb6fa829fda4b3c41044779aea0bc72944c0e7",
+    "audit_ref": "docs/implementation/reviews/2026-10-26-m7-012-astra-audit.md",
+    "audit_pass": true,
+    "compatibility_assessment": {
+      "shared_writer_call": "R/cli.R:1708 unconditionally calls triomics_c06_write_handoff() from triomics_execute_stage_c().",
+      "fresh_root_callers": [
+        {
+          "test": "tests/testthat/test-C-08-shared.R:486-525",
+          "evidence": "Calls triomics_execute_stage_c(config_path, output_dir) on a tempfile fresh root at lines 487-491 without Stage B preparation, then expects successful C-08 endpoint and scheduled-request artifacts."
+        },
+        {
+          "test": "tests/testthat/test-C-08-shared.R:539-554",
+          "evidence": "Calls triomics_execute_stage_c(config_path, output_dir) on a fresh tempfile root at lines 540-544 without Stage B preparation and expects a successful C-08 endpoint."
+        }
+      ],
+      "decision": "A mandatory real-B predecessor check in the shared handoff writer cannot preserve these callers. Doing so would require a missing-B bypass, route-specific rerouting, or fixture/orchestration changes outside the six-file allowlist; each is forbidden by the audited record. Stop before product edits."
+    },
+    "diagnostic_test": {
+      "command": "Rscript --vanilla -e \"testthat::test_local(filter='^C-08-shared$', stop_on_failure=TRUE)\"",
+      "exit_code": 0,
+      "failures": 0,
+      "warnings": 0,
+      "skips": 0,
+      "expectations_passed": 52,
+      "duration_seconds": 33.7,
+      "scope_note": "Pre-edit compatibility baseline only. It confirms the existing fresh-root callers currently pass; it does not establish M7-012 implementation feasibility or new C-06 GREEN."
+    },
+    "implementation": {
+      "product_edits_started": false,
+      "tests_or_commands_not_run": [
+        "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\"",
+        "Rscript --vanilla -e \"testthat::test_local(filter='^B-T07$', stop_on_failure=TRUE)\"",
+        "Same-root Stage B then Stage C C-06 CLI commands"
+      ],
+      "reason": "The pre-edit caller boundary is unsatisfiable within the approved allowlist."
+    },
+    "scope_note": "No product or test files were edited. The prior m7_011_native_provenance_attempt and accepted=false state are preserved. No M7 acceptance or Stage-D release is implied."
+  },
   "acceptance_ref": "discovery/spec-v2/packets/C-06.md",
   "next_action": "Sol directly inspects and verifies the repair-2 candidate, then pauses; no second rereview or packet acceptance is requested."
 }

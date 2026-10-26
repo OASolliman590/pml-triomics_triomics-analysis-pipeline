@@ -1,22 +1,26 @@
 # Implementation handover
 
-## Current checkpoint — 26 October 2026, M7-011 blocked; M7-012 authorized
+## Current checkpoint — 26 October 2026, M7-011 and M7-012 blocked
 
-Active M7-012 worker: `/root/m7_012_luna`, requested gpt-6-luna/max, no commits,
-new worktree `/Users/megastore/.codex/worktrees/m7-012-c06-predecessor/PML MultiOmics Analysis Pipeline`
-at `4bdda74`. It must assess the known C-08 caller boundary before editing.
-Reconcile this worker rather than dispatch a duplicate. Sol review/reruns are
-required before any product integration; stop if real predecessor supply or
-compatibility needs outside files. No second implementation repair is allowed.
+M7-012 stopped before implementation. Fresh Luna-max `/root/m7_012_luna`
+finished at base `4bdda74` with only a 42-line C-06 registration receipt;
+no worker commit or product/test changes. Its worktree is retained at
+`/Users/megastore/.codex/worktrees/m7-012-c06-predecessor/PML MultiOmics Analysis Pipeline`.
+No active M7-012 worker or audit remains. Sol inspected the returned diff.
 
-M7-012's single documentation repair is frozen at `e37f334` (SHA-256
+The mandatory B-backed shared C handoff conflicts with two existing C-08
+standalone Stage C callers. Their unchanged baseline passes FAIL 0 / WARN 0 /
+SKIP 0 / PASS 52 (Luna-reported); preserving that contract requires a decision
+outside this six-file scope. No new C-06, B-T07 or B-to-C acceptance gate ran,
+and no new provenance paths or digests were produced. Receipt:
+`reviews/2026-10-26-m7-012-preflight-blocker.md`.
+
+M7-012's sole documentation repair is frozen at `e37f334` (SHA-256
 `6cd3447e918272f9cde9dbaabceb6fa829fda4b3c41044779aea0bc72944c0e7`).
-Fresh Astra-low audit required a C-08 shared-caller compatibility stop condition;
-the single focused rereview passed with zero findings. This approves the stop
-disposition, not feasibility. Audit receipt: `reviews/2026-10-26-m7-012-astra-audit.md`.
-One fresh no-commit Luna-max worker may now assess the six-file scope before
-product edits. If preserving existing C-08 callers needs other files or a
-missing-B bypass, stop blocked. Do not restart M7-011 or open another audit.
+The focused Astra-low rereview passed with zero findings: approval of the
+explicit stop disposition, not implementation feasibility or acceptance.
+Do not redispatch either worker or open a second implementation repair.
+M7-011/M7-012 remain incomplete; C-06 accepted=false; M7/G7 and Stage D closed.
 
 M7-011's audit passed, but its Luna-max worker stopped before implementation:
 the exact Stage C output lacks the required native B predecessor frame. Sol
@@ -734,13 +738,13 @@ the first predictor block only; native component mismatch still fails closed.
 
 ## Literal resume instruction
 
-Current authority: M7-012 only. Read the current checkpoint and
-`reviews/2026-10-26-m7-011-predecessor-blocker.md`; preserve the M7-011 RED and
-do not restart its worker. Freeze the M7-012 predecessor-supply record, obtain
-the single fresh Astra-low audit (one documentation repair/rereview maximum),
-then dispatch one fresh no-commit Luna-max worker on the six-file allowlist
-only if audit_pass yes. Stop if a real B frame cannot be bound. No second
-implementation repair, M7/G7 acceptance, Stage D, private data or push.
+M7-012 has reached its bounded stop. Read the current checkpoint and
+`reviews/2026-10-26-m7-012-preflight-blocker.md`. Preserve both worker receipts
+and the M7-011 RED evidence. The audit and fresh worker are finished; do not
+repeat them or claim completion. A new explicit bounded decision must reconcile
+standalone C-08 endpoints with mandatory B-backed C-to-D handoff, including the
+affected callers/tests and audit. No further implementation is authorized by
+this cycle. M7/G7 and Stage D remain closed; no private data or push.
 The older resume guidance below is historical and does not override this scope.
 
 Read the current checkpoint, `execution-ledger.json`, M7-010's change record,
