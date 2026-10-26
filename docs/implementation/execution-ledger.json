@@ -36,13 +36,25 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_012_blocked_before_implementation",
+    "status": "m7_013_astra_pass",
     "last_reconciled": "2026-10-26",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Astra approved the stop disposition; fresh Luna-max confirmed C08 caller incompatibility outside six-file scope. Registration-only dirty receipt (+42 lines), no product edits or commit. C08-shared pre-edit baseline FAIL 0 WARN 0 SKIP 0 PASS 52 (worker-reported). No new provenance or acceptance gates. New bounded caller-contract decision required. M7/G7 and Stage D closed."
+    "disposition": "Astra audit_pass yes at 4e5ad08; zero findings; no doc repair used. Next: one fresh Luna-max no-commit seven-file worker in a new worktree; no implementation acceptance. M7/G7/Stage D closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_013_astra_pass",
+      "date": "2026-10-26",
+      "worker": null,
+      "disposition": "Astra audit_pass yes at 4e5ad08; zero findings; no doc repair used. Next: one fresh Luna-max no-commit seven-file worker in a new worktree; no implementation acceptance. M7/G7/Stage D closed."
+    },
+    {
+      "event": "m7_013_astra_audit_running",
+      "date": "2026-10-26",
+      "worker": "/root/m7_013_astra_audit",
+      "disposition": "Immutable record 4e5ad08; SHA256 a50af758c28b2bb77dde6d6608d022b7ecb7e85cc32d7ea30d59b4c346df30a7. Await audit; one doc repair/rereview maximum; no implementation before pass. M7/G7/Stage D closed."
+    },
     {
       "event": "m7_012_blocked_before_implementation",
       "date": "2026-10-26",
