@@ -54,6 +54,22 @@
   },
   "orchestration_events": [
     {
+      "event": "m7_014_shared_run_record_disposition",
+      "date": "2026-10-26",
+      "file": "R/cli.R",
+      "observed_failure": "Native B writes registries/run.json; subsequent C fails A_ARTIFACT_FINALIZE overwriting it",
+      "decision": "Authorized Stage C caller writes registries/run-C.json, preserving B run.json bytes and schema; C06 retains complete/partial/unavailable semantics. Add assertions/readback for preserved B and truthful C status.",
+      "authority": "User permits Stage C caller fixes in this run."
+    },
+    {
+      "event": "m7_014_c06_contrast_label_disposition",
+      "date": "2026-10-26",
+      "file": "inst/examples/tickets/C-06.yaml",
+      "observed_failure": "Native B B_DESIGN_CONTRAST: weights must match model column ids by name",
+      "decision": "Authorize weights {intercept: 0, continuous.score: 1} in already allowlisted ticket. R/design_levels.R:271 defines intercept/continuous.<condition>; R/statistics_limma.R:1-16 requires complete named vector. Existing B-T02 score-slope test uses zero intercept/unit continuous weight. This encodes the already declared score slope, does not change estimand/method/data/thresholds or numerical expectations.",
+      "authority": "User permits Sol fixture/ticket label decisions without new approval."
+    },
+    {
       "event": "m7_014_luna_running",
       "date": "2026-10-26",
       "worker": "/root/m7_014_luna",
