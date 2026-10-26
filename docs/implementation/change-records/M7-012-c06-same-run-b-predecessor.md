@@ -6,6 +6,8 @@
 - Authority: Omar's bounded M7-012 continuation; this does not complete M7-011
 - Prior definition: M7-011; governing profile: accepted M7-002/M7-003 and repairs
 - Evidence: `reviews/2026-10-26-m7-011-predecessor-blocker.md`
+- Documentation repair 1: initial audit `db96c5e` returned changes_required
+  (Important 1) for the shared C-08 caller compatibility boundary below.
 
 ## Defect and scope
 
@@ -93,6 +95,25 @@ no claim of benefit. A successful native profile does not accept a milestone.
 
 ## Fixture and verification requirements
 
+### Known compatibility blocker and mandatory stop
+
+The shared writer is called by ordinary Stage C at `R/cli.R:1708`. Existing
+accepted C-08 shared tests at `test-C-08-shared.R:486–490` and `:539–544` expect
+successful fresh-root C execution without a preceding B run. Mandatory native
+B validation at that writer can break those callers. This is a known unresolved
+dependency, not presumed compatibility and not permission to retrofit them.
+
+In addition to C-06, the complete C-08 shared test file and B-T07 suite are
+mandatory non-regression gates. Those tests may be run but not edited. If
+preserving those callers requires changing their fixtures, stage orchestration,
+any other file or any assertion outside the six-file scope, the packet stops
+blocked without integration. A C-06-only green result is insufficient. There
+is no authorized missing-B bypass, route-specific silent fallback or weakening
+of the required C frame. The worker must assess this boundary before product
+edits; if it cannot be satisfied, return bounded evidence rather than spend an
+implementation repair. A passed proposal audit approves this stop disposition,
+not a finding that implementation feasibility has been established.
+
 The shared C-06 fixture must invoke the native B producer, not manually seed B
 results, nominations, envelopes or provenance. Assertions must inspect the
 resulting real artifacts. Existing behavioral requirements are retained; do
@@ -110,6 +131,8 @@ Sol independently reviews the dirty diff and reruns:
 
 ```sh
 Rscript --vanilla -e "testthat::test_local(filter='C-06', stop_on_failure=TRUE)"
+Rscript --vanilla -e "testthat::test_local(filter='^C-08-shared$', stop_on_failure=TRUE)"
+Rscript --vanilla -e "testthat::test_local(filter='^B-T07$', stop_on_failure=TRUE)"
 # Allocate a new output root; substitute that same path for <fresh-root> below.
 Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-06.yaml --stage B --output <fresh-root>
 Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-06.yaml --stage C --output <fresh-root>
