@@ -2,11 +2,14 @@
 
 ## Current checkpoint — 26 October 2026, M7-011 blocked; M7-012 authorized
 
-M7-012 record is frozen at `db96c5e` (SHA-256
-`f80b723984094e4d5f0986e304b536946792cde1cfb5a3b6d588ad5781f64ebb`).
-Fresh read-only reviewer `/root/m7_012_astra_audit` is active. Implementation
-remains closed until audit_pass yes. Reconcile that reviewer before dispatch;
-do not launch a duplicate audit or resume the old M7-011 worker.
+M7-012's single documentation repair is frozen at `e37f334` (SHA-256
+`6cd3447e918272f9cde9dbaabceb6fa829fda4b3c41044779aea0bc72944c0e7`).
+Fresh Astra-low audit required a C-08 shared-caller compatibility stop condition;
+the single focused rereview passed with zero findings. This approves the stop
+disposition, not feasibility. Audit receipt: `reviews/2026-10-26-m7-012-astra-audit.md`.
+One fresh no-commit Luna-max worker may now assess the six-file scope before
+product edits. If preserving existing C-08 callers needs other files or a
+missing-B bypass, stop blocked. Do not restart M7-011 or open another audit.
 
 M7-011's audit passed, but its Luna-max worker stopped before implementation:
 the exact Stage C output lacks the required native B predecessor frame. Sol
