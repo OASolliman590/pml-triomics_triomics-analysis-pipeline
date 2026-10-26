@@ -36,13 +36,25 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_011_audit_passed_implementation_unlocked",
+    "status": "m7_011_luna_implementation_running",
     "last_reconciled": "2026-10-26",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Astra-low passed M7-011 at 721153c with Critical 0, Important 0, Minor 0. One Luna-max worker may implement the three-file C-06 provenance allowlist. M7/G7 and Stage D remain closed."
+    "disposition": "Luna-max is implementing the M7-011 three-file allowlist in draft/m7-011-c06 from c03756d. No integration yet. M7/G7 and Stage D remain closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_011_luna_implementation_dispatched",
+      "date": "2026-10-26",
+      "worker": "luna-max",
+      "model": "gpt-6-luna",
+      "effort": "max",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-011-c06-provenance",
+      "branch": "draft/m7-011-c06",
+      "base": "c03756d",
+      "allowed_next_transition": "Review the allowlisted diff and rerun C-06 before any integration. Do not accept M7 or release G7.",
+      "disposition": "Implementation is in progress. Stage D stays closed."
+    },
     {
       "event": "m7_011_astra_audit_pass_implementation_unlocked",
       "date": "2026-10-26",
