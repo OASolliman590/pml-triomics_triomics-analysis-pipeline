@@ -309,26 +309,19 @@ testthat::test_that("C-06 exports both nomination branches and complete keyed in
   testthat::expect_identical(handoff$nomination_branches$integration_selection$status, "complete")
   testthat::expect_true(any(vapply(handoff$nominations, function(x) identical(x$source_branch, "primary_statistics"), logical(1))))
   testthat::expect_true(any(vapply(handoff$nominations, function(x) identical(x$source_branch, "integration_selection"), logical(1))))
+  testthat::expect_identical(length(handoff$nominations), 5L)
   testthat::expect_identical(handoff$clinical_prediction$completion_policy, "conditional")
 
   output_root <- tempfile("triomics-c06-output-")
-  written <- triomics_c06_write_handoff(
+  error <- testthat::capture_error(triomics_c06_write_handoff(
     handoff, output_root,
     config_sha256 = paste(rep("f", 64), collapse = ""),
     producer_commit = "ef7da20",
     privacy_class = "synthetic"
-  )
-  candidate_path <- file.path(written$directory, "candidate-nominations.json")
-  evidence_path <- file.path(written$directory, "integration-evidence.json")
-  candidate <- jsonlite::read_json(candidate_path, simplifyVector = FALSE)
-  evidence_payload <- jsonlite::read_json(evidence_path, simplifyVector = FALSE)
-  testthat::expect_true(file.exists(written$manifest))
-  testthat::expect_true(triomics_validate_envelope(
-    file.path(written$directory, "candidate-nominations.envelope.json")
   ))
-  testthat::expect_identical(candidate$artifact_type, "candidate_nominations")
-  testthat::expect_equal(candidate$n_nominations, 5L)
-  testthat::expect_identical(evidence_payload$integrations[[1]]$backend, "mixomics_diablo")
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "C_EXPORT_PREDECESSOR_MISSING")
+  testthat::expect_false(file.exists(file.path(output_root, "D")))
   unlink(output_root, recursive = TRUE)
 })
 
@@ -438,7 +431,7 @@ testthat::test_that("C-06 preserves an explicitly unrequested primary nomination
   testthat::expect_length(handoff$lineage_inputs, 1L)
 })
 
-testthat::test_that("C-06 D envelopes require and propagate the authoritative privacy class", {
+testthat::test_that("C-06 writer requires the authoritative privacy class and native B", {
   handoff <- triomics_c06_build_handoff(
     primary_nominations = c06_primary_nominations(),
     integration_runs = list(c06_run()),
@@ -447,32 +440,28 @@ testthat::test_that("C-06 D envelopes require and propagate the authoritative pr
     clinical_prediction = list(status = "not_started", completion_policy = "conditional", packet_id = "C-09")
   )
   output_root <- tempfile("triomics-c06-sensitive-")
-  written <- triomics_c06_write_handoff(
+  error <- testthat::capture_error(triomics_c06_write_handoff(
     handoff, output_root,
     config_sha256 = paste(rep("e", 64), collapse = ""),
     producer_commit = "c06-test",
     privacy_class = "sensitive"
-  )
-  envelope_paths <- c(
-    list.files(written$directory, pattern = "\\.envelope\\.json$", full.names = TRUE)
-  )
-  envelopes <- lapply(envelope_paths, jsonlite::read_json, simplifyVector = FALSE)
-  testthat::expect_length(envelopes, 6L)
-  testthat::expect_true(all(vapply(envelopes, function(envelope) {
-    identical(envelope$privacy_class, "sensitive")
-  }, logical(1))))
-  testthat::expect_error(
+  ))
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "C_EXPORT_PREDECESSOR_MISSING")
+  testthat::expect_false(file.exists(file.path(output_root, "D")))
+  no_privacy <- testthat::capture_error(
     triomics_c06_write_handoff(
       handoff, tempfile("triomics-c06-no-privacy-"),
       config_sha256 = paste(rep("e", 64), collapse = ""),
       producer_commit = "c06-test"
-    ),
-    class = "triomics_error"
+    )
   )
+  testthat::expect_s3_class(no_privacy, "triomics_error")
+  testthat::expect_identical(no_privacy$code, "C_EXPORT_INPUT_INVALID")
   unlink(output_root, recursive = TRUE)
 })
 
-testthat::test_that("C-06 envelopes bind context and immutable nomination, evaluation and native lineage", {
+testthat::test_that("C-06 writer revalidates context and lineage before requiring native B", {
   handoff <- triomics_c06_build_handoff(
     primary_nominations = c06_primary_nominations(),
     integration_runs = list(c06_run()),
@@ -483,54 +472,6 @@ testthat::test_that("C-06 envelopes bind context and immutable nomination, evalu
   testthat::expect_identical(handoff$preparation_context_id, "prep-1")
   testthat::expect_identical(handoff$representation_id, "levels")
   output_root <- tempfile("triomics-c06-lineage-")
-  written <- triomics_c06_write_handoff(
-    handoff, output_root,
-    config_sha256 = paste(rep("a", 64), collapse = ""),
-    producer_commit = "c06-test",
-    privacy_class = "synthetic"
-  )
-  candidate_envelope <- jsonlite::read_json(
-    file.path(written$directory, "candidate-nominations.envelope.json"),
-    simplifyVector = FALSE
-  )
-  integration_envelope <- jsonlite::read_json(
-    file.path(written$directory, "integration-evidence.envelope.json"),
-    simplifyVector = FALSE
-  )
-  evaluation_envelope <- jsonlite::read_json(
-    file.path(written$directory, "evaluation-evidence.envelope.json"),
-    simplifyVector = FALSE
-  )
-  envelope_names <- c(
-    "candidate-nominations.envelope.json",
-    "integration-evidence.envelope.json",
-    "evaluation-evidence.envelope.json"
-  )
-  for (envelope_path in file.path(written$directory, envelope_names)) {
-    envelope <- jsonlite::read_json(envelope_path, simplifyVector = FALSE)
-    testthat::expect_identical(envelope$analysis_id, "analysis-1")
-    testthat::expect_identical(envelope$preparation_context_id, "prep-1")
-    testthat::expect_identical(envelope$representation_id, "levels")
-    testthat::expect_true(triomics_validate_envelope(envelope_path))
-  }
-  has_input <- function(envelope, artifact_id, sha256 = NULL) {
-    any(vapply(envelope$inputs, function(input) {
-      identical(input$artifact_id, artifact_id) &&
-        (is.null(sha256) || identical(input$sha256, sha256))
-    }, logical(1)))
-  }
-  testthat::expect_true(has_input(
-    candidate_envelope, "b-t07-candidate-nominations",
-    c06_primary_nominations()$source_artifact_ref$sha256
-  ))
-  testthat::expect_true(has_input(
-    candidate_envelope, "native-state-mixomics_diablo",
-    c06_run()$native_artifact_ref$sha256
-  ))
-  evaluation_file <- file.path(written$directory, "evaluation-evidence.json")
-  testthat::expect_true(has_input(
-    candidate_envelope, "c06-evaluation-evidence", triomics_sha256(evaluation_file)
-  ))
   missing_native <- c06_run()
   missing_native$native_artifact_ref <- NULL
   testthat::expect_error(
@@ -557,15 +498,17 @@ testthat::test_that("C-06 envelopes bind context and immutable nomination, evalu
   missing_lineage <- handoff
   missing_lineage$lineage_inputs <- list()
   missing_lineage_root <- tempfile("triomics-c06-lineage-missing-")
-  testthat::expect_error(
+  missing_lineage_error <- tryCatch(
     triomics_c06_write_handoff(
       missing_lineage, missing_lineage_root,
       config_sha256 = paste(rep("b", 64), collapse = ""),
       producer_commit = "c06-test",
       privacy_class = "synthetic"
     ),
-    class = "triomics_error"
+    error = identity
   )
+  testthat::expect_s3_class(missing_lineage_error, "triomics_error")
+  testthat::expect_identical(missing_lineage_error$code, "C_EXPORT_LINEAGE_MISMATCH")
   unlink(missing_lineage_root, recursive = TRUE)
   fabricated_evaluation_source <- handoff
   fabricated_ref <- list(

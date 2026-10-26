@@ -4,7 +4,7 @@
   "implementation_base": "ef7da2086e7a0244e18a8ea1902423596d6a2b75",
   "accepted": false,
   "applied_to_shared_files": false,
-  "implementation_status": "Targeted repairs 1 and 2 and the authorized shared C-stage CLI seam are implemented in this candidate. Requested evaluation completion is separated from D single-fit export availability; persisted preparation JSON byte hashes, verified nested-only identities, and explicit no-plan C-07 controls are retained. This is synthetic software evidence only; the packet is not accepted.",
+  "implementation_status": "M7-014 native same-root B-backed C-06 provenance candidate is implemented in this local worker worktree. The C profile binds the exact four B predecessor files, consumed source and metadata identities, resolved B matrices, C prepared matrices, C preparation states, native sidecars, and D outputs. C-08 endpoint-only publication remains standalone. This is synthetic software evidence only; the packet remains unaccepted pending Sol integration and acceptance.",
   "synthetic_software_only": true,
   "local_files": [
     "R/cli.R",
@@ -512,6 +512,109 @@
     "provenance_artifacts": [],
     "receipt": "docs/implementation/reviews/2026-10-26-m7-013-publication-split-receipt.md"
   },
+  "m7_014_c_provenance_completion_attempt": {
+    "status": "implemented_unaccepted_local_candidate",
+    "accepted": false,
+    "worker_base": "79003fd166c7aa96c0af270c6fb775cc1178834f",
+    "worker_commit": null,
+    "change_record": "docs/implementation/change-records/M7-014-c-provenance-completion.md",
+    "change_record_sha256": "f97e30c68b26e1fa05315568181d469533d9bd723a8425619ec8f895551d4be5",
+    "audit_note": "The prior Astra PASS at 4e5ad08 covers M7-013 publication split. No new audit was requested or claimed for this M7-014 candidate.",
+    "local_files": [
+      "R/cli.R",
+      "R/export_c.R",
+      "inst/examples/tickets/C-02.yaml",
+      "inst/examples/tickets/C-06.yaml",
+      "tests/testthat/test-C-06.R",
+      "tests/testthat/test-C-06-shared.R",
+      "tests/testthat/test-C-08-shared.R",
+      "docs/implementation/registrations/C-06.json"
+    ],
+    "implementation_summary": [
+      "C-06 requires exactly one valid native B handoff in the same output root and binds its bundle payload/envelope plus provenance payload/envelope bytes; it refuses missing or ambiguous B without endpoint-only fallback.",
+      "C-06 checks already-ingested source identities and normalized metadata against validated B provenance, recomputes the actual pre-preparation B matrix hashes and prepared C integration matrix hashes, and records C-generated preparation-state entities linked to native sidecars.",
+      "C-06 writes a C-specific run-C.json while preserving the B run.json bytes, keeps D status partial for explicitly unrun C-07 controls, and removes partial D files and a newly created empty D directory after a failed publication.",
+      "C-08 configured endpoints and request scheduling remain standalone: they do not invoke B or emit C provenance/D handoff, and refuse endpoint-only publication before modifying C when D already exists.",
+      "C-02 ticket preparation context is c02_fixture. C-06 effect_unit is per_unit_beta and weights are {intercept: 0, continuous.score: 1}; statistical methods and numerical expectations were not changed."
+    ],
+    "named_tests": [
+      {
+        "command": "Rscript --vanilla -e \"testthat::test_local(filter='C-06', stop_on_failure=TRUE)\"",
+        "exit_code": 0,
+        "failures": 0,
+        "warnings": 0,
+        "skips": 0,
+        "expectations_passed": 347,
+        "duration_seconds": 277.7,
+        "log": "/tmp/triomics-m7-014-luna/green-c06-final3.log"
+      },
+      {
+        "command": "Rscript --vanilla -e \"testthat::test_local(filter='^C-08-shared$', stop_on_failure=TRUE)\"",
+        "exit_code": 0,
+        "failures": 0,
+        "warnings": 0,
+        "skips": 0,
+        "expectations_passed": 64,
+        "duration_seconds": 14.6,
+        "log": "/tmp/triomics-m7-014-luna/green-c08-shared-final.log"
+      }
+    ],
+    "native_proofs": [
+      {
+        "proof": "Native C-02 Stage B producer and provenance read-back",
+        "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-02.yaml --stage B --output /tmp/triomics-m7-014-luna/c02-native-b",
+        "exit_code": 0,
+        "output_root": "/private/tmp/triomics-m7-014-luna/c02-native-b",
+        "readback_log": "/tmp/triomics-m7-014-luna/c02-native-b-readback.log",
+        "readback": "Native B required evidence, B provenance profile/envelope validators, complete B run record, and preparation_context_id c02_fixture passed."
+      },
+      {
+        "proof": "Fresh same-root native B then C-06 CLI producer/read-back",
+        "commands": [
+          "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-06.yaml --stage B --output /tmp/triomics-m7-014-luna/native-bc-final2",
+          "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-06.yaml --stage C --output /tmp/triomics-m7-014-luna/native-bc-final2"
+        ],
+        "exit_codes": [0, 0],
+        "output_root": "/private/tmp/triomics-m7-014-luna/native-bc-final2",
+        "readback_log": "/tmp/triomics-m7-014-luna/native-bc-final2-readback.log",
+        "readback": "B required evidence and provenance validated; C provenance profile, C envelope and D manifest envelope validated; exactly four B predecessor file hashes match; two C-generated preparation-state entities are present; B and C run records were read back."
+      }
+    ],
+    "same_root_predecessors": [
+      {
+        "path": "B/handoffs/a69080febe9558c754f28b83c9b10d157f5fe6d78eeeb3a0cd9213a088b38b88/bundle.json",
+        "sha256": "d8d411f5d3bc2ec6410c6b7ced1f8b8ab19c770ef18ee63f817698935390d47e"
+      },
+      {
+        "path": "B/handoffs/a69080febe9558c754f28b83c9b10d157f5fe6d78eeeb3a0cd9213a088b38b88/bundle.envelope.json",
+        "sha256": "e96b735b71a3cfaed3705fa03d821e192d6f2ea20e51e3ce258bc7cdb7d402f0"
+      },
+      {
+        "path": "B/handoffs/a69080febe9558c754f28b83c9b10d157f5fe6d78eeeb3a0cd9213a088b38b88/stage-handoff-provenance.json",
+        "sha256": "a0f68428a1991c655c9c1ef2286ba14ad7912ab855104a832ea9db64ebcb550f"
+      },
+      {
+        "path": "B/handoffs/a69080febe9558c754f28b83c9b10d157f5fe6d78eeeb3a0cd9213a088b38b88/stage-handoff-provenance.envelope.json",
+        "sha256": "7dd91b44d0f1ec2130a9577831cd5e8431809f7d8d6908ef469ea8815fe22b6f"
+      }
+    ],
+    "c_provenance_pair": [
+      {
+        "path": "D/stage-handoff-provenance.json",
+        "sha256": "6fa36b2b12817e88aa4373ba58701c744fe1629e0a861ca7586a0029d7781ea5"
+      },
+      {
+        "path": "D/stage-handoff-provenance.envelope.json",
+        "sha256": "b1ad2c9bc479f1d06fc8baa4c10b3aaff8bc0f955ca4312abd9ec2a2686506a7"
+      }
+    ],
+    "known_gaps": [
+      "All inputs/tests are public synthetic software fixtures. This is not biological or clinical validation.",
+      "C-07 controls were not run; D aggregate remains partial. C-09 remains not_started and unqualified.",
+      "The auto-review rejection prohibited an added source-file reread/hash helper. C validation uses the persisted exact B predecessor bytes, already-ingested C source hashes, and canonical C metadata/sample-registry/factor-level equality to B normalized_metadata; it does not claim an independent C-side raw metadata byte rehash.",
+      "M7-014 remains accepted=false. Sol must inspect this dirty candidate, independently rerun the named tests/native proofs, and own integration and acceptance. No commit or shared integration was made by this worker."
+    ]
+  },
   "acceptance_ref": "discovery/spec-v2/packets/C-06.md",
-  "next_action": "M7-013 blocked; new bounded disposition for the existing nested C02 caller/fixture identity required. No product integration or milestone acceptance."
+  "next_action": "M7-014 local candidate ready for Sol review. Keep accepted=false until Sol independently verifies and integrates it; the preceding M7-011 through M7-013 attempt records remain preserved above."
 }

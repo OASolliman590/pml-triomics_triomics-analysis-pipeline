@@ -145,7 +145,7 @@ analyses:
     block_ids:
       - block_1
       - block_2
-    preparation_context_id: c01_fixture
+    preparation_context_id: c02_fixture
     design:
       kind: independent
       condition: group

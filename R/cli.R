@@ -1365,6 +1365,141 @@ triomics_execute_c09_synthetic_stage <- function(config, output) {
   ))
 }
 
+triomics_c06_cli_native_b_predecessors <- function(output) {
+  abort <- function(code, message, key = "B/handoffs") {
+    triomics_integration_abort(code, message, key = key)
+  }
+  root <- tryCatch(
+    triomics_b07_output_root(output, create = FALSE),
+    error = function(error) NULL
+  )
+  if (is.null(root)) {
+    abort(
+      "C_EXPORT_PREDECESSOR_MISSING",
+      "C-06 publication requires a native B handoff produced in this output root."
+    )
+  }
+  handoff_dir <- tryCatch(
+    triomics_b07_child_path(root, file.path("B", "handoffs")),
+    error = function(error) NULL
+  )
+  if (is.null(handoff_dir) || !dir.exists(handoff_dir)) {
+    abort(
+      "C_EXPORT_PREDECESSOR_MISSING",
+      "C-06 publication requires a native B handoff produced in this output root."
+    )
+  }
+  bundle_paths <- list.files(
+    handoff_dir, pattern = "^bundle[.]json$", recursive = TRUE,
+    full.names = TRUE, all.files = FALSE
+  )
+  if (!length(bundle_paths)) {
+    abort(
+      "C_EXPORT_PREDECESSOR_MISSING",
+      "C-06 publication requires one complete native B handoff in this output root."
+    )
+  }
+  if (length(bundle_paths) != 1L) {
+    abort(
+      "C_EXPORT_PREDECESSOR_AMBIGUOUS",
+      "C-06 publication found more than one B handoff in this output root."
+    )
+  }
+  bundle_relative <- substring(
+    normalizePath(bundle_paths[[1L]], winslash = "/", mustWork = TRUE),
+    nchar(root) + 2L
+  )
+  bundle_path <- tryCatch(
+    triomics_b07_child_path(root, bundle_relative),
+    error = function(error) NULL
+  )
+  if (is.null(bundle_path)) {
+    abort(
+      "C_EXPORT_PREDECESSOR_PATH",
+      "The native B handoff path must resolve beneath this output root."
+    )
+  }
+  provenance_path <- file.path(dirname(bundle_path), "stage-handoff-provenance.json")
+  list(
+    bundle_path = bundle_path,
+    bundle_envelope_path = sub("[.]json$", ".envelope.json", bundle_path),
+    provenance_path = provenance_path,
+    provenance_envelope_path = sub("[.]json$", ".envelope.json", provenance_path)
+  )
+}
+
+triomics_c06_cli_input_identity <- function(resolved, ingested, analysis,
+                                             representation, block_ids,
+                                             source_inputs, config,
+                                             source_resolved = resolved) {
+  block_identity <- function(block_set, hash_matrix) {
+    stats::setNames(lapply(block_ids, function(block_id) {
+      block <- block_set$blocks[[block_id]]
+      matrix <- block$assay
+      if (!is.matrix(matrix) || is.null(rownames(matrix)) || is.null(colnames(matrix))) {
+        triomics_integration_abort(
+          "C_EXPORT_IDENTITY_MISMATCH",
+          "C-06 provenance needs the exact keyed matrices resolved by Stage C.",
+          key = paste0("blocks.", block_id)
+        )
+      }
+      list(
+        matrix = matrix,
+        matrix_sha256 = hash_matrix(block_id, matrix),
+        feature_ids = as.character(rownames(matrix)),
+        unit_ids = as.character(colnames(matrix))
+      )
+    }), block_ids)
+  }
+  blocks <- block_identity(resolved, function(block_id, matrix) {
+    digest::digest(matrix, algo = "sha256", serialize = TRUE)
+  })
+  source_blocks <- block_identity(source_resolved, triomics_b07_matrix_hash)
+  source_specs <- config$sources %||% list()
+  source_ids <- vapply(source_specs, function(source) as.character(source$source_id), character(1L))
+  if (length(source_ids) && anyDuplicated(source_ids)) {
+    triomics_integration_abort(
+      "C_EXPORT_IDENTITY_MISMATCH", "Configured C source identities must be unique.",
+      key = "sources"
+    )
+  }
+  conversion_count <- sum(vapply(source_specs, function(source) {
+    !is.null(source$conversion_manifest)
+  }, logical(1L)))
+  metadata_is_declared_source <- any(vapply(source_specs, function(source) {
+    identical(as.character(source$file), as.character(config$metadata$file))
+  }, logical(1L)))
+  list(
+    study_id = as.character(ingested$study_id),
+    analysis_id = as.character(analysis$analysis_id),
+    preparation_context_id = as.character(analysis$preparation_context_id),
+    representation_id = as.character(representation),
+    source_inputs = unname(source_inputs),
+    source_blocks = source_blocks,
+    expected_source_entity_count = length(source_specs) + conversion_count +
+      as.integer(!metadata_is_declared_source),
+    normalized_metadata = list(
+      sample_metadata = ingested$sample_metadata,
+      sample_registry = ingested$sample_registry,
+      declared_factor_levels = ingested$declared_factor_levels
+    ),
+    blocks = blocks
+  )
+}
+
+triomics_c08_cli_refuse_existing_d <- function(output) {
+  d_root <- file.path(output, "D")
+  if (triomics_is_symlink(d_root) || (file.exists(d_root) && !dir.exists(d_root)) ||
+      (dir.exists(d_root) && length(list.files(d_root, all.files = TRUE, no.. = TRUE)))) {
+    triomics_c08_abort(
+      "C_EXPORT_ENDPOINT_CONFLICT",
+      "The endpoint-only C route cannot schedule B requests into a root with an existing D publication.",
+      "D"
+    )
+  }
+  invisible(TRUE)
+}
+
 triomics_execute_stage_c <- function(config_path, output) {
   if (!is.character(output) || length(output) != 1L || is.na(output) || !nzchar(output)) {
     triomics_abort(
@@ -1385,6 +1520,9 @@ triomics_execute_stage_c <- function(config_path, output) {
   if (!is.null(config$clinical_prediction)) {
     return(triomics_execute_c09_synthetic_stage(config, output))
   }
+  has_clinical_objectives <- isTRUE(config$clinical$enabled) &&
+    is.list(config$clinical$objectives) && length(config$clinical$objectives) > 0L
+  if (has_clinical_objectives) triomics_c08_cli_refuse_existing_d(output)
   if (length(config$analyses) != 1L) {
     triomics_integration_abort(
       "C_ELIGIBILITY_INPUT_INVALID",
@@ -1452,6 +1590,7 @@ triomics_execute_stage_c <- function(config_path, output) {
   )
   resolved <- triomics_resolve_analysis(study, analysis)
   resolved <- triomics_c06_cli_ingest_lineage(resolved, ingested, config, block_ids)
+  source_resolved <- resolved
   if (any(!vapply(requests, function(request) {
     identical(request$evaluation$mode, "nested_cv")
   }, logical(1L))) && identical(representation, "levels")) {
@@ -1460,8 +1599,6 @@ triomics_execute_stage_c <- function(config_path, output) {
     )
   }
   c08_methods <- c("concat_pca", "mixomics_diablo", "mixomics_block_spls", "mofa2")
-  has_clinical_objectives <- isTRUE(config$clinical$enabled) &&
-    is.list(config$clinical$objectives) && length(config$clinical$objectives) > 0L
   resolved_unit_records <- triomics_c08_unit_records(
     if (!is.null(resolved$unit_map)) resolved$unit_map else analysis_unit_map
   )
@@ -1679,6 +1816,40 @@ triomics_execute_stage_c <- function(config_path, output) {
   envelope$preparation_context_id <- analysis$preparation_context_id
   envelope$representation_id <- representation
   triomics_write_envelope(envelope, file.path(output, "C", "integration-results.envelope.json"))
+  endpoint_requests <- vapply(integration_results, function(item) {
+    request <- item$clinical_score_request
+    is.list(request) && identical(request$status, "scheduled") &&
+      identical(request$owner_stage, "B") && identical(request$model_execution, "not_started")
+  }, logical(1L))
+  if (has_clinical_objectives && !all(endpoint_requests)) {
+    triomics_c08_abort(
+      "C_SCORE_REQUEST_INVALID",
+      "A configured clinical-objective route must produce every declared B request before Stage C returns.",
+      "clinical.objectives"
+    )
+  }
+  required_runs <- Filter(function(run) isTRUE(run$required), c06_integration_runs)
+  required_complete <- all(vapply(required_runs, function(run) {
+    requested_status <- run$requested_evaluation_status %||% run$status
+    identical(requested_status, "complete")
+  }, logical(1L)))
+  run_status <- if (required_complete) "complete" else "partial"
+  if (has_clinical_objectives) {
+    triomics_write_json_atomic(list(
+      schema_version = "2.0",
+      run_id = "c-01",
+      study_id = ingested$study_id,
+      stage = "C",
+      status = run_status
+    ), file.path(output, "registries", "run-C.json"))
+    return(invisible(list(
+      status = "endpoint_request_scheduled",
+      run_status = run_status,
+      payload_path = payload_path,
+      results = integration_results,
+      required_complete = required_complete
+    )))
+  }
   evaluation_controls <- triomics_c06_cli_unrun_controls(
     c06_integration_runs, resolved, analysis, integration_results
   )
@@ -1709,14 +1880,14 @@ triomics_execute_stage_c <- function(config_path, output) {
     handoff,
     output,
     config_sha256 = attr(config, "config_sha256"),
-    producer_commit = "not-recorded",
-    privacy_class = privacy_class
+    producer_commit = triomics_b07_git_ref(getwd()),
+    privacy_class = privacy_class,
+    b_predecessor_paths = triomics_c06_cli_native_b_predecessors(output),
+    c_input_identity = triomics_c06_cli_input_identity(
+      resolved, ingested, analysis, representation, block_ids, c06_source_inputs,
+      config, source_resolved
+    )
   )
-  required_runs <- Filter(function(run) isTRUE(run$required), c06_integration_runs)
-  required_complete <- all(vapply(required_runs, function(run) {
-    requested_status <- run$requested_evaluation_status %||% run$status
-    identical(requested_status, "complete")
-  }, logical(1L)))
   run_status <- if (required_complete) "complete" else handoff$status
   triomics_write_json_atomic(list(
     schema_version = "2.0",
@@ -1724,7 +1895,7 @@ triomics_execute_stage_c <- function(config_path, output) {
     study_id = ingested$study_id,
     stage = "C",
     status = run_status
-  ), file.path(output, "registries", "run.json"))
+  ), file.path(output, "registries", "run-C.json"))
   invisible(list(
       status = handoff$status,
       run_status = run_status,

@@ -163,13 +163,13 @@ analyses:
       method: limma
       contrasts:
         - contrast_id: score_slope
-          weights: {score: 1}
+          weights: {intercept: 0, continuous.score: 1}
           interpretation: Synthetic software fixture only; no scientific inference.
       trend: false
       robust: false
       q_threshold: 0.05
       effect_threshold: 0.5
-      effect_unit: slope_per_score_unit
+      effect_unit: per_unit_beta
       family_scope: one_scalar_contrast_all_retained_features
       selection_validity: qualified
       selection_justification: Synthetic fixture; no scientific inference is claimed.

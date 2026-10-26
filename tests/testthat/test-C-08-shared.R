@@ -519,10 +519,37 @@ testthat::test_that("Stage C writes immutable C-08 endpoints and schedules, but 
   testthat::expect_identical(
     request$source_endpoint_bundle_sha256, endpoint_bundle$payload_sha256
   )
+  testthat::expect_false(file.exists(file.path(output_dir, "D", "handoff-manifest.json")))
+  testthat::expect_false(file.exists(file.path(output_dir, "D", "stage-handoff-provenance.json")))
+  testthat::expect_false(file.exists(file.path(output_dir, "D", "stage-handoff-provenance.envelope.json")))
+  testthat::expect_false(file.exists(file.path(output_dir, "D", "stage-status.json")))
+  testthat::expect_false(file.exists(file.path(output_dir, "B", "block-results.json")))
+  testthat::expect_false(file.exists(file.path(output_dir, "registries", "run.json")))
+  c_run_record <- jsonlite::read_json(file.path(output_dir, "registries", "run-C.json"),
+                                     simplifyVector = FALSE)
+  testthat::expect_identical(c_run_record$stage, "C")
+  testthat::expect_identical(c_run_record$status, "complete")
   testthat::expect_error(
     triomics_execute_stage_c(config_path, output_dir),
     class = "triomics_error"
   )
+})
+
+testthat::test_that("endpoint-only C refuses an existing D publication before writing C", {
+  config_path <- c08_shared_fixture_path()
+  output_dir <- tempfile("triomics-c08-existing-d-")
+  on.exit(unlink(output_dir, recursive = TRUE), add = TRUE)
+  d_root <- file.path(output_dir, "D")
+  dir.create(d_root, recursive = TRUE)
+  marker <- file.path(d_root, "handoff-manifest.json")
+  writeLines("stale D publication", marker, useBytes = TRUE)
+
+  error <- testthat::capture_error(triomics_execute_stage_c(config_path, output_dir))
+
+  testthat::expect_identical(error$code, "C_EXPORT_ENDPOINT_CONFLICT")
+  testthat::expect_identical(readLines(marker, warn = FALSE), "stale D publication")
+  testthat::expect_false(file.exists(file.path(output_dir, "C", "integration-results.json")))
+  testthat::expect_false(file.exists(file.path(output_dir, "registries", "run-C.json")))
 })
 
 testthat::test_that("Stage C refuses an unknown source selection history", {
