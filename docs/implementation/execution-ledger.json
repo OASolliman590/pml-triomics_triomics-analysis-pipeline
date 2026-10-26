@@ -36,13 +36,19 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_013_blocked_after_red",
+    "status": "m7_014_authorized",
     "last_reconciled": "2026-10-26",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Astra passed 4e5ad08, zero findings. Luna returned test-only RED patch at 425455b, no commit/product edits. Sol reruns: C08-shared FAIL2 WARN0 SKIP0 PASS60; C06 FAIL10 WARN0 SKIP0 ERROR0 PASS106. Native C02 B exits2 B_DESIGN_PREPARATION. Existing nested caller needs out-of-scope fixture/contract disposition. No provenance written or product integration. Receipt reviews/2026-10-26-m7-013-publication-split-receipt.md. M7/G7/Stage D closed; no active workers."
+    "disposition": "User authorizes fresh C seam completion under existing Astra pass 4e5ad08; initial allowlist includes C02.yaml preparation label and C06.yaml effect label, C writer/caller and three tests plus C06 registration. Extra same-label fixture/test files require ledger entry before edit. One fresh Luna-max no commits; two reproduced-failure repairs maximum. M7/G7/StageD closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_014_authorized",
+      "date": "2026-10-26",
+      "worker": null,
+      "disposition": "User authorizes fresh C seam completion under existing Astra pass 4e5ad08; initial allowlist includes C02.yaml preparation label and C06.yaml effect label, C writer/caller and three tests plus C06 registration. Extra same-label fixture/test files require ledger entry before edit. One fresh Luna-max no commits; two reproduced-failure repairs maximum. M7/G7/StageD closed."
+    },
     {
       "event": "m7_013_blocked_after_red",
       "date": "2026-10-26",
