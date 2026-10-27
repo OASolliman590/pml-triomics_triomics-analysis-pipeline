@@ -276,6 +276,83 @@ testthat::test_that("public integrate_blocks keeps the protected six-field resul
   )
 })
 
+testthat::test_that("C-08 preserves visit-level subject-centered unit identity", {
+  ids <- c("SYN_01", "SYN_02", "SYN_03")
+  unit_map <- lapply(seq_along(ids), function(index) list(
+    unit_id = ids[[index]],
+    unit_type = "visit_level",
+    source_sample_ids = ids[[index]],
+    subject_id = paste0("subject-", ceiling(index / 3)),
+    visit_id = paste0("visit-", index),
+    time = as.numeric(index - 1L),
+    time_unit = "synthetic_step",
+    time_origin = "0",
+    representation_id = "subject_centered",
+    eligibility = "retained",
+    exclusion_reason = NULL,
+    study_id = "study-c08-trajectory",
+    analysis_id = "analysis-c08-trajectory",
+    preparation_context_id = "context-c08-trajectory"
+  ))
+  context <- list(
+    study_id = "study-c08-trajectory",
+    analysis_id = "analysis-c08-trajectory",
+    preparation_context_id = "context-c08-trajectory",
+    representation_id = "subject_centered"
+  )
+
+  mapped <- triomics_c08_validate_unit_map(unit_map, ids, context)
+
+  testthat::expect_identical(mapped$unit_type, rep("visit_level", length(ids)))
+  testthat::expect_identical(mapped$representation_id, rep("subject_centered", length(ids)))
+  testthat::expect_identical(unclass(mapped$source_sample_ids), lapply(ids, identity))
+  testthat::expect_identical(unclass(mapped$visit_id), lapply(seq_along(ids), function(i) paste0("visit-", i)))
+  testthat::expect_identical(unclass(mapped$time), lapply(seq_along(ids), function(i) as.numeric(i - 1L)))
+  testthat::expect_identical(unclass(mapped$time_unit), as.list(rep("synthetic_step", length(ids))))
+  testthat::expect_identical(unclass(mapped$time_origin), as.list(rep("0", length(ids))))
+
+  for (field in c("subject_id", "visit_id", "time_unit", "time_origin")) {
+    changed <- unit_map
+    changed[[1L]][[field]] <- ""
+    error <- testthat::capture_error(triomics_c08_validate_unit_map(changed, ids, context))
+    testthat::expect_identical(error$code, "C_SCORE_LINEAGE_INVALID")
+  }
+  changed <- unit_map
+  changed[[1L]]$time <- Inf
+  error <- testthat::capture_error(triomics_c08_validate_unit_map(changed, ids, context))
+  testthat::expect_identical(error$code, "C_SCORE_LINEAGE_INVALID")
+})
+
+testthat::test_that("C-08 preserves paired sign names and leaves mean weights numeric", {
+  paired <- list(list(
+    unit_id = "subject-a", unit_type = "subject_delta", representation_id = "delta",
+    source_sample_ids = c("a-v0", "a-v1"), subject_id = "subject-a",
+    visit_weights = stats::setNames(c(-1, 1), c("baseline", "followup")),
+    eligibility = "retained"
+  ))
+  paired_context <- list(
+    study_id = "study", analysis_id = "paired", preparation_context_id = "prep",
+    representation_id = "delta"
+  )
+  paired_map <- triomics_c08_validate_unit_map(paired, "subject-a", paired_context)
+  testthat::expect_identical(names(paired_map$visit_weights[[1L]]), c("baseline", "followup"))
+  testthat::expect_identical(as.numeric(unlist(paired_map$visit_weights[[1L]])), c(-1, 1))
+
+  mean_map <- list(list(
+    unit_id = "subject-b", unit_type = "subject_mean", representation_id = "mean",
+    source_sample_ids = c("b-v0", "b-v1"), subject_id = "subject-b",
+    visit_weights = stats::setNames(c(0.25, 0.75), c("v0", "v1")),
+    eligibility = "retained"
+  ))
+  mean_context <- list(
+    study_id = "study", analysis_id = "mean", preparation_context_id = "prep",
+    representation_id = "mean"
+  )
+  mean_result <- triomics_c08_validate_unit_map(mean_map, "subject-b", mean_context)
+  testthat::expect_identical(mean_result$visit_weights[[1L]],
+                             stats::setNames(c(0.25, 0.75), c("v0", "v1")))
+})
+
 testthat::test_that("actual DIABLO and block.spls fits receive same-fit handoffs", {
   ids <- sprintf("sample-%02d", seq_len(12L))
   subjects <- paste0("subject-", ids)

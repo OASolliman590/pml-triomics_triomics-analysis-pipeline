@@ -48,6 +48,79 @@ c06_shared_cli_run <- function(output_root, stage = "C", config_path = NULL,
   run_cli(stage)
 }
 
+c06_shared_repeated_fixture <- function(kind) {
+  source_config <- triomics_test_resource("examples", "tickets", "D-T01.yaml")
+  fixture_root <- tempfile(paste0("c06-shared-", kind, "-fixture-"), tmpdir = "/private/tmp")
+  dir.create(file.path(fixture_root, "tickets"), recursive = TRUE)
+  testthat::expect_true(file.copy(source_config, file.path(fixture_root, "tickets")))
+  source_data <- normalizePath(file.path(dirname(source_config), "..", "data"),
+                               winslash = "/", mustWork = TRUE)
+  testthat::expect_true(file.copy(source_data, fixture_root, recursive = TRUE))
+  config_path <- file.path(fixture_root, "tickets", basename(source_config))
+  metadata_path <- file.path(fixture_root, "data", "c04", "metadata.tsv")
+  metadata <- utils::read.delim(metadata_path, check.names = FALSE, stringsAsFactors = FALSE)
+
+  if (identical(kind, "paired")) {
+    subjects <- paste0("pair-", seq_len(nrow(metadata) / 2L))
+    metadata$subject <- rep(subjects, each = 2L)
+    metadata$visit <- rep(c("baseline", "followup"), times = length(subjects))
+    metadata$time <- rep(c(0, 1), times = length(subjects))
+    visit_levels <- c("baseline", "followup")
+  } else if (identical(kind, "trajectory")) {
+    subjects <- paste0("trajectory-", seq_len(nrow(metadata) / 3L))
+    metadata$subject <- rep(subjects, each = 3L)
+    metadata$visit <- rep(c("v0", "v1", "v2"), times = length(subjects))
+    metadata$time <- rep(0:2, times = length(subjects))
+    visit_levels <- c("v0", "v1", "v2")
+  } else {
+    stop("Unsupported repeated fixture kind: ", kind)
+  }
+  utils::write.table(metadata, metadata_path, sep = "\t", row.names = FALSE, quote = FALSE)
+
+  config_text <- paste(readLines(config_path, warn = FALSE), collapse = "\n")
+  config_text <- sub(
+    "    score: numeric",
+    "    score: numeric\n    subject: string\n    visit: factor\n    time: numeric",
+    config_text, fixed = TRUE
+  )
+  levels_text <- paste0("  factor_levels:\n    visit: [", paste(visit_levels, collapse = ", "), "]")
+  config_text <- sub("  factor_levels: {}", levels_text, config_text, fixed = TRUE)
+  config_text <- sub("  subject_id: null", "  subject_id: subject", config_text, fixed = TRUE)
+  config_text <- sub("      subject_id: null", "      subject_id: subject", config_text, fixed = TRUE)
+  config_text <- sub("      repeated: false", "      repeated: true", config_text, fixed = TRUE)
+
+  if (identical(kind, "paired")) {
+    config_text <- sub("      kind: independent", "      kind: paired", config_text, fixed = TRUE)
+    config_text <- sub("      condition: score", "      condition: visit", config_text, fixed = TRUE)
+    config_text <- sub("      condition_type: continuous", "      condition_type: factor", config_text, fixed = TRUE)
+    config_text <- sub("      representation: levels", "      representation: delta", config_text, fixed = TRUE)
+    config_text <- sub("      reference_level: null", "      reference_level: baseline", config_text, fixed = TRUE)
+    config_text <- sub("      target_level: null", "      target_level: followup", config_text, fixed = TRUE)
+    config_text <- sub("      visit_column: null", "      visit_column: visit", config_text, fixed = TRUE)
+    config_text <- sub("      reference_visit: null", "      reference_visit: baseline", config_text, fixed = TRUE)
+    config_text <- sub("      target_visit: null", "      target_visit: followup", config_text, fixed = TRUE)
+    config_text <- sub("contrast_id: score_slope", "contrast_id: target_minus_reference", config_text, fixed = TRUE)
+    config_text <- sub("weights: {intercept: 0, continuous.score: 1}",
+                       "weights: {intercept: 1}", config_text, fixed = TRUE)
+    config_text <- sub("effect_unit: per_unit_beta", "effect_unit: delta_difference", config_text, fixed = TRUE)
+  } else {
+    config_text <- sub("      kind: independent", "      kind: trajectory", config_text, fixed = TRUE)
+    config_text <- sub("      condition: score", "      condition: time", config_text, fixed = TRUE)
+    config_text <- sub("      representation: levels", "      representation: subject_centered", config_text, fixed = TRUE)
+    config_text <- sub("      time_column: null", "      time_column: time", config_text, fixed = TRUE)
+    config_text <- sub("      time_unit: null", "      time_unit: synthetic_step", config_text, fixed = TRUE)
+    config_text <- sub("      time_origin: null", "      time_origin: '0'", config_text, fixed = TRUE)
+    config_text <- sub("      residual_contract_ref: null",
+                       "      residual_contract_ref: fixed_subject_ordinary_independent",
+                       config_text, fixed = TRUE)
+    config_text <- sub("contrast_id: score_slope", "contrast_id: time_slope", config_text, fixed = TRUE)
+    config_text <- sub("weights: {intercept: 0, continuous.score: 1}",
+                       "weights: {time.linear: 1}", config_text, fixed = TRUE)
+  }
+  writeLines(config_text, config_path, useBytes = TRUE)
+  list(root = fixture_root, config = config_path)
+}
+
 c06_shared_native_input_identity <- function(output_root, config_path) {
   config <- triomics_read_config(config_path)
   ingested <- triomics_ingest_configured_study(config, config_path)
@@ -403,6 +476,232 @@ testthat::test_that("C-06 Stage C rejects a fresh root without native B evidence
   testthat::expect_false(file.exists(file.path(output_root, "D", "handoff-manifest.json")))
   testthat::expect_false(file.exists(file.path(output_root, "D", "stage-handoff-provenance.json")))
   testthat::expect_false(file.exists(file.path(output_root, "D", "stage-handoff-provenance.envelope.json")))
+})
+
+testthat::test_that("Stage C composes paired and trajectory units from native B resolution", {
+  for (kind in c("paired", "trajectory")) {
+    fixture <- c06_shared_repeated_fixture(kind)
+    output_root <- tempfile(paste0("c06-shared-", kind, "-output-"), tmpdir = "/private/tmp")
+    cat(kind, "\t", fixture$root, "\t", output_root, "\n",
+        file = "/tmp/triomics-m7-017-luna/native-roots.txt", append = TRUE)
+
+    c_run <- c06_shared_cli_run(output_root, config_path = fixture$config, prepare_b = TRUE)
+
+    testthat::expect_identical(c_run$status, 0L, info = paste(c_run$output, collapse = "\n"))
+    if (c_run$status == 0L) {
+      testthat::expect_true(file.exists(file.path(output_root, "C", "integration-results.json")))
+      testthat::expect_true(file.exists(file.path(output_root, "D", "stage-handoff-provenance.json")))
+      endpoint_path <- file.path(output_root, "C", "score-endpoints", "integration-01.json")
+      endpoint <- jsonlite::read_json(endpoint_path, simplifyVector = FALSE)
+      testthat::expect_true(length(endpoint$endpoints) > 0L)
+      unit_map <- endpoint$endpoints[[1L]]$unit_map
+      testthat::expect_true(length(unit_map) > 0L)
+      if (identical(kind, "paired")) {
+        testthat::expect_true(all(vapply(unit_map, function(record) {
+          identical(record$representation_id, "delta")
+        }, logical(1L))))
+        testthat::expect_true(all(vapply(unit_map, function(record) {
+          weights <- record$visit_weights
+          is.list(weights) && identical(names(weights), c("baseline", "followup")) &&
+            identical(as.numeric(unlist(weights)), c(-1, 1))
+        }, logical(1L))))
+      } else {
+        testthat::expect_true(all(vapply(unit_map, function(record) {
+          identical(record$representation_id, "subject_centered")
+        }, logical(1L))))
+        testthat::expect_true(all(vapply(unit_map, function(record) {
+          value <- record$subject_id
+          is.character(value) && length(value) == 1L && nzchar(value)
+        }, logical(1L))))
+        testthat::expect_true(all(vapply(unit_map, function(record) {
+          value <- record$time
+          is.numeric(value) && length(value) == 1L && is.finite(value)
+        }, logical(1L))))
+        testthat::expect_true(all(vapply(unit_map, function(record) {
+          value <- record$time_unit
+          is.character(value) && length(value) == 1L && nzchar(value)
+        }, logical(1L))))
+        testthat::expect_true(all(vapply(unit_map, function(record) length(record$time_origin) == 1L,
+                                         logical(1L))))
+      }
+      d_run <- c06_shared_cli_run(output_root, stage = "D", prepare_b = FALSE)
+      testthat::expect_identical(d_run$status, 0L, info = paste(d_run$output, collapse = "\n"))
+    }
+  }
+})
+
+testthat::test_that("paired C unit composition joins per-block maps by subject and records attrition", {
+  sample_ids <- c("s1-baseline", "s1-followup", "s2-baseline", "s2-followup")
+  metadata <- data.frame(
+    sample_id = sample_ids,
+    subject = c("s1", "s1", "s2", "s2"),
+    visit = c("baseline", "followup", "baseline", "followup"),
+    stringsAsFactors = FALSE
+  )
+  weights <- stats::setNames(c(-1, 1), c("baseline", "followup"))
+  make_record <- function(subject, eligibility = "retained") {
+    list(
+      unit_id = subject, unit_type = "subject_delta", representation_id = "delta",
+      eligibility = eligibility,
+      exclusion_reason = if (eligibility == "retained") NULL else "missing_visit",
+      source_sample_ids = c(paste0(subject, "-baseline"), paste0(subject, "-followup")),
+      subject_id = subject, visit_weights = weights
+    )
+  }
+  matrix_for <- function(ids) {
+    matrix(seq_len(length(ids)), nrow = 1L, dimnames = list("feature", ids))
+  }
+  block <- function(id, ids, records) {
+    assay <- matrix_for(ids)
+    list(
+      block_id = id, assay = assay, sample_ids = ids, all_subjects = c("s1", "s2"),
+      signed_delta_map = assay, centered = FALSE,
+      decomposition = "target_minus_reference_once", decomposition_count = 1L,
+      unit_map = records
+    )
+  }
+  resolved <- list(
+    model_plan = list(reference_visit = "baseline", target_visit = "followup"),
+    blocks = list(
+      block_a = block("block_a", c("s1", "s2"), list(make_record("s2"), make_record("s1"))),
+      block_b = block("block_b", c("s1"), list(make_record("s1"), make_record("s2", "excluded")))
+    )
+  )
+  ingested <- list(sample_metadata = metadata, study_id = "paired-map-study")
+  analysis <- list(
+    analysis_id = "paired-map-analysis", preparation_context_id = "paired-map-prep",
+    design = list(representation = "delta", subject_id = "subject", visit_column = "visit")
+  )
+
+  composed <- triomics_c06_cli_compose_unit_map(
+    resolved, ingested, analysis, c("block_a", "block_b"),
+    source_unit_map = resolved$blocks$block_a$unit_map
+  )
+
+  testthat::expect_identical(composed$unit_ids, c("s1", "s2"))
+  testthat::expect_identical(composed$training_unit_ids, "s1")
+  testthat::expect_identical(composed$unit_map$s2$eligibility, "excluded")
+  testthat::expect_match(composed$unit_map$s2$exclusion_reason, "block_b")
+  testthat::expect_named(composed$unit_map$s2$block_eligibility, c("block_a", "block_b"))
+  testthat::expect_identical(composed$unit_map$s2$block_eligibility$block_b, "excluded")
+  testthat::expect_setequal(composed$unit_map$s2$source_sample_ids,
+                            c("s2-baseline", "s2-followup"))
+
+  shuffled_sign_names <- resolved
+  shuffled_sign_names$blocks$block_b$unit_map[[1L]]$visit_weights <-
+    stats::setNames(c(1, -1), c("followup", "baseline"))
+  testthat::expect_silent(triomics_c06_cli_compose_unit_map(
+    shuffled_sign_names, ingested, analysis, c("block_a", "block_b"),
+    source_unit_map = resolved$blocks$block_a$unit_map
+  ))
+
+  wrong_sign <- resolved
+  wrong_sign$blocks$block_b$unit_map[[2L]]$visit_weights <-
+    stats::setNames(c(1, -1), c("baseline", "followup"))
+  error <- testthat::capture_error(triomics_c06_cli_compose_unit_map(
+    wrong_sign, ingested, analysis, c("block_a", "block_b"),
+    source_unit_map = resolved$blocks$block_a$unit_map
+  ))
+  testthat::expect_identical(error$code, "C_SCORE_LINEAGE_INVALID")
+
+  wrong_source <- resolved
+  wrong_source$blocks$block_b$unit_map[[2L]]$source_sample_ids <-
+    c("s1-baseline", "s1-followup")
+  error <- testthat::capture_error(triomics_c06_cli_compose_unit_map(
+    wrong_source, ingested, analysis, c("block_a", "block_b"),
+    source_unit_map = resolved$blocks$block_a$unit_map
+  ))
+  testthat::expect_identical(error$code, "C_SCORE_LINEAGE_INVALID")
+})
+
+testthat::test_that("trajectory C units retain source-time identity without inventing visits", {
+  metadata <- data.frame(
+    sample_id = c("sample-a", "sample-b"), subject = c("subject-a", "subject-a"),
+    time = c(0, 2), stringsAsFactors = FALSE
+  )
+  matrix_a <- matrix(c(1, 3), nrow = 1L, dimnames = list("feature", c("sample-b", "sample-a")))
+  matrix_b <- matrix(c(4, 2), nrow = 1L, dimnames = list("feature", c("sample-a", "sample-b")))
+  resolved <- list(blocks = list(
+    block_a = list(assay = matrix_a, sample_ids = colnames(matrix_a)),
+    block_b = list(assay = matrix_b, sample_ids = colnames(matrix_b))
+  ))
+  source_map <- data.frame(
+    unit_id = c("sample-a", "sample-b"),
+    representation_id = rep("subject_centered", 2L),
+    subject_id = rep("subject-a", 2L), visit_id = rep(NA_character_, 2L),
+    condition = c("0", "2"), eligible = rep(TRUE, 2L),
+    time = c(0, 2), time_unit = rep("day", 2L), time_origin = rep("0", 2L),
+    exclusion_reason = rep(NA_character_, 2L),
+    source_sample_ids = I(list("sample-a", "sample-b")),
+    represented_blocks = I(rep(list(c("block_a", "block_b")), 2L)),
+    stringsAsFactors = FALSE
+  )
+  ingested <- list(sample_metadata = metadata, study_id = "trajectory-map-study")
+  analysis <- list(
+    analysis_id = "trajectory-map-analysis", preparation_context_id = "trajectory-map-prep",
+    design = list(
+      representation = "subject_centered", subject_id = "subject", condition = "time",
+      time_column = "time", time_unit = "day", time_origin = "0", visit_column = NULL
+    )
+  )
+  before <- resolved$blocks
+
+  composed <- triomics_c06_cli_compose_unit_map(
+    resolved, ingested, analysis, c("block_a", "block_b"), source_map
+  )
+
+  testthat::expect_identical(composed$unit_ids, c("sample-a", "sample-b"))
+  testthat::expect_true(all(vapply(composed$unit_map, function(record) {
+    identical(record$unit_type, "sample") && is.null(record$visit_id)
+  }, logical(1L))))
+  testthat::expect_identical(unname(vapply(composed$unit_map, `[[`, numeric(1L), "time")), c(0, 2))
+  testthat::expect_identical(resolved$blocks, before)
+
+  declared_visit <- analysis
+  declared_visit$design$visit_column <- "visit"
+  ingested$sample_metadata$visit <- c("v0", "v2")
+  source_map$visit_id <- c("v0", "v2")
+  with_visit <- triomics_c06_cli_compose_unit_map(
+    resolved, ingested, declared_visit, c("block_a", "block_b"), source_map
+  )
+  testthat::expect_true(all(vapply(with_visit$unit_map, function(record) {
+    identical(record$unit_type, "visit_level") && nzchar(record$visit_id)
+  }, logical(1L))))
+
+  wrong_visit <- source_map
+  wrong_visit$visit_id <- c("wrong-v0", "v2")
+  error <- testthat::capture_error(triomics_c06_cli_compose_unit_map(
+    resolved, ingested, declared_visit, c("block_a", "block_b"), wrong_visit
+  ))
+  testthat::expect_identical(error$code, "C_SCORE_LINEAGE_INVALID")
+
+  wrong_time <- source_map
+  wrong_time$time[[1L]] <- 3
+  error <- testthat::capture_error(triomics_c06_cli_compose_unit_map(
+    resolved, ingested, analysis, c("block_a", "block_b"), wrong_time
+  ))
+  testthat::expect_identical(error$code, "C_SCORE_LINEAGE_INVALID")
+
+  wrong_time_unit <- source_map
+  wrong_time_unit$time_unit[[1L]] <- "hour"
+  error <- testthat::capture_error(triomics_c06_cli_compose_unit_map(
+    resolved, ingested, analysis, c("block_a", "block_b"), wrong_time_unit
+  ))
+  testthat::expect_identical(error$code, "C_SCORE_LINEAGE_INVALID")
+
+  wrong_origin <- source_map
+  wrong_origin$time_origin[[1L]] <- "1"
+  error <- testthat::capture_error(triomics_c06_cli_compose_unit_map(
+    resolved, ingested, analysis, c("block_a", "block_b"), wrong_origin
+  ))
+  testthat::expect_identical(error$code, "C_SCORE_LINEAGE_INVALID")
+
+  wrong_subject <- source_map
+  wrong_subject$subject_id[[1L]] <- "other-subject"
+  error <- testthat::capture_error(triomics_c06_cli_compose_unit_map(
+    resolved, ingested, analysis, c("block_a", "block_b"), wrong_subject
+  ))
+  testthat::expect_identical(error$code, "C_SCORE_LINEAGE_INVALID")
 })
 
 testthat::test_that("C-06 validates same-root B identities and cleans failed D publication", {

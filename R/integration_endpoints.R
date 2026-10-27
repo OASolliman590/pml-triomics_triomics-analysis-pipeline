@@ -165,9 +165,37 @@ triomics_c08_validate_unit_map <- function(unit_map, score_unit_ids, context) {
     is_excluded <- identical(record$eligibility, "excluded")
     weights <- record$visit_weights
     if (unit_type %in% c("sample", "visit_level")) {
-      expected_representation <- "levels"
+      trajectory_unit <- identical(unit_representation, "subject_centered")
+      expected_representation <- if (trajectory_unit) "subject_centered" else "levels"
       if (length(source_ids) != 1L || !is.null(weights)) {
         triomics_c08_abort("C_SCORE_LINEAGE_INVALID", "Sample and visit-level units require one source sample and no derived visit weights.", "unit_map.source_sample_ids")
+      }
+      if (trajectory_unit) {
+        time <- record$time
+        time_unit <- record$time_unit
+        time_origin <- record$time_origin
+        visit_id <- record$visit_id
+        valid_origin <- (is.character(time_origin) && length(time_origin) == 1L &&
+                         !is.na(time_origin) && nzchar(trimws(time_origin))) ||
+          (is.numeric(time_origin) && length(time_origin) == 1L &&
+           !is.na(time_origin) && is.finite(time_origin))
+        if (!is.character(subject_id) || length(subject_id) != 1L ||
+            is.na(subject_id) || !nzchar(trimws(subject_id)) ||
+            !is.numeric(time) || length(time) != 1L || is.na(time) || !is.finite(time) ||
+            !is.character(time_unit) || length(time_unit) != 1L || is.na(time_unit) ||
+            !nzchar(trimws(time_unit)) || !valid_origin ||
+            (unit_type == "visit_level" &&
+             (!is.character(visit_id) || length(visit_id) != 1L || is.na(visit_id) ||
+              !nzchar(trimws(visit_id)))) ||
+            (!is.null(visit_id) && length(visit_id) &&
+             (!is.character(visit_id) || length(visit_id) != 1L || is.na(visit_id) ||
+              !nzchar(trimws(visit_id))))) {
+          triomics_c08_abort(
+            "C_SCORE_LINEAGE_INVALID",
+            "Subject-centered units require subject, finite time, time unit, time origin, and any declared visit identity.",
+            "unit_map.time"
+          )
+        }
       }
     } else if (identical(unit_type, "subject_mean")) {
       expected_representation <- "mean"
@@ -188,6 +216,11 @@ triomics_c08_validate_unit_map <- function(unit_map, score_unit_ids, context) {
           anyDuplicated(names(weights))) {
         triomics_c08_abort("C_SCORE_LINEAGE_INVALID", "Subject deltas require two source samples and named reference/target weights of -1 and +1.", "unit_map.visit_weights")
       }
+      # Preserve the visit names through JSON artifact serialization; an unnamed
+      # numeric array would discard which source visit carries each sign.
+      records[[record_index]]$visit_weights <- stats::setNames(
+        as.list(as.numeric(weights)), names(weights)
+      )
     }
     if (!identical(unit_representation, expected_representation)) {
       triomics_c08_abort("C_SCORE_LINEAGE_INVALID", "Unit type and representation id disagree.", "unit_map.representation_id")
@@ -214,6 +247,12 @@ triomics_c08_validate_unit_map <- function(unit_map, score_unit_ids, context) {
   result$visit_weights <- I(lapply(records, function(record) record$visit_weights))
   result$eligibility <- I(lapply(records, function(record) record$eligibility))
   result$exclusion_reason <- I(lapply(records, function(record) record$exclusion_reason))
+  for (field in c("visit_id", "condition", "time", "time_unit", "time_origin",
+                  "represented_blocks", "block_eligibility", "block_source_sample_ids")) {
+    if (any(vapply(records, function(record) field %in% names(record), logical(1L)))) {
+      result[[field]] <- I(lapply(records, function(record) record[[field]]))
+    }
+  }
   for (field in c("study_id", "analysis_id", "preparation_context_id")) {
     result[[field]] <- I(lapply(records, function(record) record[[field]]))
   }
@@ -521,7 +560,9 @@ triomics_integration_score_endpoints <- function(result, backend_fit, context) {
       if (length(score_unit_map$visit_weights[[i]])) sample$visit_weights <- score_unit_map$visit_weights[[i]]
       if (length(score_unit_map$eligibility[[i]])) sample$eligibility <- score_unit_map$eligibility[[i]]
       if (length(score_unit_map$exclusion_reason[[i]])) sample$exclusion_reason <- score_unit_map$exclusion_reason[[i]]
-      for (field in c("study_id", "analysis_id", "preparation_context_id")) {
+      for (field in c("study_id", "analysis_id", "preparation_context_id", "visit_id",
+                      "condition", "time", "time_unit", "time_origin")) {
+        if (!field %in% names(score_unit_map)) next
         value <- score_unit_map[[field]][[i]]
         if (length(value)) sample[[field]] <- value
       }

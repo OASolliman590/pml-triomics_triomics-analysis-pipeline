@@ -880,6 +880,54 @@ d_t01_cli_run <- function(config_path, stage, output_root) {
   list(status = as.integer(status), output = output)
 }
 
+testthat::test_that("D-T01 refuses stale paired signs and preserves the old pointer", {
+  roots_path <- "/tmp/triomics-m7-017-luna/native-roots.txt"
+  testthat::expect_true(file.exists(roots_path))
+  if (!file.exists(roots_path)) return(invisible(NULL))
+  roots <- utils::read.delim(roots_path, header = FALSE, sep = "\t",
+                             stringsAsFactors = FALSE, quote = "")
+  paired <- roots[roots[[1L]] == "paired", , drop = FALSE]
+  testthat::expect_gt(nrow(paired), 0L)
+  if (!nrow(paired)) return(invisible(NULL))
+  fixture_root <- paired[[2L]][[nrow(paired)]]
+  source_root <- paired[[3L]][[nrow(paired)]]
+  source_pointer <- file.path(source_root, "registries", "current-D.json")
+  testthat::expect_true(file.exists(source_pointer))
+  if (!file.exists(source_pointer)) return(invisible(NULL))
+
+  clone_root <- tempfile("d-t01-paired-sign-stale-", tmpdir = "/private/tmp")
+  dir.create(clone_root, recursive = TRUE, showWarnings = FALSE)
+  testthat::expect_true(all(file.copy(
+    list.files(source_root, all.files = TRUE, no.. = TRUE, full.names = TRUE),
+    clone_root, recursive = TRUE
+  )))
+  on.exit(unlink(clone_root, recursive = TRUE, force = TRUE), add = TRUE)
+  pointer_path <- file.path(clone_root, "registries", "current-D.json")
+  pointer_hash <- triomics_sha256(pointer_path)
+
+  config_path <- file.path(fixture_root, "tickets", "D-T01.yaml")
+  config_text <- paste(readLines(config_path, warn = FALSE), collapse = "\n")
+  reversed <- sub('"reference_level": "baseline"',
+                  '"reference_level": "followup"', config_text, fixed = TRUE)
+  reversed <- sub('"target_level": "followup"',
+                  '"target_level": "baseline"', reversed, fixed = TRUE)
+  reversed <- sub('"reference_visit": "baseline"',
+                  '"reference_visit": "followup"', reversed, fixed = TRUE)
+  reversed <- sub('"target_visit": "followup"',
+                  '"target_visit": "baseline"', reversed, fixed = TRUE)
+  stale_config <- tempfile("d-t01-paired-sign-stale-", tmpdir = dirname(config_path),
+                           fileext = ".yaml")
+  on.exit(unlink(stale_config, force = TRUE), add = TRUE)
+  writeLines(reversed, stale_config, useBytes = TRUE)
+
+  stale_run <- d_t01_cli_run(stale_config, "D", clone_root)
+  testthat::expect_false(identical(stale_run$status, 0L),
+                         info = paste(stale_run$output, collapse = "\n"))
+  testthat::expect_true(any(grepl("D_LINEAGE_MISMATCH", stale_run$output, fixed = TRUE)),
+                        info = paste(stale_run$output, collapse = "\n"))
+  testthat::expect_identical(triomics_sha256(pointer_path), pointer_hash)
+})
+
 testthat::test_that("D-T01 publishes a complete generation from actual native B and C CLI handoffs", {
   config <- triomics_test_resource("examples", "tickets", "D-T01.yaml")
   output_root <- tempfile("d-t01-native-cli-", tmpdir = "/private/tmp")

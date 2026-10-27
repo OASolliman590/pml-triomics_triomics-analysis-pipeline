@@ -1021,16 +1021,22 @@ triomics_c06_validate_b_predecessors <- function(output_root, handoff, config_sh
   }, character(1L)) else character()
   actual_source_ids <- vapply(source_entities, `[[`, character(1L), "entity_id")
   normalized_metadata_entities <- triomics_b07_provenance_entities(profile, "normalized_metadata")
+  analysis_unit_map_entities <- triomics_b07_provenance_entities(profile, "analysis_unit_map")
   current_metadata_digest <- triomics_b07_prov_value_sha256(c_input_identity$normalized_metadata)
+  current_unit_map_digest <- triomics_b07_prov_value_sha256(c_input_identity$analysis_unit_map)
   if (!length(expected_source_ids) || any(!vapply(source_inputs, function(input) {
     is.list(input) && triomics_c06_nonempty_string(input$artifact_id) &&
       triomics_sha256_text(input$sha256)
   }, logical(1L))) || any(!expected_source_ids %in% actual_source_ids) ||
       length(source_entities) != as.integer(c_input_identity$expected_source_entity_count) ||
       length(normalized_metadata_entities) != 1L ||
-      !identical(as.character(normalized_metadata_entities[[1L]]$digest), current_metadata_digest)) {
+      !identical(as.character(normalized_metadata_entities[[1L]]$digest), current_metadata_digest) ||
+      length(analysis_unit_map_entities) != 1L ||
+      !triomics_sha256_text(c_input_identity$analysis_unit_map_sha256) ||
+      !identical(as.character(c_input_identity$analysis_unit_map_sha256), current_unit_map_digest) ||
+      !identical(as.character(analysis_unit_map_entities[[1L]]$digest), current_unit_map_digest)) {
     fail("C_EXPORT_IDENTITY_MISMATCH",
-         "The already-ingested C block sources and normalized metadata do not match the validated B source identities.")
+         "C source metadata and AnalysisUnitMap do not match the validated native B identities.")
   }
   expected_blocks <- c_input_identity$blocks
   source_blocks <- c_input_identity$source_blocks
@@ -1110,6 +1116,7 @@ triomics_c06_validate_b_predecessors <- function(output_root, handoff, config_sh
     profile_envelope = provenance_envelope,
     predecessor_hashes = stats::setNames(vapply(paths, triomics_sha256, character(1L)), required_names),
     source_entities = source_entities,
+    analysis_unit_map_entity = analysis_unit_map_entities[[1L]],
     baseline_entities = Filter(function(entity) entity$scientific_role %in% c(
       "normalized_metadata", "feature_registry", "analysis_unit_map", "resolved_analysis",
       "represented_matrix", "preprocessing_state"
