@@ -1,0 +1,10 @@
+Candidate: ac98db3191bf8a5854144f5e017329038e9170e4
+Command: Rscript --vanilla /tmp/triomics-m7-016/sol-probe-native-ancestry.R
+Exit: 0
+Captured tool output:
+baseline=evidence_bundle
+native_parent_is_symlink=TRUE
+read_result=evidence_bundle
+executor_result=complete
+probe_root=/private/tmp/sol-native-path-5935ab28d80
+outside=/private/tmp/sol-outside-native-59355067d3fc

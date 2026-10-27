@@ -37,24 +37,58 @@
   "active_workers": [
     {
       "agent": "/root/m7_016_luna",
-      "role": "implementation",
+      "role": "implementation_repair",
+      "candidate": "ac98db3",
+      "repairs_used": 1,
       "model_requested": "gpt-6-luna",
       "effort_requested": "max",
-      "effective_settings_exposed": false,
-      "base": "92351d6",
-      "worktree": "/Users/megastore/.codex/worktrees/m7-016-d-publication/PML MultiOmics Analysis Pipeline",
-      "attempt": 1,
-      "repairs_used": 0
+      "effective_settings_exposed": false
     }
   ],
   "orchestration_control": {
-    "status": "m7_016_luna_running",
+    "status": "m7_016_repair1_running",
     "last_reconciled": "2026-10-27",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Astra scope PASS92351d6; one Luna-max initial attempt running in new isolated ten-file worktree. Sol review and independent B/C/D gates then full/archive and fresh final Astra required. M7/G7 closed."
+    "disposition": "Sol-high task review changesrequired4Important distinct findings; parent independently reproduced3behavior defects. Candidateac98db3 not integrated. Focusedrun interrupted as superseded exit143 with no GREEN. Same Luna repair1/2 active; no test process active. M7/G7closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_016_repair1_dispatch",
+      "date": "2026-10-27",
+      "candidate": "ac98db3",
+      "review": "/tmp/triomics-m7-016/sol-review.md",
+      "defects": [
+        "C native-sidecar symlink ancestry",
+        "exported API proof bypass",
+        "generation semantic manifest conflicts",
+        "missing D-boundary acceptance evidence"
+      ],
+      "parent_reproduced": true,
+      "interrupted_gate_session": 49026,
+      "interrupted_gate_exit": 143,
+      "repairs_used": 1
+    },
+    {
+      "date": "2026-10-27",
+      "event": "m7_016_candidate_frozen",
+      "candidate": "ac98db3191bf8a5854144f5e017329038e9170e4",
+      "worker_report": "/tmp/triomics-m7-016-luna/report.md",
+      "reviewer": "/root/m7_016_sol_review"
+    },
+    {
+      "date": "2026-10-27",
+      "event": "m7_016_worker_red",
+      "worker": "/root/m7_016_luna",
+      "reported_counts": {
+        "fail": 1,
+        "warn": 1,
+        "skip": 0,
+        "pass": 133
+      },
+      "evidence": "/tmp/triomics-m7-016-luna/red-D-T01.log",
+      "disposition": "Native B/C CLIs succeed; D exit3 A_STAGE_UNAVAILABLE is intended RED. Initial implementation ongoing, no repair used."
+    },
     {
       "event": "m7_016_spec_pass_luna_dispatch",
       "date": "2026-10-27",

@@ -1,0 +1,6 @@
+baseline=evidence_bundle
+native_parent_is_symlink=TRUE
+read_result=evidence_bundle
+executor_result=complete
+probe_root=/private/tmp/sol-native-path-5d2c1ec3ead
+outside=/private/tmp/sol-outside-native-5d2c3d06d0d7
