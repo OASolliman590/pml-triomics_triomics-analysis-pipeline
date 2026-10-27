@@ -51,9 +51,18 @@
     "last_reconciled": "2026-10-27",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Scope Astra PASS8c68b68; fresh Luna at025bc69 preservingcfe9160. No integration/M7/G7release; actual trajectory representation required."
+    "disposition": "Corrected scope5eaf18c focused Astra PASS; worktreebase627c7da. One scope rereview consumed. Fresh Luna initial attempt active; no product integration."
   },
   "orchestration_events": [
+    {
+      "event": "m7_017_scope_rereview_pass",
+      "date": "2026-10-27",
+      "scope_commit": "5eaf18c",
+      "worktree_base": "627c7da",
+      "scope_rereviews_used": 1,
+      "added_file": "R/integration_endpoints.R",
+      "verdict": "pass"
+    },
     {
       "event": "m7_017_implementation_dispatch",
       "scope_commit": "8c68b68",

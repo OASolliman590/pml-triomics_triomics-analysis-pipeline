@@ -2,15 +2,17 @@
 
 ## Current M7-017 checkpoint — implementation active
 
-User authorizes C paired/trajectory unit-map repair. Scope8c68b68 passed fresh
+User authorizes C paired/trajectory unit-map repair. Scope8c68b68 and focused endpoint-map correction5eaf18c passed fresh
 Astra-low; runtime accepted requested model/effort but independent effective
 attestation unavailable. Fresh Luna-max /root/m7_017_luna runs in
 `/Users/megastore/.codex/worktrees/m7-017-c-unit-map/PML MultiOmics Analysis Pipeline`
-at base025bc69 (preserved cfe9160 plus scope). No old worker restarted.
+at base627c7da (preserved cfe9160 plus corrected scope). No old worker restarted.
 Scope/audit: change-records/M7-017-c-unit-map-composition.md and
 reviews/2026-10-27-m7-017-scope-audit.md. No acceptance or integration.
 Trajectory map is not proof of centering: worker must prove actual representation.
-Spec validator remains unavailable due missing jsonschema/PyYAML.
+Spec validator restored with cached dependencies in /private/tmp/triomics-m7-017-spec-deps;
+now fails pre-existing AGENTS.md frozen hash (reporting/control addition b585b26).
+Do not edit frozen manifest; disclose exact result in final audit.
 Literal resume: reconcile active Luna result, review/freeze, bounded repairs
 if needed, independently verify B/C/D plus focused/full/archive gates, then
 fresh Astra before M7/G7 release. Do not restart M7-016 or infer its acceptance.
