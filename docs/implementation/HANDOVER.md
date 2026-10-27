@@ -1,5 +1,24 @@
 # Implementation handover
 
+## Current M7-015 checkpoint — shared integration seam blocked
+
+2026-10-27: Omar authorized D verification/publication, phase3, within six D-owned
+files and explicitly required stopping for shared-file needs. Record frozen at
+`6fe5f1d`; one fresh Astra-low audit approves the blocker disposition only.
+The public D stage is disabled in R/stage_registry.R and has no R/cli.R executor.
+Sol's D command exits3 A_STAGE_UNAVAILABLE and creates no output root. The
+accepted M7-002 gate requires public B/C/D CLI read-back; an internal-function
+smoke cannot substitute. No Luna dispatched, product edits, suite reruns or D
+artifacts. Receipt: reviews/2026-10-27-m7-015-d-publication-preflight.md.
+
+Next requires a separately scoped shared executor/registration integration
+record before the six-file D implementation can meet its full gate. Do not
+reimport rejected shared candidates or bypass the stage guard. M7-014 remains
+verified/integrated; M7-011/012/013 incomplete. C06acceptedfalse, C07not_run,
+C09unqualified; M7/G7 closed and D downstream closed. No active worker/process.
+Literal resume: read the M7-015 receipt, resolve its shared integration scope,
+then resume the legal D phase without repeating producer work or this audit.
+
 ## Current M7-014 checkpoint — verified and integrated; milestone closed
 
 The C publication seam is integrated at `359a1d0`, with all eight candidate

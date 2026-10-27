@@ -36,13 +36,33 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_015_preimplementation_audit",
+    "status": "m7_015_blocked_shared_integration_closed",
     "last_reconciled": "2026-10-27",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "User authorized phase3 D verification/publication within six D-owned files. Preflight finds D execution disabled and no CLI D branch; freeze M7-015 for fresh Astra-low audit of contract and shared-file stop boundary. No product edit or Luna dispatch. M7/G7 closed."
+    "disposition": "Fresh Astra-low at6fe5f1d approves shared-seam stop only: D stage disabled/no CLI executor; accepted M7-002 requires public B/C/D CLI. Sol CLI exit3 A_STAGE_UNAVAILABLE no output. No Luna/product edits/suite reruns/D artifacts. Shared executor/registration scope required next. M7/G7 closed; C06acceptedfalse C07not_run C09unqualified; no active worker."
   },
   "orchestration_events": [
+    {
+      "date": "2026-10-27",
+      "event": "m7_015_audited_shared_seam_stop",
+      "audit_snapshot": "6fe5f1d3641446e130b2cd49bc7b7f8a9b6c66ca",
+      "auditor": "/root/m7_015_astra_preflight",
+      "verdict": "audit_pass yes for blocker disposition only; implementation infeasible within allowlist",
+      "implementation_attempts": 0,
+      "receipt": "docs/implementation/reviews/2026-10-27-m7-015-d-publication-preflight.md",
+      "cli_exit": 3,
+      "new_test_counts": null,
+      "new_D_artifacts": false
+    },
+    {
+      "date": "2026-10-27",
+      "event": "m7_015_phase_record",
+      "base_commit": "4d40f3c",
+      "record": "docs/implementation/change-records/M7-015-d-verification-publication.md",
+      "status": "audit_pending",
+      "implementation_attempts": 0
+    },
     {
       "event": "m7_014_verified_integrated_closed",
       "date": "2026-10-26",
@@ -124,38 +144,9 @@
       "review_ref": "docs/implementation/reviews/2026-10-26-m7-012-preflight-blocker.md",
       "allowed_next_transition": "Stop; new explicitly bounded caller-contract decision required. No second implementation repair. M7/G7 and Stage D closed."
     },
-    {
-      "event": "m7_012_luna_dispatched",
-      "date": "2026-10-26",
-      "worker": "/root/m7_012_luna",
-      "model": "gpt-6-luna",
-      "effort": "max",
-      "base": "4bdda740dd1ad558cccc070635ad5836fa4f9231",
-      "worktree": "/Users/megastore/.codex/worktrees/m7-012-c06-predecessor/PML MultiOmics Analysis Pipeline",
-      "commit_permission": false,
-      "allowed_next_transition": "Sol inspects returned diff. Stop on scope/real-B binding blocker; otherwise independently run C06, C08-shared, B-T07 and fresh B-to-C command/readback gates before integration."
-    },
-    {
-      "event": "m7_012_focused_astra_pass",
-      "date": "2026-10-26",
-      "snapshot": "e37f334b5208b52c00144b4758a9e060663dd76c",
-      "record_sha256": "6cd3447e918272f9cde9dbaabceb6fa829fda4b3c41044779aea0bc72944c0e7",
-      "reviewer": "/root/m7_012_astra_audit",
-      "verdict": "pass; audit_pass yes; Critical 0 Important 0 Minor 0; stop disposition approved, not implementation feasibility",
-      "review_ref": "docs/implementation/reviews/2026-10-26-m7-012-astra-audit.md",
-      "allowed_next_transition": "One fresh Luna-max no-commit worker in a new worktree; six-file allowlist; assess C08 compatibility before editing; stop if scope insufficient. No second implementation repair."
-    },
-    {
-      "event": "m7_012_frozen_audit_dispatched",
-      "date": "2026-10-26",
-      "snapshot": "db96c5ed5f1b33b822aa4acadc03b269cadb386a",
-      "record_sha256": "f80b723984094e4d5f0986e304b536946792cde1cfb5a3b6d588ad5781f64ebb",
-      "reviewer": "/root/m7_012_astra_audit",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "allowed_next_transition": "Audit receipt first; one documentation repair/rereview if required; one fresh no-commit Luna-max worker only after audit_pass yes.",
-      "disposition": "No product edit; M7/G7 and Stage D closed."
-    },
+    {"event":"m7_012_luna_dispatched","date":"2026-10-26","worker":"/root/m7_012_luna","model":"gpt-6-luna","effort":"max","base":"4bdda740dd1ad558cccc070635ad5836fa4f9231","worktree":"/Users/megastore/.codex/worktrees/m7-012-c06-predecessor/PML MultiOmics Analysis Pipeline","commit_permission":false,"allowed_next_transition":"Sol inspects returned diff. Stop on scope/real-B binding blocker; otherwise independently run C06, C08-shared, B-T07 and fresh B-to-C command/readback gates before integration."},
+    {"event":"m7_012_focused_astra_pass","date":"2026-10-26","snapshot":"e37f334b5208b52c00144b4758a9e060663dd76c","record_sha256":"6cd3447e918272f9cde9dbaabceb6fa829fda4b3c41044779aea0bc72944c0e7","reviewer":"/root/m7_012_astra_audit","verdict":"pass; audit_pass yes; Critical 0 Important 0 Minor 0; stop disposition approved, not implementation feasibility","review_ref":"docs/implementation/reviews/2026-10-26-m7-012-astra-audit.md","allowed_next_transition":"One fresh Luna-max no-commit worker in a new worktree; six-file allowlist; assess C08 compatibility before editing; stop if scope insufficient. No second implementation repair."},
+    {"event":"m7_012_frozen_audit_dispatched","date":"2026-10-26","snapshot":"db96c5ed5f1b33b822aa4acadc03b269cadb386a","record_sha256":"f80b723984094e4d5f0986e304b536946792cde1cfb5a3b6d588ad5781f64ebb","reviewer":"/root/m7_012_astra_audit","requested_model":"gpt-6-astra","requested_effort":"low","allowed_next_transition":"Audit receipt first; one documentation repair/rereview if required; one fresh no-commit Luna-max worker only after audit_pass yes.","disposition":"No product edit; M7/G7 and Stage D closed."},
     {
       "event": "m7_011_blocker_reconciled_m7_012_authorized",
       "date": "2026-10-26",
@@ -186,11 +177,7 @@
       "snapshot": "721153c",
       "verdict": "pass; Critical 0, Important 0, Minor 0; audit_pass yes",
       "review_ref": "docs/implementation/reviews/2026-10-26-m7-011-astra-audit.md",
-      "allowlist": [
-        "R/export_c.R",
-        "tests/testthat/test-C-06.R",
-        "docs/implementation/registrations/C-06.json"
-      ],
+      "allowlist": ["R/export_c.R", "tests/testthat/test-C-06.R", "docs/implementation/registrations/C-06.json"],
       "allowed_next_transition": "Dispatch one fresh isolated Luna-max implementer on the allowlist. Do not integrate before Standards and Spec review.",
       "disposition": "No D-T01 work, M7/G7 release, private-data access, or push."
     },
@@ -245,12 +232,7 @@
       "event": "m7_009_integrated_full_source_gate_failed_b_t04_producer_context",
       "date": "2026-10-25",
       "candidate": "2eb483ac7bcf5aa1919b8d72b9b8c8b239235861",
-      "integration_commits": [
-        "0fa320c",
-        "fced7eb",
-        "5ca5012",
-        "0f139a4"
-      ],
+      "integration_commits": ["0fa320c", "fced7eb", "5ca5012", "0f139a4"],
       "integrated_snapshot": "0f139a49fb5e6471a6529c830e27bd7616431e34",
       "blob_identity": "R/export_b.R, R/results_b.R, tests/testthat/test-B-T07.R and B-T07 registration equal candidate 2eb483a exactly",
       "focused_gate": "B-T07 PASS 315; focused B-T02 PASS 266; B-T03 PASS 286; A-T08 PASS 284; zero failures, test warnings or skips",
@@ -298,11 +280,7 @@
       "candidate": "8745f22a2fddaef9a98a49ce646efe57b1f40245",
       "verdict": "pass; Critical 0, Important 0, Minor 0; audit_pass yes",
       "review_ref": "docs/implementation/reviews/2026-10-25-m7-009-astra-final-audit.md",
-      "allowlist": [
-        "R/export_b.R",
-        "tests/testthat/test-B-T07.R",
-        "docs/implementation/registrations/B-T07.json"
-      ],
+      "allowlist": ["R/export_b.R", "tests/testthat/test-B-T07.R", "docs/implementation/registrations/B-T07.json"],
       "allowed_next_transition": "Dispatch one fresh bounded implementer; require public-seam RED/GREEN, exact B-T07, affected B-T02/B-T03 and Stage-A non-regression evidence, then independent review before any integration.",
       "disposition": "No integration, private-data access, C-06 provenance, migration, M7/G7 release, or Stage-D work."
     },
@@ -324,11 +302,7 @@
       "reviewer": "/root/m7_009_astra_audit",
       "snapshot": "b4d43c5",
       "verdict": "changes_required; Critical 0, Important 2, Minor 1; audit_pass no",
-      "findings": [
-        "overlapping hash and evidence failures lacked precedence",
-        "physical envelope presence could weaken the post-write full-validation guard",
-        "Stage A filesystem behavior was overstated"
-      ],
+      "findings": ["overlapping hash and evidence failures lacked precedence", "physical envelope presence could weaken the post-write full-validation guard", "Stage A filesystem behavior was overstated"],
       "clarification": "Define ordered refusal precedence; preserve hash_mismatch for a readable envelope binding different payload bytes; track physical presence, base-envelope validity and required-evidence completeness separately; require both resume and post-write finalization regressions; keep scope bounded to B-T07.",
       "review_ref": "docs/implementation/reviews/2026-10-25-m7-009-astra-audit.md",
       "allowed_next_transition": "Commit the clarified contract and dispatch one fresh read-only focused re-audit; no implementation before audit_pass yes.",
@@ -349,11 +323,7 @@
       "event": "m7_008_final_repair_red_packet_blocked",
       "date": "2026-10-24",
       "worker": "/root/m7_008_bt07_provenance_luna",
-      "candidate_commits": [
-        "62f33c48f80b525b6a434e8981ed4ddf7610d9eb",
-        "39b49f7ef354f3a1f16c82978bec9dd622dd22c7",
-        "8745f22a2fddaef9a98a49ce646efe57b1f40245"
-      ],
+      "candidate_commits": ["62f33c48f80b525b6a434e8981ed4ddf7610d9eb", "39b49f7ef354f3a1f16c82978bec9dd622dd22c7", "8745f22a2fddaef9a98a49ce646efe57b1f40245"],
       "focused_regression": "FAIL 0, WARN 0, SKIP 0, PASS 1",
       "b_t07": "FAIL 1, WARN 0, SKIP 0, PASS 261",
       "b_t02_identity_cli": "two public CLI runs, both exit 0",
@@ -385,10 +355,7 @@
       "candidate_commit": "62f33c48f80b525b6a434e8981ed4ddf7610d9eb",
       "red": "pre-implementation B-T07: FAIL 2, WARN 8, SKIP 0, PASS 218; native provenance payload and envelope absent",
       "post_implementation": "B-T07 FAIL 9, WARN 5, SKIP 0, PASS 224; B-T01 FAIL 3, WARN 3, SKIP 0, PASS 574; B-T03 FAIL 0, WARN 0, SKIP 0, PASS 286",
-      "product_root_causes": [
-        "strict matrix-key equality included irrelevant names attributes despite identical ordered values",
-        "retained list-form analysis unit map was passed through although exporter requires normalized keyed records"
-      ],
+      "product_root_causes": ["strict matrix-key equality included irrelevant names attributes despite identical ordered values", "retained list-form analysis unit map was passed through although exporter requires normalized keyed records"],
       "environment_diagnostic": "B-T01 test-B-T01.R:594 cannot write a temporary fixture under inst/examples/tickets in the managed worktree; not a product repair target",
       "repair_scope": "Only normalize exact retained matrix/unit identities and their dependent expectations; same four-file allowlist.",
       "allowed_next_transition": "Repair-1 focused GREEN and clean commit -> Sol inspection; remaining product failure -> stop before repair 2.",
@@ -402,12 +369,7 @@
       "requested_effort": "max",
       "base_commit": "0d96c57",
       "worktree": "/Users/megastore/.codex/worktrees/m7-008-bt07-provenance/PML MultiOmics Analysis Pipeline",
-      "allowlist": [
-        "R/results_b.R",
-        "R/export_b.R",
-        "tests/testthat/test-B-T07.R",
-        "docs/implementation/registrations/B-T07.json"
-      ],
+      "allowlist": ["R/results_b.R", "R/export_b.R", "tests/testthat/test-B-T07.R", "docs/implementation/registrations/B-T07.json"],
       "allowed_next_transition": "Focused GREEN and a clean commit -> Sol inspection -> parallel Standards and Spec review.",
       "disposition": "No full suite, private data, schema/contract edit, C/D change, shared registration, acceptance, gate release, or Stage-D work in the worker turn."
     },
@@ -419,12 +381,7 @@
       "rejected_route": "Deterministic migration is ineligible because the historical B handoff lacks complete immutable proof for required metadata, unit/design, preprocessing, and method-state roles.",
       "fixed_point": "3c11c9c735fc8c86397d9680c10cb147cd2da00f",
       "change_record": "docs/implementation/change-records/M7-008-b-t07-native-provenance-producer-seam.md",
-      "allowlist": [
-        "R/results_b.R",
-        "R/export_b.R",
-        "tests/testthat/test-B-T07.R",
-        "docs/implementation/registrations/B-T07.json"
-      ],
+      "allowlist": ["R/results_b.R", "R/export_b.R", "tests/testthat/test-B-T07.R", "docs/implementation/registrations/B-T07.json"],
       "review_route": "public CLI and post-stage RED/GREEN -> two-axis Sol-high review -> serial integration -> focused B tests -> one full source suite",
       "allowed_next_transition": "Create one fresh managed worktree and dispatch one fresh Luna-max implementer.",
       "disposition": "No private data, migration, C/D edit, shared registration, acceptance, gate release, or Stage-D work."
@@ -445,14 +402,8 @@
     {
       "event": "m7_007_integrated_verified_astra_audit_dispatched",
       "date": "2026-10-24",
-      "candidate_commits": [
-        "0b1fcbdbb321a8e6caa002d19e769d693d53d2bd",
-        "b34df9f5d93ca60d74f690a2e86e5f416547fec6"
-      ],
-      "integration_commits": [
-        "ea1407b",
-        "b29c3aa"
-      ],
+      "candidate_commits": ["0b1fcbdbb321a8e6caa002d19e769d693d53d2bd", "b34df9f5d93ca60d74f690a2e86e5f416547fec6"],
+      "integration_commits": ["ea1407b", "b29c3aa"],
       "snapshot": "b29c3aa5693b29ac232f26344987877e4e79511d",
       "focused_gate": "exit 0; DONE; zero failures, warnings, or skips",
       "full_source_suite": "exit 0; DONE; failures 0, errors 0, skips 0, warnings 14; summary reporter emitted no numeric PASS total",
@@ -465,10 +416,7 @@
     {
       "event": "m7_007_two_axis_review_passed",
       "date": "2026-10-24",
-      "candidate_commits": [
-        "0b1fcbdbb321a8e6caa002d19e769d693d53d2bd",
-        "b34df9f5d93ca60d74f690a2e86e5f416547fec6"
-      ],
+      "candidate_commits": ["0b1fcbdbb321a8e6caa002d19e769d693d53d2bd", "b34df9f5d93ca60d74f690a2e86e5f416547fec6"],
       "standards": "pass; Critical 0, Important 0, Minor 1 nonblocking duplicated-test-setup smell; ready_to_integrate yes",
       "spec": "pass; Critical 0, Important 0, Minor 0; ready_to_integrate yes",
       "review_ref": "docs/implementation/reviews/2026-10-24-m7-007-two-axis-review.md",
@@ -478,18 +426,12 @@
     {
       "event": "m7_007_candidate_two_axis_review_dispatched",
       "date": "2026-10-24",
-      "candidate_commits": [
-        "0b1fcbdbb321a8e6caa002d19e769d693d53d2bd",
-        "b34df9f5d93ca60d74f690a2e86e5f416547fec6"
-      ],
+      "candidate_commits": ["0b1fcbdbb321a8e6caa002d19e769d693d53d2bd", "b34df9f5d93ca60d74f690a2e86e5f416547fec6"],
       "product_fixed_point": "e4aed594877ef53ace6958d9a757cffb471ba53a",
       "red": "focused M7-003 suite exit 1; one failure, zero errors/warnings/skips; schema-valid escaped-U+001C collision accepted",
       "green": "focused M7-003 suite exit 0; DONE; zero failures/warnings/skips; collision rejects and legal escaped multi-context profile passes",
       "repair_1": "registration-only stale next_gate correction; JSON parse and diff check passed; no product/test rerun",
-      "reviewers": [
-        "/root/m7_007_standards_review",
-        "/root/m7_007_spec_review"
-      ],
+      "reviewers": ["/root/m7_007_standards_review", "/root/m7_007_spec_review"],
       "brief": "docs/implementation/reviews/2026-10-24-m7-007-two-axis-review-brief.md",
       "allowed_next_transition": "Both axes pass -> serial integration, focused Sol verification, and one full source suite; changes_required -> bounded repair or block.",
       "disposition": "Read-only review only; no private data, integration, acceptance, gate release, or Stage-D work."
@@ -503,11 +445,7 @@
       "base_commit": "dfceea7",
       "product_fixed_point": "e4aed594877ef53ace6958d9a757cffb471ba53a",
       "worktree": "/Users/megastore/.codex/worktrees/m7-007-collision-free-context/PML MultiOmics Analysis Pipeline",
-      "allowlist": [
-        "R/provenance_contract.R",
-        "tests/testthat/test-M7-003-provenance-contract.R",
-        "docs/implementation/registrations/M7-003-contract-foundation.json"
-      ],
+      "allowlist": ["R/provenance_contract.R", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
       "allowed_next_transition": "Focused GREEN and a clean commit -> Sol inspection -> parallel Standards and Spec review.",
       "disposition": "No full suite, integration, private data, schema/frozen-spec edit, acceptance, gate release, or Stage-D work in the worker turn."
     },
@@ -518,11 +456,7 @@
       "change_record": "docs/implementation/change-records/M7-007-collision-free-provenance-context-keys.md",
       "product_base": "e4aed594877ef53ace6958d9a757cffb471ba53a",
       "finding": "M7-006-ASTRA-01",
-      "allowlist": [
-        "R/provenance_contract.R",
-        "tests/testthat/test-M7-003-provenance-contract.R",
-        "docs/implementation/registrations/M7-003-contract-foundation.json"
-      ],
+      "allowlist": ["R/provenance_contract.R", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
       "review_route": "public-validator RED/GREEN -> two-axis code review -> serial integration -> focused suite -> one full source suite -> one fresh read-only Astra-low acceptance audit",
       "allowed_next_transition": "Create a fresh managed worktree and dispatch one fresh Luna-max implementer.",
       "disposition": "No scientific-contract/schema change, private data, acceptance, gate release, or downstream Stage-D work."
@@ -533,9 +467,7 @@
       "reviewer": "/root/m7_006_astra_acceptance_audit",
       "snapshot": "e4aed594877ef53ace6958d9a757cffb471ba53a",
       "verdict": "changes_required; Critical 0, Important 1, Minor 0; ready_for_sol_acceptance no",
-      "closed": [
-        "M7-004-ASTRA-02: migration proof requires handoff_payload and complete proof remains valid"
-      ],
+      "closed": ["M7-004-ASTRA-02: migration proof requires handoff_payload and complete proof remains valid"],
       "finding": "M7-006-ASTRA-01: raw U+001C delimiter joining permits collisions between distinct analysis/preparation/representation tuples, so represented/preprocessing context closure remains partially fail-open",
       "review_ref": "docs/implementation/reviews/2026-10-24-m7-006-astra-acceptance-audit.md",
       "allowed_next_transition": "Only Omar's explicit authorization of a new bounded repair record may reopen the context-key defect; require collision RED fixtures, focused GREEN, review, and a fresh immutable acceptance audit.",
@@ -570,17 +502,10 @@
       "date": "2026-10-24",
       "candidate_commit": "5242609518886b26e60ea76863aa9c0badfd360d",
       "fixed_point": "5dcc25f",
-      "allowlist": [
-        "R/provenance_contract.R",
-        "tests/testthat/test-M7-003-provenance-contract.R",
-        "docs/implementation/registrations/M7-003-contract-foundation.json"
-      ],
+      "allowlist": ["R/provenance_contract.R", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
       "red": "context slice: 1 failure, 0 errors after fixture correction; migration slice: 2 failures, 0 errors",
       "green": "focused M7-003 contract suite exit 0; zero failures, warnings, or skips",
-      "reviewers": [
-        "/root/m7_006_standards_review",
-        "/root/m7_006_spec_review"
-      ],
+      "reviewers": ["/root/m7_006_standards_review", "/root/m7_006_spec_review"],
       "brief": "docs/implementation/reviews/2026-10-24-m7-006-two-axis-review-brief.md",
       "allowed_next_transition": "Both axes pass -> serial integration and one full source-suite run; changes_required -> bounded repair or block.",
       "disposition": "Read-only review only; no integration, private data, acceptance, gate release, or Stage-D work."
@@ -594,11 +519,7 @@
       "base_commit": "b306f14",
       "fixed_point": "5dcc25f",
       "worktree": "/Users/megastore/.codex/worktrees/m7-006-provenance-completeness/PML MultiOmics Analysis Pipeline",
-      "allowlist": [
-        "R/provenance_contract.R",
-        "tests/testthat/test-M7-003-provenance-contract.R",
-        "docs/implementation/registrations/M7-003-contract-foundation.json"
-      ],
+      "allowlist": ["R/provenance_contract.R", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
       "allowed_next_transition": "Focused GREEN and clean commit -> Sol inspection -> parallel Standards and Spec review.",
       "disposition": "No full suite, integration, private data, frozen-spec edit, gate release, or Stage-D work in the worker turn."
     },
@@ -609,11 +530,7 @@
       "change_record": "docs/implementation/change-records/M7-006-provenance-completeness-repair.md",
       "fixed_point": "5dcc25f",
       "worker": "pending:/root/m7_006_provenance_luna",
-      "allowlist": [
-        "R/provenance_contract.R",
-        "tests/testthat/test-M7-003-provenance-contract.R",
-        "docs/implementation/registrations/M7-003-contract-foundation.json"
-      ],
+      "allowlist": ["R/provenance_contract.R", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
       "review_route": "focused RED/GREEN -> two-axis code review -> serial integration -> one full source suite -> one fresh read-only Astra-low acceptance audit",
       "allowed_next_transition": "Create a fresh managed worktree and dispatch one fresh Luna-max implementer.",
       "disposition": "No Stage-D work, private data, frozen-spec edit, scientific-method change, warning suppression, or gate release."
@@ -624,16 +541,8 @@
       "reviewer": "/root/m7_004_astra_acceptance_audit",
       "snapshot": "5dcc25f",
       "verdict": "changes_required; Critical 0, Important 2, Minor 0; ready_for_sol_acceptance no",
-      "confirmed": [
-        "all five previously reproduced fail-open paths are closed",
-        "positive multi-block/method/preprocessing/route fixtures remain",
-        "four candidate blobs equal the integrated snapshot",
-        "V8 Imports registration is present"
-      ],
-      "findings": [
-        "represented-matrix/preprocessing context is not required to join the unit/design/method context",
-        "migration proof coverage omits mandatory handoff_payload"
-      ],
+      "confirmed": ["all five previously reproduced fail-open paths are closed", "positive multi-block/method/preprocessing/route fixtures remain", "four candidate blobs equal the integrated snapshot", "V8 Imports registration is present"],
+      "findings": ["represented-matrix/preprocessing context is not required to join the unit/design/method context", "migration proof coverage omits mandatory handoff_payload"],
       "review_ref": "docs/implementation/reviews/2026-10-24-m7-004-astra-acceptance-audit.md",
       "allowed_next_transition": "Only Omar's explicit authorization of a new bounded repair record may reopen M7-004; require RED fixtures, focused GREEN, and a fresh immutable acceptance audit.",
       "disposition": "M7-004 not accepted; no test rerun, code edit, private data, M7 acceptance, gate release, or downstream Stage-D work."
@@ -654,12 +563,7 @@
       "event": "m7_004_final_repair_integrated_source_suite_green_paused",
       "date": "2026-10-23",
       "final_candidate": "647192f",
-      "integration_commits": [
-        "8b8c3cd",
-        "fe34495",
-        "1cb9daf",
-        "5dcc25f"
-      ],
+      "integration_commits": ["8b8c3cd", "fe34495", "1cb9daf", "5dcc25f"],
       "focused_sol_verification": "exit 0; DONE; zero failures, warnings, or skips",
       "combined_source_suite": "exit 0; DONE; failures 0, errors 0, skips 0, warnings 14; summary reporter emitted no numeric PASS total",
       "warning_set": "the same named C-05 native MOFA small-fixture diagnostics; none suppressed",
@@ -673,15 +577,8 @@
       "repair_commit": "6c437d1",
       "reviewer": "/root/m7_004_spec_review",
       "verdict": "changes_required; Critical 0, Important 1, Minor 0; ready_to_integrate false",
-      "resolved": [
-        "represented-block feature-registry coverage",
-        "C integration-method state coverage",
-        "reverse route kind, ID, and full-scope matching"
-      ],
-      "remaining": [
-        "B method_state can move to an unrelated method",
-        "normalized_metadata can move to an unrelated analysis"
-      ],
+      "resolved": ["represented-block feature-registry coverage", "C integration-method state coverage", "reverse route kind, ID, and full-scope matching"],
+      "remaining": ["B method_state can move to an unrelated method", "normalized_metadata can move to an unrelated analysis"],
       "review_ref": "docs/implementation/reviews/2026-10-23-m7-004-focused-rereview.md",
       "worker": "/root/m7_004_contract_luna",
       "allowed_next_transition": "Final repair 2/2 must reproduce both paths as RED, minimally enforce required scope, and return focused GREEN. Any remaining defect blocks M7-004.",
@@ -695,10 +592,7 @@
       "red": "three malformed public-validator profiles were accepted; 3 failed rejection expectations and 3 dependent errors, no warning or skip",
       "green": "focused contract suite completed DONE with zero failures, warnings, or skips; positive multi-block, multi-method, and multi-route controls passed",
       "reviewer": "/root/m7_004_spec_review",
-      "review_scope": [
-        "complete required block/method scope coverage",
-        "reverse evidence-to-declaration match by route kind, route_id, and full scope"
-      ],
+      "review_scope": ["complete required block/method scope coverage", "reverse evidence-to-declaration match by route kind, route_id, and full scope"],
       "allowed_next_transition": "Pass -> serial integration and Sol-owned V8 registration review; changes_required -> one final bounded repair remains.",
       "disposition": "Single focused read-only rereview; no full-suite rerun, integration, private data, M7 acceptance, or downstream release."
     },
@@ -721,9 +615,7 @@
       "worker": "/root/m7_005_c05_luna",
       "candidate_commit": "ef62066",
       "fixed_point": "29e7a36c858f954d2d15292132e2ba1738f3b79a",
-      "allowlist": [
-        "tests/testthat/test-C-05.R"
-      ],
+      "allowlist": ["tests/testthat/test-C-05.R"],
       "red": "two stale registration-state failures plus fourteen known native warnings",
       "green": "zero failures/errors/skips; fourteen known warnings plus one intermittent correlated-factor QC warning; none suppressed",
       "reviewer": "/root/m7_005_c05_review",
@@ -736,10 +628,7 @@
       "candidate_commit": "65662bcaf67f59bd3fbf5440984dc7711444daca",
       "standards": "pass; Critical 0, Important 0, Minor 1",
       "spec": "changes_required; Critical 0, Important 2, Minor 0",
-      "findings": [
-        "required block/method scope groups can be absent while unrelated groups remain",
-        "extra evidence can reuse a declared route_id with the wrong route kind"
-      ],
+      "findings": ["required block/method scope groups can be absent while unrelated groups remain", "extra evidence can reuse a declared route_id with the wrong route kind"],
       "review_ref": "docs/implementation/reviews/2026-10-23-m7-004-two-axis-review.md",
       "worker": "/root/m7_004_contract_luna",
       "allowed_next_transition": "Repair commit and focused GREEN -> same Spec reviewer performs one focused rereview; pass then waits for independent C-05 baseline gate before integration.",
@@ -752,9 +641,7 @@
       "worker": "/root/m7_005_c05_luna",
       "base_commit": "29e7a36c858f954d2d15292132e2ba1738f3b79a",
       "worktree": "/Users/megastore/.codex/worktrees/m7-005-c05-source-baseline/PML MultiOmics Analysis Pipeline",
-      "allowed_files": [
-        "tests/testthat/test-C-05.R"
-      ],
+      "allowed_files": ["tests/testthat/test-C-05.R"],
       "red": "Correct isolated MOFA runtime leaves exactly two stale registration-state failures plus fourteen already dispositioned native small-fixture warnings.",
       "allowed_next_transition": "Fresh isolated Luna-max implementation -> one-file commit -> fresh read-only Sol-high review.",
       "disposition": "Test-only baseline repair; no product, registration, scientific-contract, warning suppression, private-data, acceptance, or gate change."
@@ -766,10 +653,7 @@
       "fixed_point": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
       "focused_gate": "pass; zero failures, warnings, or skips",
       "full_suite": "Candidate provenance tests passed; overall source suite failed two pre-existing C-05 registration assertions. Correct isolated MOFA runtime leaves those two failures plus the fourteen already dispositioned C-05 native warnings.",
-      "reviewers": [
-        "/root/m7_004_standards_review",
-        "/root/m7_004_spec_review"
-      ],
+      "reviewers": ["/root/m7_004_standards_review", "/root/m7_004_spec_review"],
       "brief": "docs/implementation/reviews/2026-10-23-m7-004-two-axis-review-brief.md",
       "allowed_next_transition": "Both axes pass -> separately repair and review the stale C-05 source-test baseline before integration; M7 finding -> bounded Luna repair.",
       "disposition": "Read-only review only; no acceptance, C-05 edit, integration, private data, or gate release."
@@ -783,12 +667,7 @@
       "seed_commit": "8bc460bdfba1510d32eb2825bb460f480d75b483",
       "accepted_review_base": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
       "worktree": "/Users/megastore/.codex/worktrees/m7-004-contract-completion/PML MultiOmics Analysis Pipeline",
-      "allowed_files": [
-        "R/provenance_contract.R",
-        "inst/schema/stage-handoff-provenance.schema.json",
-        "tests/testthat/test-M7-003-provenance-contract.R",
-        "docs/implementation/registrations/M7-003-contract-foundation.json"
-      ],
+      "allowed_files": ["R/provenance_contract.R", "inst/schema/stage-handoff-provenance.schema.json", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
       "allowed_next_transition": "Passing immutable commit -> coordinator inspection -> parallel Standards and Spec review; changes_required -> at most two targeted repairs to the same worker.",
       "disposition": "Fresh bounded implementation only; no private data, shared-file edit, downstream wiring, integration, acceptance, or gate release."
     },
@@ -802,16 +681,7 @@
       "attempt_limit": "one implementation plus at most two targeted repairs",
       "review_route": "focused GREEN -> one full suite -> immutable candidate -> parallel Standards and Spec review -> bounded repair or serial Sol integration",
       "allowed_next_transition": "Preserve the failed M7-003 files as a non-acceptance seed, create a fresh isolated worktree, and dispatch one fresh Luna-max worker with the exact four-file allowlist.",
-      "closed_scope": [
-        "B-T07 producer seam",
-        "C-06 producer seam",
-        "D verification and publication",
-        "migration",
-        "shared CLI/NAMESPACE registration",
-        "D-T01 acceptance",
-        "M7 release",
-        "every Stage-D successor"
-      ],
+      "closed_scope": ["B-T07 producer seam", "C-06 producer seam", "D verification and publication", "migration", "shared CLI/NAMESPACE registration", "D-T01 acceptance", "M7 release", "every Stage-D successor"],
       "disposition": "Implementation exception only; no scientific-contract, threshold, seed, frozen-spec, private-data, or gate change."
     },
     {
@@ -821,10 +691,7 @@
       "base_and_head": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
       "candidate_commit": null,
       "focused_gate": "Initial implementation and two targeted repair runs each exited 1; final run had 2 failures and 6 errors.",
-      "remaining_defects": [
-        "empty derived_from_entity_ids reaches sort(NULL, method=radix)",
-        "embedded-JSON fixture removes size_bytes instead of retaining JSON null"
-      ],
+      "remaining_defects": ["empty derived_from_entity_ids reaches sort(NULL, method=radix)", "embedded-JSON fixture removes size_bytes instead of retaining JSON null"],
       "registration_request": "not created",
       "full_suite": "not run because focused gate failed; an immediately started run was interrupted before producing a result",
       "review": "not dispatched because there is no passing immutable candidate",
@@ -840,24 +707,10 @@
       "requested_effort": "max",
       "base_commit": "221df65a20e6a53bf523a4f5592a9ffe1e006ec8",
       "worktree": "/Users/megastore/.codex/worktrees/m7-003-contract-foundation/PML MultiOmics Analysis Pipeline",
-      "allowed_files": [
-        "R/provenance_contract.R",
-        "inst/schema/stage-handoff-provenance.schema.json",
-        "tests/testthat/test-M7-003-provenance-contract.R",
-        "docs/implementation/registrations/M7-003-contract-foundation.json"
-      ],
+      "allowed_files": ["R/provenance_contract.R", "inst/schema/stage-handoff-provenance.schema.json", "tests/testthat/test-M7-003-provenance-contract.R", "docs/implementation/registrations/M7-003-contract-foundation.json"],
       "plan": "/private/tmp/triomics-m7-003-contract-foundation-plan.md",
       "allowed_next_transition": "Worker commit -> inspect exact diff and evidence -> fresh read-only Sol-high review. Pass may permit serial integration and Sol-owned registration; changes_required returns one bounded repair to the same worker.",
-      "closed_scope": [
-        "B-T07 producer seam",
-        "C-06 producer seam",
-        "D verification and publication",
-        "migration",
-        "shared registration",
-        "D-T01 acceptance",
-        "M7 release",
-        "every Stage-D successor"
-      ],
+      "closed_scope": ["B-T07 producer seam", "C-06 producer seam", "D verification and publication", "migration", "shared registration", "D-T01 acceptance", "M7 release", "every Stage-D successor"],
       "disposition": "One isolated new-file-only contract-foundation implementation; no private data, producer wiring, D route wiring, shared-file edit, acceptance, or gate release."
     },
     {
@@ -871,16 +724,7 @@
       "sol_acceptance_ref": "docs/implementation/reviews/2026-10-23-m7-003-sol-acceptance.md",
       "accepted_scope": "Combined M7-002 plus M7-003 provenance amendment; only contract foundation released.",
       "allowed_next_transition": "Create one fresh isolated worktree and dispatch one Luna-max implementer for new-file-only contract foundation, then fresh Sol-high review and serial integration.",
-      "closed_scope": [
-        "B-T07 producer seam",
-        "C-06 producer seam",
-        "D verification and publication",
-        "migration",
-        "shared registration",
-        "D-T01 acceptance",
-        "M7 release",
-        "every Stage-D successor"
-      ],
+      "closed_scope": ["B-T07 producer seam", "C-06 producer seam", "D verification and publication", "migration", "shared registration", "D-T01 acceptance", "M7 release", "every Stage-D successor"],
       "disposition": "Specification accepted; no product implementation or private data in the audit cycle; Astra did not accept or release gates."
     },
     {
@@ -891,12 +735,7 @@
       "initial_verdict": "changes_required; Critical 0, Important 1, Minor 0",
       "initial_review_ref": "docs/implementation/reviews/2026-10-23-m7-003-astra-audit.md",
       "focused_brief": "docs/implementation/reviews/2026-10-23-m7-003-focused-astra-rereview-brief.md",
-      "repairs": [
-        "closed declared_routes registry and descriptor route_id",
-        "executable profile, predecessor-pair, integration-pair, handoff-payload, clinical-route, and native-route keys",
-        "entity-ID uniqueness separated from exact-one and one-or-more row cardinality",
-        "positive multi-state and multi-route fixtures plus missing, duplicate, mismatched, and undeclared-route rejection"
-      ],
+      "repairs": ["closed declared_routes registry and descriptor route_id", "executable profile, predecessor-pair, integration-pair, handoff-payload, clinical-route, and native-route keys", "entity-ID uniqueness separated from exact-one and one-or-more row cardinality", "positive multi-state and multi-route fixtures plus missing, duplicate, mismatched, and undeclared-route rejection"],
       "allowed_next_transition": "Commit immutable repair -> same read-only Astra reviewer performs the single focused rereview. Pass may permit Sol acceptance; any remaining Critical or Important blocks M7-003.",
       "disposition": "Documentation repair only; no product implementation, private data, frozen base spec edit, packet change, or gate release."
     },
@@ -910,11 +749,7 @@
       "change_record": "docs/implementation/change-records/M7-003-provenance-schema-closure.md",
       "audit_brief": "docs/implementation/reviews/2026-10-23-m7-003-astra-audit-brief.md",
       "candidate_commit": "the immutable commit containing this event",
-      "scope": [
-        "explicit block_id and method_id descriptor scope",
-        "closed total scientific_role-to-entity_type mapping with executable cardinality",
-        "current provenance payload and envelope self-inventory exclusion"
-      ],
+      "scope": ["explicit block_id and method_id descriptor scope", "closed total scientific_role-to-entity_type mapping with executable cardinality", "current provenance payload and envelope self-inventory exclusion"],
       "allowed_next_transition": "Commit immutable documentation candidate -> fresh read-only Astra-low audit. Pass may permit Sol acceptance and contract-foundation authorization; changes_required permits one documentation repair and one focused rereview.",
       "disposition": "Specification and audit only; no product code, frozen base spec, packet ID, statistical setting, private data, or gate release."
     },
@@ -924,15 +759,8 @@
       "reviewer": "/root/m7_002_astra_audit",
       "repair_commit": "366f284ba81bc595faa42f2017f00aa754ff8c6c",
       "verdict": "changes_required; Critical 0, Important 1, Minor 0",
-      "remaining_finding": [
-        "ScientificEntityDescriptor omits block_id and method_id required by cardinality grouping",
-        "entity_type registry and scientific_role-to-entity_type mapping are undefined",
-        "Stage Handoff Provenance payload/envelope is not explicitly excluded from its own produced-handoff inventory"
-      ],
-      "closed_findings": [
-        "atomic pointer rename is the publication linearization point with truthful ambiguous-acknowledgement recovery",
-        "shared CLI/stage/package registration remains Sol-owned"
-      ],
+      "remaining_finding": ["ScientificEntityDescriptor omits block_id and method_id required by cardinality grouping", "entity_type registry and scientific_role-to-entity_type mapping are undefined", "Stage Handoff Provenance payload/envelope is not explicitly excluded from its own produced-handoff inventory"],
+      "closed_findings": ["atomic pointer rename is the publication linearization point with truthful ambiguous-acknowledgement recovery", "shared CLI/stage/package registration remains Sol-owned"],
       "review_ref": "docs/implementation/reviews/2026-10-23-m7-002-focused-astra-rereview.md",
       "allowed_next_transition": "Only Omar's explicit authorization of a new bounded change record may reopen specification work. Do not implement M7-002 or start any Stage-D packet.",
       "disposition": "M7-002 not accepted; repair and rereview allowance exhausted; no active worker; no product code or frozen-spec edit; no private data accessed."
@@ -945,11 +773,7 @@
       "initial_verdict": "changes_required; Critical 0, Important 3, Minor 0",
       "initial_review_ref": "docs/implementation/reviews/2026-10-23-m7-002-astra-amendment-audit.md",
       "focused_brief": "docs/implementation/reviews/2026-10-23-m7-002-focused-astra-rereview-brief.md",
-      "repairs": [
-        "closed role/type/cardinality, graph, conditional-field, and non-circular manifest definitions",
-        "rename made the linearization point with truthful ambiguous-postcommit recovery",
-        "shared CLI/stage/package registration restored to Sol-only ownership"
-      ],
+      "repairs": ["closed role/type/cardinality, graph, conditional-field, and non-circular manifest definitions", "rename made the linearization point with truthful ambiguous-postcommit recovery", "shared CLI/stage/package registration restored to Sol-only ownership"],
       "allowed_next_transition": "Commit immutable repair -> same read-only Astra reviewer performs the single focused rereview. Pass may authorize phase 1; any remaining Critical/Important blocks M7-002.",
       "disposition": "Documentation repair only; no product implementation, private data, frozen base spec edit, or gate release."
     },
@@ -972,11 +796,7 @@
       "audit_brief": "docs/implementation/reviews/2026-10-23-m7-002-astra-amendment-audit-brief.md",
       "wayfinder_map": "docs/implementation/investigations/d-t01-provenance-wayfinder/MAP.md",
       "legacy_decision": "Only immutable producer-complete lineage may migrate without numerical recomputation; missing proof requires unchanged-science producer regeneration.",
-      "affected_seams": [
-        "B-T07 public handoff",
-        "C-06 public handoff",
-        "D-T01 verifier and publication lifecycle"
-      ],
+      "affected_seams": ["B-T07 public handoff", "C-06 public handoff", "D-T01 verifier and publication lifecycle"],
       "allowed_next_transition": "Commit immutable documentation candidate -> dispatch one fresh read-only Astra-low amendment audit. Implementation prohibited until pass.",
       "disposition": "Proposed normative amendment only; no product code, frozen base spec, packet IDs, methods, thresholds, seeds, or private inputs changed."
     },
@@ -997,14 +817,8 @@
     {
       "event": "d_t01_wayfinder_primary_research_reconciled",
       "date": "2026-10-23",
-      "researchers": [
-        "/root/provenance_research",
-        "/root/publication_research"
-      ],
-      "research_outputs": [
-        "docs/implementation/investigations/2026-10-23-stage-handoff-scientific-provenance-research.md",
-        "docs/implementation/investigations/2026-10-23-canonical-digests-safe-publication-research.md"
-      ],
+      "researchers": ["/root/provenance_research", "/root/publication_research"],
+      "research_outputs": ["docs/implementation/investigations/2026-10-23-stage-handoff-scientific-provenance-research.md", "docs/implementation/investigations/2026-10-23-canonical-digests-safe-publication-research.md"],
       "outcome": "Primary sources support a producer-owned triomics handoff-provenance profile with closed typed lineage, RFC 8785 canonical JSON, algorithm-tagged SHA-256 descriptors, immutable complete generations, safe path preflight, and atomic registry replacement last.",
       "next_frontier": "docs/implementation/investigations/d-t01-provenance-wayfinder/select-provenance-domain-model.md",
       "allowed_next_transition": "Resolve the named domain-model decision with the user; then decide legacy migration and draft an explicit spec-v2 change record for user and fresh Astra review before implementation.",
@@ -1014,14 +828,8 @@
       "event": "d_t01_wayfinder_map_charted_primary_research_dispatched",
       "date": "2026-10-23",
       "map": "docs/implementation/investigations/d-t01-provenance-wayfinder/MAP.md",
-      "researchers": [
-        "/root/provenance_research",
-        "/root/publication_research"
-      ],
-      "research_outputs": [
-        "docs/implementation/investigations/2026-10-23-stage-handoff-scientific-provenance-research.md",
-        "docs/implementation/investigations/2026-10-23-canonical-digests-safe-publication-research.md"
-      ],
+      "researchers": ["/root/provenance_research", "/root/publication_research"],
+      "research_outputs": ["docs/implementation/investigations/2026-10-23-stage-handoff-scientific-provenance-research.md", "docs/implementation/investigations/2026-10-23-canonical-digests-safe-publication-research.md"],
       "destination": "A citable producer-owned provenance and fail-safe publication decision sufficient to draft a new explicit spec-v2 change record for user and Astra approval.",
       "allowed_next_transition": "Verify and resolve the two research tickets, update Decisions so far, then work the domain-model frontier. Do not edit the frozen spec or product code during map charting.",
       "disposition": "Planning and public-source research only; no private data, no product edit, no D-T01 authorization, no Stage-D release."
@@ -1032,13 +840,7 @@
       "reviewer": "/root/m7_001_sol_review",
       "candidate_commit": "1b44a84e71139ca52b496bbe562e2e2a70142b2f",
       "review_verdict": "ready_to_integrate: no; Critical 0, Important 5, Minor 0",
-      "important_findings": [
-        "current FeatureRegistry semantics can drift beside stale predecessor evidence",
-        "paired/repeated consumed metadata changes can preserve the guard hash",
-        "DEqMS consumer identity disagrees with the producer for an unchanged supported lane",
-        "recursive model-hash collection misreads a valid contrast ID named model_hash",
-        "a dangling D output symlink is rejected only after registry rollover"
-      ],
+      "important_findings": ["current FeatureRegistry semantics can drift beside stale predecessor evidence", "paired/repeated consumed metadata changes can preserve the guard hash", "DEqMS consumer identity disagrees with the producer for an unchanged supported lane", "recursive model-hash collection misreads a valid contrast ID named model_hash", "a dangling D output symlink is rejected only after registry rollover"],
       "review_ref": "docs/implementation/reviews/2026-10-23-m7-001-focused-sol-rereview.md",
       "verification": "Candidate exact D-T01 PASS 268, FAIL 0, WARN 0, SKIP 0; reviewer independently passed packet tests and diff check, then reproduced the five uncovered boundary defects.",
       "allowed_next_transition": "No product repair is authorized. D-T01 and all successors remain blocked unless Omar explicitly authorizes a new bounded change record after reviewing these five findings.",
@@ -1053,12 +855,7 @@
       "luna_commit": "0d82e9f6a3b78899ee1ccd2c389c01e273ba65cc",
       "sol_cli_commit": "1b44a84e71139ca52b496bbe562e2e2a70142b2f",
       "candidate_base": "71c0a1b628c314c03112a4c2a27a760e9ab0d0a1",
-      "changed_files": [
-        "R/cli.R",
-        "R/evidence_bundle.R",
-        "tests/testthat/test-D-T01-shared.R",
-        "tests/testthat/test-D-T01.R"
-      ],
+      "changed_files": ["R/cli.R", "R/evidence_bundle.R", "tests/testthat/test-D-T01-shared.R", "tests/testthat/test-D-T01.R"],
       "verification": "Exact uncapped D-T01 filter PASS 268 across 27 test blocks; FAIL 0, WARN 0, SKIP 0. Former RED probes and unchanged public B-to-C-to-D path passed; worktree clean.",
       "review_package": "/private/tmp/triomics-m7-001-review-package.diff",
       "review_package_sha256": "6909a7e1e514e8bf070845a84510d6390dd4b03630a05d54c2b7d5e336403c2b",
@@ -1075,11 +872,7 @@
       "base_commit": "71c0a1b628c314c03112a4c2a27a760e9ab0d0a1",
       "baseline": "Exact D-T01 filter exit 0 with baseline-ok; prior immutable candidate count PASS 204, FAIL/WARN/SKIP 0.",
       "brief": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/.superpowers/sdd/M7-001-d-t01-provenance-boundary-exception-proposal/task-1-brief.md",
-      "allowed_files": [
-        "R/evidence_bundle.R",
-        "tests/testthat/test-D-T01-shared.R",
-        "tests/testthat/test-D-T01.R"
-      ],
+      "allowed_files": ["R/evidence_bundle.R", "tests/testthat/test-D-T01-shared.R", "tests/testthat/test-D-T01.R"],
       "allowed_next_transition": "Worker commits evidence fix plus RED CLI tests -> Sol applies authorized R/cli.R repair -> exact suite GREEN -> focused immutable rereview.",
       "disposition": "One exceptional repair only; no private data, frozen contract, scientific estimator, threshold, seed, namespace, schema, lockfile or adapter change."
     },
@@ -1112,15 +905,8 @@
       "candidate_commit": "71c0a1b628c314c03112a4c2a27a760e9ab0d0a1",
       "review_verdict": "ready_to_integrate: no; Critical 0, Important 3, Minor 2",
       "review_tests": "Exact D-T01 suite FAIL 0, WARN 0, SKIP 0, PASS 204; ordinary B/C/D path and rerun immutability pass, but adversarial boundary probes fail.",
-      "important_findings": [
-        "mutable source changes accepted beside stale B/C results",
-        "registry-directory symlink writes outside output root",
-        "conflicting B envelope artifact/preparation/representation identities accepted after rehash"
-      ],
-      "minor_findings": [
-        "structured selection comparison is key-order-sensitive",
-        "invalid config mutates current registry before validation"
-      ],
+      "important_findings": ["mutable source changes accepted beside stale B/C results", "registry-directory symlink writes outside output root", "conflicting B envelope artifact/preparation/representation identities accepted after rehash"],
+      "minor_findings": ["structured selection comparison is key-order-sensitive", "invalid config mutates current registry before validation"],
       "review_ref": "docs/implementation/reviews/2026-10-22-d-t01-shared-sol-review.md",
       "repair_capacity": "Initial implementation plus two targeted repairs consumed; no third repair is authorized.",
       "allowed_next_transition": "Astra confirmation -> record blocked and request explicit bounded exception from Omar. Do not integrate, accept D-T01, or start any Stage-D successor.",
@@ -1134,16 +920,7 @@
       "checkpoint_commit": "a5c8f0903db9daccf030cd019100a382215e62fc",
       "upstream_dependency_commit": "0ca90467fd8306f6a4a5e6fc4c73183cb87b6b6d",
       "candidate_commit": "71c0a1b628c314c03112a4c2a27a760e9ab0d0a1",
-      "changed_files": [
-        "NAMESPACE",
-        "R/cli.R",
-        "R/evidence_bundle.R",
-        "R/stage_registry.R",
-        "docs/implementation/registrations/D-T01.json",
-        "inst/examples/tickets/D-T01.yaml",
-        "man/triomics-api.Rd",
-        "tests/testthat/test-D-T01-shared.R"
-      ],
+      "changed_files": ["NAMESPACE", "R/cli.R", "R/evidence_bundle.R", "R/stage_registry.R", "docs/implementation/registrations/D-T01.json", "inst/examples/tickets/D-T01.yaml", "man/triomics-api.Rd", "tests/testthat/test-D-T01-shared.R"],
       "worker_tests": "FAIL 0, WARN 0, SKIP 0, PASS 204; git diff --check passed; worktree clean.",
       "worker_cli": "Fresh same-root Stage B, C and D exits 0/0/0. D rerun exits 2 with D_OUTPUT_FINALIZED and all 41 file hashes unchanged; B/C trees remain unchanged by D.",
       "review_package": "/private/tmp/triomics-d-t01-shared-review-package.diff",
@@ -1171,11 +948,7 @@
       "worker": "/root/b_blockresult_id_luna",
       "reviewer": "/root/b_blockresult_sol_review",
       "candidate_commit": "05fc87c1bb66148a08f1fbb4db1dbde9a3622e0f",
-      "changed_files": [
-        "R/results_b.R",
-        "tests/testthat/test-B-T01.R",
-        "tests/testthat/test-B-T07.R"
-      ],
+      "changed_files": ["R/results_b.R", "tests/testthat/test-B-T01.R", "tests/testthat/test-B-T07.R"],
       "worker_tests": "B-T01 FAIL 0, WARN 0, SKIP 0, PASS 581; B-T02 FAIL 0, WARN 0, SKIP 0, PASS 208; B-T07 FAIL 0, WARN 0, SKIP 0, PASS 216.",
       "public_readback": "B-T02 CLI produced 20 rows with 20 unique lowercase 64-hex result_id values and consistent enclosing identity context.",
       "separate_fixture_blocker": "The exact D-T01 Stage-B fixture exits 2 with B_DESIGN_EFFECT_UNIT before artifact emission because it declares slope_per_score_unit; no D file was changed by the upstream worker.",
@@ -1205,18 +978,8 @@
       "luna_disposition": "The stale-base worktree host guard treated the historical freeze flag and M6-run Stage-D closure as current despite read-only evidence of the later G6 release and active ledger; no implementation edits were applied.",
       "red_tests": "FAIL 4, WARN 0, SKIP 0, PASS 132 in the abandoned worktree.",
       "opencode_attempts": [
-        {
-          "model": "opencode/deepseek-v4.1-flash-free",
-          "status": "provider.quota",
-          "http_status": 429,
-          "edits": 0
-        },
-        {
-          "model": "opencode/glm-5.3-flash-free",
-          "status": "provider.quota",
-          "http_status": 429,
-          "edits": 0
-        }
+        {"model": "opencode/deepseek-v4.1-flash-free", "status": "provider.quota", "http_status": 429, "edits": 0},
+        {"model": "opencode/glm-5.3-flash-free", "status": "provider.quota", "http_status": 429, "edits": 0}
       ],
       "allowed_next_transition": "Create one fresh worktree from this current ledger commit and resume the same bounded shared-registration attempt with Luna-max. Then fresh Sol review, serial integration and exact CLI read-back.",
       "disposition": "No frozen spec, product implementation, private data or acceptance state was changed by the failed providers."
@@ -1229,10 +992,7 @@
       "repair_commit": "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3",
       "review_verdict": "pass; F1-F7 addressed; Critical 0, Important 0, Minor 0; ready_for_integration=true",
       "review_tests": "FAIL 0, WARN 0, SKIP 0, PASS 131 plus adversarial and actual-producer probes.",
-      "integration_commits": [
-        "d2db62d",
-        "88f1591"
-      ],
+      "integration_commits": ["d2db62d", "88f1591"],
       "review_ref": "docs/implementation/reviews/2026-10-22-d-t01-packet-review.md",
       "shared_base": "88f1591",
       "shared_worktree": "/Users/megastore/.codex/worktrees/d-t01-shared-registration/PML MultiOmics Analysis Pipeline",
@@ -1245,12 +1005,7 @@
       "worker": "/root/d_t01_luna",
       "reviewer": "/root/d_t01_sol_review",
       "repair_commit": "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3",
-      "changed_files": [
-        "R/evidence_bundle.R",
-        "R/annotation_router.R",
-        "R/resource_manifest.R",
-        "tests/testthat/test-D-T01.R"
-      ],
+      "changed_files": ["R/evidence_bundle.R", "R/annotation_router.R", "R/resource_manifest.R", "tests/testthat/test-D-T01.R"],
       "worker_tests": "FAIL 0, WARN 0, SKIP 0, PASS 131; diff check passed; worktree clean.",
       "review_package": "/private/tmp/triomics-d-t01-repair1-review-package.diff",
       "allowed_next_transition": "Focused rereview pass -> serial packet integration and separate exclusive shared registration. Remaining Critical/Important findings -> final bounded repair 2 then direct Sol inspection.",
@@ -1263,15 +1018,7 @@
       "worker": "/root/d_t01_luna",
       "candidate_commit": "98bf4c54a52cb8bab7fd3824fabb88deda579a23",
       "review_verdict": "fail; Critical 0, Important 7, Minor 0; ready_for_integration=false",
-      "findings": [
-        "lost immutable-input provenance",
-        "discarded full B evidence",
-        "mutable nomination lineage",
-        "mismatched B/C preparation and representation",
-        "ancestor-symlink escape",
-        "duplicate measured-feature accounting across contrasts",
-        "incompatible shared feature-registry handling"
-      ],
+      "findings": ["lost immutable-input provenance", "discarded full B evidence", "mutable nomination lineage", "mismatched B/C preparation and representation", "ancestor-symlink escape", "duplicate measured-feature accounting across contrasts", "incompatible shared feature-registry handling"],
       "review_ref": "/private/tmp/triomics-d-t01-sol-review.md",
       "allowed_next_transition": "Repair 1 result -> Sol inspection -> one focused rereview by the same Sol-high reviewer. A clean rereview permits serial integration and a separate shared-registration cycle.",
       "disposition": "All seven defects were reproduced with public synthetic probes. No product, acceptance or shared-registration files were changed by the reviewer."
@@ -1283,14 +1030,7 @@
       "reviewer": "/root/d_t01_sol_review",
       "candidate_commit": "98bf4c54a52cb8bab7fd3824fabb88deda579a23",
       "review_package": "/private/tmp/triomics-d-t01-review-package.diff",
-      "changed_files": [
-        "R/evidence_bundle.R",
-        "R/annotation_router.R",
-        "R/resource_manifest.R",
-        "tests/testthat/test-D-T01.R",
-        "inst/examples/tickets/D-T01.yaml",
-        "docs/implementation/registrations/D-T01.json"
-      ],
+      "changed_files": ["R/evidence_bundle.R", "R/annotation_router.R", "R/resource_manifest.R", "tests/testthat/test-D-T01.R", "inst/examples/tickets/D-T01.yaml", "docs/implementation/registrations/D-T01.json"],
       "worker_tests": "RED FAIL 9, PASS 0; GREEN FAIL 0, WARN 0, SKIP 0, PASS 86.",
       "worker_cli": "Exit 3 A_STAGE_UNAVAILABLE because Sol-owned Stage D CLI registration has not occurred; no acceptance artifact was created.",
       "allowed_next_transition": "Review pass -> serial packet integration, then one exclusive shared-registration cycle and fresh integrated verification. Critical/Important findings -> bounded Luna repair 1 and one focused rereview.",
@@ -1305,18 +1045,8 @@
       "base_commit": "57be42a9078d533885c01f3015ac54464f9a2d9f",
       "worktree": "/Users/megastore/.codex/worktrees/d-t01-evidence-routing/PML MultiOmics Analysis Pipeline",
       "baseline": "Accepted predecessor C-06 focused suites: FAIL 0, WARN 0, SKIP 0, PASS 290.",
-      "allowlist": [
-        "R/evidence_bundle.R",
-        "R/annotation_router.R",
-        "R/resource_manifest.R",
-        "tests/testthat/test-D-T01.R",
-        "inst/examples/tickets/D-T01.yaml",
-        "docs/implementation/registrations/D-T01.json"
-      ],
-      "approved_future_free_models": [
-        "opencode/deepseek-v4.1-flash-free",
-        "opencode/glm-5.3-flash-free"
-      ],
+      "allowlist": ["R/evidence_bundle.R", "R/annotation_router.R", "R/resource_manifest.R", "tests/testthat/test-D-T01.R", "inst/examples/tickets/D-T01.yaml", "docs/implementation/registrations/D-T01.json"],
+      "approved_future_free_models": ["opencode/deepseek-v4.1-flash-free", "opencode/glm-5.3-flash-free"],
       "allowed_next_transition": "Worker result -> Sol inspection -> one fresh read-only Sol-high task review. Only accepted D-T01 unlocks D-T02 and D-T03. Those disjoint successors may use the two user-approved OpenCode free models with public synthetic inputs only.",
       "disposition": "D-T01 attempt 1 is active. No private study data were read or delegated; no Stage D packet is accepted yet."
     },
@@ -1404,18 +1134,8 @@
       "date": "2026-10-21",
       "worker": "/root/c09_shared_luna",
       "reviewer": "/root/c09_shared_sol_review",
-      "candidate_commits": [
-        "c23a3c845cdca5d84961ddc74c08182a45482c00",
-        "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e",
-        "604a8683bd87a1b2dddc9db40c9426010253af07",
-        "b2aafd6e200964f1cc39267f118e01ff89485542"
-      ],
-      "integration_commits": [
-        "91107d3",
-        "164eda5",
-        "c9613de",
-        "40bc026"
-      ],
+      "candidate_commits": ["c23a3c845cdca5d84961ddc74c08182a45482c00", "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e", "604a8683bd87a1b2dddc9db40c9426010253af07", "b2aafd6e200964f1cc39267f118e01ff89485542"],
+      "integration_commits": ["91107d3", "164eda5", "c9613de", "40bc026"],
       "integrated_tests": "C-09-shared PASS 71, C-09 PASS 124, C-06 PASS 290, C-02 PASS 165; all FAIL 0, WARN 0, SKIP 0.",
       "cli": "Exact C-09 Stage-C fixture exit 0; envelope and registry hash references validated; status_scope synthetic_fixture_only; benefit_guaranteed=false.",
       "payload_sha256": "cf099b49fca889d9eb82ce293ed4dc67dbf4bb60e2d79acaae3c0d6c9b06aafc",
@@ -1432,11 +1152,7 @@
       "fix_base": "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e",
       "repair_head": "b2aafd6e200964f1cc39267f118e01ff89485542",
       "verdict": "pass",
-      "findings": {
-        "critical": 0,
-        "important": 0,
-        "minor": 0
-      },
+      "findings": {"critical": 0, "important": 0, "minor": 0},
       "focused_test": "PASS 7, FAIL 0, WARN 0, SKIP 0",
       "review_ref": ".superpowers/sdd/c09-shared-registration/repair1-rereview.md",
       "allowed_next_transition": "Sol serially cherry-picks the initial implementation, registration evidence, repair implementation, and repair evidence commits, then runs fresh integrated verification. Do not start M6 or Stage D before that evidence is reconciled.",
@@ -1451,15 +1167,8 @@
       "requested_reviewer_effort": "high",
       "effective_settings_exposed": false,
       "fix_base": "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e",
-      "repair_commits": [
-        "604a8683bd87a1b2dddc9db40c9426010253af07",
-        "b2aafd6e200964f1cc39267f118e01ff89485542"
-      ],
-      "changed_files": [
-        "R/cli.R",
-        "tests/testthat/test-C-09-shared.R",
-        "docs/implementation/registrations/C-09.json"
-      ],
+      "repair_commits": ["604a8683bd87a1b2dddc9db40c9426010253af07", "b2aafd6e200964f1cc39267f118e01ff89485542"],
+      "changed_files": ["R/cli.R", "tests/testthat/test-C-09-shared.R", "docs/implementation/registrations/C-09.json"],
       "worker_tests": "Repair RED reproduced C_C09_PROTOCOL_INVALID. GREEN C-09-shared PASS 71, C-09 PASS 124, C-06 PASS 290, C-02 PASS 165; all final runs FAIL 0, WARN 0, SKIP 0.",
       "worker_cli": "Exact Stage-C fixture exit 0; envelope validated; payload remains synthetic-only with benefit_guaranteed=false.",
       "review_package": "/private/tmp/triomics-c09-shared-repair1-review-package.md",
@@ -1474,18 +1183,10 @@
       "reviewer": "/root/c09_shared_sol_review",
       "candidate_head": "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e",
       "verdict": "changes_required",
-      "findings": {
-        "critical": 0,
-        "important": 1,
-        "minor": 0
-      },
+      "findings": {"critical": 0, "important": 1, "minor": 0},
       "review_ref": ".superpowers/sdd/c09-shared-registration/task-review.md",
       "finding": "R/cli.R protocol signature comparison is recursively order-sensitive for named YAML mappings, rejecting otherwise equivalent closed-schema declarations.",
-      "allowed_repair_files": [
-        "R/cli.R",
-        "tests/testthat/test-C-09-shared.R",
-        "docs/implementation/registrations/C-09.json"
-      ],
+      "allowed_repair_files": ["R/cli.R", "tests/testthat/test-C-09-shared.R", "docs/implementation/registrations/C-09.json"],
       "allowed_next_transition": "Repair 1 -> Sol inspect -> one focused rereview by the same fresh reviewer. A pass permits serial integration and fresh Sol verification; remaining findings permit at most repair 2 followed by direct Sol verification.",
       "disposition": "Finding accepted as a real shared-seam correctness defect. Repair must canonicalize named mappings without sorting sequences or weakening altered-value rejection."
     },
@@ -1498,17 +1199,8 @@
       "requested_reviewer_effort": "high",
       "effective_settings_exposed": false,
       "base_commit": "95987d9800c9dae11d46a1f06b13789d497be251",
-      "candidate_commits": [
-        "c23a3c845cdca5d84961ddc74c08182a45482c00",
-        "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e"
-      ],
-      "changed_files": [
-        "NAMESPACE",
-        "inst/schema/config.schema.json",
-        "R/cli.R",
-        "tests/testthat/test-C-09-shared.R",
-        "docs/implementation/registrations/C-09.json"
-      ],
+      "candidate_commits": ["c23a3c845cdca5d84961ddc74c08182a45482c00", "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e"],
+      "changed_files": ["NAMESPACE", "inst/schema/config.schema.json", "R/cli.R", "tests/testthat/test-C-09-shared.R", "docs/implementation/registrations/C-09.json"],
       "worker_tests": "RED FAIL 7/PASS 13; GREEN C-09-shared PASS 64, C-09 PASS 117, C-06 PASS 290, C-02 PASS 165; all final runs FAIL 0, WARN 0, SKIP 0.",
       "worker_cli": "Exact Stage-C fixture exit 0; payload, envelope and run registry persisted with recorded hashes; synthetic-only qualification and benefit_guaranteed=false retained.",
       "review_package": "/private/tmp/triomics-c09-shared-review-package.md",
@@ -1524,13 +1216,7 @@
       "effective_settings_exposed": false,
       "base_commit": "95987d9800c9dae11d46a1f06b13789d497be251",
       "worktree": "/Users/megastore/.codex/worktrees/c09-shared-registration/PML MultiOmics Analysis Pipeline",
-      "allowlist": [
-        "NAMESPACE",
-        "inst/schema/config.schema.json",
-        "R/cli.R",
-        "tests/testthat/test-C-09-shared.R",
-        "docs/implementation/registrations/C-09.json"
-      ],
+      "allowlist": ["NAMESPACE", "inst/schema/config.schema.json", "R/cli.R", "tests/testthat/test-C-09-shared.R", "docs/implementation/registrations/C-09.json"],
       "baseline": "C-09 PASS 53, FAIL 0, WARN 0, SKIP 0; exact CLI exit 2 at A_CONFIG_UNKNOWN_KEY clinical_prediction.",
       "allowed_next_transition": "Worker result -> Sol inspection -> fresh Sol-6.1-high read-only review. A clean review permits serial integration and fresh Sol verification; findings permit the bounded repair loop only.",
       "disposition": "This is the recorded next action from the pause handover. It is synthetic-only shared registration, not real endpoint qualification or M6 acceptance."
@@ -1539,16 +1225,8 @@
       "event": "c06_shared_cycle_integrated_verified_and_paused",
       "date": "2026-10-21",
       "worker": "/root/c06_shared_luna",
-      "candidate_commits": [
-        "1cc35048907ab4dd866d7129759ddcb7672d05eb",
-        "be2a4e4",
-        "29e1e19"
-      ],
-      "integration_commits": [
-        "32ab4d1",
-        "a658398",
-        "3753be0"
-      ],
+      "candidate_commits": ["1cc35048907ab4dd866d7129759ddcb7672d05eb", "be2a4e4", "29e1e19"],
+      "integration_commits": ["32ab4d1", "a658398", "3753be0"],
       "integrated_test": "C-06 PASS 290, FAIL 0, WARN 0, SKIP 0",
       "c06_cli": "Exit 0; D handoff partial; all five payload/envelope pairs plus manifest envelope matched recorded SHA-256; C-07 controls explicitly not_run; C-09 conditional/not_started.",
       "c06_manifest_sha256": "ecc9b0ffd794c902aa2644e5e7fbacc74cfbee7fc562ae5ad0100cc2e1cc1fbb",
@@ -1567,11 +1245,7 @@
       "reviewer": "/root/c06_shared_sol_review",
       "repair1_commit": "be2a4e4",
       "verdict": "findings_remain",
-      "findings": {
-        "critical": 0,
-        "important": 4,
-        "minor": 0
-      },
+      "findings": {"critical": 0, "important": 4, "minor": 0},
       "review_ref": "docs/implementation/reviews/2026-10-21-c06-shared-repair1-rereview.md",
       "reviewer_test": "PASS 266, FAIL 0, WARN 0, SKIP 0; fresh direct C-06 artifacts readable",
       "allowed_next_transition": "One final shared repair 2 followed by direct Sol inspection and verification. No second focused rereview. Reconcile and pause after the cycle.",
@@ -1596,11 +1270,7 @@
       "reviewer": "/root/c06_shared_sol_review",
       "candidate": "1cc35048907ab4dd866d7129759ddcb7672d05eb",
       "verdict": "changes_required",
-      "findings": {
-        "critical": 0,
-        "important": 4,
-        "minor": 1
-      },
+      "findings": {"critical": 0, "important": 4, "minor": 1},
       "review_ref": "docs/implementation/reviews/2026-10-21-c06-shared-sol-review.md",
       "reviewer_test": "PASS 172, FAIL 0, WARN 0, SKIP 0; fresh C-06 CLI artifacts/hashes valid",
       "regression": "Exact accepted C-02 nested fixture now exits 2 at C_EVAL_EVIDENCE_INVALID after evaluation because the C-06 unrun-control fallback lacks verified unit identity.",
@@ -1610,16 +1280,8 @@
     {
       "event": "c09_packet_integrated_c06_shared_candidate_review_dispatched",
       "date": "2026-10-21",
-      "c09_packet_commits": [
-        "45a0f9900306f60a6a87a2fbfffbf7dd57adca2e",
-        "253c6f0da495f0ec61c0c7ec943dca5b2bb2a7c9",
-        "de9ea9e73e3bb24d69c6e1232b25225408c200a9"
-      ],
-      "c09_integration_commits": [
-        "98f73c3",
-        "6713603",
-        "996087f"
-      ],
+      "c09_packet_commits": ["45a0f9900306f60a6a87a2fbfffbf7dd57adca2e", "253c6f0da495f0ec61c0c7ec943dca5b2bb2a7c9", "de9ea9e73e3bb24d69c6e1232b25225408c200a9"],
+      "c09_integration_commits": ["98f73c3", "6713603", "996087f"],
       "c09_sol_test": "PASS 53, FAIL 0, WARN 0, SKIP 0",
       "c06_shared_candidate": "1cc35048907ab4dd866d7129759ddcb7672d05eb",
       "c06_shared_reviewer": "/root/c06_shared_sol_review",
@@ -1631,113 +1293,46 @@
     {
       "event": "c06_packet_integrated_shared_cli_worker_dispatched",
       "date": "2026-10-21",
-      "packet_commits": [
-        "d8fa515d32b6d5d0c637e325d8fe41705ff3dae6",
-        "a60a7a56eec1250bd4a9e44253597f83a3e565fd"
-      ],
-      "integration_commits": [
-        "7d29da4",
-        "634c29f"
-      ],
+      "packet_commits": ["d8fa515d32b6d5d0c637e325d8fe41705ff3dae6", "a60a7a56eec1250bd4a9e44253597f83a3e565fd"],
+      "integration_commits": ["7d29da4", "634c29f"],
       "worker": "/root/c06_shared_luna",
       "worktree": "/Users/megastore/.codex/worktrees/c06-shared-cli/PML MultiOmics Analysis Pipeline",
-      "sol_tests": {
-        "C-06": "PASS 100, FAIL 0, WARN 0, SKIP 0",
-        "C-01": "PASS 109, FAIL 0, WARN 0, SKIP 0"
-      },
-      "allowlist": [
-        "R/cli.R",
-        "tests/testthat/test-C-06-shared.R",
-        "inst/examples/tickets/C-06.yaml",
-        "docs/implementation/registrations/C-06.json"
-      ],
+      "sol_tests": {"C-06": "PASS 100, FAIL 0, WARN 0, SKIP 0", "C-01": "PASS 109, FAIL 0, WARN 0, SKIP 0"},
+      "allowlist": ["R/cli.R", "tests/testthat/test-C-06-shared.R", "inst/examples/tickets/C-06.yaml", "docs/implementation/registrations/C-06.json"],
       "allowed_next_transition": "Inspect the shared candidate and its exact CLI artifact read-back before integration. C-06 remains unaccepted until shared wiring, integrated verification and the M6 package/milestone gates pass.",
       "disposition": "The shared worker may connect only the reviewed C-06 builders/writers to Stage C. It may not fabricate C-07 results, mark optional C-09 complete, read private data or change the scientific contract."
     },
     {
       "event": "c06_focused_pass_c09_registry_regression_repair2_dispatched",
       "date": "2026-10-21",
-      "reviewers": [
-        "/root/c06_sol_review",
-        "/root/c09_sol_review"
-      ],
-      "candidates": {
-        "C-06": "a60a7a56eec1250bd4a9e44253597f83a3e565fd",
-        "C-09": "253c6f0da495f0ec61c0c7ec943dca5b2bb2a7c9"
-      },
-      "review_refs": [
-        "docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md",
-        "docs/implementation/reviews/2026-10-21-c09-repair1-rereview.md"
-      ],
-      "reviewer_tests": {
-        "C-06": "PASS 100, FAIL 0, WARN 0, SKIP 0",
-        "C-09": "PASS 47, FAIL 0, WARN 0, SKIP 0"
-      },
-      "verdicts": {
-        "C-06": "addressed_ready_to_integrate",
-        "C-09": "findings_addressed_new_important_regression"
-      },
+      "reviewers": ["/root/c06_sol_review", "/root/c09_sol_review"],
+      "candidates": {"C-06": "a60a7a56eec1250bd4a9e44253597f83a3e565fd", "C-09": "253c6f0da495f0ec61c0c7ec943dca5b2bb2a7c9"},
+      "review_refs": ["docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c09-repair1-rereview.md"],
+      "reviewer_tests": {"C-06": "PASS 100, FAIL 0, WARN 0, SKIP 0", "C-09": "PASS 47, FAIL 0, WARN 0, SKIP 0"},
+      "verdicts": {"C-06": "addressed_ready_to_integrate", "C-09": "findings_addressed_new_important_regression"},
       "allowed_next_transition": "Serially integrate C-06 packet commits and run fresh focused checks while C-09 Luna performs final bounded repair 2. Inspect and verify C-09 repair 2 directly; do not dispatch another reviewer.",
       "disposition": "C-06 closed all six initial findings. C-09's runtime generator deletes caller profile registrations; this confirmed side effect must be removed before packet integration."
     },
     {
       "event": "c09_c06_repair1_focused_rereviews_dispatched",
       "date": "2026-10-21",
-      "workers": [
-        "/root/c09_luna",
-        "/root/c06_luna"
-      ],
-      "reviewers": [
-        "/root/c09_sol_review",
-        "/root/c06_sol_review"
-      ],
-      "repair_commits": {
-        "C-09": "253c6f0da495f0ec61c0c7ec943dca5b2bb2a7c9",
-        "C-06": "a60a7a56eec1250bd4a9e44253597f83a3e565fd"
-      },
-      "worker_tests": {
-        "C-09": "repair RED 7 failures/26 passes; exact GREEN PASS 47, FAIL 0, WARN 0, SKIP 0",
-        "C-06": "successive RED probes 8/52, 1/92, 2/97 and 1/99; exact GREEN PASS 100, FAIL 0, WARN 0, SKIP 0; C-01 adjacent PASS 109"
-      },
+      "workers": ["/root/c09_luna", "/root/c06_luna"],
+      "reviewers": ["/root/c09_sol_review", "/root/c06_sol_review"],
+      "repair_commits": {"C-09": "253c6f0da495f0ec61c0c7ec943dca5b2bb2a7c9", "C-06": "a60a7a56eec1250bd4a9e44253597f83a3e565fd"},
+      "worker_tests": {"C-09": "repair RED 7 failures/26 passes; exact GREEN PASS 47, FAIL 0, WARN 0, SKIP 0", "C-06": "successive RED probes 8/52, 1/92, 2/97 and 1/99; exact GREEN PASS 100, FAIL 0, WARN 0, SKIP 0; C-01 adjacent PASS 109"},
       "allowed_next_transition": "Focused pass permits serial integration and fresh Sol verification. Findings remaining permit bounded repair 2 only, followed by direct Sol verification without another rereview.",
       "disposition": "Both repairs remain packet-owned. C-09 keeps real protocol qualification open and shared schema/CLI pending. C-06 keeps shared CLI pending and records missing generated B-T07 evidence plus unavailable MOFA runtime as environment limitations, not passes."
     },
     {
       "event": "c09_c06_initial_reviews_changes_required_repair1_dispatched",
       "date": "2026-10-20",
-      "workers": [
-        "/root/c09_luna",
-        "/root/c06_luna"
-      ],
-      "reviewers": [
-        "/root/c09_sol_review",
-        "/root/c06_sol_review"
-      ],
-      "candidates": {
-        "C-09": "45a0f9900306f60a6a87a2fbfffbf7dd57adca2e",
-        "C-06": "d8fa515d32b6d5d0c637e325d8fe41705ff3dae6"
-      },
+      "workers": ["/root/c09_luna", "/root/c06_luna"],
+      "reviewers": ["/root/c09_sol_review", "/root/c06_sol_review"],
+      "candidates": {"C-09": "45a0f9900306f60a6a87a2fbfffbf7dd57adca2e", "C-06": "d8fa515d32b6d5d0c637e325d8fe41705ff3dae6"},
       "verdict": "changes_required",
-      "findings": {
-        "C-09": {
-          "critical": 0,
-          "important": 2,
-          "minor": 0
-        },
-        "C-06": {
-          "critical": 0,
-          "important": 6,
-          "minor": 0
-        }
-      },
-      "review_refs": [
-        "docs/implementation/reviews/2026-10-20-c09-sol-review.md",
-        "docs/implementation/reviews/2026-10-20-c06-sol-review.md"
-      ],
-      "reviewer_tests": {
-        "C-09": "PASS 24, FAIL 0, WARN 0, SKIP 0",
-        "C-06": "PASS 52, FAIL 0, WARN 0, SKIP 0"
-      },
+      "findings": {"C-09": {"critical": 0, "important": 2, "minor": 0}, "C-06": {"critical": 0, "important": 6, "minor": 0}},
+      "review_refs": ["docs/implementation/reviews/2026-10-20-c09-sol-review.md", "docs/implementation/reviews/2026-10-20-c06-sol-review.md"],
+      "reviewer_tests": {"C-09": "PASS 24, FAIL 0, WARN 0, SKIP 0", "C-06": "PASS 52, FAIL 0, WARN 0, SKIP 0"},
       "allowed_next_transition": "Each bounded repair 1 receives the single focused Sol-high rereview. Only focused pass permits serial packet integration; shared schema/CLI work remains closed until then.",
       "disposition": "C-09 must preserve candidate-specific failures and named reasons and provide runnable public inputs while keeping the real protocol gate open. C-06 must repair accepted-predecessor compatibility, variance units, complete-empty nominations, privacy propagation and immutable lineage before shared CLI wiring."
     },
@@ -1753,28 +1348,11 @@
       "event": "c09_c06_initial_workers_dispatched",
       "date": "2026-10-20",
       "base_commit": "ef7da20",
-      "workers": [
-        "/root/c09_luna",
-        "/root/c06_luna"
-      ],
-      "worktrees": [
-        "/Users/megastore/.codex/worktrees/c09-clinical-prediction/PML MultiOmics Analysis Pipeline",
-        "/Users/megastore/.codex/worktrees/c06-cross-backend/PML MultiOmics Analysis Pipeline"
-      ],
+      "workers": ["/root/c09_luna", "/root/c06_luna"],
+      "worktrees": ["/Users/megastore/.codex/worktrees/c09-clinical-prediction/PML MultiOmics Analysis Pipeline", "/Users/megastore/.codex/worktrees/c06-cross-backend/PML MultiOmics Analysis Pipeline"],
       "allowlists": {
-        "C-09": [
-          "R/clinical_prediction_comparison.R",
-          "tests/testthat/test-C-09.R",
-          "inst/examples/tickets/C-09.yaml",
-          "docs/implementation/registrations/C-09.json"
-        ],
-        "C-06": [
-          "R/export_c.R",
-          "R/integration_comparison.R",
-          "tests/testthat/test-C-06.R",
-          "inst/examples/tickets/C-06.yaml",
-          "docs/implementation/registrations/C-06.json"
-        ]
+        "C-09": ["R/clinical_prediction_comparison.R", "tests/testthat/test-C-09.R", "inst/examples/tickets/C-09.yaml", "docs/implementation/registrations/C-09.json"],
+        "C-06": ["R/export_c.R", "R/integration_comparison.R", "tests/testthat/test-C-06.R", "inst/examples/tickets/C-06.yaml", "docs/implementation/registrations/C-06.json"]
       },
       "allowed_next_transition": "Inspect each completed candidate independently, then dispatch fresh Sol-6.1-high review. Do not integrate either packet before its review; do not release G6 or D.",
       "disposition": "Write sets are disjoint and dependencies/review gate G5 are satisfied. C-09 remains conditional: public synthetic software tests may establish machinery, but no real endpoint/deployment qualification may be invented."
@@ -1783,24 +1361,12 @@
       "event": "c08_accepted_after_clean_package_gate",
       "date": "2026-10-20",
       "snapshot": "d69ef1e",
-      "integrated_commits": [
-        "bd34cb8",
-        "519f48c",
-        "b45f31a",
-        "c5535fb",
-        "2170820",
-        "d45c88f"
-      ],
+      "integrated_commits": ["bd34cb8", "519f48c", "b45f31a", "c5535fb", "2170820", "d45c88f"],
       "focused_tests": "C-08 PASS 288; C-01 PASS 109; C-03 PASS 82; C-04 PASS 132; all focused runs FAIL 0, WARN 0, SKIP 0.",
       "cli": "Exact Stage-C command exited 0; endpoint JSON and three envelopes validated; B request remained scheduled/not_started, empty-result and non-recursive; endpoint/request source hash matched.",
       "package_check": "Clean archive at d69ef1e: Status OK; FAIL 0, WARN 22, SKIP 0, PASS 4367.",
       "warning_disposition": "Eight accepted B-T07 installed-artifact missing-Git-metadata probes plus fourteen native MOFA small-fixture/QC diagnostics. The prior two C-08 file-open warnings are absent.",
-      "acceptance": [
-        "C-08-AC1",
-        "C-08-AC2",
-        "C-08-AC3",
-        "C-08-AC4"
-      ],
+      "acceptance": ["C-08-AC1", "C-08-AC2", "C-08-AC3", "C-08-AC4"],
       "review_ref": "docs/implementation/reviews/2026-10-20-c08-sol-acceptance.md",
       "allowed_next_transition": "Archive the C-08 shared worktree, then dispatch C-09 and C-06 only on disjoint allowlists. G6 and D remain closed until both packets and the milestone audit pass.",
       "disposition": "Accepted on synthetic software evidence only. No private data, biological endpoint validity, clinical association, prediction performance or new native C-08 MOFA endpoint claim is made."
@@ -1811,10 +1377,7 @@
       "worker": "/root/c08_shared_luna",
       "candidate_commit": "6ec94b35f7fe05cb61ff30b43d7bd7bf2955c508",
       "integrated_commit": "d45c88f",
-      "changed_files": [
-        "tests/testthat/test-C-08-shared.R",
-        "docs/implementation/registrations/C-08.json"
-      ],
+      "changed_files": ["tests/testthat/test-C-08-shared.R", "docs/implementation/registrations/C-08.json"],
       "worker_installed_test": "C-08-shared PASS 52, FAIL 0, WARN 0, SKIP 0 after reproducing FAIL 3, WARN 2, PASS 31 before the path repair.",
       "sol_source_test": "C-08 PASS 288, FAIL 0, WARN 0, SKIP 0.",
       "allowed_next_transition": "Repeat the full clean archive package gate with the verified combined R libraries and isolated MOFA Python runtime. Accept C-08 only after Status OK and named warning disposition.",
@@ -1835,20 +1398,10 @@
       "event": "c08_shared_focused_rereview_pass_integrated_verification_green",
       "date": "2026-10-20",
       "reviewer": "/root/c08_shared_sol_review",
-      "candidate_commits": [
-        "b579bfd214618957adb6fcd7193284758913aa27",
-        "9338bd841c3cb959028f22d7f42d05bb6c6c802a"
-      ],
-      "integrated_commits": [
-        "c5535fb",
-        "2170820"
-      ],
+      "candidate_commits": ["b579bfd214618957adb6fcd7193284758913aa27", "9338bd841c3cb959028f22d7f42d05bb6c6c802a"],
+      "integrated_commits": ["c5535fb", "2170820"],
       "verdict": "addressed/pass",
-      "findings": {
-        "critical": 0,
-        "important": 0,
-        "minor": 0
-      },
+      "findings": {"critical": 0, "important": 0, "minor": 0},
       "review_ref": "docs/implementation/reviews/2026-10-20-c08-shared-focused-rereview.md",
       "integrated_tests": "C-08 PASS 288; C-01 PASS 109; C-03 PASS 82; C-04 PASS 132; all FAIL 0, WARN 0, SKIP 0.",
       "integrated_cli": "Exact Stage-C command exited 0 at /private/tmp/triomics-c08-exact.7WHwC0; endpoint JSON and all three envelopes validated; scheduled B source hash matched endpoint bundle 0559bcb352370fc719a923b31b787ddb829fc02bff4d35ff16f5b299e08d7879.",
@@ -1862,11 +1415,7 @@
       "reviewer": "/root/c08_shared_sol_review",
       "base_candidate": "b579bfd214618957adb6fcd7193284758913aa27",
       "repair_commit": "9338bd841c3cb959028f22d7f42d05bb6c6c802a",
-      "changed_files": [
-        "R/cli.R",
-        "tests/testthat/test-C-08-shared.R",
-        "docs/implementation/registrations/C-08.json"
-      ],
+      "changed_files": ["R/cli.R", "tests/testthat/test-C-08-shared.R", "docs/implementation/registrations/C-08.json"],
       "worker_tests": "C-08 PASS 288; C-08-shared PASS 52; C-01 PASS 109; C-03 PASS 82; C-04 PASS 132; all reported FAIL 0, WARN 0, SKIP 0.",
       "worker_cli": "Fresh Stage-C command exited 0; persisted endpoint read-back validated and its bundle hash matched the scheduled B request source hash.",
       "allowed_next_transition": "Focused pass permits serial integration and fresh Sol verification. Findings remaining keep C-08 blocked; no second shared rereview.",
@@ -1879,11 +1428,7 @@
       "worker": "/root/c08_shared_luna",
       "candidate_commit": "b579bfd214618957adb6fcd7193284758913aa27",
       "verdict": "findings_remain",
-      "findings": {
-        "critical": 0,
-        "important": 2,
-        "minor": 0
-      },
+      "findings": {"critical": 0, "important": 2, "minor": 0},
       "review_ref": "docs/implementation/reviews/2026-10-20-c08-shared-sol-review.md",
       "allowed_next_transition": "One additive targeted continuation in the same isolated shared worker, followed by fresh Sol inspection and verification. Do not rerun packet repairs or release C-09/C-06.",
       "disposition": "The fit-once seam and B-owned scheduling behavior passed focused tests, but Stage C silently dropped source-selection ancestry and wrote an endpoint bundle whose body no longer matched its own hash. C-08 remains unaccepted."
@@ -1893,21 +1438,9 @@
       "date": "2026-10-20",
       "worker": "/root/c08_shared_luna",
       "base_commit": "b45f31a422349c6fd4e5a702c30d7df1c4570e6d",
-      "packet_commits": [
-        "bd34cb8",
-        "519f48c",
-        "b45f31a"
-      ],
+      "packet_commits": ["bd34cb8", "519f48c", "b45f31a"],
       "sol_verification": "Integrated C-08 focused suite: PASS 236, FAIL 0, WARN 0, SKIP 0.",
-      "allowlist": [
-        "R/integration_contract.R",
-        "R/cli.R",
-        "R/stage_registry.R",
-        "tests/testthat/test-C-08-shared.R",
-        "inst/examples/tickets/C-08.yaml",
-        "inst/examples/data/c08/**",
-        "docs/implementation/registrations/C-08.json"
-      ],
+      "allowlist": ["R/integration_contract.R", "R/cli.R", "R/stage_registry.R", "tests/testthat/test-C-08-shared.R", "inst/examples/tickets/C-08.yaml", "inst/examples/data/c08/**", "docs/implementation/registrations/C-08.json"],
       "allowed_next_transition": "Inspect and directly verify the shared candidate. C-08 remains unaccepted until actual single-fit handoff, exact CLI endpoint/request artifacts and package gate pass.",
       "disposition": "Packet repair budget and focused rereview are exhausted. This is the one separately scoped shared-behavior repair required by the registration seam, not a packet repair reset or scientific change."
     },
@@ -1918,11 +1451,7 @@
       "worker": "/root/c08_luna",
       "candidate_commit": "53acd32ac6859b0ffcef8d8c7d610b195c8f545f",
       "verdict": "findings_remain",
-      "findings": {
-        "critical": 0,
-        "important": 3,
-        "minor": 0
-      },
+      "findings": {"critical": 0, "important": 3, "minor": 0},
       "review_ref": "docs/implementation/reviews/2026-10-20-c08-repair1-rereview.md",
       "allowed_next_transition": "One final bounded repair 2, then direct Sol inspection and verification. No second focused rereview.",
       "disposition": "Authoritative handoff, score reproduction and lineage binding are locally corrected. Production mean-weight shape, B-consumer visit/time handoff and single-visit date validation remain."
@@ -1933,12 +1462,7 @@
       "worker": "/root/c08_luna",
       "reviewer": "/root/c08_sol_review",
       "candidate_commit": "53acd32ac6859b0ffcef8d8c7d610b195c8f545f",
-      "changed_files": [
-        "R/integration_endpoints.R",
-        "R/clinical_score_requests.R",
-        "tests/testthat/test-C-08.R",
-        "docs/implementation/registrations/C-08.json"
-      ],
+      "changed_files": ["R/integration_endpoints.R", "R/clinical_score_requests.R", "tests/testthat/test-C-08.R", "docs/implementation/registrations/C-08.json"],
       "worker_tests": "Exact C-08 suite: 11 blocks, PASS 206, FAIL 0, WARN 0, SKIP 0. Adversarial red run exited 1 with 18 observed failures and no skips.",
       "worker_cli": "Exact stage-C command exited 0 but exercises only the legacy PCA result; registration records the shared handoff as unresolved and C-08 remains unaccepted.",
       "allowed_next_transition": "Pass: integrate packet-owned commits as implemented-but-unaccepted, then open one exclusive shared Luna correctness repair. Findings remaining: bounded repair 2 only, followed by direct Sol verification.",
@@ -1951,17 +1475,8 @@
       "worker": "/root/c08_luna",
       "candidate_commit": "809fc8933d84f1b716205a829a717643c8c5e15f",
       "verdict": "changes_required",
-      "findings": {
-        "critical": 0,
-        "important": 4,
-        "minor": 0
-      },
-      "acceptance": {
-        "C-08-AC1": "fail",
-        "C-08-AC2": "partial",
-        "C-08-AC3": "conditional_pass",
-        "C-08-AC4": "incomplete"
-      },
+      "findings": {"critical": 0, "important": 4, "minor": 0},
+      "acceptance": {"C-08-AC1": "fail", "C-08-AC2": "partial", "C-08-AC3": "conditional_pass", "C-08-AC4": "incomplete"},
       "review_ref": "docs/implementation/reviews/2026-10-20-c08-sol-review.md",
       "allowed_next_transition": "One bounded allowlisted repair 1 followed by the single focused Sol-high rereview. Shared correctness repair stays exclusive and unopened until the packet-owned seam is corrected.",
       "disposition": "Green fabricated fixtures do not establish compatibility with accepted native fit shapes or authoritative lineage. No candidate integration or downstream release is allowed."
@@ -1972,13 +1487,7 @@
       "worker": "/root/c08_luna",
       "reviewer": "/root/c08_sol_review",
       "candidate_commit": "809fc8933d84f1b716205a829a717643c8c5e15f",
-      "changed_files": [
-        "R/integration_endpoints.R",
-        "R/clinical_score_requests.R",
-        "tests/testthat/test-C-08.R",
-        "inst/examples/tickets/C-08.yaml",
-        "docs/implementation/registrations/C-08.json"
-      ],
+      "changed_files": ["R/integration_endpoints.R", "R/clinical_score_requests.R", "tests/testthat/test-C-08.R", "inst/examples/tickets/C-08.yaml", "docs/implementation/registrations/C-08.json"],
       "worker_tests": "Exact C-08 suite: 8 blocks, PASS 149, FAIL 0, WARN 0, SKIP 0; initial red run recorded missing implementation.",
       "worker_cli": "Exact synthetic stage-C command exited 0; legacy IntegrationResult output remains until Sol adjudicates the packet-owned shared registration request.",
       "allowed_next_transition": "Pass: integrate serially and apply only reviewed Sol-owned registration. Changes required: one bounded Luna repair 1. No C-08 acceptance or downstream release yet.",
@@ -1992,13 +1501,7 @@
       "requested_effort": "max",
       "base_commit": "cad313b749814c45ed75b5116adf4951103ee2c9",
       "worktree": "/Users/megastore/.codex/worktrees/c08-endpoint-lineage/PML MultiOmics Analysis Pipeline",
-      "allowlist": [
-        "R/integration_endpoints.R",
-        "R/clinical_score_requests.R",
-        "tests/testthat/test-C-08.R",
-        "inst/examples/tickets/C-08.yaml",
-        "docs/implementation/registrations/C-08.json"
-      ],
+      "allowlist": ["R/integration_endpoints.R", "R/clinical_score_requests.R", "tests/testthat/test-C-08.R", "inst/examples/tickets/C-08.yaml", "docs/implementation/registrations/C-08.json"],
       "allowed_next_transition": "Inspect the clean candidate and dispatch one fresh Sol-6.1-high review. Do not integrate or release C-09/C-06 before review and fresh Sol verification.",
       "disposition": "Initial attempt only; public synthetic fixtures, no private study data, no duplicated clinical fitting, and no shared registration writes."
     },
@@ -2006,22 +1509,12 @@
       "event": "c05_accepted_after_integrated_gates",
       "date": "2026-10-20",
       "snapshot": "c34d9fffd4f17d88d54a69dda6410d4bc6ee6365",
-      "integrated_commits": [
-        "76f8188",
-        "ed69a12",
-        "049a0cd",
-        "c34d9ff"
-      ],
+      "integrated_commits": ["76f8188", "ed69a12", "049a0cd", "c34d9ff"],
       "focused_tests": "Registered C-05: FAIL 0, WARN 15, SKIP 0, PASS 141. Fourteen warnings were the recurring native MOFA small-fixture diagnostics; one run additionally emitted the highly-correlated-factors QC warning.",
       "cli": "Exact stage-C command exited 0; train/save/reload, missingness, variance, seed sensitivity and typed mapping hashes were recorded. Output hashes are in the acceptance review.",
       "package_check": "Clean archive at c34d9ff: Status: OK; FAIL 0, WARN 22, SKIP 0, PASS 4076.",
       "warning_disposition": "Eight warnings are the accepted B-T07 installed-artifact Git-metadata probes; fourteen are native MOFA small-fixture/QC diagnostics. None were suppressed and the run is not described as warning-free.",
-      "acceptance": [
-        "C-05-AC1",
-        "C-05-AC2",
-        "C-05-AC3",
-        "C-05-AC4"
-      ],
+      "acceptance": ["C-05-AC1", "C-05-AC2", "C-05-AC3", "C-05-AC4"],
       "review_ref": "docs/implementation/reviews/2026-10-20-c05-sol-acceptance.md",
       "allowed_next_transition": "Archive the completed C-05 worktree, then dispatch one fresh isolated Luna-max worker for C-08. C-09 and C-06 remain closed until C-08 acceptance; G6 and D remain closed.",
       "disposition": "Accepted on synthetic software evidence only. The route is exploratory-only, prediction is unsupported, no enrichment was run, and no private study or biological validation is claimed."
@@ -2033,11 +1526,7 @@
       "worker": "/root/c05_repair1_luna",
       "candidate_commit": "9eb420702c854b7e7e6de7a8303d21b9a6393c8b",
       "verdict": "changes_required",
-      "findings": {
-        "critical": 0,
-        "important": 1,
-        "minor": 0
-      },
+      "findings": {"critical": 0, "important": 1, "minor": 0},
       "review_ref": "docs/implementation/reviews/2026-10-20-c05-repair1-rereview.md",
       "allowed_next_transition": "One final bounded repair of typed MappingEdge shape and fitted-feature correspondence, then direct Sol inspection and verification. No second focused rereview.",
       "disposition": "Original variance, missingness, seed-sensitivity and version-bound hashing findings are closed. Annotation mapping validation remains open."
@@ -2047,11 +1536,7 @@
       "date": "2026-10-20",
       "worker": "/root/c05_repair1_luna",
       "candidate_commit": "9eb420702c854b7e7e6de7a8303d21b9a6393c8b",
-      "changed_files": [
-        "R/integration_mofa.R",
-        "tests/testthat/test-C-05.R",
-        "docs/implementation/registrations/C-05.json"
-      ],
+      "changed_files": ["R/integration_mofa.R", "tests/testthat/test-C-05.R", "docs/implementation/registrations/C-05.json"],
       "sol_tests": "Isolated MOFA2 1.22.1/mofapy2 0.7.5 C-05 suite: 110 successes, 0 failures, 14 warnings, 0 skips; four native fits.",
       "warning_inventory": "Tiny-fixture native diagnostics: four less-than-15-features warnings, four factor/average-expression cautions, three no-non-missing-arguments max warnings, and three inactive-factor notices.",
       "reviewer": "/root/c05_repair1_sol_rereview",
@@ -2066,14 +1551,7 @@
       "requested_effort": "max",
       "base_commit": "8dcd78d",
       "worktree": "/Users/megastore/.codex/worktrees/c05-repair1/PML MultiOmics Analysis Pipeline",
-      "allowlist": [
-        "R/integration_mofa.R",
-        "R/mofa_state.R",
-        "tools/check-mofa-environment.R",
-        "tests/testthat/test-C-05.R",
-        "inst/examples/tickets/C-05.yaml",
-        "docs/implementation/registrations/C-05.json"
-      ],
+      "allowlist": ["R/integration_mofa.R", "R/mofa_state.R", "tools/check-mofa-environment.R", "tests/testthat/test-C-05.R", "inst/examples/tickets/C-05.yaml", "docs/implementation/registrations/C-05.json"],
       "allowed_next_transition": "Worker commit to focused Sol-high rereview; shared registration remains coordinator-owned and closed.",
       "disposition": "Repair 1 addresses the five Important findings from the initial Sol review. One heavy-fit lease; public synthetic inputs only."
     },
@@ -2083,17 +1561,8 @@
       "snapshot": "bb1ac1a",
       "reviewer": "/root/c05_sol_review",
       "verdict": "changes_required",
-      "findings": {
-        "critical": 0,
-        "important": 5,
-        "minor": 1
-      },
-      "acceptance": {
-        "C-05-AC1": "pass",
-        "C-05-AC2": "open",
-        "C-05-AC3": "open",
-        "C-05-AC4": "partial"
-      },
+      "findings": {"critical": 0, "important": 5, "minor": 1},
+      "acceptance": {"C-05-AC1": "pass", "C-05-AC2": "open", "C-05-AC3": "open", "C-05-AC4": "partial"},
       "review_ref": "docs/implementation/reviews/2026-10-20-c05-sol-review.md",
       "allowed_next_transition": "One bounded C-05 repair 1 in a fresh isolated Luna-max worktree on the packet allowlist. Keep mofa2 registration disabled pending focused rereview and Sol verification.",
       "disposition": "The existing candidate is not accepted. The reproduced native-variance unit defect and AC2-AC4 gaps require repair; no private-data run or scope expansion is requested."
@@ -2107,16 +1576,7 @@
       "warning_disposition": "All eight warnings are B-T07 git rev-parse status 128 diagnostics from installed artifact output roots without Git metadata: AC1 once, AC2 once, AC3 once, AC4 missing-artifact loop four times, privacy wording once. C-03, C-04 and A installed suites emitted zero warnings.",
       "astra_adjudication": "Fresh read-only /root/c03_c04_warning_gate_astra: no Critical or Important blocker; A-T01-AC2 permits an explicit disposition and does not require another B-T07 repair exception.",
       "fresh_tests": "Current-head C-03 and C-04 focused suites completed successfully with no testthat warning or failure.",
-      "acceptance": [
-        "C-03-AC1",
-        "C-03-AC2",
-        "C-03-AC3",
-        "C-03-AC4",
-        "C-04-AC1",
-        "C-04-AC2",
-        "C-04-AC3",
-        "C-04-AC4"
-      ],
+      "acceptance": ["C-03-AC1", "C-03-AC2", "C-03-AC3", "C-03-AC4", "C-04-AC1", "C-04-AC2", "C-04-AC3", "C-04-AC4"],
       "review_refs": [
         "docs/implementation/reviews/2026-10-20-fda190f-warning-disposition.md",
         "docs/implementation/reviews/2026-10-20-c03-c04-sol-acceptance.md"
@@ -2227,10 +1687,7 @@
       "date": "2026-10-19",
       "commit": "6ea8d20",
       "verdict": "pass",
-      "findings": {
-        "critical": 0,
-        "important": 0
-      },
+      "findings": {"critical": 0, "important": 0},
       "prior_findings": "The three Important findings on a3b9713 are closed.",
       "review_ref": "docs/implementation/reviews/2026-10-19-c04-repair-rereview.md",
       "acceptance": [],
@@ -2277,11 +1734,7 @@
       "commit": "9758b4a",
       "review_thread": "01a15375-51b5-7940-880d-e90c14552e73",
       "verdict": "changes_required",
-      "findings": {
-        "critical": 0,
-        "important": 4,
-        "note": 1
-      },
+      "findings": {"critical": 0, "important": 4, "note": 1},
       "review_ref": "docs/implementation/reviews/2026-10-19-c03-astra-review.md",
       "allowed_next_transition": "One C-03 repair on the four allowlisted files. Do not register mixomics_diablo. Do not accept C-03. C-08 and every D packet stay closed.",
       "disposition": "Repair must orient common loadings with the frozen consensus signs, return held-out scores from native predict variates plus the stored consensus transform, recompute native block variance against the installed explained_variance formula, and prove the adapter fits a supplied candidate without calling tune.block.splsda. Nested CV stays in C-02."
@@ -2304,16 +1757,8 @@
       "code_commit": "85922cf",
       "m5_review_thread": "01a15362-3c23-7432-8e22-d52aa222658f",
       "m5_verdict": "pass",
-      "findings": {
-        "critical": 0,
-        "important": 0
-      },
-      "acceptance": [
-        "C-02-AC1",
-        "C-02-AC2",
-        "C-02-AC3",
-        "C-02-AC4"
-      ],
+      "findings": {"critical": 0, "important": 0},
+      "acceptance": ["C-02-AC1", "C-02-AC2", "C-02-AC3", "C-02-AC4"],
       "allowed_next_transition": "C-03, C-04, and C-05 may start on disjoint write sets. C-08 and every D packet stay closed.",
       "disposition": "Sol acceptance on public synthetic evidence. The M5 reviewer did not rerun tests. Sol had already rerun the C-02 suite, the stage C command, and the package check."
     },
@@ -2329,11 +1774,7 @@
     {
       "event": "c02_shared_registration_verified_not_accepted",
       "date": "2026-10-19",
-      "code_commits": [
-        "a3a1cfd",
-        "249e2d0",
-        "2f4e8e4"
-      ],
+      "code_commits": ["a3a1cfd", "249e2d0", "2f4e8e4"],
       "splits_commit": "028f7c8",
       "luna_recheck": "F01-F08 closed; 17 cases and 131 assertions on the pre-registration tree; no files changed",
       "astra_recheck": "read-only pass on a3a1cfd..2f4e8e4; tests were not rerun by that reviewer",
@@ -2351,12 +1792,7 @@
       "implementer_thread_id": "01a15056-fa00-79b3-867c-538f1a004894",
       "repair1_commit": "6535bea961bad463fd403504f7c9e45a481cd4b0",
       "verdict": "findings_remain",
-      "finding_status": {
-        "addressed": 7,
-        "not_addressed": 1,
-        "new_critical": 0,
-        "new_important": 1
-      },
+      "finding_status": {"addressed": 7, "not_addressed": 1, "new_critical": 0, "new_important": 1},
       "rereview_ref": "/private/tmp/triomics-c-02-repair1-sol-rereview-2026-10-18.md",
       "repair": 2,
       "allowed_next_transition": "after final repair, Sol inspects F04/N01 diff and applies shared registration plus fresh integrated tests; no further packet repair or focused rereview is authorized",
@@ -2383,11 +1819,7 @@
       "implementer_thread_id": "01a15056-fa00-79b3-867c-538f1a004894",
       "candidate_commit": "809190e62589b3e7d26c656fbdc3e8c21a37810c",
       "verdict": "changes_required",
-      "findings": {
-        "critical": 0,
-        "important": 8,
-        "minor": 2
-      },
+      "findings": {"critical": 0, "important": 8, "minor": 2},
       "review_ref": "/private/tmp/triomics-c-02-sol-review-2026-10-18.md",
       "repair": 1,
       "allowed_next_transition": "wait for repair 1, then one focused fresh Sol-6.1-high rereview of F01-F08 and new repair breakage",
@@ -2435,12 +1867,7 @@
       "focused_evidence": "109 expectations; 0 failures, warnings or skips",
       "cli": "exact C-01 stage-C command exited 0; complete concat_pca payload and valid envelope",
       "package_check": "Status: OK; 0 ERROR, 0 WARNING, 0 NOTE",
-      "acceptance": [
-        "C-01-AC1",
-        "C-01-AC2",
-        "C-01-AC3",
-        "C-01-AC4"
-      ],
+      "acceptance": ["C-01-AC1", "C-01-AC2", "C-01-AC3", "C-01-AC4"],
       "allowed_next_transition": "dispatch C-02 in a fresh isolated Luna-max worktree; do not release G5-dependent packets until C-02 acceptance and M5 Astra review",
       "disposition": "C-01 accepted on public synthetic software evidence only. No real-study or biological validation is claimed."
     },
@@ -2464,11 +1891,7 @@
       "implementer_thread_id": "01a14fdb-c11f-7e13-836e-e87635a89f23",
       "candidate_commit": "5e43391155643732289a2cfc3d2a27fdbcd3b416",
       "verdict": "changes_required",
-      "findings": {
-        "p0": 0,
-        "p1": 2,
-        "p2": 2
-      },
+      "findings": {"p0": 0, "p1": 2, "p2": 2},
       "review_ref": "/private/tmp/triomics-c-01-sol-review-2026-10-18.md",
       "repair": 1,
       "allowed_next_transition": "wait for the repair commit, then run one focused fresh Sol-6.1-high rereview of the four findings",
@@ -2510,10 +1933,7 @@
       "review_ref": "docs/implementation/reviews/2026-10-18-spec-kit-reevaluation-focused-astra-rereview.md",
       "verdict": "pass",
       "finding": "initial P2 lifecycle bookkeeping issue addressed",
-      "new_findings": {
-        "p0": 0,
-        "p1": 0
-      },
+      "new_findings": {"p0": 0, "p1": 0},
       "allowed_next_transition": "remain paused; after Omar explicitly resumes, continue the same C-01 initial attempt and obtain fresh Sol-6.1-high review only after a committed candidate",
       "disposition": "The requirement matrix and evidence boundaries are reviewed. No scientific-contract change, implementation, packet acceptance or publication occurred."
     },
@@ -2523,11 +1943,7 @@
       "reviewer": "/root/spec_reevaluation_astra",
       "review_ref": "docs/implementation/reviews/2026-10-18-spec-kit-reevaluation-astra-review.md",
       "verdict": "changes_required",
-      "findings": {
-        "p0": 0,
-        "p1": 0,
-        "p2": 1
-      },
+      "findings": {"p0": 0, "p1": 0, "p2": 1},
       "correction": "The orchestration disposition now distinguishes the active read-only reviewer from implementation workers. C-01 remains paused at attempt 1.",
       "allowed_next_transition": "run one focused read-only Astra rereview of the bookkeeping correction, then restore the paused C-01 state with no active worker",
       "disposition": "The reviewer confirmed all 29 requirement classifications and evidence boundaries. No scientific-contract change is required."
@@ -2549,12 +1965,7 @@
       "base_commit": "605244fe377ff2db8b145f1628274ab791b455a6",
       "review_ref": "docs/implementation/reviews/2026-10-18-spec-kit-reevaluation.md",
       "reviewer_brief_ref": "docs/implementation/reviews/2026-10-18-spec-kit-reevaluation-review-brief.md",
-      "requirements": {
-        "verified": 7,
-        "partial": 15,
-        "missing": 7,
-        "total": 29
-      },
+      "requirements": {"verified": 7, "partial": 15, "missing": 7, "total": 29},
       "allowed_next_transition": "keep C-01 paused; after Omar explicitly resumes, continue the same initial attempt and obtain fresh Sol-6.1-high review only after a committed candidate",
       "disposition": "No scientific contract, packet identity, product code, private input, acceptance, publication, threshold or seed changed. Live evidence files were reconciled to the 17 October inventory and Notion read-back receipts."
     },
@@ -2612,12 +2023,7 @@
       "finding": "M4-G4-001: B-T01/B-T02/B-T03 lacked explicit acceptance records despite implementation and integrated evidence",
       "correction_ref": "docs/implementation/change-records/M4-015-b-t01-b-t03-acceptance-reconciliation.md",
       "acceptance_ref": "docs/implementation/reviews/M4-015-b-t01-b-t03-sol-acceptance.md",
-      "fresh_tests": {
-        "b_t01_b_t02_b_t03_expectations": 749,
-        "failed": 0,
-        "warnings": 0,
-        "skipped": 0
-      },
+      "fresh_tests": {"b_t01_b_t02_b_t03_expectations": 749, "failed": 0, "warnings": 0, "skipped": 0},
       "allowed_next_transition": "commit the record-only correction and dispatch the single focused Astra-low rereview of M4-G4-001",
       "disposition": "No code/scientific correction was requested. B-T07, G4 and Stage C remain unreleased."
     },
@@ -2634,30 +2040,10 @@
       "event": "m4_014_integrated_software_and_package_gates_passed",
       "date": "2026-10-16",
       "snapshot_commit": "d2a2231f9299fd2f529aa8a66f2f5c0872d8e908",
-      "source_b_t07": {
-        "expectations": 124,
-        "failed": 0,
-        "warnings": 0,
-        "skipped": 0
-      },
-      "installed_b_t07": {
-        "expectations": 124,
-        "failed": 0,
-        "skipped": 0,
-        "disclosed_absent_git_warnings": 8
-      },
-      "full_suite": {
-        "expectations": 3462,
-        "failed": 0,
-        "warnings": 0,
-        "skipped": 0
-      },
-      "package_check": {
-        "status": "OK",
-        "errors": 0,
-        "warnings": 0,
-        "notes": 0
-      },
+      "source_b_t07": {"expectations": 124, "failed": 0, "warnings": 0, "skipped": 0},
+      "installed_b_t07": {"expectations": 124, "failed": 0, "skipped": 0, "disclosed_absent_git_warnings": 8},
+      "full_suite": {"expectations": 3462, "failed": 0, "warnings": 0, "skipped": 0},
+      "package_check": {"status": "OK", "errors": 0, "warnings": 0, "notes": 0},
       "evidence_ref": "docs/implementation/reviews/M4-014-integration-package-gate.md",
       "allowed_next_transition": "commit the immutable M4 evidence snapshot and dispatch one fresh Astra-low milestone review",
       "disposition": "Software/package gates passed on public synthetic fixtures only. B-T07, G4 and Stage C remain unreleased pending Astra and Sol acceptance."
@@ -2669,17 +2055,8 @@
       "repair_candidate": "74335d16e732dcaa840ed077f619fb8261d613cc",
       "integration_commit": "cbe5400",
       "verdict": "addressed",
-      "new_findings": {
-        "p0": 0,
-        "p1": 0
-      },
-      "tests": {
-        "spaced_source_expectations": 124,
-        "installed_expectations": 124,
-        "failed": 0,
-        "skipped": 0,
-        "known_git_metadata_warnings_per_run": 8
-      },
+      "new_findings": {"p0": 0, "p1": 0},
+      "tests": {"spaced_source_expectations": 124, "installed_expectations": 124, "failed": 0, "skipped": 0, "known_git_metadata_warnings_per_run": 8},
       "review_ref": "docs/implementation/reviews/M4-014-source-path-focused-rereview.md",
       "allowed_next_transition": "run fresh integrated source/installed parity, full local suite and clean archive package check; dispatch immutable M4 Astra review only if all gates pass",
       "disposition": "The correction is test-helper-only. B-T07, G4 and Stage C remain unreleased."
@@ -2690,17 +2067,8 @@
       "implementer": "/root/m4_014_bt07_luna",
       "reviewer": "/root/m4_014_repair1_sol_rereview",
       "repair_commit": "74335d16e732dcaa840ed077f619fb8261d613cc",
-      "changed_files": [
-        "tests/testthat/test-B-T07.R"
-      ],
-      "tests": {
-        "spaced_source_expectations": 124,
-        "integration_snapshot_expectations": 124,
-        "installed_expectations": 124,
-        "failed": 0,
-        "skipped": 0,
-        "known_git_metadata_warnings_per_run": 8
-      },
+      "changed_files": ["tests/testthat/test-B-T07.R"],
+      "tests": {"spaced_source_expectations": 124, "integration_snapshot_expectations": 124, "installed_expectations": 124, "failed": 0, "skipped": 0, "known_git_metadata_warnings_per_run": 8},
       "allowed_next_transition": "serially integrate 74335d1 only if the focused Sol-high re-review marks the finding ADDRESSED with no new P0/P1; otherwise block M4-014",
       "disposition": "Repair restores the prior basename-from-executable-directory source invocation pattern; production and scientific code remain unchanged."
     },
@@ -2709,15 +2077,9 @@
       "date": "2026-10-16",
       "implementer": "/root/m4_014_bt07_luna",
       "integrated_candidate": "01c5e49",
-      "red_status": {
-        "cli_smokes_failed": 4,
-        "test_failures_before_stop": 10,
-        "skips": 0
-      },
+      "red_status": {"cli_smokes_failed": 4, "test_failures_before_stop": 10, "skips": 0},
       "root_cause": "Passing the checkout executable as an absolute Rscript argument from a path containing spaces transforms spaces to ~+~ before inst/exec/triomics normalizes --file, so the CLI never starts.",
-      "allowlist": [
-        "tests/testthat/test-B-T07.R"
-      ],
+      "allowlist": ["tests/testthat/test-B-T07.R"],
       "allowed_next_transition": "one focused Sol-high re-review if source path-with-spaces and installed parity pass; otherwise block M4-014",
       "disposition": "This is a test-runner environment defect within the already authorized M4-014 source/installed CLI scope. No assertion, scientific code or package threshold may change."
     },
@@ -2729,18 +2091,8 @@
       "integration_commit": "01c5e49",
       "sol_manual_commit": "7194b23",
       "verdict": "pass",
-      "findings": {
-        "p0": 0,
-        "p1": 0,
-        "p2": 0
-      },
-      "tests": {
-        "source_expectations": 124,
-        "installed_expectations": 124,
-        "failed": 0,
-        "skipped": 0,
-        "archive_git_metadata_warnings_per_run": 8
-      },
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "tests": {"source_expectations": 124, "installed_expectations": 124, "failed": 0, "skipped": 0, "archive_git_metadata_warnings_per_run": 8},
       "review_ref": "docs/implementation/reviews/M4-014-sol-review.md",
       "allowed_next_transition": "run fresh integrated source/installed B-T07 parity, full local suite and clean archive package check; dispatch immutable M4 Astra review only if all gates pass",
       "disposition": "Review acceptance applies only to the bounded correction. B-T07, G4 and Stage C remain unreleased."
@@ -2752,18 +2104,8 @@
       "reviewer": "/root/m4_014_sol_review",
       "candidate_commit": "4acbd71f9def1dc7d0310477b133fc670530f74d",
       "sol_manual_commit": "7194b23",
-      "tests": {
-        "source_expectations": 124,
-        "installed_expectations": 124,
-        "failed": 0,
-        "skipped": 0,
-        "archive_git_metadata_warnings_per_run": 8
-      },
-      "changed_files": [
-        "R/export_b.R",
-        "tests/testthat/test-B-T07.R",
-        "man/triomics-api.Rd"
-      ],
+      "tests": {"source_expectations": 124, "installed_expectations": 124, "failed": 0, "skipped": 0, "archive_git_metadata_warnings_per_run": 8},
+      "changed_files": ["R/export_b.R", "tests/testthat/test-B-T07.R", "man/triomics-api.Rd"],
       "allowed_next_transition": "serially integrate 4acbd71 only if the fresh Sol-high review passes; then run source/installed parity, full local suite and clean archive package check",
       "disposition": "Worker diff is exactly allowlisted and clean. The archive-only warnings are retained for reviewer assessment and do not satisfy or waive the final package gate."
     },
@@ -2772,14 +2114,7 @@
       "date": "2026-10-16",
       "agent_name": "/root/m4_014_bt07_luna",
       "snapshot_commit": "fe9e870",
-      "package_status": {
-        "errors": 1,
-        "warnings": 2,
-        "notes": 1,
-        "b_t07_failures": 15,
-        "installed_passes": 3403,
-        "skips": 0
-      },
+      "package_status": {"errors": 1, "warnings": 2, "notes": 1, "b_t07_failures": 15, "installed_passes": 3403, "skips": 0},
       "root_cause": "Installed B-T07 tickets retain checkout-relative discovery paths excluded from the package, while the CLI smoke helper assumes the checkout executable rather than the installed triomics_main dispatcher.",
       "allowed_next_transition": "complete the exact M4-014 two-file correction, record GREEN source/installed evidence and return a clean candidate commit for fresh Sol-high review",
       "disposition": "RED matches M4-013. No threshold, model, fixture content, assertion or scientific behavior was changed."
@@ -2792,10 +2127,7 @@
       "requested_effort": "max",
       "snapshot_commit": "fe9e870",
       "worktree": "/Users/megastore/.codex/worktrees/m4-014-bt07-package/PML MultiOmics Analysis Pipeline",
-      "allowlist": [
-        "tests/testthat/test-B-T07.R",
-        "R/export_b.R"
-      ],
+      "allowlist": ["tests/testthat/test-B-T07.R", "R/export_b.R"],
       "allowed_next_transition": "inspect the candidate and dispatch a fresh Sol-high review; do not integrate before review",
       "disposition": "No scientific change, private-data access, attempt reset or gate waiver is authorized."
     },
@@ -2804,11 +2136,7 @@
       "date": "2026-10-16",
       "authorization": "Omar: perfect go ahead, continue",
       "proposal_ref": "docs/implementation/change-records/M4-014-b-t07-package-gate-exception-proposal.md",
-      "scope": [
-        "tests/testthat/test-B-T07.R",
-        "R/export_b.R",
-        "man/triomics-api.Rd (Sol-owned mechanical correction)"
-      ],
+      "scope": ["tests/testthat/test-B-T07.R", "R/export_b.R", "man/triomics-api.Rd (Sol-owned mechanical correction)"],
       "allowed_next_transition": "dispatch one fresh isolated Luna-max worker for tests/testthat/test-B-T07.R and R/export_b.R; Sol applies only the duplicate Rd consolidation serially",
       "disposition": "Authorization is limited to the recorded package-gate correction. Attempt counters remain consumed and every mandatory gate remains in force."
     },
@@ -2838,13 +2166,7 @@
       "date": "2026-10-16",
       "integration_commit": "bd7da66ba58bbce571e90ab1ca76017c8e269d78",
       "package_gate_ref": "docs/implementation/reviews/M4-013-package-check-gate.md",
-      "package_status": {
-        "errors": 1,
-        "warnings": 2,
-        "notes": 1,
-        "installed_test_failures": 15,
-        "installed_test_passes": 3403
-      },
+      "package_status": {"errors": 1, "warnings": 2, "notes": 1, "installed_test_failures": 15, "installed_test_passes": 3403},
       "allowed_next_transition": "record Astra authority classification; do not edit B-T07 beyond exhausted budget without a valid exception",
       "disposition": "Local suite passed. Package gate remains mandatory and failed on installed-path plus package-hygiene defects."
     },
@@ -2854,18 +2176,8 @@
       "reviewer": "/root/m4_013_sol_review",
       "candidate_commit": "57474e754aa3657a45e1db644f8cad3a10840ad6",
       "verdict": "pass",
-      "findings": {
-        "p0": 0,
-        "p1": 0,
-        "p2": 0
-      },
-      "tests": {
-        "cases": 54,
-        "expectations": 870,
-        "failed": 0,
-        "skipped": 0,
-        "archive_git_warnings": 8
-      },
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "tests": {"cases": 54, "expectations": 870, "failed": 0, "skipped": 0, "archive_git_warnings": 8},
       "review_ref": "docs/implementation/reviews/M4-013-sol-review.md",
       "allowed_next_transition": "serial integration followed by full local suite and clean-archive package check",
       "disposition": "Numerics, calibration and privacy are unchanged; exact CLIs exited 0 and 34 envelopes validated."
@@ -2876,13 +2188,7 @@
       "implementer": "/root/m4_013_composition_luna",
       "reviewer": "/root/m4_013_sol_review",
       "candidate_commit": "57474e754aa3657a45e1db644f8cad3a10840ad6",
-      "tests": {
-        "focused_expectations": 870,
-        "adjacent_expectations": 746,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "tests": {"focused_expectations": 870, "adjacent_expectations": 746, "failed": 0, "warned": 0, "skipped": 0},
       "allowed_next_transition": "serial integration only after fresh Sol-high PASS",
       "disposition": "Fresh-root B04/B08/B09 CLI slices passed; exact five-file diff and worktree are clean."
     },
@@ -2900,11 +2206,7 @@
       "date": "2026-10-16",
       "snapshot_commit": "1146b5a",
       "change_ref": "docs/implementation/change-records/M4-013-stage-b-handoff-composition.md",
-      "red_evidence": {
-        "adjacent_failures": 6,
-        "b_t07_focused_status": "pass",
-        "b_t07_exact_cli_exit": 0
-      },
+      "red_evidence": {"adjacent_failures": 6, "b_t07_focused_status": "pass", "b_t07_exact_cli_exit": 0},
       "allowed_next_transition": "dispatch one fresh isolated Luna-max shared-integration worker, then fresh Sol-high review before integration",
       "disposition": "No numerical or scientific contract change; correct producer artifact versioning, same-run B-T04 return and stale composition assertions only."
     },
@@ -2929,11 +2231,7 @@
       "adjudicator": "/root/b_t07_p1_astra_adjudication",
       "candidate_commit": "a893475",
       "verdict": "fail",
-      "findings": {
-        "p0": 0,
-        "p1": 1,
-        "p2": 0
-      },
+      "findings": {"p0": 0, "p1": 1, "p2": 0},
       "allowed_next_transition": "if P1 is upheld, block B-T07 with exhausted repair budget; if overruled on frozen-contract grounds, Sol may record the reasoned disposition and continue integration gates without code change",
       "disposition": "Sol confirmed 124 focused expectations and exact CLI behavior but challenged fail-closed handling of stripped unavailable-method metadata."
     },
@@ -2943,13 +2241,7 @@
       "implementer": "/root/b_t07_luna",
       "reviewer": "/root/b_t07_repair2_sol_review",
       "candidate_commit": "a893475",
-      "tests": {
-        "cases": 12,
-        "expectations": 124,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "tests": {"cases": 12, "expectations": 124, "failed": 0, "warned": 0, "skipped": 0},
       "allowed_next_transition": "serial integration and complete shared-diff review only if the focused repair review passes; otherwise block B-T07 because its repair budget is exhausted",
       "disposition": "Exact B-T07 CLI exited 0 with verified same-run matrix handoff; AC2 remains independently proven by the focused suite rather than the standalone CLI receipt."
     },
@@ -2958,10 +2250,7 @@
       "date": "2026-10-16",
       "implementer": "/root/b_t07_luna",
       "snapshot_commit": "c5f868f",
-      "allowlist": [
-        "R/export_b.R",
-        "tests/testthat/test-B-T07.R"
-      ],
+      "allowlist": ["R/export_b.R", "tests/testthat/test-B-T07.R"],
       "review_ref": "docs/implementation/change-records/M4-012-b-t07-final-compatibility-repair.md",
       "allowed_next_transition": "fresh Sol-high focused review if the exact B-T07 suite and CLI pass; otherwise block B-T07 because its repair budget is exhausted",
       "disposition": "Repair preserves typed unavailable Stage B evidence without inventing an empty C handoff and updates tests for the registered CLI lifecycle."
@@ -2972,16 +2261,8 @@
       "reviewer": "/root/m4_011_unit_a_sol_review",
       "candidate_commit": "814964b5f525f2104153777a5580f0a84f917ea4",
       "verdict": "pass",
-      "findings": {
-        "p0": 0,
-        "p1": 0,
-        "p2": 0
-      },
-      "tests": {
-        "b_t07_expectations": 103,
-        "failed": 0,
-        "skipped": 0
-      },
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "tests": {"b_t07_expectations": 103, "failed": 0, "skipped": 0},
       "review_ref": "docs/implementation/reviews/M4-011-unit-a-sol-review.md",
       "allowed_next_transition": "serially integrate Unit A and perform the frozen three-file Unit B registration",
       "disposition": "Same-run identity, public-hash binding, mutation rejection, serialization boundary and exact allowlist all passed; B-T07 remains unaccepted."
@@ -2992,13 +2273,7 @@
       "implementer": "/root/m4_011_matrix_luna",
       "reviewer": "/root/m4_011_unit_a_sol_review",
       "candidate_commit": "814964b5f525f2104153777a5580f0a84f917ea4",
-      "tests": {
-        "targeted_expectations": 15,
-        "b_t07_expectations": 103,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "tests": {"targeted_expectations": 15, "b_t07_expectations": 103, "failed": 0, "warned": 0, "skipped": 0},
       "allowed_next_transition": "serially integrate Unit A and implement Sol-owned Unit B only if the fresh review passes; otherwise return one bounded shared-unit repair",
       "disposition": "Candidate changes only R/results_b.R and tests/testthat/test-B-T07.R; B-T07 remains unaccepted."
     },
@@ -3008,10 +2283,7 @@
       "agent_name": "/root/m4_011_matrix_luna",
       "snapshot_commit": "f5c4b58",
       "worktree": "/Users/megastore/.codex/worktrees/m4-011-bt07-matrix/PML MultiOmics Analysis Pipeline",
-      "allowlist": [
-        "R/results_b.R",
-        "tests/testthat/test-B-T07.R"
-      ],
+      "allowlist": ["R/results_b.R", "tests/testthat/test-B-T07.R"],
       "allowed_next_transition": "inspect the candidate and dispatch fresh Sol-high review before serial integration and Sol-owned Unit B",
       "disposition": "Unit A is an exclusive shared-behavior implementation and does not consume B-T07 repair 2 unless packet-owned semantics must change."
     },
@@ -3021,18 +2293,8 @@
       "agent_name": "/root/b_t07_repair1_rereview",
       "repair_candidate_commit": "25415fbe4d88a684133267696024d43683e33f64",
       "verdict": "pass",
-      "findings": {
-        "p0": 0,
-        "p1": 0,
-        "p2": 0
-      },
-      "tests": {
-        "cases": 10,
-        "expectations": 88,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "tests": {"cases": 10, "expectations": 88, "failed": 0, "warned": 0, "skipped": 0},
       "review_ref": "docs/implementation/reviews/B-T07-repair1-rereview.md",
       "allowed_next_transition": "integrate b7a9455 then 25415fb serially and apply the scoped Sol-owned shared registration/hook before integrated acceptance",
       "disposition": "All four initial findings are addressed; AC3 same-run and CLI generation remain gated on shared integration."
@@ -3043,13 +2305,7 @@
       "implementer": "/root/b_t07_luna",
       "reviewer": "/root/b_t07_repair1_rereview",
       "repair_candidate_commit": "25415fbe4d88a684133267696024d43683e33f64",
-      "tests": {
-        "cases": 10,
-        "expectations": 88,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "tests": {"cases": 10, "expectations": 88, "failed": 0, "warned": 0, "skipped": 0},
       "allowed_next_transition": "serially integrate the packet commits and perform the approved Sol-owned hook only if the focused rereview passes; otherwise use bounded repair 2",
       "disposition": "Repair 1 changed only R/export_b.R and tests/testthat/test-B-T07.R; exact CLI remains honestly blocked pending shared integration."
     },
@@ -3060,11 +2316,7 @@
       "reviewer": "/root/b_t07_sol_review",
       "candidate_commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
       "verdict": "fail",
-      "findings": {
-        "p0": 0,
-        "p1": 3,
-        "p2": 1
-      },
+      "findings": {"p0": 0, "p1": 3, "p2": 1},
       "review_ref": "docs/implementation/reviews/B-T07-initial-review.md",
       "allowed_next_transition": "same Luna-max implementer performs bounded repair 1, followed by one focused Sol-high rereview",
       "disposition": "False-green success tests, absent source/matrix hash comparison, incomplete restart members and unconditional synthetic claims require packet repair before shared integration."
@@ -3075,19 +2327,8 @@
       "implementer": "/root/b_t07_luna",
       "reviewer": "/root/b_t07_sol_review",
       "candidate_commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
-      "changed_files": [
-        "R/export_b.R",
-        "tests/testthat/test-B-T07.R",
-        "inst/examples/tickets/B-T07.yaml",
-        "docs/implementation/registrations/B-T07.json"
-      ],
-      "worker_tests": {
-        "cases": 8,
-        "expectations": 27,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "changed_files": ["R/export_b.R", "tests/testthat/test-B-T07.R", "inst/examples/tickets/B-T07.yaml", "docs/implementation/registrations/B-T07.json"],
+      "worker_tests": {"cases": 8, "expectations": 27, "failed": 0, "warned": 0, "skipped": 0},
       "cli_evidence": "exit 0 but no B-T07 handoff or reproduction record because the shared post-B hook and same-run resolved matrix exposure are absent",
       "allowed_next_transition": "follow the fresh Sol-high review: integrate packet-owned candidate and perform scoped shared registration only if approved, otherwise use bounded repair 1",
       "disposition": "Coordinator confirmed the clean four-file commit and complete worker report before dispatching the mandatory review."
@@ -3098,12 +2339,7 @@
       "agent_name": "/root/b_t07_luna",
       "snapshot_commit": "b204b53",
       "worktree": "/Users/megastore/.codex/worktrees/b-t07-export-handoff/PML MultiOmics Analysis Pipeline",
-      "allowlist": [
-        "R/export_b.R",
-        "tests/testthat/test-B-T07.R",
-        "inst/examples/tickets/B-T07.yaml",
-        "docs/implementation/registrations/B-T07.json"
-      ],
+      "allowlist": ["R/export_b.R", "tests/testthat/test-B-T07.R", "inst/examples/tickets/B-T07.yaml", "docs/implementation/registrations/B-T07.json"],
       "allowed_next_transition": "inspect candidate and dispatch fresh Sol-high review if the packet evidence and allowlist are complete",
       "disposition": "One fresh Luna-max worker owns the B-T07 initial attempt; Sol retains shared integration, ledger, acceptance and milestone authority."
     },
@@ -3113,11 +2349,7 @@
       "agent_name": "/root/m4_010_m4_005_astra_gate",
       "snapshot_commit": "f96be49",
       "verdict": "pass",
-      "findings": {
-        "p0": 0,
-        "p1": 0,
-        "p2": 0
-      },
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
       "review_ref": "docs/implementation/reviews/M4-010-m4-005-astra-rereview.md",
       "allowed_next_transition": "dispatch one fresh Luna-max B-T07 initial attempt in an isolated worktree",
       "disposition": "Sol accepted B-T08, cleared its blocker and released B-T07. M4/G4 remains open until B-T07 completes and the milestone gate passes."
@@ -3134,23 +2366,9 @@
       "event": "m4_010_full_suite_and_clean_package_check_passed",
       "date": "2026-10-16",
       "integration_commit": "92760cb",
-      "full_suite": {
-        "status": "pass",
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0,
-        "acceptance_assertions_unchanged": 3298
-      },
-      "clean_archive_package_check": {
-        "status": "OK",
-        "exit_code": 0,
-        "required_skips": 0,
-        "root": "/private/tmp/triomics-m4-010-archive-check.pF5pJH"
-      },
-      "log_hashes": {
-        "build_log_sha256": "db9433898016400b9a61f29d1bced54429ba53f3ad80f820674b6af6a87aa5d9",
-        "check_log_sha256": "cb44e185db191cc73ec7185d2aa7bf99280192488aa25261cfc1fe5e6045f2f9"
-      },
+      "full_suite": {"status": "pass", "failed": 0, "warned": 0, "skipped": 0, "acceptance_assertions_unchanged": 3298},
+      "clean_archive_package_check": {"status": "OK", "exit_code": 0, "required_skips": 0, "root": "/private/tmp/triomics-m4-010-archive-check.pF5pJH"},
+      "log_hashes": {"build_log_sha256": "db9433898016400b9a61f29d1bced54429ba53f3ad80f820674b6af6a87aa5d9", "check_log_sha256": "cb44e185db191cc73ec7185d2aa7bf99280192488aa25261cfc1fe5e6045f2f9"},
       "review_ref": "docs/implementation/reviews/M4-010-integration-verification.md",
       "allowed_next_transition": "dispatch the required focused M4-005 Astra rereview on an immutable integrated snapshot",
       "disposition": "The formerly failing installed context is green; B-T08 and B-T07 remain gated until Astra reviews the immutable integrated snapshot."
@@ -3162,11 +2380,7 @@
       "candidate_commit": "91d7d3b83f57684e2a01b3f548e01fee4cfcb97b",
       "integration_commit": "92760cb",
       "verdict": "pass",
-      "findings": {
-        "p0": 0,
-        "p1": 0,
-        "p2": 0
-      },
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
       "review_ref": "docs/implementation/reviews/M4-010-sol-review.md",
       "allowed_next_transition": "complete local suite and fresh clean-archive package check, then immutable focused M4-005 Astra rereview if green",
       "disposition": "The reviewed one-file exception was integrated serially; no production or scientific file changed."
@@ -3177,13 +2391,8 @@
       "implementer": "/root/m4_010_bt08_luna",
       "reviewer": "/root/m4_010_sol_review",
       "candidate_commit": "91d7d3b83f57684e2a01b3f548e01fee4cfcb97b",
-      "changed_files": [
-        "tests/testthat/test-B-T08.R"
-      ],
-      "worker_evidence": {
-        "red": "3 errors and 3 file-open warnings in installed context",
-        "green": "source and installed B-T08 tests completed with no failure, warning or skip"
-      },
+      "changed_files": ["tests/testthat/test-B-T08.R"],
+      "worker_evidence": {"red": "3 errors and 3 file-open warnings in installed context", "green": "source and installed B-T08 tests completed with no failure, warning or skip"},
       "allowed_next_transition": "integrate serially only if the fresh Sol-high review passes; otherwise no further correction is automatically authorized",
       "disposition": "Coordinator inspected the clean one-file commit and report, confirmed the allowlist, and dispatched the mandatory fresh review."
     },
@@ -3193,9 +2402,7 @@
       "agent_name": "/root/m4_010_bt08_luna",
       "snapshot_commit": "f1e9f00",
       "worktree": "/Users/megastore/.codex/worktrees/m4-010-bt08-test-path/PML MultiOmics Analysis Pipeline",
-      "allowlist": [
-        "tests/testthat/test-B-T08.R"
-      ],
+      "allowlist": ["tests/testthat/test-B-T08.R"],
       "allowed_next_transition": "inspect the worker commit and dispatch a fresh Sol-high task review if the allowlist and evidence are complete",
       "disposition": "One fresh Luna-max worker owns the single bounded exception; Sol retains integration, ledger and acceptance authority."
     },
@@ -3205,11 +2412,7 @@
       "agent_name": "/root/m4_010_astra_rereview",
       "candidate_commit": "e9094886e69fb524355323e26dc6a521df445171",
       "verdict": "pass",
-      "findings": {
-        "p0": 0,
-        "p1": 0,
-        "p2": 0
-      },
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
       "review_ref": "docs/implementation/reviews/M4-010-astra-rereview.md",
       "allowed_next_transition": "dispatch one fresh Luna-max worker in one isolated worktree for the approved test-only correction",
       "disposition": "Prior P1 is resolved; the record now covers both installed resource resolution and context-aware CLI harness execution while forbidding simulation, bypass, weakened assertions and scientific changes."
@@ -3220,11 +2423,7 @@
       "agent_name": "/root/m4_010_astra_audit",
       "candidate_commit": "133fe646fd3bc458ea9970f06a79909f28f9d722",
       "verdict": "fail",
-      "findings": {
-        "p0": 0,
-        "p1": 1,
-        "p2": 0
-      },
+      "findings": {"p0": 0, "p1": 1, "p2": 0},
       "review_ref": "docs/implementation/reviews/M4-010-astra-audit.md",
       "allowed_next_transition": "one focused Astra rereview of the corrected record before worker dispatch",
       "disposition": "The exception remains test-only and scientifically non-semantic, but must cover both installed resource resolution and source-versus-installed CLI harness selection in tests/testthat/test-B-T08.R."
@@ -3233,19 +2432,8 @@
       "event": "m4_009_package_check_failed_repair_allowance_exhausted",
       "date": "2026-10-16",
       "candidate_tip": "ed94035",
-      "full_suite": {
-        "passed": 3298,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
-      "clean_archive_package_check": {
-        "status": "1 ERROR",
-        "installed_passed": 3204,
-        "installed_errors": 3,
-        "installed_warnings": 3,
-        "installed_skipped": 0
-      },
+      "full_suite": {"passed": 3298, "failed": 0, "warned": 0, "skipped": 0},
+      "clean_archive_package_check": {"status": "1 ERROR", "installed_passed": 3204, "installed_errors": 3, "installed_warnings": 3, "installed_skipped": 0},
       "failure_class": "tests/testthat/test-B-T08.R assumes a source-tree inst/examples/tickets path during installed-package tests",
       "review_ref": "docs/implementation/reviews/M4-009-package-check-gate.md",
       "repairs_consumed": 2,
@@ -3258,18 +2446,8 @@
       "agent_name": "/root/m4_009_sol_review",
       "snapshot_commit": "5df2043",
       "verdict": "pass",
-      "findings": {
-        "p0": 0,
-        "p1": 0,
-        "p2": 0
-      },
-      "verification": {
-        "tests": 30,
-        "passed": 407,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "verification": {"tests": 30, "passed": 407, "failed": 0, "warned": 0, "skipped": 0},
       "review_ref": "docs/implementation/reviews/M4-009-sol-review.md",
       "allowed_next_transition": "run the complete suite and fresh package check; only all-green evidence permits the focused M4-005 Astra rereview",
       "disposition": "Both repairs are consumed. B-T08 is not accepted and B-T07 is not released by this review alone."
@@ -3291,37 +2469,12 @@
       "date": "2026-10-16",
       "worker_agent_name": "/root/m4_009_bt08_luna",
       "worker_base": "c876059",
-      "worker_commits": [
-        "a6860c8",
-        "f8f0f73",
-        "47439b5",
-        "cdaaf5d"
-      ],
-      "integrated_commits": [
-        "61f4c96",
-        "1718ed3",
-        "01a19e3",
-        "d862547",
-        "8e392a2",
-        "44a0f0d"
-      ],
+      "worker_commits": ["a6860c8", "f8f0f73", "47439b5", "cdaaf5d"],
+      "integrated_commits": ["61f4c96", "1718ed3", "01a19e3", "d862547", "8e392a2", "44a0f0d"],
       "repairs_consumed": 2,
-      "scientific_red": {
-        "failed": 22
-      },
-      "focused_green": {
-        "b_t08_passed": 268,
-        "b_t09_and_composition_passed": 145,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
-      "installed_probe": {
-        "exports": "6/6",
-        "b_t08": "exit_0_complete",
-        "b_t09": "exit_0_own_route",
-        "nonfixture": "refused_no_outputs"
-      },
+      "scientific_red": {"failed": 22},
+      "focused_green": {"b_t08_passed": 268, "b_t09_and_composition_passed": 145, "failed": 0, "warned": 0, "skipped": 0},
+      "installed_probe": {"exports": "6/6", "b_t08": "exit_0_complete", "b_t09": "exit_0_own_route", "nonfixture": "refused_no_outputs"},
       "allowed_next_transition": "commit this immutable candidate snapshot and dispatch one fresh Sol-high complete-diff review; no further implementation repair is available if a blocking finding remains",
       "disposition": "Repair 1 fixed constant-response and duplicate-family behavior. Repair 2 corrected only the registration evidence harness; Sol completed one dangling removed-trace environment reference before review and applied the audited shared registration."
     },
@@ -3333,10 +2486,7 @@
       "requested_effort": "max",
       "snapshot_commit": "c876059",
       "worktree": "/Users/megastore/.codex/worktrees/m4-009-bt08-repair/PML MultiOmics Analysis Pipeline",
-      "allowlist": [
-        "R/clinical_association.R",
-        "tests/testthat/test-B-T08.R"
-      ],
+      "allowlist": ["R/clinical_association.R", "tests/testthat/test-B-T08.R"],
       "allowed_next_transition": "inspect RED/GREEN evidence and candidate commits, then Sol applies only the audited shared registration changes before fresh complete-diff review",
       "disposition": "This consumes B-T08 targeted repair 1. Any later implementation correction is repair 2 and exhausts the packet allowance."
     },
@@ -3346,11 +2496,7 @@
       "agent_name": "/root/m4_009_astra_audit",
       "snapshot_commit": "659d499",
       "verdict": "pass",
-      "findings": {
-        "p0": 0,
-        "p1": 0,
-        "p2": 0
-      },
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
       "review_ref": "docs/implementation/reviews/M4-009-astra-audit.md",
       "literature_review": "not_required",
       "allowed_next_transition": "dispatch one fresh isolated Luna-max worker for bounded B-T08 repair 1, then apply only the audited Sol-owned registration changes",
@@ -3373,19 +2519,9 @@
       "agent_name": "/root/m4_009_astra_audit",
       "snapshot_commit": "c774737",
       "verdict": "fail",
-      "findings": {
-        "p0": 0,
-        "p1": 2,
-        "p2": 1
-      },
+      "findings": {"p0": 0, "p1": 2, "p2": 1},
       "review_ref": "docs/implementation/reviews/M4-009-astra-audit.md",
-      "corrections": [
-        "fixture-restricted exactly-once B-T08 dispatch",
-        "B-T09 exclusion and nonfixture refusal",
-        "man/triomics-api.Rd in Sol allowlist",
-        "repair 1 and repair 2 counted within the existing ceiling",
-        "mixed-family publication regression"
-      ],
+      "corrections": ["fixture-restricted exactly-once B-T08 dispatch", "B-T09 exclusion and nonfixture refusal", "man/triomics-api.Rd in Sol allowlist", "repair 1 and repair 2 counted within the existing ceiling", "mixed-family publication regression"],
       "allowed_next_transition": "commit the corrected immutable snapshot and obtain the single focused Astra rereview before any implementation dispatch",
       "disposition": "The original three acceptance diagnoses remain supported and need no literature review. B-T08 and B-T07 remain blocked."
     },
@@ -3406,25 +2542,11 @@
       "agent_name": "/root/b_t08_acceptance_review",
       "snapshot_commit": "542a7b4",
       "verdict": "fail",
-      "findings": {
-        "p0": 0,
-        "p1": 3,
-        "p2": 0
-      },
-      "tests": {
-        "tests": 7,
-        "passed": 139,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "findings": {"p0": 0, "p1": 3, "p2": 0},
+      "tests": {"tests": 7, "passed": 139, "failed": 0, "warned": 0, "skipped": 0},
       "review_ref": "docs/implementation/reviews/B-T08-acceptance-review.md",
       "change_record_ref": "docs/implementation/change-records/M4-009-b-t08-acceptance-repair.md",
-      "failure_classes": [
-        "constant continuous response labelled estimated with non-finite inference",
-        "duplicate fixed-family member ids fitted twice",
-        "six exports and installed CLI dispatch missing"
-      ],
+      "failure_classes": ["constant continuous response labelled estimated with non-finite inference", "duplicate fixed-family member ids fitted twice", "six exports and installed CLI dispatch missing"],
       "allowed_next_transition": "commit the immutable M4-009 record and dispatch one fresh Astra-low audit before repair 1",
       "disposition": "B-T08 remains blocked and B-T07 dependency-illegal. No private data or biological claims were involved."
     },
@@ -3437,7 +2559,7 @@
       "snapshot_commit": "542a7b4",
       "implementation_commit": "bded42a",
       "integration_commit": "9cd36fe",
-      "review_scope": "B-T08 AC1\u2013AC4, 139-assertion suite, public synthetic CLI, registration, integration drift, fixed families, fail-closed handling and privacy",
+      "review_scope": "B-T08 AC1–AC4, 139-assertion suite, public synthetic CLI, registration, integration drift, fixed families, fail-closed handling and privacy",
       "allowed_next_transition": "PASS permits Sol to mark B-T08 accepted and immediately dispatch B-T07; findings preserve the dependency block and require an authorized bounded resolution",
       "disposition": "This review reconciles missing acceptance evidence only; it does not reset B-T08 implementation counters or authorize code changes."
     },
@@ -3447,17 +2569,10 @@
       "agent_name": "/root/m4_005_shared_astra_audit",
       "snapshot_commit": "98a8c8c",
       "shared_implementation_verdict": "pass",
-      "findings": {
-        "p0": 0,
-        "p1": 1,
-        "p2": 0
-      },
+      "findings": {"p0": 0, "p1": 1, "p2": 0},
       "p1": "B-T08 remained sol_verified with no acceptance references and a stale blocker, so B-T07 was not dependency-legal",
       "review_ref": "docs/implementation/reviews/M4-005-shared-astra-audit.md",
-      "accepted_packets": [
-        "B-T05",
-        "B-T06"
-      ],
+      "accepted_packets": ["B-T05", "B-T06"],
       "allowed_next_transition": "obtain a fresh evidence-only Sol-high B-T08 review; release B-T07 only after B-T08 has an accepted disposition",
       "disposition": "The shared implementation is accepted and no focused M4-005 rereview is required unless the B-T08 reconciliation changes shared code. This is not G4."
     },
@@ -3477,27 +2592,10 @@
       "date": "2026-10-16",
       "candidate_commit": "f59abdf467cca274a1174c13be8daacb50e01a01",
       "integrated_tip_before_receipt": "f83aeda",
-      "integration_commits": [
-        "f486232",
-        "df6b4fd",
-        "053d8ae",
-        "d76bc1e",
-        "b3e7c95",
-        "8ef8c9b",
-        "595bac5",
-        "f83aeda"
-      ],
-      "full_suite": {
-        "passed": 3169,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "integration_commits": ["f486232", "df6b4fd", "053d8ae", "d76bc1e", "b3e7c95", "8ef8c9b", "595bac5", "f83aeda"],
+      "full_suite": {"passed": 3169, "failed": 0, "warned": 0, "skipped": 0},
       "package_check": "Status: OK; 0 errors, warnings or notes",
-      "parity_probes": {
-        "source_exits_zero": 4,
-        "installed_exits_zero": 4
-      },
+      "parity_probes": {"source_exits_zero": 4, "installed_exits_zero": 4},
       "candidate_path_identity": "byte_identical",
       "verification_ref": "docs/implementation/reviews/M4-005B-integration-verification.md",
       "allowed_next_transition": "create the immutable documentation snapshot and dispatch the single fresh Astra-low M4-005 shared-integration audit",
@@ -3510,17 +2608,8 @@
       "candidate_base": "0c844281b68e0f7c9b81bfcc975f6c30f7316a92",
       "candidate_commit": "f59abdf467cca274a1174c13be8daacb50e01a01",
       "verdict": "pass",
-      "findings": {
-        "p0": 0,
-        "p1": 0,
-        "p2": 0
-      },
-      "verification": {
-        "passed": 62,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "verification": {"passed": 62, "failed": 0, "warned": 0, "skipped": 0},
       "preserved_package_check": "Status: OK; 0 errors, warnings or notes",
       "review_ref": "docs/implementation/reviews/M4-008-sol-review.md",
       "allowed_next_transition": "run fresh complete suite, package check and source/installed parity probes; only all-green results permit serial integration",
@@ -3534,20 +2623,9 @@
       "requested_model": "gpt-6.1-sol",
       "requested_effort": "high",
       "candidate_base": "0c844281b68e0f7c9b81bfcc975f6c30f7316a92",
-      "candidate_commits": [
-        "a658c1e",
-        "f59abdf467cca274a1174c13be8daacb50e01a01"
-      ],
-      "scope": [
-        ".Rbuildignore",
-        "tests/testthat/test-M4-005-stage-b-composition.R"
-      ],
-      "focused_green": {
-        "passed": 62,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "candidate_commits": ["a658c1e", "f59abdf467cca274a1174c13be8daacb50e01a01"],
+      "scope": [".Rbuildignore", "tests/testthat/test-M4-005-stage-b-composition.R"],
+      "focused_green": {"passed": 62, "failed": 0, "warned": 0, "skipped": 0},
       "allowed_next_transition": "PASS permits coordinator full-suite, package and parity gates; any unresolved review finding blocks M4-008 because its targeted repair allowance is exhausted",
       "disposition": "No production R, scientific contract, threshold, fixture values or private data changed."
     },
@@ -3568,13 +2646,9 @@
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "candidate_base": "0c844281b68e0f7c9b81bfcc975f6c30f7316a92",
-      "luna_allowlist": [
-        "tests/testthat/test-M4-005-stage-b-composition.R"
-      ],
+      "luna_allowlist": ["tests/testthat/test-M4-005-stage-b-composition.R"],
       "sol_commit": "a658c1e",
-      "sol_scope": [
-        ".Rbuildignore"
-      ],
+      "sol_scope": [".Rbuildignore"],
       "allowed_next_transition": "inspect Luna's one-file commit, run focused GREEN, then dispatch one fresh Sol-high complete-diff review if clean",
       "disposition": "No production R, statistics, fixtures, thresholds, private data or downstream release are authorized."
     },
@@ -3585,11 +2659,7 @@
       "snapshot_commit": "6934e488c9739175aef2b0b73508b9ab7696e536",
       "candidate_commit": "0c844281b68e0f7c9b81bfcc975f6c30f7316a92",
       "verdict": "pass",
-      "findings": {
-        "p0": 0,
-        "p1": 0,
-        "p2": 0
-      },
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
       "review_ref": "docs/implementation/reviews/M4-008-astra-audit.md",
       "literature_review": "not_required",
       "allowed_next_transition": "dispatch one fresh Luna-max worker on the single test file and apply only the audited Sol-owned .Rbuildignore exclusion",
@@ -3610,18 +2680,9 @@
       "event": "m4_005b_package_check_blocked_m4_008_record_written",
       "date": "2026-10-16",
       "candidate_commit": "0c84428",
-      "full_suite": {
-        "passed": 3169,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "full_suite": {"passed": 3169, "failed": 0, "warned": 0, "skipped": 0},
       "package_build": "passed",
-      "package_check": {
-        "passed": 3156,
-        "failed": 3,
-        "status": "1 ERROR, 1 NOTE"
-      },
+      "package_check": {"passed": 3156, "failed": 3, "status": "1 ERROR, 1 NOTE"},
       "coordinator_gate_ref": "docs/implementation/reviews/M4-005B-package-check-gate.md",
       "change_record_ref": "docs/implementation/change-records/M4-008-stage-b-package-check-reconciliation.md",
       "allowed_next_transition": "commit an immutable record snapshot and dispatch one fresh Astra-low audit; no M4-008 file change before PASS",
@@ -3634,17 +2695,8 @@
       "candidate_base": "ada3a17adebc388850321190bfdbcc9fb64b1152",
       "candidate_commit": "0c84428",
       "verdict": "pass",
-      "findings": {
-        "p0": 0,
-        "p1": 0,
-        "p2": 0
-      },
-      "verification": {
-        "passed": 677,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
+      "verification": {"passed": 677, "failed": 0, "warned": 0, "skipped": 0},
       "review_ref": "docs/implementation/reviews/M4-007-sol-review.md",
       "allowed_next_transition": "run the complete local suite; only a clean result permits package and source/installed parity gates followed by serial integration",
       "disposition": "Review accepted the bounded reconciliation only. It does not accept B-T05/B-T06 or replace the M4-005 shared Astra audit."
@@ -3659,18 +2711,8 @@
       "candidate_base": "ada3a17adebc388850321190bfdbcc9fb64b1152",
       "test_commit": "325f0c548ec9098762d70270f43522ff9cf13771",
       "product_commit": "0c84428",
-      "red": {
-        "passed": 670,
-        "failed": 7,
-        "warned": 0,
-        "skipped": 0
-      },
-      "green": {
-        "passed": 677,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "red": {"passed": 670, "failed": 7, "warned": 0, "skipped": 0},
+      "green": {"passed": 677, "failed": 0, "warned": 0, "skipped": 0},
       "allowed_next_transition": "PASS permits fresh coordinator full-suite, package and CLI verification; findings permit at most one focused repair and rereview under M4-007",
       "disposition": "The product correction deletes one blanket inferential-status overwrite. Family invalidity still withholds published q-values, retains internal BH accounting and independently blocks nominations. No private data were used."
     },
@@ -3679,19 +2721,9 @@
       "date": "2026-10-16",
       "agent_name": "/root/m4_007_luna_tests",
       "test_commit": "325f0c548ec9098762d70270f43522ff9cf13771",
-      "red": {
-        "passed": 670,
-        "failed": 7,
-        "warned": 0,
-        "skipped": 0
-      },
+      "red": {"passed": 670, "failed": 7, "warned": 0, "skipped": 0},
       "product_commit": "0c84428",
-      "green": {
-        "passed": 677,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "green": {"passed": 677, "failed": 0, "warned": 0, "skipped": 0},
       "allowed_next_transition": "dispatch the one authorized fresh Sol-high complete-diff review",
       "disposition": "All seven RED failures were the audited blanket row-status overwrite; q-withholding, internal-q, missing-inventory reason and block-invariance assertions were already green."
     },
@@ -3702,11 +2734,7 @@
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "candidate_base": "ada3a17adebc388850321190bfdbcc9fb64b1152",
-      "allowed_files": [
-        "tests/testthat/test-B-T01.R",
-        "tests/testthat/test-B-T03.R",
-        "tests/testthat/test-B-T06.R"
-      ],
+      "allowed_files": ["tests/testthat/test-B-T01.R", "tests/testthat/test-B-T03.R", "tests/testthat/test-B-T06.R"],
       "allowed_next_transition": "inspect the tests-only RED commit, then Sol removes only the blanket row inferential_status overwrite in R/multiplicity.R and runs GREEN",
       "disposition": "No production, statistical method, threshold, fixture, private-data or canonical-document change is authorized to Luna."
     },
@@ -3716,11 +2744,7 @@
       "agent_name": "/root/m4_007_astra_audit",
       "snapshot_commit": "50b2dfa",
       "verdict": "pass",
-      "findings": {
-        "p0": 0,
-        "p1": 0,
-        "p2": 0
-      },
+      "findings": {"p0": 0, "p1": 0, "p2": 0},
       "review_ref": "docs/implementation/reviews/M4-007-astra-audit.md",
       "allowed_next_transition": "dispatch one fresh Luna-max worker to the three test files, then Sol removes only the blanket row-status overwrite in R/multiplicity.R and runs the prescribed gates",
       "disposition": "No literature search was needed because the frozen internal contracts fully resolve the issue. This does not authorize integration or downstream release."
@@ -3742,12 +2766,7 @@
       "candidate_commit": "ada3a17adebc388850321190bfdbcc9fb64b1152",
       "coordinator_gate_ref": "docs/implementation/reviews/M4-005B-coordinator-gate.md",
       "change_record_ref": "docs/implementation/change-records/M4-007-b-t01-b-t03-family-gate-reconciliation.md",
-      "full_suite": {
-        "passed": 3130,
-        "failed": 6,
-        "warned": 0,
-        "skipped": 0
-      },
+      "full_suite": {"passed": 3130, "failed": 6, "warned": 0, "skipped": 0},
       "failure_classes": [
         "three predecessor q-publication expectations conflict with B-T06-AC3 when selection inventory is missing",
         "three predecessor row-status expectations are erased by B-T06's blanket family-withheld overwrite"
@@ -3761,11 +2780,7 @@
       "review_agent_name": "/root/m4_005b_sol_review",
       "candidate_commit": "ada3a17adebc388850321190bfdbcc9fb64b1152",
       "verdict": "pass",
-      "findings": {
-        "critical": 0,
-        "important": 0,
-        "minor": 0
-      },
+      "findings": {"critical": 0, "important": 0, "minor": 0},
       "review_receipt": ".superpowers/sdd/M4-005B-stage-b-dispatch-composition/task-4-sol-review.md",
       "review_verification": {
         "passed": 732,
@@ -3788,22 +2803,13 @@
       "requested_effort": "high",
       "candidate_commit": "ada3a17",
       "integration_base": "11757c0e8dd272a87700e873eccdc7dc8bc50e8a",
-      "candidate_commits": [
-        "de21436",
-        "573811c",
-        "265edf9",
-        "ada3a17"
-      ],
+      "candidate_commits": ["de21436", "573811c", "265edf9", "ada3a17"],
       "verification": {
         "target_and_adjacent_passed": 732,
         "failed": 0,
         "warned": 0,
         "skipped": 0,
-        "source_cli_exits": {
-          "B-T04": 0,
-          "B-T05": 0,
-          "B-T06": 0
-        },
+        "source_cli_exits": {"B-T04": 0, "B-T05": 0, "B-T06": 0},
         "b_t04_calibration": "pass",
         "b_t05_status": "unavailable_count_metadata_missing",
         "b_t06_family_and_rank": "complete"
@@ -4155,16 +3161,7 @@
       "integration_base": "94f3580",
       "requested_model": "gpt-6.1-sol",
       "requested_effort": "high",
-      "worker_tests": {
-        "red_failed": 2,
-        "red_passed": 61,
-        "focused_passed": 14,
-        "packet_passed": 66,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0,
-        "cli_exit": 0
-      },
+      "worker_tests": {"red_failed": 2, "red_passed": 61, "focused_passed": 14, "packet_passed": 66, "failed": 0, "warned": 0, "skipped": 0, "cli_exit": 0},
       "review_package_ref": ".superpowers/sdd/M4-003-M4-004-final-repairs/review-task2-94f3580..086d604.diff",
       "allowed_next_transition": "reconcile final verdict; integrate only if accepted; no worker fix or review retry is authorized",
       "disposition": "Candidate final edit touches only R/rank_sensitivity.R and tests/testthat/test-B-T06.R. Private study data were not used."
@@ -4179,16 +3176,8 @@
       "worktree": ".worktrees/b-t06-final-repair",
       "branch": "codex/b-t06-final-repair",
       "integration_base": "94f3580",
-      "historical_restore_commits": [
-        "ac2e046",
-        "a80754d"
-      ],
-      "baseline": {
-        "passed": 52,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0
-      },
+      "historical_restore_commits": ["ac2e046", "a80754d"],
+      "baseline": {"passed": 52, "failed": 0, "warned": 0, "skipped": 0},
       "allowed_next_transition": "receive candidate, inspect two-file repair and TDD evidence, then dispatch the one authorized fresh Sol 6.1 high review",
       "disposition": "Repair edits are restricted to R/rank_sensitivity.R and tests/testthat/test-B-T06.R. Private study data are excluded; no further repair round is authorized."
     },
@@ -4218,14 +3207,7 @@
       "integration_base": "3003da4f91097a8623138d3e326eb1e9d7c88546",
       "requested_model": "gpt-6.1-sol",
       "requested_effort": "high",
-      "worker_tests": {
-        "passed": 98,
-        "failed": 0,
-        "warned": 0,
-        "skipped": 0,
-        "source_cli_checked": true,
-        "installed_cli_checked": true
-      },
+      "worker_tests": {"passed": 98, "failed": 0, "warned": 0, "skipped": 0, "source_cli_checked": true, "installed_cli_checked": true},
       "worker_concern": "Stage B serializer omits method/fallback provenance; fallback_complete payload is written but envelope validation exits 2 with A_ARTIFACT_INVALID.",
       "review_package_ref": ".superpowers/sdd/M4-003-M4-004-final-repairs/review-task1-3003da4..b6d3970.diff",
       "allowed_next_transition": "reconcile final verdict; integrate only if accepted; no worker fix or review retry is authorized",
@@ -4241,16 +3223,8 @@
       "worktree": ".worktrees/b-t05-final-repair",
       "branch": "codex/b-t05-final-repair",
       "integration_base": "3003da4",
-      "historical_restore_commits": [
-        "74987ff",
-        "48e81fa"
-      ],
-      "baseline": {
-        "passed": 59,
-        "failed": 4,
-        "warned": 0,
-        "skipped": 0
-      },
+      "historical_restore_commits": ["74987ff", "48e81fa"],
+      "baseline": {"passed": 59, "failed": 4, "warned": 0, "skipped": 0},
       "failure_scope": "source CLI qualified and explicit-fallback dispatch on the current integration snapshot",
       "allowed_next_transition": "receive candidate, inspect two-file repair and TDD evidence, then dispatch the one authorized fresh Sol 6.1 high review",
       "disposition": "Repair edits are restricted to R/statistics_deqms.R and tests/testthat/test-B-T05.R. Private study data are excluded; no further repair round is authorized."
@@ -4270,10 +3244,7 @@
       "event": "b_t05_b_t06_reopening_focused_rereviews_passed_awaiting_user",
       "date": "2026-10-15",
       "snapshot_commit": "0dfe88d91ab98d2dd0045f6bab5ea78ce4270065",
-      "verdicts": {
-        "B-T05": "pass",
-        "B-T06": "pass"
-      },
+      "verdicts": {"B-T05": "pass", "B-T06": "pass"},
       "review_refs": [
         "docs/implementation/reviews/B-T05-reopening-astra-audit.md",
         "docs/implementation/reviews/B-T06-reopening-astra-audit.md"
@@ -4285,10 +3256,7 @@
       "event": "b_t05_b_t06_reopening_focused_rereviews_dispatched",
       "date": "2026-10-15",
       "snapshot_commit": "0dfe88d",
-      "agents": [
-        "/root/bt05_reopen_audit",
-        "/root/bt06_reopen_audit"
-      ],
+      "agents": ["/root/bt05_reopen_audit", "/root/bt06_reopen_audit"],
       "scope": "only the required changes from each initial audit",
       "allowed_next_transition": "reconcile both final verdicts; pass permits requesting Omar acceptance, fail leaves the affected record blocked; no implementation",
       "disposition": "This exhausts the focused change-record rereview for M4-003 and M4-004."
@@ -4339,27 +3307,14 @@
     {
       "event": "b_t05_b_t06_reopening_diagnostics_completed_records_proposed",
       "date": "2026-10-15",
-      "packets": [
-        "B-T05",
-        "B-T06"
-      ],
+      "packets": ["B-T05", "B-T06"],
       "candidate_commits": {
         "B-T05": "efd830884b894d79441af5a948fa3b600ff8e4db",
         "B-T06": "9b85bbd616a797c03f133fb43a5f0cce1260bb7d"
       },
       "candidate_tests": {
-        "B-T05": {
-          "passed": 63,
-          "failed": 0,
-          "warned": 0,
-          "skipped": 0
-        },
-        "B-T06": {
-          "passed": 52,
-          "failed": 0,
-          "warned": 0,
-          "skipped": 0
-        }
+        "B-T05": {"passed": 63, "failed": 0, "warned": 0, "skipped": 0},
+        "B-T06": {"passed": 52, "failed": 0, "warned": 0, "skipped": 0}
       },
       "reproduced_failures": {
         "B-T05": "A missing-count level request with explicit_limma bypasses B-T05 and returns generic unavailable without requested method, named reason or fallback.",
@@ -4621,10 +3576,7 @@
       "date": "2026-10-14",
       "review_thread_id": "01a13a5e-446b-7f53-ba70-435b976f59ee",
       "candidate_commit": "0ca50369e2fb52c819a54abdfc8ff4480d9efc88",
-      "integration_commits": [
-        "f7973fe",
-        "2da6c09"
-      ],
+      "integration_commits": ["f7973fe", "2da6c09"],
       "review_ref": "docs/implementation/reviews/B-T09-review.md",
       "change_record_ref": "docs/implementation/change-records/M4-001-b-t09-longitudinal-cli-registration.md",
       "verdict": "accepted_subject_to_sol_registration",
@@ -4749,11 +3701,7 @@
       "event": "stage_b_b_t05_b_t06_b_t09_workers_dispatched",
       "date": "2026-10-14",
       "base_commit": "ea3a47c",
-      "packets": [
-        "B-T05",
-        "B-T06",
-        "B-T09"
-      ],
+      "packets": ["B-T05", "B-T06", "B-T09"],
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "disposition": "Dependencies and G3 are satisfied and file allowlists are disjoint. Three fresh isolated workers are active within the four-slot host cap."
@@ -4767,11 +3715,7 @@
       "review_ref": "docs/implementation/reviews/M3-astra-review.md",
       "verdict": "pass",
       "independent_assertions_passed": 580,
-      "findings_addressed": [
-        "G3-01",
-        "G3-02",
-        "G3-03"
-      ],
+      "findings_addressed": ["G3-01", "G3-02", "G3-03"],
       "disposition": "Sol accepted G3 as a synthetic-software milestone. Real-data scientific validation remains outstanding and kNN/RF remain unavailable in v2."
     },
     {
@@ -5065,14 +4009,6 @@
       "candidate_commit": "aa1595f94f0556fb3210702192307b5a4ab7bccb",
       "review_ref": "docs/implementation/reviews/A-T01-initial-review.md",
       "disposition": "Three P1 spec gaps, one P2 taxonomy gap, and a non-reproducible Sol test required bounded repair 1."
-    },
-    {
-      "date": "2026-10-27",
-      "event": "m7_015_phase_record",
-      "base_commit": "4d40f3c",
-      "record": "docs/implementation/change-records/M7-015-d-verification-publication.md",
-      "status": "audit_pending",
-      "implementation_attempts": 0
     }
   ],
   "packets": {
@@ -5260,14 +4196,7 @@
         "docs/implementation/reviews/M4-005B-integration-verification.md",
         "docs/implementation/reviews/M4-005-shared-astra-audit.md"
       ],
-      "integration_commits": [
-        "09d33f6",
-        "03b9ab0",
-        "45eb7e5",
-        "cc21eb5",
-        "d76e564",
-        "053d8ae"
-      ],
+      "integration_commits": ["09d33f6", "03b9ab0", "45eb7e5", "cc21eb5", "d76e564", "053d8ae"],
       "blockers": []
     },
     "B-T06": {
@@ -5284,12 +4213,7 @@
         "docs/implementation/reviews/M4-007-sol-review.md",
         "docs/implementation/reviews/M4-005-shared-astra-audit.md"
       ],
-      "integration_commits": [
-        "f486232",
-        "053d8ae",
-        "d76bc1e",
-        "8ef8c9b"
-      ],
+      "integration_commits": ["f486232", "053d8ae", "d76bc1e", "8ef8c9b"],
       "blockers": []
     },
     "B-T08": {
@@ -5297,10 +4221,7 @@
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "bded42a",
-      "repair_candidate_commits": [
-        "1718ed3",
-        "44a0f0d"
-      ],
+      "repair_candidate_commits": ["1718ed3", "44a0f0d"],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T08-acceptance-review.md",
         "docs/implementation/reviews/M4-009-astra-audit.md",
@@ -5326,12 +4247,7 @@
         "docs/implementation/reviews/B-T09-review.md"
       ],
       "blockers": [],
-      "integration_commits": [
-        "f7973fe",
-        "2da6c09",
-        "15f5031",
-        "219b9b2"
-      ]
+      "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
     },
     "B-T07": {
       "status": "accepted",
@@ -5355,10 +4271,7 @@
       "package_exception_repair_integration_commit": "cbe5400",
       "package_exception_repair_review_ref": "docs/implementation/reviews/M4-014-source-path-focused-rereview.md",
       "package_exception_gate_ref": "docs/implementation/reviews/M4-014-integration-package-gate.md",
-      "integration_commits": [
-        "8cf2d38",
-        "4a33f01"
-      ],
+      "integration_commits": ["8cf2d38", "4a33f01"],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T07-initial-review.md",
         "docs/implementation/reviews/B-T07-repair1-rereview.md",
@@ -5450,35 +4363,12 @@
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "de9ea9e73e3bb24d69c6e1232b25225408c200a9",
-      "integration_commits": [
-        "98f73c3",
-        "6713603",
-        "996087f"
-      ],
-      "shared_candidate_commits": [
-        "c23a3c845cdca5d84961ddc74c08182a45482c00",
-        "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e"
-      ],
-      "shared_repair1_commits": [
-        "604a8683bd87a1b2dddc9db40c9426010253af07",
-        "b2aafd6e200964f1cc39267f118e01ff89485542"
-      ],
-      "shared_integration_commits": [
-        "91107d3",
-        "164eda5",
-        "c9613de",
-        "40bc026"
-      ],
-      "acceptance_refs": [
-        "docs/implementation/reviews/2026-10-20-c09-sol-review.md",
-        "docs/implementation/reviews/2026-10-21-c09-repair1-rereview.md",
-        "docs/implementation/reviews/2026-10-21-c09-shared-integration-verification.md",
-        "docs/implementation/reviews/2026-10-22-m6-focused-astra-rereview.md",
-        "docs/implementation/reviews/2026-10-22-m6-sol-acceptance.md"
-      ],
-      "blockers": [
-        "No concrete real endpoint/model/deployment and uncertainty protocol was supplied. The verified synthetic fixture receives no C-09 packet completion credit; no clinical performance or benefit claim is qualified."
-      ]
+      "integration_commits": ["98f73c3", "6713603", "996087f"],
+      "shared_candidate_commits": ["c23a3c845cdca5d84961ddc74c08182a45482c00", "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e"],
+      "shared_repair1_commits": ["604a8683bd87a1b2dddc9db40c9426010253af07", "b2aafd6e200964f1cc39267f118e01ff89485542"],
+      "shared_integration_commits": ["91107d3", "164eda5", "c9613de", "40bc026"],
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c09-sol-review.md", "docs/implementation/reviews/2026-10-21-c09-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c09-shared-integration-verification.md", "docs/implementation/reviews/2026-10-22-m6-focused-astra-rereview.md", "docs/implementation/reviews/2026-10-22-m6-sol-acceptance.md"],
+      "blockers": ["No concrete real endpoint/model/deployment and uncertainty protocol was supplied. The verified synthetic fixture receives no C-09 packet completion credit; no clinical performance or benefit claim is qualified."]
     },
     "C-06": {
       "status": "accepted_synthetic_software_evidence",
@@ -5486,25 +4376,11 @@
       "repair_attempts": 1,
       "shared_repair_attempts": 2,
       "commit": "a60a7a56eec1250bd4a9e44253597f83a3e565fd",
-      "integration_commits": [
-        "7d29da4",
-        "634c29f",
-        "32ab4d1",
-        "a658398",
-        "3753be0"
-      ],
+      "integration_commits": ["7d29da4", "634c29f", "32ab4d1", "a658398", "3753be0"],
       "shared_candidate_commit": "1cc35048907ab4dd866d7129759ddcb7672d05eb",
       "shared_repair_candidate": "be2a4e4",
       "shared_repair2_candidate": "29e1e19",
-      "acceptance_refs": [
-        "docs/implementation/reviews/2026-10-20-c06-sol-review.md",
-        "docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md",
-        "docs/implementation/reviews/2026-10-21-c06-shared-sol-review.md",
-        "docs/implementation/reviews/2026-10-21-c06-shared-repair1-rereview.md",
-        "docs/implementation/reviews/2026-10-21-c06-shared-integration-verification.md",
-        "docs/implementation/reviews/2026-10-22-m6-focused-astra-rereview.md",
-        "docs/implementation/reviews/2026-10-22-m6-sol-acceptance.md"
-      ],
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c06-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c06-shared-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-shared-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c06-shared-integration-verification.md", "docs/implementation/reviews/2026-10-22-m6-focused-astra-rereview.md", "docs/implementation/reviews/2026-10-22-m6-sol-acceptance.md"],
       "blockers": []
     },
     "D-T01": {
@@ -5512,22 +4388,10 @@
       "attempts": 2,
       "exceptional_repair_attempts": 1,
       "commit": "88f1591",
-      "candidate_commits": [
-        "98bf4c54a52cb8bab7fd3824fabb88deda579a23",
-        "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3"
-      ],
-      "m7_001_candidate_commits": [
-        "0d82e9f6a3b78899ee1ccd2c389c01e273ba65cc",
-        "1b44a84e71139ca52b496bbe562e2e2a70142b2f"
-      ],
-      "integration_commits": [
-        "d2db62d",
-        "88f1591"
-      ],
-      "acceptance_refs": [
-        "docs/implementation/reviews/2026-10-22-d-t01-packet-review.md",
-        "docs/implementation/reviews/2026-10-23-m7-001-focused-sol-rereview.md"
-      ],
+      "candidate_commits": ["98bf4c54a52cb8bab7fd3824fabb88deda579a23", "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3"],
+      "m7_001_candidate_commits": ["0d82e9f6a3b78899ee1ccd2c389c01e273ba65cc", "1b44a84e71139ca52b496bbe562e2e2a70142b2f"],
+      "integration_commits": ["d2db62d", "88f1591"],
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-22-d-t01-packet-review.md", "docs/implementation/reviews/2026-10-23-m7-001-focused-sol-rereview.md"],
       "blockers": [
         "M7-001's single exceptional repair passed 268 named expectations but focused review reproduced five Important gaps: FeatureRegistry drift, incomplete paired/repeated metadata freshness, DEqMS producer/consumer identity mismatch, unsafe model-hash traversal for a valid contrast id, and D-leaf symlink failure after registry rollover. The candidate was not integrated. Initial plus two ordinary repairs and the one authorized exceptional repair are consumed; no further product edit is authorized."
       ]
@@ -5675,16 +4539,8 @@
       "commit": "2150b4dffd174abd08a38389467f91e9d5c73e54",
       "package_status": "Status: OK; FAIL 0, WARN 22, SKIP 0, PASS 4787 at implementation snapshot 76fe5e2",
       "astra_verdict": "pass: M6-ASTRA-01 addressed; no new blocking finding",
-      "accepted_packets": [
-        "C-03",
-        "C-04",
-        "C-05",
-        "C-08",
-        "C-06"
-      ],
-      "conditional_packets_without_completion_credit": [
-        "C-09"
-      ],
+      "accepted_packets": ["C-03", "C-04", "C-05", "C-08", "C-06"],
+      "conditional_packets_without_completion_credit": ["C-09"],
       "blocking_packets": [],
       "gate_release": "G6"
     },
