@@ -43,6 +43,10 @@ Allow only these existing files:
   associated lineage passing; no A/B/D executor changes or stage registration.
 - R/export_c.R: C unit/representation lineage binding only.
 - R/integration_contract.R: unit-map adapter/alignment only, no numerical methods.
+- R/integration_endpoints.R: validate existing trajectory sample/visit unit maps
+  under their actual subject_centered analysis representation; preserve one-to-one
+  source membership, explicit subject/time lineage and all mean/delta rules.
+  Do not relabel trajectory as levels or make arbitrary representations valid.
 - tests/testthat/test-C-06.R and tests/testthat/test-C-06-shared.R.
 - tests/testthat/test-C-08-shared.R: additive regressions only.
 - tests/testthat/test-D-T01.R: additive native paired/trajectory lineage probes;
@@ -92,3 +96,17 @@ targeted repairs. Sol reviews and freezes; final fresh Astra initial audit plus
 at most one focused rereview. Do not reset M7-016 attempts. Unresolved blocker
 at cap gets exact evidence and resumable handover; no repeated restart. Record
 requested model/effort and whether actual effective settings are exposed.
+
+## Focused scope correction — endpoint map compatibility
+
+Inspection found R/integration_endpoints.R:167–193 requires sample/visit units
+to have levels representation, so the existing subject_centered analysis map
+is rejected even after the caller supplies it. This is an existing C unit-map
+consumer within Omar's authorized repair, not new statistical functionality.
+The narrow file addition above needs the one focused Astra scope rereview before
+implementation continues. Require explicit native trajectory binding and negative
+tests for arbitrary representation labels, missing subject/time identity, wrong
+source cardinality and map mismatch; preserve levels/mean/delta behavior. A valid
+subject_centered analysis label still makes no claim that handed-off matrix values
+were centered; keep the approved raw-handoff/fitted-centered distinction explicit.
+No provenance schema or protected IntegrationResult shape changes.
