@@ -953,6 +953,11 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
   wrong_metadata <- current_metadata
   wrong_metadata$sample_metadata <- list(tampered = TRUE)
   expect_d_code(function() read_native(metadata = wrong_metadata), "D_LINEAGE_MISMATCH")
+  for (field in c("sample_id", "subject_id", "visit_id", "sample_role")) {
+    changed_map <- current_metadata
+    changed_map$sample_registry[[field]][[1L]] <- paste0("changed-", field)
+    expect_d_code(function() read_native(metadata = changed_map), "D_LINEAGE_MISMATCH")
+  }
   expect_d_code(function() read_native(config_digest = d_t01_hash("different-current-config")),
                  "D_LINEAGE_MISMATCH")
 
@@ -1002,6 +1007,92 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
   ))
   testthat::expect_true(triomics_validate_envelope(predecessor_envelope_path))
   expect_d_code(function() read_native(root = reordered_envelope_root), "D_PROVENANCE_INVALID")
+
+  native_ancestor_root <- clone_native_root()
+  native_directory <- file.path(native_ancestor_root, "C", "native-states")
+  native_external <- tempfile("d-t01-native-external-", tmpdir = "/private/tmp")
+  on.exit(unlink(native_external, recursive = TRUE, force = TRUE), add = TRUE)
+  testthat::expect_true(file.rename(native_directory, native_external))
+  testthat::expect_true(file.symlink(native_external, native_directory))
+  expect_d_code(function() read_native(root = native_ancestor_root), "D_OUTPUT_PATH_UNSAFE")
+  expect_d_code(function() triomics_execute_stage_d(config, native_ancestor_root),
+                 "D_OUTPUT_PATH_UNSAFE")
+
+  native_parent_root <- clone_native_root()
+  c_directory <- file.path(native_parent_root, "C")
+  c_external <- tempfile("d-t01-c-parent-", tmpdir = "/private/tmp")
+  on.exit(unlink(c_external, recursive = TRUE, force = TRUE), add = TRUE)
+  testthat::expect_true(file.rename(c_directory, c_external))
+  testthat::expect_true(file.symlink(c_external, c_directory))
+  expect_d_code(function() read_native(root = native_parent_root), "D_OUTPUT_PATH_UNSAFE")
+
+  native_envelope_root <- clone_native_root()
+  native_envelope <- list.files(file.path(native_envelope_root, "C", "native-states"),
+                                pattern = "[.]envelope[.]json$", full.names = TRUE)[[1L]]
+  envelope_external <- tempfile("d-t01-native-envelope-", tmpdir = "/private/tmp")
+  on.exit(unlink(envelope_external, force = TRUE), add = TRUE)
+  testthat::expect_true(file.rename(native_envelope, envelope_external))
+  testthat::expect_true(file.symlink(envelope_external, native_envelope))
+  expect_d_code(function() read_native(root = native_envelope_root), "D_OUTPUT_PATH_UNSAFE")
+
+  native_payload_root <- clone_native_root()
+  native_payload <- list.files(file.path(native_payload_root, "C", "native-states"),
+                               pattern = "[.]json$", full.names = TRUE)
+  native_payload <- native_payload[!grepl("[.]envelope[.]json$", native_payload)]
+  native_payload <- native_payload[[1L]]
+  payload_external <- tempfile("d-t01-native-payload-", tmpdir = "/private/tmp")
+  on.exit(unlink(payload_external, force = TRUE), add = TRUE)
+  testthat::expect_true(file.rename(native_payload, payload_external))
+  testthat::expect_true(file.symlink(payload_external, native_payload))
+  expect_d_code(function() read_native(root = native_payload_root), "D_OUTPUT_PATH_UNSAFE")
+
+  dangling_native_payload_root <- clone_native_root()
+  dangling_native_payload <- list.files(
+    file.path(dangling_native_payload_root, "C", "native-states"),
+    pattern = "[.]json$", full.names = TRUE
+  )
+  dangling_native_payload <- dangling_native_payload[
+    !grepl("[.]envelope[.]json$", dangling_native_payload)
+  ][[1L]]
+  dangling_payload_target <- tempfile("d-t01-dangling-native-payload-", tmpdir = "/private/tmp")
+  testthat::expect_true(unlink(dangling_native_payload) == 0L)
+  testthat::expect_true(file.symlink(dangling_payload_target, dangling_native_payload))
+  expect_d_code(function() read_native(root = dangling_native_payload_root), "D_OUTPUT_PATH_UNSAFE")
+
+  dangling_native_envelope_root <- clone_native_root()
+  dangling_native_envelope <- list.files(
+    file.path(dangling_native_envelope_root, "C", "native-states"),
+    pattern = "[.]envelope[.]json$", full.names = TRUE
+  )[[1L]]
+  dangling_envelope_target <- tempfile("d-t01-dangling-native-envelope-", tmpdir = "/private/tmp")
+  testthat::expect_true(unlink(dangling_native_envelope) == 0L)
+  testthat::expect_true(file.symlink(dangling_envelope_target, dangling_native_envelope))
+  expect_d_code(function() read_native(root = dangling_native_envelope_root), "D_OUTPUT_PATH_UNSAFE")
+
+  dangling_native_root <- clone_native_root()
+  dangling_native_dir <- file.path(dangling_native_root, "C", "native-states")
+  dangling_native_target <- tempfile("d-t01-missing-native-target-", tmpdir = "/private/tmp")
+  testthat::expect_true(unlink(dangling_native_dir, recursive = TRUE) == 0L)
+  testthat::expect_true(file.symlink(dangling_native_target, dangling_native_dir))
+  expect_d_code(function() read_native(root = dangling_native_root), "D_OUTPUT_PATH_UNSAFE")
+
+  matrix_mutation_root <- clone_native_root()
+  matrix_values_path <- list.files(file.path(matrix_mutation_root, "B", "handoffs"),
+                                   pattern = "^stage-c-matrix-values[.]rds$",
+                                   recursive = TRUE, full.names = TRUE)[[1L]]
+  persisted_matrices <- readRDS(matrix_values_path)
+  first_matrix <- names(persisted_matrices)[[1L]]
+  persisted_matrices[[first_matrix]][[1L, 1L]] <- persisted_matrices[[first_matrix]][[1L, 1L]] + 0.25
+  saveRDS(persisted_matrices, matrix_values_path, version = 3)
+  expect_d_code(function() read_native(root = matrix_mutation_root), "D_PROVENANCE_INVALID")
+
+  preparation_state_root <- clone_native_root()
+  preparation_state <- list.files(file.path(preparation_state_root, "C", "preparation-states"),
+                                  pattern = "[.]json$", full.names = TRUE)[[1L]]
+  preparation_state_value <- jsonlite::read_json(preparation_state, simplifyVector = FALSE)
+  preparation_state_value$training_unit_ids[[1L]] <- "changed-unit"
+  write_raw(preparation_state, triomics_b07_prov_canonical_value(preparation_state_value))
+  expect_d_code(function() read_native(root = preparation_state_root), "D_PROVENANCE_INVALID")
 
   unsafe_root <- tempfile("d-t01-native-symlink-", tmpdir = "/private/tmp")
   on.exit(unlink(unsafe_root), add = TRUE)
@@ -1086,6 +1177,17 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
   testthat::expect_true(is.list(routing$inherited_evidence$b$block_results))
 
   native_evidence <- read_native()
+  profileless_bundle <- list(
+    artifact_type = "evidence_bundle", study_id = native_evidence$study_id,
+    analysis_id = native_evidence$analysis_id,
+    immutable_inputs = native_evidence$immutable_inputs
+  )
+  expect_d_code(function() triomics_annotate_evidence(profileless_bundle),
+                 "D_PROVENANCE_REQUIRED")
+  changed_in_memory <- native_evidence
+  changed_in_memory$source_manifests[[1L]]$sha256 <- d_t01_hash("changed-after-native-read")
+  expect_d_code(function() triomics_annotate_evidence(changed_in_memory),
+                 "D_PROVENANCE_INVALID")
   expected_inputs <- triomics_d_output_input_pairs(native_evidence$immutable_inputs)
   route_envelope <- jsonlite::read_json(file.path(generation, "evidence-routing.envelope.json"),
                                        simplifyVector = FALSE)
@@ -1101,6 +1203,60 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
   testthat::expect_setequal(names(manifest$provenance$c$members),
                             c("candidate_nominations", "integration_evidence", "integration_comparisons",
                               "evaluation_evidence", "stage_status"))
+
+  semantic_manifest_root <- clone_native_root()
+  semantic_pointer <- triomics_d_validate_current_pointer(
+    semantic_manifest_root, file.path(semantic_manifest_root, "registries", "current-D.json")
+  )
+  semantic_generation <- semantic_pointer$generation$paths$generation
+  semantic_manifest_path <- file.path(semantic_generation, "generation-manifest.json")
+  semantic_manifest <- jsonlite::read_json(semantic_manifest_path, simplifyVector = FALSE)
+  payload_descriptor <- which(vapply(semantic_manifest$members, function(member) {
+    identical(member$path, "evidence-routing.json")
+  }, logical(1)))[[1L]]
+  semantic_manifest$members[[payload_descriptor]]$artifact_type <- "wrong_type"
+  semantic_manifest$members[[payload_descriptor]]$scientific_role <- "wrong_role"
+  semantic_manifest$provenance$b$profile$payload_sha256 <- paste(rep("0", 64L), collapse = "")
+  write_raw(semantic_manifest_path, triomics_b07_prov_canonical_value(semantic_manifest))
+  semantic_generation_id <- triomics_sha256(semantic_manifest_path)
+  testthat::expect_true(file.rename(
+    semantic_generation,
+    file.path(dirname(semantic_generation), semantic_generation_id)
+  ))
+  expect_d_code(function() triomics_d_validate_generation(semantic_manifest_root,
+                                                           semantic_generation_id),
+                 "D_PROVENANCE_INVALID")
+
+  semantic_envelope_root <- clone_native_root()
+  semantic_envelope_pointer <- triomics_d_validate_current_pointer(
+    semantic_envelope_root, file.path(semantic_envelope_root, "registries", "current-D.json")
+  )
+  semantic_envelope_generation <- semantic_envelope_pointer$generation$paths$generation
+  semantic_envelope_path <- file.path(semantic_envelope_generation,
+                                      "evidence-routing.envelope.json")
+  semantic_envelope <- jsonlite::read_json(semantic_envelope_path, simplifyVector = FALSE)
+  semantic_envelope$inputs[[1L]]$sha256 <- paste(rep("0", 64L), collapse = "")
+  write_raw(semantic_envelope_path, triomics_b07_prov_canonical_value(semantic_envelope))
+  semantic_envelope_manifest_path <- file.path(semantic_envelope_generation,
+                                               "generation-manifest.json")
+  semantic_envelope_manifest <- jsonlite::read_json(semantic_envelope_manifest_path,
+                                                    simplifyVector = FALSE)
+  envelope_descriptor <- which(vapply(semantic_envelope_manifest$members, function(member) {
+    identical(member$path, "evidence-routing.envelope.json")
+  }, logical(1)))[[1L]]
+  semantic_envelope_manifest$members[[envelope_descriptor]]$digest <- triomics_sha256(semantic_envelope_path)
+  semantic_envelope_manifest$members[[envelope_descriptor]]$size_bytes <-
+    as.numeric(file.info(semantic_envelope_path)$size)
+  write_raw(semantic_envelope_manifest_path,
+            triomics_b07_prov_canonical_value(semantic_envelope_manifest))
+  semantic_envelope_generation_id <- triomics_sha256(semantic_envelope_manifest_path)
+  testthat::expect_true(file.rename(
+    semantic_envelope_generation,
+    file.path(dirname(semantic_envelope_generation), semantic_envelope_generation_id)
+  ))
+  expect_d_code(function() triomics_d_validate_generation(semantic_envelope_root,
+                                                           semantic_envelope_generation_id),
+                 "D_PROVENANCE_INVALID")
 
   old_pointer_hash <- triomics_sha256(pointer_path)
   old_generation_files <- list.files(generation, recursive = TRUE, full.names = TRUE, all.files = TRUE)
@@ -1151,6 +1307,123 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
     testthat::expect_true(is.list(triomics_d_validate_current_pointer(output_root, pointer_path)))
   }
 
+  generation_parent_root <- clone_native_root()
+  generation_parent <- file.path(generation_parent_root, "D", "generations")
+  generation_parent_external <- tempfile("d-t01-generations-external-", tmpdir = "/private/tmp")
+  on.exit(unlink(generation_parent_external, recursive = TRUE, force = TRUE), add = TRUE)
+  testthat::expect_true(file.rename(generation_parent, generation_parent_external))
+  testthat::expect_true(file.symlink(generation_parent_external, generation_parent))
+  expect_d_code(function() triomics_execute_stage_d(config, generation_parent_root),
+                 "D_OUTPUT_PATH_UNSAFE")
+
+  registry_parent_root <- clone_native_root()
+  registry_parent <- file.path(registry_parent_root, "registries")
+  registry_parent_external <- tempfile("d-t01-registry-external-", tmpdir = "/private/tmp")
+  on.exit(unlink(registry_parent_external, recursive = TRUE, force = TRUE), add = TRUE)
+  testthat::expect_true(file.rename(registry_parent, registry_parent_external))
+  testthat::expect_true(file.symlink(registry_parent_external, registry_parent))
+  expect_d_code(function() triomics_execute_stage_d(config, registry_parent_root),
+                 "D_OUTPUT_PATH_UNSAFE")
+
+  pointer_leaf_root <- clone_native_root()
+  pointer_leaf <- file.path(pointer_leaf_root, "registries", "current-D.json")
+  pointer_leaf_external <- tempfile("d-t01-pointer-external-", tmpdir = "/private/tmp")
+  on.exit(unlink(pointer_leaf_external, force = TRUE), add = TRUE)
+  testthat::expect_true(file.rename(pointer_leaf, pointer_leaf_external))
+  testthat::expect_true(file.symlink(pointer_leaf_external, pointer_leaf))
+  expect_d_code(function() triomics_execute_stage_d(config, pointer_leaf_root),
+                 "D_OUTPUT_PATH_UNSAFE")
+
+  dangling_pointer_root <- clone_native_root()
+  dangling_pointer <- file.path(dangling_pointer_root, "registries", "current-D.json")
+  dangling_pointer_target <- tempfile("d-t01-dangling-pointer-", tmpdir = "/private/tmp")
+  testthat::expect_true(unlink(dangling_pointer) == 0L)
+  testthat::expect_true(file.symlink(dangling_pointer_target, dangling_pointer))
+  expect_d_code(function() triomics_execute_stage_d(config, dangling_pointer_root),
+                 "D_OUTPUT_PATH_UNSAFE")
+
+  recovery_probe_root <- clone_native_root()
+  recovery_probe_script <- tempfile("d-t01-recovery-probe-", tmpdir = "/private/tmp")
+  on.exit(unlink(recovery_probe_script, force = TRUE), add = TRUE)
+  repository_root <- normalizePath(file.path(
+    dirname(triomics_test_resource("exec", "triomics")), "..", ".."
+  ), winslash = "/", mustWork = TRUE)
+  writeLines(c(
+    "probe_args <- commandArgs(trailingOnly=TRUE); config_path <- probe_args[[1L]]; root <- probe_args[[2L]]; repository_root <- probe_args[[3L]]",
+    "setwd(repository_root); for (f in sort(list.files(file.path(repository_root,'R'), pattern='[.]R$', full.names=TRUE))) sys.source(f, .GlobalEnv)",
+    "config <- triomics_read_config(config_path); analysis <- config$analyses[[1L]]",
+    "ingested <- triomics_ingest_configured_study(config, config_path)",
+    "metadata <- list(sample_metadata=ingested$sample_metadata, sample_registry=ingested$sample_registry, declared_factor_levels=ingested$declared_factor_levels)",
+    "evidence <- triomics_d_read_evidence_bundle(root, as.character(config$study_id), as.character(analysis$analysis_id), ingested$source_manifests, ingested$feature_registry, current_config_sha256=as.character(attr(config,'config_sha256')), current_metadata=metadata)",
+    "routed <- triomics_annotate_evidence(evidence, config$annotation %||% list())",
+    "args <- list(result=routed, output_root=root, config_sha256=as.character(attr(config,'config_sha256')), producer_commit='repair1-readback-probe', privacy_class='synthetic', run_id='d-t01')",
+    "original_validate <- triomics_d_validate_current_pointer; calls <- 0L",
+    "triomics_d_validate_current_pointer <- function(root, pointer_path) { calls <<- calls + 1L; if (calls == 2L) return(NULL); original_validate(root, pointer_path) }",
+    "options(triomics.d.publication.failpoint='after_pointer_rename')",
+    "ambiguous <- tryCatch(do.call(triomics_d_publish_evidence_generation, args), error=identity)",
+    "options(triomics.d.publication.failpoint=NULL); triomics_d_validate_current_pointer <- original_validate",
+    "cat('ambiguous_readback=', if (inherits(ambiguous,'error')) ambiguous$code else ambiguous$status, '\\n', sep='')",
+    "current <- original_validate(root, file.path(root,'registries','current-D.json'))",
+    "cat('current_after_ambiguous=', current$pointer$generation_id, '\\n', sep='')",
+    "original_paths <- triomics_d_generation_paths; current_id <- as.character(current$pointer$generation_id)",
+    "triomics_d_generation_paths <- function(root, generation_id) { p <- original_paths(root,generation_id); if (!identical(as.character(generation_id),current_id) && !file.exists(p$generation) && !dir.exists(p$generation)) file.symlink('/private/tmp',p$generation); p }",
+    "args$producer_commit <- 'repair1-planned-leaf-probe'",
+    "planned <- tryCatch(do.call(triomics_d_publish_evidence_generation, args), error=identity)",
+    "triomics_d_generation_paths <- original_paths",
+    "cat('planned_generation_leaf=', if (inherits(planned,'error')) planned$code else planned$status, '\\n', sep='')",
+    "external_temp_root <- tempfile('repair1-external-temp-', tmpdir='/private/tmp'); dir.create(external_temp_root)",
+    "temp_generation_parent <- file.path(root,'D','generations','.temp-parent-link'); file.symlink(external_temp_root,temp_generation_parent)",
+    "base_tempfile <- base::tempfile; tempfile_calls <- 0L",
+    "tempfile <- function(pattern='',tmpdir=tempdir(),fileext='') { tempfile_calls <<- tempfile_calls + 1L; if (tempfile_calls == 1L) file.path(temp_generation_parent,'planned-generation') else base_tempfile(pattern,tmpdir,fileext) }",
+    "args$producer_commit <- 'repair1-temp-generation-parent-probe'",
+    "temp_generation_ancestry <- tryCatch(do.call(triomics_d_publish_evidence_generation, args), error=identity)",
+    "tempfile <- base_tempfile",
+    "cat('temporary_generation_ancestry=', if (inherits(temp_generation_ancestry,'error')) temp_generation_ancestry$code else temp_generation_ancestry$status, '\\n', sep='')",
+    "temp_pointer_parent <- file.path(root,'registries','.temp-parent-link'); file.symlink(external_temp_root,temp_pointer_parent)",
+    "tempfile_calls <- 0L",
+    "tempfile <- function(pattern='',tmpdir=tempdir(),fileext='') { tempfile_calls <<- tempfile_calls + 1L; if (tempfile_calls == 2L) file.path(temp_pointer_parent,'planned-pointer.tmp') else base_tempfile(pattern,tmpdir,fileext) }",
+    "args$producer_commit <- 'repair1-temp-pointer-parent-probe'",
+    "temp_pointer_ancestry <- tryCatch(do.call(triomics_d_publish_evidence_generation, args), error=identity)",
+    "tempfile <- base_tempfile",
+    "cat('temporary_pointer_ancestry=', if (inherits(temp_pointer_ancestry,'error')) temp_pointer_ancestry$code else temp_pointer_ancestry$status, '\\n', sep='')",
+    "old_current <- original_validate(root,file.path(root,'registries','current-D.json')); old_pointer_hash <- triomics_sha256(file.path(root,'registries','current-D.json')); old_id <- as.character(old_current$pointer$generation_id)",
+    "original_rename <- file.rename",
+    "file.rename <- function(from,to) { if (identical(basename(to),'current-D.json')) FALSE else original_rename(from,to) }",
+    "args$producer_commit <- 'repair1-old-current-readback-probe'",
+    "old_current_failure <- tryCatch(do.call(triomics_d_publish_evidence_generation, args), error=identity)",
+    "file.rename <- original_rename",
+    "current_after_failed_rename <- original_validate(root,file.path(root,'registries','current-D.json'))",
+    "cat('failed_rename_class=', if (inherits(old_current_failure,'error')) old_current_failure$code else old_current_failure$status, '\\n', sep='')",
+    "cat('old_current_preserved=', identical(as.character(current_after_failed_rename$pointer$generation_id),old_id) && identical(triomics_sha256(file.path(root,'registries','current-D.json')),old_pointer_hash), '\\n', sep='')",
+    "unlink(c(temp_generation_parent,temp_pointer_parent,external_temp_root), recursive=TRUE, force=TRUE)"
+  ), recovery_probe_script, useBytes = TRUE)
+  recovery_probe <- system2(file.path(R.home("bin"), "Rscript"),
+                            c("--vanilla", shQuote(recovery_probe_script),
+                              shQuote(config), shQuote(recovery_probe_root),
+                              shQuote(repository_root)),
+                            stdout = TRUE, stderr = TRUE)
+  recovery_probe_text <- paste(recovery_probe, collapse = "\n")
+  testthat::expect_true(any(grepl("ambiguous_readback=D_PUBLICATION_STATUS_UNKNOWN",
+                                  recovery_probe, fixed = TRUE)),
+                        info = recovery_probe_text)
+  testthat::expect_true(any(grepl("current_after_ambiguous=", recovery_probe, fixed = TRUE)),
+                        info = recovery_probe_text)
+  testthat::expect_true(any(grepl("planned_generation_leaf=D_OUTPUT_PATH_UNSAFE",
+                                  recovery_probe, fixed = TRUE)),
+                        info = recovery_probe_text)
+  testthat::expect_true(any(grepl("temporary_generation_ancestry=D_OUTPUT_PATH_UNSAFE",
+                                  recovery_probe, fixed = TRUE)),
+                        info = recovery_probe_text)
+  testthat::expect_true(any(grepl("temporary_pointer_ancestry=D_OUTPUT_PATH_UNSAFE",
+                                  recovery_probe, fixed = TRUE)),
+                        info = recovery_probe_text)
+  testthat::expect_true(any(grepl("failed_rename_class=D_PUBLICATION_FAILED",
+                                  recovery_probe, fixed = TRUE)),
+                        info = recovery_probe_text)
+  testthat::expect_true(any(grepl("old_current_preserved=TRUE",
+                                  recovery_probe, fixed = TRUE)),
+                        info = recovery_probe_text)
+
   inventory_root <- clone_native_root()
   inventory_pointer <- triomics_d_validate_current_pointer(
     inventory_root, file.path(inventory_root, "registries", "current-D.json")
@@ -1165,4 +1438,253 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
   testthat::expect_identical(final_source_hashes, source_hashes_before)
   testthat::expect_identical(vapply(run_registry_paths, triomics_sha256, character(1)),
                              run_registry_hashes_before)
+})
+
+testthat::test_that("D-T01 revalidates native DEqMS group sign, time maps, counts and source bytes", {
+  source_config <- triomics_test_resource("examples", "tickets", "D-T01.yaml")
+  fixture_root <- tempfile("d-t01-source-mutation-fixture-", tmpdir = "/private/tmp")
+  output_root <- tempfile("d-t01-source-mutation-output-", tmpdir = "/private/tmp")
+  dir.create(fixture_root, recursive = TRUE, showWarnings = FALSE)
+  dir.create(file.path(fixture_root, "tickets"), recursive = TRUE, showWarnings = FALSE)
+  dir.create(output_root, recursive = TRUE, showWarnings = FALSE)
+  fixture_root <- normalizePath(fixture_root, winslash = "/", mustWork = TRUE)
+  output_root <- normalizePath(output_root, winslash = "/", mustWork = TRUE)
+  on.exit(unlink(c(fixture_root, output_root), recursive = TRUE, force = TRUE), add = TRUE)
+  testthat::expect_true(file.copy(source_config, file.path(fixture_root, "tickets")))
+  data_source <- normalizePath(file.path(dirname(source_config), "..", "data"),
+                               winslash = "/", mustWork = TRUE)
+  testthat::expect_true(file.copy(data_source, fixture_root, recursive = TRUE))
+  config <- file.path(fixture_root, "tickets", basename(source_config))
+
+  metadata_path <- file.path(fixture_root, "data", "c04", "metadata.tsv")
+  sample_metadata <- utils::read.delim(metadata_path, check.names = FALSE,
+                                       stringsAsFactors = FALSE)
+  sample_metadata$group <- ifelse(
+    as.integer(sub("^SYN_", "", sample_metadata$sample_id)) <= 6L,
+    "control", "treatment"
+  )
+  sample_metadata$subject <- rep(paste0("pair-", seq_len(6L)), each = 2L)
+  sample_metadata$visit <- rep(c("baseline", "followup"), times = 6L)
+  sample_metadata$time <- rep(c(0, 1), times = 6L)
+  sample_metadata$time_origin <- rep(0, nrow(sample_metadata))
+  utils::write.table(sample_metadata, metadata_path, sep = "\t", row.names = FALSE,
+                     quote = FALSE)
+  config_text <- paste(readLines(config, warn = FALSE), collapse = "\n")
+  config_text <- sub(
+    "    score: numeric\n  factor_levels: {}",
+    "    score: numeric\n    group: factor\n    subject: string\n    visit: factor\n    time: numeric\n    time_origin: numeric\n  factor_levels:\n    group:\n      - control\n      - treatment\n    visit:\n      - baseline\n      - followup",
+    config_text, fixed = TRUE
+  )
+  config_text <- sub("  subject_id: null", "  subject_id: subject", config_text, fixed = TRUE)
+  config_text <- sub("      visit_column: null", "      visit_column: visit", config_text, fixed = TRUE)
+  config_text <- sub("      condition: score\n      condition_type: continuous",
+                     "      condition: group\n      condition_type: factor",
+                     config_text, fixed = TRUE)
+  config_text <- sub("      reference_level: null\n      target_level: null",
+                     "      reference_level: control\n      target_level: treatment",
+                     config_text, fixed = TRUE)
+  config_text <- sub("weights: {intercept: 0, continuous.score: 1}",
+                     "weights: {condition.control: -1, condition.treatment: 1}",
+                     config_text, fixed = TRUE)
+  config_text <- sub("effect_unit: per_unit_beta", "effect_unit: group_difference",
+                     config_text, fixed = TRUE)
+  config_text <- sub("method: limma", "method: deqms", config_text, fixed = TRUE)
+  writeLines(config_text, config, useBytes = TRUE)
+
+  config_value <- triomics_read_config(config)
+  ingested <- triomics_ingest_configured_study(config_value, config)
+  count_frames <- lapply(sort(unique(as.character(ingested$feature_registry$block_id)),
+                            method = "radix"), function(block_id) {
+    features <- as.character(ingested$feature_registry$feature_key[
+      as.character(ingested$feature_registry$block_id) == block_id
+    ])
+    samples <- as.character(ingested$sample_metadata$sample_id)
+    data.frame(
+      block_id = block_id,
+      feature_key = rep(features, each = length(samples)),
+      sample_id = rep(samples, times = length(features)),
+      stringsAsFactors = FALSE
+    )
+  })
+  count_table <- do.call(rbind, count_frames)
+  rownames(count_table) <- NULL
+  count_table$psm_count <- seq_len(nrow(count_table)) + 2L
+  count_table$acquisition <- "synthetic_D_T01_qualified_acquisition"
+  count_table$provenance <- "synthetic public D-T01 qualified count fixture"
+  count_path <- file.path(fixture_root, "qualified-counts.tsv")
+  utils::write.table(count_table, count_path, sep = "\t", row.names = FALSE,
+                     quote = FALSE)
+  config_text <- paste(readLines(config, warn = FALSE), collapse = "\n")
+  config_text <- sub(
+    "count_metadata: null",
+    paste0("count_metadata: ", as.character(jsonlite::toJSON(count_path, auto_unbox = TRUE))),
+    config_text, fixed = TRUE
+  )
+  writeLines(config_text, config, useBytes = TRUE)
+  config_value <- triomics_read_config(config)
+  ingested <- triomics_ingest_configured_study(config_value, config)
+
+  b <- d_t01_cli_run(config, "B", output_root)
+  testthat::expect_identical(b$status, 0L, info = paste(b$output, collapse = "\n"))
+  if (b$status != 0L) return(invisible(NULL))
+  c <- d_t01_cli_run(config, "C", output_root)
+  testthat::expect_identical(c$status, 0L, info = paste(c$output, collapse = "\n"))
+  if (c$status != 0L) return(invisible(NULL))
+  d <- d_t01_cli_run(config, "D", output_root)
+  testthat::expect_identical(d$status, 0L, info = paste(d$output, collapse = "\n"))
+  if (d$status != 0L) return(invisible(NULL))
+
+  block_results_path <- file.path(output_root, "B", "block-results.json")
+  block_results <- jsonlite::read_json(block_results_path, simplifyVector = FALSE)
+  testthat::expect_identical(block_results$method, "DEqMS")
+  testthat::expect_identical(block_results$deqms_version, "1.30.0")
+  testthat::expect_identical(block_results$status, "complete")
+  first_block <- names(block_results$blocks)[[1L]]
+  first_claim <- names(block_results$blocks[[first_block]]$contrasts)[[1L]]
+  first_count_prior <- block_results$blocks[[first_block]]$contrasts[[first_claim]]$rows[[1L]]$count_prior_ref
+  testthat::expect_identical(first_count_prior$method, "DEqMS")
+  testthat::expect_identical(first_count_prior$count_type, "psm_count")
+  for (field in c("count", "metadata_sha256")) {
+    changed_prior <- block_results
+    prior_rows <- changed_prior$blocks[[first_block]]$contrasts[[first_claim]]$rows
+    if (identical(field, "count")) {
+      prior_rows[[1L]]$count_prior_ref$count <- prior_rows[[1L]]$count_prior_ref$count + 1
+    } else {
+      prior_rows[[1L]]$count_prior_ref$metadata_sha256 <- d_t01_hash("different-count-table")
+    }
+    changed_prior$blocks[[first_block]]$contrasts[[first_claim]]$rows <- prior_rows
+    prior_error <- tryCatch(
+      triomics_d_validate_current_deqms_count_metadata(
+        changed_prior, config_value$analyses[[1L]]$statistics$count_metadata
+      ),
+      error = identity
+    )
+    testthat::expect_true(inherits(prior_error, "triomics_error"))
+    if (inherits(prior_error, "triomics_error")) {
+      testthat::expect_identical(prior_error$code, "D_LINEAGE_MISMATCH")
+    }
+  }
+
+  current_metadata <- list(
+    sample_metadata = ingested$sample_metadata,
+    sample_registry = ingested$sample_registry,
+    declared_factor_levels = ingested$declared_factor_levels
+  )
+  read_native <- function(root = output_root) {
+    triomics_d_read_evidence_bundle(
+      root, as.character(config_value$study_id),
+      as.character(config_value$analyses[[1L]]$analysis_id),
+      ingested$source_manifests, ingested$feature_registry,
+      current_config_sha256 = as.character(attr(config_value, "config_sha256")),
+      current_metadata = current_metadata,
+      current_count_metadata = config_value$analyses[[1L]]$statistics$count_metadata
+    )
+  }
+  native <- tryCatch(read_native(), error = identity)
+  testthat::expect_false(inherits(native, "error"),
+                         info = if (inherits(native, "error")) {
+                           paste(native$code, conditionMessage(native))
+                         } else NULL)
+  if (inherits(native, "error")) return(invisible(NULL))
+
+  for (field in c("subject_id", "visit_id")) {
+    changed_map <- current_metadata
+    changed_map$sample_registry[[field]][[1L]] <- paste0("changed-", field)
+    map_error <- tryCatch(triomics_d_read_evidence_bundle(
+      output_root, as.character(config_value$study_id),
+      as.character(config_value$analyses[[1L]]$analysis_id),
+      ingested$source_manifests, ingested$feature_registry,
+      current_config_sha256 = as.character(attr(config_value, "config_sha256")),
+      current_metadata = changed_map,
+      current_count_metadata = config_value$analyses[[1L]]$statistics$count_metadata
+    ), error = identity)
+    testthat::expect_true(inherits(map_error, "triomics_error"))
+    if (inherits(map_error, "triomics_error")) {
+      testthat::expect_identical(map_error$code, "D_LINEAGE_MISMATCH")
+    }
+  }
+  for (field in c("time", "time_origin")) {
+    changed_clock <- current_metadata
+    changed_clock$sample_metadata[[field]][[1L]] <-
+      changed_clock$sample_metadata[[field]][[1L]] + 1
+    clock_error <- tryCatch(triomics_d_read_evidence_bundle(
+      output_root, as.character(config_value$study_id),
+      as.character(config_value$analyses[[1L]]$analysis_id),
+      ingested$source_manifests, ingested$feature_registry,
+      current_config_sha256 = as.character(attr(config_value, "config_sha256")),
+      current_metadata = changed_clock,
+      current_count_metadata = config_value$analyses[[1L]]$statistics$count_metadata
+    ), error = identity)
+    testthat::expect_true(inherits(clock_error, "triomics_error"))
+    if (inherits(clock_error, "triomics_error")) {
+      testthat::expect_identical(clock_error$code, "D_LINEAGE_MISMATCH")
+    }
+  }
+
+  count_tamper_root <- tempfile("d-t01-deqms-count-prior-tamper-", tmpdir = "/private/tmp")
+  dir.create(count_tamper_root, recursive = TRUE, showWarnings = FALSE)
+  testthat::expect_true(all(file.copy(
+    list.files(output_root, all.files = TRUE, no.. = TRUE, full.names = TRUE),
+    count_tamper_root, recursive = TRUE
+  )))
+  on.exit(unlink(count_tamper_root, recursive = TRUE, force = TRUE), add = TRUE)
+  count_tamper_root <- normalizePath(count_tamper_root, winslash = "/", mustWork = TRUE)
+  count_tamper_path <- file.path(count_tamper_root, "B", "block-results.json")
+  changed_block_results <- jsonlite::read_json(count_tamper_path, simplifyVector = FALSE)
+  changed_rows <- changed_block_results$blocks[[first_block]]$contrasts[[first_claim]]$rows
+  changed_rows[[1L]]$count_prior_ref$count <- changed_rows[[1L]]$count_prior_ref$count + 1
+  changed_block_results$blocks[[first_block]]$contrasts[[first_claim]]$rows <- changed_rows
+  writeLines(triomics_b07_prov_canonical_value(changed_block_results), count_tamper_path,
+             useBytes = TRUE)
+  expect_count_prior_error <- tryCatch(read_native(root = count_tamper_root), error = identity)
+  testthat::expect_true(inherits(expect_count_prior_error, "triomics_error"))
+  if (inherits(expect_count_prior_error, "triomics_error")) {
+    testthat::expect_identical(expect_count_prior_error$code, "D_PROVENANCE_INVALID")
+  }
+
+  pointer_path <- file.path(output_root, "registries", "current-D.json")
+  pointer_hash_before <- triomics_sha256(pointer_path)
+  config_text <- paste(readLines(config, warn = FALSE), collapse = "\n")
+  reversed_config_text <- sub(
+    "weights: {condition.control: -1, condition.treatment: 1}",
+    "weights: {condition.control: 1, condition.treatment: -1}",
+    config_text, fixed = TRUE
+  )
+  reversed_config <- tempfile("d-t01-reversed-sign-", tmpdir = dirname(config),
+                              fileext = ".yaml")
+  on.exit(unlink(reversed_config, force = TRUE), add = TRUE)
+  writeLines(reversed_config_text, reversed_config, useBytes = TRUE)
+  reversed_sign <- tryCatch(triomics_execute_stage_d(reversed_config, output_root),
+                            error = identity)
+  testthat::expect_true(inherits(reversed_sign, "triomics_error"))
+  if (inherits(reversed_sign, "triomics_error")) {
+    testthat::expect_identical(reversed_sign$code, "D_LINEAGE_MISMATCH")
+  }
+
+  measurement_path <- file.path(fixture_root, "data", "independent", "proteomics.tsv")
+  measurement_lines <- readLines(measurement_path, warn = FALSE)
+  original_measurement_lines <- measurement_lines
+  measurement_fields <- strsplit(measurement_lines[[2L]], "\t", fixed = TRUE)[[1L]]
+  measurement_fields[[2L]] <- as.character(as.numeric(measurement_fields[[2L]]) + 0.25)
+  measurement_lines[[2L]] <- paste(measurement_fields, collapse = "\t")
+  writeLines(measurement_lines, measurement_path, useBytes = TRUE)
+  changed_measurement <- tryCatch(triomics_execute_stage_d(config, output_root), error = identity)
+  testthat::expect_true(inherits(changed_measurement, "triomics_error"))
+  if (inherits(changed_measurement, "triomics_error")) {
+    testthat::expect_identical(changed_measurement$code, "D_LINEAGE_MISMATCH")
+  }
+  testthat::expect_identical(triomics_sha256(pointer_path), pointer_hash_before)
+  writeLines(original_measurement_lines, measurement_path, useBytes = TRUE)
+
+  count_lines <- readLines(count_path, warn = FALSE)
+  count_fields <- strsplit(count_lines[[2L]], "\t", fixed = TRUE)[[1L]]
+  count_fields[[4L]] <- as.character(as.integer(count_fields[[4L]]) + 1L)
+  count_lines[[2L]] <- paste(count_fields, collapse = "\t")
+  writeLines(count_lines, count_path, useBytes = TRUE)
+  changed_counts <- tryCatch(triomics_execute_stage_d(config, output_root), error = identity)
+  testthat::expect_true(inherits(changed_counts, "triomics_error"))
+  if (inherits(changed_counts, "triomics_error")) {
+    testthat::expect_identical(changed_counts$code, "D_LINEAGE_MISMATCH")
+  }
+  testthat::expect_identical(triomics_sha256(pointer_path), pointer_hash_before)
 })

@@ -404,6 +404,69 @@ triomics_d_valid_artifact_descriptor <- function(value, has_type = FALSE) {
     triomics_sha256_text(as.character(value$envelope_sha256))
 }
 
+triomics_d_generation_provenance <- function(provenance) {
+  triomics_d_output_input_pairs(provenance)
+  b_names <- c("block_results", "family_ledger", "candidate_nominations")
+  c_names <- c("candidate_nominations", "integration_evidence", "integration_comparisons",
+               "evaluation_evidence", "stage_status")
+  c_types <- c(
+    candidate_nominations = "candidate_nominations",
+    integration_evidence = "integration_evidence_bundle",
+    integration_comparisons = "integration_comparisons",
+    evaluation_evidence = "integration_evaluation_evidence",
+    stage_status = "stage_c_status"
+  )
+  if (!is.list(provenance$b_artifacts) || !all(b_names %in% names(provenance$b_artifacts)) ||
+      !is.list(provenance$c_artifacts) || !all(c_names %in% names(provenance$c_artifacts)) ||
+      any(!vapply(b_names, function(name) {
+        identical(as.character(provenance$b_artifacts[[name]]$artifact_type), name)
+      }, logical(1))) ||
+      any(!vapply(c_names, function(name) {
+        identical(as.character(provenance$c_artifacts[[name]]$artifact_type), c_types[[name]])
+      }, logical(1)))) {
+    triomics_d_abort("D_PROVENANCE_INVALID", "D output provenance has an unexpected B/C member type.",
+                     "immutable_inputs")
+  }
+  list(
+    b = list(
+      bundle = list(
+        artifact_id = as.character(provenance$b_bundle_artifact_id),
+        payload_sha256 = as.character(provenance$b_bundle_sha256),
+        envelope_sha256 = as.character(provenance$b_bundle_envelope_sha256)
+      ),
+      profile = list(
+        artifact_id = as.character(provenance$b_profile_artifact_id),
+        payload_sha256 = as.character(provenance$b_profile_sha256),
+        envelope_sha256 = as.character(provenance$b_profile_envelope_sha256)
+      ),
+      members = lapply(provenance$b_artifacts[b_names], function(ref) {
+        list(artifact_id = as.character(ref$artifact_id),
+             artifact_type = as.character(ref$artifact_type),
+             payload_sha256 = as.character(ref$sha256),
+             envelope_sha256 = as.character(ref$envelope_sha256))
+      })
+    ),
+    c = list(
+      manifest = list(
+        artifact_id = as.character(provenance$c_manifest_artifact_id),
+        payload_sha256 = as.character(provenance$c_manifest_sha256),
+        envelope_sha256 = as.character(provenance$c_manifest_envelope_sha256)
+      ),
+      profile = list(
+        artifact_id = as.character(provenance$c_profile_artifact_id),
+        payload_sha256 = as.character(provenance$c_profile_sha256),
+        envelope_sha256 = as.character(provenance$c_profile_envelope_sha256)
+      ),
+      members = lapply(provenance$c_artifacts[c_names], function(ref) {
+        list(artifact_id = as.character(ref$artifact_id),
+             artifact_type = as.character(ref$artifact_type),
+             payload_sha256 = as.character(ref$payload_sha256),
+             envelope_sha256 = as.character(ref$envelope_sha256))
+      })
+    )
+  )
+}
+
 triomics_d_validate_generation <- function(root, generation_id) {
   paths <- triomics_d_generation_paths(root, generation_id)
   manifest_path <- triomics_d_secure_path(
@@ -544,6 +607,10 @@ triomics_d_validate_generation <- function(root, generation_id) {
   payload_member <- Filter(function(member) identical(member$path, "evidence-routing.json"), manifest$members)
   envelope_member <- Filter(function(member) identical(member$path, "evidence-routing.envelope.json"),
                             manifest$members)
+  expected_provenance <- tryCatch(triomics_d_generation_provenance(payload$immutable_inputs),
+                                 error = function(error) NULL)
+  expected_inputs <- tryCatch(triomics_d_output_input_pairs(payload$immutable_inputs),
+                              error = function(error) NULL)
   if (length(payload_member) != 1L || !is.list(payload) || !is.list(envelope) ||
       !identical(payload$artifact_type, "annotation_routing_result") ||
       !identical(payload$artifact_id, "d-evidence-routing") ||
@@ -560,10 +627,20 @@ triomics_d_validate_generation <- function(root, generation_id) {
       !identical(as.character(envelope$analysis_id), as.character(payload$analysis_id)) ||
       !identical(as.character(envelope$config_sha256), as.character(payload$config_sha256)) ||
       !identical(as.character(envelope$payload_sha256), as.character(payload_member[[1L]]$digest)) ||
+      is.null(expected_provenance) || is.null(expected_inputs) ||
+      !identical(triomics_b07_prov_canonical_value(manifest$provenance),
+                 triomics_b07_prov_canonical_value(expected_provenance)) ||
+      !identical(triomics_b07_prov_canonical_value(envelope$inputs),
+                 triomics_b07_prov_canonical_value(expected_inputs)) ||
+      !identical(as.character(manifest$study_id), as.character(payload$study_id)) ||
       length(envelope_member) != 1L ||
+      !identical(payload_member[[1L]]$artifact_type, "annotation_routing_result") ||
+      !identical(payload_member[[1L]]$scientific_role, "annotation_routing_result") ||
+      "envelope_for_artifact_id" %in% names(payload_member[[1L]]) ||
       !identical(envelope_member[[1L]]$artifact_type, "artifact_envelope") ||
       !identical(envelope_member[[1L]]$scientific_role, "evidence_envelope") ||
       !identical(envelope_member[[1L]]$envelope_for_artifact_id, "d-evidence-routing") ||
+      !"envelope_for_artifact_id" %in% names(envelope_member[[1L]]) ||
       !isTRUE(triomics_validate_envelope(envelope_path))) {
     triomics_d_abort("D_PROVENANCE_INVALID", "The D payload and envelope do not match their complete generation descriptor.",
                      "generation.envelope")
@@ -929,45 +1006,7 @@ triomics_d_publish_evidence_generation <- function(result, output_root, config_s
       version = as.character(utils::packageVersion("triomics")),
       commit = as.character(producer_commit)
     ),
-    provenance = list(
-      b = list(
-        bundle = list(
-          artifact_id = as.character(provenance$b_bundle_artifact_id),
-          payload_sha256 = as.character(provenance$b_bundle_sha256),
-          envelope_sha256 = as.character(provenance$b_bundle_envelope_sha256)
-        ),
-        profile = list(
-          artifact_id = as.character(provenance$b_profile_artifact_id),
-          payload_sha256 = as.character(provenance$b_profile_sha256),
-          envelope_sha256 = as.character(provenance$b_profile_envelope_sha256)
-        ),
-        members = lapply(provenance$b_artifacts[c("block_results", "family_ledger",
-                                                   "candidate_nominations")], function(ref) {
-          list(artifact_id = as.character(ref$artifact_id),
-               artifact_type = as.character(ref$artifact_type),
-               payload_sha256 = as.character(ref$sha256),
-               envelope_sha256 = as.character(ref$envelope_sha256))
-        })
-      ),
-      c = list(
-        manifest = list(
-          artifact_id = as.character(provenance$c_manifest_artifact_id),
-          payload_sha256 = as.character(provenance$c_manifest_sha256),
-          envelope_sha256 = as.character(provenance$c_manifest_envelope_sha256)
-        ),
-        profile = list(
-          artifact_id = as.character(provenance$c_profile_artifact_id),
-          payload_sha256 = as.character(provenance$c_profile_sha256),
-          envelope_sha256 = as.character(provenance$c_profile_envelope_sha256)
-        ),
-        members = lapply(provenance$c_artifacts, function(ref) {
-          list(artifact_id = as.character(ref$artifact_id),
-               artifact_type = as.character(ref$artifact_type),
-               payload_sha256 = as.character(ref$payload_sha256),
-               envelope_sha256 = as.character(ref$envelope_sha256))
-        })
-      )
-    ),
+    provenance = triomics_d_generation_provenance(provenance),
     limitations = list(
       "C-06 remains unaccepted.",
       "C-07 controls remain not_run.",
@@ -1112,6 +1151,38 @@ triomics_d_write_evidence_result <- function(result, output_root, config_sha256,
   )
 }
 
+triomics_d_validate_route_evidence_proof <- function(evidence_bundle) {
+  context <- if (is.list(evidence_bundle)) evidence_bundle$publication_context else NULL
+  request <- if (is.list(context)) context$verified_request else NULL
+  if (!is.list(context) || !triomics_d_nonempty_string(context$root) ||
+      !triomics_sha256_text(as.character(context$current_config_sha256)) ||
+      !is.list(request) || !is.list(request$source_manifests) ||
+      !is.data.frame(request$feature_registry) || !is.list(request$imported_statistics) ||
+      !all(c("source_manifests", "feature_registry", "current_config_sha256",
+             "current_metadata", "current_count_metadata", "imported_statistics",
+             "routing_metadata") %in% names(request)) ||
+      (!is.null(request$current_metadata) && !is.list(request$current_metadata))) {
+    triomics_d_abort("D_PROVENANCE_REQUIRED",
+                     "The exported annotation API requires a native same-root B/C readback context.",
+                     "publication_context")
+  }
+  verified <- triomics_d_read_evidence_bundle(
+    context$root, as.character(evidence_bundle$study_id), as.character(evidence_bundle$analysis_id),
+    request$source_manifests, request$feature_registry,
+    imported_statistics = request$imported_statistics,
+    routing_metadata = request$routing_metadata,
+    current_config_sha256 = as.character(context$current_config_sha256),
+    current_metadata = request$current_metadata,
+    current_count_metadata = request$current_count_metadata
+  )
+  if (!identical(evidence_bundle, verified)) {
+    triomics_d_abort("D_PROVENANCE_INVALID",
+                     "The in-memory annotation input differs from its re-read same-root producer evidence.",
+                     "evidence_bundle")
+  }
+  invisible(TRUE)
+}
+
 triomics_annotate_evidence <- function(evidence_bundle, annotation_spec = list()) {
   provenance <- if (is.list(evidence_bundle)) evidence_bundle$immutable_inputs else NULL
   required_b <- c("block_results", "family_ledger", "candidate_nominations")
@@ -1128,6 +1199,7 @@ triomics_annotate_evidence <- function(evidence_bundle, annotation_spec = list()
     triomics_d_abort("D_PROVENANCE_REQUIRED", "The annotation entry point accepts only B/C evidence loaded from hash-verified immutable handoffs.",
                      "evidence_bundle.immutable_inputs")
   }
+  triomics_d_validate_route_evidence_proof(evidence_bundle)
   if (!is.list(annotation_spec)) {
     triomics_d_abort("D_ROUTE_INVALID", "The annotation request must be a typed list.", "annotation_spec")
   }

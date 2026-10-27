@@ -1977,7 +1977,8 @@ triomics_execute_stage_d <- function(config_path, output) {
     imported_statistics = list(),
     routing_metadata = NULL,
     current_config_sha256 = as.character(attr(config, "config_sha256")),
-    current_metadata = current_metadata
+    current_metadata = current_metadata,
+    current_count_metadata = analysis$statistics$count_metadata %||% NULL
   )
   routed <- triomics_annotate_evidence(evidence, config$annotation %||% list())
   triomics_d_publication_failpoint("provenance_preflight_complete")

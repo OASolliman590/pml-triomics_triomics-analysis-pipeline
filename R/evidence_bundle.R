@@ -49,7 +49,7 @@ triomics_d_child_path <- function(root, relative, key) {
   current <- root
   for (part in parts) {
     current <- file.path(current, part)
-    if (file.exists(current) && triomics_is_symlink(current)) {
+    if (triomics_is_symlink(current)) {
       triomics_d_abort("D_OUTPUT_PATH_UNSAFE", "A producer handoff path crosses a symbolic link.", key)
     }
   }
@@ -620,25 +620,47 @@ triomics_d_validate_c_profile_values <- function(root, b_handoff, c_handoff,
     native_ref <- evidence$native_artifact_ref
     native_payload <- NULL
     if (identical(as.character(evidence$status), "complete") && is.list(native_ref)) {
-    native_dir <- file.path(root, "C", "native-states")
+    native_dir <- triomics_d_secure_path(
+      file.path(root, "C", "native-states"), "D_OUTPUT_PATH_UNSAFE",
+      "The C native-state directory is unsafe or crosses a symbolic link.",
+      "C.native_sidecar.directory", directory = TRUE
+    )
+    root_prefix <- if (endsWith(root, "/")) root else paste0(root, "/")
+    if (!identical(native_dir, root) && !startsWith(native_dir, root_prefix)) {
+      triomics_d_abort("D_OUTPUT_PATH_UNSAFE", "The C native-state directory escapes its output root.",
+                       "C.native_sidecar.directory")
+    }
     native_files <- if (dir.exists(native_dir)) {
       list.files(native_dir, pattern = "^integration-[0-9]+[.]json$",
                  full.names = TRUE, all.files = FALSE)
     } else character()
     native_hits <- native_files[vapply(native_files, function(path) {
-      if (triomics_is_symlink(path)) return(FALSE)
-      value <- tryCatch(jsonlite::read_json(path, simplifyVector = FALSE),
+      relative_path <- file.path("C", "native-states", basename(path))
+      safe_path <- triomics_d_child_path(root, relative_path,
+                                         paste0("C.native_sidecar.", integration_id))
+      if (is.null(safe_path)) return(FALSE)
+      value <- tryCatch(jsonlite::read_json(safe_path, simplifyVector = FALSE),
                         error = function(error) NULL)
       is.list(value) &&
         identical(as.character(value$artifact_id), as.character(native_ref$artifact_id)) &&
-        identical(triomics_sha256(path), as.character(native_ref$sha256))
+        identical(triomics_sha256(safe_path), as.character(native_ref$sha256))
     }, logical(1))]
     if (length(native_hits) != 1L) {
       triomics_d_abort("D_PROVENANCE_INVALID", "A C native sidecar does not resolve to one exact persisted file.",
                        paste0("C.native_sidecar.", integration_id))
     }
-    native_path <- normalizePath(native_hits[[1L]], winslash = "/", mustWork = TRUE)
-    native_envelope_path <- sub("[.]json$", ".envelope.json", native_path)
+    native_relative_path <- file.path("C", "native-states", basename(native_hits[[1L]]))
+    native_path <- triomics_d_child_path(root, native_relative_path,
+                                         paste0("C.native_sidecar.", integration_id))
+    native_envelope_relative_path <- sub("[.]json$", ".envelope.json", native_relative_path)
+    native_envelope_path <- triomics_d_child_path(
+      root, native_envelope_relative_path,
+      paste0("C.native_sidecar.", integration_id, ".envelope")
+    )
+    if (is.null(native_path) || is.null(native_envelope_path)) {
+      triomics_d_abort("D_PROVENANCE_REQUIRED", "A C native sidecar payload or envelope is missing.",
+                       paste0("C.native_sidecar.", integration_id))
+    }
     native_payload <- triomics_d_read_json(native_path, paste0("C.native_sidecar.", integration_id))
     native_envelope <- triomics_d_read_json(
       native_envelope_path, paste0("C.native_sidecar.", integration_id, ".envelope")
@@ -754,10 +776,171 @@ triomics_d_validate_c_profile_values <- function(root, b_handoff, c_handoff,
   invisible(TRUE)
 }
 
+triomics_d_validate_current_deqms_count_metadata <- function(block_results, current_count_metadata) {
+  status <- if (is.list(block_results)) as.character(block_results$status %||% "") else ""
+  if (!is.list(block_results) || !identical(as.character(block_results$method), "DEqMS") ||
+      !status %in% c("complete", "partial")) {
+    return(invisible(TRUE))
+  }
+  if (is.null(current_count_metadata)) {
+    triomics_d_abort("D_PROVENANCE_REQUIRED",
+                     "A successful native DEqMS handoff needs its current count metadata for D readback.",
+                     "statistics.count_metadata")
+  }
+  count_input <- tryCatch(triomics_b05_read_count_metadata(current_count_metadata),
+                          error = function(error) NULL)
+  if (!is.list(count_input) || !isTRUE(count_input$ok) || !is.data.frame(count_input$table)) {
+    triomics_d_abort("D_LINEAGE_MISMATCH", "Current DEqMS count metadata are missing or unreadable.",
+                     "statistics.count_metadata")
+  }
+  table <- count_input$table
+  count_columns <- intersect(c("peptide_count", "psm_count"), names(table))
+  if (length(count_columns) == 0L || length(count_columns) > 2L) {
+    triomics_d_abort("D_LINEAGE_MISMATCH", "Current DEqMS count metadata do not match the producer table schema.",
+                     "statistics.count_metadata")
+  }
+  if (!"block_id" %in% names(table)) {
+    if (length(block_results$blocks) != 1L) {
+      triomics_d_abort("D_LINEAGE_MISMATCH", "Current DEqMS count metadata omit required block identities.",
+                       "statistics.count_metadata.block_id")
+    }
+    table$block_id <- names(block_results$blocks)[[1L]]
+  }
+  raw_counts <- lapply(count_columns, function(column) {
+    suppressWarnings(as.numeric(as.character(table[[column]])))
+  })
+  names(raw_counts) <- count_columns
+  present <- lapply(raw_counts, function(values) !is.na(values))
+  if (length(present) > 1L && any(present[[1L]] & present[[2L]])) {
+    triomics_d_abort("D_LINEAGE_MISMATCH", "Current DEqMS count metadata ambiguously declare count types.",
+                     "statistics.count_metadata")
+  }
+  any_count <- Reduce(`|`, present)
+  if (any(!any_count)) {
+    triomics_d_abort("D_LINEAGE_MISMATCH", "Current DEqMS count metadata contain missing count values.",
+                     "statistics.count_metadata")
+  }
+  chosen <- if (length(present) == 1L) rep(count_columns[[1L]], nrow(table)) else {
+    ifelse(present[[1L]], count_columns[[1L]], count_columns[[2L]])
+  }
+  if (length(unique(chosen)) != 1L) {
+    triomics_d_abort("D_LINEAGE_MISMATCH", "Current DEqMS count metadata mix peptide and PSM counts.",
+                     "statistics.count_metadata")
+  }
+  table$count_value <- raw_counts[[unique(chosen)]]
+  table$count_type <- unique(chosen)
+  table$feature_key <- as.character(table$feature_key)
+  table$block_id <- as.character(table$block_id)
+  table$acquisition <- as.character(table$acquisition)
+  table$provenance <- as.character(table$provenance)
+  if ("sample_id" %in% names(table)) table$sample_id <- as.character(table$sample_id)
+  current_hash <- triomics_b05_table_hash(table)
+  has_sample <- "sample_id" %in% names(table)
+  if (has_sample) table$sample_id <- as.character(table$sample_id)
+  persisted_hashes <- character()
+  for (block_id in names(block_results$blocks)) {
+    block <- block_results$blocks[[block_id]]
+    for (group in c("contrasts", "joint_claims")) {
+      claims <- block[[group]]
+      if (!is.list(claims)) next
+      for (claim in claims) {
+        rows <- claim$rows
+        if (!is.list(rows)) next
+        for (row in rows) {
+          reference <- row$count_prior_ref
+          if (!is.list(reference) ||
+              !triomics_sha256_text(as.character(reference$metadata_sha256))) {
+            triomics_d_abort("D_PROVENANCE_INVALID",
+                             "A complete native DEqMS handoff omits its count-table identity.",
+                             "B.block_results.count_prior_ref")
+          }
+          persisted_hashes <- c(persisted_hashes, as.character(reference$metadata_sha256))
+          feature_key <- as.character(row$feature_key %||% "")
+          if (!identical(as.character(reference$method), "DEqMS") ||
+              !identical(as.character(reference$feature_key), feature_key) ||
+              !identical(as.character(reference$count_type), unique(chosen))) {
+            triomics_d_abort("D_LINEAGE_MISMATCH",
+                             "A persisted DEqMS count-prior row conflicts with its current feature or count type.",
+                             "B.block_results.count_prior_ref")
+          }
+          feature_rows <- table[table$block_id == block_id &
+                                table$feature_key == feature_key, , drop = FALSE]
+          if (has_sample) {
+            source_sample_ids <- as.character(unlist(reference$sample_ids, use.names = FALSE))
+            if (!length(source_sample_ids) && is.null(reference$count)) {
+              if (!as.character(reference$summary_method) %in% c(
+                "minimum_over_feature_specific_samples_used_by_fit",
+                "minimum_over_feature_specific_complete_pair_observations"
+              ) || length(unlist(reference$acquisition, use.names = FALSE)) ||
+                  length(unlist(reference$provenance, use.names = FALSE))) {
+                triomics_d_abort("D_LINEAGE_MISMATCH",
+                                 "An unavailable DEqMS count prior has inconsistent empty source metadata.",
+                                 "B.block_results.count_prior_ref")
+              }
+              next
+            }
+            if (!length(source_sample_ids) || anyNA(source_sample_ids) ||
+                any(!nzchar(source_sample_ids)) || anyDuplicated(source_sample_ids)) {
+              triomics_d_abort("D_LINEAGE_MISMATCH",
+                               "A persisted DEqMS count-prior row has invalid source-sample identities.",
+                               "B.block_results.count_prior_ref.sample_ids")
+            }
+            feature_rows <- feature_rows[
+              feature_rows$sample_id %in% source_sample_ids, , drop = FALSE
+            ]
+            if (nrow(feature_rows) != length(source_sample_ids) ||
+                !setequal(as.character(feature_rows$sample_id), source_sample_ids)) {
+              triomics_d_abort("D_LINEAGE_MISMATCH",
+                               "Current DEqMS count metadata do not cover the persisted feature-specific source samples.",
+                               "statistics.count_metadata.sample_id")
+            }
+            expected_summary <- if (identical(as.character(reference$summary_method),
+                                               "minimum_over_feature_specific_complete_pair_observations")) {
+              "minimum_over_feature_specific_complete_pair_observations"
+            } else {
+              "minimum_over_feature_specific_samples_used_by_fit"
+            }
+            expected_count <- min(as.numeric(feature_rows$count_value))
+          } else {
+            if (!is.null(reference$sample_ids) || nrow(feature_rows) != 1L) {
+              triomics_d_abort("D_LINEAGE_MISMATCH",
+                               "Current source-reported DEqMS counts do not match the persisted feature identity.",
+                               "statistics.count_metadata.feature_key")
+            }
+            expected_summary <- "source_reported_feature_count"
+            expected_count <- as.numeric(feature_rows$count_value[[1L]])
+          }
+          expected_acquisition <- unique(as.character(feature_rows$acquisition))
+          expected_provenance <- unique(as.character(feature_rows$provenance))
+          if (is.null(reference$count) || length(reference$count) != 1L ||
+              !is.finite(as.numeric(reference$count)) ||
+              !identical(as.numeric(reference$count), expected_count) ||
+              !identical(as.character(reference$summary_method), expected_summary) ||
+              !identical(as.character(unlist(reference$acquisition, use.names = FALSE)),
+                         expected_acquisition) ||
+              !identical(as.character(unlist(reference$provenance, use.names = FALSE)),
+                         expected_provenance)) {
+            triomics_d_abort("D_LINEAGE_MISMATCH",
+                             "Persisted DEqMS count priors differ from the exact current table values or metadata.",
+                             "B.block_results.count_prior_ref")
+          }
+        }
+      }
+    }
+  }
+  if (!length(persisted_hashes) || any(!vapply(persisted_hashes, identical, logical(1), current_hash))) {
+    triomics_d_abort("D_LINEAGE_MISMATCH",
+                     "Current DEqMS count metadata differ from the exact B-T05 count-prior identity.",
+                     "statistics.count_metadata")
+  }
+  invisible(TRUE)
+}
+
 triomics_d_validate_producer_provenance <- function(root, b_handoff, c_handoff,
                                                     source_manifests, feature_registry,
                                                     current_config_sha256 = NULL,
-                                                    current_metadata = NULL) {
+                                                    current_metadata = NULL,
+                                                    current_count_metadata = NULL) {
   b_profile_path <- file.path(dirname(b_handoff$bundle_path), "stage-handoff-provenance.json")
   b_profile_envelope_path <- sub("[.]json$", ".envelope.json", b_profile_path)
   b_profile_ref <- triomics_d_read_producer_profile(
@@ -853,6 +1036,9 @@ triomics_d_validate_producer_provenance <- function(root, b_handoff, c_handoff,
                        "normalized_metadata")
     }
   }
+  triomics_d_validate_current_deqms_count_metadata(
+    b_handoff$block_results, current_count_metadata
+  )
   feature_entities <- triomics_d_profile_entities(c_profile, "feature_registry")
   block_ids <- sort(unique(as.character(feature_registry$block_id)), method = "radix")
   if (!length(block_ids) || length(feature_entities) != length(block_ids) ||
@@ -889,7 +1075,8 @@ triomics_d_read_evidence_bundle <- function(output_root, expected_study_id, expe
                                             source_manifests, feature_registry,
                                             imported_statistics = list(), routing_metadata = NULL,
                                             current_config_sha256 = NULL,
-                                            current_metadata = NULL) {
+                                            current_metadata = NULL,
+                                            current_count_metadata = NULL) {
   if (!triomics_d_nonempty_string(output_root) || !dir.exists(output_root) ||
       triomics_is_symlink(output_root)) {
     triomics_d_abort("D_PROVENANCE_REQUIRED", "The Stage-B/Stage-C local output root is unavailable.", "output_root")
@@ -905,7 +1092,16 @@ triomics_d_read_evidence_bundle <- function(output_root, expected_study_id, expe
   )
   producer_provenance <- triomics_d_validate_producer_provenance(
     root, b_handoff, c_handoff, source_manifests, feature_registry,
-    current_config_sha256, current_metadata
+    current_config_sha256, current_metadata, current_count_metadata
+  )
+  producer_provenance$verified_request <- list(
+    source_manifests = source_manifests,
+    feature_registry = feature_registry,
+    current_config_sha256 = current_config_sha256,
+    current_metadata = current_metadata,
+    current_count_metadata = current_count_metadata,
+    imported_statistics = imported_statistics,
+    routing_metadata = routing_metadata
   )
   result <- triomics_d_build_evidence_bundle(list(
     study_id = expected_study_id,
