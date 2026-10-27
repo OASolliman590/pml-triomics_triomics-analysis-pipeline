@@ -880,47 +880,86 @@ d_t01_cli_run <- function(config_path, stage, output_root) {
   list(status = as.integer(status), output = output)
 }
 
-testthat::test_that("D-T01 refuses stale paired signs and preserves the old pointer", {
-  roots_path <- "/tmp/triomics-m7-017-luna/native-roots.txt"
-  testthat::expect_true(file.exists(roots_path))
-  if (!file.exists(roots_path)) return(invisible(NULL))
-  roots <- utils::read.delim(roots_path, header = FALSE, sep = "\t",
-                             stringsAsFactors = FALSE, quote = "")
-  paired <- roots[roots[[1L]] == "paired", , drop = FALSE]
-  testthat::expect_gt(nrow(paired), 0L)
-  if (!nrow(paired)) return(invisible(NULL))
-  fixture_root <- paired[[2L]][[nrow(paired)]]
-  source_root <- paired[[3L]][[nrow(paired)]]
-  source_pointer <- file.path(source_root, "registries", "current-D.json")
-  testthat::expect_true(file.exists(source_pointer))
-  if (!file.exists(source_pointer)) return(invisible(NULL))
+d_t01_paired_cli_fixture <- function() {
+  source_config <- triomics_test_resource("examples", "tickets", "D-T01.yaml")
+  fixture_root <- tempfile("d-t01-paired-native-fixture-", tmpdir = "/private/tmp")
+  dir.create(file.path(fixture_root, "tickets"), recursive = TRUE, showWarnings = FALSE)
+  if (!file.copy(source_config, file.path(fixture_root, "tickets"))) {
+    stop("Could not copy the public D-T01 synthetic config.", call. = FALSE)
+  }
+  source_data <- normalizePath(file.path(dirname(source_config), "..", "data"),
+                               winslash = "/", mustWork = TRUE)
+  if (!file.copy(source_data, fixture_root, recursive = TRUE)) {
+    stop("Could not copy the public D-T01 synthetic data.", call. = FALSE)
+  }
+  config_path <- file.path(fixture_root, "tickets", basename(source_config))
+  metadata_path <- file.path(fixture_root, "data", "c04", "metadata.tsv")
+  metadata <- utils::read.delim(metadata_path, check.names = FALSE, stringsAsFactors = FALSE)
+  if (nrow(metadata) %% 2L != 0L) stop("The public D-T01 fixture is not pairable.", call. = FALSE)
+  subjects <- paste0("sub", seq_len(nrow(metadata) / 2L))
+  metadata$subject <- rep(subjects, each = 2L)
+  metadata$visit <- rep(c("baseline", "followup"), times = length(subjects))
+  metadata$time <- rep(c(0, 1), times = length(subjects))
+  utils::write.table(metadata, metadata_path, sep = "\t", row.names = FALSE, quote = FALSE)
 
-  clone_root <- tempfile("d-t01-paired-sign-stale-", tmpdir = "/private/tmp")
-  dir.create(clone_root, recursive = TRUE, showWarnings = FALSE)
-  testthat::expect_true(all(file.copy(
-    list.files(source_root, all.files = TRUE, no.. = TRUE, full.names = TRUE),
-    clone_root, recursive = TRUE
-  )))
-  on.exit(unlink(clone_root, recursive = TRUE, force = TRUE), add = TRUE)
-  pointer_path <- file.path(clone_root, "registries", "current-D.json")
-  pointer_hash <- triomics_sha256(pointer_path)
-
-  config_path <- file.path(fixture_root, "tickets", "D-T01.yaml")
   config_text <- paste(readLines(config_path, warn = FALSE), collapse = "\n")
-  reversed <- sub('"reference_level": "baseline"',
-                  '"reference_level": "followup"', config_text, fixed = TRUE)
-  reversed <- sub('"target_level": "followup"',
-                  '"target_level": "baseline"', reversed, fixed = TRUE)
-  reversed <- sub('"reference_visit": "baseline"',
-                  '"reference_visit": "followup"', reversed, fixed = TRUE)
-  reversed <- sub('"target_visit": "followup"',
-                  '"target_visit": "baseline"', reversed, fixed = TRUE)
-  stale_config <- tempfile("d-t01-paired-sign-stale-", tmpdir = dirname(config_path),
-                           fileext = ".yaml")
-  on.exit(unlink(stale_config, force = TRUE), add = TRUE)
-  writeLines(reversed, stale_config, useBytes = TRUE)
+  replacements <- list(
+    "    score: numeric" = "    score: numeric\n    subject: string\n    visit: factor\n    time: numeric",
+    "  subject_id: null" = "  subject_id: subject",
+    "  factor_levels: {}" = "  factor_levels:\n    visit: [baseline, followup]",
+    "      kind: independent" = "      kind: paired",
+    "      condition: score" = "      condition: visit",
+    "      condition_type: continuous" = "      condition_type: factor",
+    "      subject_id: null" = "      subject_id: subject",
+    "      repeated: false" = "      repeated: true",
+    "      representation: levels" = "      representation: delta",
+    "      reference_level: null" = "      reference_level: baseline",
+    "      target_level: null" = "      target_level: followup",
+    "      visit_column: null" = "      visit_column: visit",
+    "      reference_visit: null" = "      reference_visit: baseline",
+    "      target_visit: null" = "      target_visit: followup",
+    "contrast_id: score_slope" = "contrast_id: target_minus_reference",
+    "weights: {intercept: 0, continuous.score: 1}" = "weights: {intercept: 1}",
+    "effect_unit: per_unit_beta" = "effect_unit: delta_difference"
+  )
+  for (old in names(replacements)) {
+    config_text <- sub(old, replacements[[old]], config_text, fixed = TRUE)
+  }
+  writeLines(config_text, config_path, useBytes = TRUE)
+  list(root = fixture_root, config = config_path)
+}
 
-  stale_run <- d_t01_cli_run(stale_config, "D", clone_root)
+testthat::test_that("D-T01 refuses stale paired signs and preserves the old pointer", {
+  fixture <- d_t01_paired_cli_fixture()
+  output_root <- tempfile("d-t01-paired-native-output-", tmpdir = "/private/tmp")
+  on.exit(unlink(c(fixture$root, output_root), recursive = TRUE, force = TRUE), add = TRUE)
+
+  b_run <- d_t01_cli_run(fixture$config, "B", output_root)
+  testthat::expect_identical(b_run$status, 0L, info = paste(b_run$output, collapse = "\n"))
+  c_run <- d_t01_cli_run(fixture$config, "C", output_root)
+  testthat::expect_identical(c_run$status, 0L, info = paste(c_run$output, collapse = "\n"))
+  d_run <- d_t01_cli_run(fixture$config, "D", output_root)
+  testthat::expect_identical(d_run$status, 0L, info = paste(d_run$output, collapse = "\n"))
+
+  pointer_path <- file.path(output_root, "registries", "current-D.json")
+  testthat::expect_true(file.exists(pointer_path))
+  pointer_hash <- triomics_sha256(pointer_path)
+  stale_config_text <- paste(readLines(fixture$config, warn = FALSE), collapse = "\n")
+  stale_replacements <- list(
+    "      reference_level: baseline" = "      reference_level: followup",
+    "      target_level: followup" = "      target_level: baseline",
+    "      reference_visit: baseline" = "      reference_visit: followup",
+    "      target_visit: followup" = "      target_visit: baseline"
+  )
+  for (old in names(stale_replacements)) {
+    stale_config_text <- sub(old, stale_replacements[[old]], stale_config_text, fixed = TRUE)
+  }
+  stale_path <- tempfile("d-t01-paired-sign-stale-", tmpdir = dirname(fixture$config),
+                         fileext = ".yaml")
+  on.exit(unlink(stale_path, force = TRUE), add = TRUE)
+  writeLines(stale_config_text, stale_path, useBytes = TRUE)
+
+  stale_run <- d_t01_cli_run(stale_path, "D", output_root)
   testthat::expect_false(identical(stale_run$status, 0L),
                          info = paste(stale_run$output, collapse = "\n"))
   testthat::expect_true(any(grepl("D_LINEAGE_MISMATCH", stale_run$output, fixed = TRUE)),

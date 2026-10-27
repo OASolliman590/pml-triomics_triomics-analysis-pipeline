@@ -274,7 +274,19 @@ triomics_c08_cli_unit_map <- function(resolved, sample_registry, analysis_unit_m
         "C_SCORE_LINEAGE_INVALID", "AnalysisUnitMap source sample ids are incomplete.", "source_sample_ids"
       )
     }
-    subject_ids <- character()
+    registry_index <- match(source_ids, as.character(registry$sample_id))
+    if (anyNA(registry_index)) {
+      triomics_c08_abort(
+        "C_SCORE_COVERAGE_MISMATCH", "An AnalysisUnitMap source sample is absent from the predecessor registry.",
+        "sample_registry.sample_id"
+      )
+    }
+    raw_subject_ids <- character()
+    if ("subject_id" %in% names(registry)) {
+      raw_subject_ids <- as.character(registry$subject_id[registry_index])
+      raw_subject_ids[is.na(raw_subject_ids)] <- ""
+    }
+    subject_ids <- raw_subject_ids
     if (length(clinical_links)) {
       mapped <- clinical_links[source_ids]
       if (length(mapped) != length(source_ids) || any(vapply(mapped, is.null, logical(1L)))) {
@@ -283,10 +295,74 @@ triomics_c08_cli_unit_map <- function(resolved, sample_registry, analysis_unit_m
           "clinical.links_file"
         )
       }
-      subject_ids <- vapply(mapped, `[[`, character(1L), "subject_key")
-    } else if ("subject_id" %in% names(registry)) {
-      subject_ids <- as.character(registry$subject_id[match(source_ids, registry$sample_id)])
-      subject_ids[is.na(subject_ids)] <- ""
+      raw_subjects <- unique(raw_subject_ids[nzchar(raw_subject_ids)])
+      if (length(raw_subjects) != 1L) {
+        if (length(raw_subjects) > 1L) {
+          triomics_c08_abort(
+            "C_SCORE_COVERAGE_MISMATCH",
+            "AnalysisUnitMap source samples disagree on the raw molecular subject identity.",
+            "analysis_unit_map.subject_id"
+          )
+        }
+      }
+      declared_raw_subject <- triomics_c06_cli_unit_map_scalar(record, "subject_id")
+      if (!is.null(declared_raw_subject) && !nzchar(as.character(declared_raw_subject))) {
+        declared_raw_subject <- NULL
+      }
+      if (length(raw_subjects) && !is.null(declared_raw_subject) &&
+          !identical(as.character(declared_raw_subject), raw_subjects[[1L]])) {
+        triomics_c08_abort(
+          "C_SCORE_COVERAGE_MISMATCH",
+          "The AnalysisUnitMap raw subject identity disagrees with predecessor source samples.",
+          "analysis_unit_map.subject_id"
+        )
+      }
+      clinical_subject_keys <- vapply(mapped, function(link) {
+        as.character(link$subject_key %||% "")
+      }, character(1L))
+      if (any(!nzchar(clinical_subject_keys)) || length(clinical_subject_keys) != length(source_ids)) {
+        triomics_c08_abort(
+          "C_SCORE_COVERAGE_MISMATCH", "A source sample has an incomplete linked clinical subject key.",
+          "clinical.links_file"
+        )
+      }
+      clinical_study_id <- as.character(clinical_view$study_id %||% "")
+      if (length(clinical_study_id) != 1L || is.na(clinical_study_id) || !nzchar(clinical_study_id)) {
+        triomics_c08_abort(
+          "C_SCORE_COVERAGE_MISMATCH", "Clinical subject links lack their declared study identity.",
+          "clinical_view.study_id"
+        )
+      }
+      raw_subject <- if (length(raw_subjects)) raw_subjects[[1L]] else declared_raw_subject
+      repeated_representation <- representation_id %in% c("delta", "subject_centered")
+      if (is.null(raw_subject) && repeated_representation) {
+        triomics_c08_abort(
+          "C_SCORE_COVERAGE_MISMATCH",
+          "Repeated C-08 units require the declared raw molecular subject identity.",
+          "analysis_unit_map.subject_id"
+        )
+      }
+      if (!is.null(raw_subject)) {
+        expected_subject_key <- triomics_clinical_subject_key(clinical_study_id, raw_subject)
+        if (any(clinical_subject_keys != expected_subject_key)) {
+          triomics_c08_abort(
+            "C_SCORE_COVERAGE_MISMATCH",
+            "Clinical subject keys do not match the declared raw molecular subject link.",
+            "clinical.links_file.subject_key"
+          )
+        }
+        subject_ids <- expected_subject_key
+      } else {
+        linked_subject_keys <- unique(clinical_subject_keys)
+        if (length(linked_subject_keys) != 1L) {
+          triomics_c08_abort(
+            "C_SCORE_COVERAGE_MISMATCH",
+            "Linked source samples disagree on their approved clinical subject key.",
+            "clinical.links_file.subject_key"
+          )
+        }
+        subject_ids <- linked_subject_keys[[1L]]
+      }
     }
     subject_ids <- unique(subject_ids[nzchar(subject_ids)])
     if (length(subject_ids) > 1L) {
@@ -296,7 +372,7 @@ triomics_c08_cli_unit_map <- function(resolved, sample_registry, analysis_unit_m
         "analysis_unit_map.subject_id"
       )
     }
-    if (!is.null(record$subject_id) && length(subject_ids) &&
+    if (!length(clinical_links) && !is.null(record$subject_id) && length(subject_ids) &&
         !identical(as.character(record$subject_id), subject_ids[[1L]])) {
       triomics_c08_abort(
         "C_SCORE_COVERAGE_MISMATCH",
@@ -304,7 +380,11 @@ triomics_c08_cli_unit_map <- function(resolved, sample_registry, analysis_unit_m
         "analysis_unit_map.subject_id"
       )
     }
-    if (is.null(record$subject_id) && length(subject_ids)) record$subject_id <- subject_ids[[1L]]
+    if (length(clinical_links) && length(subject_ids)) {
+      record$subject_id <- subject_ids[[1L]]
+    } else if (is.null(record$subject_id) && length(subject_ids)) {
+      record$subject_id <- subject_ids[[1L]]
+    }
     record$representation_id <- representation_id
     record
   })
@@ -370,10 +450,10 @@ triomics_c06_cli_compose_unit_map <- function(resolved, ingested, analysis,
       as.character(triomics_c06_cli_unit_map_scalar(record, "unit_id") %||% "")
     }, character(1L))
     if (any(!nzchar(source_ids)) || anyDuplicated(source_ids) ||
-        any(!all_samples %in% source_ids)) {
+        any(!all_samples %in% source_ids) || !setequal(source_ids, sample_ids)) {
       triomics_integration_abort(
         "C_SCORE_LINEAGE_INVALID",
-        "Trajectory B unit identities do not cover the resolved source samples exactly by name.",
+        "Trajectory B unit identities must preserve every named source sample, including exclusions.",
         key = "analysis_unit_map.unit_id"
       )
     }
@@ -386,6 +466,90 @@ triomics_c06_cli_compose_unit_map <- function(resolved, ingested, analysis,
         "Trajectory C composition requires the declared subject-centered B representation.",
         key = "analysis_unit_map.representation_id"
       )
+    }
+    source_by_id <- stats::setNames(records, source_ids)
+    declared_blocks <- stats::setNames(vector("list", length(source_ids)), source_ids)
+    source_eligibility <- stats::setNames(logical(length(source_ids)), source_ids)
+    source_exclusion <- stats::setNames(character(length(source_ids)), source_ids)
+    for (unit_id in source_ids) {
+      source_record <- source_by_id[[unit_id]]
+      source_members <- as.character(unlist(source_record$source_sample_ids, use.names = FALSE))
+      if (!identical(source_members, unit_id) ||
+          !"represented_blocks" %in% names(source_record)) {
+        triomics_integration_abort(
+          "C_SCORE_LINEAGE_INVALID",
+          "Trajectory B units must retain one named source sample and its represented-block membership.",
+          key = paste0("analysis_unit_map.", unit_id, ".source_sample_ids")
+        )
+      }
+      mapped_blocks <- as.character(unlist(source_record$represented_blocks, use.names = FALSE))
+      if (anyNA(mapped_blocks) || any(!nzchar(mapped_blocks)) || anyDuplicated(mapped_blocks) ||
+          any(!mapped_blocks %in% block_ids)) {
+        triomics_integration_abort(
+          "C_SCORE_LINEAGE_INVALID",
+          "Trajectory B represented-block membership contains invalid block identities.",
+          key = paste0("analysis_unit_map.", unit_id, ".represented_blocks")
+        )
+      }
+      actual_blocks <- names(block_samples)[vapply(block_samples, function(ids) unit_id %in% ids, logical(1L))]
+      if (!setequal(mapped_blocks, actual_blocks)) {
+        triomics_integration_abort(
+          "C_SCORE_LINEAGE_INVALID",
+          "Trajectory B represented-block membership disagrees with the named resolved matrices.",
+          key = paste0("analysis_unit_map.", unit_id, ".represented_blocks")
+        )
+      }
+      eligible <- triomics_c06_cli_unit_map_scalar(source_record, "eligible")
+      disposition <- triomics_c06_cli_unit_map_scalar(source_record, "eligibility")
+      if (is.null(eligible) && is.null(disposition)) {
+        triomics_integration_abort(
+          "C_SCORE_LINEAGE_INVALID",
+          "Trajectory B units need an explicit eligibility disposition.",
+          key = paste0("analysis_unit_map.", unit_id, ".eligible")
+        )
+      }
+      if (!is.null(eligible) && !is.logical(eligible)) {
+        triomics_integration_abort(
+          "C_SCORE_LINEAGE_INVALID",
+          "Trajectory B eligibility must be a single logical value.",
+          key = paste0("analysis_unit_map.", unit_id, ".eligible")
+        )
+      }
+      if (!is.null(disposition) && !as.character(disposition) %in% c("retained", "excluded")) {
+        triomics_integration_abort(
+          "C_SCORE_LINEAGE_INVALID",
+          "Trajectory B eligibility disposition must be retained or excluded.",
+          key = paste0("analysis_unit_map.", unit_id, ".eligibility")
+        )
+      }
+      is_eligible <- if (!is.null(eligible)) eligible else identical(as.character(disposition), "retained")
+      if (!is.null(disposition) && !identical(as.character(disposition),
+          if (is_eligible) "retained" else "excluded")) {
+        triomics_integration_abort(
+          "C_SCORE_LINEAGE_INVALID",
+          "Trajectory B eligibility fields disagree.",
+          key = paste0("analysis_unit_map.", unit_id, ".eligibility")
+        )
+      }
+      exclusion_reason <- as.character(triomics_c06_cli_unit_map_scalar(source_record, "exclusion_reason") %||% "")
+      if (!length(mapped_blocks) &&
+          (!identical(is_eligible, FALSE) || !identical(exclusion_reason, "absent_from_all_analysis_blocks"))) {
+        triomics_integration_abort(
+          "C_SCORE_LINEAGE_INVALID",
+          "A B unit absent from every resolved block must retain its explicit absent-from-all exclusion.",
+          key = paste0("analysis_unit_map.", unit_id, ".exclusion_reason")
+        )
+      }
+      if (length(mapped_blocks) && !is_eligible && !nzchar(exclusion_reason)) {
+        triomics_integration_abort(
+          "C_SCORE_LINEAGE_INVALID",
+          "An excluded trajectory B unit must retain its declared exclusion reason.",
+          key = paste0("analysis_unit_map.", unit_id, ".exclusion_reason")
+        )
+      }
+      declared_blocks[[unit_id]] <- mapped_blocks
+      source_eligibility[[unit_id]] <- is_eligible
+      source_exclusion[[unit_id]] <- exclusion_reason
     }
     design <- analysis$design
     subject_column <- as.character(design$subject_id %||% "")
@@ -408,7 +572,8 @@ triomics_c06_cli_compose_unit_map <- function(resolved, ingested, analysis,
     }
     subject_values <- as.character(metadata[[subject_column]])
     time_values <- suppressWarnings(as.numeric(as.character(metadata[[time_column]])))
-    used_rows <- match(all_samples, sample_ids)
+    unit_ids <- sort(source_ids, method = "radix")
+    used_rows <- match(unit_ids, sample_ids)
     if (anyNA(subject_values[used_rows]) || any(!nzchar(trimws(subject_values[used_rows]))) ||
         anyNA(time_values[used_rows]) || any(!is.finite(time_values[used_rows]))) {
       triomics_integration_abort(
@@ -425,11 +590,10 @@ triomics_c06_cli_compose_unit_map <- function(resolved, ingested, analysis,
         key = "analyses.design.visit_column"
       )
     }
-    source_rows <- match(all_samples, sample_ids)
-    record_index <- match(all_samples, source_ids)
-    output <- lapply(seq_along(all_samples), function(index) {
-      sample_id <- all_samples[[index]]
-      source_record <- records[[record_index[[index]]]]
+    source_rows <- match(unit_ids, sample_ids)
+    output <- lapply(seq_along(unit_ids), function(index) {
+      sample_id <- unit_ids[[index]]
+      source_record <- source_by_id[[sample_id]]
       source_members <- as.character(unlist(source_record$source_sample_ids, use.names = FALSE))
       if (!identical(source_members, sample_id)) {
         triomics_integration_abort(
@@ -461,6 +625,18 @@ triomics_c06_cli_compose_unit_map <- function(resolved, ingested, analysis,
           )
         }
       }
+      if (is.character(design$condition) && length(design$condition) == 1L &&
+          design$condition %in% names(metadata)) {
+        source_condition <- triomics_c06_cli_unit_map_scalar(source_record, "condition")
+        declared_condition <- as.character(metadata[[design$condition]][[source_rows[[index]]]])
+        if (!is.null(source_condition) && !identical(as.character(source_condition), declared_condition)) {
+          triomics_integration_abort(
+            "C_SCORE_LINEAGE_INVALID",
+            "Trajectory B condition identity disagrees with declared source metadata.",
+            key = paste0("analysis_unit_map.", sample_id, ".condition")
+          )
+        }
+      }
       mapped_time_unit <- triomics_c06_cli_unit_map_scalar(source_record, "time_unit")
       mapped_time_origin <- triomics_c06_cli_unit_map_scalar(source_record, "time_origin")
       if ((!is.null(mapped_time_unit) && !identical(as.character(mapped_time_unit), as.character(time_unit))) ||
@@ -485,22 +661,23 @@ triomics_c06_cli_compose_unit_map <- function(resolved, ingested, analysis,
         }
         visit_id <- declared_visit
       }
-      represented <- names(block_samples)[vapply(block_samples, function(ids) sample_id %in% ids, logical(1L))]
-      eligible <- all(vapply(block_samples, function(ids) sample_id %in% ids, logical(1L))) &&
-        !identical(triomics_c06_cli_unit_map_scalar(source_record, "eligible"), FALSE) &&
-        !identical(triomics_c06_cli_unit_map_scalar(source_record, "eligibility"), "excluded")
+      represented <- declared_blocks[[sample_id]]
+      eligible <- all(block_ids %in% represented) && source_eligibility[[sample_id]]
       missing_blocks <- setdiff(block_ids, represented)
-      exclusion_reason <- if (eligible) NULL else if (length(missing_blocks)) {
+      exclusion_reason <- if (eligible) NULL else if (!length(represented)) {
+        source_exclusion[[sample_id]]
+      } else if (!source_eligibility[[sample_id]]) {
+        source_exclusion[[sample_id]]
+      } else if (length(missing_blocks)) {
         paste0("absent_from_required_blocks:", paste(missing_blocks, collapse = ","))
       } else {
-        as.character(triomics_c06_cli_unit_map_scalar(source_record, "exclusion_reason") %||%
-                       "excluded_by_B_analysis_unit_map")
+        source_exclusion[[sample_id]]
       }
       record <- list(
         unit_id = sample_id,
         unit_type = if (visit_declared) "visit_level" else "sample",
         representation_id = "subject_centered",
-        source_sample_ids = sample_id,
+        source_sample_ids = source_members,
         subject_id = subject,
         visit_id = visit_id,
         condition = if (is.character(design$condition) && length(design$condition) == 1L &&
@@ -521,13 +698,13 @@ triomics_c06_cli_compose_unit_map <- function(resolved, ingested, analysis,
       )
       record
     })
-    names(output) <- all_samples
+    names(output) <- unit_ids
     retained <- vapply(output, function(record) identical(record$eligibility, "retained"), logical(1L))
     return(list(
       unit_map = output,
-      unit_ids = all_samples,
-      training_unit_ids = all_samples[retained],
-      target_unit_ids = all_samples,
+      unit_ids = unit_ids,
+      training_unit_ids = unit_ids[retained],
+      target_unit_ids = unit_ids,
       block_ids = block_ids
     ))
   }
@@ -550,6 +727,33 @@ triomics_c06_cli_compose_unit_map <- function(resolved, ingested, analysis,
       key = "analysis_unit_map.unit_id"
     )
   }
+  expected_paired_identity <- list(
+    unit_type = "subject_delta",
+    representation_id = "delta",
+    study_id = as.character(ingested$study_id),
+    analysis_id = as.character(analysis$analysis_id),
+    preparation_context_id = as.character(analysis$preparation_context_id)
+  )
+  validate_paired_identity <- function(records, map_label) {
+    for (record_index in seq_along(records)) {
+      record <- records[[record_index]]
+      unit_id <- as.character(triomics_c06_cli_unit_map_scalar(record, "unit_id") %||% "")
+      for (field in names(expected_paired_identity)) {
+        observed <- triomics_c06_cli_unit_map_scalar(record, field)
+        expected <- expected_paired_identity[[field]]
+        if (is.null(observed) || length(expected) != 1L || is.na(expected) || !nzchar(expected) ||
+            !identical(as.character(observed), expected)) {
+          triomics_integration_abort(
+            "C_SCORE_LINEAGE_INVALID",
+            paste0("Paired ", map_label, " unit ", unit_id, " has an absent or foreign ", field, "."),
+            key = paste0(map_label, ".", unit_id, ".", field)
+          )
+        }
+      }
+    }
+    invisible(records)
+  }
+  validate_paired_identity(top_map_records, "analysis_unit_map")
   block_records <- stats::setNames(lapply(block_ids, function(block_id) {
     block <- resolved$blocks[[block_id]]
     if (!identical(block$decomposition, "target_minus_reference_once") ||
@@ -580,6 +784,7 @@ triomics_c06_cli_compose_unit_map <- function(resolved, ingested, analysis,
         key = paste0("blocks.", block_id, ".unit_map")
       )
     }
+    validate_paired_identity(records, paste0("blocks.", block_id, ".unit_map"))
     stats::setNames(records, ids)
   }), block_ids)
   canonical_record <- function(record) {
@@ -2061,7 +2266,8 @@ triomics_execute_stage_c <- function(config_path, output) {
   }
   c08_methods <- c("concat_pca", "mixomics_diablo", "mixomics_block_spls", "mofa2")
   resolved_unit_records <- triomics_c08_unit_records(
-    if (!is.null(resolved$unit_map)) resolved$unit_map else analysis_unit_map
+    if (!is.null(repeated_composition)) repeated_composition$unit_map else
+      if (!is.null(resolved$unit_map)) resolved$unit_map else analysis_unit_map
   )
   clinical_source_ids <- unique(unlist(lapply(resolved_unit_records, function(record) {
     record$source_sample_ids
@@ -2139,7 +2345,11 @@ triomics_execute_stage_c <- function(config_path, output) {
           resolved, ingested$sample_registry, analysis_unit_map, clinical_view
         )
       } else {
-        repeated_composition$unit_map
+        repeated_resolved <- resolved
+        repeated_resolved$unit_map <- repeated_composition$unit_map
+        triomics_c08_cli_unit_map(
+          repeated_resolved, ingested$sample_registry, analysis_unit_map, clinical_view
+        )
       }
       selection <- triomics_c08_cli_selection(request, ingested, block_ids)
       fit_context <- list(

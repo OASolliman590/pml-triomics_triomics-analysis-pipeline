@@ -67,7 +67,7 @@ c06_shared_repeated_fixture <- function(kind) {
     metadata$time <- rep(c(0, 1), times = length(subjects))
     visit_levels <- c("baseline", "followup")
   } else if (identical(kind, "trajectory")) {
-    subjects <- paste0("trajectory-", seq_len(nrow(metadata) / 3L))
+    subjects <- paste0("sub", seq_len(nrow(metadata) / 3L))
     metadata$subject <- rep(subjects, each = 3L)
     metadata$visit <- rep(c("v0", "v1", "v2"), times = length(subjects))
     metadata$time <- rep(0:2, times = length(subjects))
@@ -114,11 +114,53 @@ c06_shared_repeated_fixture <- function(kind) {
                        "      residual_contract_ref: fixed_subject_ordinary_independent",
                        config_text, fixed = TRUE)
     config_text <- sub("contrast_id: score_slope", "contrast_id: time_slope", config_text, fixed = TRUE)
+    trajectory_weights <- paste(
+      c(paste0("subject.", subjects, ": 0"), "time.linear: 1"),
+      collapse = ", "
+    )
     config_text <- sub("weights: {intercept: 0, continuous.score: 1}",
-                       "weights: {time.linear: 1}", config_text, fixed = TRUE)
+                       paste0("weights: {", trajectory_weights, "}"), config_text, fixed = TRUE)
   }
   writeLines(config_text, config_path, useBytes = TRUE)
   list(root = fixture_root, config = config_path)
+}
+
+c06_shared_paired_attrition_fixture <- function() {
+  fixture <- c06_shared_repeated_fixture("paired")
+  config_text <- paste(readLines(fixture$config, warn = FALSE), collapse = "\n")
+  config_text <- sub("      missing_visits: error",
+                     "      missing_visits: complete_pairs_per_contrast",
+                     config_text, fixed = TRUE)
+  writeLines(config_text, fixture$config, useBytes = TRUE)
+  config <- yaml::read_yaml(fixture$config)
+
+  metadata_path <- file.path(fixture$root, "data", "c04", "metadata.tsv")
+  metadata <- utils::read.delim(metadata_path, check.names = FALSE, stringsAsFactors = FALSE)
+  subjects <- unique(as.character(metadata$subject))
+  if (length(subjects) < 2L) stop("The public fixture needs two paired attrition units.", call. = FALSE)
+  excluded_subjects <- stats::setNames(subjects[(length(subjects) - 1L):length(subjects)],
+                                       c("block_1", "block_2"))
+  excluded_targets <- vapply(names(excluded_subjects), function(block_id) {
+    subject <- excluded_subjects[[block_id]]
+    target <- as.character(metadata$sample_id[metadata$subject == subject & metadata$visit == "followup"])
+    if (length(target) != 1L) stop("The synthetic attrition target is not unique.", call. = FALSE)
+    target
+  }, character(1L))
+  for (block_index in seq_along(config$blocks)) {
+    block <- config$blocks[[block_index]]
+    target <- excluded_targets[[block$block_id]]
+    if (is.null(target)) next
+    matrix_path <- normalizePath(file.path(dirname(fixture$config), block$file),
+                                 winslash = "/", mustWork = TRUE)
+    assay <- utils::read.delim(matrix_path, check.names = FALSE, stringsAsFactors = FALSE)
+    if (!target %in% names(assay)) stop("The declared attrition target is absent from its block.", call. = FALSE)
+    assay <- assay[, names(assay) != target, drop = FALSE]
+    utils::write.table(assay, matrix_path, sep = "\t", row.names = FALSE, quote = FALSE)
+  }
+  fixture$excluded_subjects <- excluded_subjects
+  fixture$excluded_targets <- excluded_targets
+  fixture$metadata <- metadata
+  fixture
 }
 
 c06_shared_native_input_identity <- function(output_root, config_path) {
@@ -482,8 +524,8 @@ testthat::test_that("Stage C composes paired and trajectory units from native B 
   for (kind in c("paired", "trajectory")) {
     fixture <- c06_shared_repeated_fixture(kind)
     output_root <- tempfile(paste0("c06-shared-", kind, "-output-"), tmpdir = "/private/tmp")
-    cat(kind, "\t", fixture$root, "\t", output_root, "\n",
-        file = "/tmp/triomics-m7-017-luna/native-roots.txt", append = TRUE)
+    on.exit(unlink(fixture$root, recursive = TRUE, force = TRUE), add = TRUE)
+    on.exit(unlink(output_root, recursive = TRUE, force = TRUE), add = TRUE)
 
     c_run <- c06_shared_cli_run(output_root, config_path = fixture$config, prepare_b = TRUE)
 
@@ -524,10 +566,67 @@ testthat::test_that("Stage C composes paired and trajectory units from native B 
         testthat::expect_true(all(vapply(unit_map, function(record) length(record$time_origin) == 1L,
                                          logical(1L))))
       }
-      d_run <- c06_shared_cli_run(output_root, stage = "D", prepare_b = FALSE)
+      d_run <- c06_shared_cli_run(
+        output_root, stage = "D", config_path = fixture$config, prepare_b = FALSE
+      )
       testthat::expect_identical(d_run$status, 0L, info = paste(d_run$output, collapse = "\n"))
     }
   }
+})
+
+testthat::test_that("native paired C retains per-block complete-pair exclusions through D", {
+  fixture <- c06_shared_paired_attrition_fixture()
+  output_root <- tempfile("c06-paired-attrition-output-", tmpdir = "/private/tmp")
+  on.exit(unlink(c(fixture$root, output_root), recursive = TRUE, force = TRUE), add = TRUE)
+
+  b_run <- c06_shared_cli_run(output_root, stage = "B", config_path = fixture$config,
+                              prepare_b = FALSE)
+  testthat::expect_identical(b_run$status, 0L, info = paste(b_run$output, collapse = "\n"))
+  if (b_run$status != 0L) return(invisible(NULL))
+  c_run <- c06_shared_cli_run(output_root, stage = "C", config_path = fixture$config,
+                              prepare_b = FALSE)
+  testthat::expect_identical(c_run$status, 0L, info = paste(c_run$output, collapse = "\n"))
+  if (c_run$status != 0L) return(invisible(NULL))
+  d_run <- c06_shared_cli_run(output_root, stage = "D", config_path = fixture$config,
+                              prepare_b = FALSE)
+  testthat::expect_identical(d_run$status, 0L, info = paste(d_run$output, collapse = "\n"))
+  if (d_run$status != 0L) return(invisible(NULL))
+
+  endpoint <- jsonlite::read_json(
+    file.path(output_root, "C", "score-endpoints", "integration-01.json"),
+    simplifyVector = FALSE
+  )$endpoints[[1L]]
+  unit_ids <- vapply(endpoint$unit_map, `[[`, character(1L), "unit_id")
+  unit_map <- stats::setNames(endpoint$unit_map, unit_ids)
+  excluded <- fixture$excluded_subjects
+  testthat::expect_setequal(unit_ids, unique(as.character(
+    vapply(endpoint$unit_map, `[[`, character(1L), "subject_id")
+  )))
+  for (block_id in names(excluded)) {
+    subject <- excluded[[block_id]]
+    record <- unit_map[[subject]]
+    testthat::expect_identical(record$eligibility, "excluded")
+    testthat::expect_identical(record$block_eligibility[[block_id]], "excluded")
+    testthat::expect_match(record$exclusion_reason, paste0("ineligible_in_blocks:", block_id))
+    testthat::expect_length(record$block_source_sample_ids[[block_id]], 1L)
+    other_block <- setdiff(c("block_1", "block_2"), block_id)[[1L]]
+    testthat::expect_identical(record$block_eligibility[[other_block]], "retained")
+    testthat::expect_length(record$block_source_sample_ids[[other_block]], 2L)
+    subject_samples <- as.character(fixture$metadata$sample_id[
+      fixture$metadata$subject == subject
+    ])
+    testthat::expect_setequal(record$source_sample_ids, subject_samples)
+  }
+  expected_training <- setdiff(unit_ids, unname(excluded))
+  testthat::expect_setequal(unlist(endpoint$training_unit_ids, use.names = FALSE), expected_training)
+  endpoint_samples <- endpoint$samples
+  sample_units <- vapply(endpoint_samples, `[[`, character(1L), "unit_id")
+  testthat::expect_false(any(sample_units %in% unname(excluded)))
+
+  d_evidence <- jsonlite::read_json(file.path(output_root, "D", "integration-evidence.json"),
+                                    simplifyVector = FALSE)$integrations[[1L]]
+  testthat::expect_setequal(unlist(d_evidence$eligibility$training_unit_ids, use.names = FALSE),
+                            expected_training)
 })
 
 testthat::test_that("paired C unit composition joins per-block maps by subject and records attrition", {
@@ -545,7 +644,9 @@ testthat::test_that("paired C unit composition joins per-block maps by subject a
       eligibility = eligibility,
       exclusion_reason = if (eligibility == "retained") NULL else "missing_visit",
       source_sample_ids = c(paste0(subject, "-baseline"), paste0(subject, "-followup")),
-      subject_id = subject, visit_weights = weights
+      subject_id = subject, visit_weights = weights,
+      study_id = "paired-map-study", analysis_id = "paired-map-analysis",
+      preparation_context_id = "paired-map-prep"
     )
   }
   matrix_for <- function(ids) {
@@ -612,12 +713,25 @@ testthat::test_that("paired C unit composition joins per-block maps by subject a
     source_unit_map = resolved$blocks$block_a$unit_map
   ))
   testthat::expect_identical(error$code, "C_SCORE_LINEAGE_INVALID")
+
+  for (field in c("unit_type", "representation_id", "study_id", "analysis_id",
+                  "preparation_context_id")) {
+    foreign_identity <- resolved
+    foreign_identity$blocks$block_b$unit_map[[1L]][[field]] <- "foreign-context"
+    error <- testthat::capture_error(triomics_c06_cli_compose_unit_map(
+      foreign_identity, ingested, analysis, c("block_a", "block_b"),
+      source_unit_map = resolved$blocks$block_a$unit_map
+    ))
+    testthat::expect_s3_class(error, "triomics_error")
+    testthat::expect_identical(error$code, "C_SCORE_LINEAGE_INVALID", info = field)
+  }
 })
 
 testthat::test_that("trajectory C units retain source-time identity without inventing visits", {
   metadata <- data.frame(
-    sample_id = c("sample-a", "sample-b"), subject = c("subject-a", "subject-a"),
-    time = c(0, 2), stringsAsFactors = FALSE
+    sample_id = c("sample-a", "sample-b", "sample-excluded"),
+    subject = c("subject-a", "subject-a", "subject-b"),
+    time = c(0, 2, 0), stringsAsFactors = FALSE
   )
   matrix_a <- matrix(c(1, 3), nrow = 1L, dimnames = list("feature", c("sample-b", "sample-a")))
   matrix_b <- matrix(c(4, 2), nrow = 1L, dimnames = list("feature", c("sample-a", "sample-b")))
@@ -626,14 +740,15 @@ testthat::test_that("trajectory C units retain source-time identity without inve
     block_b = list(assay = matrix_b, sample_ids = colnames(matrix_b))
   ))
   source_map <- data.frame(
-    unit_id = c("sample-a", "sample-b"),
-    representation_id = rep("subject_centered", 2L),
-    subject_id = rep("subject-a", 2L), visit_id = rep(NA_character_, 2L),
-    condition = c("0", "2"), eligible = rep(TRUE, 2L),
-    time = c(0, 2), time_unit = rep("day", 2L), time_origin = rep("0", 2L),
-    exclusion_reason = rep(NA_character_, 2L),
-    source_sample_ids = I(list("sample-a", "sample-b")),
-    represented_blocks = I(rep(list(c("block_a", "block_b")), 2L)),
+    unit_id = c("sample-a", "sample-b", "sample-excluded"),
+    representation_id = rep("subject_centered", 3L),
+    subject_id = c("subject-a", "subject-a", "subject-b"),
+    visit_id = rep(NA_character_, 3L),
+    condition = c("0", "2", "0"), eligible = c(TRUE, TRUE, FALSE),
+    time = c(0, 2, 0), time_unit = rep("day", 3L), time_origin = rep("0", 3L),
+    exclusion_reason = c(NA_character_, NA_character_, "absent_from_all_analysis_blocks"),
+    source_sample_ids = I(list("sample-a", "sample-b", "sample-excluded")),
+    represented_blocks = I(list(c("block_a", "block_b"), c("block_a", "block_b"), character())),
     stringsAsFactors = FALSE
   )
   ingested <- list(sample_metadata = metadata, study_id = "trajectory-map-study")
@@ -650,17 +765,25 @@ testthat::test_that("trajectory C units retain source-time identity without inve
     resolved, ingested, analysis, c("block_a", "block_b"), source_map
   )
 
-  testthat::expect_identical(composed$unit_ids, c("sample-a", "sample-b"))
+  testthat::expect_identical(composed$unit_ids, c("sample-a", "sample-b", "sample-excluded"))
+  testthat::expect_identical(composed$training_unit_ids, c("sample-a", "sample-b"))
+  testthat::expect_identical(composed$unit_map[["sample-excluded"]]$eligibility, "excluded")
+  testthat::expect_identical(composed$unit_map[["sample-excluded"]]$exclusion_reason,
+                             "absent_from_all_analysis_blocks")
+  testthat::expect_identical(composed$unit_map[["sample-excluded"]]$source_sample_ids,
+                             "sample-excluded")
+  testthat::expect_identical(composed$unit_map[["sample-excluded"]]$represented_blocks,
+                             character())
   testthat::expect_true(all(vapply(composed$unit_map, function(record) {
     identical(record$unit_type, "sample") && is.null(record$visit_id)
   }, logical(1L))))
-  testthat::expect_identical(unname(vapply(composed$unit_map, `[[`, numeric(1L), "time")), c(0, 2))
+  testthat::expect_identical(unname(vapply(composed$unit_map[1:2], `[[`, numeric(1L), "time")), c(0, 2))
   testthat::expect_identical(resolved$blocks, before)
 
   declared_visit <- analysis
   declared_visit$design$visit_column <- "visit"
-  ingested$sample_metadata$visit <- c("v0", "v2")
-  source_map$visit_id <- c("v0", "v2")
+  ingested$sample_metadata$visit <- c("v0", "v2", "v0")
+  source_map$visit_id <- c("v0", "v2", "v0")
   with_visit <- triomics_c06_cli_compose_unit_map(
     resolved, ingested, declared_visit, c("block_a", "block_b"), source_map
   )
@@ -669,7 +792,7 @@ testthat::test_that("trajectory C units retain source-time identity without inve
   }, logical(1L))))
 
   wrong_visit <- source_map
-  wrong_visit$visit_id <- c("wrong-v0", "v2")
+  wrong_visit$visit_id <- c("wrong-v0", "v2", "v0")
   error <- testthat::capture_error(triomics_c06_cli_compose_unit_map(
     resolved, ingested, declared_visit, c("block_a", "block_b"), wrong_visit
   ))

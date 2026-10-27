@@ -223,6 +223,21 @@ c08_shared_config_with_selection <- function(selection_by_block) {
   path
 }
 
+c08_shared_cli_run <- function(config_path, output_root) {
+  cli <- triomics_test_resource("exec", "triomics")
+  previous_wd <- setwd(dirname(cli))
+  on.exit(setwd(previous_wd), add = TRUE)
+  output <- system2(
+    file.path(R.home("bin"), "Rscript"),
+    c("--vanilla", shQuote(basename(cli)), "--config", shQuote(config_path),
+      "--stage", "C", "--output", shQuote(output_root)),
+    stdout = TRUE, stderr = TRUE
+  )
+  status <- attr(output, "status")
+  if (is.null(status)) status <- 0L
+  list(status = as.integer(status), output = output)
+}
+
 testthat::test_that("the shared fit seam retains one fit and emits a qualified PCA handoff", {
   ids <- sprintf("sample-%02d", seq_len(8L))
   resolved <- c08_shared_resolved(ids)
@@ -656,4 +671,92 @@ testthat::test_that("Stage C propagates outcome-selected ancestry as withheld an
   testthat::expect_identical(endpoint$selection$validity, "withheld")
   testthat::expect_identical(endpoint$inference_status, "descriptive_only")
   testthat::expect_identical(endpoint$selection$source_selection$block_1$inference_gate, "withheld")
+})
+
+testthat::test_that("C-08 validates raw molecular identity before translating linked subjects", {
+  raw_subject <- "molecular-subject-a"
+  study_id <- "public-synthetic-clinical-study"
+  subject_key <- triomics_clinical_subject_key(study_id, raw_subject)
+  resolved <- list(
+    representation_id = "subject_centered",
+    unit_map = list(
+      list(
+        unit_id = "sample-a", unit_type = "sample",
+        representation_id = "subject_centered", source_sample_ids = "sample-a",
+        subject_id = raw_subject
+      )
+    )
+  )
+  registry <- data.frame(
+    sample_id = "sample-a", subject_id = raw_subject,
+    stringsAsFactors = FALSE
+  )
+  clinical_view <- list(
+    study_id = study_id,
+    links = list(sample_a = list(subject_key = subject_key))
+  )
+  names(clinical_view$links) <- "sample-a"
+
+  adapted <- triomics_c08_cli_unit_map(resolved, registry, NULL, clinical_view)
+
+  testthat::expect_identical(adapted[[1L]]$subject_id, subject_key)
+  testthat::expect_identical(adapted[[1L]]$source_sample_ids, "sample-a")
+
+  wrong_link <- clinical_view
+  wrong_link$links[["sample-a"]]$subject_key <- triomics_clinical_subject_key(
+    study_id, "different-subject"
+  )
+  error <- testthat::capture_error(
+    triomics_c08_cli_unit_map(resolved, registry, NULL, wrong_link)
+  )
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "C_SCORE_COVERAGE_MISMATCH")
+
+  exact_sample_key <- triomics_clinical_subject_key(study_id, "linked-by-exact-sample")
+  unresolved_raw <- list(
+    representation_id = "levels",
+    unit_map = list(list(
+      unit_id = "sample-a", unit_type = "visit_level", representation_id = "levels",
+      source_sample_ids = "sample-a"
+    ))
+  )
+  blank_registry <- data.frame(sample_id = "sample-a", subject_id = "", stringsAsFactors = FALSE)
+  exact_sample_view <- list(
+    study_id = study_id,
+    links = list("sample-a" = list(
+      link_id = "approved-exact-sample-link", sample_id = "sample-a",
+      subject_id = exact_sample_key, subject_key = exact_sample_key,
+      visit_id = "V0", reference_time = "2026-01-01", status = "approved",
+      cardinality = "one_to_one"
+    ))
+  )
+  exact_sample_map <- triomics_c08_cli_unit_map(
+    unresolved_raw, blank_registry, NULL, exact_sample_view
+  )
+  testthat::expect_identical(exact_sample_map[[1L]]$subject_id, exact_sample_key)
+})
+
+testthat::test_that("public C-08 CLI schedules linked clinical work without starting B", {
+  config_path <- c08_shared_fixture_path()
+  output_root <- tempfile("triomics-c08-public-cli-")
+  on.exit(unlink(output_root, recursive = TRUE, force = TRUE), add = TRUE)
+
+  cli <- c08_shared_cli_run(config_path, output_root)
+
+  testthat::expect_identical(cli$status, 0L, info = paste(cli$output, collapse = "\n"))
+  endpoint_path <- file.path(output_root, "C", "score-endpoints", "integration-01.json")
+  testthat::expect_true(file.exists(endpoint_path))
+  request_paths <- list.files(output_root, pattern = "[.]json$",
+                              recursive = TRUE, full.names = TRUE)
+  requests <- lapply(request_paths, function(path) {
+    tryCatch(jsonlite::read_json(path, simplifyVector = FALSE), error = function(error) NULL)
+  })
+  scheduled <- Filter(function(request) is.list(request) &&
+    identical(request$status, "scheduled") && identical(request$owner_stage, "B") &&
+    identical(request$model_execution, "not_started") &&
+    identical(request$recurses_to_stage_c, FALSE), requests)
+  testthat::expect_length(scheduled, 1L)
+  testthat::expect_false(file.exists(file.path(output_root, "B", "block-results.json")))
+  testthat::expect_false(file.exists(file.path(output_root, "D", "stage-handoff-provenance.json")))
+  testthat::expect_false(file.exists(file.path(output_root, "registries", "run.json")))
 })
