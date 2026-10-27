@@ -163,6 +163,30 @@ c06_shared_paired_attrition_fixture <- function() {
   fixture
 }
 
+c06_shared_trajectory_missing_time_fixture <- function() {
+  fixture <- c06_shared_repeated_fixture("trajectory")
+  metadata_path <- file.path(fixture$root, "data", "c04", "metadata.tsv")
+  metadata <- utils::read.delim(metadata_path, check.names = FALSE, stringsAsFactors = FALSE)
+  excluded_sample <- tail(as.character(metadata$sample_id), 1L)
+  metadata$time[metadata$sample_id == excluded_sample] <- NA_real_
+  utils::write.table(metadata, metadata_path, sep = "\t", row.names = FALSE,
+                     quote = FALSE, na = "NA")
+  config <- triomics_read_config(fixture$config)
+  for (block in config$blocks) {
+    matrix_path <- normalizePath(file.path(dirname(fixture$config), block$file),
+                                 winslash = "/", mustWork = TRUE)
+    assay <- utils::read.delim(matrix_path, check.names = FALSE, stringsAsFactors = FALSE)
+    if (!excluded_sample %in% names(assay)) {
+      stop("The declared absent-all trajectory sample is missing from a source block.",
+           call. = FALSE)
+    }
+    assay <- assay[, names(assay) != excluded_sample, drop = FALSE]
+    utils::write.table(assay, matrix_path, sep = "\t", row.names = FALSE, quote = FALSE)
+  }
+  fixture$excluded_sample <- excluded_sample
+  fixture
+}
+
 c06_shared_native_input_identity <- function(output_root, config_path) {
   config <- triomics_read_config(config_path)
   ingested <- triomics_ingest_configured_study(config, config_path)
@@ -627,6 +651,51 @@ testthat::test_that("native paired C retains per-block complete-pair exclusions 
                                     simplifyVector = FALSE)$integrations[[1L]]
   testthat::expect_setequal(unlist(d_evidence$eligibility$training_unit_ids, use.names = FALSE),
                             expected_training)
+})
+
+testthat::test_that("native trajectory C retains an absent-all B exclusion with unavailable time", {
+  fixture <- c06_shared_trajectory_missing_time_fixture()
+  output_root <- tempfile("c06-trajectory-missing-time-output-", tmpdir = "/private/tmp")
+  on.exit(unlink(c(fixture$root, output_root), recursive = TRUE, force = TRUE), add = TRUE)
+
+  b_run <- c06_shared_cli_run(output_root, stage = "B", config_path = fixture$config,
+                              prepare_b = FALSE)
+  testthat::expect_identical(b_run$status, 0L, info = paste(b_run$output, collapse = "\n"))
+  if (b_run$status != 0L) return(invisible(NULL))
+  c_run <- c06_shared_cli_run(output_root, stage = "C", config_path = fixture$config,
+                              prepare_b = FALSE)
+  testthat::expect_identical(c_run$status, 0L, info = paste(c_run$output, collapse = "\n"))
+  if (c_run$status != 0L) return(invisible(NULL))
+
+  endpoint_path <- file.path(output_root, "C", "score-endpoints", "integration-01.json")
+  endpoint_bundle <- triomics_c08_cli_validate_endpoint_readback(endpoint_path)
+  testthat::expect_no_error(triomics_c08_validate_endpoint_bundle(endpoint_bundle))
+  endpoint <- endpoint_bundle$endpoints[[1L]]
+  unit_map <- endpoint$unit_map
+  unit_ids <- vapply(unit_map, `[[`, character(1L), "unit_id")
+  excluded <- unit_map[[match(fixture$excluded_sample, unit_ids)]]
+  testthat::expect_identical(excluded$eligibility, "excluded")
+  testthat::expect_identical(excluded$exclusion_reason, "absent_from_all_analysis_blocks")
+  testthat::expect_identical(unlist(excluded$source_sample_ids, use.names = FALSE),
+                             fixture$excluded_sample)
+  testthat::expect_length(excluded$represented_blocks, 0L)
+  testthat::expect_null(excluded$time)
+  testthat::expect_false(fixture$excluded_sample %in% unlist(endpoint$training_unit_ids,
+                                                              use.names = FALSE))
+  testthat::expect_false(any(vapply(endpoint$samples, function(sample) {
+    identical(sample$unit_id, fixture$excluded_sample)
+  }, logical(1L))))
+
+  d_run <- c06_shared_cli_run(output_root, stage = "D", config_path = fixture$config,
+                              prepare_b = FALSE)
+  testthat::expect_identical(d_run$status, 0L, info = paste(d_run$output, collapse = "\n"))
+  if (d_run$status == 0L) {
+    d_evidence <- jsonlite::read_json(file.path(output_root, "D", "integration-evidence.json"),
+                                      simplifyVector = FALSE)$integrations[[1L]]
+    testthat::expect_false(fixture$excluded_sample %in% unlist(
+      d_evidence$eligibility$training_unit_ids, use.names = FALSE
+    ))
+  }
 })
 
 testthat::test_that("paired C unit composition joins per-block maps by subject and records attrition", {

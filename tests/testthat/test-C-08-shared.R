@@ -338,6 +338,60 @@ testthat::test_that("C-08 preserves visit-level subject-centered unit identity",
   testthat::expect_identical(error$code, "C_SCORE_LINEAGE_INVALID")
 })
 
+testthat::test_that("C-08 permits unavailable time only for an explicit absent-all exclusion", {
+  study_id <- "study-c08-missing-time"
+  analysis_id <- "analysis-c08-missing-time"
+  preparation_context_id <- "context-c08-missing-time"
+  context <- list(
+    study_id = study_id,
+    analysis_id = analysis_id,
+    preparation_context_id = preparation_context_id,
+    representation_id = "subject_centered"
+  )
+  record <- function(unit_id, eligibility, time, represented_blocks, exclusion_reason = NULL) {
+    list(
+      unit_id = unit_id,
+      unit_type = "visit_level",
+      source_sample_ids = unit_id,
+      subject_id = paste0("subject-", unit_id),
+      visit_id = paste0("visit-", unit_id),
+      time = time,
+      time_unit = "synthetic_step",
+      time_origin = "0",
+      representation_id = "subject_centered",
+      eligibility = eligibility,
+      exclusion_reason = exclusion_reason,
+      represented_blocks = represented_blocks,
+      study_id = study_id,
+      analysis_id = analysis_id,
+      preparation_context_id = preparation_context_id
+    )
+  }
+  retained <- record("retained", "retained", 0, c("block_1", "block_2"))
+  absent <- record("absent", "excluded", NA_real_, character(0),
+                   "absent_from_all_analysis_blocks")
+
+  mapped <- triomics_c08_validate_unit_map(list(retained, absent), "retained", context)
+  testthat::expect_identical(unclass(mapped$time), list(0, NA_real_))
+  testthat::expect_identical(unclass(mapped$represented_blocks),
+                             list(c("block_1", "block_2"), character(0)))
+
+  represented_exclusion <- absent
+  represented_exclusion$represented_blocks <- "block_1"
+  represented_exclusion$exclusion_reason <- "absent_from_required_blocks:block_2"
+  represented_error <- testthat::capture_error(triomics_c08_validate_unit_map(
+    list(retained, represented_exclusion), "retained", context
+  ))
+  testthat::expect_identical(represented_error$code, "C_SCORE_LINEAGE_INVALID")
+
+  missing_retained <- retained
+  missing_retained$time <- NA_real_
+  retained_error <- testthat::capture_error(triomics_c08_validate_unit_map(
+    list(missing_retained, absent), "retained", context
+  ))
+  testthat::expect_identical(retained_error$code, "C_SCORE_LINEAGE_INVALID")
+})
+
 testthat::test_that("C-08 preserves paired sign names and leaves mean weights numeric", {
   paired <- list(list(
     unit_id = "subject-a", unit_type = "subject_delta", representation_id = "delta",

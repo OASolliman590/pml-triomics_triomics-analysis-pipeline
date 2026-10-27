@@ -175,13 +175,26 @@ triomics_c08_validate_unit_map <- function(unit_map, score_unit_ids, context) {
         time_unit <- record$time_unit
         time_origin <- record$time_origin
         visit_id <- record$visit_id
+        represented_blocks <- record$represented_blocks
+        empty_represented_blocks <- "represented_blocks" %in% names(record) &&
+          (is.character(represented_blocks) || is.list(represented_blocks)) &&
+          length(represented_blocks) == 0L
+        absent_all_excluded <- is_excluded &&
+          identical(record$exclusion_reason, "absent_from_all_analysis_blocks") &&
+          empty_represented_blocks && length(source_ids) == 1L
+        missing_time <- "time" %in% names(record) &&
+          (is.null(time) || (is.numeric(time) && length(time) == 1L &&
+                             is.na(time) && !is.nan(time)))
+        valid_time <- (is.numeric(time) && length(time) == 1L &&
+                       !is.na(time) && is.finite(time)) ||
+          (absent_all_excluded && missing_time)
         valid_origin <- (is.character(time_origin) && length(time_origin) == 1L &&
                          !is.na(time_origin) && nzchar(trimws(time_origin))) ||
           (is.numeric(time_origin) && length(time_origin) == 1L &&
            !is.na(time_origin) && is.finite(time_origin))
         if (!is.character(subject_id) || length(subject_id) != 1L ||
             is.na(subject_id) || !nzchar(trimws(subject_id)) ||
-            !is.numeric(time) || length(time) != 1L || is.na(time) || !is.finite(time) ||
+            !valid_time ||
             !is.character(time_unit) || length(time_unit) != 1L || is.na(time_unit) ||
             !nzchar(trimws(time_unit)) || !valid_origin ||
             (unit_type == "visit_level" &&

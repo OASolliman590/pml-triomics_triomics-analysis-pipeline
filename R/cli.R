@@ -574,11 +574,15 @@ triomics_c06_cli_compose_unit_map <- function(resolved, ingested, analysis,
     time_values <- suppressWarnings(as.numeric(as.character(metadata[[time_column]])))
     unit_ids <- sort(source_ids, method = "radix")
     used_rows <- match(unit_ids, sample_ids)
+    required_time <- lengths(declared_blocks[unit_ids]) > 0L
+    source_times <- unname(time_values[used_rows])
+    unavailable_absent_all_time <- !required_time & is.na(source_times) & !is.nan(source_times)
+    valid_source_time <- is.finite(source_times) | unavailable_absent_all_time
     if (anyNA(subject_values[used_rows]) || any(!nzchar(trimws(subject_values[used_rows]))) ||
-        anyNA(time_values[used_rows]) || any(!is.finite(time_values[used_rows]))) {
+        any(!valid_source_time)) {
       triomics_integration_abort(
         "C_SCORE_LINEAGE_INVALID",
-        "Trajectory source metadata has incomplete subject or finite time identities.",
+        "Trajectory source metadata needs subject identities and finite time for every represented unit.",
         key = "analysis_unit_map.subject_id"
       )
     }
@@ -612,12 +616,20 @@ triomics_c06_cli_compose_unit_map <- function(resolved, ingested, analysis,
         )
       }
       time <- unname(time_values[[source_rows[[index]]]])
+      represented <- declared_blocks[[sample_id]]
+      absent_all_missing_time <- !length(represented) && !source_eligibility[[sample_id]] &&
+        identical(source_exclusion[[sample_id]], "absent_from_all_analysis_blocks") &&
+        is.na(time) && !is.nan(time)
       mapped_time <- triomics_c06_cli_unit_map_scalar(source_record, "time")
       if (is.null(mapped_time)) mapped_time <- triomics_c06_cli_unit_map_scalar(source_record, "condition")
       if (!is.null(mapped_time)) {
         mapped_numeric <- suppressWarnings(as.numeric(as.character(mapped_time)))
-        if (length(mapped_numeric) != 1L || is.na(mapped_numeric) ||
-            !is.finite(mapped_numeric) || !identical(as.numeric(mapped_numeric), time)) {
+        mapped_missing_time <- length(mapped_numeric) == 1L && is.na(mapped_numeric) &&
+          !is.nan(mapped_numeric)
+        mapped_time_matches <- absent_all_missing_time && mapped_missing_time
+        if (!mapped_time_matches &&
+            (length(mapped_numeric) != 1L || is.na(mapped_numeric) ||
+             !is.finite(mapped_numeric) || !identical(as.numeric(mapped_numeric), time))) {
           triomics_integration_abort(
             "C_SCORE_LINEAGE_INVALID",
             "Trajectory B time identity disagrees with the declared source metadata.",
@@ -661,7 +673,6 @@ triomics_c06_cli_compose_unit_map <- function(resolved, ingested, analysis,
         }
         visit_id <- declared_visit
       }
-      represented <- declared_blocks[[sample_id]]
       eligible <- all(block_ids %in% represented) && source_eligibility[[sample_id]]
       missing_blocks <- setdiff(block_ids, represented)
       exclusion_reason <- if (eligible) NULL else if (!length(represented)) {
