@@ -1,0 +1,16 @@
+CANDIDATE_HEAD: 7ef25eff64dbb334b5ac75f1051a3ca1dca37a58 
+WORKTREE: /Users/megastore/.codex/worktrees/m7-017-c-unit-map/PML MultiOmics Analysis Pipeline 
+MOFA2: 1.22.1 
+C-06-shared: .....................................................................................................................................................................................................................................................................................................................................................
+C-06: .......................................................................................
+C-08-shared: ................................Design matrix has changed to include Y; each block will be
+            linked to Y.
+..........................................................
+D-T01: ......................................................................................................................W...............................................................................................................................................................................................................
+
+══ Warnings ════════════════════════════════════════════════════════════════════
+1. D-T01 refuses stale paired signs and preserves the old pointer ('test-D-T01.R:962:3') - running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-16c0bc993d8a/tickets/d-t01-paired-sign-stale-16c0b4d3c467b.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-16c0b2097357c' 2>&1' had status 2
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+NAMED_CONDITION: {"file":"test-D-T01.R","test":"D-T01 refuses stale paired signs and preserves the old pointer","type":"expectation_warning","message":"running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-16c0bc993d8a/tickets/d-t01-paired-sign-stale-16c0b4d3c467b.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-16c0b2097357c' 2>&1' had status 2"} 
+EXACT_TOTALS: {"fail":0,"warn":1,"skip":0,"error":0,"pass":843,"test_blocks":53} 

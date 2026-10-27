@@ -1,0 +1,18 @@
+{
+  "totals": {
+    "fail": 0,
+    "warn": 1,
+    "skip": 0,
+    "error": 0,
+    "pass": 843,
+    "test_blocks": 53
+  },
+  "conditions": [
+    {
+      "file": "test-D-T01.R",
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "type": "expectation_warning",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-16c0bc993d8a/tickets/d-t01-paired-sign-stale-16c0b4d3c467b.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-16c0b2097357c' 2>&1' had status 2"
+    }
+  ]
+}

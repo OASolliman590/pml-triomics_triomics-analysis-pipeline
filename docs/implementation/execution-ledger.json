@@ -34,27 +34,48 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_017_luna",
-      "role": "focused_verification",
-      "candidate": "7ef25eff64dbb334b5ac75f1051a3ca1dca37a58",
-      "repairs_used": 2,
-      "worktree": "/Users/megastore/.codex/worktrees/m7-017-c-unit-map/PML MultiOmics Analysis Pipeline",
-      "model_requested": "gpt-6-luna",
-      "effort_requested": "max",
-      "effective_settings_exposed": false,
-      "next_transition": "finish frozen repair1 gate; execute bounded final repair2"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_017_repair2_queued_after_frozen_gate",
+    "status": "m7_017_blocked_closed_repair_cap",
     "last_reconciled": "2026-10-27",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Independent Sol reproduced native absent-all excluded trajectory row with missing time rejected by C. Final repair2/2 queued after immutable repair1 gate completes; no concurrent fitting or source edits. M7/G7 closed."
+    "disposition": "Final6456055 native proof19pass2fail: persisted time stringNA, not null. Two repairs exhausted. No integration/full gates/final Astra/M7/G7release. All run-owned native workers completed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_017_blocked_close",
+      "date": "2026-10-27",
+      "candidate": "6456055d394057baf029eba7321c45ad90a3ec21",
+      "repairs_used": 2,
+      "native_proof": {
+        "pass": 19,
+        "fail": 2,
+        "B_exit": 0,
+        "C_exit": 0,
+        "D_exit": 0
+      },
+      "receipt": "docs/implementation/reviews/2026-10-27-m7-017-blocked-close-receipt.md"
+    },
+    {
+      "event": "m7_017_repair2_freeze",
+      "date": "2026-10-27",
+      "candidate": "6456055d394057baf029eba7321c45ad90a3ec21",
+      "repairs_used": 2
+    },
+    {
+      "event": "m7_017_repair1_gate_completed_repair2_started",
+      "date": "2026-10-27",
+      "candidate": "7ef25ef",
+      "totals": {
+        "fail": 0,
+        "warn": 1,
+        "skip": 0,
+        "error": 0,
+        "pass": 843,
+        "test_blocks": 53
+      }
+    },
     {
       "event": "m7_017_repair1_review_reconciled",
       "date": "2026-10-27",

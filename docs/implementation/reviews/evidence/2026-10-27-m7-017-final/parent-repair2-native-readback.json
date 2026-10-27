@@ -1,0 +1,28 @@
+{
+  "endpoint_path": "/private/tmp/m7-017-repair2-native-output-182073a594a3a/C/score-endpoints/integration-01.json",
+  "sha256": "543c9da2e07feadc7b03423ded62b9886b41de822c46a49b00270629c847549e",
+  "excluded_record": {
+    "unit_id": "SYN_12",
+    "unit_type": "sample",
+    "representation_id": "subject_centered",
+    "source_sample_ids": "SYN_12",
+    "subject_id": "sub4",
+    "visit_weights": null,
+    "eligibility": "excluded",
+    "exclusion_reason": "absent_from_all_analysis_blocks",
+    "visit_id": null,
+    "condition": null,
+    "time": "NA",
+    "time_unit": "synthetic_step",
+    "time_origin": "0",
+    "represented_blocks": [],
+    "study_id": "triomics_d_t01_fixture",
+    "analysis_id": "d_t01_synthetic_exploratory",
+    "preparation_context_id": "c06_fixture",
+    "_row": "SYN_12"
+  },
+  "training_has_excluded": false,
+  "score_has_excluded": false,
+  "D_pointer_exists": false,
+  "C_provenance_exists": true
+}

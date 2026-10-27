@@ -1,31 +1,27 @@
 # Implementation handover
 
-## Current M7-017 checkpoint — repair1 frozen, verification active
+## Current M7-017 checkpoint — blocked and closed at two-repair cap
 
-User-authorized C unit-map scope8c68b68 + endpoint correction5eaf18c passed
-Astra scope audit and one focused rereview. Fresh Luna candidatec8b309e is
-frozen in `/Users/megastore/.codex/worktrees/m7-017-c-unit-map/PML MultiOmics Analysis Pipeline`;
-base627c7da preservescfe9160. Fresh Sol review found4Important issues, all
-independently reproduced: trajectory excluded-unit loss, unchecked secondary
-paired identities, clinical raw-vs-public subject key, and run-local test dependency.
-Initial worker focused gate748pass4fail2error0warn0skip/50blocks.
-Repair1 now frozen at7ef25ef (four files). Structured focused suite by Luna
-is active. Sol rereview completed: one Important native absent-all/missing-time
-exclusion defect; parent reproduced it. Final repair2/2 queued after the suite.
-Receipt reviews/2026-10-27-m7-017-repair1-review.md. No other fit job.
-Native repaired trajectory and paired attrition B/C/D pass; parent independently
-read back attrition generation and predecessor hashes. Public C08 passes6;
-standalone self-contained D stale-sign passes7 with one named expected system2
-status2 warning; prior publication pointer unchanged. These are scoped proofs,
-not full acceptance. No product integration/full source/archive/final Astra yet.
-Literal resume: reconcile active /root/m7_017_luna focused gate then final bounded repair2 on the existing worker, freeze/review, independent focused/native
-proofs, integration, full source/archive Status: OK and scoped fresh Astra.
-No third M7-016 repair; originalcfe9160unchanged; one M7-017 repair remains.
-Canonical M7/G7 requires additional D packets; this phase alone cannot release
-it. No downstream D/private data/push. C06unaccepted,C07not_run,C09unqualified.
-Spec validator restored with cached temporary deps; fails historical AGENTS
-hash; full92filediagnostic also findsCLAUDE mismatch, other90match. Additions
-were b585b26 reporting/control docs. Preserve frozen manifest and disclose audit.
+Scope audit passed; isolated initialc8b309e, repair17ef25ef and final6456055
+are preserved. Original D candidatecfe9160 remains clean/unchanged. No product
+integration. Final native B/C/D commands exit0 and publish matching hashes, but
+semantic proof FAIL2/PASS19: excluded SYN_12 time is JSON string"NA", not null.
+Its source/exclusion and no-score status are correct. Parent independently
+reproduced; Sol review one Important unresolved. Full close receipt:
+reviews/2026-10-27-m7-017-blocked-close-receipt.md.
+
+Last comprehensive focused gate843pass0fail0error1expectedwarning0skip/53blocks
+belongs to repair1 only. Final narrow C08 regression4pass, reviewer8negative
+checks; no final comprehensive/source/archive/finalAstra pass inferred.
+M7/G7closed,C06false,C07not_run,C09unqualified; downstreamDclosed. No private
+inputs/push. No active worker/test process; no run-owned desktop chats created.
+Historical AGENTS/CLAUDE frozen hash discrepancy preserved, other90match.
+
+Literal resume: obtain a newly authorized bounded C explicit-null serialization
+cycle from6456055; preservecfe9160, retain failing native tests, keep global writer
+and statistical/schema guards unchanged. Then independent focused/native gates,
+integration only after pass, full source/archive Status: OK and fresh scoped
+Astra. Do not open a third M7-017 repair or repeat older producer cycles.
 
 ## Current M7-016 checkpoint — blocked, isolated repair preserved
 

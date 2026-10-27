@@ -1,0 +1,38 @@
+CANDIDATE_HEAD: 6456055d394057baf029eba7321c45ad90a3ec21 
+FIXTURE_ROOT: /private/tmp/c06-shared-trajectory-fixture-182071cd7f7fb 
+OUTPUT_ROOT: /private/tmp/m7-017-repair2-native-output-182073a594a3a 
+EXCLUDED_SOURCE: SYN_12 
+B_STATUS: 0 
+  
+B_ANALYSIS_UNIT_MAP_DIGEST: c57c63efb3ab79cd1b94d5762c24f96c4cc7abf693322a1ad89fed4e5bf219af 
+B_ANALYSIS_UNIT_MAP_ROW_IDENTITY_SHA256: 6c2710fe937eceeb63f87d359c720ee26c801fcaecd8281750d841415db15a8b 
+C_STATUS: 0 
+  
+D_STATUS: 0 
+  
+REPAIR2_NATIVE_EVIDENCE: {"candidate_head":"6456055d394057baf029eba7321c45ad90a3ec21","fixture_root":"/private/tmp/c06-shared-trajectory-fixture-182071cd7f7fb","output_root":"/private/tmp/m7-017-repair2-native-output-182073a594a3a","excluded_source":"SYN_12","b_analysis_unit_map_digest":"c57c63efb3ab79cd1b94d5762c24f96c4cc7abf693322a1ad89fed4e5bf219af","b_analysis_unit_map_row_identity_sha256":"6c2710fe937eceeb63f87d359c720ee26c801fcaecd8281750d841415db15a8b","b_bundle_sha256":"204810a213192dcc65b21e14ac15d90bfc9066a88f3f07d481f2b228972de84e","endpoint_bundle_sha256":"29eb6d50b6664f53c2a1e493b6564793240d326e74f2b1fc7f0acbf147d56b75","endpoint_sha256":"922444ed5464003e0581a4a98b5da794e2d710831aeedb54dd799a9144e89a6e","endpoint_file_sha256":"543c9da2e07feadc7b03423ded62b9886b41de822c46a49b00270629c847549e","d_pointer_sha256":"e1e0b26b780361d22a34d68169c90ccb24d524bd36c0d58360c0cc2c686e2b7a","d_generation_id":"27937b0ee602a0dd5171859e2aa5f83878d211b3e3e92d78b03897765d67b531","d_manifest_sha256":"27937b0ee602a0dd5171859e2aa5f83878d211b3e3e92d78b03897765d67b531","d_provenance_sha256":"c47a43a057f0e39774ff9c85be208059ff82b745bc663a4828d841844c8e8d82","manifest_file":"/tmp/triomics-m7-017-luna/repair2-native-sha256-manifest.txt","manifest_sha256":"d3735e10c6d8f551d0609eb508c9474147272c2236310faed0724024db3b664e","files_hashed":58} 
+REPAIR2_NATIVE_COMPLETE
+── Failure: repair2 retained-root native B/C/D missing-time proof ──────────────
+Expected `grepl("\"time\"\\s*:\\s*null", endpoint_text, perl = TRUE)` to be TRUE.
+Differences:
+`actual`:   FALSE
+`expected`: TRUE 
+
+The persisted endpoint must contain an explicit null time.
+── Failure: repair2 retained-root native B/C/D missing-time proof ──────────────
+Expected `excluded$time` to be NULL.
+Differences:
+`actual` is a character vector ('NA')
+`expected` is NULL
+
+Error:
+! Test failed with 2 failures and 19 successes.
+Backtrace:
+    ▆
+ 1. └─testthat::test_that(...)
+ 2.   └─testthat:::test_code(code, parent.frame())
+ 3.     ├─withr (local) `<fn>`()
+ 4.     └─reporter$end_test(context = reporter$.context, test = test)
+ 5.       └─cli::cli_abort(...)
+ 6.         └─rlang::abort(...)
+Execution halted

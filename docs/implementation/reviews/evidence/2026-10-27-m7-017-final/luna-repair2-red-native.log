@@ -1,0 +1,21 @@
+REPAIR2_NATIVE_RED_START HEAD 7ef25eff64dbb334b5ac75f1051a3ca1dca37a58
+── Failure: native trajectory C retains an absent-all B exclusion with unavailable time ──
+Expected `c_run$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics C_SCORE_LINEAGE_INVALID: Trajectory source metadata has incomplete subject or finite time identities.
+Error:
+! Test failed with 1 failure and 3 successes.
+Backtrace:
+    ▆
+ 1. ├─base::eval(matches[[1L]], envir = .GlobalEnv)
+ 2. │ └─base::eval(matches[[1L]], envir = .GlobalEnv)
+ 3. └─testthat::test_that(...)
+ 4.   └─testthat:::test_code(code, parent.frame())
+ 5.     ├─withr (local) `<fn>`()
+ 6.     └─reporter$end_test(context = reporter$.context, test = test)
+ 7.       └─cli::cli_abort(...)
+ 8.         └─rlang::abort(...)
+Execution halted
