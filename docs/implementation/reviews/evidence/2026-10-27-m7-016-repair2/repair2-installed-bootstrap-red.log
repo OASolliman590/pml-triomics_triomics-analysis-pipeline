@@ -1,0 +1,4 @@
+repository_root=/Users/megastore/Library/R/x86_64/4.6/library
+R_source_count=0
+triomics_namespace_loaded=FALSE
+next_call=could not find function "triomics_read_config"

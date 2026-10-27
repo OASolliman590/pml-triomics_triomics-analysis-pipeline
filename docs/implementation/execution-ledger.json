@@ -34,25 +34,38 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_016_luna",
-      "role": "implementation_repair",
-      "candidate": "ac98db3",
-      "repairs_used": 1,
-      "model_requested": "gpt-6-luna",
-      "effort_requested": "max",
-      "effective_settings_exposed": false
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_016_repair1_running",
+    "status": "m7_016_blocked_closed_run",
     "last_reconciled": "2026-10-27",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Sol-high task review changesrequired4Important distinct findings; parent independently reproduced3behavior defects. Candidateac98db3 not integrated. Focusedrun interrupted as superseded exit143 with no GREEN. Same Luna repair1/2 active; no test process active. M7/G7closed."
+    "disposition": "Candidate cfe9160 isolated, not integrated; scope Astra PASS; original3defects fixed and final bootstrap review passed; required native paired/trajectory evidence blocked in C outside scope. Two repairs used. No active workers/processes. M7/G7closed, downstream Dclosed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_016_blocked_close",
+      "date": "2026-10-27",
+      "candidate": "cfe9160",
+      "repairs_used": 2,
+      "receipt": "docs/implementation/reviews/2026-10-27-m7-016-blocked-repair-receipt.md",
+      "final_astra": "not_run_prerequisites_unmet",
+      "product_integrated": false,
+      "m7_accepted": false,
+      "g7_released": false
+    },
+    {
+      "event": "m7_016_repair2_dispatch",
+      "date": "2026-10-27",
+      "candidate": "f23b5a7",
+      "repairs_used": 2,
+      "scope": [
+        "tests/testthat/test-D-T01.R"
+      ],
+      "reason": "Installed recovery subprocess sources nonexistent R/*.R and cannot find triomics_read_config",
+      "upstream_blocker": "paired C_ELIGIBILITY_UNKNOWN_UNIT; trajectory C_SCORE_LINEAGE_INVALID",
+      "suite_evidence": "317 success markers, no failure/warning/skip blocks; structured counts unavailable"
+    },
     {
       "event": "m7_016_repair1_dispatch",
       "date": "2026-10-27",

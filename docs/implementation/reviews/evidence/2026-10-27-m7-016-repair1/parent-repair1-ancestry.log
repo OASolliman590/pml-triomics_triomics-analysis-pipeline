@@ -1,0 +1,6 @@
+baseline=evidence_bundle
+native_parent_is_symlink=TRUE
+read_result=D_OUTPUT_PATH_UNSAFE The C native-state directory is unsafe or crosses a symbolic link.
+executor_result=D_OUTPUT_PATH_UNSAFE The C native-state directory is unsafe or crosses a symbolic link.
+probe_root=/private/tmp/sol-native-path-87b162c787df
+outside=/private/tmp/sol-outside-native-87b119a97423

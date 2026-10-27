@@ -1,0 +1,16 @@
+mode=source
+config=/Users/megastore/.codex/worktrees/m7-016-d-publication/PML MultiOmics Analysis Pipeline/inst/examples/tickets/D-T01.yaml
+package_root=/Users/megastore/.codex/worktrees/m7-016-d-publication/PML MultiOmics Analysis Pipeline
+output_root=/private/tmp/repair2-source-root-936b36f7db48
+exit_code=0
+pointer_sha256=5389f10bd634a14538a1c1bc296e77d6bf085071d241af42c52707c43f9eacf2
+probe_bootstrap=source
+ambiguous_readback=D_PUBLICATION_STATUS_UNKNOWN
+current_after_ambiguous=e87a8788466a0ef59198e2f8f00707ccc4b87a2cb58fe8f43bcf6392524d13f8
+planned_generation_leaf=D_OUTPUT_PATH_UNSAFE
+[1] TRUE
+temporary_generation_ancestry=D_OUTPUT_PATH_UNSAFE
+[1] TRUE
+temporary_pointer_ancestry=D_OUTPUT_PATH_UNSAFE
+failed_rename_class=D_PUBLICATION_FAILED
+old_current_preserved=TRUE

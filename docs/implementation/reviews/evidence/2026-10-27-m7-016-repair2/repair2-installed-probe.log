@@ -1,0 +1,16 @@
+mode=installed
+config=/private/tmp/triomics-m7-016-luna/repair2-installed-lib/triomics/examples/tickets/D-T01.yaml
+package_root=/private/tmp/triomics-m7-016-luna/repair2-installed-lib/triomics
+output_root=/private/tmp/repair2-installed-root-936b3c6eb9e3
+exit_code=0
+pointer_sha256=01441c0998f87bedc013b4cd0a7a172edec1bcc3d0e04044173ad9f08fe9816a
+probe_bootstrap=installed
+ambiguous_readback=D_PUBLICATION_STATUS_UNKNOWN
+current_after_ambiguous=99edf1dce3dd5149ad4d16e020d61cb26fe9d4c5e016e6db4d9dfbca8de27a63
+planned_generation_leaf=D_OUTPUT_PATH_UNSAFE
+[1] TRUE
+temporary_generation_ancestry=D_OUTPUT_PATH_UNSAFE
+[1] TRUE
+temporary_pointer_ancestry=D_OUTPUT_PATH_UNSAFE
+failed_rename_class=D_PUBLICATION_FAILED
+old_current_preserved=TRUE

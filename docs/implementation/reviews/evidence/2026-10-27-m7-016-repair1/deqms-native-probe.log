@@ -1,0 +1,13 @@
+deqms_version=1.30.0
+metadata groups=control 6;treatment 6
+hash=94ba52ea1b8d0c862c814cf6335be5585932d640c76914a9a6d950c3a59d78a0
+B  status= 0 
+  
+B method=DEqMS requested=DEqMS status=complete reason=
+countprior={"method":"DEqMS","metadata_sha256":"827dc616e600ccc2277c38520a4a3c2cea1045912601aa677ba97a69d3e4f291","feature_key":"fk1|22:triomics_d_t01_fixture|7:block_1|1:1","count_type":"psm_count","count":3,"acquisition":"synthetic_D_T01_qualified_acquisition","provenance":"synthetic public D-T01 qualified count fixture","summary_method":"minimum_over_feature_specific_samples_used_by_fit","sample_ids":["SYN_01","SYN_02","SYN_03","SYN_04","SYN_05","SYN_06","SYN_07","SYN_08","SYN_09","SYN_10","SYN_11","SYN_12"]}
+C  status= 0 
+  
+D  status= 0 
+  
+d_status=0
+root=/private/tmp/d-t01-deqms-output-70935ceaf01b

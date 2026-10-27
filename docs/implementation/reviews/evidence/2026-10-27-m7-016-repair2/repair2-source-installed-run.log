@@ -1,0 +1,32 @@
+mode=source
+config=/Users/megastore/.codex/worktrees/m7-016-d-publication/PML MultiOmics Analysis Pipeline/inst/examples/tickets/D-T01.yaml
+package_root=/Users/megastore/.codex/worktrees/m7-016-d-publication/PML MultiOmics Analysis Pipeline
+output_root=/private/tmp/repair2-source-root-936b36f7db48
+exit_code=0
+pointer_sha256=5389f10bd634a14538a1c1bc296e77d6bf085071d241af42c52707c43f9eacf2
+probe_bootstrap=source
+ambiguous_readback=D_PUBLICATION_STATUS_UNKNOWN
+current_after_ambiguous=e87a8788466a0ef59198e2f8f00707ccc4b87a2cb58fe8f43bcf6392524d13f8
+planned_generation_leaf=D_OUTPUT_PATH_UNSAFE
+[1] TRUE
+temporary_generation_ancestry=D_OUTPUT_PATH_UNSAFE
+[1] TRUE
+temporary_pointer_ancestry=D_OUTPUT_PATH_UNSAFE
+failed_rename_class=D_PUBLICATION_FAILED
+old_current_preserved=TRUE
+mode=installed
+config=/private/tmp/triomics-m7-016-luna/repair2-installed-lib/triomics/examples/tickets/D-T01.yaml
+package_root=/private/tmp/triomics-m7-016-luna/repair2-installed-lib/triomics
+output_root=/private/tmp/repair2-installed-root-936b3c6eb9e3
+exit_code=0
+pointer_sha256=01441c0998f87bedc013b4cd0a7a172edec1bcc3d0e04044173ad9f08fe9816a
+probe_bootstrap=installed
+ambiguous_readback=D_PUBLICATION_STATUS_UNKNOWN
+current_after_ambiguous=99edf1dce3dd5149ad4d16e020d61cb26fe9d4c5e016e6db4d9dfbca8de27a63
+planned_generation_leaf=D_OUTPUT_PATH_UNSAFE
+[1] TRUE
+temporary_generation_ancestry=D_OUTPUT_PATH_UNSAFE
+[1] TRUE
+temporary_pointer_ancestry=D_OUTPUT_PATH_UNSAFE
+failed_rename_class=D_PUBLICATION_FAILED
+old_current_preserved=TRUE

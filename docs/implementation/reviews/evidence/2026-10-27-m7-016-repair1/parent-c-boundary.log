@@ -1,0 +1,303 @@
+Tracing function "triomics_abort" in package "namespace:triomics"
+[1] "triomics_abort"
+
+KIND paired ROOT /private/tmp/sol-paired-boundary-81e71c7a0cf7 
+B_EXIT 0 
+
+BOUNDARY C_ELIGIBILITY_UNKNOWN_UNIT KEY block_1 MESSAGE A block contains sample ids outside the declared unit map. 
+[[1]]
+get("triomics_main", ns)(c("--config", config, "--stage", "C", 
+    "--output", root))
+
+[[2]]
+tryCatch({
+    options <- triomics_parse_cli(args)
+    if (options$help) {
+      cat(triomics_usage(), "\n")
+      return(0L)
+    }
+    if (is.null(options$stage)) {
+      triomics_abort("A_CLI_ARGUMENT", "Option --stage is required.", key = "stage",
+                     module = "cli", remediation = "Run triomics --help for the stage grammar.")
+    }
+    triomics_require_stage(options$stage, options$validate_only)
+    if (is.null(options$config) || is.null(options$output)) {
+      triomics_abort("A_CLI_ARGUMENT", "Options --config and --output are required.",
+                     key = if (is.null(options$config)) "config" else "output",
+                     module = "cli", stage = options$stage,
+                     remediation = "Provide --config FILE and --output DIR.")
+    }
+    if (isTRUE(options$validate_only)) {
+      config <- triomics_read_config(options$config)
+      triomics_validate_only(config, options$config, options$stage, options$output)
+    } else if (identical(options$stage, "A")) {
+      triomics_execute_stage_a(options$config, options$output)
+    } else if (identical(options$stage, "B")) {
+      registered_b09 <- triomics_cli_prepare_registered_b09(options, args)
+      registered_b08 <- triomics_cli_prepare_registered_b08(options, args)
+      stage_b_result <- triomics_execute_stage_b(options$config, options$output)
+      if (isTRUE(registered_b09)) triomics_b09_cli_after_stage_b(args)
+      if (isTRUE(registered_b08)) triomics_b08_cli_after_stage_b(args)
+      triomics_b07_cli_after_stage_b(args, stage_b_result)
+    } else if (identical(options$stage, "C")) {
+      stage_c_result <- triomics_execute_stage_c(options$config, options$output)
+      if (!isTRUE(stage_c_result$required_complete)) {
+        return(4L)
+      }
+    } else if (identical(options$stage, "D")) {
+      triomics_execute_stage_d(options$config, options$output)
+    } else {
+      triomics_abort("A_STAGE_UNAVAILABLE",
+                     paste0("Execution is not implemented for stage '", options$stage, "'."),
+                     key = "stage", module = "cli", stage = options$stage,
+                     remediation = "Use --validate-only for stage A, or run an accepted stage.")
+    }
+    0L
+  }, triomics_error = function(error) {
+    cat(paste0("triomics ", error$code, ": ", conditionMessage(error), "\n"), file = stderr())
+    triomics_cli_exit(error)
+  }, error = function(error) {
+    cat(paste0("triomics A_INTERNAL: ", conditionMessage(error), "\n"), file = stderr())
+    1L
+  })
+
+[[3]]
+tryCatchList(expr, classes, parentenv, handlers)
+
+[[4]]
+tryCatchOne(tryCatchList(expr, names[-nh], parentenv, handlers[-nh]), 
+    names[nh], parentenv, handlers[[nh]])
+
+[[5]]
+doTryCatch(return(expr), name, parentenv, handler)
+
+[[6]]
+tryCatchList(expr, names[-nh], parentenv, handlers[-nh])
+
+[[7]]
+tryCatchOne(expr, names, parentenv, handlers[[1L]])
+
+[[8]]
+doTryCatch(return(expr), name, parentenv, handler)
+
+[[9]]
+stage_c_result <- triomics_execute_stage_c(options$config, options$output)
+
+[[10]]
+integration_results <- lapply(seq_along(requests), function(request_index) {
+    request <- requests[[request_index]]
+    c08_method <- request$method %in% c08_methods
+    if (has_clinical_objectives && !c08_method) {
+      triomics_c08_abort(
+        "C_SCORE_BACKEND_UNAVAILABLE",
+        "Declared clinical objectives need a registered C-08 score endpoint method.",
+        "analyses.integration.method"
+      )
+    }
+    if (identical(request$evaluation$mode, "nested_cv")) {
+      if (has_clinical_objectives) {
+        triomics_c08_abort(
+          "C_SCORE_REQUEST_INVALID",
+          "Nested evaluation does not expose a single same-fit score endpoint for B scheduling.",
+          "analyses.integration.evaluation.mode"
+        )
+      }
+      evaluation <- triomics_c02_evaluate_request(
+        config, ingested, analysis, request, block_ids, unit_ids, output
+      )
+      c06_integration_runs[[request_index]] <<- list(
+        integration_id = request$integration_id,
+        method = request$method,
+        required = isTRUE(request$required),
+        status = "unavailable",
+        requested_evaluation_status = triomics_c06_cli_requested_evaluation_status(evaluation),
+        reason_code = "C06_INTEGRATION_RESULT_UNAVAILABLE",
+        reason = paste(
+          "Nested-CV evaluation did not produce a single IntegrationResult",
+          "and native sidecar for the D handoff."
+        )
+      )
+      return(list(
+        integration_id = request$integration_id,
+        method = request$method,
+        required = isTRUE(request$required),
+        status = "complete",
+        evaluation = evaluation
+      ))
+    }
+    spec <- request
+    spec$block_ids <- block_ids
+    spec$unit_ids <- unit_ids
+    spec$training_unit_ids <- unit_ids
+    spec$target_unit_ids <- unit_ids
+    spec$required_views <- block_ids
+    spec$task_mode <- request$evaluation$mode
+    result <- if (c08_method) {
+      unit_map <- triomics_c08_cli_unit_map(
+        resolved, ingested$sample_registry, analysis_unit_map, clinical_view
+      )
+      selection <- triomics_c08_cli_selection(request, ingested, block_ids)
+      fit_context <- list(
+        integration_id = request$integration_id,
+        unit_map = unit_map,
+        selection = selection,
+        available_at_time = "after_integration_fit",
+        dependency_group = paste(ingested$study_id, request$integration_id, sep = "::")
+      )
+      fitted <- triomics_integration_fit_once(resolved, spec, c08_context = fit_context)
+      if (!is.null(resolved$preparation_state_hashes)) {
+        fitted <- triomics_c06_cli_bind_preparation_lineage(fitted, resolved)
+      }
+      c06_run <- triomics_c06_cli_integration_run(request, fitted)
+      native_artifact <- triomics_c06_cli_write_native_state(
+        c06_run, config, analysis, output, request_index, c06_source_inputs, privacy_class
+      )
+      c06_run$native_artifact_ref <- native_artifact$artifact_ref
+      c06_integration_runs[[request_index]] <<- c06_run
+      endpoint_bundle <- triomics_integration_score_endpoints(
+        fitted$result, fitted$backend_fit, fitted$context
+      )
+      endpoint_ids <- vapply(endpoint_bundle$endpoints, function(endpoint) {
+        endpoint$endpoint_id
+      }, character(1L))
+      endpoint_directory <- file.path(output, "C", "score-endpoints")
+      endpoint_stub <- sprintf("integration-%02d", request_index)
+      endpoint_path <- file.path(endpoint_directory, paste0(endpoint_stub, ".json"))
+      endpoint_envelope_path <- file.path(endpoint_directory, paste0(endpoint_stub, ".envelope.json"))
+      endpoint_payload <- triomics_c08_cli_endpoint_payload(endpoint_bundle)
+      source_inputs <- unname(lapply(ingested$source_manifests, function(source) {
+        list(artifact_id = source$source_id, sha256 = source$sha256)
+      }))
+      endpoint_artifact <- triomics_c08_cli_write_artifact(
+        endpoint_payload, endpoint_path, endpoint_envelope_path,
+        artifact_type = "integration_score_endpoint_bundle",
+        artifact_id = paste0("c08-score-endpoint-bundle-", request_index),
+        config = config, analysis = analysis, inputs = source_inputs,
+        status = "complete",
+        privacy_class = if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive"
+      )
+      endpoint_bundle <- triomics_c08_cli_validate_endpoint_readback(endpoint_path)
+      endpoint_reference <- list(
+        artifact_id = paste0("c08-score-endpoint-bundle-", request_index),
+        payload_file = file.path("C", "score-endpoints", basename(endpoint_path)),
+        envelope_file = file.path("C", "score-endpoints", basename(endpoint_envelope_path)),
+        payload_sha256 = endpoint_artifact$payload_sha256,
+        envelope_sha256 = endpoint_artifact$envelope_sha256,
+        endpoint_ids = as.list(endpoint_ids)
+      )
+      request_reference <- NULL
+      if (has_clinical_objectives) {
+        objective_spec <- triomics_c08_cli_objective_spec(config, analysis)
+        scheduled <- triomics_schedule_clinical_score_request(
+          endpoint_bundle, objective_spec, clinical_view
+        )
+        request_directory <- file.path(output, "B", "clinical-score-association-requests")
+        request_stub <- sprintf("request-%02d", request_index)
+        request_path <- file.path(request_directory, paste0(request_stub, ".json"))
+        request_envelope_path <- file.path(request_directory, paste0(request_stub, ".envelope.json"))
+        clinical_inputs <- list(
+          list(artifact_id = endpoint_reference$artifact_id, sha256 = endpoint_artifact$payload_sha256),
+          list(artifact_id = "clinical-dictionary-source", sha256 = clinical$dictionary_sha256),
+          list(artifact_id = "clinical-observations-source", sha256 = clinical$observations_sha256),
+          list(artifact_id = "clinical-links-source", sha256 = clinical$links_sha256)
+        )
+        request_artifact <- triomics_c08_cli_write_artifact(
+          unclass(scheduled), request_path, request_envelope_path,
+          artifact_type = "clinical_score_association_request",
+          artifact_id = paste0("c08-clinical-score-request-", request_index),
+          config = config, analysis = analysis, inputs = clinical_inputs,
+          status = "not_started",
+          privacy_class = if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive"
+        )
+        request_reference <- list(
+          artifact_id = paste0("c08-clinical-score-request-", request_index),
+          payload_file = file.path("B", "clinical-score-association-requests", basename(request_path)),
+          envelope_file = file.path("B", "clinical-score-association-requests", basename(request_envelope_path)),
+          payload_sha256 = request_artifact$payload_sha256,
+          envelope_sha256 = request_artifact$envelope_sha256,
+          request_sha256 = scheduled$request_sha256,
+          status = scheduled$status,
+          owner_stage = scheduled$owner_stage,
+          model_execution = scheduled$model_execution
+        )
+      }
+      list(
+        result = fitted$result,
+        endpoint_bundle = endpoint_bundle,
+        endpoint_reference = endpoint_reference,
+        request_reference = request_reference
+      )
+    } else {
+      fitted <- triomics_integration_fit_once(resolved, spec)
+      if (!is.null(resolved$preparation_state_hashes)) {
+        fitted <- triomics_c06_cli_bind_preparation_lineage(fitted, resolved)
+      }
+      c06_run <- triomics_c06_cli_integration_run(request, fitted)
+      native_artifact <- triomics_c06_cli_write_native_state(
+        c06_run, config, analysis, output, request_index, c06_source_inputs, privacy_class
+      )
+      c06_run$native_artifact_ref <- native_artifact$artifact_ref
+      c06_integration_runs[[request_index]] <<- c06_run
+      list(result = fitted$result)
+    }
+    item <- list(
+      integration_id = request$integration_id,
+      method = request$method,
+      required = isTRUE(request$required),
+      status = "complete",
+      result = triomics_c01_result_payload(result$result)
+    )
+    if (!is.null(result$endpoint_reference)) item$score_endpoint_bundle <- result$endpoint_reference
+    if (!is.null(result$request_reference)) item$clinical_score_request <- result$request_reference
+    item
+  })
+
+[[11]]
+FUN(X[[i]], ...)
+
+[[12]]
+fitted <- triomics_integration_fit_once(resolved, spec, c08_context = fit_context)
+
+[[13]]
+eligibility <- adapter$validate(resolved_analysis, integration_spec)
+
+[[14]]
+triomics_integration_eligibility(resolved_analysis, params)
+
+[[15]]
+triomics_integration_abort(
+        "C_ELIGIBILITY_UNKNOWN_UNIT", "A block contains sample ids outside the declared unit map.",
+        key = block_id
+      )
+
+[[16]]
+triomics_abort(
+    code, message, key = key, module = "integration", stage = "C",
+    remediation = remediation
+  )
+
+[[17]]
+.doTrace({
+    if (code %in% c("A_ARTIFACT_FINALIZE", "C_ELIGIBILITY_UNKNOWN_UNIT")) {
+        cat("\nBOUNDARY", code, "KEY", key, "MESSAGE", message, 
+            "\n")
+        print(sys.calls())
+    }
+})
+
+[[18]]
+eval.parent(exprObj)
+
+[[19]]
+eval(expr, p)
+
+[[20]]
+eval(expr, p)
+
+triomics C_ELIGIBILITY_UNKNOWN_UNIT: A block contains sample ids outside the declared unit map.
+C_EXIT 2 
+
+KIND trajectory ROOT /private/tmp/sol-trajectory-boundary-81e71e40580b 
+B_EXIT 0 
+triomics C_SCORE_LINEAGE_INVALID: C-08 requires the declared AnalysisUnitMap from analysis resolution.
+C_EXIT 2 

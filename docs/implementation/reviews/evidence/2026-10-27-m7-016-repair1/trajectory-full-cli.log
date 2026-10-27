@@ -1,0 +1,14 @@
+[1] TRUE
+[1] TRUE TRUE TRUE TRUE TRUE
+COLS= subject.sub1,subject.sub2,subject.sub3,subject.sub4,time.linear 
+B STATUS 0 
+ Warning message:
+In system2("git", c("-C", shQuote(root), "rev-parse", "HEAD"), stdout = TRUE,  :
+  running command ''git' -C '/private/tmp/d-t01-trajectory-cli-probe-7ff610834a8e/out' rev-parse HEAD 2>/dev/null' had status 128 
+CRESULT_AFTER_B= FALSE 
+C STATUS 4 
+ triomics A_ARTIFACT_FINALIZE: The output file could not be atomically finalized. 
+Warning message:
+In system2(file.path(R.home("bin"), "Rscript"), c("--vanilla", shQuote(basename(cli)),  :
+  running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-trajectory-cli-probe-7ff610834a8e/tickets/D-T01.yaml' --stage 'C' --output '/private/tmp/d-t01-trajectory-cli-probe-7ff610834a8e/out' 2>&1' had status 4
+ROOT= /private/tmp/d-t01-trajectory-cli-probe-7ff610834a8e 

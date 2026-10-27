@@ -1,5 +1,32 @@
 # Implementation handover
 
+## Current M7-016 checkpoint — blocked, isolated repair preserved
+
+2026-10-27: scope Astra PASS at92351d6. Initial candidateac98db3, repaired
+f23b5a7, final test-only repaircfe9160 remain isolated in
+`/Users/megastore/.codex/worktrees/m7-016-d-publication/PML MultiOmics Analysis Pipeline`.
+No product integration. Sol independently reproduced the three initial defects
+and verified their rejection after repair1. Focused reviewer marks those fixed;
+final test-bootstrap repair passes narrow rereview. Two repairs used.
+
+Worker D suite:317 success markers, no failure/warning/skip blocks; structured
+counts unavailable. Source+installed recovery probes pass seven checks each.
+These are not full acceptance gates. Required native paired/trajectory evidence
+is blocked before D: fresh B0/C2 C_ELIGIBILITY_UNKNOWN_UNIT (paired), B0/C2
+C_SCORE_LINEAGE_INVALID missing AnalysisUnitMap (trajectory). Fixing the C
+caller is outside the D-only shared exception. No requirement waived.
+
+Receipt: reviews/2026-10-27-m7-016-blocked-repair-receipt.md and its two durable
+evidence directories. No worker/proof process remains active. Final Astra,
+full source, archive package gate and final independent B/C/D readback did not
+run to completion. No M7/G7 acceptance or release. C06unaccepted, C07not_run,
+C09unqualified; all downstream D closed. No private data or push.
+
+Literal resume: preservecfe9160; do not redispatch M7-016 Luna or open a third
+repair. Scope/audit the C paired/trajectory unit-map composition seam, then
+complete outstanding independent gates and fresh Astra before M7/G7 release.
+Do not restart earlier producer cycles or treat old counts as new GREEN.
+
 ## Current M7-015 checkpoint — shared integration seam blocked
 
 2026-10-27: Omar authorized D verification/publication, phase3, within six D-owned

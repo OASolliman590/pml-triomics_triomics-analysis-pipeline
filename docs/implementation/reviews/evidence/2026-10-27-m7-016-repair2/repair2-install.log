@@ -1,0 +1,22 @@
+# Bootstrapping renv 1.2.4 ---------------------------------------------------
+- Downloading renv ... Warning: unable to access index for repository https://cloud.r-project.org/bin/macosx/big-sur-x86_64/contrib/4.6:
+  cannot open URL 'https://cloud.r-project.org/bin/macosx/big-sur-x86_64/contrib/4.6/PACKAGES'
+Warning: unable to access index for repository https://cloud.r-project.org/src/contrib:
+  cannot open URL 'https://cloud.r-project.org/src/contrib/PACKAGES'
+FAILED
+Warning message:
+failed to bootstrap renv: the project will not be loaded.
+Reason: failed to download:
+All download methods failed
+Use `renv::activate()` to re-initialize the project. 
+* installing *source* package ‘triomics’ ...
+** this is package ‘triomics’ version ‘0.1.0’
+** using staged installation
+** R
+** exec
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+* DONE (triomics)
