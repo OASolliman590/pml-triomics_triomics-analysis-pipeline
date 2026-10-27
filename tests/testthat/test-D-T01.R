@@ -1345,53 +1345,81 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
   recovery_probe_root <- clone_native_root()
   recovery_probe_script <- tempfile("d-t01-recovery-probe-", tmpdir = "/private/tmp")
   on.exit(unlink(recovery_probe_script, force = TRUE), add = TRUE)
-  repository_root <- normalizePath(file.path(
-    dirname(triomics_test_resource("exec", "triomics")), "..", ".."
-  ), winslash = "/", mustWork = TRUE)
+  exec_resource <- triomics_test_resource("exec", "triomics")
+  source_root <- normalizePath(file.path(dirname(exec_resource), "..", ".."),
+                              winslash = "/", mustWork = TRUE)
+  source_tree_available <- length(list.files(
+    file.path(source_root, "R"), pattern = "[.]R$", full.names = TRUE
+  )) > 0L
+  package_root <- if (source_tree_available) {
+    source_root
+  } else {
+    normalizePath(file.path(dirname(exec_resource), ".."),
+                  winslash = "/", mustWork = TRUE)
+  }
   writeLines(c(
-    "probe_args <- commandArgs(trailingOnly=TRUE); config_path <- probe_args[[1L]]; root <- probe_args[[2L]]; repository_root <- probe_args[[3L]]",
-    "setwd(repository_root); for (f in sort(list.files(file.path(repository_root,'R'), pattern='[.]R$', full.names=TRUE))) sys.source(f, .GlobalEnv)",
+    "probe_args <- commandArgs(trailingOnly=TRUE); config_path <- probe_args[[1L]]; root <- probe_args[[2L]]; package_root <- probe_args[[3L]]",
+    "source_files <- sort(list.files(file.path(package_root,'R'), pattern='[.]R$', full.names=TRUE))",
+    "if (length(source_files)) {",
+    "  setwd(package_root); for (f in source_files) sys.source(f, .GlobalEnv)",
+    "  publisher_env <- .GlobalEnv; bootstrap_kind <- 'source'",
+    "} else {",
+    "  package_namespace <- loadNamespace('triomics', lib.loc=dirname(package_root))",
+    "  probe_bindings <- c('triomics_read_config','triomics_ingest_configured_study','triomics_d_read_evidence_bundle','triomics_annotate_evidence','triomics_sha256','triomics_d_validate_current_pointer','triomics_d_generation_paths','triomics_d_publish_evidence_generation','%||%')",
+    "  for (name in probe_bindings) assign(name, get(name, envir=package_namespace, inherits=FALSE), envir=.GlobalEnv)",
+    "  publisher_env <- new.env(parent=package_namespace)",
+    "  publisher <- get('triomics_d_publish_evidence_generation', envir=package_namespace, inherits=FALSE)",
+    "  environment(publisher) <- publisher_env",
+    "  assign('triomics_d_publish_evidence_generation', publisher, envir=.GlobalEnv)",
+    "  bootstrap_kind <- 'installed'",
+    "}",
+    "cat('probe_bootstrap=',bootstrap_kind,'\\n',sep='')",
     "config <- triomics_read_config(config_path); analysis <- config$analyses[[1L]]",
     "ingested <- triomics_ingest_configured_study(config, config_path)",
     "metadata <- list(sample_metadata=ingested$sample_metadata, sample_registry=ingested$sample_registry, declared_factor_levels=ingested$declared_factor_levels)",
     "evidence <- triomics_d_read_evidence_bundle(root, as.character(config$study_id), as.character(analysis$analysis_id), ingested$source_manifests, ingested$feature_registry, current_config_sha256=as.character(attr(config,'config_sha256')), current_metadata=metadata)",
     "routed <- triomics_annotate_evidence(evidence, config$annotation %||% list())",
     "args <- list(result=routed, output_root=root, config_sha256=as.character(attr(config,'config_sha256')), producer_commit='repair1-readback-probe', privacy_class='synthetic', run_id='d-t01')",
-    "original_validate <- triomics_d_validate_current_pointer; calls <- 0L",
-    "triomics_d_validate_current_pointer <- function(root, pointer_path) { calls <<- calls + 1L; if (calls == 2L) return(NULL); original_validate(root, pointer_path) }",
+    "original_validate <- get('triomics_d_validate_current_pointer', envir=publisher_env); calls <- 0L",
+    "replacement_validate <- function(root, pointer_path) { calls <<- calls + 1L; if (calls == 2L) return(NULL); original_validate(root, pointer_path) }",
+    "assign('triomics_d_validate_current_pointer', replacement_validate, envir=publisher_env)",
     "options(triomics.d.publication.failpoint='after_pointer_rename')",
     "ambiguous <- tryCatch(do.call(triomics_d_publish_evidence_generation, args), error=identity)",
-    "options(triomics.d.publication.failpoint=NULL); triomics_d_validate_current_pointer <- original_validate",
+    "options(triomics.d.publication.failpoint=NULL); assign('triomics_d_validate_current_pointer', original_validate, envir=publisher_env)",
     "cat('ambiguous_readback=', if (inherits(ambiguous,'error')) ambiguous$code else ambiguous$status, '\\n', sep='')",
     "current <- original_validate(root, file.path(root,'registries','current-D.json'))",
     "cat('current_after_ambiguous=', current$pointer$generation_id, '\\n', sep='')",
-    "original_paths <- triomics_d_generation_paths; current_id <- as.character(current$pointer$generation_id)",
-    "triomics_d_generation_paths <- function(root, generation_id) { p <- original_paths(root,generation_id); if (!identical(as.character(generation_id),current_id) && !file.exists(p$generation) && !dir.exists(p$generation)) file.symlink('/private/tmp',p$generation); p }",
+    "original_paths <- get('triomics_d_generation_paths', envir=publisher_env); current_id <- as.character(current$pointer$generation_id)",
+    "replacement_paths <- function(root, generation_id) { p <- original_paths(root,generation_id); if (!identical(as.character(generation_id),current_id) && !file.exists(p$generation) && !dir.exists(p$generation)) file.symlink('/private/tmp',p$generation); p }",
+    "assign('triomics_d_generation_paths', replacement_paths, envir=publisher_env)",
     "args$producer_commit <- 'repair1-planned-leaf-probe'",
     "planned <- tryCatch(do.call(triomics_d_publish_evidence_generation, args), error=identity)",
-    "triomics_d_generation_paths <- original_paths",
+    "assign('triomics_d_generation_paths', original_paths, envir=publisher_env)",
     "cat('planned_generation_leaf=', if (inherits(planned,'error')) planned$code else planned$status, '\\n', sep='')",
     "external_temp_root <- tempfile('repair1-external-temp-', tmpdir='/private/tmp'); dir.create(external_temp_root)",
     "temp_generation_parent <- file.path(root,'D','generations','.temp-parent-link'); file.symlink(external_temp_root,temp_generation_parent)",
     "base_tempfile <- base::tempfile; tempfile_calls <- 0L",
-    "tempfile <- function(pattern='',tmpdir=tempdir(),fileext='') { tempfile_calls <<- tempfile_calls + 1L; if (tempfile_calls == 1L) file.path(temp_generation_parent,'planned-generation') else base_tempfile(pattern,tmpdir,fileext) }",
+    "replacement_tempfile <- function(pattern='',tmpdir=tempdir(),fileext='') { tempfile_calls <<- tempfile_calls + 1L; if (tempfile_calls == 1L) file.path(temp_generation_parent,'planned-generation') else base_tempfile(pattern,tmpdir,fileext) }",
+    "assign('tempfile', replacement_tempfile, envir=publisher_env)",
     "args$producer_commit <- 'repair1-temp-generation-parent-probe'",
     "temp_generation_ancestry <- tryCatch(do.call(triomics_d_publish_evidence_generation, args), error=identity)",
-    "tempfile <- base_tempfile",
+    "assign('tempfile', base_tempfile, envir=publisher_env)",
     "cat('temporary_generation_ancestry=', if (inherits(temp_generation_ancestry,'error')) temp_generation_ancestry$code else temp_generation_ancestry$status, '\\n', sep='')",
     "temp_pointer_parent <- file.path(root,'registries','.temp-parent-link'); file.symlink(external_temp_root,temp_pointer_parent)",
     "tempfile_calls <- 0L",
-    "tempfile <- function(pattern='',tmpdir=tempdir(),fileext='') { tempfile_calls <<- tempfile_calls + 1L; if (tempfile_calls == 2L) file.path(temp_pointer_parent,'planned-pointer.tmp') else base_tempfile(pattern,tmpdir,fileext) }",
+    "replacement_tempfile <- function(pattern='',tmpdir=tempdir(),fileext='') { tempfile_calls <<- tempfile_calls + 1L; if (tempfile_calls == 2L) file.path(temp_pointer_parent,'planned-pointer.tmp') else base_tempfile(pattern,tmpdir,fileext) }",
+    "assign('tempfile', replacement_tempfile, envir=publisher_env)",
     "args$producer_commit <- 'repair1-temp-pointer-parent-probe'",
     "temp_pointer_ancestry <- tryCatch(do.call(triomics_d_publish_evidence_generation, args), error=identity)",
-    "tempfile <- base_tempfile",
+    "assign('tempfile', base_tempfile, envir=publisher_env)",
     "cat('temporary_pointer_ancestry=', if (inherits(temp_pointer_ancestry,'error')) temp_pointer_ancestry$code else temp_pointer_ancestry$status, '\\n', sep='')",
     "old_current <- original_validate(root,file.path(root,'registries','current-D.json')); old_pointer_hash <- triomics_sha256(file.path(root,'registries','current-D.json')); old_id <- as.character(old_current$pointer$generation_id)",
-    "original_rename <- file.rename",
-    "file.rename <- function(from,to) { if (identical(basename(to),'current-D.json')) FALSE else original_rename(from,to) }",
+    "original_rename <- get('file.rename', envir=publisher_env)",
+    "replacement_rename <- function(from,to) { if (identical(basename(to),'current-D.json')) FALSE else original_rename(from,to) }",
+    "assign('file.rename', replacement_rename, envir=publisher_env)",
     "args$producer_commit <- 'repair1-old-current-readback-probe'",
     "old_current_failure <- tryCatch(do.call(triomics_d_publish_evidence_generation, args), error=identity)",
-    "file.rename <- original_rename",
+    "assign('file.rename', original_rename, envir=publisher_env)",
     "current_after_failed_rename <- original_validate(root,file.path(root,'registries','current-D.json'))",
     "cat('failed_rename_class=', if (inherits(old_current_failure,'error')) old_current_failure$code else old_current_failure$status, '\\n', sep='')",
     "cat('old_current_preserved=', identical(as.character(current_after_failed_rename$pointer$generation_id),old_id) && identical(triomics_sha256(file.path(root,'registries','current-D.json')),old_pointer_hash), '\\n', sep='')",
@@ -1400,9 +1428,13 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
   recovery_probe <- system2(file.path(R.home("bin"), "Rscript"),
                             c("--vanilla", shQuote(recovery_probe_script),
                               shQuote(config), shQuote(recovery_probe_root),
-                              shQuote(repository_root)),
+                              shQuote(package_root)),
                             stdout = TRUE, stderr = TRUE)
   recovery_probe_text <- paste(recovery_probe, collapse = "\n")
+  expected_bootstrap <- if (source_tree_available) "source" else "installed"
+  testthat::expect_true(any(grepl(paste0("probe_bootstrap=", expected_bootstrap),
+                                  recovery_probe, fixed = TRUE)),
+                        info = recovery_probe_text)
   testthat::expect_true(any(grepl("ambiguous_readback=D_PUBLICATION_STATUS_UNKNOWN",
                                   recovery_probe, fixed = TRUE)),
                         info = recovery_probe_text)
