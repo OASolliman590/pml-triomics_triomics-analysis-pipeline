@@ -34,15 +34,41 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m7_016_luna",
+      "role": "implementation",
+      "model_requested": "gpt-6-luna",
+      "effort_requested": "max",
+      "effective_settings_exposed": false,
+      "base": "92351d6",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-016-d-publication/PML MultiOmics Analysis Pipeline",
+      "attempt": 1,
+      "repairs_used": 0
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_015_blocked_shared_integration_closed",
+    "status": "m7_016_luna_running",
     "last_reconciled": "2026-10-27",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Astra-low at6fe5f1d approves shared-seam stop only: D stage disabled/no CLI executor; accepted M7-002 requires public B/C/D CLI. Sol CLI exit3 A_STAGE_UNAVAILABLE no output. No Luna/product edits/suite reruns/D artifacts. Shared executor/registration scope required next. M7/G7 closed; C06acceptedfalse C07not_run C09unqualified; no active worker."
+    "disposition": "Fresh Astra scope PASS92351d6; one Luna-max initial attempt running in new isolated ten-file worktree. Sol review and independent B/C/D gates then full/archive and fresh final Astra required. M7/G7 closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_016_spec_pass_luna_dispatch",
+      "date": "2026-10-27",
+      "audit_snapshot": "92351d6",
+      "audit_pass": true,
+      "worker": "/root/m7_016_luna",
+      "repairs_used": 0
+    },
+    {
+      "event": "m7_016_authorized_and_frozen",
+      "date": "2026-10-27",
+      "snapshot": "92351d6",
+      "next": "Astra scope verdict then one fresh Luna-max"
+    },
     {
       "date": "2026-10-27",
       "event": "m7_015_audited_shared_seam_stop",
