@@ -1,0 +1,38 @@
+C-06-shared: ........................................................................................................................................................1..2..............................................................................................................
+C-08-shared: .................3Design matrix has changed to include Y; each block will be
+            linked to Y.
+...............................................
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-C-06-shared.R:490:5'): Stage C composes paired and trajecto
+Expected `c_run$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics C_ELIGIBILITY_UNKNOWN_UNIT: A block contains sample ids outside the declared unit map.
+
+── 2. Failure ('test-C-06-shared.R:490:5'): Stage C composes paired and trajecto
+Expected `c_run$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics B_DESIGN_UNSUPPORTED: Model terms must be declared names, not R expressions.
+
+── 3. Error ('test-C-08-shared.R:304:3'): C-08 preserves visit-level subject-cen
+<triomics_error/error/condition>
+Error: Unit type and representation id disagree.
+Backtrace:
+    ▆
+ 1. └─triomics:::triomics_c08_validate_unit_map(unit_map, ids, context) at test-C-08-shared.R:304:3
+ 2.   └─triomics:::triomics_c08_abort(...) at PML MultiOmics Analysis Pipeline/R/integration_endpoints.R:193:7
+ 3.     └─triomics:::triomics_integration_abort(code, message, key = key) at PML MultiOmics Analysis Pipeline/R/integration_endpoints.R:2:3
+ 4.       └─triomics:::triomics_abort(...) at PML MultiOmics Analysis Pipeline/R/integration_eligibility.R:3:3
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+
+EXACT_TOTALS: {"fail":2,"warn":0,"skip":0,"error":1,"pass":328,"test_blocks":18} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"Stage C composes paired and trajectory units from native B resolution","type":"expectation_failure","message":"Expected `c_run$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_ELIGIBILITY_UNKNOWN_UNIT: A block contains sample ids outside the declared unit map."} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"Stage C composes paired and trajectory units from native B resolution","type":"expectation_failure","message":"Expected `c_run$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics B_DESIGN_UNSUPPORTED: Model terms must be declared names, not R expressions."} 
+NAMED_CONDITION: {"file":"test-C-08-shared.R","test":"C-08 preserves visit-level subject-centered unit identity","type":"expectation_error","message":"<triomics_error/error/condition>\nError: Unit type and representation id disagree."} 

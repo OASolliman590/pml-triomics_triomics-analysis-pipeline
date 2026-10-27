@@ -37,23 +37,45 @@
   "active_workers": [
     {
       "agent": "/root/m7_017_luna",
-      "role": "implementation",
-      "candidate": "025bc69",
+      "role": "implementation_repair",
+      "candidate": "c8b309e5e0a09887e5939a35db641e3665d4f650",
+      "repairs_used": 1,
+      "worktree": "/Users/megastore/.codex/worktrees/m7-017-c-unit-map/PML MultiOmics Analysis Pipeline",
       "model_requested": "gpt-6-luna",
       "effort_requested": "max",
-      "effective_settings_exposed": false,
-      "worktree": "/Users/megastore/.codex/worktrees/m7-017-c-unit-map/PML MultiOmics Analysis Pipeline",
-      "repairs_used": 0
+      "effective_settings_exposed": false
     }
   ],
   "orchestration_control": {
-    "status": "m7_017_luna_running",
+    "status": "m7_017_repair1_running",
     "last_reconciled": "2026-10-27",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Corrected scope5eaf18c focused Astra PASS; worktreebase627c7da. One scope rereview consumed. Fresh Luna initial attempt active; no product integration."
+    "disposition": "Four Important findings independently reproduced; focused748pass4fail2error0warn0skip. Same Luna bounded repair1/2. No integration or M7/G7release."
   },
   "orchestration_events": [
+    {
+      "event": "m7_017_repair1_dispatch",
+      "date": "2026-10-27",
+      "candidate": "c8b309e",
+      "repairs_used": 1,
+      "review": "docs/implementation/reviews/2026-10-27-m7-017-initial-review.md",
+      "focused_counts": {
+        "pass": 748,
+        "fail": 4,
+        "error": 2,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 50
+      }
+    },
+    {
+      "event": "m7_017_candidate_freeze_review",
+      "date": "2026-10-27",
+      "candidate": "c8b309e5e0a09887e5939a35db641e3665d4f650",
+      "reviewer": "/root/m7_017_sol_review",
+      "gate_session": 85390
+    },
     {
       "event": "m7_017_scope_rereview_pass",
       "date": "2026-10-27",

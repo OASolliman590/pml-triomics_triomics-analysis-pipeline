@@ -1,22 +1,27 @@
 # Implementation handover
 
-## Current M7-017 checkpoint — implementation active
+## Current M7-017 checkpoint — repair1 active, no integration
 
-User authorizes C paired/trajectory unit-map repair. Scope8c68b68 and focused endpoint-map correction5eaf18c passed fresh
-Astra-low; runtime accepted requested model/effort but independent effective
-attestation unavailable. Fresh Luna-max /root/m7_017_luna runs in
-`/Users/megastore/.codex/worktrees/m7-017-c-unit-map/PML MultiOmics Analysis Pipeline`
-at base627c7da (preserved cfe9160 plus corrected scope). No old worker restarted.
-Scope/audit: change-records/M7-017-c-unit-map-composition.md and
-reviews/2026-10-27-m7-017-scope-audit.md. No acceptance or integration.
-Trajectory map is not proof of centering: worker must prove actual representation.
-Spec validator restored with cached dependencies in /private/tmp/triomics-m7-017-spec-deps;
-now fails pre-existing AGENTS.md frozen hash (reporting/control addition b585b26).
-Do not edit frozen manifest; disclose exact result in final audit.
-Literal resume: reconcile active Luna result, review/freeze, bounded repairs
-if needed, independently verify B/C/D plus focused/full/archive gates, then
-fresh Astra before M7/G7 release. Do not restart M7-016 or infer its acceptance.
+User-authorized C unit-map scope8c68b68 + endpoint correction5eaf18c passed
+Astra scope audit and one focused rereview. Fresh Luna candidatec8b309e is
+frozen in `/Users/megastore/.codex/worktrees/m7-017-c-unit-map/PML MultiOmics Analysis Pipeline`;
+base627c7da preservescfe9160. Fresh Sol review found4Important issues, all
+independently reproduced: trajectory excluded-unit loss, unchecked secondary
+paired identities, clinical raw-vs-public subject key, and run-local test dependency.
+Worker focused gate748pass4fail2error0warn0skip/50blocks. Same Luna repair1/2
+active; no other fit job. Receipt reviews/2026-10-27-m7-017-initial-review.md.
 
+Native worker paired/trajectory B-C-D succeeded with88hashes/4matrixbindings
+verified, but those complete-data examples do not waive the defects or failed
+suite. No product integration, full source/archive gate or final Astra.
+Literal resume: reconcile active /root/m7_017_luna repair1, freeze/review result,
+then independent focused/native proofs, integration, full source and archive
+Status: OK, scoped fresh Astra. No third M7-016 repair; originalcfe9160unchanged.
+Canonical M7/G7 requires additional D packets; this phase alone cannot release
+it. No downstream D/private data/push. C06unaccepted,C07not_run,C09unqualified.
+Spec validator restored with cached temporary deps; fails historical AGENTS
+hash; full92filediagnostic also findsCLAUDE mismatch, other90match. Additions
+were b585b26 reporting/control docs. Preserve frozen manifest and disclose audit.
 
 ## Current M7-016 checkpoint — blocked, isolated repair preserved
 

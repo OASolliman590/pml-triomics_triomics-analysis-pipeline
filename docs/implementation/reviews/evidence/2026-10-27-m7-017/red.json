@@ -1,0 +1,30 @@
+{
+  "totals": {
+    "fail": 2,
+    "warn": 0,
+    "skip": 0,
+    "error": 1,
+    "pass": 328,
+    "test_blocks": 18
+  },
+  "conditions": [
+    {
+      "file": "test-C-06-shared.R",
+      "test": "Stage C composes paired and trajectory units from native B resolution",
+      "type": "expectation_failure",
+      "message": "Expected `c_run$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_ELIGIBILITY_UNKNOWN_UNIT: A block contains sample ids outside the declared unit map."
+    },
+    {
+      "file": "test-C-06-shared.R",
+      "test": "Stage C composes paired and trajectory units from native B resolution",
+      "type": "expectation_failure",
+      "message": "Expected `c_run$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics B_DESIGN_UNSUPPORTED: Model terms must be declared names, not R expressions."
+    },
+    {
+      "file": "test-C-08-shared.R",
+      "test": "C-08 preserves visit-level subject-centered unit identity",
+      "type": "expectation_error",
+      "message": "<triomics_error/error/condition>\nError: Unit type and representation id disagree."
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+C-06-shared: ...............................................................................................................................................................1..2..................................................................................................................................
+C-06: .......................................................................................
+C-08-shared: ................................Design matrix has changed to include Y; each block will be
+            linked to Y.
+..............3....4.5
+D-T01: ...................................................................................................................6............................................................................................................................................................................................................
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-C-06-shared.R:528:7'): Stage C composes paired and trajecto
+Expected `d_run$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics D_LINEAGE_MISMATCH: C-06 manifest has an absent or mismatched study_id.
+
+── 2. Failure ('test-C-06-shared.R:490:5'): Stage C composes paired and trajecto
+Expected `c_run$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics B_DESIGN_UNSUPPORTED: Model terms must be declared names, not R expressions.
+
+── 3. Error ('test-C-08-shared.R:566:3'): Stage C writes immutable C-08 endpoint
+<triomics_error/error/condition>
+Error: The declared AnalysisUnitMap subject identity disagrees with its source samples.
+Backtrace:
+    ▆
+ 1. └─triomics:::triomics_execute_stage_c(config_path, output_dir) at test-C-08-shared.R:566:3
+ 2.   └─base::lapply(...) at PML MultiOmics Analysis Pipeline/R/cli.R:2080:3
+ 3.     └─triomics (local) FUN(X[[i]], ...)
+ 4.       └─triomics:::triomics_c08_cli_unit_map(...) at PML MultiOmics Analysis Pipeline/R/cli.R:2138:9
+ 5.         └─base::lapply(...) at PML MultiOmics Analysis Pipeline/R/cli.R:269:3
+ 6.           └─triomics (local) FUN(X[[i]], ...)
+ 7.             └─triomics:::triomics_c08_abort(...) at PML MultiOmics Analysis Pipeline/R/cli.R:301:7
+ 8.               └─triomics:::triomics_integration_abort(code, message, key = key) at PML MultiOmics Analysis Pipeline/R/integration_endpoints.R:2:3
+ 9.                 └─triomics:::triomics_abort(...) at PML MultiOmics Analysis Pipeline/R/integration_eligibility.R:3:3
+
+── 4. Failure ('test-C-08-shared.R:639:3'): Stage C refuses an unknown source se
+Expected `error$code` to be identical to "C_SCORE_LINEAGE_INVALID".
+Differences:
+`actual`:   "C_SCORE_COVERAGE_MISMATCH"
+`expected`: "C_SCORE_LINEAGE_INVALID"  
+
+
+── 5. Error ('test-C-08-shared.R:648:3'): Stage C propagates outcome-selected an
+<triomics_error/error/condition>
+Error: The declared AnalysisUnitMap subject identity disagrees with its source samples.
+Backtrace:
+    ▆
+ 1. └─triomics:::triomics_execute_stage_c(config_path, output_dir) at test-C-08-shared.R:648:3
+ 2.   └─base::lapply(...) at PML MultiOmics Analysis Pipeline/R/cli.R:2080:3
+ 3.     └─triomics (local) FUN(X[[i]], ...)
+ 4.       └─triomics:::triomics_c08_cli_unit_map(...) at PML MultiOmics Analysis Pipeline/R/cli.R:2138:9
+ 5.         └─base::lapply(...) at PML MultiOmics Analysis Pipeline/R/cli.R:269:3
+ 6.           └─triomics (local) FUN(X[[i]], ...)
+ 7.             └─triomics:::triomics_c08_abort(...) at PML MultiOmics Analysis Pipeline/R/cli.R:301:7
+ 8.               └─triomics:::triomics_integration_abort(code, message, key = key) at PML MultiOmics Analysis Pipeline/R/integration_endpoints.R:2:3
+ 9.                 └─triomics:::triomics_abort(...) at PML MultiOmics Analysis Pipeline/R/integration_eligibility.R:3:3
+
+── 6. Failure ('test-D-T01.R:890:3'): D-T01 refuses stale paired signs and prese
+Expected `nrow(paired)` > 0L.
+Actual comparison: 0 <= 0
+Difference: 0 <= 0
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+No one gets it right on their first try
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"Stage C composes paired and trajectory units from native B resolution","type":"expectation_failure","message":"Expected `d_run$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics D_LINEAGE_MISMATCH: C-06 manifest has an absent or mismatched study_id."} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"Stage C composes paired and trajectory units from native B resolution","type":"expectation_failure","message":"Expected `c_run$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics B_DESIGN_UNSUPPORTED: Model terms must be declared names, not R expressions."} 
+NAMED_CONDITION: {"file":"test-C-08-shared.R","test":"Stage C writes immutable C-08 endpoints and schedules, but does not execute, B work","type":"expectation_error","message":"<triomics_error/error/condition>\nError: The declared AnalysisUnitMap subject identity disagrees with its source samples."} 
+NAMED_CONDITION: {"file":"test-C-08-shared.R","test":"Stage C refuses an unknown source selection history","type":"expectation_failure","message":"Expected `error$code` to be identical to \"C_SCORE_LINEAGE_INVALID\".\nDifferences:\n`actual`:   \"C_SCORE_COVERAGE_MISMATCH\"\n`expected`: \"C_SCORE_LINEAGE_INVALID\"  \n"} 
+NAMED_CONDITION: {"file":"test-C-08-shared.R","test":"Stage C propagates outcome-selected ancestry as withheld and descriptive-only","type":"expectation_error","message":"<triomics_error/error/condition>\nError: The declared AnalysisUnitMap subject identity disagrees with its source samples."} 
+NAMED_CONDITION: {"file":"test-D-T01.R","test":"D-T01 refuses stale paired signs and preserves the old pointer","type":"expectation_failure","message":"Expected `nrow(paired)` > 0L.\nActual comparison: 0 <= 0\nDifference: 0 <= 0"} 
+EXACT_TOTALS: {"fail":4,"warn":0,"skip":0,"error":2,"pass":748,"test_blocks":50} 

@@ -1,0 +1,7 @@
+── Failure: D-T01 refuses stale paired signs and preserves the old pointer ─────
+Expected `file.exists(roots_path)` to be TRUE.
+Differences:
+`actual`:   FALSE
+`expected`: TRUE 
+
+CLEAN_ROOT_SIMULATION: rlang_error Test failed with 1 failure and 0 successes. 

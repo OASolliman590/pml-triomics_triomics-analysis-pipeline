@@ -1,0 +1,48 @@
+{
+  "totals": {
+    "fail": 4,
+    "warn": 0,
+    "skip": 0,
+    "error": 2,
+    "pass": 748,
+    "test_blocks": 50
+  },
+  "conditions": [
+    {
+      "file": "test-C-06-shared.R",
+      "test": "Stage C composes paired and trajectory units from native B resolution",
+      "type": "expectation_failure",
+      "message": "Expected `d_run$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics D_LINEAGE_MISMATCH: C-06 manifest has an absent or mismatched study_id."
+    },
+    {
+      "file": "test-C-06-shared.R",
+      "test": "Stage C composes paired and trajectory units from native B resolution",
+      "type": "expectation_failure",
+      "message": "Expected `c_run$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics B_DESIGN_UNSUPPORTED: Model terms must be declared names, not R expressions."
+    },
+    {
+      "file": "test-C-08-shared.R",
+      "test": "Stage C writes immutable C-08 endpoints and schedules, but does not execute, B work",
+      "type": "expectation_error",
+      "message": "<triomics_error/error/condition>\nError: The declared AnalysisUnitMap subject identity disagrees with its source samples."
+    },
+    {
+      "file": "test-C-08-shared.R",
+      "test": "Stage C refuses an unknown source selection history",
+      "type": "expectation_failure",
+      "message": "Expected `error$code` to be identical to \"C_SCORE_LINEAGE_INVALID\".\nDifferences:\n`actual`:   \"C_SCORE_COVERAGE_MISMATCH\"\n`expected`: \"C_SCORE_LINEAGE_INVALID\"  \n"
+    },
+    {
+      "file": "test-C-08-shared.R",
+      "test": "Stage C propagates outcome-selected ancestry as withheld and descriptive-only",
+      "type": "expectation_error",
+      "message": "<triomics_error/error/condition>\nError: The declared AnalysisUnitMap subject identity disagrees with its source samples."
+    },
+    {
+      "file": "test-D-T01.R",
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "type": "expectation_failure",
+      "message": "Expected `nrow(paired)` > 0L.\nActual comparison: 0 <= 0\nDifference: 0 <= 0"
+    }
+  ]
+}
