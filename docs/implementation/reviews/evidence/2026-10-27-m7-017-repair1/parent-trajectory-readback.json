@@ -1,0 +1,24 @@
+{
+  "root": "/private/tmp/m7-017-native-repair1-trajectory-output",
+  "generation_id": "d290b9dc56ba0590b2037d8e18872914687cc51dd7807d34ea70c77752ea1167",
+  "files": {
+    "B/handoffs/a73602b95af0bae93a96de84a78c0d477a3d6ac78482e585adb0ec2faad0ef4b/bundle.json": "2bf000b41dc210bc142a0938067abc517afbc30fb9d2d2a9a9a4c7142b068fa0",
+    "B/handoffs/a73602b95af0bae93a96de84a78c0d477a3d6ac78482e585adb0ec2faad0ef4b/bundle.envelope.json": "a9c49f4fe119712b727315b243a98483400d4c21cf27cfc1b2c97a4d3360df06",
+    "B/handoffs/a73602b95af0bae93a96de84a78c0d477a3d6ac78482e585adb0ec2faad0ef4b/stage-handoff-provenance.json": "a7921ed35bb98f859a97c30ed840fa0261959b4e9eb9e654d89d463336b73a5f",
+    "B/handoffs/a73602b95af0bae93a96de84a78c0d477a3d6ac78482e585adb0ec2faad0ef4b/stage-handoff-provenance.envelope.json": "297111d2c467dc742a76cc72ca808e5f13b770d434632c8e2c230a4886d3e5c3",
+    "D/stage-handoff-provenance.json": "ec5a6d11c490077e84e6476d33745bee171d63a957d902a480a3b6757f9db115",
+    "D/stage-handoff-provenance.envelope.json": "c4155c5a297c65f5d245a46866560e1b1df33fb0dd897c30b44d95375d44189e",
+    "D/generations/d290b9dc56ba0590b2037d8e18872914687cc51dd7807d34ea70c77752ea1167/generation-manifest.json": "d290b9dc56ba0590b2037d8e18872914687cc51dd7807d34ea70c77752ea1167",
+    "registries/current-D.json": "736f2483462127ec1673a7d099aabe2474a50e1632ff4cc3161b722458d48a7a",
+    "D/generations/d290b9dc56ba0590b2037d8e18872914687cc51dd7807d34ea70c77752ea1167/evidence-routing.json": "aafe4df6cb08b7db684803833108643622930e6190a9dfebb0d6e8622f3afebf",
+    "D/generations/d290b9dc56ba0590b2037d8e18872914687cc51dd7807d34ea70c77752ea1167/evidence-routing.envelope.json": "34739fc3717aa88c50cffab0fed6551256bc7608be88e89e44a0a944f3a4c0c2"
+  },
+  "routes": [
+    "gene_reaction",
+    "lipid_ontology",
+    "ora",
+    "mofa_native",
+    "biopan"
+  ],
+  "controls_not_run": 4
+}

@@ -1,0 +1,24 @@
+{
+  "root": "/private/tmp/m7-017-native-repair1-paired-attrition-output",
+  "generation_id": "f8ae731342d407ce28309f2597bd60a13320cbe8cc14672bc357373135f3a874",
+  "files": {
+    "B/handoffs/ef83d4b1d557682fe6a5f4238836e5a920106bfaa4106798f500d4944dbad0c0/bundle.json": "bdc251068d7941b114532b231dc70afa8eb803615038673290937c5a61b0aeb0",
+    "B/handoffs/ef83d4b1d557682fe6a5f4238836e5a920106bfaa4106798f500d4944dbad0c0/bundle.envelope.json": "8520d64e1ab6a1a4a470dac4923172f273aed0eada588c1097d0d16a8dca68d7",
+    "B/handoffs/ef83d4b1d557682fe6a5f4238836e5a920106bfaa4106798f500d4944dbad0c0/stage-handoff-provenance.json": "576d7e7c82aff0db5575196c49e4d94466326ae33f0031346b8cba6c75fd5e36",
+    "B/handoffs/ef83d4b1d557682fe6a5f4238836e5a920106bfaa4106798f500d4944dbad0c0/stage-handoff-provenance.envelope.json": "b6e67c339a63286f19419167b950607cdfc2f414622980527cec498edb564fe4",
+    "D/stage-handoff-provenance.json": "b3b24d219bb2e9f2b831baaf8693d3bb579c17ffe996244bbf565bef0240cac6",
+    "D/stage-handoff-provenance.envelope.json": "111c3441404de0d6120ad0a6c3d743bf93f5582fee8060fa396bf4181c31fecc",
+    "D/generations/f8ae731342d407ce28309f2597bd60a13320cbe8cc14672bc357373135f3a874/generation-manifest.json": "f8ae731342d407ce28309f2597bd60a13320cbe8cc14672bc357373135f3a874",
+    "registries/current-D.json": "adf0b5d0296410da7a0ac9f8a053789ff05d1a7f9bee9a70567750b894f8d664",
+    "D/generations/f8ae731342d407ce28309f2597bd60a13320cbe8cc14672bc357373135f3a874/evidence-routing.json": "616b2ab39c075cb9cbbabcdf3eaeb80e4388c6cc87cdd5dda935dc06395bf0d4",
+    "D/generations/f8ae731342d407ce28309f2597bd60a13320cbe8cc14672bc357373135f3a874/evidence-routing.envelope.json": "75fb053b78b188aa10725646493069ff22f98c78713dc2c0e118c7bc5cf71c79"
+  },
+  "routes": [
+    "gene_reaction",
+    "lipid_ontology",
+    "ora",
+    "mofa_native",
+    "biopan"
+  ],
+  "controls_not_run": 4
+}

@@ -37,23 +37,47 @@
   "active_workers": [
     {
       "agent": "/root/m7_017_luna",
-      "role": "implementation_repair",
-      "candidate": "c8b309e5e0a09887e5939a35db641e3665d4f650",
-      "repairs_used": 1,
+      "role": "focused_verification",
+      "candidate": "7ef25eff64dbb334b5ac75f1051a3ca1dca37a58",
+      "repairs_used": 2,
       "worktree": "/Users/megastore/.codex/worktrees/m7-017-c-unit-map/PML MultiOmics Analysis Pipeline",
       "model_requested": "gpt-6-luna",
       "effort_requested": "max",
-      "effective_settings_exposed": false
+      "effective_settings_exposed": false,
+      "next_transition": "finish frozen repair1 gate; execute bounded final repair2"
     }
   ],
   "orchestration_control": {
-    "status": "m7_017_repair1_running",
+    "status": "m7_017_repair2_queued_after_frozen_gate",
     "last_reconciled": "2026-10-27",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Four Important findings independently reproduced; focused748pass4fail2error0warn0skip. Same Luna bounded repair1/2. No integration or M7/G7release."
+    "disposition": "Independent Sol reproduced native absent-all excluded trajectory row with missing time rejected by C. Final repair2/2 queued after immutable repair1 gate completes; no concurrent fitting or source edits. M7/G7 closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_017_repair1_review_reconciled",
+      "date": "2026-10-27",
+      "candidate": "7ef25ef",
+      "scientific_important": 1,
+      "code_important": 0,
+      "review": "docs/implementation/reviews/2026-10-27-m7-017-repair1-review.md"
+    },
+    {
+      "event": "m7_017_repair2_authorized",
+      "date": "2026-10-27",
+      "candidate": "7ef25ef",
+      "repairs_used": 2,
+      "reason": "Native B excludes absent-from-all row with missing time; C must preserve truthful exclusion/null, without scoring or weakening represented-unit time guard",
+      "parent_reproduction": "/tmp/triomics-m7-017/parent-repair1-time-probe.log"
+    },
+    {
+      "event": "m7_017_repair1_freeze",
+      "date": "2026-10-27",
+      "candidate": "7ef25eff64dbb334b5ac75f1051a3ca1dca37a58",
+      "repairs_used": 1,
+      "expected_new_warning": "D-T01 refuses stale paired signs and preserves the old pointer: system2 status2 on intentional stale-sign invocation"
+    },
     {
       "event": "m7_017_repair1_dispatch",
       "date": "2026-10-27",
