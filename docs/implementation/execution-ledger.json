@@ -34,15 +34,41 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m7_017_luna",
+      "role": "implementation",
+      "candidate": "025bc69",
+      "model_requested": "gpt-6-luna",
+      "effort_requested": "max",
+      "effective_settings_exposed": false,
+      "worktree": "/Users/megastore/.codex/worktrees/m7-017-c-unit-map/PML MultiOmics Analysis Pipeline",
+      "repairs_used": 0
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_016_blocked_closed_run",
+    "status": "m7_017_luna_running",
     "last_reconciled": "2026-10-27",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Candidate cfe9160 isolated, not integrated; scope Astra PASS; original3defects fixed and final bootstrap review passed; required native paired/trajectory evidence blocked in C outside scope. Two repairs used. No active workers/processes. M7/G7closed, downstream Dclosed."
+    "disposition": "Scope Astra PASS8c68b68; fresh Luna at025bc69 preservingcfe9160. No integration/M7/G7release; actual trajectory representation required."
   },
   "orchestration_events": [
+    {
+      "event": "m7_017_implementation_dispatch",
+      "scope_commit": "8c68b68",
+      "scope_audit": "pass",
+      "worker": "/root/m7_017_luna",
+      "base": "025bc69",
+      "date": "2026-10-27"
+    },
+    {
+      "event": "m7_017_scope_audit_dispatch",
+      "date": "2026-10-27",
+      "scope_commit": "8c68b68",
+      "preserved_candidate": "cfe916059c9e2e3b04f64cb96035d8777520b488",
+      "worktree_operation": "2fd06ce7-95c6-4a0b-8e5b-2010ce2602d0"
+    },
     {
       "event": "m7_016_blocked_close",
       "date": "2026-10-27",
