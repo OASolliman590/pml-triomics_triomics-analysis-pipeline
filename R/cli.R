@@ -1905,6 +1905,92 @@ triomics_execute_stage_c <- function(config_path, output) {
   ))
 }
 
+triomics_execute_stage_d <- function(config_path, output) {
+  root <- triomics_d_secure_path(
+    output, "D_OUTPUT_PATH_UNSAFE",
+    "Stage D requires the existing same-root B/C handoff directory and a safe local output root.",
+    "output", directory = TRUE
+  )
+  if (!dir.exists(root)) {
+    triomics_d_abort("D_PROVENANCE_REQUIRED", "Stage D requires a completed same-root B/C handoff.",
+                     "output")
+  }
+  root <- normalizePath(root, winslash = "/", mustWork = TRUE)
+  registry <- file.path(root, "registries")
+  pointer_path <- file.path(registry, "current-D.json")
+  lock_path <- file.path(registry, ".D-publication.lock")
+  for (path in c(file.path(root, "D"), file.path(root, "D", "generations"),
+                 registry, pointer_path, lock_path)) {
+    triomics_d_secure_path(
+      path, "D_OUTPUT_PATH_UNSAFE",
+      "A D publication path is unsafe or crosses a symlink.",
+      "publication.paths",
+      directory = path %in% c(file.path(root, "D"),
+                              file.path(root, "D", "generations"),
+                              registry, lock_path)
+    )
+  }
+  if (!dir.exists(file.path(root, "D")) || !dir.exists(registry) ||
+      (file.exists(pointer_path) && dir.exists(pointer_path)) ||
+      file.exists(lock_path) || dir.exists(lock_path)) {
+    triomics_d_abort("D_OUTPUT_PATH_UNSAFE", "D publication requires safe B/C directories and an available exclusive lock.",
+                     "publication.paths")
+  }
+  if (!dir.create(lock_path, recursive = FALSE, showWarnings = FALSE)) {
+    triomics_d_abort("D_PUBLICATION_FAILED", "Another D publisher holds the exclusive publication lock.",
+                     "publication.lock")
+  }
+  on.exit(unlink(lock_path, recursive = TRUE, force = TRUE), add = TRUE)
+  for (path in c(file.path(root, "D"), file.path(root, "D", "generations"),
+                 registry, pointer_path, lock_path)) {
+    triomics_d_secure_path(
+      path, "D_OUTPUT_PATH_UNSAFE",
+      "A D publication path changed or became unsafe while acquiring the run lock.",
+      "publication.paths",
+      directory = path %in% c(file.path(root, "D"),
+                              file.path(root, "D", "generations"),
+                              registry, lock_path)
+    )
+  }
+  if (!dir.exists(file.path(root, "D")) || !dir.exists(registry) ||
+      (file.exists(pointer_path) && dir.exists(pointer_path))) {
+    triomics_d_abort("D_OUTPUT_PATH_UNSAFE", "D publication directories changed before locked preflight.",
+                     "publication.paths")
+  }
+  triomics_d_validate_current_pointer(root, pointer_path)
+  config <- triomics_read_config(config_path)
+  triomics_validate_config_paths(config, config_path)
+  if (length(config$analyses) != 1L) {
+    triomics_d_abort("D_PROVENANCE_INVALID", "The registered D-T01 lane requires one declared analysis.",
+                     "analyses")
+  }
+  analysis <- config$analyses[[1L]]
+  ingested <- triomics_ingest_configured_study(config, config_path)
+  current_metadata <- list(
+    sample_metadata = ingested$sample_metadata,
+    sample_registry = ingested$sample_registry,
+    declared_factor_levels = ingested$declared_factor_levels
+  )
+  evidence <- triomics_d_read_evidence_bundle(
+    root, as.character(config$study_id), as.character(analysis$analysis_id),
+    ingested$source_manifests, ingested$feature_registry,
+    imported_statistics = list(),
+    routing_metadata = NULL,
+    current_config_sha256 = as.character(attr(config, "config_sha256")),
+    current_metadata = current_metadata
+  )
+  routed <- triomics_annotate_evidence(evidence, config$annotation %||% list())
+  triomics_d_publication_failpoint("provenance_preflight_complete")
+  triomics_d_publish_evidence_generation(
+    routed, root, config_sha256 = as.character(attr(config, "config_sha256")),
+    producer_commit = triomics_b07_git_ref(getwd()),
+    privacy_class = if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive",
+    run_id = "d-t01",
+    lock_held = TRUE
+  )
+  invisible(list(status = "complete", root = root))
+}
+
 triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
   tryCatch({
     options <- triomics_parse_cli(args)
@@ -1940,6 +2026,8 @@ triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
       if (!isTRUE(stage_c_result$required_complete)) {
         return(4L)
       }
+    } else if (identical(options$stage, "D")) {
+      triomics_execute_stage_d(options$config, options$output)
     } else {
       triomics_abort("A_STAGE_UNAVAILABLE",
                      paste0("Execution is not implemented for stage '", options$stage, "'."),

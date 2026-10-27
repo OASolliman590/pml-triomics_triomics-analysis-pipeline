@@ -452,9 +452,7 @@ testthat::test_that("D-T01 routes B and C nominations by molecular identity and 
 })
 
 testthat::test_that("D-T01 all-disabled routes retain accounting without making absence or enrichment claims", {
-  root <- tempfile("d-t01-accounting-input-")
-  on.exit(unlink(root, recursive = TRUE), add = TRUE)
-  bundle <- d_t01_public_bundle(root, d_t01_input())
+  bundle <- d_t01_invoke("triomics_d_build_evidence_bundle", list(d_t01_input()))
   testthat::expect_true(is.list(bundle))
   if (!is.list(bundle)) return(invisible(NULL))
   routed <- d_t01_invoke("triomics_d_route_evidence", list(bundle, d_t01_routes(FALSE)))
@@ -471,46 +469,20 @@ testthat::test_that("D-T01 all-disabled routes retain accounting without making 
   testthat::expect_identical(routed$enrichment$test_count, 0L)
   testthat::expect_identical(routed$inherited_evidence$evaluation_evidence$controls[[1]]$status, "not_run")
   testthat::expect_identical(routed$inherited_evidence$stage_status$clinical_prediction$status, "not_started")
-
-  output_root <- file.path(root, "accounting-output")
-  written <- d_t01_invoke("triomics_d_write_evidence_result", list(
-    routed, output_root, d_t01_hash("d-t01-config"), "synthetic-test", "synthetic"
-  ))
-  testthat::expect_true(is.list(written))
-  if (!is.list(written)) return(invisible(NULL))
-  payload <- jsonlite::read_json(written$payload_path, simplifyVector = FALSE)
-  testthat::expect_identical(payload$artifact_type, "annotation_routing_result")
-  testthat::expect_equal(as.integer(payload$accounting$measured_row_count), 3L)
-  testthat::expect_identical(payload$inherited_evidence$evaluation_evidence$controls[[1]]$status, "not_run")
-  envelope <- jsonlite::read_json(written$envelope_path, simplifyVector = FALSE)
-  testthat::expect_identical(envelope$study_id, "synthetic-d-t01")
-  testthat::expect_identical(envelope$payload_sha256, triomics_sha256(written$payload_path))
-  testthat::expect_true(triomics_validate_envelope(written$envelope_path))
 })
 
 testthat::test_that("D-T01 public annotation seam consumes the typed bundle and route request", {
   input <- d_t01_input()
   unverified <- d_t01_invoke("triomics_d_build_evidence_bundle", list(input))
-  testthat::expect_error(d_t01_invoke("annotate_evidence", list(
+  missing_profile <- tryCatch(d_t01_invoke("annotate_evidence", list(
     unverified, list(routes = d_t01_routes(FALSE))
-  )), class = "triomics_error")
+  )), error = identity)
+  testthat::expect_identical(missing_profile$code, "D_PROVENANCE_REQUIRED")
 
   output_root <- tempfile("d-t01-public-annotation-")
   on.exit(unlink(output_root, recursive = TRUE), add = TRUE)
-  input$c$candidate_nominations$branches$primary_statistics$source_artifact_ref <-
-    d_t01_write_b_handoff(output_root, input)$candidate_ref
-  d_t01_write_c06_handoff(file.path(output_root, "D"), input)
-  bundle <- d_t01_invoke("triomics_d_read_evidence_bundle", list(
-    output_root, input$study_id, input$analysis_id, input$source_manifests,
-    input$feature_registry, input$imported_statistics
-  ))
-  testthat::expect_true(is.list(bundle))
-  if (!is.list(bundle)) return(invisible(NULL))
-  result <- d_t01_invoke("annotate_evidence", list(bundle, list(routes = d_t01_routes(FALSE))))
-  testthat::expect_true(is.list(result))
-  if (!is.list(result)) return(invisible(NULL))
-  testthat::expect_identical(result$artifact_type, "annotation_routing_result")
-  testthat::expect_identical(result$accounting$routes_disabled, 2L)
+  missing_reader_profile <- tryCatch(d_t01_public_bundle(output_root, input), error = identity)
+  testthat::expect_identical(missing_reader_profile$code, "D_PROVENANCE_REQUIRED")
 })
 
 testthat::test_that("D-T01 reconciles identical nominations but rejects mixed identities and unknown source roles", {
@@ -663,16 +635,11 @@ testthat::test_that("D-T01 resolves the exact B artifact named by the C-06 immut
   testthat::expect_identical(b_handoff$candidate_nominations$nominations[[1]]$nomination_id,
                              input$b$candidate_nominations$nominations[[1]]$nomination_id)
 
-  evidence_bundle <- d_t01_invoke("triomics_d_read_evidence_bundle", list(
+  evidence_bundle <- tryCatch(d_t01_invoke("triomics_d_read_evidence_bundle", list(
     root, input$study_id, input$analysis_id,
     input$source_manifests, input$feature_registry, input$imported_statistics
-  ))
-  testthat::expect_true(is.list(evidence_bundle))
-  if (is.list(evidence_bundle)) {
-    testthat::expect_true(is.list(evidence_bundle$immutable_inputs))
-    testthat::expect_identical(evidence_bundle$accounting$measured_row_count, 3L)
-    testthat::expect_identical(evidence_bundle$c$evaluation_evidence$controls[[1]]$status, "not_run")
-  }
+  )), error = identity)
+  testthat::expect_identical(evidence_bundle$code, "D_PROVENANCE_REQUIRED")
 
   wrong_ref <- c_handoff$candidate_nominations$branches$primary_statistics$source_artifact_ref
   wrong_ref$sha256 <- d_t01_hash("another-candidate-artifact")
@@ -681,34 +648,12 @@ testthat::test_that("D-T01 resolves the exact B artifact named by the C-06 immut
   )), class = "triomics_error")
 })
 
-testthat::test_that("D-T01 preserves exact immutable input hashes through public routing and output", {
+testthat::test_that("D-T01 refuses public routing without exact producer provenance", {
   root <- tempfile("d-t01-public-lineage-")
   on.exit(unlink(root, recursive = TRUE), add = TRUE)
   input <- d_t01_input()
-  bundle <- d_t01_public_bundle(root, input)
-  testthat::expect_true(is.list(bundle$immutable_inputs))
-  if (!is.list(bundle$immutable_inputs)) return(invisible(NULL))
-
-  routed <- d_t01_invoke("annotate_evidence", list(bundle, list(routes = d_t01_routes(FALSE))))
-  testthat::expect_identical(routed$immutable_inputs, bundle$immutable_inputs)
-  output_root <- file.path(root, "D-result")
-  written <- d_t01_invoke("triomics_d_write_evidence_result", list(
-    routed, output_root, d_t01_hash("d-t01-config"), "synthetic-test", "synthetic"
-  ))
-  testthat::expect_true(is.list(written))
-  if (!is.list(written)) return(invisible(NULL))
-  payload <- jsonlite::read_json(written$payload_path, simplifyVector = FALSE)
-  envelope <- jsonlite::read_json(written$envelope_path, simplifyVector = FALSE)
-  expected_inputs <- list(
-    list(artifact_id = "b-t07-bundle", sha256 = bundle$immutable_inputs$b_bundle_sha256),
-    list(artifact_id = "stage-b-block-results", sha256 = bundle$immutable_inputs$b_artifacts$block_results$sha256),
-    list(artifact_id = "b-t07-family-ledger", sha256 = bundle$immutable_inputs$b_artifacts$family_ledger$sha256),
-    list(artifact_id = "b-t07-candidate-nominations", sha256 = bundle$immutable_inputs$b_artifacts$candidate_nominations$sha256),
-    list(artifact_id = "c06-handoff-manifest", sha256 = bundle$immutable_inputs$c_manifest_sha256)
-  )
-  testthat::expect_identical(payload$immutable_inputs, bundle$immutable_inputs)
-  testthat::expect_identical(envelope$inputs, expected_inputs)
-  testthat::expect_true(triomics_validate_envelope(written$envelope_path))
+  missing_profile <- tryCatch(d_t01_public_bundle(root, input), error = identity)
+  testthat::expect_identical(missing_profile$code, "D_PROVENANCE_REQUIRED")
 })
 
 testthat::test_that("D-T01 disabled output retains failed and nonnominated B evidence", {
@@ -728,18 +673,14 @@ testthat::test_that("D-T01 disabled output retains failed and nonnominated B evi
   input$b$family_ledger$families[[3]] <- list(
     block_id = "proteome", claim_id = "contrast_failed", family = failed_family
   )
-  bundle <- d_t01_public_bundle(root, input)
-  routed <- d_t01_invoke("annotate_evidence", list(bundle, list(routes = d_t01_routes(FALSE))))
+  bundle <- d_t01_invoke("triomics_d_build_evidence_bundle", list(input))
+  routed <- d_t01_invoke("triomics_d_route_evidence", list(bundle, d_t01_routes(FALSE)))
   testthat::expect_true(is.list(routed$inherited_evidence$b))
   if (!is.list(routed$inherited_evidence$b)) return(invisible(NULL))
   testthat::expect_true("contrast_failed" %in% names(
     routed$inherited_evidence$b$block_results$blocks$proteome$contrasts
   ))
-  written <- d_t01_invoke("triomics_d_write_evidence_result", list(
-    routed, file.path(root, "D-result"), d_t01_hash("d-t01-config"), "synthetic-test", "synthetic"
-  ))
-  payload <- jsonlite::read_json(written$payload_path, simplifyVector = FALSE)
-  failed <- payload$inherited_evidence$b$block_results$blocks$proteome$contrasts$contrast_failed
+  failed <- routed$inherited_evidence$b$block_results$blocks$proteome$contrasts$contrast_failed
   testthat::expect_identical(failed$family$family_id, "family_failed_nonnominated")
   testthat::expect_identical(failed$rows[[1]]$result_id, "result_gene_b_failed")
   testthat::expect_identical(failed$rows[[1]]$estimation_status, "failed")
@@ -789,20 +730,30 @@ testthat::test_that("D-T01 reconciles canonical nomination bodies and producer-s
                          class = "triomics_error")
 })
 
+testthat::test_that("D-T01 preserves structured native integration selection rules", {
+  input <- d_t01_input()
+  selection_rule <- list(rule = "largest_absolute_component_loading",
+                         criterion = "maximum_absolute_loading", value = 1L)
+  input$c$integration_evidence$integrations[[1]]$selection$rule <- selection_rule
+  input$c$candidate_nominations$branches$integration_selection$nominations[[1]]$selection_rule <- selection_rule
+  input$c$candidate_nominations$nominations[[2]]$selection_rule <- selection_rule
+
+  bundle <- d_t01_invoke("triomics_d_build_evidence_bundle", list(input))
+  testthat::expect_identical(bundle$nominations[[2]]$selection_rule, selection_rule)
+})
+
 testthat::test_that("D-T01 refuses B evidence with missing or conflicting preparation lineage", {
-  mismatch_root <- tempfile("d-t01-b-context-mismatch-")
-  on.exit(unlink(mismatch_root, recursive = TRUE), add = TRUE)
   mismatch <- d_t01_input()
   mismatch$b$block_results$preparation_context_id <- "different-b-preparation"
   mismatch$b$block_results$representation_id <- "delta"
-  testthat::expect_error(d_t01_public_bundle(mismatch_root, mismatch), class = "triomics_error")
+  testthat::expect_error(d_t01_invoke("triomics_d_build_evidence_bundle", list(mismatch)),
+                         class = "triomics_error")
 
-  missing_root <- tempfile("d-t01-b-context-missing-")
-  on.exit(unlink(missing_root, recursive = TRUE), add = TRUE)
   missing <- d_t01_input()
   missing$b$block_results$preparation_context_id <- NULL
   missing$b$block_results$representation_id <- NULL
-  testthat::expect_error(d_t01_public_bundle(missing_root, missing), class = "triomics_error")
+  testthat::expect_error(d_t01_invoke("triomics_d_build_evidence_bundle", list(missing)),
+                         class = "triomics_error")
 })
 
 testthat::test_that("D-T01 rejects cache and output paths traversing symlink ancestors", {
@@ -842,15 +793,13 @@ testthat::test_that("D-T01 rejects cache and output paths traversing symlink anc
   )), class = "triomics_error")
 
   handoff_root <- file.path(root, "handoff")
-  result_bundle <- d_t01_public_bundle(handoff_root, d_t01_input())
-  routed <- d_t01_invoke("triomics_d_route_evidence", list(result_bundle, d_t01_routes(FALSE)))
-  testthat::expect_error(d_t01_invoke("triomics_d_write_evidence_result", list(
-    routed, file.path(link, "written"), d_t01_hash("d-t01-config"), "synthetic-test", "synthetic"
+  testthat::expect_error(d_t01_invoke("triomics_d_secure_path", list(
+    file.path(link, "written"), "D_OUTPUT_PATH_UNSAFE", "unsafe path", "output_root", TRUE
   )), class = "triomics_error")
   testthat::expect_false(file.exists(file.path(outside, "written", "D", "evidence-routing.json")))
-  testthat::expect_error(d_t01_invoke("triomics_d_write_evidence_result", list(
-    routed, file.path(allowed, "..", "outside", "traversal-output"),
-    d_t01_hash("d-t01-config"), "synthetic-test", "synthetic"
+  testthat::expect_error(d_t01_invoke("triomics_d_secure_path", list(
+    file.path(allowed, "..", "outside", "traversal-output"),
+    "D_OUTPUT_PATH_UNSAFE", "unsafe path", "output_root", TRUE
   )), class = "triomics_error")
 })
 
@@ -914,4 +863,306 @@ testthat::test_that("D-T01 adapts the shared A feature registry without inventin
   malformed_metadata$routing_metadata[[feature_key]]$taxon$status <- c("declared", "unknown")
   testthat::expect_error(d_t01_invoke("triomics_d_build_evidence_bundle", list(malformed_metadata)),
                          class = "triomics_error")
+})
+
+d_t01_cli_run <- function(config_path, stage, output_root) {
+  cli <- triomics_test_resource("exec", "triomics")
+  previous_wd <- setwd(dirname(cli))
+  on.exit(setwd(previous_wd), add = TRUE)
+  output <- system2(
+    file.path(R.home("bin"), "Rscript"),
+    c("--vanilla", shQuote(basename(cli)), "--config", shQuote(config_path),
+      "--stage", shQuote(stage), "--output", shQuote(output_root)),
+    stdout = TRUE, stderr = TRUE
+  )
+  status <- attr(output, "status")
+  if (is.null(status)) status <- 0L
+  list(status = as.integer(status), output = output)
+}
+
+testthat::test_that("D-T01 publishes a complete generation from actual native B and C CLI handoffs", {
+  config <- triomics_test_resource("examples", "tickets", "D-T01.yaml")
+  output_root <- tempfile("d-t01-native-cli-", tmpdir = "/private/tmp")
+  dir.create(output_root, recursive = TRUE, showWarnings = FALSE)
+  output_root <- normalizePath(output_root, winslash = "/", mustWork = TRUE)
+  clone_roots <- character()
+  on.exit(unlink(c(output_root, clone_roots), recursive = TRUE, force = TRUE), add = TRUE)
+
+  clone_native_root <- function() {
+    destination <- tempfile("d-t01-native-tamper-", tmpdir = "/private/tmp")
+    dir.create(destination, recursive = TRUE, showWarnings = FALSE)
+    contents <- list.files(output_root, all.files = TRUE, no.. = TRUE, full.names = TRUE)
+    copied <- file.copy(contents, destination, recursive = TRUE)
+    if (!all(copied)) stop("Could not copy the synthetic native handoff root for an adversarial probe.")
+    clone_roots <<- c(clone_roots, destination)
+    normalizePath(destination, winslash = "/", mustWork = TRUE)
+  }
+  write_raw <- function(path, value) {
+    connection <- file(path, open = "wb")
+    on.exit(close(connection), add = TRUE)
+    writeBin(charToRaw(enc2utf8(value)), connection)
+    invisible(path)
+  }
+  expect_d_code <- function(thunk, code) {
+    outcome <- tryCatch(thunk(), error = identity)
+    testthat::expect_true(inherits(outcome, "triomics_error"),
+                          info = paste("Expected D error", code))
+    if (inherits(outcome, "triomics_error")) {
+      testthat::expect_identical(outcome$code, code)
+    }
+    invisible(outcome)
+  }
+
+  b <- d_t01_cli_run(config, "B", output_root)
+  testthat::expect_identical(b$status, 0L, info = paste(b$output, collapse = "\n"))
+  if (b$status != 0L) return(invisible(NULL))
+  c <- d_t01_cli_run(config, "C", output_root)
+  testthat::expect_identical(c$status, 0L, info = paste(c$output, collapse = "\n"))
+  if (c$status != 0L) return(invisible(NULL))
+
+  config_value <- triomics_read_config(config)
+  analysis_id <- as.character(config_value$analyses[[1L]]$analysis_id)
+  ingested <- triomics_ingest_configured_study(config_value, config)
+  config_sha256 <- as.character(attr(config_value, "config_sha256"))
+  current_metadata <- list(
+    sample_metadata = ingested$sample_metadata,
+    sample_registry = ingested$sample_registry,
+    declared_factor_levels = ingested$declared_factor_levels
+  )
+  read_native <- function(root = output_root,
+                          source_manifests = ingested$source_manifests,
+                          feature_registry = ingested$feature_registry,
+                          metadata = current_metadata,
+                          config_digest = config_sha256) {
+    triomics_d_read_evidence_bundle(
+      root, as.character(config_value$study_id), analysis_id,
+      source_manifests, feature_registry, imported_statistics = list(),
+      routing_metadata = NULL, current_config_sha256 = config_digest,
+      current_metadata = metadata
+    )
+  }
+
+  wrong_sources <- ingested$source_manifests
+  wrong_sources[[1L]]$sha256 <- d_t01_hash("altered-current-source-bytes")
+  expect_d_code(function() read_native(source_manifests = wrong_sources), "D_LINEAGE_MISMATCH")
+
+  wrong_registry <- ingested$feature_registry
+  wrong_registry$quantity[[1L]] <- paste0(wrong_registry$quantity[[1L]], "_tampered")
+  expect_d_code(function() read_native(feature_registry = wrong_registry), "D_LINEAGE_MISMATCH")
+
+  wrong_metadata <- current_metadata
+  wrong_metadata$sample_metadata <- list(tampered = TRUE)
+  expect_d_code(function() read_native(metadata = wrong_metadata), "D_LINEAGE_MISMATCH")
+  expect_d_code(function() read_native(config_digest = d_t01_hash("different-current-config")),
+                 "D_LINEAGE_MISMATCH")
+
+  missing_profile_root <- clone_native_root()
+  b_profile_path <- list.files(file.path(missing_profile_root, "B", "handoffs"),
+                               pattern = "^stage-handoff-provenance[.]json$",
+                               recursive = TRUE, full.names = TRUE)[[1L]]
+  unlink(b_profile_path)
+  expect_d_code(function() read_native(root = missing_profile_root), "D_PROVENANCE_REQUIRED")
+
+  duplicate_profile_root <- clone_native_root()
+  duplicate_profile_path <- list.files(file.path(duplicate_profile_root, "B", "handoffs"),
+                                      pattern = "^stage-handoff-provenance[.]json$",
+                                      recursive = TRUE, full.names = TRUE)[[1L]]
+  duplicate_profile_envelope <- sub("[.]json$", ".envelope.json", duplicate_profile_path)
+  duplicate_profile_raw <- readChar(duplicate_profile_path,
+                                    nchars = file.info(duplicate_profile_path)$size,
+                                    useBytes = TRUE)
+  duplicate_needle <- '"profile_version": "1.0"'
+  testthat::expect_true(grepl(duplicate_needle, duplicate_profile_raw, fixed = TRUE))
+  duplicate_profile_raw <- sub(duplicate_needle,
+                               paste(duplicate_needle, duplicate_needle, sep = ",\n  "),
+                               duplicate_profile_raw, fixed = TRUE)
+  write_raw(duplicate_profile_path, duplicate_profile_raw)
+  duplicate_envelope <- jsonlite::read_json(duplicate_profile_envelope, simplifyVector = FALSE)
+  duplicate_envelope$payload_sha256 <- triomics_sha256(duplicate_profile_path)
+  write_raw(duplicate_profile_envelope, triomics_b07_prov_canonical_value(duplicate_envelope))
+  testthat::expect_true(triomics_validate_envelope(duplicate_profile_envelope))
+  expect_d_code(function() read_native(root = duplicate_profile_root), "D_PROVENANCE_INVALID")
+
+  reordered_envelope_root <- clone_native_root()
+  predecessor_envelope_path <- list.files(file.path(reordered_envelope_root, "B", "handoffs"),
+                                          pattern = "^bundle[.]envelope[.]json$",
+                                          recursive = TRUE, full.names = TRUE)[[1L]]
+  predecessor_original <- readChar(predecessor_envelope_path,
+                                   nchars = file.info(predecessor_envelope_path)$size,
+                                   useBytes = TRUE)
+  predecessor_value <- jsonlite::fromJSON(predecessor_original, simplifyVector = FALSE)
+  predecessor_reordered <- as.character(jsonlite::toJSON(
+    predecessor_value[rev(names(predecessor_value))], auto_unbox = TRUE,
+    null = "null", pretty = TRUE, digits = NA
+  ))
+  write_raw(predecessor_envelope_path, predecessor_reordered)
+  testthat::expect_false(identical(
+    digest::digest(predecessor_original, algo = "sha256", serialize = FALSE),
+    digest::digest(predecessor_reordered, algo = "sha256", serialize = FALSE)
+  ))
+  testthat::expect_true(triomics_validate_envelope(predecessor_envelope_path))
+  expect_d_code(function() read_native(root = reordered_envelope_root), "D_PROVENANCE_INVALID")
+
+  unsafe_root <- tempfile("d-t01-native-symlink-", tmpdir = "/private/tmp")
+  on.exit(unlink(unsafe_root), add = TRUE)
+  testthat::expect_true(file.symlink(output_root, unsafe_root))
+  expect_d_code(function() triomics_execute_stage_d(config, unsafe_root), "D_OUTPUT_PATH_UNSAFE")
+
+  source_paths <- c(
+    list.files(file.path(output_root, "B"), recursive = TRUE, full.names = TRUE, all.files = TRUE),
+    list.files(file.path(output_root, "C"), recursive = TRUE, full.names = TRUE, all.files = TRUE),
+    list.files(file.path(output_root, "D"), recursive = TRUE, full.names = TRUE, all.files = TRUE)
+  )
+  source_paths <- source_paths[!file.info(source_paths)$isdir &
+                               !grepl("/D/generations/", source_paths, fixed = TRUE)]
+  source_names <- substring(source_paths, nchar(output_root) + 2L)
+  source_hashes_before <- stats::setNames(vapply(source_paths, triomics_sha256, character(1)), source_names)
+  run_registry_paths <- file.path(output_root, "registries", c("run.json", "run-C.json"))
+  run_registry_hashes_before <- vapply(run_registry_paths, triomics_sha256, character(1))
+
+  d <- d_t01_cli_run(config, "D", output_root)
+  testthat::expect_identical(d$status, 0L, info = paste(d$output, collapse = "\n"))
+  if (d$status != 0L) return(invisible(NULL))
+
+  pointer_path <- file.path(output_root, "registries", "current-D.json")
+  testthat::expect_true(file.exists(pointer_path))
+  if (!file.exists(pointer_path)) return(invisible(NULL))
+  pointer <- jsonlite::read_json(pointer_path, simplifyVector = FALSE)
+  testthat::expect_setequal(names(pointer),
+                            c("schema_version", "study_id", "run_id", "generation_id",
+                              "generation_manifest"))
+  testthat::expect_setequal(names(pointer$generation_manifest),
+                            c("path", "size_bytes", "digest_algorithm", "digest"))
+  generation <- file.path(output_root, "D", "generations", pointer$generation_id)
+  manifest_path <- file.path(generation, "generation-manifest.json")
+  testthat::expect_match(pointer$generation_id, "^[0-9a-f]{64}$")
+  testthat::expect_identical(triomics_sha256(manifest_path), pointer$generation_id)
+  manifest <- jsonlite::read_json(manifest_path, simplifyVector = FALSE)
+  testthat::expect_setequal(names(manifest),
+                            c("profile", "profile_version", "study_id", "run_id", "provenance",
+                              "producer", "status", "limitations", "members"))
+  testthat::expect_identical(manifest$profile, "triomics.output-generation-manifest")
+  testthat::expect_identical(manifest$profile_version, "1.0")
+  testthat::expect_identical(manifest$status, "complete")
+  testthat::expect_identical(manifest$run_id, "d-t01")
+  testthat::expect_length(manifest$members, 2L)
+  generation_inventory <- triomics_d_generation_inventory(generation)
+  testthat::expect_identical(generation_inventory$files,
+                             sort(c("evidence-routing.envelope.json", "evidence-routing.json",
+                                    "generation-manifest.json"), method = "radix"))
+  testthat::expect_length(generation_inventory$directories, 0L)
+  for (member in manifest$members) {
+    fields <- c("path", "scientific_role", "artifact_type", "media_type", "status",
+                "size_bytes", "digest_algorithm", "digest")
+    if ("envelope_for_artifact_id" %in% names(member)) {
+      fields <- c(fields, "envelope_for_artifact_id")
+    }
+    testthat::expect_setequal(names(member), fields)
+    member_path <- file.path(generation, member$path)
+    testthat::expect_true(file.exists(member_path))
+    if (!file.exists(member_path)) next
+    testthat::expect_identical(as.numeric(file.info(member_path)$size), as.numeric(member$size_bytes))
+    testthat::expect_identical(triomics_sha256(member_path), member$digest)
+  }
+  testthat::expect_identical(pointer$generation_manifest$path,
+                             file.path("D", "generations", pointer$generation_id,
+                                       "generation-manifest.json"))
+  testthat::expect_identical(pointer$generation_manifest$digest_algorithm, "sha256")
+  testthat::expect_identical(pointer$generation_manifest$digest, pointer$generation_id)
+  testthat::expect_identical(as.numeric(pointer$generation_manifest$size_bytes),
+                             as.numeric(file.info(manifest_path)$size))
+  testthat::expect_true(all(c("C-06 remains unaccepted.", "C-07 controls remain not_run.",
+                              "C-09 remains unqualified and conditional.") %in%
+                            unlist(manifest$limitations, use.names = FALSE)))
+  routing_path <- file.path(generation, "evidence-routing.json")
+  routing <- jsonlite::read_json(routing_path, simplifyVector = FALSE)
+  testthat::expect_setequal(names(routing$routes), c("gene_reaction", "lipid_ontology", "ora", "mofa_native", "biopan"))
+  testthat::expect_true(all(vapply(routing$routes, function(route) identical(route$status, "not_requested"), logical(1))))
+  testthat::expect_true(all(vapply(routing$inherited_evidence$evaluation_evidence$controls,
+                                   function(control) identical(control$status, "not_run"), logical(1))))
+  testthat::expect_identical(routing$inherited_evidence$stage_status$clinical_prediction$completion_policy,
+                             "conditional")
+  testthat::expect_true(is.list(routing$inherited_evidence$integration_evidence))
+  testthat::expect_true(is.list(routing$inherited_evidence$b$block_results))
+
+  native_evidence <- read_native()
+  expected_inputs <- triomics_d_output_input_pairs(native_evidence$immutable_inputs)
+  route_envelope <- jsonlite::read_json(file.path(generation, "evidence-routing.envelope.json"),
+                                       simplifyVector = FALSE)
+  testthat::expect_identical(route_envelope$inputs, expected_inputs)
+  testthat::expect_identical(manifest$provenance$b$bundle$artifact_id,
+                             native_evidence$immutable_inputs$b_bundle_artifact_id)
+  testthat::expect_identical(manifest$provenance$b$bundle$payload_sha256,
+                             native_evidence$immutable_inputs$b_bundle_sha256)
+  testthat::expect_identical(manifest$provenance$b$bundle$envelope_sha256,
+                             native_evidence$immutable_inputs$b_bundle_envelope_sha256)
+  testthat::expect_setequal(names(manifest$provenance$b$members),
+                            c("block_results", "family_ledger", "candidate_nominations"))
+  testthat::expect_setequal(names(manifest$provenance$c$members),
+                            c("candidate_nominations", "integration_evidence", "integration_comparisons",
+                              "evaluation_evidence", "stage_status"))
+
+  old_pointer_hash <- triomics_sha256(pointer_path)
+  old_generation_files <- list.files(generation, recursive = TRUE, full.names = TRUE, all.files = TRUE)
+  old_generation_files <- old_generation_files[!file.info(old_generation_files)$isdir]
+  old_generation_hashes <- stats::setNames(vapply(old_generation_files, triomics_sha256, character(1)),
+                                           substring(old_generation_files, nchar(generation) + 2L))
+  publisher_result <- triomics_annotate_evidence(native_evidence, config_value$annotation %||% list())
+  publish_args <- list(
+    result = publisher_result, output_root = output_root, config_sha256 = config_sha256,
+    producer_commit = triomics_b07_git_ref(getwd()),
+    privacy_class = if (identical(config_value$data_class, "synthetic")) "synthetic" else "sensitive",
+    run_id = "d-t01"
+  )
+  expect_unchanged <- function() {
+    testthat::expect_identical(triomics_sha256(pointer_path), old_pointer_hash)
+    current_files <- list.files(generation, recursive = TRUE, full.names = TRUE, all.files = TRUE)
+    current_files <- current_files[!file.info(current_files)$isdir]
+    current_hashes <- stats::setNames(vapply(current_files, triomics_sha256, character(1)),
+                                      substring(current_files, nchar(generation) + 2L))
+    testthat::expect_identical(current_hashes, old_generation_hashes)
+  }
+  old_failpoint <- getOption("triomics.d.publication.failpoint")
+  options(triomics.d.publication.failpoint = "provenance_preflight_complete")
+  preflight_failure <- tryCatch(triomics_execute_stage_d(config, output_root), error = identity)
+  options(triomics.d.publication.failpoint = old_failpoint)
+  testthat::expect_identical(preflight_failure$code, "D_PUBLICATION_FAILED")
+  expect_unchanged()
+
+  for (failpoint in c("temporary_generation_created", "payload_written", "envelope_written",
+                      "manifest_sealed", "generation_renamed", "pointer_prepared",
+                      "before_pointer_rename")) {
+    options(triomics.d.publication.failpoint = failpoint)
+    failure <- tryCatch(do.call(triomics_d_publish_evidence_generation, publish_args),
+                        error = identity)
+    options(triomics.d.publication.failpoint = old_failpoint)
+    testthat::expect_identical(failure$code, "D_PUBLICATION_FAILED", info = failpoint)
+    expect_unchanged()
+  }
+  options(triomics.d.publication.failpoint = "after_pointer_rename")
+  recovered <- tryCatch(do.call(triomics_d_publish_evidence_generation, publish_args),
+                        error = identity)
+  options(triomics.d.publication.failpoint = old_failpoint)
+  testthat::expect_false(inherits(recovered, "error"),
+                         info = if (inherits(recovered, "error")) conditionMessage(recovered) else NULL)
+  if (!inherits(recovered, "error")) {
+    testthat::expect_identical(recovered$status, "complete")
+    testthat::expect_true(isTRUE(recovered$recovered))
+    testthat::expect_true(is.list(triomics_d_validate_current_pointer(output_root, pointer_path)))
+  }
+
+  inventory_root <- clone_native_root()
+  inventory_pointer <- triomics_d_validate_current_pointer(
+    inventory_root, file.path(inventory_root, "registries", "current-D.json")
+  )
+  inventory_generation <- inventory_pointer$generation$paths$generation
+  writeLines("undisclosed synthetic member", file.path(inventory_generation, "undisclosed.txt"))
+  expect_d_code(function() triomics_d_validate_current_pointer(
+    inventory_root, file.path(inventory_root, "registries", "current-D.json")
+  ), "D_PROVENANCE_INVALID")
+
+  final_source_hashes <- stats::setNames(vapply(source_paths, triomics_sha256, character(1)), source_names)
+  testthat::expect_identical(final_source_hashes, source_hashes_before)
+  testthat::expect_identical(vapply(run_registry_paths, triomics_sha256, character(1)),
+                             run_registry_hashes_before)
 })

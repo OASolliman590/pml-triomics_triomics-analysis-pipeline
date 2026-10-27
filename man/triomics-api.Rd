@@ -25,6 +25,8 @@
 \alias{associate_longitudinal_endpoints}
 \alias{triomics_associate_longitudinal_endpoints}
 \alias{triomics_execute_longitudinal_associations}
+\alias{annotate_evidence}
+\alias{triomics_annotate_evidence}
 \title{Triomics simulation, analysis, and integration entry points}
 \description{
 Public entry points for generating synthetic studies, exporting a validated
@@ -126,6 +128,10 @@ associate_longitudinal_endpoints(
 )
 
 triomics_execute_longitudinal_associations(config_path, output)
+
+triomics_annotate_evidence(evidence_bundle, annotation_spec = list())
+
+annotate_evidence(evidence_bundle, annotation_spec = list())
 }
 \arguments{
   \item{n_subjects}{Positive integer number of synthetic subjects; C-09 fixtures
@@ -188,6 +194,10 @@ triomics_execute_longitudinal_associations(config_path, output)
   identifier fields.}
   \item{endpoint}{One endpoint record whose declared values and sample keys are
   hashed for lineage verification.}
+  \item{evidence_bundle}{D evidence loaded from hash-verified, same-root B-T07
+  and C-06 handoffs.}
+  \item{annotation_spec}{Typed annotation route request. D-T01 accepts its
+  packet-qualified route settings and preserves disabled-route accounting.}
 }
 \value{
 The return value depends on the entry point: a synthetic study, export or
@@ -196,6 +206,8 @@ stage B execution summary, verified Stage B handoff, resolved clinical
 objectives, privacy-scrubbed
 clinical results, or an endpoint hash. Clinical and longitudinal association
 functions return typed objective, family, audit, and result records.
+\code{annotate_evidence()} returns a typed routing result with inherited B/C
+evidence, nomination accounting, and route status.
 \code{triomics_c09_synthetic_inputs()} returns a \code{C09SyntheticInputs}
 object containing \code{protocol}, \code{endpoint_bundle},
 \code{clinical_score_request}, \code{split_plan}, and \code{candidates}.
@@ -213,6 +225,12 @@ substituting an analysis.
 \code{resolve_analysis} and \code{fit_block_models} are aliases for their
 \code{triomics_} counterparts. These interfaces enforce the frozen analysis
 contracts and do not infer undeclared scientific choices.
+
+\code{annotate_evidence()} and \code{triomics_annotate_evidence()} require
+persisted producer provenance that binds the exact B-T07 and C-06 payload and
+envelope bytes. D publication retains C-06 as unaccepted, C-07 controls as
+\code{not_run}, and C-09 as conditional and unqualified; unavailable or
+disabled annotation methods do not imply biological absence.
 
 The simulator deliberately has no seed argument. Stage A orchestration must
 set \code{options("triomics.execution_context")} to a list containing one

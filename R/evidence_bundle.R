@@ -15,7 +15,7 @@ triomics_d_same_identity <- function(payload, field, expected, label) {
   if (!triomics_d_nonempty_string(value) || !triomics_d_nonempty_string(expected) ||
       !identical(value, expected)) {
     triomics_d_abort(
-      "D_IDENTITY_MISMATCH", paste0(label, " has an absent or mismatched ", field, "."),
+      "D_LINEAGE_MISMATCH", paste0(label, " has an absent or mismatched ", field, "."),
       key = paste0(label, ".", field)
     )
   }
@@ -23,13 +23,15 @@ triomics_d_same_identity <- function(payload, field, expected, label) {
 }
 
 triomics_d_read_json <- function(path, key) {
-  if (!triomics_d_nonempty_string(path) || !file.exists(path) || dir.exists(path) ||
-      triomics_is_symlink(path)) {
-    triomics_d_abort("D_HANDOFF_MISSING", paste0("The verified C-06 handoff is missing ", key, "."), key)
+  if (triomics_d_nonempty_string(path) && triomics_is_symlink(path)) {
+    triomics_d_abort("D_OUTPUT_PATH_UNSAFE", paste0("The D handoff path is a symbolic link: ", key, "."), key)
+  }
+  if (!triomics_d_nonempty_string(path) || !file.exists(path) || dir.exists(path)) {
+    triomics_d_abort("D_PROVENANCE_REQUIRED", paste0("The verified C-06 handoff is missing ", key, "."), key)
   }
   value <- tryCatch(jsonlite::read_json(path, simplifyVector = FALSE), error = function(error) NULL)
   if (!is.list(value) || is.null(names(value))) {
-    triomics_d_abort("D_HANDOFF_INVALID", paste0("The C-06 handoff member is unreadable: ", key, "."), key)
+    triomics_d_abort("D_PROVENANCE_INVALID", paste0("The C-06 handoff member is unreadable: ", key, "."), key)
   }
   value
 }
@@ -37,34 +39,57 @@ triomics_d_read_json <- function(path, key) {
 triomics_d_child_path <- function(root, relative, key) {
   if (!triomics_d_nonempty_string(relative) ||
       grepl("^(?:[A-Za-z]:[/\\\\]|/|\\\\)", relative)) {
-    return(NULL)
+    triomics_d_abort("D_OUTPUT_PATH_UNSAFE", "A producer descriptor names an unsafe path.", key)
   }
   parts <- strsplit(relative, "[/\\\\]+")[[1L]]
   parts <- parts[nzchar(parts)]
-  if (!length(parts) || any(parts %in% c(".", ".."))) return(NULL)
+  if (!length(parts) || any(parts %in% c(".", ".."))) {
+    triomics_d_abort("D_OUTPUT_PATH_UNSAFE", "A producer descriptor names an unsafe path.", key)
+  }
   current <- root
   for (part in parts) {
     current <- file.path(current, part)
-    if (file.exists(current) && triomics_is_symlink(current)) return(NULL)
+    if (file.exists(current) && triomics_is_symlink(current)) {
+      triomics_d_abort("D_OUTPUT_PATH_UNSAFE", "A producer handoff path crosses a symbolic link.", key)
+    }
   }
   if (!file.exists(current) || dir.exists(current)) return(NULL)
   resolved <- normalizePath(current, winslash = "/", mustWork = TRUE)
   prefix <- if (endsWith(root, "/")) root else paste0(root, "/")
-  if (!startsWith(resolved, prefix)) return(NULL)
+  if (!startsWith(resolved, prefix)) {
+    triomics_d_abort("D_OUTPUT_PATH_UNSAFE", "A producer handoff path escapes its output root.", key)
+  }
   resolved
 }
 
 triomics_d_read_c06_handoff <- function(handoff_dir, expected_study_id, expected_analysis_id) {
   if (!triomics_d_nonempty_string(handoff_dir) || !dir.exists(handoff_dir) ||
       triomics_is_symlink(handoff_dir)) {
-    triomics_d_abort("D_HANDOFF_MISSING", "The C-06 D handoff directory is unavailable.", "handoff_dir")
+    triomics_d_abort("D_PROVENANCE_REQUIRED", "The C-06 D handoff directory is unavailable.", "handoff_dir")
   }
   root <- normalizePath(handoff_dir, winslash = "/", mustWork = TRUE)
   manifest_path <- file.path(root, "handoff-manifest.json")
   envelope_path <- file.path(root, "handoff-manifest.envelope.json")
+  manifest_json <- if (file.exists(manifest_path) && !dir.exists(manifest_path)) {
+    tryCatch(readChar(manifest_path, nchars = file.info(manifest_path)$size, useBytes = TRUE),
+             error = function(error) NULL)
+  } else NULL
+  if (triomics_is_symlink(manifest_path) || triomics_is_symlink(envelope_path)) {
+    triomics_d_abort("D_OUTPUT_PATH_UNSAFE", "The C-06 handoff manifest path crosses a symbolic link.",
+                     "handoff_manifest")
+  }
   if (!file.exists(manifest_path) || dir.exists(manifest_path) ||
+      !file.exists(envelope_path) || dir.exists(envelope_path)) {
+    triomics_d_abort("D_PROVENANCE_REQUIRED", "The C-06 handoff manifest or envelope is missing.",
+                     "handoff_manifest")
+  }
+  if (!is.character(manifest_json) ||
+      !isTRUE(tryCatch({
+        triomics_provenance_json_scan(manifest_json)
+        TRUE
+      }, error = function(error) FALSE)) ||
       !isTRUE(triomics_validate_envelope(envelope_path))) {
-    triomics_d_abort("D_HANDOFF_INVALID", "The C-06 handoff manifest or its envelope is absent or invalid.",
+    triomics_d_abort("D_PROVENANCE_INVALID", "The C-06 handoff manifest or its envelope is invalid.",
                      "handoff_manifest")
   }
   manifest <- triomics_d_read_json(manifest_path, "handoff-manifest.json")
@@ -85,20 +110,20 @@ triomics_d_read_c06_handoff <- function(handoff_dir, expected_study_id, expected
       !identical(envelope$preparation_context_id, manifest$preparation_context_id) ||
       !identical(envelope$representation_id, manifest$representation_id) ||
       !identical(as.character(envelope$status), as.character(manifest$status))) {
-    triomics_d_abort("D_HANDOFF_INVALID", "The C-06 manifest identity, type, or status is inconsistent.",
+    triomics_d_abort("D_PROVENANCE_INVALID", "The C-06 manifest identity, type, or status is inconsistent.",
                      "handoff_manifest")
   }
   triomics_d_same_identity(manifest, "study_id", expected_study_id, "C-06 manifest")
   triomics_d_same_identity(manifest, "analysis_id", expected_analysis_id, "C-06 manifest")
   if (!is.list(manifest$artifacts) || length(manifest$artifacts) != length(required_types)) {
-    triomics_d_abort("D_HANDOFF_INVALID", "The C-06 manifest does not account for every required handoff member.",
+    triomics_d_abort("D_PROVENANCE_INVALID", "The C-06 manifest does not account for every required handoff member.",
                      "handoff_manifest.artifacts")
   }
   seen_types <- vapply(manifest$artifacts, function(item) {
     if (!is.list(item) || is.null(item$artifact_type)) "" else as.character(item$artifact_type)
   }, character(1))
   if (anyDuplicated(seen_types) || !setequal(seen_types, unname(required_types))) {
-    triomics_d_abort("D_HANDOFF_INVALID", "The C-06 manifest member set is incomplete or duplicated.",
+    triomics_d_abort("D_PROVENANCE_INVALID", "The C-06 manifest member set is incomplete or duplicated.",
                      "handoff_manifest.artifacts")
   }
   triomics_d_same_identity(manifest, "preparation_context_id", manifest$preparation_context_id, "C-06 manifest")
@@ -106,6 +131,7 @@ triomics_d_read_c06_handoff <- function(handoff_dir, expected_study_id, expected
 
   payloads <- vector("list", length(required_types))
   names(payloads) <- names(required_types)
+  artifact_refs <- list()
   for (artifact in manifest$artifacts) {
     artifact_type <- as.character(artifact$artifact_type)
     output_name <- names(required_types)[match(artifact_type, unname(required_types))]
@@ -119,7 +145,7 @@ triomics_d_read_c06_handoff <- function(handoff_dir, expected_study_id, expected
         !identical(triomics_sha256(payload_path), as.character(artifact$payload_sha256)) ||
         !identical(triomics_sha256(member_envelope_path), as.character(artifact$envelope_sha256)) ||
         !isTRUE(triomics_validate_envelope(member_envelope_path))) {
-      triomics_d_abort("D_HANDOFF_HASH_MISMATCH", "A C-06 handoff payload or envelope failed hash verification.",
+      triomics_d_abort("D_PROVENANCE_INVALID", "A C-06 handoff payload or envelope failed hash verification.",
                        paste0("handoff_manifest.", output_name))
     }
     member <- triomics_d_read_json(payload_path, basename(payload_path))
@@ -131,17 +157,25 @@ triomics_d_read_c06_handoff <- function(handoff_dir, expected_study_id, expected
         !identical(as.character(member_envelope$analysis_id), as.character(manifest$analysis_id)) ||
         !identical(as.character(member_envelope$preparation_context_id), as.character(manifest$preparation_context_id)) ||
         !identical(as.character(member_envelope$representation_id), as.character(manifest$representation_id))) {
-      triomics_d_abort("D_HANDOFF_INVALID", "A C-06 member type or envelope identity is inconsistent.",
+      triomics_d_abort("D_PROVENANCE_INVALID", "A C-06 member type or envelope identity is inconsistent.",
                        paste0("handoff_manifest.", output_name))
     }
     triomics_d_same_identity(member, "study_id", expected_study_id, output_name)
     triomics_d_same_identity(member, "analysis_id", expected_analysis_id, output_name)
     if (!identical(as.character(member$preparation_context_id), as.character(manifest$preparation_context_id)) ||
         !identical(as.character(member$representation_id), as.character(manifest$representation_id))) {
-      triomics_d_abort("D_HANDOFF_IDENTITY_MISMATCH", "A C-06 member has different preparation or representation identity.",
+      triomics_d_abort("D_LINEAGE_MISMATCH", "A C-06 member has different preparation or representation identity.",
                        paste0("handoff_manifest.", output_name))
     }
     payloads[[output_name]] <- member
+    artifact_refs[[output_name]] <- list(
+      artifact_type = artifact_type,
+      artifact_id = as.character(member_envelope$artifact_id),
+      payload_file = as.character(artifact$payload_file),
+      payload_sha256 = as.character(artifact$payload_sha256),
+      envelope_file = as.character(artifact$envelope_file),
+      envelope_sha256 = as.character(artifact$envelope_sha256)
+    )
   }
   for (artifact in manifest$artifacts) {
     artifact_id <- paste0("c06-", sub("[.]json$", "", artifact$payload_file))
@@ -149,7 +183,7 @@ triomics_d_read_c06_handoff <- function(handoff_dir, expected_study_id, expected
       identical(as.character(input$artifact_id), artifact_id) &&
         identical(as.character(input$sha256), as.character(artifact$payload_sha256))
     }, logical(1)))) {
-      triomics_d_abort("D_HANDOFF_INVALID", "The C-06 manifest envelope does not bind every declared member payload.",
+      triomics_d_abort("D_PROVENANCE_INVALID", "The C-06 manifest envelope does not bind every declared member payload.",
                        paste0("handoff_manifest.", artifact_id))
     }
   }
@@ -178,6 +212,7 @@ triomics_d_read_c06_handoff <- function(handoff_dir, expected_study_id, expected
     manifest_artifact_id = as.character(envelope$artifact_id),
     manifest_sha256 = triomics_sha256(manifest_path),
     manifest_envelope_sha256 = triomics_sha256(envelope_path),
+    artifact_refs = artifact_refs,
     candidate_nominations = payloads$candidate_nominations,
     integration_evidence = payloads$integration_evidence,
     integration_comparisons = payloads$integration_comparisons,
@@ -194,14 +229,14 @@ triomics_d_read_b_handoff <- function(output_root, candidate_ref,
       triomics_is_symlink(output_root) || !is.list(candidate_ref) ||
       !triomics_d_nonempty_string(candidate_ref$artifact_id) ||
       !triomics_sha256_text(as.character(candidate_ref$sha256))) {
-    triomics_d_abort("D_B_HANDOFF_INVALID", "D needs a local B output root and the exact C-06 nomination artifact reference.",
+    triomics_d_abort("D_PROVENANCE_REQUIRED", "D needs a local B output root and the exact C-06 nomination artifact reference.",
                      "b_handoff")
   }
   expected_candidate_ref <- candidate_ref
   root <- normalizePath(output_root, winslash = "/", mustWork = TRUE)
   handoff_root <- file.path(root, "B", "handoffs")
   if (!dir.exists(handoff_root) || triomics_is_symlink(handoff_root)) {
-    triomics_d_abort("D_B_HANDOFF_MISSING", "The B-T07 public handoff directory is unavailable.", "B/handoffs")
+    triomics_d_abort("D_PROVENANCE_REQUIRED", "The B-T07 public handoff directory is unavailable.", "B/handoffs")
   }
   bundle_files <- list.files(handoff_root, pattern = "^bundle[.]json$", recursive = TRUE,
                              full.names = TRUE, all.files = TRUE)
@@ -241,7 +276,7 @@ triomics_d_read_b_handoff <- function(output_root, candidate_ref,
   }
   if (length(matches) != 1L) {
     triomics_d_abort(
-      if (length(matches)) "D_B_HANDOFF_AMBIGUOUS" else "D_B_HANDOFF_MISSING",
+      if (length(matches)) "D_LINEAGE_MISMATCH" else "D_PROVENANCE_REQUIRED",
       "The C-06 nomination reference does not resolve to exactly one verified B-T07 public bundle.",
       "candidate_nominations.source_artifact_ref"
     )
@@ -258,7 +293,7 @@ triomics_d_read_b_handoff <- function(output_root, candidate_ref,
       is.list(member) && identical(as.character(member$artifact_id), member_id)
     }, bundle$members)
     if (length(found) != 1L) {
-      triomics_d_abort("D_B_HANDOFF_INVALID", "The B-T07 public bundle has a missing or duplicated required member.",
+      triomics_d_abort("D_PROVENANCE_INVALID", "The B-T07 public bundle has a missing or duplicated required member.",
                        paste0("B.bundle.", member_name))
     }
     member <- found[[1L]]
@@ -271,28 +306,35 @@ triomics_d_read_b_handoff <- function(output_root, candidate_ref,
         !identical(triomics_sha256(payload_path), as.character(member$sha256)) ||
         !identical(triomics_sha256(envelope_path), as.character(member$envelope_sha256)) ||
         !isTRUE(triomics_validate_envelope(envelope_path))) {
-      triomics_d_abort("D_B_HANDOFF_HASH_MISMATCH", "A B-T07 bundle member failed payload or envelope verification.",
+      triomics_d_abort("D_PROVENANCE_INVALID", "A B-T07 bundle member failed payload or envelope verification.",
                        paste0("B.bundle.", member_name))
     }
     payload <- triomics_d_read_json(payload_path, paste0("B/", member_name))
     member_envelope <- triomics_d_read_json(envelope_path, paste0("B/", member_name, ".envelope"))
-    if (!identical(as.character(payload$artifact_type), member_id) ||
+    payload_type_valid <- if (identical(member_name, "block_results")) {
+      is.null(payload$artifact_type) || identical(as.character(payload$artifact_type), member_id)
+    } else {
+      identical(as.character(payload$artifact_type), member_id)
+    }
+    if (!isTRUE(payload_type_valid) ||
         !identical(as.character(member$artifact_id), member_id) ||
         !identical(as.character(member_envelope$artifact_type), member_id) ||
         !identical(as.character(member_envelope$study_id), expected_study_id) ||
         !identical(as.character(member_envelope$payload_sha256), as.character(member$sha256)) ||
         !identical(as.character(payload$status), as.character(member$status))) {
-      triomics_d_abort("D_B_HANDOFF_INVALID", "A B-T07 member type, status, or envelope identity is inconsistent.",
+      triomics_d_abort("D_PROVENANCE_INVALID", "A B-T07 member type, status, or envelope identity is inconsistent.",
                        paste0("B.bundle.", member_name))
     }
     triomics_d_same_identity(payload, "study_id", expected_study_id, paste0("B ", member_name))
     triomics_d_same_identity(payload, "analysis_id", expected_analysis_id, paste0("B ", member_name))
     payloads[[member_name]] <- payload
     artifact_refs[[member_name]] <- list(
+      artifact_type = member_id,
       artifact_id = as.character(member_envelope$artifact_id),
       sha256 = as.character(member$sha256),
       envelope_sha256 = as.character(member$envelope_sha256),
       path = as.character(member$path),
+      envelope_path = as.character(member$envelope_path),
       envelope_inputs = member_envelope$inputs
     )
   }
@@ -301,7 +343,7 @@ triomics_d_read_b_handoff <- function(output_root, candidate_ref,
       !identical(as.character(artifact_refs$candidate_nominations$sha256),
                  as.character(expected_candidate_ref$sha256)) ||
       !identical(as.character(match$candidate_member$sha256), as.character(expected_candidate_ref$sha256))) {
-    triomics_d_abort("D_B_HANDOFF_INVALID", "The B candidate nomination reference does not match the C-06 immutable input.",
+    triomics_d_abort("D_LINEAGE_MISMATCH", "The B candidate nomination reference does not match the C-06 immutable input.",
                      "candidate_nominations.source_artifact_ref")
   }
   preparation_context_id <- bundle$preparation_context_id
@@ -315,7 +357,7 @@ triomics_d_read_b_handoff <- function(output_root, candidate_ref,
        !identical(preparation_context_id, expected_preparation_context_id)) ||
       (triomics_d_nonempty_string(expected_representation_id) &&
        !identical(representation_id, expected_representation_id))) {
-    triomics_d_abort("D_IDENTITY_MISMATCH", "B-T07 and its source block results do not match the C preparation context and representation.",
+    triomics_d_abort("D_LINEAGE_MISMATCH", "B-T07 and its source block results do not match the C preparation context and representation.",
                      "B.bundle.preparation_context_id")
   }
   expected_block_ref <- list(artifact_id = "stage-b-block-results",
@@ -326,7 +368,7 @@ triomics_d_read_b_handoff <- function(output_root, candidate_ref,
         identical(as.character(input$sha256), expected_block_ref$sha256)
     }, logical(1)))
     if (!has_source_edge) {
-      triomics_d_abort("D_B_HANDOFF_INVALID", "A derived B-T07 artifact is not hash-bound to its source block results.",
+    triomics_d_abort("D_PROVENANCE_INVALID", "A derived B-T07 artifact is not hash-bound to its source block results.",
                        paste0("B.bundle.", derived_name, ".source"))
     }
   }
@@ -345,12 +387,512 @@ triomics_d_read_b_handoff <- function(output_root, candidate_ref,
   )
 }
 
+triomics_d_profile_entities <- function(profile, role) {
+  entities <- profile$identity$entities
+  if (!is.list(entities)) return(list())
+  Filter(function(entity) identical(as.character(entity$scientific_role), role), entities)
+}
+
+triomics_d_profile_file <- function(path, key) {
+  if (triomics_d_nonempty_string(path) && triomics_is_symlink(path)) {
+    triomics_d_abort("D_OUTPUT_PATH_UNSAFE", "A producer provenance path is a symbolic link.", key)
+  }
+  if (!triomics_d_nonempty_string(path) || !file.exists(path) || dir.exists(path)) {
+    triomics_d_abort("D_PROVENANCE_REQUIRED", "A producer provenance payload or envelope is missing.", key)
+  }
+  normalizePath(path, winslash = "/", mustWork = TRUE)
+}
+
+triomics_d_read_producer_profile <- function(payload_path, envelope_path, stage,
+                                             payload_id, envelope_id, study_id,
+                                             analysis_id) {
+  payload_path <- triomics_d_profile_file(payload_path, paste0(stage, ".provenance"))
+  envelope_path <- triomics_d_profile_file(envelope_path, paste0(stage, ".provenance_envelope"))
+  if (!isTRUE(triomics_validate_envelope(envelope_path))) {
+    triomics_d_abort("D_PROVENANCE_INVALID", "A producer provenance envelope failed validation.",
+                     paste0(stage, ".provenance_envelope"))
+  }
+  profile_json <- tryCatch(readChar(payload_path, nchars = file.info(payload_path)$size,
+                                   useBytes = TRUE),
+                           error = function(error) NULL)
+  profile <- if (is.character(profile_json)) {
+    tryCatch(jsonlite::fromJSON(profile_json, simplifyVector = FALSE),
+             error = function(error) NULL)
+  } else NULL
+  envelope <- tryCatch(jsonlite::read_json(envelope_path, simplifyVector = FALSE),
+                       error = function(error) NULL)
+  validator_ids <- if (identical(stage, "B")) {
+    c("b-t07-stage-handoff-provenance", "b-t07-stage-handoff-provenance-envelope")
+  } else {
+    c("c06-stage-handoff-provenance", "c06-stage-handoff-provenance-envelope")
+  }
+  if (!is.list(profile) || !is.list(envelope) ||
+      !identical(as.character(envelope$artifact_type), "stage_handoff_provenance") ||
+      !identical(as.character(envelope$artifact_id), envelope_id) ||
+      !identical(as.character(envelope$study_id), study_id) ||
+      !identical(as.character(envelope$run_id), as.character(profile$run_id)) ||
+      !identical(as.character(envelope$status), "complete") ||
+      !identical(as.character(envelope$payload_sha256), triomics_sha256(payload_path)) ||
+      !identical(as.character(profile$producer_stage), stage) ||
+      !identical(as.character(profile$study_id), study_id) ||
+      !identical(as.character(profile$handoff_artifact_id), payload_id) ||
+      !isTRUE(tryCatch(triomics_validate_stage_handoff_provenance(
+        profile_json, validator_ids[[1L]], validator_ids[[2L]]
+      ), error = function(error) FALSE))) {
+    triomics_d_abort("D_PROVENANCE_INVALID", "A producer profile is not a valid, byte-bound B/C handoff identity.",
+                     paste0(stage, ".provenance"))
+  }
+  if (!is.null(envelope$analysis_id) &&
+      !identical(as.character(envelope$analysis_id), analysis_id)) {
+    triomics_d_abort("D_LINEAGE_MISMATCH", "A producer provenance profile has mismatched analysis identity.",
+                     paste0(stage, ".provenance.analysis_id"))
+  }
+  list(
+    profile = profile, envelope = envelope,
+    path = payload_path, envelope_path = envelope_path,
+    payload_sha256 = triomics_sha256(payload_path),
+    envelope_sha256 = triomics_sha256(envelope_path)
+  )
+}
+
+triomics_d_validate_profile_artifact <- function(entity, payload_path, envelope_path,
+                                                 artifact_id, key) {
+  payload_path <- triomics_d_profile_file(payload_path, paste0(key, ".payload"))
+  envelope_path <- triomics_d_profile_file(envelope_path, paste0(key, ".envelope"))
+  if (!isTRUE(triomics_b07_profile_artifact_matches(
+    entity, payload_path, envelope_path, artifact_id
+  ))) {
+    triomics_d_abort("D_PROVENANCE_INVALID", "A persisted producer artifact differs from its provenance descriptor.",
+                     key)
+  }
+  invisible(TRUE)
+}
+
+triomics_d_validate_predecessor_pair <- function(profile, payload_path,
+                                                 envelope_path, artifact_id,
+                                                 key) {
+  envelopes <- triomics_d_profile_entities(profile, "predecessor_envelope")
+  payloads <- triomics_d_profile_entities(profile, "predecessor_payload")
+  envelope_hits <- Filter(function(entity) {
+    identical(as.character(entity$artifact_id), artifact_id)
+  }, envelopes)
+  if (length(envelope_hits) != 1L) {
+    triomics_d_abort("D_PROVENANCE_INVALID", "C did not persist one exact B predecessor envelope.",
+                     key)
+  }
+  payload_hits <- Filter(function(entity) {
+    identical(as.character(entity$member_of_entity_id),
+              as.character(envelope_hits[[1L]]$entity_id)) &&
+      identical(as.character(entity$digest), triomics_sha256(payload_path))
+  }, payloads)
+  if (length(payload_hits) != 1L ||
+      !identical(as.character(envelope_hits[[1L]]$digest), triomics_sha256(envelope_path)) ||
+      !identical(as.character(envelope_hits[[1L]]$artifact_payload_sha256), triomics_sha256(payload_path))) {
+    triomics_d_abort("D_PROVENANCE_INVALID", "C did not bind the exact B predecessor payload/envelope bytes.",
+                     key)
+  }
+  invisible(TRUE)
+}
+
+triomics_d_compare_profile_identity <- function(b_profile, c_profile, role) {
+  b_entities <- triomics_d_profile_entities(b_profile, role)
+  c_entities <- triomics_d_profile_entities(c_profile, role)
+  b_ids <- vapply(b_entities, function(entity) as.character(entity$entity_id), character(1))
+  c_ids <- vapply(c_entities, function(entity) as.character(entity$entity_id), character(1))
+  if (!length(b_ids) || anyDuplicated(b_ids) || !all(b_ids %in% c_ids) ||
+      any(!vapply(b_ids, function(id) {
+        left <- b_entities[[match(id, b_ids)]]
+        right <- c_entities[[match(id, c_ids)]]
+        identical(as.character(left$digest), as.character(right$digest)) &&
+          identical(as.character(left$artifact_payload_sha256 %||% ""),
+                    as.character(right$artifact_payload_sha256 %||% "")) &&
+          identical(as.character(left$artifact_id %||% ""),
+                    as.character(right$artifact_id %||% "")) &&
+          identical(as.character(left$storage_form), as.character(right$storage_form))
+      }, logical(1)))) {
+    triomics_d_abort("D_LINEAGE_MISMATCH", "C does not preserve the exact inherited B identity descriptors.",
+                     paste0("C.provenance.", role))
+  }
+  invisible(TRUE)
+}
+
+triomics_d_validate_c_profile_values <- function(root, b_handoff, c_handoff,
+                                                 c_profile_ref) {
+  profile <- c_profile_ref$profile
+  for (spec in list(
+    list(role = "candidate_nominations", type = "candidate_nominations",
+         artifact_id = "c06-candidate-nominations"),
+    list(role = "evaluation_evidence", type = "integration_evaluation_evidence",
+         artifact_id = "c06-evaluation-evidence")
+  )) {
+    entities <- triomics_d_profile_entities(profile, spec$role)
+    artifacts <- Filter(function(item) identical(as.character(item$artifact_type), spec$type),
+                        c_handoff$manifest$artifacts)
+    if (length(entities) != 1L || length(artifacts) != 1L) {
+      triomics_d_abort("D_PROVENANCE_INVALID", "A required C handoff member has no unique provenance descriptor.",
+                       paste0("C.provenance.", spec$role))
+    }
+    payload_path <- triomics_d_child_path(
+      file.path(root, "D"), as.character(artifacts[[1L]]$payload_file),
+      paste0("C.", spec$role, ".payload")
+    )
+    envelope_path <- triomics_d_child_path(
+      file.path(root, "D"), as.character(artifacts[[1L]]$envelope_file),
+      paste0("C.", spec$role, ".envelope")
+    )
+    if (is.null(payload_path) || is.null(envelope_path)) {
+      triomics_d_abort("D_PROVENANCE_INVALID", "A C provenance member path is unsafe.",
+                       paste0("C.", spec$role))
+    }
+    triomics_d_validate_profile_artifact(
+      entities[[1L]], payload_path, envelope_path,
+      spec$artifact_id, paste0("C.", spec$role)
+    )
+  }
+
+  matrix_members <- Filter(function(member) {
+    identical(as.character(member$artifact_id), "stage_c_matrix_values")
+  }, b_handoff$bundle$members)
+  matrices <- if (length(matrix_members) == 1L) {
+    matrix_path <- triomics_d_child_path(root, as.character(matrix_members[[1L]]$path),
+                                         "B.matrix_values")
+    if (is.null(matrix_path)) NULL else tryCatch(readRDS(matrix_path), error = function(error) NULL)
+  } else NULL
+  if (!is.list(matrices)) {
+    triomics_d_abort("D_PROVENANCE_INVALID", "B represented matrices needed for C lineage are unavailable.",
+                     "B.matrix_values")
+  }
+
+  integrations <- c_handoff$integration_evidence$integrations
+  result_entities <- triomics_d_profile_entities(profile, "integration_result")
+  state_entities <- triomics_d_profile_entities(profile, "integration_state")
+  method_entities <- triomics_d_profile_entities(profile, "method_state")
+  native_entities <- triomics_d_profile_entities(profile, "native_sidecar")
+  preparation_entities <- triomics_d_profile_entities(profile, "preprocessing_state")
+  expected_results <- expected_states <- expected_methods <- expected_native <- character()
+  expected_preparation <- list()
+
+  for (evidence in integrations) {
+    integration_id <- as.character(evidence$integration_id)
+    method_id <- as.character(evidence$backend %||% evidence$method %||% "")
+    if (!triomics_d_nonempty_string(integration_id) || !triomics_d_nonempty_string(method_id)) {
+      triomics_d_abort("D_PROVENANCE_INVALID", "A C integration lacks its method or route identity.",
+                       "C.integration_evidence")
+    }
+    scope <- list(
+      analysis_id = c_handoff$analysis_id,
+      method_id = method_id,
+      preparation_context_id = c_handoff$preparation_context_id,
+      representation_id = c_handoff$representation_id
+    )
+    result_id <- triomics_b07_prov_entity_id("integration_result", scope)
+    result_digest <- triomics_b07_prov_value_sha256(evidence)
+    result <- Filter(function(entity) identical(as.character(entity$entity_id), result_id) &&
+      identical(as.character(entity$digest), result_digest), result_entities)
+    state_id <- triomics_b07_prov_entity_id("integration_state", scope)
+    state_value <- list(
+      integration_id = integration_id,
+      method_id = method_id,
+      status = as.character(evidence$status),
+      reason_code = evidence$reason_code %||% NULL,
+      reason = evidence$reason %||% NULL,
+      native_artifact_ref = evidence$native_artifact_ref %||% NULL
+    )
+    method_id_entity <- triomics_b07_prov_entity_id("method_state", scope)
+    method_value <- list(
+      integration_id = integration_id,
+      method_id = method_id,
+      status = as.character(evidence$status),
+      backend = as.character(evidence$backend),
+      native_state_ref = evidence$native_artifact_ref %||% NULL
+    )
+    method_state <- Filter(function(entity) {
+      identical(as.character(entity$entity_id), method_id_entity) &&
+        identical(as.character(entity$digest), triomics_b07_prov_value_sha256(method_value))
+    }, method_entities)
+    if (length(result) != 1L || length(method_state) != 1L) {
+      triomics_d_abort("D_LINEAGE_MISMATCH", "C integration result/state/method values differ from profile bytes.",
+                       paste0("C.integration.", integration_id))
+    }
+    expected_results <- c(expected_results, result_id)
+    expected_methods <- c(expected_methods, method_id_entity)
+
+    native_ref <- evidence$native_artifact_ref
+    native_payload <- NULL
+    if (identical(as.character(evidence$status), "complete") && is.list(native_ref)) {
+    native_dir <- file.path(root, "C", "native-states")
+    native_files <- if (dir.exists(native_dir)) {
+      list.files(native_dir, pattern = "^integration-[0-9]+[.]json$",
+                 full.names = TRUE, all.files = FALSE)
+    } else character()
+    native_hits <- native_files[vapply(native_files, function(path) {
+      if (triomics_is_symlink(path)) return(FALSE)
+      value <- tryCatch(jsonlite::read_json(path, simplifyVector = FALSE),
+                        error = function(error) NULL)
+      is.list(value) &&
+        identical(as.character(value$artifact_id), as.character(native_ref$artifact_id)) &&
+        identical(triomics_sha256(path), as.character(native_ref$sha256))
+    }, logical(1))]
+    if (length(native_hits) != 1L) {
+      triomics_d_abort("D_PROVENANCE_INVALID", "A C native sidecar does not resolve to one exact persisted file.",
+                       paste0("C.native_sidecar.", integration_id))
+    }
+    native_path <- normalizePath(native_hits[[1L]], winslash = "/", mustWork = TRUE)
+    native_envelope_path <- sub("[.]json$", ".envelope.json", native_path)
+    native_payload <- triomics_d_read_json(native_path, paste0("C.native_sidecar.", integration_id))
+    native_envelope <- triomics_d_read_json(
+      native_envelope_path, paste0("C.native_sidecar.", integration_id, ".envelope")
+    )
+    if (!isTRUE(triomics_validate_envelope(native_envelope_path)) ||
+        !identical(as.character(native_payload$integration_id), integration_id) ||
+        !identical(as.character(native_payload$backend), method_id) ||
+        !identical(as.character(native_envelope$payload_sha256), triomics_sha256(native_path)) ||
+        !identical(as.character(native_envelope$config_sha256),
+                   as.character(profile$producer$effective_configuration_sha256))) {
+      triomics_d_abort("D_PROVENANCE_INVALID", "A C native sidecar has a mismatched payload or envelope identity.",
+                       paste0("C.native_sidecar.", integration_id))
+    }
+    native_id <- triomics_b07_prov_entity_id("native_sidecar", integration_id)
+    native_entity <- Filter(function(entity) identical(as.character(entity$entity_id), native_id) &&
+      identical(as.character(entity$route_id), integration_id), native_entities)
+    if (length(native_entity) != 1L) {
+      triomics_d_abort("D_PROVENANCE_INVALID", "C profile does not bind one native sidecar per completed integration.",
+                       paste0("C.provenance.native_sidecar.", integration_id))
+    }
+    triomics_d_validate_profile_artifact(
+      native_entity[[1L]], native_path, native_envelope_path,
+      as.character(native_ref$artifact_id), paste0("C.native_sidecar.", integration_id)
+    )
+    expected_native <- c(expected_native, native_id)
+
+    prep_states <- tryCatch(
+      triomics_c06_validate_native_preparation_inputs(
+        evidence, native_payload, native_envelope, root
+      ),
+      error = function(error) NULL
+    )
+    if (is.null(prep_states)) {
+      triomics_d_abort("D_PROVENANCE_INVALID", "C native preparation matrix or persisted state failed read-back.",
+                       paste0("C.preparation_state.", integration_id))
+    }
+    for (block_id in names(prep_states)) {
+      item <- prep_states[[block_id]]
+      matrix_hashes <- evidence$identity$matrix_sha256
+      if (is.null(matrices[[block_id]]) || is.null(matrix_hashes[[block_id]])) {
+        triomics_d_abort("D_PROVENANCE_INVALID", "C preparation has no matching B matrix or fitted matrix hash.",
+                         paste0("C.preparation_state.", block_id))
+      }
+      preparation_value <- list(
+        producer_stage = "C",
+        integration_id = integration_id,
+        block_id = block_id,
+        preparation_context_id = c_handoff$preparation_context_id,
+        representation_id = c_handoff$representation_id,
+        state_id = as.character(item$reference$state_id),
+        state_hash = as.character(item$reference$state_hash),
+        state_payload_sha256 = as.character(item$reference$payload_sha256),
+        state_path = as.character(item$reference$path),
+        input_matrix_sha256 = triomics_b07_matrix_hash(block_id, matrices[[block_id]]),
+        prepared_matrix_sha256 = as.character(matrix_hashes[[block_id]]),
+        profile_id = as.character(item$state$profile_id),
+        operation_order = item$state$operation_order,
+        operation_hash = as.character(item$state$operation_hash),
+        training_unit_hash = as.character(item$state$training_unit_hash),
+        feature_keys_sha256 = triomics_b07_prov_ordered_ids_sha256(item$state$feature_keys)
+      )
+      preparation_id <- triomics_b07_prov_entity_id("preprocessing_state", list(
+        producer_stage = "C",
+        analysis_id = c_handoff$analysis_id,
+        block_id = block_id,
+        preparation_context_id = c_handoff$preparation_context_id,
+        representation_id = c_handoff$representation_id,
+        state_hash = as.character(item$reference$state_hash)
+      ))
+      expected_preparation[[length(expected_preparation) + 1L]] <- list(
+        entity_id = preparation_id,
+        digest = triomics_b07_prov_value_sha256(preparation_value)
+      )
+    }
+    }
+    if (!is.null(native_payload)) state_value$native_state <- native_payload
+    state_digest <- triomics_b07_prov_value_sha256(state_value)
+    state <- Filter(function(entity) identical(as.character(entity$entity_id), state_id) &&
+      identical(as.character(entity$digest), state_digest),
+      state_entities)
+    if (length(state) != 1L) {
+      triomics_d_abort("D_LINEAGE_MISMATCH",
+                       paste0("C integration state differs from its handoff/native sidecar (expected ",
+                              state_id, "/", state_digest, "; profile ",
+                              paste(vapply(state_entities, function(entity) {
+                                paste(as.character(entity$entity_id), as.character(entity$digest), sep = "/")
+                              }, character(1)), collapse = ", "), ")."),
+                       paste0("C.integration.", integration_id))
+    }
+    expected_states <- c(expected_states, state_id)
+  }
+
+  entity_ids <- function(entities) vapply(entities, function(entity) {
+    as.character(entity$entity_id)
+  }, character(1))
+  if (!identical(sort(expected_results), sort(entity_ids(result_entities))) ||
+      !identical(sort(expected_states), sort(entity_ids(state_entities))) ||
+      !identical(sort(expected_methods), sort(entity_ids(method_entities))) ||
+      !identical(sort(expected_native), sort(entity_ids(native_entities)))) {
+    triomics_d_abort("D_PROVENANCE_INVALID", "C profile has an integration or native artifact outside the exact handoff evidence.",
+                     "C.provenance.integration")
+  }
+  for (expected in expected_preparation) {
+    matches <- Filter(function(entity) {
+      identical(as.character(entity$entity_id), expected$entity_id) &&
+        identical(as.character(entity$digest), expected$digest)
+    }, preparation_entities)
+    if (length(matches) != 1L) {
+      triomics_d_abort("D_LINEAGE_MISMATCH", "C profile prepared matrix/state differs from the exact native sidecar state.",
+                       paste0("C.provenance.", expected$entity_id))
+    }
+  }
+  invisible(TRUE)
+}
+
+triomics_d_validate_producer_provenance <- function(root, b_handoff, c_handoff,
+                                                    source_manifests, feature_registry,
+                                                    current_config_sha256 = NULL,
+                                                    current_metadata = NULL) {
+  b_profile_path <- file.path(dirname(b_handoff$bundle_path), "stage-handoff-provenance.json")
+  b_profile_envelope_path <- sub("[.]json$", ".envelope.json", b_profile_path)
+  b_profile_ref <- triomics_d_read_producer_profile(
+    b_profile_path, b_profile_envelope_path, "B",
+    b_handoff$bundle_artifact_id, "b-t07-stage-handoff-provenance",
+    b_handoff$study_id, b_handoff$analysis_id
+  )
+  b_profile <- b_profile_ref$profile
+  if (!isTRUE(tryCatch(triomics_b07_validate_provenance_artifacts(
+    b_handoff$bundle, b_handoff$bundle_path,
+    sub("[.]json$", ".envelope.json", b_handoff$bundle_path)
+  ), error = function(error) FALSE))) {
+    triomics_d_abort("D_PROVENANCE_INVALID", "B provenance does not bind every persisted B handoff artifact.",
+                     "B.provenance")
+  }
+  c_profile_path <- file.path(root, "D", "stage-handoff-provenance.json")
+  c_profile_envelope_path <- sub("[.]json$", ".envelope.json", c_profile_path)
+  c_profile_ref <- triomics_d_read_producer_profile(
+    c_profile_path, c_profile_envelope_path, "C",
+    "c06-handoff-manifest", "c06-stage-handoff-provenance",
+    c_handoff$study_id, c_handoff$analysis_id
+  )
+  c_profile <- c_profile_ref$profile
+  c_manifest_path <- file.path(root, "D", "handoff-manifest.json")
+  c_manifest_envelope_path <- sub("[.]json$", ".envelope.json", c_manifest_path)
+  c_handoff_entities <- triomics_d_profile_entities(c_profile, "handoff_payload")
+  if (length(c_handoff_entities) != 1L) {
+    triomics_d_abort("D_PROVENANCE_INVALID", "C provenance must bind exactly one handoff manifest.",
+                     "C.provenance.handoff_payload")
+  }
+  triomics_d_validate_profile_artifact(
+    c_handoff_entities[[1L]], c_manifest_path, c_manifest_envelope_path,
+    c_handoff$manifest_artifact_id, "C.handoff_manifest"
+  )
+  b_bundle_envelope_path <- sub("[.]json$", ".envelope.json", b_handoff$bundle_path)
+  triomics_d_validate_predecessor_pair(
+    c_profile, b_handoff$bundle_path, b_bundle_envelope_path,
+    b_handoff$bundle_artifact_id, "C.provenance.predecessor_b_bundle"
+  )
+  triomics_d_validate_predecessor_pair(
+    c_profile, b_profile_ref$path, b_profile_ref$envelope_path,
+    "b-t07-stage-handoff-provenance", "C.provenance.predecessor_b_profile"
+  )
+  triomics_d_validate_c_profile_values(root, b_handoff, c_handoff, c_profile_ref)
+  inherited_roles <- c("source_manifest", "normalized_metadata", "feature_registry",
+                       "analysis_unit_map", "resolved_analysis", "represented_matrix")
+  for (role in inherited_roles) triomics_d_compare_profile_identity(b_profile, c_profile, role)
+  inherited_preprocessing <- triomics_d_profile_entities(b_profile, "preprocessing_state")
+  c_preprocessing <- triomics_d_profile_entities(c_profile, "preprocessing_state")
+  if (!length(inherited_preprocessing) || any(!vapply(inherited_preprocessing, function(entity) {
+    matches <- Filter(function(candidate) identical(as.character(candidate$entity_id),
+                                                    as.character(entity$entity_id)), c_preprocessing)
+    length(matches) == 1L &&
+      identical(as.character(matches[[1L]]$digest), as.character(entity$digest)) &&
+      identical(as.character(matches[[1L]]$canonical_schema_uri),
+                as.character(entity$canonical_schema_uri))
+  }, logical(1)))) {
+    triomics_d_abort("D_LINEAGE_MISMATCH", "C preprocessing lineage differs from persisted B descriptors.",
+                     "C.provenance.preprocessing_state")
+  }
+  if (!is.null(current_config_sha256)) {
+    config_hashes <- c(
+      as.character(b_handoff$bundle$config_sha256),
+      as.character(b_profile$producer$effective_configuration_sha256),
+      as.character(c_profile$producer$effective_configuration_sha256),
+      as.character(c_profile_ref$envelope$config_sha256)
+    )
+    if (!triomics_sha256_text(as.character(current_config_sha256)) ||
+        any(!vapply(config_hashes, identical, logical(1), as.character(current_config_sha256)))) {
+      triomics_d_abort("D_LINEAGE_MISMATCH", "The current D configuration differs from the B/C producer request.",
+                       "config_sha256")
+    }
+  }
+  source_ids <- vapply(source_manifests, function(source) {
+    triomics_b07_prov_entity_id("source_manifest", list(
+      source_id = as.character(source$source_id), sha256 = as.character(source$sha256)
+    ))
+  }, character(1))
+  persisted_source_ids <- vapply(triomics_d_profile_entities(c_profile, "source_manifest"),
+                                 function(entity) as.character(entity$entity_id), character(1))
+  source_hashes <- vapply(source_manifests, function(source) as.character(source$sha256), character(1))
+  if (!length(source_ids) || any(!vapply(source_hashes, triomics_sha256_text, logical(1))) ||
+      any(!source_ids %in% persisted_source_ids)) {
+    triomics_d_abort("D_LINEAGE_MISMATCH", "Current ingested sources differ from exact B/C source identities.",
+                     "source_manifests")
+  }
+  if (!is.null(current_metadata)) {
+    metadata_entities <- triomics_d_profile_entities(c_profile, "normalized_metadata")
+    expected_digest <- triomics_b07_prov_value_sha256(current_metadata)
+    if (length(metadata_entities) != 1L ||
+        !identical(as.character(metadata_entities[[1L]]$digest), expected_digest)) {
+      triomics_d_abort("D_LINEAGE_MISMATCH", "Current normalized metadata differ from B/C producer evidence.",
+                       "normalized_metadata")
+    }
+  }
+  feature_entities <- triomics_d_profile_entities(c_profile, "feature_registry")
+  block_ids <- sort(unique(as.character(feature_registry$block_id)), method = "radix")
+  if (!length(block_ids) || length(feature_entities) != length(block_ids) ||
+      any(!vapply(block_ids, function(block_id) {
+        entity_id <- triomics_b07_prov_entity_id("feature_registry", block_id)
+        entities <- Filter(function(entity) identical(as.character(entity$entity_id), entity_id),
+                           feature_entities)
+        rows <- feature_registry[as.character(feature_registry$block_id) == block_id, , drop = FALSE]
+        length(entities) == 1L &&
+          identical(as.character(entities[[1L]]$digest), triomics_b07_prov_value_sha256(rows))
+      }, logical(1)))) {
+    triomics_d_abort("D_LINEAGE_MISMATCH", "The current FeatureRegistry differs from exact B/C provenance.",
+                     "feature_registry")
+  }
+  list(
+    root = root,
+    current_config_sha256 = if (is.null(current_config_sha256)) NULL else
+      as.character(current_config_sha256),
+    b_bundle_path = b_handoff$bundle_path,
+    b_bundle_envelope_path = b_bundle_envelope_path,
+    b_bundle_artifact_id = b_handoff$bundle_artifact_id,
+    b_bundle_sha256 = b_handoff$bundle_sha256,
+    b_bundle_envelope_sha256 = b_handoff$bundle_envelope_sha256,
+    b_artifacts = b_handoff$artifact_refs,
+    b_profile = b_profile_ref,
+    c_profile = c_profile_ref,
+    c_manifest_path = c_manifest_path,
+    c_manifest_envelope_path = c_manifest_envelope_path,
+    c_artifacts = c_handoff$artifact_refs
+  )
+}
+
 triomics_d_read_evidence_bundle <- function(output_root, expected_study_id, expected_analysis_id,
                                             source_manifests, feature_registry,
-                                            imported_statistics = list(), routing_metadata = NULL) {
+                                            imported_statistics = list(), routing_metadata = NULL,
+                                            current_config_sha256 = NULL,
+                                            current_metadata = NULL) {
   if (!triomics_d_nonempty_string(output_root) || !dir.exists(output_root) ||
       triomics_is_symlink(output_root)) {
-    triomics_d_abort("D_HANDOFF_MISSING", "The Stage-B/Stage-C local output root is unavailable.", "output_root")
+    triomics_d_abort("D_PROVENANCE_REQUIRED", "The Stage-B/Stage-C local output root is unavailable.", "output_root")
   }
   root <- normalizePath(output_root, winslash = "/", mustWork = TRUE)
   c_handoff <- triomics_d_read_c06_handoff(
@@ -360,6 +902,10 @@ triomics_d_read_evidence_bundle <- function(output_root, expected_study_id, expe
   b_handoff <- triomics_d_read_b_handoff(
     root, nomination_ref, expected_study_id, expected_analysis_id,
     c_handoff$preparation_context_id, c_handoff$representation_id
+  )
+  producer_provenance <- triomics_d_validate_producer_provenance(
+    root, b_handoff, c_handoff, source_manifests, feature_registry,
+    current_config_sha256, current_metadata
   )
   result <- triomics_d_build_evidence_bundle(list(
     study_id = expected_study_id,
@@ -384,8 +930,16 @@ triomics_d_read_evidence_bundle <- function(output_root, expected_study_id, expe
     b_artifacts = b_handoff$artifact_refs,
     c_manifest_artifact_id = c_handoff$manifest_artifact_id,
     c_manifest_sha256 = c_handoff$manifest_sha256,
-    c_manifest_envelope_sha256 = c_handoff$manifest_envelope_sha256
+    c_manifest_envelope_sha256 = c_handoff$manifest_envelope_sha256,
+    c_artifacts = c_handoff$artifact_refs,
+    b_profile_artifact_id = "b-t07-stage-handoff-provenance",
+    b_profile_sha256 = producer_provenance$b_profile$payload_sha256,
+    b_profile_envelope_sha256 = producer_provenance$b_profile$envelope_sha256,
+    c_profile_artifact_id = "c06-stage-handoff-provenance",
+    c_profile_sha256 = producer_provenance$c_profile$payload_sha256,
+    c_profile_envelope_sha256 = producer_provenance$c_profile$envelope_sha256
   )
+  result$publication_context <- producer_provenance
   result
 }
 
@@ -404,7 +958,7 @@ triomics_d_validate_sources <- function(input, study_id) {
   for (index in seq_along(sources)) {
     source <- sources[[index]]
     if (!identical(as.character(source$study_id), study_id)) {
-      triomics_d_abort("D_IDENTITY_MISMATCH", "A D source manifest belongs to a different study.",
+      triomics_d_abort("D_LINEAGE_MISMATCH", "A D source manifest belongs to a different study.",
                        paste0("source_manifests.", source_ids[[index]], ".study_id"))
     }
     if (!is.character(source$role) || length(source$role) != 1L || is.na(source$role) ||
@@ -749,7 +1303,8 @@ triomics_d_resolve_integration_nomination <- function(integration_evidence, nomi
   expected_value <- list(block_id = block_id,
                          component_loadings = selected_value$component_loadings)
   if (!identical(triomics_canonical_json(reference), triomics_canonical_json(expected_ref)) ||
-      !identical(as.character(nomination$selection_rule), as.character(selection$rule)) ||
+      !identical(triomics_canonical_json(nomination$selection_rule),
+                 triomics_canonical_json(selection$rule)) ||
       !identical(triomics_canonical_json(nomination$selection_value),
                  triomics_canonical_json(expected_value))) {
     triomics_d_abort("D_NOMINATION_LINEAGE_MISMATCH", "An integration nomination's selected value or producer reference was changed.",
@@ -759,11 +1314,24 @@ triomics_d_resolve_integration_nomination <- function(integration_evidence, nomi
 }
 
 triomics_d_validate_nomination <- function(nomination, feature_registry) {
+  selection_rule_valid <- function(rule, source_branch) {
+    if (identical(as.character(source_branch), "primary_statistics")) {
+      return(triomics_d_nonempty_string(rule))
+    }
+    if (triomics_d_nonempty_string(rule)) return(TRUE)
+    if (!is.list(rule) || !length(rule) || is.null(names(rule)) ||
+        any(!nzchar(names(rule))) || anyDuplicated(names(rule))) return(FALSE)
+    tryCatch({
+      triomics_canonical_json(rule)
+      TRUE
+    }, error = function(error) FALSE)
+  }
   if (!is.list(nomination) || !triomics_sha256_text(as.character(nomination$nomination_id)) ||
       !triomics_d_nonempty_string(as.character(nomination$feature_key)) ||
       !as.character(nomination$feature_key) %in% names(feature_registry) ||
       !as.character(nomination$source_branch) %in% c("primary_statistics", "integration_selection") ||
-      !is.list(nomination$result_ref) || !triomics_d_nonempty_string(nomination$selection_rule) ||
+      !is.list(nomination$result_ref) ||
+      !selection_rule_valid(nomination$selection_rule, as.character(nomination$source_branch)) ||
       !is.list(nomination$selection_value)) {
     triomics_d_abort("D_NOMINATION_INVALID", "A D nomination lacks a registered feature or full selection lineage.",
                      "candidate_nominations")
@@ -832,7 +1400,7 @@ triomics_d_build_evidence_bundle <- function(input) {
   context_id <- c$candidate_nominations$preparation_context_id
   representation_id <- c$candidate_nominations$representation_id
   if (!triomics_d_nonempty_string(context_id) || !triomics_d_nonempty_string(representation_id)) {
-    triomics_d_abort("D_IDENTITY_MISMATCH", "C-06 nominations require preparation and representation identities.",
+    triomics_d_abort("D_LINEAGE_MISMATCH", "C-06 nominations require preparation and representation identities.",
                      "candidate_nominations.context")
   }
   for (name in names(c_artifacts)) {
@@ -843,11 +1411,11 @@ triomics_d_build_evidence_bundle <- function(input) {
   triomics_d_same_identity(b$block_results, "preparation_context_id", context_id, "B block_results")
   triomics_d_same_identity(b$block_results, "representation_id", representation_id, "B block_results")
   if (!is.null(b$preparation_context_id) && !identical(b$preparation_context_id, context_id)) {
-    triomics_d_abort("D_IDENTITY_MISMATCH", "B-T07 and C-06 preparation contexts differ.",
+    triomics_d_abort("D_LINEAGE_MISMATCH", "B-T07 and C-06 preparation contexts differ.",
                      "B.bundle.preparation_context_id")
   }
   if (!is.null(b$representation_id) && !identical(b$representation_id, representation_id)) {
-    triomics_d_abort("D_IDENTITY_MISMATCH", "B-T07 and C-06 representations differ.",
+    triomics_d_abort("D_LINEAGE_MISMATCH", "B-T07 and C-06 representations differ.",
                      "B.bundle.representation_id")
   }
   candidate_payload <- c$candidate_nominations
