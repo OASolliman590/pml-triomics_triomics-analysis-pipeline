@@ -697,7 +697,7 @@ triomics_c06_cli_compose_unit_map <- function(resolved, ingested, analysis,
         } else {
           as.character(triomics_c06_cli_unit_map_scalar(source_record, "condition") %||% "")
         },
-        time = time,
+        time = if (absent_all_missing_time) NULL else time,
         time_unit = as.character(time_unit),
         time_origin = time_origin,
         eligibility = if (eligible) "retained" else "excluded",
