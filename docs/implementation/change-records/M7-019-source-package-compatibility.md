@@ -17,7 +17,10 @@ carry its actual full commit into the installed package; unexpanded/missing or
 malformed stamps must fail closed. Never invent a commit, consult an unrelated
 working-directory repository, initialize fake Git history, or accept a user/env
 claim as verified lineage. Resolve source identity from the executing package or
-its actual source root. Keep existing SHA-256 predecessor binding and profile
+its actual source root. A source-root Git fallback must establish that root
+belongs to the executing code; installed packages never fall back to another
+checkout. Test unrelated working directories and missing/unexpanded/malformed
+stamps. Archive metadata is an unsigned build-source assertion. Keep existing SHA-256 predecessor binding and profile
 schema unchanged. Explain the stamp trust boundary: source/build metadata is not
 a signature or proof against a malicious repackager. If a truthful compatible
 identity cannot be supplied without a schema/contract change, stop with evidence.
@@ -39,7 +42,11 @@ tests/testthat/test-B-T07.R; existing tests/testthat/helper*.R for resource path
 new tests/testthat/test-package-source-identity.R; .gitattributes and a narrowly
 named inst source-revision stamp file. Record each helper/stamp path before edit.
 Sol exclusively applies shared tools/check-package.R and man/triomics-api.Rd
-changes from Luna's separate proposed patch. No product changes in the live
+changes from Luna's separate proposed patch. Sol also exclusively applies a
+proposed patch to R/cli.R::triomics_c08_cli_endpoint_payload, limited to named
+signed-weight JSON conversion before payload hashing and validation. No other
+CLI edits. Verify numeric API weights and persisted named JSON weights together,
+including unchanged explicit null/exclusion guards. No product changes in the live
 integration checkout before reviewed candidate integration. No lockfile,
 NAMESPACE, DESCRIPTION or stage-registration change without a revised scope.
 If another existing test needs only the identical resource-path repair, identify
