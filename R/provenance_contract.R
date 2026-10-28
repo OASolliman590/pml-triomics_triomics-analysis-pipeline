@@ -1,5 +1,124 @@
 .triomics_provenance_runtime <- new.env(parent = emptyenv())
 
+triomics_source_root_valid <- function(root) {
+  if (!is.character(root) || length(root) != 1L || is.na(root) || !dir.exists(root)) return(FALSE)
+  description <- file.path(root, "DESCRIPTION")
+  source_files <- file.path(root, "R", "export_c.R")
+  executable <- file.path(root, "inst", "exec", "triomics")
+  if (!file.exists(description) || !file.exists(source_files) || !file.exists(executable)) return(FALSE)
+  metadata <- tryCatch(read.dcf(description, fields = "Package"), error = function(error) NULL)
+  !is.null(metadata) && nrow(metadata) == 1L && identical(unname(metadata[1L, "Package"]), "triomics")
+}
+
+triomics_installed_root_valid <- function(root) {
+  if (!is.character(root) || length(root) != 1L || is.na(root) || !dir.exists(root)) return(FALSE)
+  description <- file.path(root, "DESCRIPTION")
+  if (!file.exists(description)) return(FALSE)
+  metadata <- tryCatch(read.dcf(description, fields = "Package"), error = function(error) NULL)
+  !is.null(metadata) && nrow(metadata) == 1L && identical(unname(metadata[1L, "Package"]), "triomics")
+}
+
+triomics_source_git_revision <- function(root) {
+  git_metadata <- file.path(root, ".git")
+  if (!file.exists(git_metadata) && !dir.exists(git_metadata)) return("unavailable")
+  if (!nzchar(Sys.which("git"))) return("unavailable")
+  run_git <- function(arguments) {
+    tryCatch(
+      system2("git", c("-C", shQuote(root), arguments), stdout = TRUE, stderr = TRUE),
+      error = function(error) character()
+    )
+  }
+  repository_root <- run_git(c("rev-parse", "--show-toplevel"))
+  if (length(repository_root) != 1L || (!is.null(attr(repository_root, "status")) &&
+      !identical(as.integer(attr(repository_root, "status")), 0L))) return("unavailable")
+  repository_root <- tryCatch(normalizePath(repository_root, winslash = "/", mustWork = TRUE),
+                              error = function(error) "")
+  if (!identical(repository_root, root)) return("unavailable")
+  status <- run_git(c("status", "--porcelain", "--untracked-files=all"))
+  if (length(status) != 0L || (!is.null(attr(status, "status")) &&
+      !identical(as.integer(attr(status, "status")), 0L))) return("unavailable")
+  revision <- run_git(c("rev-parse", "--verify", "HEAD^{commit}"))
+  if (length(revision) == 1L && grepl("^(?:[0-9a-f]{40}|[0-9a-f]{64})$", revision) &&
+      (is.null(attr(revision, "status")) || identical(as.integer(attr(revision, "status")), 0L))) {
+    revision
+  } else {
+    "unavailable"
+  }
+}
+
+triomics_source_revision_from_root <- function(root, installed = NULL) {
+  root <- tryCatch(normalizePath(root, winslash = "/", mustWork = TRUE),
+                   error = function(error) "")
+  source_tree <- nzchar(root) && triomics_source_root_valid(root)
+  if (is.null(installed)) installed <- !source_tree
+  if (!is.logical(installed) || length(installed) != 1L || is.na(installed) ||
+      (isTRUE(installed) && !triomics_installed_root_valid(root)) ||
+      (!isTRUE(installed) && !source_tree)) return("unavailable")
+
+  stamp_path <- if (isTRUE(installed)) {
+    file.path(root, "triomics-source-revision")
+  } else {
+    file.path(root, "inst", "triomics-source-revision")
+  }
+  if (!file.exists(stamp_path) || dir.exists(stamp_path) || triomics_is_symlink(stamp_path)) {
+    return(if (isTRUE(installed)) "unavailable" else triomics_source_git_revision(root))
+  }
+  stamp <- tryCatch(readLines(stamp_path, warn = FALSE), error = function(error) character())
+  if (length(stamp) != 1L) return("unavailable")
+  if (grepl("^(?:[0-9a-f]{40}|[0-9a-f]{64})$", stamp)) return(stamp)
+  if (!isTRUE(installed) && identical(stamp, "$Format:%H$")) {
+    return(triomics_source_git_revision(root))
+  }
+  "unavailable"
+}
+
+triomics_source_identity_context <- function() {
+  resolver_environment <- environment(triomics_source_identity_context)
+  if (!identical(resolver_environment, .GlobalEnv)) {
+    namespace_name <- tryCatch(getNamespaceName(resolver_environment), error = function(error) "")
+    if (!identical(namespace_name, "triomics")) return(NULL)
+    root <- tryCatch(
+      normalizePath(getNamespaceInfo(resolver_environment, "path"), winslash = "/", mustWork = TRUE),
+      error = function(error) ""
+    )
+    if (!nzchar(root)) return(NULL)
+    if (triomics_source_root_valid(root)) return(list(root = root, installed = FALSE))
+    if (triomics_installed_root_valid(root)) return(list(root = root, installed = TRUE))
+    return(NULL)
+  }
+
+  source_entrypoint <- exists("triomics_main", envir = .GlobalEnv, inherits = FALSE) &&
+    is.function(get("triomics_main", envir = .GlobalEnv, inherits = FALSE)) &&
+    identical(environment(get("triomics_main", envir = .GlobalEnv, inherits = FALSE)), .GlobalEnv)
+  script_arg <- grep("^--file=", commandArgs(FALSE), value = TRUE)
+  if (source_entrypoint && length(script_arg) == 1L) {
+    script_path <- tryCatch(
+      normalizePath(sub("^--file=", "", script_arg[[1L]]), winslash = "/", mustWork = TRUE),
+      error = function(error) ""
+    )
+    if (nzchar(script_path)) {
+      root <- tryCatch(normalizePath(file.path(dirname(script_path), "..", ".."),
+                                     winslash = "/", mustWork = TRUE),
+                       error = function(error) "")
+      expected_script <- if (nzchar(root)) normalizePath(file.path(root, "inst", "exec", "triomics"),
+                                                         winslash = "/", mustWork = FALSE) else ""
+      if (nzchar(root) && identical(script_path, expected_script) && triomics_source_root_valid(root)) {
+        return(list(root = root, installed = FALSE))
+      }
+    }
+  }
+
+  NULL
+}
+
+triomics_source_revision <- function() {
+  context <- triomics_source_identity_context()
+  if (is.null(context)) return("unavailable")
+  # Git archive expansion records the build source; it is unsigned metadata, not a
+  # signature and not proof against a malicious repackager.
+  triomics_source_revision_from_root(context$root, installed = context$installed)
+}
+
 triomics_provenance_abort <- function(reason) {
   reason <- as.character(reason)
   if (length(reason) != 1L || is.na(reason) || !nzchar(reason)) {
@@ -428,8 +547,8 @@ triomics_provenance_validate_profile <- function(profile, frame_payload_id, fram
   activity_ids <- vapply(activities, function(activity) activity$activity_id, character(1))
   if (anyDuplicated(entity_ids)) triomics_provenance_abort("entity_id values must be globally unique")
   if (anyDuplicated(activity_ids)) triomics_provenance_abort("activity_id values must be unique")
-  entity_index <- setNames(seq_along(entities), entity_ids)
-  activity_index <- setNames(seq_along(activities), activity_ids)
+  entity_index <- stats::setNames(seq_along(entities), entity_ids)
+  activity_index <- stats::setNames(seq_along(activities), activity_ids)
   identity_key <- paste(profile$producer_stage, profile$study_id, profile$run_id,
                         profile$handoff_artifact_id, sep = "\034")
   if (identical(frame_payload_id, frame_envelope_id)) {
@@ -526,8 +645,8 @@ triomics_provenance_validate_profile <- function(profile, frame_payload_id, fram
     }
   }
 
-  derived_edges <- setNames(vector("list", length(entity_ids)), entity_ids)
-  member_edges <- setNames(vector("list", length(entity_ids)), entity_ids)
+  derived_edges <- stats::setNames(vector("list", length(entity_ids)), entity_ids)
+  member_edges <- stats::setNames(vector("list", length(entity_ids)), entity_ids)
   for (entity in entities) {
     derived_edges[[entity$entity_id]] <- unlist(entity$derived_from_entity_ids, use.names = FALSE)
     member_edges[[entity$entity_id]] <- if (is.null(entity$member_of_entity_id)) character() else entity$member_of_entity_id

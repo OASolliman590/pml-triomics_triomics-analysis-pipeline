@@ -693,6 +693,7 @@ testthat::test_that("C-08 preserves mean and delta AnalysisUnitMap lineage and r
                              c("sample-u1-V0", "sample-u1-V1"))
   testthat::expect_identical(mean_endpoint$samples[[1L]]$visit_weights,
                              stats::setNames(c(.5, .5), c("V0", "V1")))
+  testthat::expect_type(mean_endpoint$unit_map$visit_weights[[1L]], "double")
   mean_bundle <- triomics_integration_score_endpoints(
     mean_input$result, mean_input$fit, mean_input$context
   )
@@ -715,6 +716,35 @@ testthat::test_that("C-08 preserves mean and delta AnalysisUnitMap lineage and r
                              c("sample-u1-V0", "sample-u1-V1"))
   testthat::expect_identical(delta_endpoint$samples[[1L]]$visit_weights,
                              stats::setNames(c(-1, 1), c("V0", "V1")))
+  testthat::expect_type(delta_endpoint$unit_map$visit_weights[[1L]], "double")
+  testthat::expect_type(delta_endpoint$samples[[1L]]$visit_weights, "double")
+  testthat::expect_identical(names(delta_endpoint$samples[[1L]]$visit_weights), c("V0", "V1"))
+  tampered_delta <- delta_bundle
+  tampered_delta$endpoints[[1L]]$samples[[1L]]$visit_weights[[1L]] <- -2
+  tamper_error <- testthat::capture_error(triomics_c08_cli_endpoint_payload(tampered_delta))
+  testthat::expect_s3_class(tamper_error, "triomics_error")
+  testthat::expect_identical(tamper_error$code, "C_SCORE_ENDPOINT_HASH")
+  serialized_delta <- triomics_c08_cli_endpoint_payload(delta_bundle)
+  testthat::expect_identical(
+    serialized_delta$endpoints[[1L]]$samples[[1L]]$visit_weights,
+    list(V0 = -1, V1 = 1)
+  )
+  testthat::expect_identical(
+    serialized_delta$endpoints[[1L]]$unit_map$visit_weights[[1L]],
+    list(V0 = -1, V1 = 1)
+  )
+  serialized_path <- tempfile("c08-delta-endpoint-", fileext = ".json")
+  on.exit(unlink(serialized_path), add = TRUE)
+  triomics_write_json_atomic(serialized_delta, serialized_path)
+  persisted_delta <- triomics_c08_cli_validate_endpoint_readback(serialized_path)
+  testthat::expect_identical(
+    persisted_delta$endpoints[[1L]]$samples[[1L]]$visit_weights,
+    list(V0 = -1, V1 = 1)
+  )
+  testthat::expect_identical(
+    persisted_delta$endpoints[[1L]]$unit_map[[1L]]$visit_weights,
+    list(V0 = -1, V1 = 1)
+  )
   delta_objective <- c08_objective(delta_endpoint$endpoint_id, mode = "baseline_to_later", visit = "V0")
   delta_objective$objectives[[1L]]$baseline_visit_ref <- "V0"
   delta_objective$objectives[[1L]]$later_visit_ref <- "V1"

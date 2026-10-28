@@ -132,19 +132,81 @@ b_row <- function(fit, feature, block = "block_1", contrast = "target_minus_refe
   hit[[1L]]
 }
 
-b_stage_cli_smoke <- function(config_path, output) {
-  source_root <- normalizePath(testthat::test_path("..", ".."), winslash = "/", mustWork = TRUE)
-  cli <- file.path(source_root, "inst", "exec", "triomics")
-  rscript <- file.path(R.home("bin"), "Rscript")
-  original_wd <- getwd()
-  setwd(dirname(cli))
-  on.exit(setwd(original_wd), add = TRUE)
-  lines <- system2(
-    rscript,
-    c("--vanilla", shQuote(basename(cli)), "--config", shQuote(config_path),
-      "--stage", "B", "--output", shQuote(output)),
-    stdout = TRUE, stderr = TRUE
+b_t01_package_context <- function() {
+  source_root <- tryCatch(
+    normalizePath(testthat::test_path("..", ".."), winslash = "/", mustWork = TRUE),
+    error = function(error) ""
   )
+  namespace_root <- tryCatch(
+    normalizePath(getNamespaceInfo(asNamespace("triomics"), "path"),
+                  winslash = "/", mustWork = TRUE),
+    error = function(error) ""
+  )
+  list(
+    source_root = source_root,
+    source_checkout = nzchar(source_root) && identical(namespace_root, source_root) &&
+      dir.exists(file.path(source_root, "R")) &&
+      file.exists(file.path(source_root, "inst", "exec", "triomics")),
+    namespace_root = namespace_root
+  )
+}
+
+b_t01_fixture_config <- function(name) {
+  config_path <- triomics_test_resource("examples", "tickets", name)
+  config <- yaml::read_yaml(config_path)
+  changed <- FALSE
+  resolve_fixture_path <- function(path) {
+    if (is.null(path)) return(NULL)
+    resolved <- normalizePath(file.path(dirname(config_path), path), winslash = "/", mustWork = FALSE)
+    if (file.exists(resolved)) return(path)
+    independent_prefix <- "../../../discovery/spec-v2/examples/independent/"
+    if (startsWith(path, independent_prefix)) {
+      changed <<- TRUE
+      return(triomics_test_resource(
+        "examples", "data", "independent", basename(path)
+      ))
+    }
+    path
+  }
+  for (index in seq_along(config$sources)) {
+    config$sources[[index]]$file <- resolve_fixture_path(config$sources[[index]]$file)
+  }
+  config$metadata$file <- resolve_fixture_path(config$metadata$file)
+  for (index in seq_along(config$blocks)) {
+    config$blocks[[index]]$file <- resolve_fixture_path(config$blocks[[index]]$file)
+  }
+  if (!changed) return(config_path)
+  relocated <- tempfile(pattern = "b-t01-packaged-fixture-", fileext = ".yaml")
+  yaml::write_yaml(config, relocated)
+  relocated
+}
+
+b_stage_cli_smoke <- function(config_path, output) {
+  context <- b_t01_package_context()
+  rscript <- file.path(R.home("bin"), "Rscript")
+  cli_args <- c("--config", shQuote(config_path), "--stage", "B", "--output", shQuote(output))
+  if (context$source_checkout) {
+    cli <- triomics_test_resource("exec", "triomics")
+    original_wd <- getwd()
+    setwd(dirname(cli))
+    on.exit(setwd(original_wd), add = TRUE)
+    lines <- system2(
+      rscript, c("--vanilla", shQuote(basename(cli)), cli_args),
+      stdout = TRUE, stderr = TRUE
+    )
+  } else {
+    runner <- tempfile(pattern = "b-t01-installed-cli-", fileext = ".R")
+    on.exit(unlink(runner), add = TRUE)
+    writeLines(c(
+      "status <- triomics:::triomics_main(commandArgs(trailingOnly = TRUE))",
+      "quit(save = \"no\", status = as.integer(status))"
+    ), runner, useBytes = TRUE)
+    lines <- system2(
+      rscript, c("--vanilla", shQuote(runner), cli_args),
+      env = paste0("R_LIBS=", shQuote(paste(.libPaths(), collapse = .Platform$path.sep))),
+      stdout = TRUE, stderr = TRUE
+    )
+  }
   status <- attr(lines, "status")
   if (is.null(status)) status <- 0L
   list(status = as.integer(status), output = lines)
@@ -605,7 +667,7 @@ testthat::test_that("the stage B fixture envelope matches limma on predecessor m
 })
 
 testthat::test_that("Stage B CLI writes unique, deterministic BlockResult identities across contrasts", {
-  config_path <- triomics_test_resource("examples", "tickets", "B-T02.yaml")
+  config_path <- b_t01_fixture_config("B-T02.yaml")
   first_output <- tempfile("b-t02-identity-first-")
   second_output <- tempfile("b-t02-identity-second-")
   dir.create(first_output)
@@ -693,7 +755,7 @@ testthat::test_that("Stage B CLI writes unique, deterministic BlockResult identi
 })
 
 testthat::test_that("public identity finalization preserves the fitted scientific rows exactly", {
-  config_path <- triomics_test_resource("examples", "tickets", "B-T02.yaml")
+  config_path <- b_t01_fixture_config("B-T02.yaml")
   config <- triomics_read_config(config_path)
   ingested <- triomics_ingest_configured_study(config, config_path)
   analysis <- config$analyses[[1L]]
@@ -752,7 +814,7 @@ testthat::test_that("public identity finalization preserves the fitted scientifi
 })
 
 testthat::test_that("Stage B serializes joint claim identity without choosing a member contrast", {
-  source_config <- triomics_test_resource("examples", "tickets", "B-T02.yaml")
+  source_config <- b_t01_fixture_config("B-T02.yaml")
   output <- tempfile("b-t02-joint-identity-")
   dir.create(output)
   on.exit(unlink(output, recursive = TRUE), add = TRUE)

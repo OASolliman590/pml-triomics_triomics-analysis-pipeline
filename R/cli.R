@@ -1082,8 +1082,32 @@ triomics_c08_cli_write_artifact <- function(payload, path, envelope_path, artifa
 }
 
 triomics_c08_cli_endpoint_payload <- function(endpoint_bundle) {
+  triomics_c08_validate_endpoint_bundle(endpoint_bundle)
   payload <- unclass(endpoint_bundle)
   payload$schema_version <- "2.0"
+  payload$endpoints <- lapply(payload$endpoints, function(endpoint) {
+    endpoint$samples <- lapply(endpoint$samples, function(sample) {
+      weights <- sample$visit_weights
+      if (is.numeric(weights) && !is.null(names(weights))) {
+        sample$visit_weights <- stats::setNames(as.list(as.numeric(weights)), names(weights))
+      }
+      sample
+    })
+    if (is.data.frame(endpoint$unit_map) && "visit_weights" %in% names(endpoint$unit_map)) {
+      endpoint$unit_map$visit_weights <- I(lapply(endpoint$unit_map$visit_weights, function(weights) {
+        if (is.numeric(weights) && !is.null(names(weights))) {
+          return(stats::setNames(as.list(as.numeric(weights)), names(weights)))
+        }
+        weights
+      }))
+    }
+    endpoint$endpoint_sha256 <- NULL
+    endpoint$endpoint_sha256 <- triomics_c08_endpoint_hash(endpoint)
+    endpoint
+  })
+  if (length(payload$endpoints)) {
+    payload$unit_map_hash <- triomics_c08_sha256(payload$endpoints[[1L]]$unit_map)
+  }
   payload$payload_sha256 <- NULL
   payload$payload_sha256 <- triomics_c08_bundle_hash(payload)
   class(payload) <- class(endpoint_bundle)

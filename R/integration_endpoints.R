@@ -229,10 +229,8 @@ triomics_c08_validate_unit_map <- function(unit_map, score_unit_ids, context) {
           anyDuplicated(names(weights))) {
         triomics_c08_abort("C_SCORE_LINEAGE_INVALID", "Subject deltas require two source samples and named reference/target weights of -1 and +1.", "unit_map.visit_weights")
       }
-      # Preserve the visit names through JSON artifact serialization; an unnamed
-      # numeric array would discard which source visit carries each sign.
       records[[record_index]]$visit_weights <- stats::setNames(
-        as.list(as.numeric(weights)), names(weights)
+        as.numeric(weights), names(weights)
       )
     }
     if (!identical(unit_representation, expected_representation)) {

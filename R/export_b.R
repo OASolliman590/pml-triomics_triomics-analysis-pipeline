@@ -2149,11 +2149,7 @@ triomics_b07_member <- function(artifact_id, status, root, path = NULL,
 }
 
 triomics_b07_git_ref <- function(root) {
-  value <- tryCatch(
-    system2("git", c("-C", shQuote(root), "rev-parse", "HEAD"), stdout = TRUE, stderr = FALSE),
-    error = function(error) character()
-  )
-  if (length(value) == 1L && grepl("^[0-9a-f]{40,64}$", value)) value else "unavailable"
+  triomics_source_revision()
 }
 
 triomics_b07_runtime <- function() {

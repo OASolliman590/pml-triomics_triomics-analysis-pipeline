@@ -83,7 +83,8 @@ triomics_b07_export_handoff(
   cli_exit_code = NULL,
   resume = FALSE,
   qualifications = NULL,
-  matrix_source = NULL
+  matrix_source = NULL,
+  provenance_context = NULL
 )
 
 triomics_b07_cli_after_stage_b(args, stage_b_result, smoke_runs = NULL)
@@ -181,6 +182,7 @@ annotate_evidence(evidence_bundle, annotation_spec = list())
   \item{qualifications}{Explicit unrun scientific qualifications recorded in
   the acceptance and reproduction evidence.}
   \item{matrix_source}{Declared provenance label for the handed-off matrices.}
+  \item{provenance_context}{Same-run Stage B fit and source context used to verify native provenance before export.}
   \item{args}{Original Stage B CLI argument vector.}
   \item{stage_b_result}{In-memory result returned by the same
   \code{triomics_execute_stage_b()} execution.}

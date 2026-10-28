@@ -118,6 +118,16 @@ main <- function(args = commandArgs(trailingOnly = TRUE)) {
     if (file.exists(check_log)) {
       file.copy(check_log, file.path(options$output, "00check.log"), overwrite = TRUE)
     }
+    warning_inventory <- list.files(
+      check_dir, pattern = "^triomics-warning-inventory\\.json$",
+      recursive = TRUE, full.names = TRUE
+    )
+    if (length(warning_inventory) != 1L || !file.copy(
+      warning_inventory[[1L]], file.path(options$output, "warning-inventory.json"), overwrite = TRUE
+    )) {
+      cat("testthat warning inventory was not captured; see 00check.log.\n", file = stderr())
+      return(1L)
+    }
   }
   summary <- if (file.exists(check_log)) readLines(check_log, warn = FALSE) else character()
   status_line <- grep("^Status:", summary, value = TRUE)

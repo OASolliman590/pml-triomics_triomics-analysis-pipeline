@@ -1,3 +1,18 @@
+triomics_test_source_checkout <- function() {
+  source_root <- tryCatch(
+    normalizePath(testthat::test_path("..", ".."), winslash = "/", mustWork = TRUE),
+    error = function(error) ""
+  )
+  namespace_root <- tryCatch(
+    normalizePath(getNamespaceInfo(asNamespace("triomics"), "path"),
+                  winslash = "/", mustWork = TRUE),
+    error = function(error) ""
+  )
+  nzchar(source_root) && identical(namespace_root, source_root) &&
+    dir.exists(file.path(source_root, "R")) &&
+    file.exists(file.path(source_root, "inst", "exec", "triomics"))
+}
+
 triomics_test_resource <- function(...) {
   components <- as.character(c(...))
   if (length(components) == 0L || anyNA(components) || any(!nzchar(components))) {
@@ -6,7 +21,7 @@ triomics_test_resource <- function(...) {
 
   relative_path <- do.call(file.path, as.list(components))
   source_path <- testthat::test_path("..", "..", "inst", relative_path)
-  if (file.exists(source_path)) {
+  if (triomics_test_source_checkout() && file.exists(source_path)) {
     return(normalizePath(source_path, winslash = "/", mustWork = TRUE))
   }
 

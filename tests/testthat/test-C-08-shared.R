@@ -404,6 +404,10 @@ testthat::test_that("C-08 preserves paired sign names and leaves mean weights nu
     representation_id = "delta"
   )
   paired_map <- triomics_c08_validate_unit_map(paired, "subject-a", paired_context)
+  testthat::expect_type(paired_map$visit_weights[[1L]], "double")
+  testthat::expect_identical(
+    paired_map$visit_weights[[1L]], stats::setNames(c(-1, 1), c("baseline", "followup"))
+  )
   testthat::expect_identical(names(paired_map$visit_weights[[1L]]), c("baseline", "followup"))
   testthat::expect_identical(as.numeric(unlist(paired_map$visit_weights[[1L]])), c(-1, 1))
 
