@@ -34,35 +34,34 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_018_luna",
-      "role": "implementation",
-      "model_requested": "gpt-6-luna",
-      "effort_requested": "max",
-      "effective_settings_exposed": false,
-      "base": "6456055",
-      "worktree": "/Users/megastore/.codex/worktrees/m7-018-c-null/PML MultiOmics Analysis Pipeline",
-      "next_transition": "freeze candidate then Terra review"
-    },
-    {
-      "agent": "/root/m7_018_terra",
-      "role": "read_only_red_and_review",
-      "model_requested": "gpt-6.1-terra",
-      "effort_requested": "high",
-      "effective_settings_exposed": false,
-      "base": "6456055",
-      "next_transition": "reconcile native RED then review frozen Luna candidate"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_018_parallel_workers",
+    "status": "m7_018_focused_gate_running",
     "last_reconciled": "2026-10-28",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "New authorized C null serialization cycle; Luna implementation and Terra read-only RED concurrent. M7/G7 closed."
+    "disposition": "774bbcc native21pass0fail, B/C/D exits0, persisted time:null and independent full provenance hashreadback pass; Terra no findings. Focused suite running, no integration yet."
   },
   "orchestration_events": [
+    {
+      "event": "m7_018_native_proof_pass",
+      "date": "2026-10-28",
+      "candidate": "774bbcc",
+      "pass_count": 21,
+      "persisted_time": null
+    },
+    {
+      "event": "m7_018_terra_review_reconciled",
+      "date": "2026-10-28",
+      "candidate": "774bbcc5f7ad3152e6daf1d57d1972cf99519963",
+      "verdict": "no_scoped_findings"
+    },
+    {
+      "event": "m7_018_candidate_frozen",
+      "date": "2026-10-28",
+      "candidate": "774bbcc5f7ad3152e6daf1d57d1972cf99519963",
+      "repairs_used": 0
+    },
     {
       "event": "m7_018_dispatch",
       "date": "2026-10-28",

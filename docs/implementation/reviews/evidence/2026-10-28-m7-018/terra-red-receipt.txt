@@ -1,0 +1,9 @@
+M7-018 independent RED: clean preserved 6456055d394057baf029eba7321c45ad90a3ec21; public synthetic SYN_12.
+Native B/C/D each exit 0; proof exits 1: 19 successes, 2 failures.
+Required literal JSON time:null absent; readback excluded$time is character "NA", not NULL.
+Exclusion, source identity, empty represented blocks and no training/score row assertions passed.
+Endpoint SHA256 543c9da2e07feadc7b03423ded62b9886b41de822c46a49b00270629c847549e.
+D manifest/generation SHA256 a68a21fbdb0348cb22f2b55daea72775a8f4034fc76297b122346cf1c854273d; pointer 4421304696f482ab52d336a108cecc27ce85c270a9a4c79fbb470bd1836dc7e4.
+58-file manifest SHA256 a37b30d3ad3403d42e4a6a8e26d987016888da2ac9802feea49e9ca09ab0fd1d; full evidence and log in this directory.
+R renv bootstrap download failed before fixture; installed libraries allowed native commands to complete. No biological validity claim.
+C06 false; C07 not_run; C09 unqualified; M7/G7 closed. No repository changes.

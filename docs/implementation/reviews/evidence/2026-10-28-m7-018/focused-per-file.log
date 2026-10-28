@@ -1,0 +1,6 @@
+                file passed failed warning skipped error
+1       test-B-T07.R    315      0       0       0     0
+2 test-C-06-shared.R    355      0       0       0     0
+3        test-C-06.R     87      0       0       0     0
+4 test-C-08-shared.R     94      0       0       0     0
+5       test-D-T01.R    325      0       1       0     0

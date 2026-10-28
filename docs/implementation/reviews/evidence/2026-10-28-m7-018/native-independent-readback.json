@@ -1,0 +1,24 @@
+{
+  "root": "/private/tmp/m7-018-sol-native-output-11fa824268892",
+  "generation_id": "942bf940f7a80608f8aa67919d3fd7065f6783a000760d45826283d6e2d44fa1",
+  "files": {
+    "B/handoffs/b603fd22641a03da4301a6f770e7baedd138ccf8d748729e791fc50313aaafb0/bundle.json": "78beedcaf72003e65a306fb91b4b397c3a1b8c54199629a222d1b768acefb84c",
+    "B/handoffs/b603fd22641a03da4301a6f770e7baedd138ccf8d748729e791fc50313aaafb0/bundle.envelope.json": "91cf8791716f0a0aec55056b80ffcbd2e914d98da10823940adeba9b4facc9b9",
+    "B/handoffs/b603fd22641a03da4301a6f770e7baedd138ccf8d748729e791fc50313aaafb0/stage-handoff-provenance.json": "bfad080d3c7bea359f709ddf66bb3b6e91771391edc9db41f452a971014897be",
+    "B/handoffs/b603fd22641a03da4301a6f770e7baedd138ccf8d748729e791fc50313aaafb0/stage-handoff-provenance.envelope.json": "13d5e9f8cc4ed91b3f83dd3672eff9aeb2d1bfeb0c25d72f41ee64e9702a83f5",
+    "D/stage-handoff-provenance.json": "1aa0e0189ecb2b200bd2d66b0ac548a90dcae9f00eedce1d66767261a2036ccd",
+    "D/stage-handoff-provenance.envelope.json": "e3d529a5c70c38524b1b78452ac29c3ddbc9868137ec8bed797d1b2310f1007f",
+    "D/generations/942bf940f7a80608f8aa67919d3fd7065f6783a000760d45826283d6e2d44fa1/generation-manifest.json": "942bf940f7a80608f8aa67919d3fd7065f6783a000760d45826283d6e2d44fa1",
+    "registries/current-D.json": "49bcb631409fd4b2d09a9509d8ffdba24af1317a926507bd2c7bfb40eb137b34",
+    "D/generations/942bf940f7a80608f8aa67919d3fd7065f6783a000760d45826283d6e2d44fa1/evidence-routing.json": "f3e630cb8fe1f3596226fcefeb4eabad630d85fe6ff85c81f39d88eea324f8e6",
+    "D/generations/942bf940f7a80608f8aa67919d3fd7065f6783a000760d45826283d6e2d44fa1/evidence-routing.envelope.json": "aaa41ff631f1ac2059d285030557f6b0a02191ff3c4848d7e7e0c496568741bd"
+  },
+  "routes": [
+    "gene_reaction",
+    "lipid_ontology",
+    "ora",
+    "mofa_native",
+    "biopan"
+  ],
+  "controls_not_run": 4
+}

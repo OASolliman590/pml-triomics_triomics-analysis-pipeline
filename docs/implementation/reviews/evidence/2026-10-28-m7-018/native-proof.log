@@ -1,0 +1,15 @@
+CANDIDATE_HEAD: 774bbcc5f7ad3152e6daf1d57d1972cf99519963 
+FIXTURE_ROOT: /private/tmp/c06-shared-trajectory-fixture-11fa842defa03 
+OUTPUT_ROOT: /private/tmp/m7-018-sol-native-output-11fa824268892 
+EXCLUDED_SOURCE: SYN_12 
+B_STATUS: 0 
+  
+B_ANALYSIS_UNIT_MAP_DIGEST: c57c63efb3ab79cd1b94d5762c24f96c4cc7abf693322a1ad89fed4e5bf219af 
+B_ANALYSIS_UNIT_MAP_ROW_IDENTITY_SHA256: 6c2710fe937eceeb63f87d359c720ee26c801fcaecd8281750d841415db15a8b 
+C_STATUS: 0 
+  
+D_STATUS: 0 
+  
+REPAIR2_NATIVE_EVIDENCE: {"candidate_head":"774bbcc5f7ad3152e6daf1d57d1972cf99519963","fixture_root":"/private/tmp/c06-shared-trajectory-fixture-11fa842defa03","output_root":"/private/tmp/m7-018-sol-native-output-11fa824268892","excluded_source":"SYN_12","b_analysis_unit_map_digest":"c57c63efb3ab79cd1b94d5762c24f96c4cc7abf693322a1ad89fed4e5bf219af","b_analysis_unit_map_row_identity_sha256":"6c2710fe937eceeb63f87d359c720ee26c801fcaecd8281750d841415db15a8b","b_bundle_sha256":"78beedcaf72003e65a306fb91b4b397c3a1b8c54199629a222d1b768acefb84c","endpoint_bundle_sha256":"6432f58f9c57feeb5245ee49d23af40fbc1ce73b757855f5689c397527ec6363","endpoint_sha256":"512a2514fc64a9ccac5c1d1b57cb22fb8d408234c579affa302c2a8d68f3ed91","endpoint_file_sha256":"6f63d224d7bcd7f29b74a62898c4fab48b3a366f50977f790eb3685d76546b86","d_pointer_sha256":"49bcb631409fd4b2d09a9509d8ffdba24af1317a926507bd2c7bfb40eb137b34","d_generation_id":"942bf940f7a80608f8aa67919d3fd7065f6783a000760d45826283d6e2d44fa1","d_manifest_sha256":"942bf940f7a80608f8aa67919d3fd7065f6783a000760d45826283d6e2d44fa1","d_provenance_sha256":"1aa0e0189ecb2b200bd2d66b0ac548a90dcae9f00eedce1d66767261a2036ccd","manifest_file":"/tmp/triomics-m7-018/repair2-native-sha256-manifest.txt","manifest_sha256":"be76d4716db05be84ae411711ebfa39b014f1eff8b9e18d0f1ba4c0e25913369","files_hashed":58} 
+REPAIR2_NATIVE_COMPLETE
+Test passed with 21 successes 🌈.
