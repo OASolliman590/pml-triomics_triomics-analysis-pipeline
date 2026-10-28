@@ -1,0 +1,94 @@
+* using log directory ‘/private/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T/Rtmp47eve1/triomics-package-check-174322f79efee/triomics.Rcheck’
+* using R version 4.6.1 (2026-06-24)
+* using platform: x86_64-apple-darwin20
+* R was compiled by
+    Apple clang version 14.0.0 (clang-1400.0.29.202)
+    GNU Fortran (GCC) 14.2.0
+* running under: macOS Tahoe 26.7.1
+* using session charset: UTF-8
+* current time: 2026-10-28 17:42:20 UTC
+* using options ‘--no-manual --no-build-vignettes’
+* checking for file ‘triomics/DESCRIPTION’ ... OK
+* this is package ‘triomics’ version ‘0.1.0’
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘triomics’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking whether startup messages can be suppressed ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+triomics_provenance_validate_profile: no visible global function
+  definition for ‘setNames’
+Undefined global functions or variables:
+  setNames
+Consider adding
+  importFrom("stats", "setNames")
+to your NAMESPACE file.
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... WARNING
+Codoc mismatches from Rd file 'triomics-api.Rd':
+triomics_b07_export_handoff
+  Code: function(output, config_path, matrices = NULL, smoke_runs =
+                 NULL, command = NULL, working_ref = NULL,
+                 cli_exit_code = NULL, resume = FALSE, qualifications =
+                 NULL, matrix_source = NULL, provenance_context = NULL)
+  Docs: function(output, config_path, matrices = NULL, smoke_runs =
+                 NULL, command = NULL, working_ref = NULL,
+                 cli_exit_code = NULL, resume = FALSE, qualifications =
+                 NULL, matrix_source = NULL)
+  Argument names in code not in docs:
+    provenance_context
+
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking examples ... OK
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ... ERROR
+  Running ‘testthat.R’
+Running the tests in ‘tests/testthat.R’ failed.
+Last 13 lines of output:
+  ── Failure ('test-M4-005-stage-b-composition.R:298:3'): M4-005B source composition preserves B-T04 stage execution ──
+  Expected `run$status` to be identical to 0L.
+  Differences:
+    `actual`: 2
+  `expected`: 0
+  
+  triomics B_EXPORT_INCOMPLETE: Native B provenance requires the exact persisted matrix and repository revision.
+  Warning message:
+  In system2("git", c("-C", shQuote(root), "rev-parse", "HEAD"), stdout = TRUE,  :
+    running command ''git' -C '/private/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T/Rtmp47eve1/triomics-package-check-174322f79efee/triomics.Rcheck/triomics/exec' rev-parse HEAD 2>/dev/null' had status 128
+  
+  [ FAIL 45 | WARN 42 | SKIP 0 | PASS 5266 ]
+  Error:
+  ! Test failures.
+  Execution halted
+* DONE
+Status: 1 ERROR, 1 WARNING, 1 NOTE

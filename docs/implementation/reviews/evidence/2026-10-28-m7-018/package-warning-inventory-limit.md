@@ -1,0 +1,1 @@
+Installed CheckReporter reports FAIL 45 | WARN 42 | SKIP 0 | PASS 5266 but does not enumerate warning test names in the preserved transcript. The 42 warnings cannot be certified as the named source set. No warnings were suppressed. No rerun was performed. This incomplete inventory independently blocks acceptance. Source warnings are individually recorded in warning-inventory.md.

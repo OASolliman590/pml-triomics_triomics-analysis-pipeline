@@ -1,14 +1,23 @@
 # Implementation handover
 
-## Current M7-018 — active new bounded null serialization cycle
+## Current M7-018 — integrated null fix; gates failed; closed
 
-2026-10-28: user authorizes new cycle from preserved6456055, new worktree
-m7-018-c-null. Luna-max implements C seam; Terra6.1-high read-only reproduces
-RED concurrently then reviews frozen diff. One repair allowed. No milestone
-release/private data/push. M7-017 remains closed, not reopened.
-Literal resume: reconcile /root/m7_018_luna and /root/m7_018_terra; freeze/review,
-independent focused/native proofs, integrate only after pass, uninterrupted full
-source and clean archive Status: OK, then fresh Astra-low; keep M7/G7closed.
+Repair774bbcc is integrated at d660879. Terra found no scoped findings.
+Native B/C/D0/0/0,21 assertions, explicit SYN_12 time:null. Focused1176pass,
+0fail,1named expected warning,0skip. Original6456055/cfe9160 unchanged.
+One full-source run:6280pass1fail15warn0error0skip. Paired visit_weights list
+versus established named numeric API is unresolved. Clean archive d660879:
+Status: 1 ERROR, 1 WARNING, 1 NOTE; installed5266pass45fail42warn0skip.
+Archive native producer Git-revision/fixture portability failures, Rd usage and
+setNames diagnostics remain; installed warning names are not fully enumerated.
+Fresh Astra-low audit_pass no: P1 1, P2 2, P3 1. No additional product repair.
+All run-owned workers/checks completed; no desktop chats created.
+Receipt: reviews/2026-10-28-m7-018-close-receipt.md.
+M7/G7closed,C06false,C07not_run,C09unqualified; no laterD/private data/push.
+Literal resume: preserve d660879; scope a new bounded cycle for numeric endpoint
+API and installed provenance/fixture portability, complete installed warning
+inventory and package diagnostics. Do not reopen M7-017 or waive lineage.
+Preserve unrelated dirty .Rbuildignore, .gitignore and renv/activate.R.
 
 ## Current M7-017 checkpoint — blocked and closed at two-repair cap
 

@@ -36,13 +36,68 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_018_focused_gate_running",
+    "status": "m7_018_closed_integrated_null_fix_acceptance_blocked",
     "last_reconciled": "2026-10-28",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "774bbcc native21pass0fail, B/C/D exits0, persisted time:null and independent full provenance hashreadback pass; Terra no findings. Focused suite running, no integration yet."
+    "disposition": "Native/focused passed. Source and clean archive failed. Fresh Astra audit_pass no (P1 1 P2 2 P3 1). All workers/checks complete. M7/G7/laterD closed; new bounded scope required for remaining defects."
   },
   "orchestration_events": [
+    {
+      "event": "m7_018_close",
+      "date": "2026-10-28",
+      "repair_commit": "774bbcc5f7ad3152e6daf1d57d1972cf99519963",
+      "integrated_snapshot": "d660879ab7d6dbf4e652aa8957452c02ec5e1cdb",
+      "astra_audit_pass": false,
+      "receipt": "docs/implementation/reviews/2026-10-28-m7-018-close-receipt.md"
+    },
+    {
+      "event": "m7_018_archive_failed_astra_dispatched",
+      "date": "2026-10-28",
+      "snapshot": "d660879",
+      "package_status": "Status: 1 ERROR, 1 WARNING, 1 NOTE",
+      "installed_counts": {
+        "fail": 45,
+        "warn": 42,
+        "skip": 0,
+        "pass": 5266
+      },
+      "warning_names": "installed names not enumerated; uncertified"
+    },
+    {
+      "event": "m7_018_package_pretest_diagnostics",
+      "date": "2026-10-28",
+      "candidate": "d660879",
+      "warning": "triomics_b07_export_handoff provenance_context undocumented in usage",
+      "note": "triomics_provenance_validate_profile unqualified setNames"
+    },
+    {
+      "event": "m7_018_full_source_complete",
+      "date": "2026-10-28",
+      "candidate": "d660879",
+      "totals": {
+        "fail": 1,
+        "warn": 15,
+        "skip": 0,
+        "error": 0,
+        "pass": 6280,
+        "test_blocks": 370
+      },
+      "failure": "C-08 preserves mean and delta AnalysisUnitMap lineage and rejects incompatible times: visit_weights list vs named numeric"
+    },
+    {
+      "event": "m7_018_full_source_progress",
+      "date": "2026-10-28",
+      "candidate": "d660879",
+      "observed_failure_marker": "standalone C08, awaiting exact final inventory"
+    },
+    {
+      "event": "m7_018_serial_integration",
+      "date": "2026-10-28",
+      "candidate": "d660879ab7d6dbf4e652aa8957452c02ec5e1cdb",
+      "product_blobs_equal": "774bbcc",
+      "integration_note": "Multi-pick encountered transient index and dependency skip; incomplete test merge discarded, missing f23b5a7 then remaining commits applied individually; final exact blobs verified. Unrelated dirty files preserved."
+    },
     {
       "event": "m7_018_native_proof_pass",
       "date": "2026-10-28",
