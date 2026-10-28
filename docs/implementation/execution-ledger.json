@@ -34,15 +34,42 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m7_018_luna",
+      "role": "implementation",
+      "model_requested": "gpt-6-luna",
+      "effort_requested": "max",
+      "effective_settings_exposed": false,
+      "base": "6456055",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-018-c-null/PML MultiOmics Analysis Pipeline",
+      "next_transition": "freeze candidate then Terra review"
+    },
+    {
+      "agent": "/root/m7_018_terra",
+      "role": "read_only_red_and_review",
+      "model_requested": "gpt-6.1-terra",
+      "effort_requested": "high",
+      "effective_settings_exposed": false,
+      "base": "6456055",
+      "next_transition": "reconcile native RED then review frozen Luna candidate"
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_017_blocked_closed_repair_cap",
-    "last_reconciled": "2026-10-27",
+    "status": "m7_018_parallel_workers",
+    "last_reconciled": "2026-10-28",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Final6456055 native proof19pass2fail: persisted time stringNA, not null. Two repairs exhausted. No integration/full gates/final Astra/M7/G7release. All run-owned native workers completed."
+    "disposition": "New authorized C null serialization cycle; Luna implementation and Terra read-only RED concurrent. M7/G7 closed."
   },
   "orchestration_events": [
+    {
+      "event": "m7_018_dispatch",
+      "date": "2026-10-28",
+      "base": "6456055",
+      "record": "docs/implementation/change-records/M7-018-c-endpoint-null-serialization.md",
+      "repair_limit": 1
+    },
     {
       "event": "m7_017_blocked_close",
       "date": "2026-10-27",

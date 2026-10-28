@@ -1,5 +1,15 @@
 # Implementation handover
 
+## Current M7-018 — active new bounded null serialization cycle
+
+2026-10-28: user authorizes new cycle from preserved6456055, new worktree
+m7-018-c-null. Luna-max implements C seam; Terra6.1-high read-only reproduces
+RED concurrently then reviews frozen diff. One repair allowed. No milestone
+release/private data/push. M7-017 remains closed, not reopened.
+Literal resume: reconcile /root/m7_018_luna and /root/m7_018_terra; freeze/review,
+independent focused/native proofs, integrate only after pass, uninterrupted full
+source and clean archive Status: OK, then fresh Astra-low; keep M7/G7closed.
+
 ## Current M7-017 checkpoint — blocked and closed at two-repair cap
 
 Scope audit passed; isolated initialc8b309e, repair17ef25ef and final6456055
