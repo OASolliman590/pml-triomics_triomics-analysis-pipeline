@@ -642,11 +642,22 @@ testthat::test_that("the stage B fixture envelope matches limma on predecessor m
   ))
   testthat::expect_identical(written$status, "complete")
 
-  ticket_dir <- dirname(config_path)
+  fixture_root <- tempfile("b-t01-modified-fixtures-")
+  ticket_dir <- file.path(fixture_root, "tickets")
+  independent_dir <- file.path(fixture_root, "data", "independent")
+  dir.create(ticket_dir, recursive = TRUE)
+  dir.create(independent_dir, recursive = TRUE)
+  on.exit(unlink(fixture_root, recursive = TRUE), add = TRUE)
+  temporary_config <- file.path(ticket_dir, basename(config_path))
+  testthat::expect_true(file.copy(config_path, temporary_config, overwrite = TRUE))
+  for (fixture_name in c("metadata.tsv", "proteomics.tsv", "metabolomics.tsv")) {
+    fixture_path <- triomics_test_resource("examples", "data", "independent", fixture_name)
+    testthat::expect_true(file.copy(fixture_path, file.path(independent_dir, fixture_name), overwrite = TRUE))
+  }
   refused_config <- tempfile("b-t01-refused-", tmpdir = ticket_dir, fileext = ".yaml")
   budget_config <- tempfile("b-t01-budget-", tmpdir = ticket_dir, fileext = ".yaml")
   on.exit(unlink(c(refused_config, budget_config)), add = TRUE)
-  config_text <- paste(readLines(config_path), collapse = "\n")
+  config_text <- paste(readLines(temporary_config), collapse = "\n")
   refused_text <- sub(
     "transform:\n        method: none",
     "transform:\n        method: log2",

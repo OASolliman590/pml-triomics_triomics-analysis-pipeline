@@ -379,6 +379,20 @@ testthat::test_that("B-T07 AC2 independent and paired CLI smokes retain signed e
 
   consolidated_root <- t07_test_root("ac2-consolidated")
   same_run_stage_result <- triomics_execute_stage_b(independent_config, consolidated_root)
+  stale_source_revision <- "e6f9b29304f8cc7c78dcefac3fde55d1a4be672e"
+  testthat::expect_false(identical(stale_source_revision, triomics_source_revision()))
+  stale_revision_error <- t07_attempt_export(
+    output = consolidated_root,
+    config_path = independent_config,
+    matrices = same_run_stage_result$resolved_matrices,
+    working_ref = stale_source_revision,
+    matrix_source = "stage_b_resolved_blocks",
+    provenance_context = same_run_stage_result$provenance_context
+  )
+  testthat::expect_s3_class(stale_revision_error, "triomics_error")
+  testthat::expect_identical(stale_revision_error$code, "B_EXPORT_INCOMPLETE")
+  testthat::expect_match(conditionMessage(stale_revision_error), "working_ref")
+  testthat::expect_false(dir.exists(file.path(consolidated_root, "B", "handoffs")))
   exported <- t07_expect_export_success(t07_attempt_export(
     output = consolidated_root, config_path = independent_config,
     matrices = same_run_stage_result$resolved_matrices,

@@ -2350,6 +2350,21 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
       triomics_b07_abort("B_EXPORT_MATRIX", "Native B provenance requires the exact same-run matrix source designation.",
                          "matrix_source", "Use only matrices returned by this Stage B fit run.")
     }
+    native_source_revision <- triomics_source_revision()
+    if (!is.character(native_source_revision) || length(native_source_revision) != 1L ||
+        is.na(native_source_revision) ||
+        !grepl("^(?:[0-9a-f]{40}|[0-9a-f]{64})$", native_source_revision) ||
+        (!is.null(working_ref) &&
+         (!is.character(working_ref) || length(working_ref) != 1L || is.na(working_ref) ||
+          !identical(working_ref, native_source_revision)))) {
+      triomics_b07_abort(
+        "B_EXPORT_INCOMPLETE",
+        "Native B provenance requires the executing package source revision; a supplied working_ref must match it.",
+        "working_ref",
+        "Use the immutable source identity resolved from the executing package, not a caller-supplied revision claim."
+      )
+    }
+    working_ref <- native_source_revision
   }
   block_results <- artifact$payload
   entries <- triomics_b07_claim_entries(block_results)
@@ -2792,7 +2807,7 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
       provenance_context, config_sha256, bundle, bundle_path, bundle_envelope_path,
       artifact, family_artifact, nominations_artifact, matrix_artifact, matrix_bindings,
       clinical_artifacts, clinical_dispositions,
-      repository_commit = if (is.null(working_ref)) triomics_b07_git_ref(getwd()) else working_ref,
+      repository_commit = native_source_revision,
       privacy_class = as.character(artifact$envelope$privacy_class)
     )
   }

@@ -739,11 +739,11 @@ testthat::test_that("C-08 preserves mean and delta AnalysisUnitMap lineage and r
   persisted_delta <- triomics_c08_cli_validate_endpoint_readback(serialized_path)
   testthat::expect_identical(
     persisted_delta$endpoints[[1L]]$samples[[1L]]$visit_weights,
-    list(V0 = -1, V1 = 1)
+    list(V0 = -1L, V1 = 1L)
   )
   testthat::expect_identical(
     persisted_delta$endpoints[[1L]]$unit_map[[1L]]$visit_weights,
-    list(V0 = -1, V1 = 1)
+    list(V0 = -1L, V1 = 1L)
   )
   delta_objective <- c08_objective(delta_endpoint$endpoint_id, mode = "baseline_to_later", visit = "V0")
   delta_objective$objectives[[1L]]$baseline_visit_ref <- "V0"

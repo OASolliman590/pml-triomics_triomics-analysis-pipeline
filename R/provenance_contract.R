@@ -75,7 +75,7 @@ triomics_source_revision_from_root <- function(root, installed = NULL) {
 triomics_source_identity_context <- function() {
   resolver_environment <- environment(triomics_source_identity_context)
   if (!identical(resolver_environment, .GlobalEnv)) {
-    namespace_name <- tryCatch(getNamespaceName(resolver_environment), error = function(error) "")
+    namespace_name <- tryCatch(unname(getNamespaceName(resolver_environment)), error = function(error) "")
     if (!identical(namespace_name, "triomics")) return(NULL)
     root <- tryCatch(
       normalizePath(getNamespaceInfo(resolver_environment, "path"), winslash = "/", mustWork = TRUE),
