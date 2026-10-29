@@ -1,5 +1,21 @@
 # Implementation handover
 
+## Current checkpoint — 29 October 2026, weight-name fix landed
+
+Commit `7ff1d53` binds numeric visit-weight names into the endpoint hash and
+keeps explicit `visit_weights: null`. C-08 on that change passed 250, with no
+failures, warnings, or skips. A clean worktree of `7ff1d53` then passed D-T01
+with FAIL 0, WARN 1, SKIP 0, PASS 325. The one warning is the existing stale
+paired-sign rejection. M7, G7, and every D packet after D-T01 remain closed.
+
+The repair loop had a mechanical cause. `triomics_source_git_revision()` returns
+`unavailable` whenever `git status --porcelain` is non-empty. The main checkout
+carries untracked AppleDouble files and dirty `.Rbuildignore`, `.gitignore`, and
+`renv/activate.R`. Native Stage B then exits 2 with `B_EXPORT_INCOMPLETE`, and
+Stage C and Stage D fail because that B frame was never written. Prove native
+B, C, and D only from a clean worktree or archive. Do not start another repair
+cycle for that symptom.
+
 ## Current M7-019 — blocked close; cap exhausted
 
 Integrated product snapshot98c71256e61c4613833f81bf049de06427c9a094; failed final
