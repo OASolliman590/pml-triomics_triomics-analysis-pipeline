@@ -36,13 +36,23 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "d_t03_implemented_unaccepted",
+    "status": "d_t04_implemented_unaccepted",
     "last_reconciled": "2026-10-29",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "D-T03 reaction mapping is implemented at 1d420e6 and unaccepted. Focused suite PASS 53. Astra high and Opus 5.5 audit_pass yes. D-T02 remains unaccepted at fcc05b6. Stage D CLI wiring stays a Sol blocker. M7 and G7 stay closed. Next required packet is D-T04."
+    "disposition": "D-T04 over-representation is implemented at 4b8eb12 and unaccepted. Focused suite PASS 38. Astra high and Opus 5.5 audit_pass yes. D-T02 and D-T03 remain unaccepted. Stage D CLI wiring stays a Sol blocker. M7 and G7 stay closed. Next required packet is D-T05."
   },
   "orchestration_events": [
+    {
+      "event": "d_t04_implemented_unaccepted",
+      "date": "2026-10-29",
+      "commit": "4b8eb123387e2f64040787ed9e016bc20be32186",
+      "focused_suite": {"fail": 0, "warn": 0, "skip": 0, "pass": 38},
+      "astra_audit_pass": true,
+      "opus_audit_pass": true,
+      "accepted": false,
+      "receipt": "docs/implementation/reviews/2026-10-29-d-t04-ora.md"
+    },
     {
       "event": "d_t03_implemented_unaccepted",
       "date": "2026-10-29",
@@ -4801,11 +4811,11 @@
       "blockers": ["Stage D CLI does not call triomics_map_reactions. The ticket has no pinned mapping table. Sol owns that integration."]
     },
     "D-T04": {
-      "status": "not_started",
-      "attempts": 0,
-      "commit": null,
-      "acceptance_refs": [],
-      "blockers": []
+      "status": "implemented_unaccepted",
+      "attempts": 2,
+      "commit": "4b8eb123387e2f64040787ed9e016bc20be32186",
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-29-d-t04-ora.md"],
+      "blockers": ["Stage D CLI does not call triomics_ora_family. Sol owns that integration."]
     },
     "D-T05": {
       "status": "not_started",

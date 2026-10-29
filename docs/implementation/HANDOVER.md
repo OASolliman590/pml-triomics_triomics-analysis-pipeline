@@ -1,12 +1,18 @@
 # Implementation handover
 
-## Current checkpoint — 29 October 2026, D-T03 reaction mapping landed unaccepted
+## Current checkpoint — 29 October 2026, D-T04 over-representation landed unaccepted
+
+Commit `4b8eb12` adds declared-universe over-representation. The focused suite
+passed 38, with no failures, warnings, or skips. Astra high and Opus 5.5
+rereviews both returned audit_pass yes. The tail is P(X >= k): N=10, K=3, n=2
+gives 1/15 at k=2 and 8/15 at k=1. The Stage D CLI call remains a Sol
+integration blocker, so `accepted` stays false. M7 and G7 stay closed. D-T05
+is the next required packet.
 
 Commit `1d420e6` adds local gene-product and reaction mapping. The focused
 suite passed 53, with no failures, warnings, or skips. Astra high and Opus 5.5
 rereviews both returned audit_pass yes. The Stage D CLI call and the pinned
 mapping table remain a Sol integration blocker, so `accepted` stays false.
-M7 and G7 stay closed. D-T04 is the next required packet.
 
 Commit `fcc05b6` adds local lipid mapping. The focused suite passed 71, with
 no failures, warnings, or skips. Astra high rereview audit_pass yes. Opus 5.5
