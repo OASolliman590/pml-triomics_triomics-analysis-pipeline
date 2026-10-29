@@ -1,6 +1,14 @@
 # Implementation handover
 
-## Current checkpoint — 29 October 2026, D-T05 resource status landed unaccepted
+## Current checkpoint — 29 October 2026, D-T10 target evidence landed unaccepted
+
+Commit `9e1499d` records a target request and external assay evidence. The focused
+suite passed 59, with no failures, warnings, or skips. Astra high and Opus 5.5
+rereviews of repair 2 both returned audit_pass yes. A record attaches only when
+taxon, context, construct, compound namespace, and compound ID all match. Binding,
+function, engagement, and association stay separate. The Stage D CLI call remains
+a Sol integration blocker, so `accepted` stays false. M7 and G7 stay closed.
+D-T11 is the next required packet.
 
 Commit `62421b1` accounts for optional and required resource failure. The focused
 suite passed 39, with no failures, warnings, or skips. Astra high and Opus 5.5

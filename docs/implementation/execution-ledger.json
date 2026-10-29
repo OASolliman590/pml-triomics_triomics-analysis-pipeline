@@ -36,13 +36,23 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "d_t05_implemented_unaccepted",
+    "status": "d_t10_implemented_unaccepted",
     "last_reconciled": "2026-10-29",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "D-T05 resource status is implemented at 62421b1 and unaccepted. Focused suite PASS 39. Astra high and Opus 5.5 audit_pass yes. D-T02, D-T03, and D-T04 remain unaccepted. Stage D CLI wiring stays a Sol blocker. M7 and G7 stay closed. D-T10 is in repair."
+    "disposition": "D-T10 target evidence is implemented at 9e1499d and unaccepted. Focused suite PASS 59. Astra high and Opus 5.5 audit_pass yes. D-T02 through D-T05 remain unaccepted. Stage D CLI wiring stays a Sol blocker. M7 and G7 stay closed. Next required packet is D-T11."
   },
   "orchestration_events": [
+    {
+      "event": "d_t10_implemented_unaccepted",
+      "date": "2026-10-29",
+      "commit": "9e1499df1e8d4216f57e7afc9a67dfbf79932c2a",
+      "focused_suite": {"fail": 0, "warn": 0, "skip": 0, "pass": 59},
+      "astra_audit_pass": true,
+      "opus_audit_pass": true,
+      "accepted": false,
+      "receipt": "docs/implementation/reviews/2026-10-29-d-t10-targets.md"
+    },
     {
       "event": "d_t05_implemented_unaccepted",
       "date": "2026-10-29",
@@ -4849,11 +4859,11 @@
       "blockers": []
     },
     "D-T10": {
-      "status": "not_started",
-      "attempts": 0,
-      "commit": null,
-      "acceptance_refs": [],
-      "blockers": []
+      "status": "implemented_unaccepted",
+      "attempts": 3,
+      "commit": "9e1499df1e8d4216f57e7afc9a67dfbf79932c2a",
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-29-d-t10-targets.md"],
+      "blockers": ["Stage D CLI does not call triomics_target_request or triomics_target_external_evidence. Sol owns that integration."]
     },
     "D-T11": {
       "status": "not_started",
