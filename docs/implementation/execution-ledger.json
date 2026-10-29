@@ -36,13 +36,23 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "d_t04_implemented_unaccepted",
+    "status": "d_t05_implemented_unaccepted",
     "last_reconciled": "2026-10-29",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "D-T04 over-representation is implemented at 4b8eb12 and unaccepted. Focused suite PASS 38. Astra high and Opus 5.5 audit_pass yes. D-T02 and D-T03 remain unaccepted. Stage D CLI wiring stays a Sol blocker. M7 and G7 stay closed. Next required packet is D-T05."
+    "disposition": "D-T05 resource status is implemented at 62421b1 and unaccepted. Focused suite PASS 39. Astra high and Opus 5.5 audit_pass yes. D-T02, D-T03, and D-T04 remain unaccepted. Stage D CLI wiring stays a Sol blocker. M7 and G7 stay closed. D-T10 is in repair."
   },
   "orchestration_events": [
+    {
+      "event": "d_t05_implemented_unaccepted",
+      "date": "2026-10-29",
+      "commit": "62421b13ee528a0b94b81b288126a181f4cd0637",
+      "focused_suite": {"fail": 0, "warn": 0, "skip": 0, "pass": 39},
+      "astra_audit_pass": true,
+      "opus_audit_pass": true,
+      "accepted": false,
+      "receipt": "docs/implementation/reviews/2026-10-29-d-t05-status.md"
+    },
     {
       "event": "d_t04_implemented_unaccepted",
       "date": "2026-10-29",
@@ -4818,11 +4828,11 @@
       "blockers": ["Stage D CLI does not call triomics_ora_family. Sol owns that integration."]
     },
     "D-T05": {
-      "status": "not_started",
-      "attempts": 0,
-      "commit": null,
-      "acceptance_refs": [],
-      "blockers": []
+      "status": "implemented_unaccepted",
+      "attempts": 2,
+      "commit": "62421b13ee528a0b94b81b288126a181f4cd0637",
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-29-d-t05-status.md"],
+      "blockers": ["Stage D CLI does not call triomics_d_route_status. Sol owns that integration."]
     },
     "D-T06": {
       "status": "not_started",

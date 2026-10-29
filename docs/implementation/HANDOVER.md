@@ -1,6 +1,14 @@
 # Implementation handover
 
-## Current checkpoint — 29 October 2026, D-T04 over-representation landed unaccepted
+## Current checkpoint — 29 October 2026, D-T05 resource status landed unaccepted
+
+Commit `62421b1` accounts for optional and required resource failure. The focused
+suite passed 39, with no failures, warnings, or skips. Astra high and Opus 5.5
+rereviews both returned audit_pass yes. A required route with a stale cache
+exits 2 as `D_STATUS_CACHE_INVALID`. An optional stale cache stays complete and
+keeps that reason. A missing file stays `D_RESOURCE_MISSING`. The Stage D CLI
+call remains a Sol integration blocker, so `accepted` stays false. M7 and G7
+stay closed. D-T10 is in repair.
 
 Commit `4b8eb12` adds declared-universe over-representation. The focused suite
 passed 38, with no failures, warnings, or skips. Astra high and Opus 5.5
