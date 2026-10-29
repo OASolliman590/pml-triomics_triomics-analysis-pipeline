@@ -1,0 +1,17 @@
+{
+  "packet_id": "D-T03",
+  "request_type": "registration_request",
+  "accepted": false,
+  "namespace_edits": false,
+  "local_files": [
+    "R/annotation_reactions.R",
+    "tests/testthat/test-D-T03.R",
+    "inst/examples/tickets/D-T03.yaml",
+    "docs/implementation/registrations/D-T03.json"
+  ],
+  "owned_functions": [
+    "triomics_map_reactions"
+  ],
+  "integration_request": "Sol: register triomics_map_reactions and integrate verified measured rows into triomics_execute_stage_d; that executor does not call this function. The ticket leaves annotation.resources empty because a pinned CLI table is outside this packet's allowlist. Review and rerun gates.",
+  "repair": "D-T03 repair 1: spec-shaped tables, namespace-derived edge types, per-type ambiguity, and nomination lineage."
+}
