@@ -36,13 +36,23 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_019_closed_blocked",
+    "status": "d_t02_implemented_unaccepted",
     "last_reconciled": "2026-10-29",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Cap exhausted. Integrated98c7125 fullsource6287pass15warn; archive Status:1ERROR FAIL24 WARN5 SKIP0 PASS5877. Finalcandidatee410486 NOTintegrated, focused1627pass12fail5error7warn. Fresh Astra audit_pass no (4P1). All workers/processes completed; M7/G7 closed. New bounded cycle required."
+    "disposition": "D-T02 lipid mapping is implemented at fcc05b6 and unaccepted. Focused suite PASS 71. Astra high audit_pass yes. Opus 5.5 found no Critical mapper defect. Stage D CLI wiring and the pinned lipid table remain a Sol blocker. M7 and G7 stay closed."
   },
   "orchestration_events": [
+    {
+      "event": "d_t02_implemented_unaccepted",
+      "date": "2026-10-29",
+      "commit": "fcc05b67573797dce6a8d7295de9a2dc4bb3310b",
+      "focused_suite": {"fail": 0, "warn": 0, "skip": 0, "pass": 71},
+      "astra_audit_pass": true,
+      "opus_critical": 0,
+      "accepted": false,
+      "receipt": "docs/implementation/reviews/2026-10-29-d-t02-lipid-mapping.md"
+    },
     {
       "event": "m7_019_blocked_close",
       "date": "2026-10-29",
@@ -4767,11 +4777,11 @@
       ]
     },
     "D-T02": {
-      "status": "not_started",
-      "attempts": 0,
-      "commit": null,
-      "acceptance_refs": [],
-      "blockers": []
+      "status": "implemented_unaccepted",
+      "attempts": 2,
+      "commit": "fcc05b67573797dce6a8d7295de9a2dc4bb3310b",
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-29-d-t02-lipid-mapping.md"],
+      "blockers": ["Stage D CLI does not call triomics_map_lipids. The ticket has no pinned lipid table or lipid block. Sol owns that integration."]
     },
     "D-T03": {
       "status": "not_started",

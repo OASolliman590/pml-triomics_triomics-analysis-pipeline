@@ -1,12 +1,18 @@
 # Implementation handover
 
-## Current checkpoint — 29 October 2026, weight-name fix landed
+## Current checkpoint — 29 October 2026, D-T02 lipid mapping landed unaccepted
+
+Commit `fcc05b6` adds local lipid mapping. The focused suite passed 71, with
+no failures, warnings, or skips. Astra high rereview audit_pass yes. Opus 5.5
+found no Critical defect in the mapper. The Stage D CLI call and the pinned
+mapping table remain a Sol integration blocker, so `accepted` stays false.
+M7 and G7 stay closed. D-T03 is the next required packet.
 
 Commit `7ff1d53` binds numeric visit-weight names into the endpoint hash and
 keeps explicit `visit_weights: null`. C-08 on that change passed 250, with no
 failures, warnings, or skips. A clean worktree of `7ff1d53` then passed D-T01
 with FAIL 0, WARN 1, SKIP 0, PASS 325. The one warning is the existing stale
-paired-sign rejection. M7, G7, and every D packet after D-T01 remain closed.
+paired-sign rejection.
 
 The repair loop had a mechanical cause. `triomics_source_git_revision()` returns
 `unavailable` whenever `git status --porcelain` is non-empty. The main checkout
