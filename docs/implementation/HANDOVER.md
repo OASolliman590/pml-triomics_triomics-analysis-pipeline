@@ -1,12 +1,17 @@
 # Implementation handover
 
-## Current checkpoint — 29 October 2026, D-T02 lipid mapping landed unaccepted
+## Current checkpoint — 29 October 2026, D-T03 reaction mapping landed unaccepted
+
+Commit `1d420e6` adds local gene-product and reaction mapping. The focused
+suite passed 53, with no failures, warnings, or skips. Astra high and Opus 5.5
+rereviews both returned audit_pass yes. The Stage D CLI call and the pinned
+mapping table remain a Sol integration blocker, so `accepted` stays false.
+M7 and G7 stay closed. D-T04 is the next required packet.
 
 Commit `fcc05b6` adds local lipid mapping. The focused suite passed 71, with
 no failures, warnings, or skips. Astra high rereview audit_pass yes. Opus 5.5
 found no Critical defect in the mapper. The Stage D CLI call and the pinned
 mapping table remain a Sol integration blocker, so `accepted` stays false.
-M7 and G7 stay closed. D-T03 is the next required packet.
 
 Commit `7ff1d53` binds numeric visit-weight names into the endpoint hash and
 keeps explicit `visit_weights: null`. C-08 on that change passed 250, with no

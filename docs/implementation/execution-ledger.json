@@ -36,13 +36,23 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "d_t02_implemented_unaccepted",
+    "status": "d_t03_implemented_unaccepted",
     "last_reconciled": "2026-10-29",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "D-T02 lipid mapping is implemented at fcc05b6 and unaccepted. Focused suite PASS 71. Astra high audit_pass yes. Opus 5.5 found no Critical mapper defect. Stage D CLI wiring and the pinned lipid table remain a Sol blocker. M7 and G7 stay closed."
+    "disposition": "D-T03 reaction mapping is implemented at 1d420e6 and unaccepted. Focused suite PASS 53. Astra high and Opus 5.5 audit_pass yes. D-T02 remains unaccepted at fcc05b6. Stage D CLI wiring stays a Sol blocker. M7 and G7 stay closed. Next required packet is D-T04."
   },
   "orchestration_events": [
+    {
+      "event": "d_t03_implemented_unaccepted",
+      "date": "2026-10-29",
+      "commit": "1d420e6a28cb1b5caff42af201be47dabb423ef6",
+      "focused_suite": {"fail": 0, "warn": 0, "skip": 0, "pass": 53},
+      "astra_audit_pass": true,
+      "opus_audit_pass": true,
+      "accepted": false,
+      "receipt": "docs/implementation/reviews/2026-10-29-d-t03-reaction-mapping.md"
+    },
     {
       "event": "d_t02_implemented_unaccepted",
       "date": "2026-10-29",
@@ -4784,11 +4794,11 @@
       "blockers": ["Stage D CLI does not call triomics_map_lipids. The ticket has no pinned lipid table or lipid block. Sol owns that integration."]
     },
     "D-T03": {
-      "status": "not_started",
-      "attempts": 0,
-      "commit": null,
-      "acceptance_refs": [],
-      "blockers": []
+      "status": "implemented_unaccepted",
+      "attempts": 2,
+      "commit": "1d420e6a28cb1b5caff42af201be47dabb423ef6",
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-29-d-t03-reaction-mapping.md"],
+      "blockers": ["Stage D CLI does not call triomics_map_reactions. The ticket has no pinned mapping table. Sol owns that integration."]
     },
     "D-T04": {
       "status": "not_started",
