@@ -36,13 +36,23 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "d_t10_implemented_unaccepted",
+    "status": "d_t11_blocked_repair_limit",
     "last_reconciled": "2026-10-29",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "D-T10 target evidence is implemented at 9e1499d and unaccepted. Focused suite PASS 59. Astra high and Opus 5.5 audit_pass yes. D-T02 through D-T05 remain unaccepted. Stage D CLI wiring stays a Sol blocker. M7 and G7 stay closed. Next required packet is D-T11."
+    "disposition": "D-T11 stopped after two repairs. The uncommitted candidate passed 42 focused tests. Opus 5.5 audit_pass yes. Astra high audit_pass no because endpoint binding_probability is still accepted. Do not start repair 3 or D-T12. D-T02 through D-T10 remain unaccepted. Stage D CLI wiring stays a Sol blocker. M7 and G7 stay closed."
   },
   "orchestration_events": [
+    {
+      "event": "d_t11_blocked_repair_limit",
+      "date": "2026-10-29",
+      "commit": null,
+      "focused_suite": {"fail": 0, "warn": 0, "skip": 0, "pass": 42},
+      "astra_audit_pass": false,
+      "opus_audit_pass": true,
+      "accepted": false,
+      "receipt": "docs/implementation/reviews/2026-10-29-d-t11-blocked.md"
+    },
     {
       "event": "d_t10_implemented_unaccepted",
       "date": "2026-10-29",
@@ -4866,11 +4876,11 @@
       "blockers": ["Stage D CLI does not call triomics_target_request or triomics_target_external_evidence. Sol owns that integration."]
     },
     "D-T11": {
-      "status": "not_started",
-      "attempts": 0,
+      "status": "blocked_repair_limit",
+      "attempts": 3,
       "commit": null,
-      "acceptance_refs": [],
-      "blockers": []
+      "acceptance_refs": ["docs/implementation/reviews/2026-10-29-d-t11-blocked.md"],
+      "blockers": ["Repair limit reached. Endpoint binding_probability is still accepted as a measured profile axis. Astra high audit_pass no. Candidate is uncommitted on draft/d-t11."]
     },
     "D-T12": {
       "status": "not_started",

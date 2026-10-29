@@ -1,6 +1,15 @@
 # Implementation handover
 
-## Current checkpoint — 29 October 2026, D-T10 target evidence landed unaccepted
+## Current checkpoint — 29 October 2026, D-T11 stopped at the repair limit
+
+D-T11 is not landed. Terra used the initial attempt and both repairs. The focused
+suite on the uncommitted candidate passed 42. Opus 5.5 rereview of repair 2
+returned audit_pass yes. Astra high returned audit_pass no. An observation
+endpoint `binding_probability` is still accepted and becomes a measured axis.
+The candidate remains uncommitted in worktree
+`/Users/megastore/.codex/worktrees/d-t11-profiles` on branch `draft/d-t11`.
+Do not start repair 3 without a new authorization. Do not start D-T12. M7 and
+G7 stay closed.
 
 Commit `9e1499d` records a target request and external assay evidence. The focused
 suite passed 59, with no failures, warnings, or skips. Astra high and Opus 5.5
