@@ -1,0 +1,17 @@
+{
+  "packet_id": "D-T02",
+  "request_type": "registration_request",
+  "accepted": false,
+  "namespace_edits": false,
+  "local_files": [
+    "R/annotation_lipids.R",
+    "tests/testthat/test-D-T02.R",
+    "inst/examples/tickets/D-T02.yaml",
+    "docs/implementation/registrations/D-T02.json"
+  ],
+  "owned_functions": [
+    "triomics_map_lipids"
+  ],
+  "integration_request": "Sol: register triomics_map_lipids, add the pinned CLI mapping table file and resource declaration, and call the mapper from the Stage D executor in R/cli.R using verified routed measured rows. The ticket leaves resources empty because the pinned table is outside this packet allowlist. Review and rerun gates.",
+  "repair": "D-T02 repair 1: structural ambiguity, normalized edges, alias-only mapping, and removal of bundle branch."
+}
