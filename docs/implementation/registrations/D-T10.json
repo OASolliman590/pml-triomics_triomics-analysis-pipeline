@@ -1,0 +1,15 @@
+{
+  "packet_id": "D-T10",
+  "request_type": "registration_request",
+  "accepted": false,
+  "namespace_edits": false,
+  "local_files": [
+    "R/target_request.R",
+    "R/target_evidence.R",
+    "tests/testthat/test-D-T10.R",
+    "inst/examples/tickets/D-T10.yaml",
+    "docs/implementation/registrations/D-T10.json"
+  ],
+  "owned_functions": ["triomics_target_request", "triomics_target_external_evidence"],
+  "integration_request": "Sol: register the owned functions and integrate the target request and external evidence at triomics_execute_stage_d in R/cli.R. triomics_execute_stage_d does not call them."
+}
