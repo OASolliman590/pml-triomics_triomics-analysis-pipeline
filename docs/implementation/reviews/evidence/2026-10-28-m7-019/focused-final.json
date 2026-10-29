@@ -1,0 +1,156 @@
+{
+  "totals": {
+    "fail": 12,
+    "warn": 7,
+    "skip": 0,
+    "error": 5,
+    "pass": 1627,
+    "test_blocks": 106
+  },
+  "conditions": [
+    {
+      "file": "test-C-06-shared.R",
+      "test": "Stage C consumes the verified B nomination artifact and preserves its lineage",
+      "type": "expectation_failure",
+      "message": "Expected `cli$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."
+    },
+    {
+      "file": "test-C-06-shared.R",
+      "test": "Stage C consumes the verified B nomination artifact and preserves its lineage",
+      "type": "expectation_failure",
+      "message": "Expected `has_handoff` to be TRUE.\nDifferences:\n`actual`:   FALSE\n`expected`: TRUE \n"
+    },
+    {
+      "file": "test-C-06-shared.R",
+      "test": "Stage C consumes the verified B nomination artifact and preserves its lineage",
+      "type": "expectation_warning",
+      "message": "cannot open file '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//RtmpZy3TZH/triomics-c06-shared-cli-6cceb0736df/D/handoff-manifest.json': No such file or directory"
+    },
+    {
+      "file": "test-C-06-shared.R",
+      "test": "Stage C consumes the verified B nomination artifact and preserves its lineage",
+      "type": "expectation_error",
+      "message": "Error in `open.connection(con, \"rb\")`: cannot open the connection"
+    },
+    {
+      "file": "test-C-06-shared.R",
+      "test": "C-06 Stage C rejects a fresh root without native B evidence",
+      "type": "expectation_failure",
+      "message": "Expected `error$code` to be identical to \"C_EXPORT_PREDECESSOR_MISSING\".\nDifferences:\n`actual`:   \"C_SCORE_ENDPOINT_HASH\"       \n`expected`: \"C_EXPORT_PREDECESSOR_MISSING\"\n"
+    },
+    {
+      "file": "test-C-06-shared.R",
+      "test": "Stage C composes paired and trajectory units from native B resolution",
+      "type": "expectation_failure",
+      "message": "Expected `c_run$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."
+    },
+    {
+      "file": "test-C-06-shared.R",
+      "test": "native trajectory C retains an absent-all B exclusion with unavailable time",
+      "type": "expectation_failure",
+      "message": "Expected `c_run$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."
+    },
+    {
+      "file": "test-C-06-shared.R",
+      "test": "native C-06 writer propagates sensitive privacy and binds D lineage",
+      "type": "expectation_failure",
+      "message": "Expected `cli$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."
+    },
+    {
+      "file": "test-C-06-shared.R",
+      "test": "native C-06 writer propagates sensitive privacy and binds D lineage",
+      "type": "expectation_failure",
+      "message": "Expected `envelope_paths` to have length 7.\nActual length: 0."
+    },
+    {
+      "file": "test-C-06-shared.R",
+      "test": "native C-06 writer propagates sensitive privacy and binds D lineage",
+      "type": "expectation_warning",
+      "message": "cannot open file '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//RtmpZy3TZH/triomics-c06-sensitive-cli-6cce23c8694d/D/candidate-nominations.envelope.json': No such file or directory"
+    },
+    {
+      "file": "test-C-06-shared.R",
+      "test": "native C-06 writer propagates sensitive privacy and binds D lineage",
+      "type": "expectation_error",
+      "message": "Error in `open.connection(con, \"rb\")`: cannot open the connection"
+    },
+    {
+      "file": "test-C-06-shared.R",
+      "test": "Stage C preserves the verified native B primary nomination source",
+      "type": "expectation_failure",
+      "message": "Expected `cli$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."
+    },
+    {
+      "file": "test-C-06-shared.R",
+      "test": "Stage C preserves the verified native B primary nomination source",
+      "type": "expectation_warning",
+      "message": "cannot open file '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//RtmpZy3TZH/triomics-c06-no-primary-6cce132e5495/D/candidate-nominations.json': No such file or directory"
+    },
+    {
+      "file": "test-C-06-shared.R",
+      "test": "Stage C preserves the verified native B primary nomination source",
+      "type": "expectation_error",
+      "message": "Error in `open.connection(con, \"rb\")`: cannot open the connection"
+    },
+    {
+      "file": "test-C-08-shared.R",
+      "test": "Stage C writes immutable C-08 endpoints and schedules, but does not execute, B work",
+      "type": "expectation_error",
+      "message": "<triomics_error/error/condition>\nError: A score endpoint has changed since C-08 construction."
+    },
+    {
+      "file": "test-C-08-shared.R",
+      "test": "Stage C propagates outcome-selected ancestry as withheld and descriptive-only",
+      "type": "expectation_error",
+      "message": "<triomics_error/error/condition>\nError: A score endpoint has changed since C-08 construction."
+    },
+    {
+      "file": "test-C-08-shared.R",
+      "test": "public C-08 CLI schedules linked clinical work without starting B",
+      "type": "expectation_warning",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/Users/megastore/.codex/worktrees/m7-019-package-compatibility/PML MultiOmics Analysis Pipeline/inst/examples/tickets/C-08.yaml' --stage C --output '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//RtmpZy3TZH/triomics-c08-public-cli-6cce5079a7e' 2>&1' had status 2"
+    },
+    {
+      "file": "test-C-08-shared.R",
+      "test": "public C-08 CLI schedules linked clinical work without starting B",
+      "type": "expectation_failure",
+      "message": "Expected `cli$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."
+    },
+    {
+      "file": "test-C-08-shared.R",
+      "test": "public C-08 CLI schedules linked clinical work without starting B",
+      "type": "expectation_failure",
+      "message": "Expected `scheduled` to have length 1.\nActual length: 0."
+    },
+    {
+      "file": "test-D-T01.R",
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "type": "expectation_warning",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-6cce395120bb/tickets/d-t01-paired-sign-stale-6cce1c48a28c.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-6cce7d3bf262' 2>&1' had status 2"
+    },
+    {
+      "file": "test-D-T01.R",
+      "test": "D-T01 publishes a complete generation from actual native B and C CLI handoffs",
+      "type": "expectation_warning",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/Users/megastore/.codex/worktrees/m7-019-package-compatibility/PML MultiOmics Analysis Pipeline/inst/examples/tickets/D-T01.yaml' --stage 'C' --output '/private/tmp/d-t01-native-cli-6cce3a846f8d' 2>&1' had status 2"
+    },
+    {
+      "file": "test-D-T01.R",
+      "test": "D-T01 publishes a complete generation from actual native B and C CLI handoffs",
+      "type": "expectation_failure",
+      "message": "Expected `c$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."
+    },
+    {
+      "file": "test-D-T01.R",
+      "test": "D-T01 revalidates native DEqMS group sign, time maps, counts and source bytes",
+      "type": "expectation_warning",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-source-mutation-fixture-6cce9bb3ce1/tickets/D-T01.yaml' --stage 'C' --output '/private/tmp/d-t01-source-mutation-output-6cce6399dcc4' 2>&1' had status 2"
+    },
+    {
+      "file": "test-D-T01.R",
+      "test": "D-T01 revalidates native DEqMS group sign, time maps, counts and source bytes",
+      "type": "expectation_failure",
+      "message": "Expected `c$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."
+    }
+  ]
+}

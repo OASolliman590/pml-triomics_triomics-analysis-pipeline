@@ -1,0 +1,1 @@
+Astra audit_pass no at4e0df02: add Sol-owned C endpoint payload serialization patch; clarify executing-root Git fallback, forbid installed fallback to unrelated checkout; assert numeric API plus named JSON and missing/unexpanded/malformed stamp rejection. Other scope adequate. No edits/tests by reviewer.

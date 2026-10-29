@@ -1,0 +1,41 @@
+{
+  "snapshot": "98c71256e61c4613833f81bf049de06427c9a094",
+  "status": "Status: 1 ERROR",
+  "counts": {
+    "fail_including_errors": 24,
+    "warn": 5,
+    "skip": 0,
+    "pass": 5877
+  },
+  "failure_headings": [
+    "\u2500\u2500 Failure ('test-B-T01.R:690:3'): Stage B CLI writes unique, deterministic BlockResult identities across contrasts \u2500\u2500",
+    "\u2500\u2500 Failure ('test-B-T01.R:691:3'): Stage B CLI writes unique, deterministic BlockResult identities across contrasts \u2500\u2500",
+    "\u2500\u2500 Error ('test-B-T01.R:692:3'): Stage B CLI writes unique, deterministic BlockResult identities across contrasts \u2500\u2500",
+    "\u2500\u2500 Error ('test-B-T01.R:770:3'): public identity finalization preserves the fitted scientific rows exactly \u2500\u2500",
+    "\u2500\u2500 Error ('test-B-T01.R:845:3'): Stage B serializes joint claim identity without choosing a member contrast \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-05.R:460:3'): C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-05.R:460:3'): C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-05.R:460:3'): C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes \u2500\u2500",
+    "\u2500\u2500 Error ('test-C-05.R:470:3'): C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-05.R:538:3'): C-05 real MOFA2 fits and extracts a missing sample-view capability cell \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-05.R:538:3'): C-05 real MOFA2 fits and extracts a missing sample-view capability cell \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-05.R:538:3'): C-05 real MOFA2 fits and extracts a missing sample-view capability cell \u2500\u2500",
+    "\u2500\u2500 Error ('test-C-05.R:543:3'): C-05 real MOFA2 fits and extracts a missing sample-view capability cell \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-05.R:551:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-05.R:551:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-05.R:551:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-05.R:555:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-05.R:555:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-05.R:558:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-05.R:562:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-05.R:562:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-06-shared.R:990:3'): native C-06 writer propagates sensitive privacy and binds D lineage \u2500\u2500",
+    "\u2500\u2500 Failure ('test-C-06-shared.R:995:3'): native C-06 writer propagates sensitive privacy and binds D lineage \u2500\u2500",
+    "\u2500\u2500 Error ('test-C-06-shared.R:1006:3'): native C-06 writer propagates sensitive privacy and binds D lineage \u2500\u2500"
+  ],
+  "named_warning_counts": {
+    "Stage B CLI writes unique, deterministic BlockResult identities across contrasts": 3,
+    "native C-06 writer propagates sensitive privacy and binds D lineage": 1,
+    "D-T01 refuses stale paired signs and preserves the old pointer": 1
+  }
+}

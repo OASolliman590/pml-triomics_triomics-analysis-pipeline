@@ -1,24 +1,24 @@
 # Tri-omics progress
 
-The missing-time defect is fixed: excluded sample SYN_12 now saves its unavailable
-time as JSON null. Its excluded status and lack of a score remain intact.
+**Blocked; tested on synthetic fixtures only.** The goal remains a traceable
+B → C → D pipeline that refuses altered evidence before publication.
 
-A fresh Luna worker changed one line; Terra reproduced the original failures and
-reviewed the repair. Independent synthetic B → C → D commands succeeded, with
-21 passing assertions and matching provenance hashes. The focused suites passed
-1,176 assertions, with one named warning from an intentional rejection test.
+The excluded sample’s missing time remains correctly saved as JSON null.
+The numeric endpoint interface is restored, source-revision tracking works in
+an installed-package probe, and package documentation checks are clean. Native
+synthetic B, C and D commands passed 21 assertions. The integrated source suite
+passed 6,287 assertions with 15 named warnings and no failures or skips.
 
-The broader checks found remaining problems. The full source suite passed 6,280
-assertions and failed one: paired visit weights changed their in-memory type.
-The installed package had 45 failures/errors, including missing Git revision and
-fixture-path problems. Its final status was 1 ERROR, 1 WARNING, 1 NOTE. The 42
-installed warnings are not fully named in the report and remain uncertified.
+The installed package still fails: 5,877 passes, 24 failures/errors, five named
+warnings and no skips. Test-fixture paths and YAML array types need correction,
+and the installed MOFA runtime was unavailable. A separate integrity probe also
+found that visit-weight names could change without detection. The final repair
+caught those changes but broke JSON null read-back, so it was not integrated.
 
-Astra did not approve the snapshot. The repair is integrated, but M7 and G7 stay
-closed; no later D packet was started. C-06 remains unaccepted, C-07 unrun and
-C-09 unqualified. This is software evidence from synthetic fixtures, not scientific
-validation on your studies. No private data were used or uploaded.
+Astra did not approve. M7/G7 remain closed; C-06 is unaccepted, C-07 unrun and
+C-09 unqualified. No later D work started. This establishes no biological validity
+for any study; no private data were used.
 
-Next: a new bounded compatibility and installed-package repair cycle. This cycle
-has stopped with all workers finished and a resumable handover. Local records only;
-no GitHub push or Notion sync.
+Next: a newly authorized bounded repair cycle; this cycle reached its repair cap.
+All workers have stopped. Sync: local documentation only; no GitHub push or Notion
+sync.

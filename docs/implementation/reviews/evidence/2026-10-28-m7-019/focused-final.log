@@ -1,0 +1,152 @@
+GATE: focused 
+COMMIT: e41048693bebdec93d73f4aeb0ec207a81cd9299 
+MOFA2: 1.22.1 
+PYTHON: /tmp/triomics-mofa-py-m7-006/bin/python 
+B-T01: .............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................Coefficients not estimable: condition.unobserved 
+....Coefficients not estimable: condition.unobserved 
+........................................................
+B-T07: ..................................................................Tracing function "triomics_export_resume_decision" in package
+"namespace:triomics"
+Tracing function "tempfile" in package "base"
+..........Untracing function "tempfile" in package "base"
+Untracing function "triomics_export_resume_decision" in package
+"namespace:triomics"
+....................................................................................................................................................................................................................................................
+C-06-shared: ...1....2W3.4...............5..........................6...........................................78.W9aWb.........................................................................................
+C-06: .......................................................................................
+C-08-shared: ......................................Design matrix has changed to include Y; each block will be
+            linked to Y.
+..............c......d.....We.f...
+C-08: ............................................................................................................................................................................................................................................................
+D-T01: ......................................................................................................................W....Wg...Wh
+package-source-identity: .........
+
+══ Warnings ════════════════════════════════════════════════════════════════════
+1. Stage C consumes the verified B nomination artifact and preserves its lineage ('test-C-06-shared.R:300:3') - cannot open file '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//RtmpZy3TZH/triomics-c06-shared-cli-6cceb0736df/D/handoff-manifest.json': No such file or directory
+
+2. native C-06 writer propagates sensitive privacy and binds D lineage ('test-C-06-shared.R:1006:3') - cannot open file '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//RtmpZy3TZH/triomics-c06-sensitive-cli-6cce23c8694d/D/candidate-nominations.envelope.json': No such file or directory
+
+3. Stage C preserves the verified native B primary nomination source ('test-C-06-shared.R:1031:3') - cannot open file '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//RtmpZy3TZH/triomics-c06-no-primary-6cce132e5495/D/candidate-nominations.json': No such file or directory
+
+4. public C-08 CLI schedules linked clinical work without starting B ('test-C-08-shared.R:802:3') - running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/Users/megastore/.codex/worktrees/m7-019-package-compatibility/PML MultiOmics Analysis Pipeline/inst/examples/tickets/C-08.yaml' --stage C --output '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//RtmpZy3TZH/triomics-c08-public-cli-6cce5079a7e' 2>&1' had status 2
+
+5. D-T01 refuses stale paired signs and preserves the old pointer ('test-D-T01.R:962:3') - running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-6cce395120bb/tickets/d-t01-paired-sign-stale-6cce1c48a28c.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-6cce7d3bf262' 2>&1' had status 2
+
+6. D-T01 publishes a complete generation from actual native B and C CLI handoffs ('test-D-T01.R:1006:3') - running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/Users/megastore/.codex/worktrees/m7-019-package-compatibility/PML MultiOmics Analysis Pipeline/inst/examples/tickets/D-T01.yaml' --stage 'C' --output '/private/tmp/d-t01-native-cli-6cce3a846f8d' 2>&1' had status 2
+
+7. D-T01 revalidates native DEqMS group sign, time maps, counts and source bytes ('test-D-T01.R:1649:3') - running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-source-mutation-fixture-6cce9bb3ce1/tickets/D-T01.yaml' --stage 'C' --output '/private/tmp/d-t01-source-mutation-output-6cce6399dcc4' 2>&1' had status 2
+
+══ Failed ══════════════════════════════════════════════════════════════════════
+── 1. Failure ('test-C-06-shared.R:263:3'): Stage C consumes the verified B nomi
+Expected `cli$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction.
+
+── 2. Failure ('test-C-06-shared.R:297:3'): Stage C consumes the verified B nomi
+Expected `has_handoff` to be TRUE.
+Differences:
+`actual`:   FALSE
+`expected`: TRUE 
+
+
+── 3. Error ('test-C-06-shared.R:300:3'): Stage C consumes the verified B nomina
+Error in `open.connection(con, "rb")`: cannot open the connection
+Backtrace:
+    ▆
+ 1. └─jsonlite::read_json(manifest_path, simplifyVector = FALSE) at test-C-06-shared.R:300:3
+ 2.   └─jsonlite::parse_json(...)
+ 3.     └─jsonlite:::parse_and_simplify(...)
+ 4.       └─jsonlite:::parseJSON(txt, bigint_as_char)
+ 5.         └─jsonlite:::parse_con(txt, bigint_as_char)
+ 6.           ├─base::open(con, "rb")
+ 7.           └─base::open.connection(con, "rb")
+
+── 4. Failure ('test-C-06-shared.R:541:3'): C-06 Stage C rejects a fresh root wi
+Expected `error$code` to be identical to "C_EXPORT_PREDECESSOR_MISSING".
+Differences:
+`actual`:   "C_SCORE_ENDPOINT_HASH"       
+`expected`: "C_EXPORT_PREDECESSOR_MISSING"
+
+
+── 5. Failure ('test-C-06-shared.R:556:5'): Stage C composes paired and trajecto
+Expected `c_run$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction.
+
+── 6. Failure ('test-C-06-shared.R:667:3'): native trajectory C retains an absen
+Expected `c_run$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction.
+
+── 7. Failure ('test-C-06-shared.R:990:3'): native C-06 writer propagates sensit
+Expected `cli$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction.
+
+── 8. Failure ('test-C-06-shared.R:995:3'): native C-06 writer propagates sensit
+Expected `envelope_paths` to have length 7.
+Actual length: 0.
+
+── 9. Error ('test-C-06-shared.R:1006:3'): native C-06 writer propagates sensiti
+Error in `open.connection(con, "rb")`: cannot open the connection
+Backtrace:
+    ▆
+ 1. └─jsonlite::read_json(candidate_envelope_path, simplifyVector = FALSE) at test-C-06-shared.R:1006:3
+ 2.   └─jsonlite::parse_json(...)
+ 3.     └─jsonlite:::parse_and_simplify(...)
+ 4.       └─jsonlite:::parseJSON(txt, bigint_as_char)
+ 5.         └─jsonlite:::parse_con(txt, bigint_as_char)
+ 6.           ├─base::open(con, "rb")
+ 7.           └─base::open.connection(con, "rb")
+
+── 10. Failure ('test-C-06-shared.R:1030:3'): Stage C preserves the verified nat
+Expected `cli$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction.
+  ... and 7 more
+
+
+Maximum number of 10 failures reached, some test results may be missing.
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+
+EXACT_TOTALS: {"fail":12,"warn":7,"skip":0,"error":5,"pass":1627,"test_blocks":106} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"Stage C consumes the verified B nomination artifact and preserves its lineage","type":"expectation_failure","message":"Expected `cli$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"Stage C consumes the verified B nomination artifact and preserves its lineage","type":"expectation_failure","message":"Expected `has_handoff` to be TRUE.\nDifferences:\n`actual`:   FALSE\n`expected`: TRUE \n"} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"Stage C consumes the verified B nomination artifact and preserves its lineage","type":"expectation_warning","message":"cannot open file '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//RtmpZy3TZH/triomics-c06-shared-cli-6cceb0736df/D/handoff-manifest.json': No such file or directory"} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"Stage C consumes the verified B nomination artifact and preserves its lineage","type":"expectation_error","message":"Error in `open.connection(con, \"rb\")`: cannot open the connection"} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"C-06 Stage C rejects a fresh root without native B evidence","type":"expectation_failure","message":"Expected `error$code` to be identical to \"C_EXPORT_PREDECESSOR_MISSING\".\nDifferences:\n`actual`:   \"C_SCORE_ENDPOINT_HASH\"       \n`expected`: \"C_EXPORT_PREDECESSOR_MISSING\"\n"} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"Stage C composes paired and trajectory units from native B resolution","type":"expectation_failure","message":"Expected `c_run$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"native trajectory C retains an absent-all B exclusion with unavailable time","type":"expectation_failure","message":"Expected `c_run$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"native C-06 writer propagates sensitive privacy and binds D lineage","type":"expectation_failure","message":"Expected `cli$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"native C-06 writer propagates sensitive privacy and binds D lineage","type":"expectation_failure","message":"Expected `envelope_paths` to have length 7.\nActual length: 0."} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"native C-06 writer propagates sensitive privacy and binds D lineage","type":"expectation_warning","message":"cannot open file '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//RtmpZy3TZH/triomics-c06-sensitive-cli-6cce23c8694d/D/candidate-nominations.envelope.json': No such file or directory"} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"native C-06 writer propagates sensitive privacy and binds D lineage","type":"expectation_error","message":"Error in `open.connection(con, \"rb\")`: cannot open the connection"} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"Stage C preserves the verified native B primary nomination source","type":"expectation_failure","message":"Expected `cli$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"Stage C preserves the verified native B primary nomination source","type":"expectation_warning","message":"cannot open file '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//RtmpZy3TZH/triomics-c06-no-primary-6cce132e5495/D/candidate-nominations.json': No such file or directory"} 
+NAMED_CONDITION: {"file":"test-C-06-shared.R","test":"Stage C preserves the verified native B primary nomination source","type":"expectation_error","message":"Error in `open.connection(con, \"rb\")`: cannot open the connection"} 
+NAMED_CONDITION: {"file":"test-C-08-shared.R","test":"Stage C writes immutable C-08 endpoints and schedules, but does not execute, B work","type":"expectation_error","message":"<triomics_error/error/condition>\nError: A score endpoint has changed since C-08 construction."} 
+NAMED_CONDITION: {"file":"test-C-08-shared.R","test":"Stage C propagates outcome-selected ancestry as withheld and descriptive-only","type":"expectation_error","message":"<triomics_error/error/condition>\nError: A score endpoint has changed since C-08 construction."} 
+NAMED_CONDITION: {"file":"test-C-08-shared.R","test":"public C-08 CLI schedules linked clinical work without starting B","type":"expectation_warning","message":"running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/Users/megastore/.codex/worktrees/m7-019-package-compatibility/PML MultiOmics Analysis Pipeline/inst/examples/tickets/C-08.yaml' --stage C --output '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//RtmpZy3TZH/triomics-c08-public-cli-6cce5079a7e' 2>&1' had status 2"} 
+NAMED_CONDITION: {"file":"test-C-08-shared.R","test":"public C-08 CLI schedules linked clinical work without starting B","type":"expectation_failure","message":"Expected `cli$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."} 
+NAMED_CONDITION: {"file":"test-C-08-shared.R","test":"public C-08 CLI schedules linked clinical work without starting B","type":"expectation_failure","message":"Expected `scheduled` to have length 1.\nActual length: 0."} 
+NAMED_CONDITION: {"file":"test-D-T01.R","test":"D-T01 refuses stale paired signs and preserves the old pointer","type":"expectation_warning","message":"running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-6cce395120bb/tickets/d-t01-paired-sign-stale-6cce1c48a28c.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-6cce7d3bf262' 2>&1' had status 2"} 
+NAMED_CONDITION: {"file":"test-D-T01.R","test":"D-T01 publishes a complete generation from actual native B and C CLI handoffs","type":"expectation_warning","message":"running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/Users/megastore/.codex/worktrees/m7-019-package-compatibility/PML MultiOmics Analysis Pipeline/inst/examples/tickets/D-T01.yaml' --stage 'C' --output '/private/tmp/d-t01-native-cli-6cce3a846f8d' 2>&1' had status 2"} 
+NAMED_CONDITION: {"file":"test-D-T01.R","test":"D-T01 publishes a complete generation from actual native B and C CLI handoffs","type":"expectation_failure","message":"Expected `c$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."} 
+NAMED_CONDITION: {"file":"test-D-T01.R","test":"D-T01 revalidates native DEqMS group sign, time maps, counts and source bytes","type":"expectation_warning","message":"running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-source-mutation-fixture-6cce9bb3ce1/tickets/D-T01.yaml' --stage 'C' --output '/private/tmp/d-t01-source-mutation-output-6cce6399dcc4' 2>&1' had status 2"} 
+NAMED_CONDITION: {"file":"test-D-T01.R","test":"D-T01 revalidates native DEqMS group sign, time maps, counts and source bytes","type":"expectation_failure","message":"Expected `c$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_SCORE_ENDPOINT_HASH: A score endpoint has changed since C-08 construction."} 

@@ -1,0 +1,24 @@
+{
+  "warnings": [
+    {
+      "test": "Stage B CLI writes unique, deterministic BlockResult identities across contrasts",
+      "message": "running command 'R_LIBS='/private/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T/RtmpdkqBjd/triomics-package-check-76652ec7b8e2/triomics.Rcheck:/private/tmp/triomics-mofa-lib-m7-006:/Users/megastore/Library/R/x86_64/4.6/library:/Library/Frameworks/R.framework/Versions/4.6-x86_64/Resources/library' '/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//Rtmpu8aUKy/b-t01-installed-cli-78de7ee7fbc8.R' --config '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//Rtmpu8aUKy/b-t01-packaged-fixture-78de17789ac1.yaml' --stage B --output '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//Rtmpu8aUKy/b-t02-identity-first-78de6ef800f0' 2>&1' had status 2"
+    },
+    {
+      "test": "Stage B CLI writes unique, deterministic BlockResult identities across contrasts",
+      "message": "running command 'R_LIBS='/private/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T/RtmpdkqBjd/triomics-package-check-76652ec7b8e2/triomics.Rcheck:/private/tmp/triomics-mofa-lib-m7-006:/Users/megastore/Library/R/x86_64/4.6/library:/Library/Frameworks/R.framework/Versions/4.6-x86_64/Resources/library' '/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//Rtmpu8aUKy/b-t01-installed-cli-78de3043488f.R' --config '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//Rtmpu8aUKy/b-t01-packaged-fixture-78de17789ac1.yaml' --stage B --output '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//Rtmpu8aUKy/b-t02-identity-second-78de5c05c57a' 2>&1' had status 2"
+    },
+    {
+      "test": "Stage B CLI writes unique, deterministic BlockResult identities across contrasts",
+      "message": "cannot open file '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//Rtmpu8aUKy/b-t02-identity-first-78de6ef800f0/B/block-results.json': No such file or directory"
+    },
+    {
+      "test": "native C-06 writer propagates sensitive privacy and binds D lineage",
+      "message": "cannot open file '/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//Rtmpu8aUKy/triomics-c06-sensitive-cli-78de2179b377/D/candidate-nominations.envelope.json': No such file or directory"
+    },
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-78de26ee68d3/tickets/d-t01-paired-sign-stale-78de4fe85bb0.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-78de6e24089c' 2>&1' had status 2"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "totals": {
+    "fail": 10,
+    "warn": 2,
+    "skip": 0,
+    "error": 1,
+    "pass": 1999,
+    "test_blocks": 106
+  },
+  "conditions": [
+    {
+      "file": "test-B-T01.R",
+      "test": "the stage B fixture envelope matches limma on predecessor matrices",
+      "type": "expectation_warning",
+      "message": "cannot open file '/Users/megastore/.codex/worktrees/m7-019-package-compatibility/PML MultiOmics Analysis Pipeline/inst/examples/tickets/b-t01-refused-2afc47bfac81.yaml': Operation not permitted"
+    },
+    {
+      "file": "test-B-T01.R",
+      "test": "the stage B fixture envelope matches limma on predecessor matrices",
+      "type": "expectation_error",
+      "message": "Error in `file(con, \"w\")`: cannot open the connection"
+    },
+    {
+      "file": "test-B-T07.R",
+      "test": "B-T07 AC2 independent and paired CLI smokes retain signed effects and unavailable methods",
+      "type": "expectation_failure",
+      "message": "Expected `is_triomics_error` to be FALSE.\nDifferences:\n`actual`:   TRUE \n`expected`: FALSE\n\nAC2: B_EXPORT_INCOMPLETE: Native B provenance requires the exact persisted matrix and repository revision."
+    },
+    {
+      "file": "test-B-T07.R",
+      "test": "B-T07 AC2 independent and paired CLI smokes retain signed effects and unavailable methods",
+      "type": "expectation_failure",
+      "message": "Expected `t07_acceptance_verdict(receipt, \"AC2\")` to be identical to \"pass\".\nDifferences:\n`actual`:   NA    \n`expected`: \"pass\"\n"
+    },
+    {
+      "file": "test-B-T07.R",
+      "test": "B-T07 AC2 independent and paired CLI smokes retain signed effects and unavailable methods",
+      "type": "expectation_failure",
+      "message": "Expected `t07_acceptance_verdict(receipt, \"AC3\")` to be identical to \"pass\".\nDifferences:\n`actual`:   NA    \n`expected`: \"pass\"\n"
+    },
+    {
+      "file": "test-B-T07.R",
+      "test": "B-T07 AC2 independent and paired CLI smokes retain signed effects and unavailable methods",
+      "type": "expectation_failure",
+      "message": "Expected `any(...)` to be TRUE.\nDifferences:\n`actual`:   FALSE\n`expected`: TRUE \n"
+    },
+    {
+      "file": "test-C-08.R",
+      "test": "C-08 preserves mean and delta AnalysisUnitMap lineage and rejects incompatible times",
+      "type": "expectation_failure",
+      "message": "Expected `persisted_delta$endpoints[[1L]]$samples[[1L]]$visit_weights` to be identical to `list(V0 = -1, V1 = 1)`.\nDifferences:\n`actual$V0` is an integer vector (-1)\n`expected$V0` is a double vector (-1)\n\n`actual$V1` is an integer vector (1)\n`expected$V1` is a double vector (1)\n"
+    },
+    {
+      "file": "test-C-08.R",
+      "test": "C-08 preserves mean and delta AnalysisUnitMap lineage and rejects incompatible times",
+      "type": "expectation_failure",
+      "message": "Expected `persisted_delta$endpoints[[1L]]$unit_map[[1L]]$visit_weights` to be identical to `list(V0 = -1, V1 = 1)`.\nDifferences:\n`actual$V0` is an integer vector (-1)\n`expected$V0` is a double vector (-1)\n\n`actual$V1` is an integer vector (1)\n`expected$V1` is a double vector (1)\n"
+    },
+    {
+      "file": "test-D-T01.R",
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "type": "expectation_warning",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-2afc3af778a4/tickets/d-t01-paired-sign-stale-2afc567f7a8a.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-2afc4d11753a' 2>&1' had status 2"
+    },
+    {
+      "file": "test-package-source-identity.R",
+      "test": "installed source identity fails closed on absent and unexpanded stamps",
+      "type": "expectation_failure",
+      "message": "Expected `actual_revision` to match regexp \"^(?:[0-9a-f]{40}|[0-9a-f]{64})$\".\nActual text:\nx | unavailable"
+    },
+    {
+      "file": "test-package-source-identity.R",
+      "test": "source identity follows the executing namespace despite unrelated global symbols",
+      "type": "expectation_failure",
+      "message": "Expected `actual_revision` to match regexp \"^(?:[0-9a-f]{40}|[0-9a-f]{64})$\".\nActual text:\nx | unavailable"
+    },
+    {
+      "file": "test-package-source-identity.R",
+      "test": "source identity follows the executing namespace despite unrelated global symbols",
+      "type": "expectation_failure",
+      "message": "Expected `context$root` to be identical to `namespace_root`.\nDifferences:\n`actual` is NULL\n`expected` is a character vector ('/Users/megastore/.codex/worktrees/m7-019-package-compatibility/PML MultiOmics Analysis Pipeline')\n"
+    },
+    {
+      "file": "test-package-source-identity.R",
+      "test": "source identity follows the executing namespace despite unrelated global symbols",
+      "type": "expectation_failure",
+      "message": "Expected `context$installed` to be identical to `!triomics_source_root_valid(namespace_root)`.\nDifferences:\n`actual` is NULL\n`expected` is a logical vector (FALSE)\n"
+    }
+  ]
+}

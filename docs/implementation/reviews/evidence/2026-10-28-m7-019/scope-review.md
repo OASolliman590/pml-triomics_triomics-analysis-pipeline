@@ -1,0 +1,1 @@
+Scope audit: initial4e0df02 changes_required; corrected e6f9b29 audit_pass yes. One focused rereview; no scope blockers. Astra gpt-6-astra low request accepted; effective settings not independently exposed. No edits/tests/children. Implementation/final evidence unaudited.

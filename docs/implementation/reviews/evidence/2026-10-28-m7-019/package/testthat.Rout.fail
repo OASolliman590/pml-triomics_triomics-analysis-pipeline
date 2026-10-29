@@ -1,0 +1,321 @@
+
+R version 4.6.1 (2026-06-24) -- "Happy Hop"
+Copyright (C) 2026 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin20
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(testthat)
+> 
+> triomics_warning_reporter <- testthat::CheckReporter$new()
+> triomics_write_warning_inventory <- function(reporter) {
++   records <- reporter$warnings$as_list()
++   warnings <- lapply(records, function(record) {
++     test_name <- record$test
++     if (!is.character(test_name) || length(test_name) != 1L || is.na(test_name)) {
++       test_name <- "<unknown test>"
++     }
++     list(test = test_name, message = as.character(record$message))
++   })
++   jsonlite::write_json(
++     list(warnings = warnings),
++     "triomics-warning-inventory.json",
++     auto_unbox = TRUE,
++     null = "null",
++     pretty = TRUE
++   )
++ }
+> 
+> tryCatch(
++   test_check("triomics", reporter = triomics_warning_reporter),
++   finally = triomics_write_warning_inventory(triomics_warning_reporter)
++ )
+Loading required package: triomics
+Saving _problems/test-B-T01-690.R
+Saving _problems/test-B-T01-691.R
+Saving _problems/test-B-T01-692.R
+Saving _problems/test-B-T01-770.R
+Saving _problems/test-B-T01-845.R
+Coefficients not estimable: covariate.batch 
+Coefficients not estimable: condition.high 
+Coefficients not estimable: condition.high 
+Coefficients not estimable: between_group.unobserved 
+Tracing function "triomics_export_resume_decision" in package
+"namespace:triomics"
+Tracing function "tempfile" in package "base"
+Untracing function "tempfile" in package "base"
+Untracing function "triomics_export_resume_decision" in package
+"namespace:triomics"
+Design matrix has changed to include Y; each block will be
+            linked to Y.
+Design matrix has changed to include Y; each block will be
+            linked to Y.
+Design matrix has changed to include Y; each block will be
+            linked to Y.
+Design matrix has changed to include Y; each block will be
+            linked to Y.
+Tracing function "tune.block.splsda" in package "namespace:mixOmics"
+Design matrix has changed to include Y; each block will be
+            linked to Y.
+Design matrix has changed to include Y; each block will be
+            linked to Y.
+Untracing function "tune.block.splsda" in package
+"namespace:mixOmics"
+Tracing function "triomics_block_spls_variance" in package
+"namespace:triomics"
+Untracing function "triomics_block_spls_variance" in package
+"namespace:triomics"
+Saving _problems/test-C-05-460.R
+Saving _problems/test-C-05-460.R
+Saving _problems/test-C-05-460.R
+Saving _problems/test-C-05-474.R
+Saving _problems/test-C-05-538.R
+Saving _problems/test-C-05-538.R
+Saving _problems/test-C-05-538.R
+Saving _problems/test-C-05-543.R
+Saving _problems/test-C-05-551.R
+Saving _problems/test-C-05-551.R
+Saving _problems/test-C-05-551.R
+Saving _problems/test-C-05-557.R
+Saving _problems/test-C-05-557.R
+Saving _problems/test-C-05-558.R
+Saving _problems/test-C-05-564.R
+Saving _problems/test-C-05-564.R
+Saving _problems/test-C-06-shared-990.R
+Saving _problems/test-C-06-shared-995.R
+Saving _problems/test-C-06-shared-1006.R
+Design matrix has changed to include Y; each block will be
+            linked to Y.
+[ FAIL 24 | WARN 5 | SKIP 0 | PASS 5877 ]
+
+══ Failed tests ════════════════════════════════════════════════════════════════
+── Failure ('test-B-T01.R:690:3'): Stage B CLI writes unique, deterministic BlockResult identities across contrasts ──
+Expected `first_run$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics A_CONFIG_TYPE: Invalid configuration at 'blocks[1].source_refs': expected an array.
+── Failure ('test-B-T01.R:691:3'): Stage B CLI writes unique, deterministic BlockResult identities across contrasts ──
+Expected `second_run$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics A_CONFIG_TYPE: Invalid configuration at 'blocks[1].source_refs': expected an array.
+── Error ('test-B-T01.R:692:3'): Stage B CLI writes unique, deterministic BlockResult identities across contrasts ──
+Error in `open.connection(con, "rb")`: cannot open the connection
+Backtrace:
+    ▆
+ 1. └─jsonlite::read_json(...) at test-B-T01.R:692:3
+ 2.   └─jsonlite::parse_json(...)
+ 3.     └─jsonlite:::parse_and_simplify(...)
+ 4.       └─jsonlite:::parseJSON(txt, bigint_as_char)
+ 5.         └─jsonlite:::parse_con(txt, bigint_as_char)
+ 6.           ├─base::open(con, "rb")
+ 7.           └─base::open.connection(con, "rb")
+── Error ('test-B-T01.R:770:3'): public identity finalization preserves the fitted scientific rows exactly ──
+<triomics_error/error/condition>
+Error: Invalid configuration at 'blocks[1].source_refs': expected an array.
+Backtrace:
+    ▆
+ 1. └─triomics:::triomics_read_config(config_path) at test-B-T01.R:770:3
+ 2.   └─triomics:::triomics_check_config_keys(parsed, schema, schema)
+ 3.     └─triomics:::triomics_check_config_keys(...)
+ 4.       └─triomics:::triomics_check_config_keys(...)
+ 5.         └─triomics:::triomics_check_config_keys(...)
+ 6.           └─triomics:::triomics_abort(...)
+── Error ('test-B-T01.R:845:3'): Stage B serializes joint claim identity without choosing a member contrast ──
+<triomics_error/error/condition>
+Error: Invalid configuration at 'blocks[1].source_refs': expected an array.
+Backtrace:
+    ▆
+ 1. └─triomics::triomics_execute_stage_b(source_config, output) at test-B-T01.R:845:3
+ 2.   └─triomics:::triomics_read_config(config_path)
+ 3.     └─triomics:::triomics_check_config_keys(parsed, schema, schema)
+ 4.       └─triomics:::triomics_check_config_keys(...)
+ 5.         └─triomics:::triomics_check_config_keys(...)
+ 6.           └─triomics:::triomics_check_config_keys(...)
+ 7.             └─triomics:::triomics_abort(...)
+── Failure ('test-C-05.R:460:3'): C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes ──
+Expected `status$available` to be TRUE.
+Differences:
+`actual`:   FALSE
+`expected`: TRUE 
+
+Backtrace:
+    ▆
+ 1. └─triomics (local) c05_require_runtime() at test-C-05.R:460:3
+ 2.   └─testthat::expect_true(status$available) at test-C-05.R:109:3
+── Failure ('test-C-05.R:460:3'): C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes ──
+Expected `status$packages$MOFA2$version` to be identical to "1.22.1".
+Differences:
+`actual` is NULL
+`expected` is a character vector ('1.22.1')
+
+Backtrace:
+    ▆
+ 1. └─triomics (local) c05_require_runtime() at test-C-05.R:460:3
+ 2.   └─testthat::expect_identical(status$packages$MOFA2$version, "1.22.1") at test-C-05.R:110:3
+── Failure ('test-C-05.R:460:3'): C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes ──
+Expected `status$packages$mofapy2$version` to be identical to "0.7.5".
+Differences:
+`actual` is NULL
+`expected` is a character vector ('0.7.5')
+
+Backtrace:
+    ▆
+ 1. └─triomics (local) c05_require_runtime() at test-C-05.R:460:3
+ 2.   └─testthat::expect_identical(status$packages$mofapy2$version, "0.7.5") at test-C-05.R:111:3
+── Error ('test-C-05.R:470:3'): C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes ──
+<triomics_error/error/condition>
+Error: Extraction requires a successfully trained MOFA2 BackendFit.
+Backtrace:
+    ▆
+ 1. └─triomics:::triomics_mofa_extract(...) at test-C-05.R:470:3
+ 2.   └─triomics:::triomics_mofa_abort(...)
+ 3.     └─triomics:::triomics_abort(...)
+── Failure ('test-C-05.R:538:3'): C-05 real MOFA2 fits and extracts a missing sample-view capability cell ──
+Expected `status$available` to be TRUE.
+Differences:
+`actual`:   FALSE
+`expected`: TRUE 
+
+Backtrace:
+    ▆
+ 1. └─triomics (local) c05_require_runtime() at test-C-05.R:538:3
+ 2.   └─testthat::expect_true(status$available) at test-C-05.R:109:3
+── Failure ('test-C-05.R:538:3'): C-05 real MOFA2 fits and extracts a missing sample-view capability cell ──
+Expected `status$packages$MOFA2$version` to be identical to "1.22.1".
+Differences:
+`actual` is NULL
+`expected` is a character vector ('1.22.1')
+
+Backtrace:
+    ▆
+ 1. └─triomics (local) c05_require_runtime() at test-C-05.R:538:3
+ 2.   └─testthat::expect_identical(status$packages$MOFA2$version, "1.22.1") at test-C-05.R:110:3
+── Failure ('test-C-05.R:538:3'): C-05 real MOFA2 fits and extracts a missing sample-view capability cell ──
+Expected `status$packages$mofapy2$version` to be identical to "0.7.5".
+Differences:
+`actual` is NULL
+`expected` is a character vector ('0.7.5')
+
+Backtrace:
+    ▆
+ 1. └─triomics (local) c05_require_runtime() at test-C-05.R:538:3
+ 2.   └─testthat::expect_identical(status$packages$mofapy2$version, "0.7.5") at test-C-05.R:111:3
+── Error ('test-C-05.R:543:3'): C-05 real MOFA2 fits and extracts a missing sample-view capability cell ──
+<triomics_error/error/condition>
+Error: Extraction requires a successfully trained MOFA2 BackendFit.
+Backtrace:
+    ▆
+ 1. └─triomics:::triomics_mofa_extract(fit, context = list(), params = fixture$params) at test-C-05.R:543:3
+ 2.   └─triomics:::triomics_mofa_abort(...)
+ 3.     └─triomics:::triomics_abort(...)
+── Failure ('test-C-05.R:551:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors ──
+Expected `status$available` to be TRUE.
+Differences:
+`actual`:   FALSE
+`expected`: TRUE 
+
+Backtrace:
+    ▆
+ 1. └─triomics (local) c05_require_runtime() at test-C-05.R:551:3
+ 2.   └─testthat::expect_true(status$available) at test-C-05.R:109:3
+── Failure ('test-C-05.R:551:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors ──
+Expected `status$packages$MOFA2$version` to be identical to "1.22.1".
+Differences:
+`actual` is NULL
+`expected` is a character vector ('1.22.1')
+
+Backtrace:
+    ▆
+ 1. └─triomics (local) c05_require_runtime() at test-C-05.R:551:3
+ 2.   └─testthat::expect_identical(status$packages$MOFA2$version, "1.22.1") at test-C-05.R:110:3
+── Failure ('test-C-05.R:551:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors ──
+Expected `status$packages$mofapy2$version` to be identical to "0.7.5".
+Differences:
+`actual` is NULL
+`expected` is a character vector ('0.7.5')
+
+Backtrace:
+    ▆
+ 1. └─triomics (local) c05_require_runtime() at test-C-05.R:551:3
+ 2.   └─testthat::expect_identical(status$packages$mofapy2$version, "0.7.5") at test-C-05.R:111:3
+── Failure ('test-C-05.R:555:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors ──
+Expected `err` to be an S3 object.
+Actual OO type: none.
+Backtrace:
+    ▆
+ 1. └─triomics (local) c05_error(...) at test-C-05.R:555:3
+ 2.   └─testthat::expect_s3_class(err, "triomics_error") at test-C-05.R:3:3
+── Failure ('test-C-05.R:555:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors ──
+Expected `err$code` to be identical to `code`.
+Differences:
+`actual` is NULL
+`expected` is a character vector ('C_NA_CAPABILITY')
+
+Backtrace:
+    ▆
+ 1. └─triomics (local) c05_error(...) at test-C-05.R:555:3
+ 2.   └─testthat::expect_identical(err$code, code) at test-C-05.R:4:3
+── Failure ('test-C-05.R:558:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors ──
+Expected `feature_error$config_key` to be identical to "view_2_feature_3".
+Differences:
+`actual` is NULL
+`expected` is a character vector ('view_2_feature_3')
+
+── Failure ('test-C-05.R:562:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors ──
+Expected `err` to be an S3 object.
+Actual OO type: none.
+Backtrace:
+    ▆
+ 1. └─triomics (local) c05_error(...) at test-C-05.R:562:3
+ 2.   └─testthat::expect_s3_class(err, "triomics_error") at test-C-05.R:3:3
+── Failure ('test-C-05.R:562:3'): C-05 all-missing features and all-view-missing samples fail with typed missingness errors ──
+Expected `err$code` to be identical to `code`.
+Differences:
+`actual` is NULL
+`expected` is a character vector ('C_NA_CAPABILITY')
+
+Backtrace:
+    ▆
+ 1. └─triomics (local) c05_error(...) at test-C-05.R:562:3
+ 2.   └─testthat::expect_identical(err$code, code) at test-C-05.R:4:3
+── Failure ('test-C-06-shared.R:990:3'): native C-06 writer propagates sensitive privacy and binds D lineage ──
+Expected `cli$status` to be identical to 0L.
+Differences:
+  `actual`: 2
+`expected`: 0
+
+triomics A_SOURCE_MISSING: Declared input file does not exist at 'sources[1].file'.
+── Failure ('test-C-06-shared.R:995:3'): native C-06 writer propagates sensitive privacy and binds D lineage ──
+Expected `envelope_paths` to have length 7.
+Actual length: 0.
+── Error ('test-C-06-shared.R:1006:3'): native C-06 writer propagates sensitive privacy and binds D lineage ──
+Error in `open.connection(con, "rb")`: cannot open the connection
+Backtrace:
+    ▆
+ 1. └─jsonlite::read_json(candidate_envelope_path, simplifyVector = FALSE) at test-C-06-shared.R:1006:3
+ 2.   └─jsonlite::parse_json(...)
+ 3.     └─jsonlite:::parse_and_simplify(...)
+ 4.       └─jsonlite:::parseJSON(txt, bigint_as_char)
+ 5.         └─jsonlite:::parse_con(txt, bigint_as_char)
+ 6.           ├─base::open(con, "rb")
+ 7.           └─base::open.connection(con, "rb")
+
+[ FAIL 24 | WARN 5 | SKIP 0 | PASS 5877 ]
+Error:
+! Test failures.
+Execution halted

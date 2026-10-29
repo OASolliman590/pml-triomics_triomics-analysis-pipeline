@@ -1,0 +1,86 @@
+diff --git a/R/integration_endpoints.R b/R/integration_endpoints.R
+index a8e540f..b99187f 100644
+--- a/R/integration_endpoints.R
++++ b/R/integration_endpoints.R
+@@ -481,9 +481,44 @@ triomics_c08_matrix_hash <- function(endpoint) {
+   triomics_b_hash(list(endpoint_id = endpoint$endpoint_id, rows = rows))
+ }
+ 
++triomics_c08_hash_visit_weights <- function(weights) {
++  if (is.numeric(weights) && !is.null(names(weights))) {
++    return(stats::setNames(as.list(unname(weights)), names(weights)))
++  }
++  weights
++}
++
+ triomics_c08_endpoint_hash <- function(endpoint) {
+   body <- endpoint
+   body$endpoint_sha256 <- NULL
++  if (is.list(body$samples)) {
++    body$samples <- lapply(body$samples, function(sample) {
++      if ("visit_weights" %in% names(sample)) {
++        sample$visit_weights <- triomics_c08_hash_visit_weights(sample$visit_weights)
++      }
++      sample
++    })
++  }
++  if (is.data.frame(body$unit_map) && "visit_weights" %in% names(body$unit_map)) {
++    body$unit_map$visit_weights <- I(lapply(
++      body$unit_map$visit_weights,
++      triomics_c08_hash_visit_weights
++    ))
++  } else if (is.list(body$unit_map)) {
++    if ("visit_weights" %in% names(body$unit_map)) {
++      body$unit_map$visit_weights <- lapply(
++        body$unit_map$visit_weights,
++        triomics_c08_hash_visit_weights
++      )
++    } else {
++      body$unit_map <- lapply(body$unit_map, function(record) {
++        if (is.list(record) && "visit_weights" %in% names(record)) {
++          record$visit_weights <- triomics_c08_hash_visit_weights(record$visit_weights)
++        }
++        record
++      })
++    }
++  }
+   triomics_c08_sha256(body)
+ }
+ 
+diff --git a/tests/testthat/test-C-08.R b/tests/testthat/test-C-08.R
+index e99a2b3..2f7ed18 100644
+--- a/tests/testthat/test-C-08.R
++++ b/tests/testthat/test-C-08.R
+@@ -719,6 +719,32 @@ testthat::test_that("C-08 preserves mean and delta AnalysisUnitMap lineage and r
+   testthat::expect_type(delta_endpoint$unit_map$visit_weights[[1L]], "double")
+   testthat::expect_type(delta_endpoint$samples[[1L]]$visit_weights, "double")
+   testthat::expect_identical(names(delta_endpoint$samples[[1L]]$visit_weights), c("V0", "V1"))
++  expect_weight_name_tamper_rejected <- function(bundle, fields) {
++    tampered <- bundle
++    tampered$endpoints <- lapply(tampered$endpoints, function(endpoint) {
++      if ("sample" %in% fields) {
++        weights <- endpoint$samples[[1L]]$visit_weights
++        endpoint$samples[[1L]]$visit_weights <- stats::setNames(
++          unname(weights), c("wrong_reference", "wrong_target")
++        )
++      }
++      if ("unit_map" %in% fields) {
++        weights <- endpoint$unit_map$visit_weights[[1L]]
++        endpoint$unit_map$visit_weights[[1L]] <- stats::setNames(
++          unname(weights), c("wrong_reference", "wrong_target")
++        )
++      }
++      endpoint
++    })
++    tampered$payload_sha256 <- NULL
++    tampered$payload_sha256 <- triomics_c08_bundle_hash(tampered)
++    error <- testthat::capture_error(triomics_c08_cli_endpoint_payload(tampered))
++    testthat::expect_s3_class(error, "triomics_error")
++    testthat::expect_identical(error$code, "C_SCORE_ENDPOINT_HASH")
++  }
++  expect_weight_name_tamper_rejected(delta_bundle, "sample")
++  expect_weight_name_tamper_rejected(delta_bundle, "unit_map")
++  expect_weight_name_tamper_rejected(delta_bundle, c("sample", "unit_map"))
+   tampered_delta <- delta_bundle
+   tampered_delta$endpoints[[1L]]$samples[[1L]]$visit_weights[[1L]] <- -2
+   tamper_error <- testthat::capture_error(triomics_c08_cli_endpoint_payload(tampered_delta))

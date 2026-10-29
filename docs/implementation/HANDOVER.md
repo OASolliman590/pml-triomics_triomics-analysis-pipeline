@@ -1,5 +1,30 @@
 # Implementation handover
 
+## Current M7-019 — blocked close; cap exhausted
+
+Integrated product snapshot98c71256e61c4613833f81bf049de06427c9a094; failed final
+candidatee41048693bebdec93d73f4aeb0ec207a81cd9299 preserved, NOT integrated.
+Scope Astra passed e6f9b29. Initial plus two repairs used; no repair3.
+Repair1 focused2023pass0fail0error1warn0skip; native B/C/D0/0/0 with21assertions,
+SYN_12 time:null and verified same-root B/C/D hashes. Full source98c7125:
+6287pass0fail0error15warn0skip. Independent coordinated weight-name tamper probe
+still fails integrity. Final candidate bindsnames but deletes explicit null keys;
+focused1627pass12fail5error7warn0skip. These are separate snapshots.
+Clean archive98c7125: Status: 1 ERROR; FAIL24 WARN5 SKIP0 PASS5877. All5 warnings
+named in same-run inventory. B-T01 YAML arrays scalarized; C06 sensitive-fixture
+path fails; installed C05 runtime unavailable despite supplied isolated paths.
+Fresh final Astra audit_pass no, fourP1; source runtime cannot qualify installed.
+All workers and package91770 completed. No desktop worker chats created.
+M7/G7closed,C06false,C07not_run,C09unqualified; no laterD/private data/push.
+Receipt: reviews/2026-10-28-m7-019-blocked-close-receipt.md (closed29October).
+Preserve unrelated dirty .Rbuildignore/.gitignore/renv/activate.R and original
+6456055/cfe9160 candidates. Detailed immutable evidence retained in reviews/evidence.
+
+Literal resume: authorize a NEW bounded cycle for weight-name plus explicit-null
+hashing, typed installed YAML/fixture paths and installed MOFA runtime visibility.
+Keep all assertions/validators. Audit scope, fresh bounded worker, independent
+focused/native/source/archive gates and fresh Astra. Do not reopen M7-019 repair3.
+
 ## Current M7-018 — integrated null fix; gates failed; closed
 
 Repair774bbcc is integrated at d660879. Terra found no scoped findings.

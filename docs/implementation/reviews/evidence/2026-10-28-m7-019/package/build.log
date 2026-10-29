@@ -1,0 +1,7 @@
+* checking for file ‘/var/folders/94/fy64sdws3rl4tv96_nf4hl5c0000gp/T//RtmpdkqBjd/triomics-package-check-76652ec7b8e2/triomics-source/DESCRIPTION’ ... OK
+* preparing ‘triomics’:
+* checking DESCRIPTION meta-information ... OK
+* checking for LF line-endings in source and make files and shell scripts
+* checking for empty or unneeded directories
+* building ‘triomics_0.1.0.tar.gz’
+

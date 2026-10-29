@@ -36,13 +36,127 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_018_closed_integrated_null_fix_acceptance_blocked",
-    "last_reconciled": "2026-10-28",
+    "status": "m7_019_closed_blocked",
+    "last_reconciled": "2026-10-29",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Native/focused passed. Source and clean archive failed. Fresh Astra audit_pass no (P1 1 P2 2 P3 1). All workers/checks complete. M7/G7/laterD closed; new bounded scope required for remaining defects."
+    "disposition": "Cap exhausted. Integrated98c7125 fullsource6287pass15warn; archive Status:1ERROR FAIL24 WARN5 SKIP0 PASS5877. Finalcandidatee410486 NOTintegrated, focused1627pass12fail5error7warn. Fresh Astra audit_pass no (4P1). All workers/processes completed; M7/G7 closed. New bounded cycle required."
   },
   "orchestration_events": [
+    {
+      "event": "m7_019_blocked_close",
+      "date": "2026-10-29",
+      "integrated_snapshot": "98c71256e61c4613833f81bf049de06427c9a094",
+      "failed_candidate": "e41048693bebdec93d73f4aeb0ec207a81cd9299",
+      "package_status": "Status: 1 ERROR",
+      "package_counts": {
+        "fail_including_errors": 24,
+        "warn": 5,
+        "skip": 0,
+        "pass": 5877
+      },
+      "astra_audit_pass": false,
+      "repair_cap_exhausted": true,
+      "receipt": "docs/implementation/reviews/2026-10-28-m7-019-blocked-close-receipt.md"
+    },
+    {
+      "event": "m7_019_final_astra_dispatched",
+      "date": "2026-10-29",
+      "snapshot": "98c7125",
+      "failed_candidate": "e410486",
+      "package_session": 91770,
+      "final_verdict_waits_for_package": true
+    },
+    {
+      "event": "m7_019_final_candidate_failed",
+      "date": "2026-10-28",
+      "candidate": "e410486",
+      "counts": {
+        "pass": 1627,
+        "fail": 12,
+        "error": 5,
+        "warn": 7,
+        "skip": 0
+      },
+      "package_session": 91770,
+      "package_snapshot": "98c7125"
+    },
+    {
+      "event": "m7_019_final_repair_blocker",
+      "date": "2026-10-28",
+      "candidate": "e410486",
+      "probe": "repair2-null-hash-probe.log",
+      "remaining_repairs": 0
+    },
+    {
+      "event": "m7_019_final_candidate",
+      "date": "2026-10-28",
+      "commit": "e41048693bebdec93d73f4aeb0ec207a81cd9299",
+      "focused_session": 10213,
+      "earlier_full_source": {
+        "pass": 6287,
+        "fail": 0,
+        "error": 0,
+        "warn": 15,
+        "skip": 0
+      }
+    },
+    {
+      "event": "m7_019_repair2_dispatch",
+      "date": "2026-10-28",
+      "reproduced_snapshot": "98c7125",
+      "probe": "weight-name-full-probe.log",
+      "remaining_repairs_after_this": 0
+    },
+    {
+      "event": "m7_019_integration",
+      "date": "2026-10-28",
+      "commit": "98c71256e61c4613833f81bf049de06427c9a094",
+      "full_source_session": 65349,
+      "archive_sha256": "86a65418dd5c65c8148f06a04f709e50147fa58f647d3dc82693b39e7a3cdcdd"
+    },
+    {
+      "event": "m7_019_focused_pass",
+      "date": "2026-10-28",
+      "candidate": "859fa9d",
+      "native_session": 46988
+    },
+    {
+      "event": "m7_019_repair1_candidate",
+      "date": "2026-10-28",
+      "commit": "859fa9d",
+      "focused_session": 16786
+    },
+    {
+      "event": "m7_019_repair1_dispatch",
+      "date": "2026-10-28",
+      "candidate": "0668d07",
+      "counts": {
+        "pass": 1999,
+        "fail": 10,
+        "error": 1,
+        "warn": 2,
+        "skip": 0
+      }
+    },
+    {
+      "event": "m7_019_initial_candidate",
+      "date": "2026-10-28",
+      "commit": "0668d07",
+      "focused_session": 89223
+    },
+    {
+      "event": "m7_019_scope_pass_luna_dispatch",
+      "date": "2026-10-28",
+      "scope": "e6f9b29",
+      "audit_pass": true
+    },
+    {
+      "event": "m7_019_scope_frozen",
+      "date": "2026-10-28",
+      "commit": "4e0df02",
+      "user_authorized": true
+    },
     {
       "event": "m7_018_close",
       "date": "2026-10-28",

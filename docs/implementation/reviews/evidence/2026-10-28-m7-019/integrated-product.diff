@@ -1,0 +1,676 @@
+diff --git a/.gitattributes b/.gitattributes
+new file mode 100644
+index 0000000..e316b23
+--- /dev/null
++++ b/.gitattributes
+@@ -0,0 +1 @@
++inst/triomics-source-revision export-subst
+diff --git a/R/cli.R b/R/cli.R
+index 01854be..4df8566 100644
+--- a/R/cli.R
++++ b/R/cli.R
+@@ -1082,8 +1082,32 @@ triomics_c08_cli_write_artifact <- function(payload, path, envelope_path, artifa
+ }
+ 
+ triomics_c08_cli_endpoint_payload <- function(endpoint_bundle) {
++  triomics_c08_validate_endpoint_bundle(endpoint_bundle)
+   payload <- unclass(endpoint_bundle)
+   payload$schema_version <- "2.0"
++  payload$endpoints <- lapply(payload$endpoints, function(endpoint) {
++    endpoint$samples <- lapply(endpoint$samples, function(sample) {
++      weights <- sample$visit_weights
++      if (is.numeric(weights) && !is.null(names(weights))) {
++        sample$visit_weights <- stats::setNames(as.list(as.numeric(weights)), names(weights))
++      }
++      sample
++    })
++    if (is.data.frame(endpoint$unit_map) && "visit_weights" %in% names(endpoint$unit_map)) {
++      endpoint$unit_map$visit_weights <- I(lapply(endpoint$unit_map$visit_weights, function(weights) {
++        if (is.numeric(weights) && !is.null(names(weights))) {
++          return(stats::setNames(as.list(as.numeric(weights)), names(weights)))
++        }
++        weights
++      }))
++    }
++    endpoint$endpoint_sha256 <- NULL
++    endpoint$endpoint_sha256 <- triomics_c08_endpoint_hash(endpoint)
++    endpoint
++  })
++  if (length(payload$endpoints)) {
++    payload$unit_map_hash <- triomics_c08_sha256(payload$endpoints[[1L]]$unit_map)
++  }
+   payload$payload_sha256 <- NULL
+   payload$payload_sha256 <- triomics_c08_bundle_hash(payload)
+   class(payload) <- class(endpoint_bundle)
+diff --git a/R/export_b.R b/R/export_b.R
+index 764b6fc..1e43529 100644
+--- a/R/export_b.R
++++ b/R/export_b.R
+@@ -2149,11 +2149,7 @@ triomics_b07_member <- function(artifact_id, status, root, path = NULL,
+ }
+ 
+ triomics_b07_git_ref <- function(root) {
+-  value <- tryCatch(
+-    system2("git", c("-C", shQuote(root), "rev-parse", "HEAD"), stdout = TRUE, stderr = FALSE),
+-    error = function(error) character()
+-  )
+-  if (length(value) == 1L && grepl("^[0-9a-f]{40,64}$", value)) value else "unavailable"
++  triomics_source_revision()
+ }
+ 
+ triomics_b07_runtime <- function() {
+@@ -2354,6 +2350,21 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
+       triomics_b07_abort("B_EXPORT_MATRIX", "Native B provenance requires the exact same-run matrix source designation.",
+                          "matrix_source", "Use only matrices returned by this Stage B fit run.")
+     }
++    native_source_revision <- triomics_source_revision()
++    if (!is.character(native_source_revision) || length(native_source_revision) != 1L ||
++        is.na(native_source_revision) ||
++        !grepl("^(?:[0-9a-f]{40}|[0-9a-f]{64})$", native_source_revision) ||
++        (!is.null(working_ref) &&
++         (!is.character(working_ref) || length(working_ref) != 1L || is.na(working_ref) ||
++          !identical(working_ref, native_source_revision)))) {
++      triomics_b07_abort(
++        "B_EXPORT_INCOMPLETE",
++        "Native B provenance requires the executing package source revision; a supplied working_ref must match it.",
++        "working_ref",
++        "Use the immutable source identity resolved from the executing package, not a caller-supplied revision claim."
++      )
++    }
++    working_ref <- native_source_revision
+   }
+   block_results <- artifact$payload
+   entries <- triomics_b07_claim_entries(block_results)
+@@ -2796,7 +2807,7 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
+       provenance_context, config_sha256, bundle, bundle_path, bundle_envelope_path,
+       artifact, family_artifact, nominations_artifact, matrix_artifact, matrix_bindings,
+       clinical_artifacts, clinical_dispositions,
+-      repository_commit = if (is.null(working_ref)) triomics_b07_git_ref(getwd()) else working_ref,
++      repository_commit = native_source_revision,
+       privacy_class = as.character(artifact$envelope$privacy_class)
+     )
+   }
+diff --git a/R/integration_endpoints.R b/R/integration_endpoints.R
+index c6cd998..a8e540f 100644
+--- a/R/integration_endpoints.R
++++ b/R/integration_endpoints.R
+@@ -229,10 +229,8 @@ triomics_c08_validate_unit_map <- function(unit_map, score_unit_ids, context) {
+           anyDuplicated(names(weights))) {
+         triomics_c08_abort("C_SCORE_LINEAGE_INVALID", "Subject deltas require two source samples and named reference/target weights of -1 and +1.", "unit_map.visit_weights")
+       }
+-      # Preserve the visit names through JSON artifact serialization; an unnamed
+-      # numeric array would discard which source visit carries each sign.
+       records[[record_index]]$visit_weights <- stats::setNames(
+-        as.list(as.numeric(weights)), names(weights)
++        as.numeric(weights), names(weights)
+       )
+     }
+     if (!identical(unit_representation, expected_representation)) {
+diff --git a/R/provenance_contract.R b/R/provenance_contract.R
+index 82973c0..829723e 100644
+--- a/R/provenance_contract.R
++++ b/R/provenance_contract.R
+@@ -1,5 +1,124 @@
+ .triomics_provenance_runtime <- new.env(parent = emptyenv())
+ 
++triomics_source_root_valid <- function(root) {
++  if (!is.character(root) || length(root) != 1L || is.na(root) || !dir.exists(root)) return(FALSE)
++  description <- file.path(root, "DESCRIPTION")
++  source_files <- file.path(root, "R", "export_c.R")
++  executable <- file.path(root, "inst", "exec", "triomics")
++  if (!file.exists(description) || !file.exists(source_files) || !file.exists(executable)) return(FALSE)
++  metadata <- tryCatch(read.dcf(description, fields = "Package"), error = function(error) NULL)
++  !is.null(metadata) && nrow(metadata) == 1L && identical(unname(metadata[1L, "Package"]), "triomics")
++}
++
++triomics_installed_root_valid <- function(root) {
++  if (!is.character(root) || length(root) != 1L || is.na(root) || !dir.exists(root)) return(FALSE)
++  description <- file.path(root, "DESCRIPTION")
++  if (!file.exists(description)) return(FALSE)
++  metadata <- tryCatch(read.dcf(description, fields = "Package"), error = function(error) NULL)
++  !is.null(metadata) && nrow(metadata) == 1L && identical(unname(metadata[1L, "Package"]), "triomics")
++}
++
++triomics_source_git_revision <- function(root) {
++  git_metadata <- file.path(root, ".git")
++  if (!file.exists(git_metadata) && !dir.exists(git_metadata)) return("unavailable")
++  if (!nzchar(Sys.which("git"))) return("unavailable")
++  run_git <- function(arguments) {
++    tryCatch(
++      system2("git", c("-C", shQuote(root), arguments), stdout = TRUE, stderr = TRUE),
++      error = function(error) character()
++    )
++  }
++  repository_root <- run_git(c("rev-parse", "--show-toplevel"))
++  if (length(repository_root) != 1L || (!is.null(attr(repository_root, "status")) &&
++      !identical(as.integer(attr(repository_root, "status")), 0L))) return("unavailable")
++  repository_root <- tryCatch(normalizePath(repository_root, winslash = "/", mustWork = TRUE),
++                              error = function(error) "")
++  if (!identical(repository_root, root)) return("unavailable")
++  status <- run_git(c("status", "--porcelain", "--untracked-files=all"))
++  if (length(status) != 0L || (!is.null(attr(status, "status")) &&
++      !identical(as.integer(attr(status, "status")), 0L))) return("unavailable")
++  revision <- run_git(c("rev-parse", "--verify", "HEAD^{commit}"))
++  if (length(revision) == 1L && grepl("^(?:[0-9a-f]{40}|[0-9a-f]{64})$", revision) &&
++      (is.null(attr(revision, "status")) || identical(as.integer(attr(revision, "status")), 0L))) {
++    revision
++  } else {
++    "unavailable"
++  }
++}
++
++triomics_source_revision_from_root <- function(root, installed = NULL) {
++  root <- tryCatch(normalizePath(root, winslash = "/", mustWork = TRUE),
++                   error = function(error) "")
++  source_tree <- nzchar(root) && triomics_source_root_valid(root)
++  if (is.null(installed)) installed <- !source_tree
++  if (!is.logical(installed) || length(installed) != 1L || is.na(installed) ||
++      (isTRUE(installed) && !triomics_installed_root_valid(root)) ||
++      (!isTRUE(installed) && !source_tree)) return("unavailable")
++
++  stamp_path <- if (isTRUE(installed)) {
++    file.path(root, "triomics-source-revision")
++  } else {
++    file.path(root, "inst", "triomics-source-revision")
++  }
++  if (!file.exists(stamp_path) || dir.exists(stamp_path) || triomics_is_symlink(stamp_path)) {
++    return(if (isTRUE(installed)) "unavailable" else triomics_source_git_revision(root))
++  }
++  stamp <- tryCatch(readLines(stamp_path, warn = FALSE), error = function(error) character())
++  if (length(stamp) != 1L) return("unavailable")
++  if (grepl("^(?:[0-9a-f]{40}|[0-9a-f]{64})$", stamp)) return(stamp)
++  if (!isTRUE(installed) && identical(stamp, "$Format:%H$")) {
++    return(triomics_source_git_revision(root))
++  }
++  "unavailable"
++}
++
++triomics_source_identity_context <- function() {
++  resolver_environment <- environment(triomics_source_identity_context)
++  if (!identical(resolver_environment, .GlobalEnv)) {
++    namespace_name <- tryCatch(unname(getNamespaceName(resolver_environment)), error = function(error) "")
++    if (!identical(namespace_name, "triomics")) return(NULL)
++    root <- tryCatch(
++      normalizePath(getNamespaceInfo(resolver_environment, "path"), winslash = "/", mustWork = TRUE),
++      error = function(error) ""
++    )
++    if (!nzchar(root)) return(NULL)
++    if (triomics_source_root_valid(root)) return(list(root = root, installed = FALSE))
++    if (triomics_installed_root_valid(root)) return(list(root = root, installed = TRUE))
++    return(NULL)
++  }
++
++  source_entrypoint <- exists("triomics_main", envir = .GlobalEnv, inherits = FALSE) &&
++    is.function(get("triomics_main", envir = .GlobalEnv, inherits = FALSE)) &&
++    identical(environment(get("triomics_main", envir = .GlobalEnv, inherits = FALSE)), .GlobalEnv)
++  script_arg <- grep("^--file=", commandArgs(FALSE), value = TRUE)
++  if (source_entrypoint && length(script_arg) == 1L) {
++    script_path <- tryCatch(
++      normalizePath(sub("^--file=", "", script_arg[[1L]]), winslash = "/", mustWork = TRUE),
++      error = function(error) ""
++    )
++    if (nzchar(script_path)) {
++      root <- tryCatch(normalizePath(file.path(dirname(script_path), "..", ".."),
++                                     winslash = "/", mustWork = TRUE),
++                       error = function(error) "")
++      expected_script <- if (nzchar(root)) normalizePath(file.path(root, "inst", "exec", "triomics"),
++                                                         winslash = "/", mustWork = FALSE) else ""
++      if (nzchar(root) && identical(script_path, expected_script) && triomics_source_root_valid(root)) {
++        return(list(root = root, installed = FALSE))
++      }
++    }
++  }
++
++  NULL
++}
++
++triomics_source_revision <- function() {
++  context <- triomics_source_identity_context()
++  if (is.null(context)) return("unavailable")
++  # Git archive expansion records the build source; it is unsigned metadata, not a
++  # signature and not proof against a malicious repackager.
++  triomics_source_revision_from_root(context$root, installed = context$installed)
++}
++
+ triomics_provenance_abort <- function(reason) {
+   reason <- as.character(reason)
+   if (length(reason) != 1L || is.na(reason) || !nzchar(reason)) {
+@@ -428,8 +547,8 @@ triomics_provenance_validate_profile <- function(profile, frame_payload_id, fram
+   activity_ids <- vapply(activities, function(activity) activity$activity_id, character(1))
+   if (anyDuplicated(entity_ids)) triomics_provenance_abort("entity_id values must be globally unique")
+   if (anyDuplicated(activity_ids)) triomics_provenance_abort("activity_id values must be unique")
+-  entity_index <- setNames(seq_along(entities), entity_ids)
+-  activity_index <- setNames(seq_along(activities), activity_ids)
++  entity_index <- stats::setNames(seq_along(entities), entity_ids)
++  activity_index <- stats::setNames(seq_along(activities), activity_ids)
+   identity_key <- paste(profile$producer_stage, profile$study_id, profile$run_id,
+                         profile$handoff_artifact_id, sep = "\034")
+   if (identical(frame_payload_id, frame_envelope_id)) {
+@@ -526,8 +645,8 @@ triomics_provenance_validate_profile <- function(profile, frame_payload_id, fram
+     }
+   }
+ 
+-  derived_edges <- setNames(vector("list", length(entity_ids)), entity_ids)
+-  member_edges <- setNames(vector("list", length(entity_ids)), entity_ids)
++  derived_edges <- stats::setNames(vector("list", length(entity_ids)), entity_ids)
++  member_edges <- stats::setNames(vector("list", length(entity_ids)), entity_ids)
+   for (entity in entities) {
+     derived_edges[[entity$entity_id]] <- unlist(entity$derived_from_entity_ids, use.names = FALSE)
+     member_edges[[entity$entity_id]] <- if (is.null(entity$member_of_entity_id)) character() else entity$member_of_entity_id
+diff --git a/inst/triomics-source-revision b/inst/triomics-source-revision
+new file mode 100644
+index 0000000..6828f88
+--- /dev/null
++++ b/inst/triomics-source-revision
+@@ -0,0 +1 @@
++$Format:%H$
+diff --git a/man/triomics-api.Rd b/man/triomics-api.Rd
+index b44caba..dfe2465 100644
+--- a/man/triomics-api.Rd
++++ b/man/triomics-api.Rd
+@@ -83,7 +83,8 @@ triomics_b07_export_handoff(
+   cli_exit_code = NULL,
+   resume = FALSE,
+   qualifications = NULL,
+-  matrix_source = NULL
++  matrix_source = NULL,
++  provenance_context = NULL
+ )
+ 
+ triomics_b07_cli_after_stage_b(args, stage_b_result, smoke_runs = NULL)
+@@ -181,6 +182,7 @@ annotate_evidence(evidence_bundle, annotation_spec = list())
+   \item{qualifications}{Explicit unrun scientific qualifications recorded in
+   the acceptance and reproduction evidence.}
+   \item{matrix_source}{Declared provenance label for the handed-off matrices.}
++  \item{provenance_context}{Same-run Stage B fit and source context used to verify native provenance before export.}
+   \item{args}{Original Stage B CLI argument vector.}
+   \item{stage_b_result}{In-memory result returned by the same
+   \code{triomics_execute_stage_b()} execution.}
+diff --git a/tests/testthat.R b/tests/testthat.R
+index 683f329..9fd15cf 100644
+--- a/tests/testthat.R
++++ b/tests/testthat.R
+@@ -1,2 +1,25 @@
+ library(testthat)
+-test_check("triomics")
++
++triomics_warning_reporter <- testthat::CheckReporter$new()
++triomics_write_warning_inventory <- function(reporter) {
++  records <- reporter$warnings$as_list()
++  warnings <- lapply(records, function(record) {
++    test_name <- record$test
++    if (!is.character(test_name) || length(test_name) != 1L || is.na(test_name)) {
++      test_name <- "<unknown test>"
++    }
++    list(test = test_name, message = as.character(record$message))
++  })
++  jsonlite::write_json(
++    list(warnings = warnings),
++    "triomics-warning-inventory.json",
++    auto_unbox = TRUE,
++    null = "null",
++    pretty = TRUE
++  )
++}
++
++tryCatch(
++  test_check("triomics", reporter = triomics_warning_reporter),
++  finally = triomics_write_warning_inventory(triomics_warning_reporter)
++)
+diff --git a/tests/testthat/helper-installed-paths.R b/tests/testthat/helper-installed-paths.R
+index 09eb547..bafdfaf 100644
+--- a/tests/testthat/helper-installed-paths.R
++++ b/tests/testthat/helper-installed-paths.R
+@@ -1,3 +1,18 @@
++triomics_test_source_checkout <- function() {
++  source_root <- tryCatch(
++    normalizePath(testthat::test_path("..", ".."), winslash = "/", mustWork = TRUE),
++    error = function(error) ""
++  )
++  namespace_root <- tryCatch(
++    normalizePath(getNamespaceInfo(asNamespace("triomics"), "path"),
++                  winslash = "/", mustWork = TRUE),
++    error = function(error) ""
++  )
++  nzchar(source_root) && identical(namespace_root, source_root) &&
++    dir.exists(file.path(source_root, "R")) &&
++    file.exists(file.path(source_root, "inst", "exec", "triomics"))
++}
++
+ triomics_test_resource <- function(...) {
+   components <- as.character(c(...))
+   if (length(components) == 0L || anyNA(components) || any(!nzchar(components))) {
+@@ -6,7 +21,7 @@ triomics_test_resource <- function(...) {
+ 
+   relative_path <- do.call(file.path, as.list(components))
+   source_path <- testthat::test_path("..", "..", "inst", relative_path)
+-  if (file.exists(source_path)) {
++  if (triomics_test_source_checkout() && file.exists(source_path)) {
+     return(normalizePath(source_path, winslash = "/", mustWork = TRUE))
+   }
+ 
+diff --git a/tests/testthat/test-B-T01.R b/tests/testthat/test-B-T01.R
+index e0d9a27..ef2e79f 100644
+--- a/tests/testthat/test-B-T01.R
++++ b/tests/testthat/test-B-T01.R
+@@ -132,19 +132,81 @@ b_row <- function(fit, feature, block = "block_1", contrast = "target_minus_refe
+   hit[[1L]]
+ }
+ 
++b_t01_package_context <- function() {
++  source_root <- tryCatch(
++    normalizePath(testthat::test_path("..", ".."), winslash = "/", mustWork = TRUE),
++    error = function(error) ""
++  )
++  namespace_root <- tryCatch(
++    normalizePath(getNamespaceInfo(asNamespace("triomics"), "path"),
++                  winslash = "/", mustWork = TRUE),
++    error = function(error) ""
++  )
++  list(
++    source_root = source_root,
++    source_checkout = nzchar(source_root) && identical(namespace_root, source_root) &&
++      dir.exists(file.path(source_root, "R")) &&
++      file.exists(file.path(source_root, "inst", "exec", "triomics")),
++    namespace_root = namespace_root
++  )
++}
++
++b_t01_fixture_config <- function(name) {
++  config_path <- triomics_test_resource("examples", "tickets", name)
++  config <- yaml::read_yaml(config_path)
++  changed <- FALSE
++  resolve_fixture_path <- function(path) {
++    if (is.null(path)) return(NULL)
++    resolved <- normalizePath(file.path(dirname(config_path), path), winslash = "/", mustWork = FALSE)
++    if (file.exists(resolved)) return(path)
++    independent_prefix <- "../../../discovery/spec-v2/examples/independent/"
++    if (startsWith(path, independent_prefix)) {
++      changed <<- TRUE
++      return(triomics_test_resource(
++        "examples", "data", "independent", basename(path)
++      ))
++    }
++    path
++  }
++  for (index in seq_along(config$sources)) {
++    config$sources[[index]]$file <- resolve_fixture_path(config$sources[[index]]$file)
++  }
++  config$metadata$file <- resolve_fixture_path(config$metadata$file)
++  for (index in seq_along(config$blocks)) {
++    config$blocks[[index]]$file <- resolve_fixture_path(config$blocks[[index]]$file)
++  }
++  if (!changed) return(config_path)
++  relocated <- tempfile(pattern = "b-t01-packaged-fixture-", fileext = ".yaml")
++  yaml::write_yaml(config, relocated)
++  relocated
++}
++
+ b_stage_cli_smoke <- function(config_path, output) {
+-  source_root <- normalizePath(testthat::test_path("..", ".."), winslash = "/", mustWork = TRUE)
+-  cli <- file.path(source_root, "inst", "exec", "triomics")
++  context <- b_t01_package_context()
+   rscript <- file.path(R.home("bin"), "Rscript")
+-  original_wd <- getwd()
+-  setwd(dirname(cli))
+-  on.exit(setwd(original_wd), add = TRUE)
+-  lines <- system2(
+-    rscript,
+-    c("--vanilla", shQuote(basename(cli)), "--config", shQuote(config_path),
+-      "--stage", "B", "--output", shQuote(output)),
+-    stdout = TRUE, stderr = TRUE
+-  )
++  cli_args <- c("--config", shQuote(config_path), "--stage", "B", "--output", shQuote(output))
++  if (context$source_checkout) {
++    cli <- triomics_test_resource("exec", "triomics")
++    original_wd <- getwd()
++    setwd(dirname(cli))
++    on.exit(setwd(original_wd), add = TRUE)
++    lines <- system2(
++      rscript, c("--vanilla", shQuote(basename(cli)), cli_args),
++      stdout = TRUE, stderr = TRUE
++    )
++  } else {
++    runner <- tempfile(pattern = "b-t01-installed-cli-", fileext = ".R")
++    on.exit(unlink(runner), add = TRUE)
++    writeLines(c(
++      "status <- triomics:::triomics_main(commandArgs(trailingOnly = TRUE))",
++      "quit(save = \"no\", status = as.integer(status))"
++    ), runner, useBytes = TRUE)
++    lines <- system2(
++      rscript, c("--vanilla", shQuote(runner), cli_args),
++      env = paste0("R_LIBS=", shQuote(paste(.libPaths(), collapse = .Platform$path.sep))),
++      stdout = TRUE, stderr = TRUE
++    )
++  }
+   status <- attr(lines, "status")
+   if (is.null(status)) status <- 0L
+   list(status = as.integer(status), output = lines)
+@@ -580,11 +642,22 @@ testthat::test_that("the stage B fixture envelope matches limma on predecessor m
+   ))
+   testthat::expect_identical(written$status, "complete")
+ 
+-  ticket_dir <- dirname(config_path)
++  fixture_root <- tempfile("b-t01-modified-fixtures-")
++  ticket_dir <- file.path(fixture_root, "tickets")
++  independent_dir <- file.path(fixture_root, "data", "independent")
++  dir.create(ticket_dir, recursive = TRUE)
++  dir.create(independent_dir, recursive = TRUE)
++  on.exit(unlink(fixture_root, recursive = TRUE), add = TRUE)
++  temporary_config <- file.path(ticket_dir, basename(config_path))
++  testthat::expect_true(file.copy(config_path, temporary_config, overwrite = TRUE))
++  for (fixture_name in c("metadata.tsv", "proteomics.tsv", "metabolomics.tsv")) {
++    fixture_path <- triomics_test_resource("examples", "data", "independent", fixture_name)
++    testthat::expect_true(file.copy(fixture_path, file.path(independent_dir, fixture_name), overwrite = TRUE))
++  }
+   refused_config <- tempfile("b-t01-refused-", tmpdir = ticket_dir, fileext = ".yaml")
+   budget_config <- tempfile("b-t01-budget-", tmpdir = ticket_dir, fileext = ".yaml")
+   on.exit(unlink(c(refused_config, budget_config)), add = TRUE)
+-  config_text <- paste(readLines(config_path), collapse = "\n")
++  config_text <- paste(readLines(temporary_config), collapse = "\n")
+   refused_text <- sub(
+     "transform:\n        method: none",
+     "transform:\n        method: log2",
+@@ -605,7 +678,7 @@ testthat::test_that("the stage B fixture envelope matches limma on predecessor m
+ })
+ 
+ testthat::test_that("Stage B CLI writes unique, deterministic BlockResult identities across contrasts", {
+-  config_path <- triomics_test_resource("examples", "tickets", "B-T02.yaml")
++  config_path <- b_t01_fixture_config("B-T02.yaml")
+   first_output <- tempfile("b-t02-identity-first-")
+   second_output <- tempfile("b-t02-identity-second-")
+   dir.create(first_output)
+@@ -693,7 +766,7 @@ testthat::test_that("Stage B CLI writes unique, deterministic BlockResult identi
+ })
+ 
+ testthat::test_that("public identity finalization preserves the fitted scientific rows exactly", {
+-  config_path <- triomics_test_resource("examples", "tickets", "B-T02.yaml")
++  config_path <- b_t01_fixture_config("B-T02.yaml")
+   config <- triomics_read_config(config_path)
+   ingested <- triomics_ingest_configured_study(config, config_path)
+   analysis <- config$analyses[[1L]]
+@@ -752,7 +825,7 @@ testthat::test_that("public identity finalization preserves the fitted scientifi
+ })
+ 
+ testthat::test_that("Stage B serializes joint claim identity without choosing a member contrast", {
+-  source_config <- triomics_test_resource("examples", "tickets", "B-T02.yaml")
++  source_config <- b_t01_fixture_config("B-T02.yaml")
+   output <- tempfile("b-t02-joint-identity-")
+   dir.create(output)
+   on.exit(unlink(output, recursive = TRUE), add = TRUE)
+diff --git a/tests/testthat/test-B-T07.R b/tests/testthat/test-B-T07.R
+index 1a616f7..bd72ea1 100644
+--- a/tests/testthat/test-B-T07.R
++++ b/tests/testthat/test-B-T07.R
+@@ -379,6 +379,20 @@ testthat::test_that("B-T07 AC2 independent and paired CLI smokes retain signed e
+ 
+   consolidated_root <- t07_test_root("ac2-consolidated")
+   same_run_stage_result <- triomics_execute_stage_b(independent_config, consolidated_root)
++  stale_source_revision <- "e6f9b29304f8cc7c78dcefac3fde55d1a4be672e"
++  testthat::expect_false(identical(stale_source_revision, triomics_source_revision()))
++  stale_revision_error <- t07_attempt_export(
++    output = consolidated_root,
++    config_path = independent_config,
++    matrices = same_run_stage_result$resolved_matrices,
++    working_ref = stale_source_revision,
++    matrix_source = "stage_b_resolved_blocks",
++    provenance_context = same_run_stage_result$provenance_context
++  )
++  testthat::expect_s3_class(stale_revision_error, "triomics_error")
++  testthat::expect_identical(stale_revision_error$code, "B_EXPORT_INCOMPLETE")
++  testthat::expect_match(conditionMessage(stale_revision_error), "working_ref")
++  testthat::expect_false(dir.exists(file.path(consolidated_root, "B", "handoffs")))
+   exported <- t07_expect_export_success(t07_attempt_export(
+     output = consolidated_root, config_path = independent_config,
+     matrices = same_run_stage_result$resolved_matrices,
+diff --git a/tests/testthat/test-C-08-shared.R b/tests/testthat/test-C-08-shared.R
+index af8ac16..2bb0543 100644
+--- a/tests/testthat/test-C-08-shared.R
++++ b/tests/testthat/test-C-08-shared.R
+@@ -404,6 +404,10 @@ testthat::test_that("C-08 preserves paired sign names and leaves mean weights nu
+     representation_id = "delta"
+   )
+   paired_map <- triomics_c08_validate_unit_map(paired, "subject-a", paired_context)
++  testthat::expect_type(paired_map$visit_weights[[1L]], "double")
++  testthat::expect_identical(
++    paired_map$visit_weights[[1L]], stats::setNames(c(-1, 1), c("baseline", "followup"))
++  )
+   testthat::expect_identical(names(paired_map$visit_weights[[1L]]), c("baseline", "followup"))
+   testthat::expect_identical(as.numeric(unlist(paired_map$visit_weights[[1L]])), c(-1, 1))
+ 
+diff --git a/tests/testthat/test-C-08.R b/tests/testthat/test-C-08.R
+index 3d182d9..e99a2b3 100644
+--- a/tests/testthat/test-C-08.R
++++ b/tests/testthat/test-C-08.R
+@@ -693,6 +693,7 @@ testthat::test_that("C-08 preserves mean and delta AnalysisUnitMap lineage and r
+                              c("sample-u1-V0", "sample-u1-V1"))
+   testthat::expect_identical(mean_endpoint$samples[[1L]]$visit_weights,
+                              stats::setNames(c(.5, .5), c("V0", "V1")))
++  testthat::expect_type(mean_endpoint$unit_map$visit_weights[[1L]], "double")
+   mean_bundle <- triomics_integration_score_endpoints(
+     mean_input$result, mean_input$fit, mean_input$context
+   )
+@@ -715,6 +716,35 @@ testthat::test_that("C-08 preserves mean and delta AnalysisUnitMap lineage and r
+                              c("sample-u1-V0", "sample-u1-V1"))
+   testthat::expect_identical(delta_endpoint$samples[[1L]]$visit_weights,
+                              stats::setNames(c(-1, 1), c("V0", "V1")))
++  testthat::expect_type(delta_endpoint$unit_map$visit_weights[[1L]], "double")
++  testthat::expect_type(delta_endpoint$samples[[1L]]$visit_weights, "double")
++  testthat::expect_identical(names(delta_endpoint$samples[[1L]]$visit_weights), c("V0", "V1"))
++  tampered_delta <- delta_bundle
++  tampered_delta$endpoints[[1L]]$samples[[1L]]$visit_weights[[1L]] <- -2
++  tamper_error <- testthat::capture_error(triomics_c08_cli_endpoint_payload(tampered_delta))
++  testthat::expect_s3_class(tamper_error, "triomics_error")
++  testthat::expect_identical(tamper_error$code, "C_SCORE_ENDPOINT_HASH")
++  serialized_delta <- triomics_c08_cli_endpoint_payload(delta_bundle)
++  testthat::expect_identical(
++    serialized_delta$endpoints[[1L]]$samples[[1L]]$visit_weights,
++    list(V0 = -1, V1 = 1)
++  )
++  testthat::expect_identical(
++    serialized_delta$endpoints[[1L]]$unit_map$visit_weights[[1L]],
++    list(V0 = -1, V1 = 1)
++  )
++  serialized_path <- tempfile("c08-delta-endpoint-", fileext = ".json")
++  on.exit(unlink(serialized_path), add = TRUE)
++  triomics_write_json_atomic(serialized_delta, serialized_path)
++  persisted_delta <- triomics_c08_cli_validate_endpoint_readback(serialized_path)
++  testthat::expect_identical(
++    persisted_delta$endpoints[[1L]]$samples[[1L]]$visit_weights,
++    list(V0 = -1L, V1 = 1L)
++  )
++  testthat::expect_identical(
++    persisted_delta$endpoints[[1L]]$unit_map[[1L]]$visit_weights,
++    list(V0 = -1L, V1 = 1L)
++  )
+   delta_objective <- c08_objective(delta_endpoint$endpoint_id, mode = "baseline_to_later", visit = "V0")
+   delta_objective$objectives[[1L]]$baseline_visit_ref <- "V0"
+   delta_objective$objectives[[1L]]$later_visit_ref <- "V1"
+diff --git a/tests/testthat/test-package-source-identity.R b/tests/testthat/test-package-source-identity.R
+new file mode 100644
+index 0000000..58cbb69
+--- /dev/null
++++ b/tests/testthat/test-package-source-identity.R
+@@ -0,0 +1,61 @@
++testthat::test_that("installed source identity fails closed on absent and unexpanded stamps", {
++  package_root <- tempfile("triomics-installed-identity-")
++  dir.create(package_root)
++  on.exit(unlink(package_root, recursive = TRUE), add = TRUE)
++  writeLines(c("Package: triomics", "Version: 0.1.0"), file.path(package_root, "DESCRIPTION"))
++
++  original_wd <- getwd()
++  unrelated_wd <- normalizePath(testthat::test_path("..", ".."), winslash = "/", mustWork = TRUE)
++  setwd(unrelated_wd)
++  on.exit(setwd(original_wd), add = TRUE)
++
++  stamp <- file.path(package_root, "triomics-source-revision")
++  testthat::expect_identical(
++    triomics_source_revision_from_root(package_root, installed = TRUE), "unavailable"
++  )
++  writeLines("$Format:%H$", stamp, useBytes = TRUE)
++  testthat::expect_identical(
++    triomics_source_revision_from_root(package_root, installed = TRUE), "unavailable"
++  )
++
++  writeLines("not-a-full-source-revision", stamp, useBytes = TRUE)
++  testthat::expect_identical(
++    triomics_source_revision_from_root(package_root, installed = TRUE), "unavailable"
++  )
++
++  actual_revision <- triomics_source_revision()
++  testthat::expect_match(actual_revision, "^(?:[0-9a-f]{40}|[0-9a-f]{64})$")
++  writeLines(actual_revision, stamp, useBytes = TRUE)
++  testthat::expect_identical(
++    triomics_source_revision_from_root(package_root, installed = TRUE), actual_revision
++  )
++})
++
++testthat::test_that("source identity follows the executing namespace despite unrelated global symbols", {
++  namespace_root <- normalizePath(
++    getNamespaceInfo(asNamespace("triomics"), "path"), winslash = "/", mustWork = TRUE
++  )
++  actual_revision <- triomics_source_revision()
++  testthat::expect_match(actual_revision, "^(?:[0-9a-f]{40}|[0-9a-f]{64})$")
++  had_global_main <- exists("triomics_main", envir = .GlobalEnv, inherits = FALSE)
++  if (had_global_main) previous_global_main <- get("triomics_main", envir = .GlobalEnv, inherits = FALSE)
++  assign("triomics_main", function(...) "unrelated global entrypoint", envir = .GlobalEnv)
++  original_wd <- getwd()
++  unrelated_wd <- tempfile("triomics-unrelated-working-directory-")
++  dir.create(unrelated_wd)
++  setwd(unrelated_wd)
++  on.exit({
++    setwd(original_wd)
++    unlink(unrelated_wd, recursive = TRUE)
++    if (had_global_main) {
++      assign("triomics_main", previous_global_main, envir = .GlobalEnv)
++    } else if (exists("triomics_main", envir = .GlobalEnv, inherits = FALSE)) {
++      rm("triomics_main", envir = .GlobalEnv)
++    }
++  }, add = TRUE)
++
++  context <- triomics_source_identity_context()
++  testthat::expect_identical(context$root, namespace_root)
++  testthat::expect_identical(context$installed, !triomics_source_root_valid(namespace_root))
++  testthat::expect_identical(triomics_source_revision(), actual_revision)
++})
+diff --git a/tools/check-package.R b/tools/check-package.R
+index f80f560..d9d35a3 100644
+--- a/tools/check-package.R
++++ b/tools/check-package.R
+@@ -118,6 +118,16 @@ main <- function(args = commandArgs(trailingOnly = TRUE)) {
+     if (file.exists(check_log)) {
+       file.copy(check_log, file.path(options$output, "00check.log"), overwrite = TRUE)
+     }
++    warning_inventory <- list.files(
++      check_dir, pattern = "^triomics-warning-inventory\\.json$",
++      recursive = TRUE, full.names = TRUE
++    )
++    if (length(warning_inventory) != 1L || !file.copy(
++      warning_inventory[[1L]], file.path(options$output, "warning-inventory.json"), overwrite = TRUE
++    )) {
++      cat("testthat warning inventory was not captured; see 00check.log.\n", file = stderr())
++      return(1L)
++    }
+   }
+   summary <- if (file.exists(check_log)) readLines(check_log, warn = FALSE) else character()
+   status_line <- grep("^Status:", summary, value = TRUE)
