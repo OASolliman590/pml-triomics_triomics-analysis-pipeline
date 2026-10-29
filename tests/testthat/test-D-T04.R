@@ -1,0 +1,60 @@
+d_t04_code <- function(expr) tryCatch({ force(expr); NULL }, error = function(e) e$code)
+d_t04_universe <- function(ids = as.character(1:10)) list(ids = ids, source = 'measured')
+d_t04_mapping <- list(rule = 'unique resolved entities', status = 'compatible')
+d_t04_sets <- function() list(list(set_id = 'a', members = c('1', '2', '3'), eligible = TRUE), list(set_id = 'b', members = c('1', '4'), eligible = TRUE), list(set_id = 'empty', members = character(), eligible = TRUE))
+
+testthat::test_that('upper tail includes the observed overlap and rejects impossible counts', {
+  testthat::expect_equal(triomics_ora_upper_tail(10, 3, 2, 2), 1/15)
+  testthat::expect_equal(triomics_ora_upper_tail(10, 3, 2, 0), 1)
+  testthat::expect_equal(triomics_ora_upper_tail(10, 3, 2, 1), 8/15)
+  testthat::expect_identical(d_t04_code(triomics_ora_upper_tail(10, 3, 2, 3)), 'D_ORA_COUNT_INVALID')
+  testthat::expect_identical(d_t04_code(triomics_ora_upper_tail(10, 9, 9, 0)), 'D_ORA_COUNT_INVALID')
+})
+testthat::test_that('selected or undeclared background is rejected', {
+  testthat::expect_identical(d_t04_code(triomics_ora_family(d_t04_universe(c('1','2')), d_t04_sets(), c('1','2'), list(status='full_unselected'), d_t04_mapping)), 'D_ORA_BACKGROUND_INVALID')
+  testthat::expect_identical(d_t04_code(triomics_ora_family(d_t04_universe(c('1','2')), d_t04_sets(), c('1','2','x'), list(status='full_unselected'), d_t04_mapping)), 'D_ORA_BACKGROUND_INVALID')
+  testthat::expect_identical(d_t04_code(triomics_ora_family(list(source='database'), d_t04_sets(), c('1','2'), list(status='full_unselected'), d_t04_mapping)), 'D_ORA_UNIVERSE_UNDECLARED')
+})
+testthat::test_that('unique mapped entities determine counts and the full family remains', {
+  sets <- d_t04_sets(); sets[[1]]$members <- c('1','1','2','3','outside')
+  x <- triomics_ora_family(d_t04_universe(), sets, c('1','1','2','outside'), list(status='full_unselected'), d_t04_mapping)
+  testthat::expect_identical(x$family_size, 3L)
+  testthat::expect_identical(x$tests_in_bh, 2L)
+  testthat::expect_identical(x$nominated_outside_universe, 1L)
+  testthat::expect_identical(x$sets[[1]]$members_outside_universe, 1L)
+  testthat::expect_identical(x$mapping_rule, d_t04_mapping$rule)
+  testthat::expect_identical(x$mapping_status, 'compatible')
+  testthat::expect_equal(unlist(x$sets[[1]][c('N','K','n','k')]), c(N=10,K=3,n=2,k=2))
+  testthat::expect_equal(x$sets[[1]]$p, 1/15)
+  testthat::expect_equal(c(x$sets[[1]]$q,x$sets[[2]]$q), stats::p.adjust(c(1/15, 17/45), method='BH'))
+  testthat::expect_identical(x$sets[[3]]$status, 'non_estimable')
+  testthat::expect_null(x$sets[[3]]$p); testthat::expect_null(x$sets[[3]]$q)
+})
+testthat::test_that('empty universe and ineligible sets remain non-estimable', {
+  sets <- d_t04_sets(); sets[[1]]$eligible <- FALSE
+  x <- triomics_ora_family(d_t04_universe(), sets, c('1','2'), list(status='full_unselected'), d_t04_mapping)
+  testthat::expect_identical(x$sets[[1]]$status, 'non_estimable'); testthat::expect_null(x$sets[[1]]$q)
+  x <- triomics_ora_family(d_t04_universe(character()), sets, c('1','2'), list(status='full_unselected'), d_t04_mapping)
+  testthat::expect_true(all(vapply(x$sets, function(row) identical(row$status, 'non_estimable') && is.null(row$p) && is.null(row$q), logical(1))))
+})
+testthat::test_that('unqualified inventories never produce enrichment q values', {
+  for (status in c('unknown','outcome_selected')) {
+    x <- triomics_ora_family(d_t04_universe(), d_t04_sets(), c('1','2'), list(status=status), d_t04_mapping)
+    testthat::expect_true(all(vapply(x$sets, function(row) identical(row$status, 'unavailable') && is.null(row$p) && is.null(row$q) && identical(row$claim, 'not_pathway_activation'), logical(1))))
+  }
+})
+
+testthat::test_that('inventory vocabulary and mapping qualification gate inference', {
+  panel <- triomics_ora_family(d_t04_universe(), d_t04_sets(), c('1','2'), list(status='prespecified_panel'), d_t04_mapping)
+  testthat::expect_true(is.numeric(panel$sets[[1]]$q))
+  for (status in c('targeted_panel', 'complete', 'other'))
+    testthat::expect_identical(d_t04_code(triomics_ora_family(d_t04_universe(), d_t04_sets(), c('1','2'), list(status=status), d_t04_mapping)), 'D_ORA_INPUT_INVALID')
+  for (mapping in list(list(status='compatible'), list(rule='', status='compatible'), list(rule='resolved', status='other'), list(rule='resolved')))
+    testthat::expect_identical(d_t04_code(triomics_ora_family(d_t04_universe(), d_t04_sets(), c('1','2'), list(status='full_unselected'), mapping)), 'D_ORA_MAPPING_INVALID')
+  testthat::expect_identical(d_t04_code(triomics_ora_family(d_t04_universe(), d_t04_sets(), c('1','2'), list(status='full_unselected'))), 'D_ORA_MAPPING_INVALID')
+  x <- triomics_ora_family(d_t04_universe(), d_t04_sets(), c('1','2'), list(status='full_unselected'), list(rule='resolved', status='incompatible'))
+  testthat::expect_identical(x$family_size, 3L)
+  testthat::expect_identical(x$tests_in_bh, 0L)
+  testthat::expect_identical(x$mapping_status, 'incompatible')
+  testthat::expect_true(all(vapply(x$sets, function(row) identical(row$status, 'unavailable') && is.null(row$p) && is.null(row$q), logical(1))))
+})

@@ -1,0 +1,19 @@
+{
+  "packet_id": "D-T04",
+  "request_type": "registration_request",
+  "accepted": false,
+  "namespace_edits": false,
+  "local_files": [
+    "R/enrichment_ora.R",
+    "R/enrichment_family.R",
+    "tests/testthat/test-D-T04.R",
+    "inst/examples/tickets/D-T04.yaml",
+    "docs/implementation/registrations/D-T04.json"
+  ],
+  "owned_functions": [
+    "triomics_ora_upper_tail",
+    "triomics_ora_family"
+  ],
+  "integration_request": "Sol: register the owned functions and integrate the declared universe, resolved entity IDs, set family and qualified inventory, mapping rule and mapping status with triomics_execute_stage_d. triomics_execute_stage_d does not call them. The fixture declares an ORA request but supplies no resources; execution and scientific qualification require a verified local handoff and mapping rule.",
+  "repair": "D-T04 repair 1"
+}
