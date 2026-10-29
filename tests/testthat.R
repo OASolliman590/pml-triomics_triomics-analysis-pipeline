@@ -1,5 +1,10 @@
 library(testthat)
 
+mofa_library <- Sys.getenv("TRIOMICS_MOFA_LIBRARY", unset = "")
+if (nzchar(mofa_library) && dir.exists(mofa_library)) {
+  .libPaths(c(mofa_library, .libPaths()))
+}
+
 triomics_warning_reporter <- testthat::CheckReporter$new()
 triomics_write_warning_inventory <- function(reporter) {
   records <- reporter$warnings$as_list()

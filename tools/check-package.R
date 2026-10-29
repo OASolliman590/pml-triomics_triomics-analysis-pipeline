@@ -23,10 +23,34 @@ parse_args <- function(args, default_root) {
   options
 }
 
+check_environment <- function() {
+  keep <- c("PATH", "HOME", "TMPDIR", "LANG", "LC_ALL", "R_HOME")
+  env <- Sys.getenv(keep, unset = NA_character_)
+  env <- env[!is.na(env) & !grepl("[\r\n]", env)]
+  mofa_library <- Sys.getenv("TRIOMICS_MOFA_LIBRARY", unset = "")
+  if (!nzchar(mofa_library) && dir.exists("/tmp/triomics-mofa-lib")) {
+    mofa_library <- "/tmp/triomics-mofa-lib"
+  }
+  python <- Sys.getenv("TRIOMICS_MOFA_PYTHON", unset = "")
+  if (!nzchar(python)) {
+    candidates <- c(
+      "/tmp/triomics-mofa-py-m7-006/bin/python",
+      "/tmp/triomics-mofa-py/bin/python"
+    )
+    python <- candidates[file.exists(candidates)][1L]
+    if (is.na(python)) python <- ""
+  }
+  c(
+    paste0(names(env), "=", env),
+    paste0("TRIOMICS_MOFA_LIBRARY=", mofa_library),
+    paste0("TRIOMICS_MOFA_PYTHON=", python)
+  )
+}
+
 capture_native <- function(command, args, log_path) {
   warnings <- character()
   output <- withCallingHandlers(
-    system2(command, args, stdout = TRUE, stderr = TRUE),
+    system2(command, args, stdout = TRUE, stderr = TRUE, env = check_environment()),
     warning = function(warning) {
       warnings <<- c(warnings, conditionMessage(warning))
       invokeRestart("muffleWarning")

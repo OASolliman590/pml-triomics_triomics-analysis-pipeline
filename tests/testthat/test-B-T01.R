@@ -153,31 +153,26 @@ b_t01_package_context <- function() {
 
 b_t01_fixture_config <- function(name) {
   config_path <- triomics_test_resource("examples", "tickets", name)
-  config <- yaml::read_yaml(config_path)
+  # Rewrite path strings in the original YAML. Parsing and writing back turns
+  # a one-element sequence such as source_refs into a scalar.
+  lines <- readLines(config_path, warn = FALSE)
+  independent_prefix <- "../../../discovery/spec-v2/examples/independent/"
   changed <- FALSE
-  resolve_fixture_path <- function(path) {
-    if (is.null(path)) return(NULL)
+  lines <- vapply(lines, function(line) {
+    match <- regexec("^([[:space:]]*file:[[:space:]]*)([^[:space:]#]+)", line)
+    parts <- regmatches(line, match)[[1L]]
+    if (length(parts) != 3L) return(line)
+    path <- parts[[3L]]
     resolved <- normalizePath(file.path(dirname(config_path), path), winslash = "/", mustWork = FALSE)
-    if (file.exists(resolved)) return(path)
-    independent_prefix <- "../../../discovery/spec-v2/examples/independent/"
-    if (startsWith(path, independent_prefix)) {
-      changed <<- TRUE
-      return(triomics_test_resource(
-        "examples", "data", "independent", basename(path)
-      ))
-    }
-    path
-  }
-  for (index in seq_along(config$sources)) {
-    config$sources[[index]]$file <- resolve_fixture_path(config$sources[[index]]$file)
-  }
-  config$metadata$file <- resolve_fixture_path(config$metadata$file)
-  for (index in seq_along(config$blocks)) {
-    config$blocks[[index]]$file <- resolve_fixture_path(config$blocks[[index]]$file)
-  }
+    if (file.exists(resolved) || !startsWith(path, independent_prefix)) return(line)
+    changed <<- TRUE
+    paste0(parts[[2L]], triomics_test_resource(
+      "examples", "data", "independent", basename(path)
+    ))
+  }, character(1L), USE.NAMES = FALSE)
   if (!changed) return(config_path)
   relocated <- tempfile(pattern = "b-t01-packaged-fixture-", fileext = ".yaml")
-  yaml::write_yaml(config, relocated)
+  writeLines(lines, relocated, useBytes = TRUE)
   relocated
 }
 

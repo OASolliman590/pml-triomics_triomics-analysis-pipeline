@@ -481,9 +481,35 @@ triomics_c08_matrix_hash <- function(endpoint) {
   triomics_b_hash(list(endpoint_id = endpoint$endpoint_id, rows = rows))
 }
 
+triomics_c08_hash_visit_weights <- function(weights) {
+  if (is.numeric(weights) && !is.null(names(weights))) {
+    return(stats::setNames(as.list(as.numeric(unname(weights))), names(weights)))
+  }
+  weights
+}
+
+triomics_c08_bind_visit_weight_names <- function(record) {
+  if (!is.list(record) || !"visit_weights" %in% names(record)) return(record)
+  weights <- record[["visit_weights"]]
+  # `$<- NULL` deletes the element. An explicit null must remain in the hash.
+  if (is.null(weights)) return(record)
+  record[["visit_weights"]] <- triomics_c08_hash_visit_weights(weights)
+  record
+}
+
 triomics_c08_endpoint_hash <- function(endpoint) {
   body <- endpoint
   body$endpoint_sha256 <- NULL
+  if (is.list(body$samples)) {
+    body$samples <- lapply(body$samples, triomics_c08_bind_visit_weight_names)
+  }
+  if (is.data.frame(body$unit_map) && "visit_weights" %in% names(body$unit_map)) {
+    body$unit_map$visit_weights <- I(lapply(
+      body$unit_map$visit_weights, triomics_c08_hash_visit_weights
+    ))
+  } else if (is.list(body$unit_map)) {
+    body$unit_map <- lapply(body$unit_map, triomics_c08_bind_visit_weight_names)
+  }
   triomics_c08_sha256(body)
 }
 

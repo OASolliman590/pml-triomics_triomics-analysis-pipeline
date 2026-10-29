@@ -719,6 +719,23 @@ testthat::test_that("C-08 preserves mean and delta AnalysisUnitMap lineage and r
   testthat::expect_type(delta_endpoint$unit_map$visit_weights[[1L]], "double")
   testthat::expect_type(delta_endpoint$samples[[1L]]$visit_weights, "double")
   testthat::expect_identical(names(delta_endpoint$samples[[1L]]$visit_weights), c("V0", "V1"))
+  tampered_names <- delta_bundle
+  tampered_names$endpoints <- lapply(tampered_names$endpoints, function(endpoint) {
+    names(endpoint$samples[[1L]]$visit_weights) <- c("wrong_reference", "wrong_target")
+    endpoint
+  })
+  name_error <- testthat::capture_error(triomics_c08_cli_endpoint_payload(tampered_names))
+  testthat::expect_s3_class(name_error, "triomics_error")
+  testthat::expect_identical(name_error$code, "C_SCORE_ENDPOINT_HASH")
+  null_endpoint <- list(
+    samples = list(),
+    unit_map = list(list(unit_id = "x", visit_weights = NULL))
+  )
+  null_hash <- triomics_c08_endpoint_hash(null_endpoint)
+  null_text <- triomics_canonical_json(null_endpoint)
+  testthat::expect_match(null_text, "\"visit_weights\":null", fixed = TRUE)
+  null_parsed <- jsonlite::fromJSON(null_text, simplifyVector = FALSE)
+  testthat::expect_identical(triomics_c08_endpoint_hash(null_parsed), null_hash)
   tampered_delta <- delta_bundle
   tampered_delta$endpoints[[1L]]$samples[[1L]]$visit_weights[[1L]] <- -2
   tamper_error <- testthat::capture_error(triomics_c08_cli_endpoint_payload(tampered_delta))

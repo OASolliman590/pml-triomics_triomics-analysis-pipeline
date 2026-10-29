@@ -976,10 +976,13 @@ testthat::test_that("native C-06 writer propagates sensitive privacy and binds D
   testthat::expect_identical(sum(matched), 1L)
   config_lines[matched] <- "data_class: real"
   sensitive_config <- tempfile("c06-sensitive-", tmpdir = tempdir(), fileext = ".yaml")
-  fixture_root <- normalizePath(testthat::test_path("..", ".."), winslash = "/")
+  data_root <- normalizePath(
+    file.path(dirname(original_config), "..", "data"),
+    winslash = "/", mustWork = TRUE
+  )
   config_lines <- sub(
     "^([[:space:]]*file: )[.][.]/data/",
-    paste0("\\1", fixture_root, "/inst/examples/data/"),
+    paste0("\\1", data_root, "/"),
     config_lines
   )
   writeLines(config_lines, sensitive_config, useBytes = TRUE)
