@@ -1,0 +1,18 @@
+{
+  "packet_id": "D-T11",
+  "request_type": "registration_request",
+  "accepted": false,
+  "namespace_edits": false,
+  "local_files": [
+    "R/target_assessment.R",
+    "R/target_alternatives.R",
+    "tests/testthat/test-D-T11.R",
+    "inst/examples/tickets/D-T11.yaml",
+    "docs/implementation/registrations/D-T11.json"
+  ],
+  "owned_functions": [
+    "triomics_target_profile",
+    "triomics_target_alternatives"
+  ],
+  "integration_request": "Sol: register the owned functions and integrate target profiles and alternatives at triomics_execute_stage_d in R/cli.R. triomics_execute_stage_d does not call them. triomics_target_request does not set mechanism_class; the profile caller must set it to non_enzymatic or enzymatic, and SYNTH_FCN3_LIKE is non_enzymatic."
+}
