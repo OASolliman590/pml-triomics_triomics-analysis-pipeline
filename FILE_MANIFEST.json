@@ -61,8 +61,8 @@
     },
     {
       "path": "discovery/spec-v2/D_ANNOTATION_TARGET_REPORT.md",
-      "sha256": "b802362daeaed0d802860083a3a1bee9c9bd110001de5de8e5df5eeb4e7c014d",
-      "size_bytes": 9597
+      "sha256": "70805ff238c76f605fd570672439144b83280f5154be89b9e9ddee3bb8002d80",
+      "size_bytes": 11596
     },
     {
       "path": "discovery/spec-v2/IMPLEMENTATION_PLAN.md",
@@ -186,7 +186,7 @@
     },
     {
       "path": "discovery/spec-v2/freeze.json",
-      "sha256": "46803ca7f75c8b596a42bfa7aefe358514f989a71fc7978ced958a44ec4abc94",
+      "sha256": "f5eb17c5371a0342710fc1e6ff32d6b01975033a94e2bd901f46f32de12f01d4",
       "size_bytes": 14727
     },
     {
@@ -431,8 +431,8 @@
     },
     {
       "path": "discovery/spec-v2/prompts/MASTER_SOL_PROMPT.md",
-      "sha256": "1c4c355492b072ed4a6b75066bebe9b84864591caec5735d7be4f84c25d3ccc2",
-      "size_bytes": 8211
+      "sha256": "413d026452f8973dd54d4f9d9825e18aa09a8eca7bcccd61e20f50e8a20eae22",
+      "size_bytes": 8538
     },
     {
       "path": "discovery/spec-v2/prompts/SOL_CLOSE.md",

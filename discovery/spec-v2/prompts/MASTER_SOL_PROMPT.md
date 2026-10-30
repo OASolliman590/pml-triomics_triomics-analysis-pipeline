@@ -108,7 +108,7 @@ task; do not invent their content or claim a real-data run.
 Preserve conditional C-09, D-T06, D-T07 and D-T14. In particular, no quantitative
 target estimator or binding probability is invented to close D-T14. Metabolomic
 compatibility, function, engagement and direct binding are separate evidence axes.
-FCN3/dapagliflozin is a use case, never a hardcoded conclusion or invented Kd.
+Use the existing `target_investigation` fields to review a supplied local assay record on evidence axis 4 for the drug under investigation and any declared protein, reporting identity and context matches, mismatches, uncertainty, or unavailable evidence without measuring binding, inventing affinity, or enabling D-T14, with FCN3/dapagliflozin retained only as an example and never a hardcoded conclusion.
 Conditional unavailable work may be recorded without blocking independent core
 work; it cannot receive completion credit or satisfy a consumer that requires it.
 

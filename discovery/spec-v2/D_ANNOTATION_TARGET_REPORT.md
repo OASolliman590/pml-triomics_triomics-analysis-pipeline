@@ -96,28 +96,62 @@ renders the dossier. D-T14 requires a separately approved quantitative method,
 null/comparison protocol, leakage controls and validation dataset. Its current
 state is conditional-unapproved; no estimator is invented to force closure.
 
-## 5. FCN3 / dapagliflozin use case
+## 5. Direct binding of the drug under investigation to the declared protein
 
-For this requested application, ask: are the observed molecular and clinical
-patterns compatible with the proposed FCN3-related mechanism, and are competing
-physiological/known-pharmacology explanations distinguishable? Do not ask the
-metabolomic matrix to establish a physical drug-protein interaction.
+`target_investigation` is the single configuration place for reviewing direct
+binding evidence for the drug under investigation and any declared protein.
+No protein-specific restriction applies. This uses the existing fields:
 
-The 2026 primary paper indexed as PMID 41587770 (DOI 10.1111/bph.70331) reports
-FCN3-related drug interactions investigated by SPR. That source belongs on the
-external binding axis. This drafting task did not inspect compound-specific raw
-sensorgrams, fit models or numerical affinity results; do not populate a
-compound-specific Kd from its abstract. A user-supplied assay report can enter as
-an explicitly sourced local evidence record after identity/assay review.
+- `enabled` enables the investigation; `mode` is `assess`, `compare`, or `discover`,
+  subject to the rules in section 4.
+- `drug_ref` identifies the drug under investigation for this binding request.
+- `targets[]` declares each target through `namespace`, `id`, `taxon_id`, and
+  `entity_type`. A binding target uses `entity_type: protein`. A pathway is not
+  a binding target.
+- `external_evidence_file` references a local assay record for the declared drug
+  and protein.
+- `context_ref` and `protocol_ref` remain required when the investigation is
+  enabled, as specified by the existing ticket rule.
 
-The pipeline should preserve any available molecular FCN3 measurement, eligible
-complement-related evidence, metabolite/lipid changes and clinical associations
-without inventing missing endpoints or a unique metabolic FCN3 signature. Each
-connection requires sourced context and coverage. A compatible downstream pattern
-is supportive mechanism evidence, not a remeasurement of SPR or proof that FCN3
-mediates the treatment association. Dose/time/causal perturbation studies or
-orthogonal engagement/function assays are follow-up evidence classes, not results
-produced by this software. No extra docking/MD subsystem is added here.
+Here, "test" means attach the supplied local assay record to evidence axis 4
+and report its applicability. The pipeline does not run the assay or measure
+binding. For each declared drug–protein pair, report whether the record matches
+the drug and protein and whether its assay context matches the declared context.
+Identify drug, protein, construct, species, or context mismatches explicitly.
+Preserve unresolved identities and context uncertainty rather than treating them
+as matches. If the record is absent, report direct binding evidence as unavailable.
+Absence is not evidence of no binding.
+
+Retain the exact compound, target construct, assay, measured endpoint, relation,
+units, source, provenance, and external versus this-study status required by
+section 4. Supplied assay evidence must never be labelled as measured by the
+pipeline. A matching record establishes applicability; its measured endpoint
+and assay limitations determine what binding claim it supports.
+
+Abundance, docking energy, and IC50 are not converted into Kd or a binding
+probability. A Kd may be stored only when the supplied assay record explicitly
+states that endpoint with units and a source. Unsupported affinity values remain
+unavailable with source-specific notes. This section adds no docking or
+molecular-dynamics step and does not enable D-T14, which remains
+conditional-unapproved.
+
+The filled example uses dapagliflozin as the drug identified by `drug_ref` and
+FCN3 as the protein declared in `targets[]`. PMID 41587770, DOI
+10.1111/bph.70331, remains the example source for this pairing, with its sourced
+local assay record entering through `external_evidence_file`. The PMID 41587770
+abstract was not used to fill a Kd. This drafting task did not inspect
+compound-specific raw sensorgrams, fit models, or numerical affinity results.
+Any other sourced local assay report for the declared drug and protein enters
+through the same file and undergoes the same identity, assay, and context review.
+The example supplies no hardcoded conclusion or affinity.
+
+For any declared protein, preserve available molecular measurements, sourced
+mechanistic connections, metabolite and lipid changes, clinical associations,
+alternative explanations, and missing coverage on their appropriate evidence
+axes. A compatible omics pattern is not proof that the protein mediates the
+treatment association or a measurement of direct binding. Perturbation,
+target-engagement, and functional assays remain separate evidence classes.
+D-T13-AC3 remains unchanged.
 
 ## 6. Clinical report and privacy
 

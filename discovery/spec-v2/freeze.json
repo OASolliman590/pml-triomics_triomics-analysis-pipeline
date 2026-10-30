@@ -9,7 +9,7 @@
   "approval_required": "Fresh Astra low G0 audit of exact candidate; actual reviewed approval recorded under docs/implementation.",
   "hash_algorithm": "sha256",
   "content_hash_encoding": "UTF-8 compact JSON of content_files with sorted object keys",
-  "content_sha256": "f0d482db62f16c8e4c802c99c1fd88e501f29959bc475d67f934b40c6f6ae5d2",
+  "content_sha256": "21ebbd04688dfacb058af671d288a85d5910c657ff2e2437d2c6e99e7461aaaf",
   "content_files": [
     {
       "path": "AGENTS.md",
@@ -53,7 +53,7 @@
     },
     {
       "path": "discovery/spec-v2/D_ANNOTATION_TARGET_REPORT.md",
-      "sha256": "b802362daeaed0d802860083a3a1bee9c9bd110001de5de8e5df5eeb4e7c014d"
+      "sha256": "70805ff238c76f605fd570672439144b83280f5154be89b9e9ddee3bb8002d80"
     },
     {
       "path": "discovery/spec-v2/IMPLEMENTATION_PLAN.md",
@@ -345,7 +345,7 @@
     },
     {
       "path": "discovery/spec-v2/prompts/MASTER_SOL_PROMPT.md",
-      "sha256": "1c4c355492b072ed4a6b75066bebe9b84864591caec5735d7be4f84c25d3ccc2"
+      "sha256": "413d026452f8973dd54d4f9d9825e18aa09a8eca7bcccd61e20f50e8a20eae22"
     },
     {
       "path": "discovery/spec-v2/prompts/SOL_CLOSE.md",
