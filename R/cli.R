@@ -2623,6 +2623,18 @@ triomics_execute_stage_c <- function(config_path, output) {
   ))
 }
 
+triomics_d_cli_route_status <- function(evidence) {
+  provenance <- evidence$immutable_inputs
+  predecessor <- list(
+    b_sha256 = as.character(provenance$b_bundle_sha256),
+    c_sha256 = as.character(provenance$c_manifest_sha256)
+  )
+  routes <- stats::setNames(lapply(triomics_d_route_names(), function(name) {
+    list(enabled = FALSE, required = FALSE, status = "not_run")
+  }), triomics_d_route_names())
+  triomics_d_route_status(routes, list(), predecessor, list())
+}
+
 triomics_execute_stage_d <- function(config_path, output) {
   root <- triomics_d_secure_path(
     output, "D_OUTPUT_PATH_UNSAFE",
@@ -2699,6 +2711,7 @@ triomics_execute_stage_d <- function(config_path, output) {
     current_count_metadata = analysis$statistics$count_metadata %||% NULL
   )
   routed <- triomics_annotate_evidence(evidence, config$annotation %||% list())
+  route_status <- triomics_d_cli_route_status(evidence)
   triomics_d_publication_failpoint("provenance_preflight_complete")
   triomics_d_publish_evidence_generation(
     routed, root, config_sha256 = as.character(attr(config, "config_sha256")),
@@ -2707,7 +2720,8 @@ triomics_execute_stage_d <- function(config_path, output) {
     run_id = "d-t01",
     lock_held = TRUE
   )
-  invisible(list(status = "complete", root = root))
+  invisible(list(status = "complete", root = root, exit_code = route_status$exit_code,
+                 route_status = route_status))
 }
 
 triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
@@ -2746,7 +2760,8 @@ triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
         return(4L)
       }
     } else if (identical(options$stage, "D")) {
-      triomics_execute_stage_d(options$config, options$output)
+      stage_d_result <- triomics_execute_stage_d(options$config, options$output)
+      return(as.integer(stage_d_result$exit_code))
     } else {
       triomics_abort("A_STAGE_UNAVAILABLE",
                      paste0("Execution is not implemented for stage '", options$stage, "'."),
