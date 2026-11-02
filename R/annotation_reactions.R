@@ -20,7 +20,7 @@ triomics_map_reactions <- function(measured_rows, resource, operation, expected_
         row$feature_key %in% keys || !is.list(row$nominations) || is.data.frame(row$nominations) ||
         any(!vapply(row$nominations, function(n) {
           is.list(n) && triomics_d_nonempty_string(n$nomination_id) &&
-            triomics_d_nonempty_string(n$source_branch) && n$source_branch %in% c("primary_statistics", "integration")
+            triomics_d_nonempty_string(n$source_branch) && n$source_branch %in% c("primary_statistics", "integration", "integration_selection")
         }, logical(1)))) {
       abort("D_REACTION_INPUT_INVALID", "Each row needs a unique feature, source ID, and valid nomination list.")
     }

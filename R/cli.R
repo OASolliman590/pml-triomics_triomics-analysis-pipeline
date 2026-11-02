@@ -2701,17 +2701,37 @@ triomics_execute_stage_d <- function(config_path, output) {
     sample_registry = ingested$sample_registry,
     declared_factor_levels = ingested$declared_factor_levels
   )
+  annotation <- config$annotation %||% list()
+  requests <- if (is.list(annotation)) annotation$requests %||% list() else list()
+  local_annotation <- triomics_d_sequence(requests) && length(requests) > 0L
+  if (length(requests) > 0L && !local_annotation) {
+    triomics_d_abort("D_ROUTE_INVALID", "Annotation requests must be a list.", "annotation.requests")
+  }
+  routing_metadata <- if (local_annotation) {
+    triomics_d_routing_metadata(config, config_path, ingested$feature_registry)
+  } else {
+    NULL
+  }
   evidence <- triomics_d_read_evidence_bundle(
     root, as.character(config$study_id), as.character(analysis$analysis_id),
     ingested$source_manifests, ingested$feature_registry,
     imported_statistics = list(),
-    routing_metadata = NULL,
+    routing_metadata = routing_metadata,
     current_config_sha256 = as.character(attr(config, "config_sha256")),
     current_metadata = current_metadata,
     current_count_metadata = analysis$statistics$count_metadata %||% NULL
   )
-  routed <- triomics_annotate_evidence(evidence, config$annotation %||% list())
-  route_status <- triomics_d_cli_route_status(evidence)
+  if (local_annotation) {
+    routed <- triomics_d_annotate_local_resources(
+      evidence, annotation, file.path(root, "D", "resource-cache"),
+      config$target_investigation %||% list(), config_path
+    )
+    route_status <- routed$route_status
+    routed$route_status <- NULL
+  } else {
+    routed <- triomics_annotate_evidence(evidence, annotation)
+    route_status <- triomics_d_cli_route_status(evidence)
+  }
   triomics_d_publication_failpoint("provenance_preflight_complete")
   triomics_d_publish_evidence_generation(
     routed, root, config_sha256 = as.character(attr(config, "config_sha256")),
