@@ -156,155 +156,234 @@ triomics_provenance_json_scan <- function(json) {
   if (is.na(utf8) || is.na(iconv(utf8, from = "UTF-8", to = "UTF-8", sub = NA_character_))) {
     triomics_provenance_abort("JSON input contains invalid UTF-8")
   }
-  characters <- strsplit(utf8, "", fixed = TRUE)[[1L]]
-  length_input <- length(characters)
-  position <- 1L
-  numbers <- list()
+  # One code-point vector. Number tokens are sliced from it. Do not paste the
+  # unread remainder of the document; that copy is quadratic in the JSON size.
+  codes <- utf8ToInt(utf8)
+  n <- length(codes)
+  pos <- 1L
+  number_items <- vector("list", 256L)
+  number_count <- 0L
+  literal_true <- c(116L, 114L, 117L, 101L)
+  literal_false <- c(102L, 97L, 108L, 115L, 101L)
+  literal_null <- c(110L, 117L, 108L, 108L)
   fail <- function(reason) triomics_provenance_abort(reason)
-  current <- function() {
-    if (position > length_input) "" else characters[[position]]
-  }
+  is_digit <- function(code) code >= 48L && code <= 57L
   skip_space <- function() {
-    while (position <= length_input && current() %in% c(" ", "\t", "\n", "\r")) {
-      position <<- position + 1L
+    while (pos <= n) {
+      code <- codes[[pos]]
+      if (code != 32L && code != 9L && code != 10L && code != 13L) break
+      pos <<- pos + 1L
     }
   }
-  parse_string <- function() {
-    if (!identical(current(), "\"")) fail("expected a JSON string")
-    start <- position
-    position <<- position + 1L
-    repeat {
-      if (position > length_input) fail("unterminated JSON string")
-      character <- current()
-      if (identical(character, "\"")) {
-        token <- paste(characters[start:position], collapse = "")
-        position <<- position + 1L
-        value <- tryCatch(jsonlite::fromJSON(token, simplifyVector = FALSE), error = function(error) NULL)
-        if (!is.character(value) || length(value) != 1L || is.na(value)) {
-          fail("JSON string contains invalid Unicode or escapes")
-        }
-        return(enc2utf8(value))
+  hex_value <- function(start) {
+    value <- 0L
+    for (i in start:(start + 3L)) {
+      digit <- codes[[i]]
+      value <- value * 16L + if (digit >= 48L && digit <= 57L) {
+        digit - 48L
+      } else if (digit >= 65L && digit <= 70L) {
+        digit - 55L
+      } else if (digit >= 97L && digit <= 102L) {
+        digit - 87L
+      } else {
+        return(NA_integer_)
       }
-      codepoint <- utf8ToInt(character)
-      if (length(codepoint) != 1L || codepoint < 0x20L) fail("JSON strings cannot contain raw control characters")
-      if (identical(character, "\\")) {
-        escape_index <- position + 1L
-        if (escape_index > length_input) fail("unterminated JSON escape")
-        escape <- characters[[escape_index]]
-        if (escape %in% c("\"", "\\", "/", "b", "f", "n", "r", "t")) {
-          position <<- escape_index + 1L
-        } else if (identical(escape, "u")) {
+    }
+    value
+  }
+  add_number <- function(path, token) {
+    number_count <<- number_count + 1L
+    if (number_count > length(number_items)) {
+      number_items <<- c(number_items, vector("list", length(number_items)))
+    }
+    number_items[[number_count]] <<- list(path = path, token = token)
+  }
+  parse_string <- function() {
+    if (pos > n || codes[[pos]] != 34L) fail("expected a JSON string")
+    pos <<- pos + 1L
+    buf <- integer(64L)
+    len <- 0L
+    push_cp <- function(cp) {
+      if (len == length(buf)) {
+        bigger <- integer(length(buf) * 2L)
+        bigger[seq_len(len)] <- buf
+        buf <<- bigger
+      }
+      len <<- len + 1L
+      buf[[len]] <<- cp
+    }
+    repeat {
+      if (pos > n) fail("unterminated JSON string")
+      code <- codes[[pos]]
+      if (code == 34L) {
+        pos <<- pos + 1L
+        cps <- if (len == 0L) integer(0) else buf[seq_len(len)]
+        zero <- match(0L, cps)
+        if (!is.na(zero)) cps <- if (zero == 1L) integer(0) else cps[seq_len(zero - 1L)]
+        # R strings truncate at U+0000, matching the previous jsonlite decode.
+        return(if (length(cps) == 0L) "" else enc2utf8(intToUtf8(cps)))
+      }
+      if (code < 0x20L) fail("JSON strings cannot contain raw control characters")
+      if (code == 92L) {
+        escape_index <- pos + 1L
+        if (escape_index > n) fail("unterminated JSON escape")
+        escape <- codes[[escape_index]]
+        if (escape == 34L || escape == 92L || escape == 47L) {
+          push_cp(escape)
+          pos <<- escape_index + 1L
+        } else if (escape == 98L) {
+          push_cp(8L)
+          pos <<- escape_index + 1L
+        } else if (escape == 102L) {
+          push_cp(12L)
+          pos <<- escape_index + 1L
+        } else if (escape == 110L) {
+          push_cp(10L)
+          pos <<- escape_index + 1L
+        } else if (escape == 114L) {
+          push_cp(13L)
+          pos <<- escape_index + 1L
+        } else if (escape == 116L) {
+          push_cp(9L)
+          pos <<- escape_index + 1L
+        } else if (escape == 117L) {
           digits_start <- escape_index + 1L
-          digits_end <- digits_start + 3L
-          if (digits_end > length_input) fail("short Unicode escape")
-          digits <- paste(characters[digits_start:digits_end], collapse = "")
-          if (!grepl("^[0-9A-Fa-f]{4}$", digits)) fail("malformed Unicode escape")
-          scalar <- strtoi(digits, base = 16L)
-          after_escape <- digits_end + 1L
+          if (digits_start + 3L > n) fail("short Unicode escape")
+          scalar <- hex_value(digits_start)
+          if (is.na(scalar)) fail("malformed Unicode escape")
+          after_escape <- digits_start + 4L
           if (scalar >= 0xD800L && scalar <= 0xDBFFL) {
-            if (after_escape + 5L > length_input ||
-                !identical(characters[[after_escape]], "\\") ||
-                !identical(characters[[after_escape + 1L]], "u")) {
+            if (after_escape + 5L > n || codes[[after_escape]] != 92L || codes[[after_escape + 1L]] != 117L) {
               fail("lone high surrogate in JSON string")
             }
-            low_digits <- paste(characters[(after_escape + 2L):(after_escape + 5L)], collapse = "")
-            if (!grepl("^[0-9A-Fa-f]{4}$", low_digits)) fail("malformed low-surrogate escape")
-            low <- strtoi(low_digits, base = 16L)
+            low <- hex_value(after_escape + 2L)
+            if (is.na(low)) fail("malformed low-surrogate escape")
             if (low < 0xDC00L || low > 0xDFFFL) fail("invalid low surrogate in JSON string")
-            position <<- after_escape + 6L
+            push_cp(0x10000L + (scalar - 0xD800L) * 0x400L + (low - 0xDC00L))
+            pos <<- after_escape + 6L
           } else if (scalar >= 0xDC00L && scalar <= 0xDFFFL) {
             fail("lone low surrogate in JSON string")
           } else {
-            position <<- after_escape
+            push_cp(scalar)
+            pos <<- after_escape
           }
         } else {
           fail("malformed JSON escape")
         }
       } else {
-        position <<- position + 1L
+        push_cp(code)
+        pos <<- pos + 1L
       }
     }
   }
   parse_value <- NULL
   parse_array <- function(path) {
-    position <<- position + 1L
+    pos <<- pos + 1L
     skip_space()
-    if (identical(current(), "]")) {
-      position <<- position + 1L
+    if (pos <= n && codes[[pos]] == 93L) {
+      pos <<- pos + 1L
       return(invisible(NULL))
     }
     index <- 1L
     repeat {
       parse_value(c(path, as.character(index)))
       skip_space()
-      if (identical(current(), "]")) {
-        position <<- position + 1L
+      if (pos <= n && codes[[pos]] == 93L) {
+        pos <<- pos + 1L
         return(invisible(NULL))
       }
-      if (!identical(current(), ",")) fail("expected a comma or closing array bracket")
-      position <<- position + 1L
+      if (pos > n || codes[[pos]] != 44L) fail("expected a comma or closing array bracket")
+      pos <<- pos + 1L
       skip_space()
       index <- index + 1L
     }
   }
   parse_object <- function(path) {
-    position <<- position + 1L
+    pos <<- pos + 1L
     skip_space()
-    if (identical(current(), "}")) {
-      position <<- position + 1L
+    if (pos <= n && codes[[pos]] == 125L) {
+      pos <<- pos + 1L
       return(invisible(NULL))
     }
-    seen <- character()
+    seen <- new.env(hash = TRUE, parent = emptyenv())
+    saw_empty_key <- FALSE
     repeat {
       key <- parse_string()
-      if (key %in% seen) fail(paste0("duplicate JSON object member '", key, "'"))
-      seen <- c(seen, key)
+      if (!nzchar(key)) {
+        if (saw_empty_key) fail(paste0("duplicate JSON object member '", key, "'"))
+        saw_empty_key <- TRUE
+      } else if (!is.null(seen[[key]])) {
+        fail(paste0("duplicate JSON object member '", key, "'"))
+      } else {
+        seen[[key]] <- TRUE
+      }
       skip_space()
-      if (!identical(current(), ":")) fail("expected a colon after an object member name")
-      position <<- position + 1L
+      if (pos > n || codes[[pos]] != 58L) fail("expected a colon after an object member name")
+      pos <<- pos + 1L
       skip_space()
       parse_value(c(path, key))
       skip_space()
-      if (identical(current(), "}")) {
-        position <<- position + 1L
+      if (pos <= n && codes[[pos]] == 125L) {
+        pos <<- pos + 1L
         return(invisible(NULL))
       }
-      if (!identical(current(), ",")) fail("expected a comma or closing object brace")
-      position <<- position + 1L
+      if (pos > n || codes[[pos]] != 44L) fail("expected a comma or closing object brace")
+      pos <<- pos + 1L
       skip_space()
     }
   }
+  parse_number <- function(path) {
+    if (pos > n) fail("malformed JSON value")
+    start <- pos
+    if (codes[[pos]] == 45L) {
+      pos <<- pos + 1L
+      if (pos > n) fail("malformed JSON value")
+    }
+    digit <- codes[[pos]]
+    if (!is_digit(digit)) fail("malformed JSON value")
+    pos <<- pos + 1L
+    if (digit != 48L) {
+      while (pos <= n && is_digit(codes[[pos]])) pos <<- pos + 1L
+    }
+    if (pos < n && codes[[pos]] == 46L && is_digit(codes[[pos + 1L]])) {
+      pos <<- pos + 2L
+      while (pos <= n && is_digit(codes[[pos]])) pos <<- pos + 1L
+    }
+    if (pos <= n && (codes[[pos]] == 101L || codes[[pos]] == 69L)) {
+      exp <- pos + 1L
+      if (exp <= n && (codes[[exp]] == 43L || codes[[exp]] == 45L)) exp <- exp + 1L
+      if (exp <= n && is_digit(codes[[exp]])) {
+        pos <<- exp + 1L
+        while (pos <= n && is_digit(codes[[pos]])) pos <<- pos + 1L
+      }
+    }
+    add_number(path, intToUtf8(codes[start:(pos - 1L)]))
+    invisible(NULL)
+  }
   parse_value <- function(path) {
     skip_space()
-    character <- current()
-    if (identical(character, "{")) return(parse_object(path))
-    if (identical(character, "[")) return(parse_array(path))
-    if (identical(character, "\"")) {
+    if (pos > n) fail("malformed JSON value")
+    code <- codes[[pos]]
+    if (code == 123L) return(parse_object(path))
+    if (code == 91L) return(parse_array(path))
+    if (code == 34L) {
       parse_string()
       return(invisible(NULL))
     }
-    if (character %in% c("t", "f", "n")) {
-      literal <- switch(character, t = "true", f = "false", n = "null")
-      end <- position + nchar(literal, type = "chars") - 1L
-      if (end > length_input || !identical(paste(characters[position:end], collapse = ""), literal)) {
-        fail("malformed JSON literal")
-      }
-      position <<- end + 1L
+    if (code == 116L || code == 102L || code == 110L) {
+      literal <- if (code == 116L) literal_true else if (code == 102L) literal_false else literal_null
+      end <- pos + length(literal) - 1L
+      if (end > n || !identical(codes[pos:end], literal)) fail("malformed JSON literal")
+      pos <<- end + 1L
       return(invisible(NULL))
     }
-    rest <- if (position <= length_input) paste(characters[position:length_input], collapse = "") else ""
-    match <- regexpr("^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?", rest, perl = TRUE)
-    if (match[[1L]] != 1L) fail("malformed JSON value")
-    token <- regmatches(rest, match)
-    numbers[[length(numbers) + 1L]] <<- list(path = path, token = token)
-    position <<- position + nchar(token, type = "chars")
-    invisible(NULL)
+    parse_number(path)
   }
   skip_space()
   parse_value(character())
   skip_space()
-  if (position <= length_input) fail("unexpected content after the JSON value")
-  numbers
+  if (pos <= n) fail("unexpected content after the JSON value")
+  if (number_count == 0L) list() else number_items[seq_len(number_count)]
 }
 
 triomics_provenance_validate_identity_number_tokens <- function(number_tokens) {
