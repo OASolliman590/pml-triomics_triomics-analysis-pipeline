@@ -29,10 +29,13 @@ match the tested worker candidate. Registrations remain unaccepted for final M7
 snapshot reconciliation; downstream D04 dependency verification is satisfied.
 Receipt: reviews/2026-11-03-m7-021-mapping-sol-verification.md. The earlier drive
 interruption is resolved. Old M7-021 worker completed; no repair used.
-M7-022 scope e59b515 has fresh Astra pass. Next: dispatch ONE fresh Luna-max in
-/tmp/triomics-m7-022-luna for the frozen D04 scope; parent reviews/independently
-verifies before integration. Brief /tmp/triomics-stage-d-evidence/m7-022/luna-brief.md.
-D05 follows D04; later target/discovery drafts remain unaudited/unimplemented.
+M7-022 scope e59b515 has fresh Astra pass. Fresh Luna /root/m7_022_luna is
+RUNNING in /tmp/triomics-m7-022-luna, clean base c78555a, initial attempt and
+zero parent repairs. Reconcile its result; parent reviews and independently
+verifies before integration. Do not duplicate dispatch. Brief /tmp/triomics-stage-d-evidence/m7-022/luna-brief.md.
+D05 scope cfed36a has fresh Astra pass, but implementation waits on D04.
+M7-024 target scope b1c7b4c is in fresh read-only audit /root/m7_024_scope_astra;
+its implementation waits on D05. D12 remains an unaudited external draft.
 M7/G7 closed; C07 not_run; C09 unqualified; no private data, AIU, fasting or push.
 
 ## Current checkpoint — 29 October 2026, D-T11 stopped at the repair limit

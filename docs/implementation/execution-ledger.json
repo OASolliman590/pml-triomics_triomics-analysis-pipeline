@@ -46,6 +46,15 @@
       "attempt": 1,
       "repair_attempts": 0,
       "next_transition": "Sol_diff_review_and_independent_D04_verification"
+    },
+    {
+      "agent": "/root/m7_024_scope_astra",
+      "role": "read_only_D10_D11_scope_audit",
+      "model_requested": "gpt-6-astra",
+      "effort_requested": "low",
+      "effective_settings_exposed": false,
+      "base": "b1c7b4cb054b4f99af585e68470f53f212726409",
+      "next_transition": "scope_verdict_then_verified_dependencies_before_implementation"
     }
   ],
   "orchestration_control": {
