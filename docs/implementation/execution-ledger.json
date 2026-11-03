@@ -34,9 +34,23 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m7_025_luna",
+      "role": "bounded_D12_implementation",
+      "model_requested": "gpt-6-luna",
+      "effort_requested": "max",
+      "effective_settings_exposed": false,
+      "base": "3aa28c576e3b2f44a48f0a9a248464bb37f8ee97",
+      "worktree": "/tmp/triomics-m7-025-luna",
+      "attempt": 1,
+      "repair_attempts": 0,
+      "phase": "read_scope_then_behavioral_red",
+      "next_transition": "Sol_review_shared_proposal_then_freeze_candidate_for_committed_source_gates"
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_025_ready",
+    "status": "m7_025_luna_running",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -5899,6 +5913,16 @@
       },
       "warning": "D-T01 refuses stale paired signs and preserves the old pointer: expected native exit2",
       "disposition": "M7-027 verified; D12 implementation dependency released. M7-024 remains blocked history. M7/G7 closed."
+    },
+    {
+      "event": "m7_025_fresh_luna_dispatched",
+      "date": "2026-11-04",
+      "agent": "/root/m7_025_luna",
+      "base": "3aa28c576e3b2f44a48f0a9a248464bb37f8ee97",
+      "worktree": "/tmp/triomics-m7-025-luna",
+      "scope_commit": "c3df0c1bfb9fd7aed8ace1965cb8fefbbfc6b6ed",
+      "scope_receipt_commit": "7b93d72",
+      "disposition": "D11 and D01 dependencies verified; fresh D12 initial attempt. No repairs yet. Sol owns shared routing; committed-source GREEN gate avoids precommit attribution. M7/G7 closed."
     }
   ],
   "packets": {
@@ -6586,8 +6610,8 @@
       }
     },
     "D-T12": {
-      "status": "not_started",
-      "attempts": 0,
+      "status": "m7_025_implementation_active_unaccepted",
+      "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": [],

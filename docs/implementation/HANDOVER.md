@@ -50,7 +50,11 @@ M7-027 Sol verification and the appended focused Astra verdict.
 Both agents completed. Sol D01 regression on clean eed7cb2 passed 325, with
 one existing named stale-sign warning and no failure/error/skip. No test process
 is active. D12 dependency verification is satisfied; do not rerun this cycle.
-M7-025 discovery scope c3df0c1 passed fresh Astra; implementation waits on D11.
+M7-025 discovery scope c3df0c1 passed fresh Astra, receipt committed7b93d72.
+Dependencies now verified. Fresh /root/m7_025_luna is active in
+/tmp/triomics-m7-025-luna from3aa28c5, initial attempt, zero repairs. Do not
+redispatch. Sol owns shared CLI/annotation routing and candidate commits if Git
+metadata permissions block the worker; no alternate-index workaround.
 M7-026 neutral generation governance wording scope
 60fa3b8 passed fresh Astra; amendedf80e7f6 also passed its one focused scope
 rereview to allow Sol-only stale manual sentence correction. Implementation
@@ -59,12 +63,13 @@ M7/G7 closed; C07 not_run; C09 unqualified; no private data, AIU, fasting or pus
 
 ## Current literal resume instruction
 
-Dispatch fresh Luna-max D12 from the committed coordinator snapshot under
-already-audited M7-025 scope. Use the prepared brief at
-/tmp/triomics-stage-d-evidence/m7-025/prepared-luna-brief.md and a fresh worktree.
-Do not rerun completed target repairs or Astra reviews. After D12 verification
-and audit, complete M7-026 wording and the final same-snapshot source/archive/
-Terra/Astra/Sol acceptance sequence.
+Continue the active /root/m7_025_luna worker; do not duplicate it. It is in
+/tmp/triomics-m7-025-luna at base3aa28c5 under audited M7-025. Read its next
+handoff promptly, review/apply Sol-only shared proposals, then freeze the coherent
+candidate before focused/native GREEN gates. Preserve initial-plus-two-repair
+limit, independent Sol read-back and fresh Astra implementation review. Then
+complete audited M7-026 wording and final same-snapshot packet/full-source/
+archive/Terra/Astra/Sol acceptance sequence. No parent verification process is active.
 M7/G7 remain closed; private data and GitHub push remain excluded.
 
 ## Historical checkpoint — 29 October 2026, D-T11 stopped at the repair limit
