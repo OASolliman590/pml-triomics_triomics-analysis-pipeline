@@ -50,13 +50,24 @@ testthat::test_that('offline resources enforce rights, hashes and cached output 
   testthat::expect_length(disabled$unavailable_routes, 0L)
   routes$gene_reaction$enabled <- TRUE
   bad <- f$request; bad$resource$rights_status <- 'unverified'
-  error <- tryCatch(run(bad), error = identity)
-  testthat::expect_identical(error$code, 'D_RESOURCE_RIGHTS')
-  testthat::expect_false(error$cache_valid)
+  routes$gene_reaction$required <- FALSE
+  denied <- run(bad)
+  testthat::expect_identical(denied$run_completeness, 'complete')
+  testthat::expect_identical(denied$exit_code, 0L)
+  testthat::expect_identical(denied$unavailable_routes$gene_reaction$reason_code, 'D_RESOURCE_RIGHTS')
+  testthat::expect_false(denied$resources$gene_reaction$cache_valid)
+  routes$gene_reaction$required <- TRUE
+  denied_required <- run(bad)
+  testthat::expect_identical(denied_required$run_completeness, 'incomplete')
+  testthat::expect_identical(denied_required$exit_code, 2L)
+  testthat::expect_identical(denied_required$unavailable_routes$gene_reaction$reason_code, 'D_RESOURCE_RIGHTS')
+  testthat::expect_false(denied_required$biological_absence)
   bad <- f$request; bad$resource$sha256 <- paste(rep('0', 64), collapse = ''); bad$expected_sha256 <- bad$resource$sha256
-  error <- tryCatch(run(bad), error = identity)
-  testthat::expect_identical(error$code, 'D_RESOURCE_HASH_MISMATCH')
-  testthat::expect_false(error$cache_valid)
+  bad_hash <- run(bad)
+  testthat::expect_identical(bad_hash$run_completeness, 'incomplete')
+  testthat::expect_identical(bad_hash$exit_code, 2L)
+  testthat::expect_identical(bad_hash$unavailable_routes$gene_reaction$reason_code, 'D_RESOURCE_HASH_MISMATCH')
+  testthat::expect_false(bad_hash$resources$gene_reaction$cache_valid)
   missing <- f$request; missing$resource$local_file <- file.path(f$root, 'missing'); missing$cache_dir <- file.path(f$root, 'empty')
   result <- run(missing)
   testthat::expect_identical(result$unavailable_routes$gene_reaction$reason_code, 'D_RESOURCE_MISSING')
@@ -65,9 +76,31 @@ testthat::test_that('offline resources enforce rights, hashes and cached output 
   testthat::expect_false(result$biological_absence)
   testthat::expect_false(result$resources$gene_reaction$cache_valid)
   writeLines('corrupted cached resource', good$resources$gene_reaction$path)
-  error <- tryCatch(run(f$request), error = identity)
-  testthat::expect_identical(error$code, 'D_RESOURCE_HASH_MISMATCH')
-  testthat::expect_false(error$cache_valid)
+  stale_cache <- run(f$request)
+  testthat::expect_identical(stale_cache$run_completeness, 'incomplete')
+  testthat::expect_identical(stale_cache$exit_code, 2L)
+  testthat::expect_identical(stale_cache$unavailable_routes$gene_reaction$reason_code, 'D_RESOURCE_HASH_MISMATCH')
+  testthat::expect_false(stale_cache$resources$gene_reaction$cache_valid)
+})
+
+testthat::test_that('mapping access reports known rights and content failures without hiding malformed resources', {
+  f <- d_t05_fixture(); on.exit(unlink(f$root, recursive = TRUE))
+  denied <- f$resource; denied$rights_status <- 'unverified'
+  rights <- triomics_d_mapping_contract(denied, 'gene_reaction', f$request$cache_dir)
+  testthat::expect_identical(rights$status, 'unavailable')
+  testthat::expect_identical(rights$reason_code, 'D_RESOURCE_RIGHTS')
+  testthat::expect_false(rights$network_attempted)
+
+  wrong_hash <- f$resource
+  wrong_hash$sha256 <- paste(rep('0', 64), collapse = '')
+  hash <- triomics_d_mapping_contract(wrong_hash, 'gene_reaction', f$request$cache_dir)
+  testthat::expect_identical(hash$status, 'unavailable')
+  testthat::expect_identical(hash$reason_code, 'D_RESOURCE_HASH_MISMATCH')
+  testthat::expect_false(hash$network_attempted)
+
+  malformed <- f$resource; malformed$resource_id <- 'bad resource id'
+  error <- tryCatch(triomics_d_mapping_contract(malformed, 'gene_reaction', f$request$cache_dir), error = identity)
+  testthat::expect_identical(error$code, 'D_RESOURCE_REQUEST_INVALID')
 })
 
 testthat::test_that('disabled and partial routes preserve predecessor evidence and bytes', {

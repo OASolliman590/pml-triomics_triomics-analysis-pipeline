@@ -1,3 +1,33 @@
+triomics_d_resource_status_from_error <- function(error, resource, operation) {
+  code <- if (inherits(error, "triomics_error")) as.character(error$code) else character()
+  if (length(code) != 1L || is.na(code) ||
+      !code %in% c("D_RESOURCE_RIGHTS", "D_RESOURCE_HASH_MISMATCH")) {
+    stop(error)
+  }
+  result <- triomics_d_resource_manifest(
+    resource, operation, "unavailable", "rejected", NULL, "offline", code
+  )
+  result$path <- NULL
+  result$sha256 <- result$content_sha256
+  result$reason <- conditionMessage(error)
+  result
+}
+
+triomics_d_annotation_resource_access <- function(resource, operation, expected_version,
+                                                  expected_sha256, cache_dir) {
+  tryCatch(
+    triomics_d_resource_access(resource, operation, expected_version, expected_sha256,
+                               cache_dir, network_policy = "offline"),
+    error = function(error) triomics_d_resource_status_from_error(error, resource, operation)
+  )
+}
+
+triomics_d_annotation_resource_attempt <- function(attempt, resource, operation) {
+  tryCatch(attempt(), error = function(error) {
+    triomics_d_resource_status_from_error(error, resource, operation)
+  })
+}
+
 triomics_d_route_status <- function(routes, resources, predecessor, cache) {
   named_list <- function(x) {
     is.list(x) && (!length(x) || (!is.null(names(x)) &&
@@ -28,13 +58,9 @@ triomics_d_route_status <- function(routes, resources, predecessor, cache) {
   checked <- list()
   for (name in names(resources)) {
     request <- resources[[name]]
-    result <- tryCatch(
-      triomics_d_resource_access(request$resource, request$operation, request$expected_version,
-                                 request$expected_sha256, request$cache_dir, network_policy = "offline"),
-      error = function(error) {
-        error$cache_valid <- FALSE
-        stop(error)
-      }
+    result <- triomics_d_annotation_resource_access(
+      request$resource, request$operation, request$expected_version,
+      request$expected_sha256, request$cache_dir
     )
     result$cache_valid <- identical(result$status, "available") &&
       identical(cache[[name]]$content_sha256, result$content_sha256)

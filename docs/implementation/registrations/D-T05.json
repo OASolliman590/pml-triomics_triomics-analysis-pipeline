@@ -5,16 +5,30 @@
   "namespace_edits": false,
   "local_files": [
     "R/annotation_status.R",
+    "R/annotation_apply.R",
     "tests/testthat/test-D-T05.R",
+    "tests/testthat/test-D-status-shared.R",
     "inst/examples/tickets/D-T05.yaml",
+    "inst/examples/data/d-status/gene-features.tsv",
+    "inst/examples/data/d-status/gene-map.tsv",
+    "inst/examples/data/d-status/lipid-features.tsv",
+    "inst/examples/data/d-status/lipid-map.tsv",
+    "inst/examples/data/d-status/ora-protocol.json",
     "docs/implementation/registrations/D-T05.json"
   ],
   "owned_functions": [
-    "triomics_d_route_status"
+    "triomics_d_route_status",
+    "triomics_d_resource_status_from_error",
+    "triomics_d_annotation_resource_access",
+    "triomics_d_annotation_resource_attempt"
   ],
-  "integration_request": "triomics_execute_stage_d does not call triomics_d_route_status. Sol must integrate the status inputs and apply its exit_code at the Stage D dispatch in triomics_main (R/cli.R, call to triomics_execute_stage_d); currently that result is discarded and the dispatcher returns 0.",
+  "integration_request": "Sol's shared CLI patch in commit 2a022cb preserves routed$route_status in every published evidence-routing payload and serializes required-unavailable target status as incomplete with exit code 2. Keep that CLI integration serial and review it with this packet candidate.",
   "reconciliation_2026_11_03": {
     "snapshot": "b03cdef",
     "finding": "At b03cdef route status and public exit-code propagation exist. Original missing-call blocker is stale; required/optional native resource cases still require proof."
+  },
+  "worker_handoff_2026_11_03": {
+    "shared_cli_commit": "2a022cb",
+    "status": "candidate; independent review and packet acceptance pending"
   }
 }

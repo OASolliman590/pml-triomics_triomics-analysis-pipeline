@@ -117,11 +117,11 @@ triomics_d_index_resources <- function(annotation) {
 }
 
 triomics_d_mapping_contract <- function(resource, route, cache_dir) {
-  access <- triomics_d_resource_access(
+  access <- triomics_d_annotation_resource_access(
     resource, route, as.character(resource$version), as.character(resource$sha256),
-    cache_dir, network_policy = "offline"
+    cache_dir
   )
-  if (!identical(access$status, "available")) return(NULL)
+  if (!identical(access$status, "available")) return(access)
   code <- if (identical(route, "lipid_ontology")) "D_LIPID_TABLE_INVALID" else "D_REACTION_TABLE_INVALID"
   table <- tryCatch(
     utils::read.delim(access$path, colClasses = "character", check.names = FALSE,
@@ -133,7 +133,7 @@ triomics_d_mapping_contract <- function(resource, route, cache_dir) {
     kept <- unique(table[[column]])
     kept[!is.na(kept) & nzchar(kept)]
   }
-  contract <- list(namespaces = values("source_namespace"), organisms = values("taxon_id"),
+  contract <- list(status = "available", namespaces = values("source_namespace"), organisms = values("taxon_id"),
                    resolutions = values("resolution"))
   if (!length(contract$namespaces) || !length(contract$organisms) || !length(contract$resolutions)) {
     triomics_d_abort(code, "The local mapping table lacks namespace, taxon, or resolution.",
@@ -585,10 +585,10 @@ triomics_d_ora_run_claim <- function(evidence, protocol_claim, protocol, protoco
   )
   candidate <- triomics_d_ora_candidate_rows(resolved, protocol_claim$mapping_operation)
   mapping_resource <- resources[[as.character(protocol_claim$mapping_resource_id)]]
-  access <- triomics_d_resource_access(
+  access <- triomics_d_annotation_resource_access(
     mapping_resource, as.character(protocol_claim$mapping_operation),
     as.character(mapping_resource$version), as.character(mapping_resource$sha256),
-    cache_dir, network_policy = "offline"
+    cache_dir
   )
   mapping_result <- NULL
   compatibility <- list(status = "incompatible", reason_code = "D_ORA_MAPPING_INCOMPATIBLE",
@@ -606,17 +606,23 @@ triomics_d_ora_run_claim <- function(evidence, protocol_claim, protocol, protoco
                             reason = "At least one producer feature lacks a complete declared mapping identity.")
     }
     mapper_rows <- triomics_d_ora_mapper_rows(candidate$rows, resolved$nominations)
-    mapping_result <- if (identical(as.character(protocol_claim$mapping_operation), "lipid_ontology")) {
-      triomics_map_lipids(mapper_rows, mapping_resource, as.character(protocol_claim$mapping_operation),
-                          as.character(mapping_resource$version), as.character(mapping_resource$sha256), cache_dir)
-    } else {
-      triomics_map_reactions(mapper_rows, mapping_resource, as.character(protocol_claim$mapping_operation),
-                             as.character(mapping_resource$version), as.character(mapping_resource$sha256), cache_dir)
-    }
+    mapping_result <- triomics_d_annotation_resource_attempt(function() {
+      if (identical(as.character(protocol_claim$mapping_operation), "lipid_ontology")) {
+        triomics_map_lipids(mapper_rows, mapping_resource, as.character(protocol_claim$mapping_operation),
+                            as.character(mapping_resource$version), as.character(mapping_resource$sha256), cache_dir)
+      } else {
+        triomics_map_reactions(mapper_rows, mapping_resource, as.character(protocol_claim$mapping_operation),
+                               as.character(mapping_resource$version), as.character(mapping_resource$sha256), cache_dir)
+      }
+    }, mapping_resource, as.character(protocol_claim$mapping_operation))
     if (!identical(mapping_result$status, "available")) {
       compatibility <- list(status = "incompatible", reason_code = mapping_result$reason_code %||% "D_RESOURCE_MISSING",
                             reason = mapping_result$reason %||% "The local mapping resource is unavailable.")
     }
+  } else {
+    compatibility <- list(status = "incompatible",
+                          reason_code = access$reason_code %||% "D_RESOURCE_MISSING",
+                          reason = access$reason %||% "The local mapping resource is unavailable.")
   }
   if (is.list(mapping_result) && identical(mapping_result$status, "available")) {
     resolved_entities <- triomics_ora_unique_entities(
@@ -716,9 +722,9 @@ triomics_d_ora_run <- function(evidence, request, resources, cache_dir) {
   }
   request_resource_ids <- as.character(unlist(request$resource_ids %||% list(), use.names = FALSE))
   protocol_resource <- resources[[protocol_ref]]
-  protocol_access <- triomics_d_resource_access(
+  protocol_access <- triomics_d_annotation_resource_access(
     protocol_resource, "ora_protocol", as.character(protocol_resource$version),
-    as.character(protocol_resource$sha256), cache_dir, network_policy = "offline"
+    as.character(protocol_resource$sha256), cache_dir
   )
   if (!identical(protocol_access$status, "available")) {
     return(list(
@@ -814,7 +820,9 @@ triomics_d_annotate_local_resources <- function(evidence, annotation, cache_dir,
     if (is.null(request)) return(list(enabled = FALSE))
     if (!route %in% c("gene_reaction", "lipid_ontology")) return(list(enabled = TRUE))
     parts <- contracts[request$resource_ids]
-    parts <- parts[vapply(parts, is.list, logical(1))]
+    parts <- parts[vapply(parts, function(part) is.list(part) &&
+                            identical(as.character(part$status %||% "available"), "available"),
+                          logical(1))]
     if (!length(parts)) return(list(enabled = FALSE))
     list(
       enabled = TRUE,
@@ -831,13 +839,15 @@ triomics_d_annotate_local_resources <- function(evidence, annotation, cache_dir,
     mappings <- list()
     for (resource_id in by_route[[route]]$resource_ids) {
       resource <- resources[[resource_id]]
-      mappings[[resource_id]] <- if (identical(route, "lipid_ontology")) {
-        triomics_map_lipids(measured, resource, route, as.character(resource$version),
-                            as.character(resource$sha256), cache_dir)
-      } else {
-        triomics_map_reactions(measured, resource, route, as.character(resource$version),
-                               as.character(resource$sha256), cache_dir)
-      }
+      mappings[[resource_id]] <- triomics_d_annotation_resource_attempt(function() {
+        if (identical(route, "lipid_ontology")) {
+          triomics_map_lipids(measured, resource, route, as.character(resource$version),
+                              as.character(resource$sha256), cache_dir)
+        } else {
+          triomics_map_reactions(measured, resource, route, as.character(resource$version),
+                                 as.character(resource$sha256), cache_dir)
+        }
+      }, resource, route)
     }
     routed$routes[[route]]$mappings <- mappings
   }

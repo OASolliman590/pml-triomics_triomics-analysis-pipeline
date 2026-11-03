@@ -1,4 +1,4 @@
-# Packet D-T05 synthetic fixture; all annotation routes are disabled.
+# Packet D-T05 synthetic fixture; local mapping routes plus optional rights denial.
 schema_version: '2.0'
 study_id: triomics_d_t05_fixture
 data_class: synthetic
@@ -36,8 +36,8 @@ blocks:
     profile_spec_ref: null
     file: ../data/independent/proteomics.tsv
     feature_id_column: feature_id
-    id_namespace: synthetic
-    feature_metadata: null
+    id_namespace: synthetic_protein
+    feature_metadata: ../data/d-status/gene-features.tsv
     source_refs:
       - block_1
     sample_map: null
@@ -81,15 +81,15 @@ blocks:
         trees: null
         qualification_ref: null
       derive: []
-    annotation_route: none
+    annotation_route: gene_reaction
   - block_id: block_2
     name: Synthetic metabolome
     profile: metabolomics
     profile_spec_ref: null
     file: ../data/independent/metabolomics.tsv
     feature_id_column: feature_id
-    id_namespace: synthetic
-    feature_metadata: null
+    id_namespace: synthetic_lipid
+    feature_metadata: ../data/d-status/lipid-features.tsv
     source_refs:
       - block_2
     sample_map: null
@@ -133,7 +133,7 @@ blocks:
         trees: null
         qualification_ref: null
       derive: []
-    annotation_route: none
+    annotation_route: lipid_ontology
 analyses:
   - analysis_id: d_t05_synthetic_exploratory
     block_ids: [block_1, block_2]
@@ -214,8 +214,45 @@ clinical:
   links_file: null
   objectives: []
 annotation:
-  resources: []
-  requests: []
+  resources:
+    - resource_id: gene-map
+      version: synthetic-1
+      sha256: 859d68deff576760b6457f576e2307f7e44e84569eeab90ed31217c02a6ea5b1
+      source_url: local://d-status/gene-map
+      local_file: ../data/d-status/gene-map.tsv
+      terms_url: local://d-status/fixture-terms
+      rights_status: verified
+      permitted_operation: [gene_reaction]
+      redistribution: prohibited
+    - resource_id: lipid-map
+      version: synthetic-1
+      sha256: 310d2188893d8308971f2756c84f87981060307d007b73f534e38a1929b53359
+      source_url: local://d-status/lipid-map
+      local_file: ../data/d-status/lipid-map.tsv
+      terms_url: local://d-status/fixture-terms
+      rights_status: verified
+      permitted_operation: [lipid_ontology]
+      redistribution: prohibited
+    - resource_id: denied-ora-protocol
+      version: synthetic-1
+      sha256: 877b4a25dc4986752f7b6b33b9bcfb1a9369205765e2da9972cae4945cf6012c
+      source_url: local://d-status/ora-protocol
+      local_file: ../data/d-status/ora-protocol.json
+      terms_url: local://d-status/fixture-terms
+      rights_status: unverified
+      permitted_operation: [ora_protocol]
+      redistribution: prohibited
+  requests:
+    - route: gene_reaction
+      required: true
+      resource_ids: [gene-map]
+    - route: lipid_ontology
+      required: false
+      resource_ids: [lipid-map]
+    - route: ora
+      required: false
+      protocol_ref: denied-ora-protocol
+      resource_ids: []
 target_investigation:
   enabled: false
   mode: assess

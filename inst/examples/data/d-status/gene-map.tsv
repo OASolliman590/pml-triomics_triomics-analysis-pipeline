@@ -1,0 +1,2 @@
+source_namespace	source_id	taxon_id	target_namespace	target_id	relation	resolution	evidence_ref	resource_id
+synthetic_protein	SYN_1_001	9606	Reactome	R-SYN-1	associated	gene	synthetic://d-status/mapping	gene-map

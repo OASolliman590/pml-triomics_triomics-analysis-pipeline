@@ -1,0 +1,11 @@
+feature_id	taxon_id	resolution	capabilities	provenance_ref
+SYN_3_001	9606	sum_composition	lipid_ontology	synthetic://d-status/lipid
+SYN_3_002	9606	sum_composition	lipid_ontology	synthetic://d-status/lipid
+SYN_3_003	9606	sum_composition	lipid_ontology	synthetic://d-status/lipid
+SYN_3_004	9606	sum_composition	lipid_ontology	synthetic://d-status/lipid
+SYN_3_005	9606	sum_composition	lipid_ontology	synthetic://d-status/lipid
+SYN_3_006	9606	sum_composition	lipid_ontology	synthetic://d-status/lipid
+SYN_3_007	9606	sum_composition	lipid_ontology	synthetic://d-status/lipid
+SYN_3_008	9606	sum_composition	lipid_ontology	synthetic://d-status/lipid
+SYN_3_009	9606	sum_composition	lipid_ontology	synthetic://d-status/lipid
+SYN_3_010	9606	sum_composition	lipid_ontology	synthetic://d-status/lipid
