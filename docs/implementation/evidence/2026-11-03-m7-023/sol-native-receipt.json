@@ -1,0 +1,471 @@
+{
+  "commit": "760098c56a00d39e5a9cce60f0033d47c680b85a",
+  "events": [
+    {
+      "name": "B",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/fixture/tickets/D-T05.yaml",
+        "--stage",
+        "B",
+        "--output",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/run"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "C",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/fixture/tickets/D-T05.yaml",
+        "--stage",
+        "C",
+        "--output",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/run"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "D-initial",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/fixture/tickets/D-T05.yaml",
+        "--stage",
+        "D",
+        "--output",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/run"
+      ],
+      "exit_code": 0,
+      "generation_id": "c41799ab37482240056c8f0e44d5c9a4d1ef28f7953c55d629878aef69645362",
+      "run_completeness": "complete",
+      "unavailable_routes": {
+        "ora": {
+          "enabled": true,
+          "required": false,
+          "status": "unavailable",
+          "reason_code": "D_RESOURCE_RIGHTS"
+        }
+      },
+      "predecessors": {
+        "b_sha256": "e5e42b3cb6f838b090000d3e6ee703779b5860e99b51fe1ea82e6ef18b7b7e16",
+        "c_sha256": "1fa11f0d5c013ee0ab6b56ea6abab33b2f6e6672292eaa11b42af31d916561d1"
+      },
+      "publication_sha256": [
+        {
+          "artifact_type": "artifact_envelope",
+          "digest": "3076940c75adb20001cca425c8933e6e065d3fcf1f1b6f7227637c5324b983bf",
+          "digest_algorithm": "sha256",
+          "envelope_for_artifact_id": "d-evidence-routing",
+          "media_type": "application/json",
+          "path": "evidence-routing.envelope.json",
+          "scientific_role": "evidence_envelope",
+          "size_bytes": 4395,
+          "status": "complete"
+        },
+        {
+          "artifact_type": "annotation_routing_result",
+          "digest": "0eeac1e18213cc4aa523f91b7c11029d6d033953141be96f887bec8ef017d874",
+          "digest_algorithm": "sha256",
+          "media_type": "application/json",
+          "path": "evidence-routing.json",
+          "scientific_role": "annotation_routing_result",
+          "size_bytes": 1946066,
+          "status": "complete"
+        }
+      ]
+    },
+    {
+      "name": "D-optional-stale",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/fixture/tickets/D-T05.yaml",
+        "--stage",
+        "D",
+        "--output",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/run"
+      ],
+      "exit_code": 0,
+      "generation_id": "9a0763419291809e001075d45cd52e50f92ab682b3f64bf25a6187db79636cc9",
+      "run_completeness": "complete",
+      "unavailable_routes": {
+        "lipid_ontology": {
+          "enabled": true,
+          "required": false,
+          "status": "unavailable",
+          "reason_code": "D_RESOURCE_HASH_MISMATCH"
+        },
+        "ora": {
+          "enabled": true,
+          "required": false,
+          "status": "unavailable",
+          "reason_code": "D_RESOURCE_RIGHTS"
+        }
+      },
+      "predecessors": {
+        "b_sha256": "e5e42b3cb6f838b090000d3e6ee703779b5860e99b51fe1ea82e6ef18b7b7e16",
+        "c_sha256": "1fa11f0d5c013ee0ab6b56ea6abab33b2f6e6672292eaa11b42af31d916561d1"
+      },
+      "publication_sha256": [
+        {
+          "artifact_type": "artifact_envelope",
+          "digest": "894acb90cb71487110ac698cad5b5b99721c8c382a7fedb75238994600eba706",
+          "digest_algorithm": "sha256",
+          "envelope_for_artifact_id": "d-evidence-routing",
+          "media_type": "application/json",
+          "path": "evidence-routing.envelope.json",
+          "scientific_role": "evidence_envelope",
+          "size_bytes": 4395,
+          "status": "complete"
+        },
+        {
+          "artifact_type": "annotation_routing_result",
+          "digest": "0fb02b889a5cd05fc48b8c97d652ebfa8f8cce38cc2a6427585b7e0845a99369",
+          "digest_algorithm": "sha256",
+          "media_type": "application/json",
+          "path": "evidence-routing.json",
+          "scientific_role": "annotation_routing_result",
+          "size_bytes": 1120576,
+          "status": "complete"
+        }
+      ]
+    },
+    {
+      "name": "D-optional-missing",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/fixture/tickets/D-T05.yaml",
+        "--stage",
+        "D",
+        "--output",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/run"
+      ],
+      "exit_code": 0,
+      "generation_id": "f6899ff406901ac8e996598a027a2e18e3fa0592ca9658d59cb7cb866b7788b9",
+      "run_completeness": "complete",
+      "unavailable_routes": {
+        "lipid_ontology": {
+          "enabled": true,
+          "required": false,
+          "status": "unavailable",
+          "reason_code": "D_RESOURCE_MISSING"
+        },
+        "ora": {
+          "enabled": true,
+          "required": false,
+          "status": "unavailable",
+          "reason_code": "D_RESOURCE_RIGHTS"
+        }
+      },
+      "predecessors": {
+        "b_sha256": "e5e42b3cb6f838b090000d3e6ee703779b5860e99b51fe1ea82e6ef18b7b7e16",
+        "c_sha256": "1fa11f0d5c013ee0ab6b56ea6abab33b2f6e6672292eaa11b42af31d916561d1"
+      },
+      "publication_sha256": [
+        {
+          "artifact_type": "artifact_envelope",
+          "digest": "997b1f547822891555442c95be563ea6d00e071f03ca399925a9aa7ad8bbe86d",
+          "digest_algorithm": "sha256",
+          "envelope_for_artifact_id": "d-evidence-routing",
+          "media_type": "application/json",
+          "path": "evidence-routing.envelope.json",
+          "scientific_role": "evidence_envelope",
+          "size_bytes": 4395,
+          "status": "complete"
+        },
+        {
+          "artifact_type": "annotation_routing_result",
+          "digest": "492f43d623084ac1f82a32f871a28c16858abf4d04116b3c0116214653948d73",
+          "digest_algorithm": "sha256",
+          "media_type": "application/json",
+          "path": "evidence-routing.json",
+          "scientific_role": "annotation_routing_result",
+          "size_bytes": 1120576,
+          "status": "complete"
+        }
+      ]
+    },
+    {
+      "name": "D-optional-bad-hash",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/fixture/tickets/D-T05.yaml",
+        "--stage",
+        "D",
+        "--output",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/run"
+      ],
+      "exit_code": 0,
+      "generation_id": "044f2212d36a6c4fd710a49b3bfc7990271c3ae086739427a757f75b75da65cc",
+      "run_completeness": "complete",
+      "unavailable_routes": {
+        "lipid_ontology": {
+          "enabled": true,
+          "required": false,
+          "status": "unavailable",
+          "reason_code": "D_RESOURCE_HASH_MISMATCH"
+        },
+        "ora": {
+          "enabled": true,
+          "required": false,
+          "status": "unavailable",
+          "reason_code": "D_RESOURCE_RIGHTS"
+        }
+      },
+      "predecessors": {
+        "b_sha256": "e5e42b3cb6f838b090000d3e6ee703779b5860e99b51fe1ea82e6ef18b7b7e16",
+        "c_sha256": "1fa11f0d5c013ee0ab6b56ea6abab33b2f6e6672292eaa11b42af31d916561d1"
+      },
+      "publication_sha256": [
+        {
+          "artifact_type": "artifact_envelope",
+          "digest": "2c201682e55c830422e95f9fac1a94986cef44719e75c79be0156e389880e019",
+          "digest_algorithm": "sha256",
+          "envelope_for_artifact_id": "d-evidence-routing",
+          "media_type": "application/json",
+          "path": "evidence-routing.envelope.json",
+          "scientific_role": "evidence_envelope",
+          "size_bytes": 4395,
+          "status": "complete"
+        },
+        {
+          "artifact_type": "annotation_routing_result",
+          "digest": "790f210ef26ab1f4664f0a762a60f41e4a129c163a95711753d168bd47c3742d",
+          "digest_algorithm": "sha256",
+          "media_type": "application/json",
+          "path": "evidence-routing.json",
+          "scientific_role": "annotation_routing_result",
+          "size_bytes": 1120581,
+          "status": "complete"
+        }
+      ]
+    },
+    {
+      "name": "D-required-bad-hash",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/fixture/tickets/D-T05.yaml",
+        "--stage",
+        "D",
+        "--output",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/run"
+      ],
+      "exit_code": 2,
+      "generation_id": "8fc4ced6ab8c6da289ab09dfb623f3c41e33fb50ec502eccd10a4891b638c1bf",
+      "run_completeness": "incomplete",
+      "unavailable_routes": {
+        "gene_reaction": {
+          "enabled": true,
+          "required": true,
+          "status": "unavailable",
+          "reason_code": "D_RESOURCE_HASH_MISMATCH"
+        },
+        "lipid_ontology": {
+          "enabled": true,
+          "required": false,
+          "status": "unavailable",
+          "reason_code": "D_RESOURCE_HASH_MISMATCH"
+        },
+        "ora": {
+          "enabled": true,
+          "required": false,
+          "status": "unavailable",
+          "reason_code": "D_RESOURCE_RIGHTS"
+        }
+      },
+      "predecessors": {
+        "b_sha256": "e5e42b3cb6f838b090000d3e6ee703779b5860e99b51fe1ea82e6ef18b7b7e16",
+        "c_sha256": "1fa11f0d5c013ee0ab6b56ea6abab33b2f6e6672292eaa11b42af31d916561d1"
+      },
+      "publication_sha256": [
+        {
+          "artifact_type": "artifact_envelope",
+          "digest": "875f75fcf8b363f26354c774407b87d9c5aac9ff64af727036656041a3d9f0aa",
+          "digest_algorithm": "sha256",
+          "envelope_for_artifact_id": "d-evidence-routing",
+          "media_type": "application/json",
+          "path": "evidence-routing.envelope.json",
+          "scientific_role": "evidence_envelope",
+          "size_bytes": 4395,
+          "status": "complete"
+        },
+        {
+          "artifact_type": "annotation_routing_result",
+          "digest": "d1e74f454169aec97d3a04c248e80a23912803bd77b8b2e959f7186ea8649f9b",
+          "digest_algorithm": "sha256",
+          "media_type": "application/json",
+          "path": "evidence-routing.json",
+          "scientific_role": "annotation_routing_result",
+          "size_bytes": 291592,
+          "status": "complete"
+        }
+      ]
+    },
+    {
+      "name": "D-required-missing",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/fixture/tickets/D-T05.yaml",
+        "--stage",
+        "D",
+        "--output",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/run"
+      ],
+      "exit_code": 2,
+      "generation_id": "1b2b5ffe0421a40419f54a39ea875cfeaffdc77132519bf7c8bd13543a136ab6",
+      "run_completeness": "incomplete",
+      "unavailable_routes": {
+        "gene_reaction": {
+          "enabled": true,
+          "required": true,
+          "status": "unavailable",
+          "reason_code": "D_RESOURCE_MISSING"
+        },
+        "lipid_ontology": {
+          "enabled": true,
+          "required": false,
+          "status": "unavailable",
+          "reason_code": "D_RESOURCE_HASH_MISMATCH"
+        },
+        "ora": {
+          "enabled": true,
+          "required": false,
+          "status": "unavailable",
+          "reason_code": "D_RESOURCE_RIGHTS"
+        }
+      },
+      "predecessors": {
+        "b_sha256": "e5e42b3cb6f838b090000d3e6ee703779b5860e99b51fe1ea82e6ef18b7b7e16",
+        "c_sha256": "1fa11f0d5c013ee0ab6b56ea6abab33b2f6e6672292eaa11b42af31d916561d1"
+      },
+      "publication_sha256": [
+        {
+          "artifact_type": "artifact_envelope",
+          "digest": "e86b1488deaa49796beba75bcd311c48765caea460c3258c3a7f04b6ec5bcd4e",
+          "digest_algorithm": "sha256",
+          "envelope_for_artifact_id": "d-evidence-routing",
+          "media_type": "application/json",
+          "path": "evidence-routing.envelope.json",
+          "scientific_role": "evidence_envelope",
+          "size_bytes": 4395,
+          "status": "complete"
+        },
+        {
+          "artifact_type": "annotation_routing_result",
+          "digest": "39ffe0773d0656018b06214e5e08edc1a3fdec5abdc2df1f9257b37061a7bd92",
+          "digest_algorithm": "sha256",
+          "media_type": "application/json",
+          "path": "evidence-routing.json",
+          "scientific_role": "annotation_routing_result",
+          "size_bytes": 291587,
+          "status": "complete"
+        }
+      ]
+    },
+    {
+      "name": "D-restored",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/fixture/tickets/D-T05.yaml",
+        "--stage",
+        "D",
+        "--output",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/run"
+      ],
+      "exit_code": 0,
+      "generation_id": "ed604bccff7066bcf0b0f5d4286b223614b5dd606083b0c2e346c3c4182df946",
+      "run_completeness": "complete",
+      "unavailable_routes": {
+        "ora": {
+          "enabled": true,
+          "required": false,
+          "status": "unavailable",
+          "reason_code": "D_RESOURCE_RIGHTS"
+        }
+      },
+      "predecessors": {
+        "b_sha256": "e5e42b3cb6f838b090000d3e6ee703779b5860e99b51fe1ea82e6ef18b7b7e16",
+        "c_sha256": "1fa11f0d5c013ee0ab6b56ea6abab33b2f6e6672292eaa11b42af31d916561d1"
+      },
+      "publication_sha256": [
+        {
+          "artifact_type": "artifact_envelope",
+          "digest": "8102b27be5e756a904630b42c358687a5f9d4da1c6844fcdc74160f9efb59350",
+          "digest_algorithm": "sha256",
+          "envelope_for_artifact_id": "d-evidence-routing",
+          "media_type": "application/json",
+          "path": "evidence-routing.envelope.json",
+          "scientific_role": "evidence_envelope",
+          "size_bytes": 4395,
+          "status": "complete"
+        },
+        {
+          "artifact_type": "annotation_routing_result",
+          "digest": "aac0bdb9be0ebd8c61bc8fa11a53c08ede19e37d98e8703a1e99931ea75ff816",
+          "digest_algorithm": "sha256",
+          "media_type": "application/json",
+          "path": "evidence-routing.json",
+          "scientific_role": "annotation_routing_result",
+          "size_bytes": 1946066,
+          "status": "complete"
+        }
+      ]
+    },
+    {
+      "name": "D-changed-rights-context",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/fixture/tickets/D-T05-rights-changed.yaml",
+        "--stage",
+        "D",
+        "--output",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/run"
+      ],
+      "exit_code": 2
+    },
+    {
+      "name": "D-unsafe-source-symlink",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/fixture/tickets/D-T05.yaml",
+        "--stage",
+        "D",
+        "--output",
+        "/private/tmp/triomics-stage-d-evidence/m7-023/sol-native/run"
+      ],
+      "exit_code": 2
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "commit": "760098c56a00d39e5a9cce60f0033d47c680b85a",
+  "generation_id": "ed604bccff7066bcf0b0f5d4286b223614b5dd606083b0c2e346c3c4182df946",
+  "four_b_predecessors_verified": true,
+  "current_members_revalidated_after_rejections": true,
+  "files": {
+    "D/generations/ed604bccff7066bcf0b0f5d4286b223614b5dd606083b0c2e346c3c4182df946/generation-manifest.json": "ed604bccff7066bcf0b0f5d4286b223614b5dd606083b0c2e346c3c4182df946",
+    "registries/current-D.json": "df106b25df016901c9e5ccc1e3be8680d7d3465f9adba00cdcc3e1b0f1a7e8df",
+    "D/generations/ed604bccff7066bcf0b0f5d4286b223614b5dd606083b0c2e346c3c4182df946/evidence-routing.envelope.json": "8102b27be5e756a904630b42c358687a5f9d4da1c6844fcdc74160f9efb59350",
+    "D/generations/ed604bccff7066bcf0b0f5d4286b223614b5dd606083b0c2e346c3c4182df946/evidence-routing.json": "aac0bdb9be0ebd8c61bc8fa11a53c08ede19e37d98e8703a1e99931ea75ff816",
+    "B/handoffs/41a58a3b08b66ede0691d29da697dae844b89c111e94dd8cb0fa087846b58ab2/bundle.json": "e5e42b3cb6f838b090000d3e6ee703779b5860e99b51fe1ea82e6ef18b7b7e16",
+    "B/handoffs/41a58a3b08b66ede0691d29da697dae844b89c111e94dd8cb0fa087846b58ab2/bundle.envelope.json": "ccb25b2f4861c30d5e222b10608df1be4a80a1d3b039eac80a92b585d468049d",
+    "B/handoffs/41a58a3b08b66ede0691d29da697dae844b89c111e94dd8cb0fa087846b58ab2/stage-handoff-provenance.json": "eb9d52f37e3a1e7e00344535b7ec17e6340c8623b7d8ae91bd4d7f665a85ad19",
+    "B/handoffs/41a58a3b08b66ede0691d29da697dae844b89c111e94dd8cb0fa087846b58ab2/stage-handoff-provenance.envelope.json": "70b6890f90ac4cd293af47d1f674185ddfc45d63f5543276e93d2580225820b1",
+    "D/stage-handoff-provenance.json": "0873a8c546fcb08aca89a0fc22e3841f0e6567832e720485ddd2bad3565416fb",
+    "D/stage-handoff-provenance.envelope.json": "9f7356bfdb3d60605149a947a0ca3b2d2bd7bdf524e6fe8fb978baee5be2f920"
+  }
+}

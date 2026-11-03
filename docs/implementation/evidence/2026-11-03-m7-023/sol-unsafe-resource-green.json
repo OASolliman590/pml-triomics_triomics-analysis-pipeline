@@ -1,0 +1,6 @@
+{
+  "commit": "760098c56a00d39e5a9cce60f0033d47c680b85a",
+  "case": "symlink source",
+  "status": "hard_error",
+  "reason_code": "D_RESOURCE_HASH_MISMATCH"
+}

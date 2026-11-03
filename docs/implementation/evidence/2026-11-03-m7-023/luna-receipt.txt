@@ -1,0 +1,8 @@
+Candidate: 2715d7d + 760098c (Sol's shared CLI commit 2a022cb remains separate); clean branch codex/m7-023-luna.
+Changed files: R/annotation_status.R, R/annotation_apply.R (resource/status boundary), R/resource_manifest.R (reproduced unsafe source/cache classification defect), D-T05 registration/ticket, public inst/examples/data/d-status fixtures, test-D-T05.R, new test-D-status-shared.R.
+RED: initial focused D-T05 unit test had 2 failing rights-translation assertions; Sol's clean all-disabled B/C/D native RED reproduced absent persisted route_status (proof: sol-red-publication-status.json).
+Repair1 unit: D-T05 + D02-D04 slice PASS 254; follow-up D-T05 PASS 71; WARN0/SKIP0. Logs: repair1-unit-tests.log, repair1-d05-unit-tests.log.
+Repair1 native: D-status-shared PASS 86, WARN0/SKIP0, including all-disabled, optional/required availability outcomes, partial mapping, unchanged B/C bytes, and pointer preservation; log repair1-native-status-tests.log.
+Regression: D-ora-shared PASS84; D-T01 PASS325; D-T02 PASS87; D-T03 PASS62; D-T04 PASS38; aggregate PASS596/FAIL0/WARN1/SKIP0. Log d01-d04-ora-regressions.log.
+Only warning: D-T01 stale-paired-sign refusal intentionally exits 2; testthat reports system2 nonzero status at test-D-T01.R:962. No warning suppression or skipped required cases.
+Native runtime used supplied /tmp/triomics-runtime-20261103 R/Python env; no installs/full suite/package/push/acceptance. Sol integration and independent review remain pending.
