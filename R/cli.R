@@ -2787,7 +2787,6 @@ triomics_execute_stage_d <- function(config_path, output) {
       config$target_investigation %||% list(), config_path
     )
     route_status <- routed$route_status
-    routed$route_status <- NULL
   } else {
     routed <- triomics_annotate_evidence(evidence, annotation)
     route_status <- triomics_d_cli_route_status(evidence)
@@ -2796,16 +2795,18 @@ triomics_execute_stage_d <- function(config_path, output) {
   if (isTRUE(investigation$enabled)) {
     if (is.null(routed$target_investigation)) {
       routed$target_investigation <- triomics_d_target_slot(investigation, config_path)
-      if (isTRUE(investigation$required) &&
-          identical(routed$target_investigation$status, "unavailable")) {
-        route_status$exit_code <- 2L
-      }
+    }
+    if (isTRUE(investigation$required) &&
+        identical(routed$target_investigation$status, "unavailable")) {
+      route_status$exit_code <- 2L
+      route_status$run_completeness <- "incomplete"
     }
     routed$target_investigation <- triomics_d_attach_target_profiles(
       routed$target_investigation, investigation
     )
     routed$target_investigation$protein_metabolites <- triomics_protein_metabolite_report(investigation)
   }
+  routed$route_status <- route_status
   triomics_d_publication_failpoint("provenance_preflight_complete")
   triomics_d_publish_evidence_generation(
     routed, root, config_sha256 = as.character(attr(config, "config_sha256")),
