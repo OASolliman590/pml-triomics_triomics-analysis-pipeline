@@ -1,25 +1,24 @@
 # Tri-omics progress
 
-**Active; synthetic-fixture evidence only.** Native Stage D now publishes local
-lipid and reaction mappings, enrichment using the eligible measured background,
-and truthful resource availability. Original measurements, ambiguous identities,
-unmapped observations and repeated nominations remain accounted for.
+**Active; tested on public synthetic fixtures only.** The goal is to finish Stage
+D so molecular findings can be connected to pathways and target evidence without
+claiming more than the measurements establish.
 
-Enrichment passed122independent focused assertions and a native publication with
-hand-checked p=q=0.3. Resource completeness passed71unit,86native and596regression
-assertions, with one expected stale-sign warning. Astra reviewed both repairs.
-Sol independently checked11resource-status commands and40predecessor files:
-optional failures remain explicit; required missing references mark the run
-incomplete; unsafe paths and changed lineage preserve the previous publication.
-Both cycles are integrated, with exact hashes recorded.
+Native publication, lipid and reaction mapping, enrichment against the measured
+background, and resource-failure handling have verified candidate results. These
+preserve original measurements, ambiguous identities, missing references and
+shared sources. Enrichment was checked against an independently calculated
+example; failed publications preserve the previous generation.
 
-Next is general target investigation. A fresh Luna worker will enforce exact
-assay/target identity, preserve four separate evidence axes and produce descriptive
-profiles. Unranked discovery follows its verified dependencies. Their design
-scopes have passed audit.
+The records now distinguish those results from formal acceptance and retain old
+failures as history. Astra found two target-comparison defects: unequal coverage
+was called comparable, and valid external binding evidence was rejected. A fresh
+bounded Luna cycle is repairing both after an approved scope audit. Discovery
+still waits for verified comparison and will produce unranked exploratory targets.
 
-M7/G7 remain closed. Acceptance still needs every required packet reconciled on
-one final snapshot, full source and clean archive checks, Terra documentation and
-fresh Astra review. Biological validity and real-study performance remain
-unestablished; conditional methods receive no completion credit. Needs Omar: none.
-Sync: local records only; no push, Notion sync or private study analysis.
+M7/G7 remain closed. The next acceptance requires all eight required Stage D
+packets on one frozen snapshot, the full source suite, a clean archive package
+check, Terra documentation and fresh Astra review. Conditional quantitative
+methods remain blocked without completion credit. No biological validity or
+real-study performance has been established. Needs Omar: none. Sync: local only;
+no GitHub push, Notion sync or private study analysis.
