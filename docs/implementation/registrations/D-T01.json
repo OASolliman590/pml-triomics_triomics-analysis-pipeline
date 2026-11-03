@@ -17,7 +17,10 @@
     "NAMESPACE",
     "man/triomics-api.Rd"
   ],
-  "dependencies": ["B-T07", "C-06"],
+  "dependencies": [
+    "B-T07",
+    "C-06"
+  ],
   "package": {
     "name": "triomics",
     "version": "0.1.0",
@@ -79,5 +82,13 @@
     "status": "deferred_to_Sol_integration_gates",
     "effect_on_D_T01": "This worker ran the D-T01 focused suite and exact public B/C/D readback only; Sol owns independent affected, full-suite, and archive gates."
   },
-  "request": "This D-T01 packet includes the explicitly authorized D-only CLI executor, D enablement, namespace exports, and matching API documentation alongside six D-owned files. Preserve the ten-file allowlist; do not add dependencies or change schemas or statistics. D consumes only same-root B-T07/C-06 handoffs whose exact producer profiles, envelopes, members, current source manifests, normalized metadata, and FeatureRegistry identities validate. The D-T01 fixture declares zero annotation requests and offline resource access. This packet does not execute ORA, MOFA-native enrichment, BioPAN, or target investigation. C-06 remains unaccepted, C-07 controls remain not_run, and C-09 remains conditional and unqualified. Sol owns integration, commits, acceptance, ledger, and close."
+  "request": "This D-T01 packet includes the explicitly authorized D-only CLI executor, D enablement, namespace exports, and matching API documentation alongside six D-owned files. Preserve the ten-file allowlist; do not add dependencies or change schemas or statistics. D consumes only same-root B-T07/C-06 handoffs whose exact producer profiles, envelopes, members, current source manifests, normalized metadata, and FeatureRegistry identities validate. The D-T01 fixture declares zero annotation requests and offline resource access. This packet does not execute ORA, MOFA-native enrichment, BioPAN, or target investigation. C-06 remains unaccepted, C-07 controls remain not_run, and C-09 remains conditional and unqualified. Sol owns integration, commits, acceptance, ledger, and close.",
+  "current_revision_verification": {
+    "cycle": "M7-021",
+    "commit": "4e8c1c2ee24f8150ebc2b67e29a40c8595816fa9",
+    "status": "verified_synthetic_native_dependency_evidence",
+    "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-precursor-verification.md",
+    "milestone_acceptance": false
+  },
+  "next_action": "Preserve historical receipts; reconcile this current revision on the final immutable M7 source snapshot before Sol acceptance. M7/G7 remain closed."
 }

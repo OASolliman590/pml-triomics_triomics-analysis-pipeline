@@ -46,8 +46,10 @@ and external-Kd comparison rejection. Both workers are complete; no test process
 active. Do not redispatch or integrate it as finished work. Last318 focused passes
 preceded two appended tests; native proof pending. Preserved candidate is the base
 for separately scoped M7-027. Read reviews/2026-11-03-m7-024-implementation-astra.md
-and change-records/M7-027-target-comparison-evidence-boundary.md. New scope audit
-must pass before a fresh Luna worker; M7/G7 remain closed.
+and change-records/M7-027-target-comparison-evidence-boundary.md. Scope11085b1 passed fresh Astra, recorded6c83d73. Fresh Luna /root/m7_027_luna
+is running in /tmp/triomics-m7-027-luna from6e73239: initialattempt, zero repairs.
+Do not duplicate dispatch; Sol independent nativeproof and fresh implementation
+Astra precede D12. M7/G7 remain closed.
 M7-025 discovery scope c3df0c1 passed fresh Astra; implementation waits on D11.
 M7-026 neutral generation governance wording scope
 60fa3b8 passed fresh Astra; amendedf80e7f6 also passed its one focused scope

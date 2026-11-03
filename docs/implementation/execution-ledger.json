@@ -34,9 +34,23 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m7_027_luna",
+      "role": "bounded_target_comparison_implementation",
+      "model_requested": "gpt-6-luna",
+      "effort_requested": "max",
+      "effective_settings_exposed": false,
+      "base": "6e73239ebbca95bc0aab24bb7b7faf78d6a640cf",
+      "worktree": "/tmp/triomics-m7-027-luna",
+      "attempt": 1,
+      "repair_attempts": 0,
+      "phase": "behavioral_red_then_initial_implementation",
+      "next_transition": "Sol_diff_and_independent_native_verification_then_fresh_Astra"
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_027_luna_ready",
+    "status": "m7_027_luna_running",
     "last_reconciled": "2026-11-03",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -5827,6 +5841,11 @@
       "base_candidate": "6e73239ebbca95bc0aab24bb7b7faf78d6a640cf",
       "worktree": "/tmp/triomics-m7-027-luna",
       "disposition": "New initial attempt authorized; old M7-024 cap preserved. M7/G7 closed."
+    },
+    {
+      "event": "current_packet_states_reconciled_without_acceptance",
+      "date": "2026-11-03",
+      "disposition": "C06/D01-05 top-level states now distinguish verified candidate evidence from final acceptance; stale historical blockers preserved in historical_state_before_m7_closure. D10/D11 successor active. No acceptance changed."
     }
   ],
   "packets": {
@@ -6235,7 +6254,7 @@
       ]
     },
     "C-06": {
-      "status": "accepted_synthetic_software_evidence",
+      "status": "verified_candidate_pending_same_snapshot_acceptance",
       "attempts": 1,
       "repair_attempts": 1,
       "shared_repair_attempts": 2,
@@ -6259,15 +6278,29 @@
         "docs/implementation/reviews/2026-10-22-m6-focused-astra-rereview.md",
         "docs/implementation/reviews/2026-10-22-m6-sol-acceptance.md"
       ],
-      "blockers": [],
+      "blockers": [
+        "Final same-snapshot packet, full-source, clean-archive and fresh Astra acceptance gates remain pending."
+      ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
         "finding": "M6 acceptance historical; current native-provenance revision accepted=false pending new proof.",
         "accepted": false
+      },
+      "historical_state_before_m7_closure": {
+        "status": "accepted_synthetic_software_evidence",
+        "blockers": [],
+        "commit": "a60a7a56eec1250bd4a9e44253597f83a3e565fd"
+      },
+      "current_revision_verification": {
+        "cycle": "M7-021",
+        "commit": "4e8c1c2ee24f8150ebc2b67e29a40c8595816fa9",
+        "status": "verified_synthetic_native_dependency_evidence",
+        "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-precursor-verification.md",
+        "milestone_acceptance": false
       }
     },
     "D-T01": {
-      "status": "blocked_m7_001_exception_exhausted",
+      "status": "verified_candidate_pending_same_snapshot_acceptance",
       "attempts": 2,
       "exceptional_repair_attempts": 1,
       "commit": "88f1591",
@@ -6288,23 +6321,37 @@
         "docs/implementation/reviews/2026-10-23-m7-001-focused-sol-rereview.md"
       ],
       "blockers": [
-        "M7-001's single exceptional repair passed 268 named expectations but focused review reproduced five Important gaps: FeatureRegistry drift, incomplete paired/repeated metadata freshness, DEqMS producer/consumer identity mismatch, unsafe model-hash traversal for a valid contrast id, and D-leaf symlink failure after registry rollover. The candidate was not integrated. Initial plus two ordinary repairs and the one authorized exceptional repair are consumed; no further product edit is authorized."
+        "Final same-snapshot packet, full-source, clean-archive and fresh Astra acceptance gates remain pending."
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
         "finding": "Native consumer implemented; reverify C06/B07 dependency revision and exact publication.",
         "accepted": false
+      },
+      "historical_state_before_m7_closure": {
+        "status": "blocked_m7_001_exception_exhausted",
+        "blockers": [
+          "M7-001's single exceptional repair passed 268 named expectations but focused review reproduced five Important gaps: FeatureRegistry drift, incomplete paired/repeated metadata freshness, DEqMS producer/consumer identity mismatch, unsafe model-hash traversal for a valid contrast id, and D-leaf symlink failure after registry rollover. The candidate was not integrated. Initial plus two ordinary repairs and the one authorized exceptional repair are consumed; no further product edit is authorized."
+        ],
+        "commit": "88f1591"
+      },
+      "current_revision_verification": {
+        "cycle": "M7-021",
+        "commit": "4e8c1c2ee24f8150ebc2b67e29a40c8595816fa9",
+        "status": "verified_synthetic_native_dependency_evidence",
+        "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-precursor-verification.md",
+        "milestone_acceptance": false
       }
     },
     "D-T02": {
-      "status": "implemented_unaccepted",
+      "status": "verified_candidate_pending_same_snapshot_acceptance",
       "attempts": 2,
       "commit": "fcc05b67573797dce6a8d7295de9a2dc4bb3310b",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t02-lipid-mapping.md"
       ],
       "blockers": [
-        "Stage D CLI does not call triomics_map_lipids. The ticket has no pinned lipid table or lipid block. Sol owns that integration."
+        "Final same-snapshot packet, full-source, clean-archive and fresh Astra acceptance gates remain pending."
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -6313,20 +6360,27 @@
       "current_revision_verification": {
         "cycle": "M7-021",
         "commit": "f173f38b79b74ae048dad55fc5566b7e53e28eaa",
-        "status": "verified_synthetic_native_for_D04_dependency",
+        "status": "verified_synthetic_native_dependency_evidence",
         "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-mapping-sol-verification.md",
         "milestone_acceptance": false
+      },
+      "historical_state_before_m7_closure": {
+        "status": "implemented_unaccepted",
+        "blockers": [
+          "Stage D CLI does not call triomics_map_lipids. The ticket has no pinned lipid table or lipid block. Sol owns that integration."
+        ],
+        "commit": "fcc05b67573797dce6a8d7295de9a2dc4bb3310b"
       }
     },
     "D-T03": {
-      "status": "implemented_unaccepted",
+      "status": "verified_candidate_pending_same_snapshot_acceptance",
       "attempts": 2,
       "commit": "1d420e6a28cb1b5caff42af201be47dabb423ef6",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t03-reaction-mapping.md"
       ],
       "blockers": [
-        "Stage D CLI does not call triomics_map_reactions. The ticket has no pinned mapping table. Sol owns that integration."
+        "Final same-snapshot packet, full-source, clean-archive and fresh Astra acceptance gates remain pending."
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -6335,20 +6389,27 @@
       "current_revision_verification": {
         "cycle": "M7-021",
         "commit": "f173f38b79b74ae048dad55fc5566b7e53e28eaa",
-        "status": "verified_synthetic_native_for_D04_dependency",
+        "status": "verified_synthetic_native_dependency_evidence",
         "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-mapping-sol-verification.md",
         "milestone_acceptance": false
+      },
+      "historical_state_before_m7_closure": {
+        "status": "implemented_unaccepted",
+        "blockers": [
+          "Stage D CLI does not call triomics_map_reactions. The ticket has no pinned mapping table. Sol owns that integration."
+        ],
+        "commit": "1d420e6a28cb1b5caff42af201be47dabb423ef6"
       }
     },
     "D-T04": {
-      "status": "implemented_unaccepted",
+      "status": "verified_candidate_pending_same_snapshot_acceptance",
       "attempts": 2,
       "commit": "4b8eb123387e2f64040787ed9e016bc20be32186",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t04-ora.md"
       ],
       "blockers": [
-        "Stage D CLI does not call triomics_ora_family. Sol owns that integration."
+        "Final same-snapshot packet, full-source, clean-archive and fresh Astra acceptance gates remain pending."
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -6358,20 +6419,27 @@
       "current_revision_verification": {
         "cycle": "M7-022",
         "commit": "36abc874da479b4c6397d598056461db730d9c26",
-        "status": "verified_synthetic_native_for_D05_dependency",
+        "status": "verified_synthetic_native_dependency_evidence",
         "review_ref": "docs/implementation/reviews/2026-11-03-m7-022-ora-sol-verification.md",
         "milestone_acceptance": false
+      },
+      "historical_state_before_m7_closure": {
+        "status": "implemented_unaccepted",
+        "blockers": [
+          "Stage D CLI does not call triomics_ora_family. Sol owns that integration."
+        ],
+        "commit": "4b8eb123387e2f64040787ed9e016bc20be32186"
       }
     },
     "D-T05": {
-      "status": "implemented_unaccepted",
+      "status": "verified_candidate_pending_same_snapshot_acceptance",
       "attempts": 2,
       "commit": "62421b13ee528a0b94b81b288126a181f4cd0637",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t05-status.md"
       ],
       "blockers": [
-        "Stage D CLI does not call triomics_d_route_status. Sol owns that integration."
+        "Final same-snapshot packet, full-source, clean-archive and fresh Astra acceptance gates remain pending."
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -6380,9 +6448,16 @@
       "current_revision_verification": {
         "cycle": "M7-023",
         "commit": "760098c56a00d39e5a9cce60f0033d47c680b85a",
-        "status": "verified_synthetic_native_for_target_dependency",
+        "status": "verified_synthetic_native_dependency_evidence",
         "review_ref": "docs/implementation/reviews/2026-11-03-m7-023-status-sol-verification.md",
         "milestone_acceptance": false
+      },
+      "historical_state_before_m7_closure": {
+        "status": "implemented_unaccepted",
+        "blockers": [
+          "Stage D CLI does not call triomics_d_route_status. Sol owns that integration."
+        ],
+        "commit": "62421b13ee528a0b94b81b288126a181f4cd0637"
       }
     },
     "D-T06": {
@@ -6400,33 +6475,47 @@
       "blockers": []
     },
     "D-T10": {
-      "status": "implemented_unaccepted",
+      "status": "m7_027_bounded_successor_active_unaccepted",
       "attempts": 3,
       "commit": "9e1499df1e8d4216f57e7afc9a67dfbf79932c2a",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t10-targets.md"
       ],
       "blockers": [
-        "Stage D CLI does not call triomics_target_request or triomics_target_external_evidence. Sol owns that integration."
+        "M7-024 candidate6e73239 failed fresh Astra comparison coverage/external-evidence audit at its repair cap. M7-027 is separately scoped/audited and active; native proof and fresh implementation review remain required."
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
         "finding": "Target slot invokes request/external evidence. Exact identity/context/construct and CLI negative cases still need fresh acceptance evidence."
+      },
+      "historical_state_before_m7_closure": {
+        "status": "implemented_unaccepted",
+        "blockers": [
+          "Stage D CLI does not call triomics_target_request or triomics_target_external_evidence. Sol owns that integration."
+        ],
+        "commit": "9e1499df1e8d4216f57e7afc9a67dfbf79932c2a"
       }
     },
     "D-T11": {
-      "status": "blocked_repair_limit",
+      "status": "m7_027_bounded_successor_active_unaccepted",
       "attempts": 3,
       "commit": null,
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t11-blocked.md"
       ],
       "blockers": [
-        "Repair limit reached. Endpoint binding_probability is still accepted as a measured profile axis. Astra high audit_pass no. Candidate is uncommitted on draft/d-t11."
+        "M7-024 candidate6e73239 failed fresh Astra comparison coverage/external-evidence audit at its repair cap. M7-027 is separately scoped/audited and active; native proof and fresh implementation review remain required."
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
         "finding": "Prior capped cycle stays closed. Later commits 3b8792f/dd31dd6/5d34462 are present. Profile publication still special-cases SYNTH_FCN3_LIKE and bypasses supplied evidence/mechanism; new bounded cycle authorized."
+      },
+      "historical_state_before_m7_closure": {
+        "status": "blocked_repair_limit",
+        "blockers": [
+          "Repair limit reached. Endpoint binding_probability is still accepted as a measured profile axis. Astra high audit_pass no. Candidate is uncommitted on draft/d-t11."
+        ],
+        "commit": null
       }
     },
     "D-T12": {

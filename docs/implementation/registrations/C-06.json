@@ -3,8 +3,8 @@
   "request_type": "registration_request",
   "implementation_base": "ef7da2086e7a0244e18a8ea1902423596d6a2b75",
   "accepted": false,
-  "applied_to_shared_files": false,
-  "implementation_status": "M7-014 native same-root B-backed C-06 provenance candidate is implemented in this local worker worktree. The C profile binds the exact four B predecessor files, consumed source and metadata identities, resolved B matrices, C prepared matrices, C preparation states, native sidecars, and D outputs. C-08 endpoint-only publication remains standalone. This is synthetic software evidence only; the packet remains unaccepted pending Sol integration and acceptance.",
+  "applied_to_shared_files": true,
+  "implementation_status": "Native same-root B-backed C provenance is integrated and independently verified on the cited synthetic candidate. Current-revision acceptance remains false pending final same-snapshot M7 gates; historical M6 acceptance is preserved separately.",
   "synthetic_software_only": true,
   "local_files": [
     "R/cli.R",
@@ -15,7 +15,12 @@
     "inst/examples/tickets/C-06.yaml",
     "docs/implementation/registrations/C-06.json"
   ],
-  "dependencies": ["C-03", "C-04", "C-05", "C-08"],
+  "dependencies": [
+    "C-03",
+    "C-04",
+    "C-05",
+    "C-08"
+  ],
   "behavior": {
     "nomination_export": "Builds separately identified primary-statistics and integration-selection nomination branches and writes D candidate nominations, complete per-integration evidence, comparison, evaluation, route-status payloads, envelopes and a manifest.",
     "comparison": "Requires exact agreement on study/analysis, training samples, full feature maps, input matrix hashes, preparation context and representation. It carries native variance definitions and withholds ranking when definitions differ.",
@@ -167,8 +172,14 @@
       "native_state_envelope_sha256": "45f5cca399ea7d2cef1be3240d09e2a496229bf34a2a9d20c553c974d3c2f834",
       "integration_results_sha256": "d7200e1ad7d679ce6ee6aa1286743d2fab538d2ce8eae3ee46cfbc51b4de4419",
       "preparation_states": {
-        "block_1": {"state_hash": "faa9b16dc51c8de750c990aa10d5490181b8b094eba9670105980b03091f50f5", "payload_sha256": "c8b04907bc45ad4e2d5239e2cbb34f16dadee5f03ba5079ed752176aa3c76995"},
-        "block_2": {"state_hash": "7b3bd9588abc9e5b08b93af0e6562fa068a61e9ab8bee83649d1eecfd6dd3a1e", "payload_sha256": "b95037ef127ed46d8f90ae09a4c54803a863b763d68d77c47473a0f0df404a89"}
+        "block_1": {
+          "state_hash": "faa9b16dc51c8de750c990aa10d5490181b8b094eba9670105980b03091f50f5",
+          "payload_sha256": "c8b04907bc45ad4e2d5239e2cbb34f16dadee5f03ba5079ed752176aa3c76995"
+        },
+        "block_2": {
+          "state_hash": "7b3bd9588abc9e5b08b93af0e6562fa068a61e9ab8bee83649d1eecfd6dd3a1e",
+          "payload_sha256": "b95037ef127ed46d8f90ae09a4c54803a863b763d68d77c47473a0f0df404a89"
+        }
       },
       "d_payload_hashes_and_envelopes_valid": "5/5",
       "d_envelopes_valid": "6/6",
@@ -180,7 +191,12 @@
       "run_registry_status": "complete",
       "cli_exit_code": 0,
       "primary_branch": "complete_empty_verified_b_artifact",
-      "control_statuses": ["not_run", "not_run", "not_run", "not_run"],
+      "control_statuses": [
+        "not_run",
+        "not_run",
+        "not_run",
+        "not_run"
+      ],
       "control_split_plan_status": "not_run",
       "control_split_plan_sha256": null
     }
@@ -244,7 +260,12 @@
           "primary_branch": "complete_empty",
           "concat_pca": "complete",
           "clinical_prediction": "not_started_conditional",
-          "c07_controls": ["not_run", "not_run", "not_run", "not_run"],
+          "c07_controls": [
+            "not_run",
+            "not_run",
+            "not_run",
+            "not_run"
+          ],
           "run_status": "partial"
         },
         "C-02 nested": {
@@ -261,7 +282,12 @@
           "context_units": 12,
           "backend_concat_plsda": "unavailable",
           "clinical_prediction": "not_started_conditional",
-          "c07_controls": ["not_run", "not_run", "not_run", "not_run"],
+          "c07_controls": [
+            "not_run",
+            "not_run",
+            "not_run",
+            "not_run"
+          ],
           "run_status": "unavailable"
         }
       }
@@ -296,7 +322,12 @@
           "study_id": "triomics_c_06_fixture",
           "analysis_id": "c06_synthetic_exploratory",
           "primary_branch": "complete_empty_verified_b_artifact",
-          "c07_controls": ["not_run", "not_run", "not_run", "not_run"],
+          "c07_controls": [
+            "not_run",
+            "not_run",
+            "not_run",
+            "not_run"
+          ],
           "c07_plan_status": "not_run",
           "c07_plan_sha256": null,
           "clinical_prediction": "not_started_conditional",
@@ -308,8 +339,14 @@
           "native_state_envelope_sha256": "45f5cca399ea7d2cef1be3240d09e2a496229bf34a2a9d20c553c974d3c2f834",
           "integration_results_sha256": "d7200e1ad7d679ce6ee6aa1286743d2fab538d2ce8eae3ee46cfbc51b4de4419",
           "preparation_states": {
-            "block_1": {"state_hash": "faa9b16dc51c8de750c990aa10d5490181b8b094eba9670105980b03091f50f5", "payload_sha256": "c8b04907bc45ad4e2d5239e2cbb34f16dadee5f03ba5079ed752176aa3c76995"},
-            "block_2": {"state_hash": "7b3bd9588abc9e5b08b93af0e6562fa068a61e9ab8bee83649d1eecfd6dd3a1e", "payload_sha256": "b95037ef127ed46d8f90ae09a4c54803a863b763d68d77c47473a0f0df404a89"}
+            "block_1": {
+              "state_hash": "faa9b16dc51c8de750c990aa10d5490181b8b094eba9670105980b03091f50f5",
+              "payload_sha256": "c8b04907bc45ad4e2d5239e2cbb34f16dadee5f03ba5079ed752176aa3c76995"
+            },
+            "block_2": {
+              "state_hash": "7b3bd9588abc9e5b08b93af0e6562fa068a61e9ab8bee83649d1eecfd6dd3a1e",
+              "payload_sha256": "b95037ef127ed46d8f90ae09a4c54803a863b763d68d77c47473a0f0df404a89"
+            }
           },
           "all_payload_and_envelope_hashes_read_back": true
         },
@@ -323,7 +360,12 @@
           "predictions": "12/12",
           "failed_predictions": 0,
           "split_plan_sha256": "8fa9871d6e4090c7d1dce629947831a4ffd678396a64063215a13ee44f2b2603",
-          "c07_controls": ["not_run", "not_run", "not_run", "not_run"],
+          "c07_controls": [
+            "not_run",
+            "not_run",
+            "not_run",
+            "not_run"
+          ],
           "clinical_prediction": "not_started_conditional",
           "d_payloads": 5,
           "d_envelopes": "6/6_valid",
@@ -408,7 +450,10 @@
       "reason": "The coordinator-authorized repair-2 allowlist addition reconciles C-06-AC3 explicit unrun controls with the previous unconditional SplitPlan-hash requirement."
     }
   ],
-  "coordinator_owned_files_to_update": ["R/cli.R", "R/integration_comparison.R"],
+  "coordinator_owned_files_to_update": [
+    "R/cli.R",
+    "R/integration_comparison.R"
+  ],
   "namespace_change_requested": false,
   "known_gaps": [
     "No C-07 evaluation was executed. All four controls are explicitly unrun; the D aggregate remains partial even when the declared required Stage-C evaluation and CLI run complete.",
@@ -649,5 +694,12 @@
     }
   },
   "acceptance_ref": "discovery/spec-v2/packets/C-06.md",
-  "next_action": "M7-014 seam independently verified and integrated at359a1d0; C-06 accepted=false. M7/G7/StageD remain closed. Preserve old incomplete cycles; next milestone/downstream work requires separate authority."
+  "next_action": "Preserve historical receipts; reconcile this current revision on the final immutable M7 source snapshot before Sol acceptance. M7/G7 remain closed.",
+  "current_revision_verification": {
+    "cycle": "M7-021",
+    "commit": "4e8c1c2ee24f8150ebc2b67e29a40c8595816fa9",
+    "status": "verified_synthetic_native_dependency_evidence",
+    "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-precursor-verification.md",
+    "milestone_acceptance": false
+  }
 }
