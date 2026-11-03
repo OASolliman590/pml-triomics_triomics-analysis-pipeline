@@ -14,6 +14,19 @@ d_t05_fixture <- function() {
        cache = list(content_sha256 = hash))
 }
 
+testthat::test_that('D-T05 public ticket pins its synthetic resource and request identities', {
+  config_path <- triomics_test_resource('examples', 'tickets', 'D-T05.yaml')
+  config <- triomics_read_config(config_path)
+  testthat::expect_identical(vapply(config$annotation$requests, `[[`, '', 'request_id'),
+                             c('d_status_gene_reaction', 'd_status_lipid_ontology', 'd_status_ora'))
+  resources <- triomics_d_index_resources(config$annotation)
+  config_root <- dirname(config_path)
+  for (resource in resources) {
+    local_path <- triomics_d_resolve_resource_path(resource$local_file, config_root)
+    testthat::expect_identical(triomics_sha256(local_path), resource$sha256)
+  }
+})
+
 testthat::test_that('optional and required unavailable routes have distinct exit behavior', {
   route <- d_t05_route()
   optional <- triomics_d_route_status(list(gene_reaction = route), list(), d_t05_predecessor, list())
@@ -33,6 +46,7 @@ testthat::test_that('offline resources enforce rights, hashes and cached output 
   run <- function(request, cache = f$cache) triomics_d_route_status(routes, list(gene_reaction = request), d_t05_predecessor, list(gene_reaction = cache))
   good <- run(f$request)
   testthat::expect_true(good$resources$gene_reaction$cache_valid)
+  testthat::expect_identical(good$resources$gene_reaction$cache_status, 'written')
   changed <- run(f$request, list(content_sha256 = paste(rep('0', 64), collapse = '')))
   testthat::expect_false(changed$resources$gene_reaction$cache_valid)
   testthat::expect_identical(changed$exit_code, 0L)
@@ -56,6 +70,8 @@ testthat::test_that('offline resources enforce rights, hashes and cached output 
   testthat::expect_identical(denied$exit_code, 0L)
   testthat::expect_identical(denied$unavailable_routes$gene_reaction$reason_code, 'D_RESOURCE_RIGHTS')
   testthat::expect_false(denied$resources$gene_reaction$cache_valid)
+  testthat::expect_null(denied$resources$gene_reaction$path)
+  testthat::expect_identical(denied$resources$gene_reaction$cache_status, 'rejected')
   routes$gene_reaction$required <- TRUE
   denied_required <- run(bad)
   testthat::expect_identical(denied_required$run_completeness, 'incomplete')
@@ -103,6 +119,36 @@ testthat::test_that('mapping access reports known rights and content failures wi
   testthat::expect_identical(error$code, 'D_RESOURCE_REQUEST_INVALID')
 })
 
+testthat::test_that('unsafe resource paths remain hard errors at the optional status boundary', {
+  f <- d_t05_fixture(); on.exit(unlink(f$root, recursive = TRUE))
+  link <- file.path(f$root, 'resource-link.tsv')
+  testthat::expect_true(file.symlink(f$resource$local_file, link))
+  linked <- f$resource
+  linked$local_file <- link
+  source_error <- tryCatch(
+    triomics_d_mapping_contract(linked, 'gene_reaction', f$request$cache_dir),
+    error = identity
+  )
+  testthat::expect_identical(source_error$code, 'D_RESOURCE_HASH_MISMATCH')
+  testthat::expect_identical(source_error$resource_access_class, 'unsafe_structure')
+
+  cache_dir <- file.path(f$root, 'unsafe-cache')
+  testthat::expect_true(dir.create(cache_dir))
+  cache_key <- triomics_hash_text(triomics_canonical_json(list(
+    resource_id = f$resource$resource_id, release = f$resource$version,
+    sha256 = f$resource$sha256, operation = 'gene_reaction'
+  )))
+  testthat::expect_true(dir.create(file.path(cache_dir, paste0(cache_key, '.resource'))))
+  cache_error <- tryCatch(
+    triomics_d_annotation_resource_access(
+      f$resource, 'gene_reaction', f$resource$version, f$resource$sha256, cache_dir
+    ),
+    error = identity
+  )
+  testthat::expect_identical(cache_error$code, 'D_RESOURCE_CACHE_INVALID')
+  testthat::expect_false(identical(cache_error$status, 'unavailable'))
+})
+
 testthat::test_that('disabled and partial routes preserve predecessor evidence and bytes', {
   root <- tempfile('d-t05-predecessor-'); dir.create(root); on.exit(unlink(root, recursive = TRUE))
   writeBin(as.raw(0:255), file.path(root, 'evidence.bin'))
@@ -114,8 +160,11 @@ testthat::test_that('disabled and partial routes preserve predecessor evidence a
   testthat::expect_false(result$biological_absence)
   testthat::expect_identical(result$predecessor, d_t05_predecessor)
   disabled$ora <- d_t05_route(TRUE, FALSE, 'unavailable')
+  disabled$ora$reason_code <- 'D_ROUTE_CAPABILITY_NOT_IMPLEMENTED'
   partial <- triomics_d_route_status(disabled, list(), d_t05_predecessor, list())
   testthat::expect_identical(partial$predecessor, d_t05_predecessor)
+  testthat::expect_identical(partial$unavailable_routes$ora$reason_code,
+                             'D_ROUTE_CAPABILITY_NOT_IMPLEMENTED')
   testthat::expect_identical(readBin(file.path(root, 'evidence.bin'), 'raw', n = 256), before)
   testthat::expect_identical(partial$capability_status, list(mofa_native = 'incomplete', biopan = 'incomplete'))
 })

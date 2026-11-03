@@ -5,6 +5,16 @@ triomics_d_resource_abort <- function(code, message, key = NULL) {
   )
 }
 
+triomics_d_resource_unsafe_abort <- function(code, message, key = NULL) {
+  tryCatch(
+    triomics_d_resource_abort(code, message, key),
+    error = function(error) {
+      error$resource_access_class <- "unsafe_structure"
+      stop(error)
+    }
+  )
+}
+
 triomics_d_secure_path <- function(path, code, message, key, directory = FALSE) {
   if (!triomics_d_nonempty_string(path)) {
     triomics_d_abort(code, message, key)
@@ -148,8 +158,11 @@ triomics_d_resource_access <- function(resource, operation, expected_version,
     "cache_dir"
   )
   if (file.exists(cache_path) || dir.exists(cache_path)) {
-    if (dir.exists(cache_path) || triomics_is_symlink(cache_path) ||
-        !identical(triomics_sha256(cache_path), as.character(expected_sha256))) {
+    if (dir.exists(cache_path) || triomics_is_symlink(cache_path)) {
+      triomics_d_resource_abort("D_RESOURCE_CACHE_INVALID", "A resource cache entry is not a regular file.",
+                                as.character(resource$resource_id))
+    }
+    if (!identical(triomics_sha256(cache_path), as.character(expected_sha256))) {
       triomics_d_resource_abort("D_RESOURCE_HASH_MISMATCH", "A cached resource does not match its pinned SHA256.",
                                 as.character(resource$resource_id))
     }
@@ -165,7 +178,17 @@ triomics_d_resource_access <- function(resource, operation, expected_version,
     triomics_d_resource_abort("D_RESOURCE_PATH_INVALID", "D resource access accepts local resource paths only.",
                               as.character(resource$resource_id))
   }
-  if (!file.exists(source_path) || dir.exists(source_path)) {
+  if (triomics_is_symlink(source_path)) {
+    triomics_d_resource_unsafe_abort(
+      "D_RESOURCE_HASH_MISMATCH", "The declared local resource path is a symbolic link.",
+      as.character(resource$resource_id)
+    )
+  }
+  if (dir.exists(source_path)) {
+    triomics_d_resource_abort("D_RESOURCE_PATH_INVALID", "The declared local resource path is a directory.",
+                              as.character(resource$resource_id))
+  }
+  if (!file.exists(source_path)) {
     reason_code <- if (identical(network_policy, "offline")) {
       "D_RESOURCE_MISSING"
     } else {
@@ -182,8 +205,7 @@ triomics_d_resource_access <- function(resource, operation, expected_version,
     }
     return(manifest)
   }
-  if (triomics_is_symlink(source_path) ||
-      !identical(triomics_sha256(source_path), as.character(expected_sha256))) {
+  if (!identical(triomics_sha256(source_path), as.character(expected_sha256))) {
     triomics_d_resource_abort("D_RESOURCE_HASH_MISMATCH", "The local resource bytes do not match the pinned SHA256.",
                               as.character(resource$resource_id))
   }

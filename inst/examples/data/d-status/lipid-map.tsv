@@ -1,2 +1,11 @@
 source_namespace	source_id	taxon_id	target_namespace	target_id	relation	resolution	evidence_ref	resource_id
-synthetic_lipid	SYN_3_001	9606	LION	L-SYN-1	associated	sum_composition	synthetic://d-status/mapping	lipid-map
+synthetic_lipid	SYN_3_001	9606	LION	L-SYN-1	associated	sum_composition	synthetic://d-status/mapping/1	lipid-map
+synthetic_lipid	SYN_3_002	9606	LION	L-SYN-2	associated	sum_composition	synthetic://d-status/mapping/2	lipid-map
+synthetic_lipid	SYN_3_003	9606	LION	L-SYN-3	associated	sum_composition	synthetic://d-status/mapping/3	lipid-map
+synthetic_lipid	SYN_3_004	9606	LION	L-SYN-4	associated	sum_composition	synthetic://d-status/mapping/4	lipid-map
+synthetic_lipid	SYN_3_005	9606	LION	L-SYN-5	associated	sum_composition	synthetic://d-status/mapping/5	lipid-map
+synthetic_lipid	SYN_3_006	9606	LION	L-SYN-6	associated	sum_composition	synthetic://d-status/mapping/6	lipid-map
+synthetic_lipid	SYN_3_007	9606	LION	L-SYN-7	associated	sum_composition	synthetic://d-status/mapping/7	lipid-map
+synthetic_lipid	SYN_3_008	9606	LION	L-SYN-8	associated	sum_composition	synthetic://d-status/mapping/8	lipid-map
+synthetic_lipid	SYN_3_009	9606	LION	L-SYN-9	associated	sum_composition	synthetic://d-status/mapping/9	lipid-map
+synthetic_lipid	SYN_3_010	9606	LION	L-SYN-10	associated	sum_composition	synthetic://d-status/mapping/10	lipid-map

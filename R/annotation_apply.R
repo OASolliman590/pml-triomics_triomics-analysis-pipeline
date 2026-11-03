@@ -722,9 +722,18 @@ triomics_d_ora_run <- function(evidence, request, resources, cache_dir) {
   }
   request_resource_ids <- as.character(unlist(request$resource_ids %||% list(), use.names = FALSE))
   protocol_resource <- resources[[protocol_ref]]
-  protocol_access <- triomics_d_annotation_resource_access(
-    protocol_resource, "ora_protocol", as.character(protocol_resource$version),
-    as.character(protocol_resource$sha256), cache_dir
+  protocol_access <- tryCatch(
+    triomics_d_resource_access(
+      protocol_resource, "ora_protocol", as.character(protocol_resource$version),
+      as.character(protocol_resource$sha256), cache_dir, network_policy = "offline"
+    ),
+    error = function(error) {
+      if (inherits(error, "triomics_error") &&
+          identical(as.character(error$code), "D_RESOURCE_RIGHTS")) {
+        return(triomics_d_resource_status_from_error(error, protocol_resource, "ora_protocol"))
+      }
+      stop(error)
+    }
   )
   if (!identical(protocol_access$status, "available")) {
     return(list(

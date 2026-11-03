@@ -1,6 +1,7 @@
 triomics_d_resource_status_from_error <- function(error, resource, operation) {
   code <- if (inherits(error, "triomics_error")) as.character(error$code) else character()
-  if (length(code) != 1L || is.na(code) ||
+  if (isTRUE(error$resource_access_class == "unsafe_structure") ||
+      length(code) != 1L || is.na(code) ||
       !code %in% c("D_RESOURCE_RIGHTS", "D_RESOURCE_HASH_MISMATCH")) {
     stop(error)
   }

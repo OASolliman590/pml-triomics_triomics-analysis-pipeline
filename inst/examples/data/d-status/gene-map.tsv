@@ -1,2 +1,11 @@
 source_namespace	source_id	taxon_id	target_namespace	target_id	relation	resolution	evidence_ref	resource_id
-synthetic_protein	SYN_1_001	9606	Reactome	R-SYN-1	associated	gene	synthetic://d-status/mapping	gene-map
+synthetic_protein	SYN_1_001	9606	Reactome	R-SYN-1	associated	gene	synthetic://d-status/mapping/1	gene-map
+synthetic_protein	SYN_1_002	9606	Reactome	R-SYN-2	associated	gene	synthetic://d-status/mapping/2	gene-map
+synthetic_protein	SYN_1_003	9606	Reactome	R-SYN-3	associated	gene	synthetic://d-status/mapping/3	gene-map
+synthetic_protein	SYN_1_004	9606	Reactome	R-SYN-4	associated	gene	synthetic://d-status/mapping/4	gene-map
+synthetic_protein	SYN_1_005	9606	Reactome	R-SYN-5	associated	gene	synthetic://d-status/mapping/5	gene-map
+synthetic_protein	SYN_1_006	9606	Reactome	R-SYN-6	associated	gene	synthetic://d-status/mapping/6	gene-map
+synthetic_protein	SYN_1_007	9606	Reactome	R-SYN-7	associated	gene	synthetic://d-status/mapping/7	gene-map
+synthetic_protein	SYN_1_008	9606	Reactome	R-SYN-8	associated	gene	synthetic://d-status/mapping/8	gene-map
+synthetic_protein	SYN_1_009	9606	Reactome	R-SYN-9	associated	gene	synthetic://d-status/mapping/9	gene-map
+synthetic_protein	SYN_1_010	9606	Reactome	R-SYN-10	associated	gene	synthetic://d-status/mapping/10	gene-map
