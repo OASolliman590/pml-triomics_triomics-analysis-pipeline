@@ -44,20 +44,10 @@
       "base": "c78555ae50688089075913a1d27c3ff72abc18a1",
       "worktree": "/tmp/triomics-m7-022-luna",
       "attempt": 1,
-      "repair_attempts": 1,
-      "next_transition": "Sol_diff_review_and_independent_D04_verification",
+      "repair_attempts": 2,
+      "next_transition": "Sol_independent_verification_and_one_focused_Astra_rereview",
       "candidate": "225529a",
-      "phase": "repair1_regressions_and_readonly_review"
-    },
-    {
-      "agent": "/root/m7_022_implementation_astra",
-      "role": "read_only_D04_implementation_audit",
-      "model_requested": "gpt-6-astra",
-      "effort_requested": "low",
-      "effective_settings_exposed": false,
-      "candidate": "225529ab1cc9cd022224ed171a641b0590ddebe0",
-      "next_transition": "combine_findings_into_remaining_repair2_or_independent_verification",
-      "attempt": 1
+      "phase": "finish_regressions_then_combined_repair2"
     }
   ],
   "orchestration_control": {
@@ -5710,6 +5700,13 @@
         "skip": 0
       },
       "disposition": "Sol no-fit probe confirms duplicate protocol, claim and set keys accepted. Fresh read-only Astra collecting material findings before one combined remaining repair2; regressions still running. M7/G7 closed."
+    },
+    {
+      "event": "m7_022_implementation_changes_required",
+      "date": "2026-11-03",
+      "candidate_commit": "225529ab1cc9cd022224ed171a641b0590ddebe0",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-022-implementation-astra.md",
+      "disposition": "One combined repair2 issued to same Luna for duplicate keys and original JSON shape/type validation. No additional repair in this cycle. One focused Astra rereview remains."
     }
   ],
   "packets": {

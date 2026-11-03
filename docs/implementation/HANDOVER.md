@@ -32,9 +32,10 @@ interruption is resolved. Old M7-021 worker completed; one targeted review repai
 M7-022 scope e59b515 has fresh Astra pass. Fresh Luna /root/m7_022_luna is
 RUNNING in /tmp/triomics-m7-022-luna, clean base c78555a, initial attempt and
 repair1 at225529a after initial890cf46 has102focusedpasses,0fail/warn/skip;
-regressions are running. One targeted repair remains. Fresh read-only Astra
-/root/m7_022_implementation_astra is reviewing225529a. Sol confirmed duplicate
-protocol/claim/set keys are accepted; collect all review findings before repair2.
+regressions are running. Fresh read-only Astra returned changes_required: duplicate
+protocol/claim/set keys and malformed member/identity types must fail closed.
+Sol issued combined final repair2 to the same Luna, after regressions finish.
+One focused Astra rereview remains; no third repair in M7-022.
 Reconcile its result; parent reviews and independently
 verifies before integration. Do not duplicate dispatch. Brief /tmp/triomics-stage-d-evidence/m7-022/luna-brief.md.
 D05 scope cfed36a has fresh Astra pass, but implementation waits on D04.
