@@ -21,12 +21,15 @@ Scope Astra passed 4e8c1c2. Clean precursor suites pass1087 with one named expec
 warning, zero failure/error/skip. Native B/C/D exits0/0/0, 23 assertions pass,
 SYN_12 persisted time:null and all predecessor/generation hashes read back.
 Receipt: reviews/2026-11-03-m7-021-precursor-verification.md.
-Fresh Luna `/root/m7_021_luna` works in `/tmp/triomics-m7-021-luna`, base4e8c1c2,
-on D02/D03 only. Initial attempt; no repairs used. Sol coordinator remains in
-`/tmp/triomics-m7-021`. No private data, AIU, fasting or push.
-Resume: reconcile the running Luna result, review its diff, apply any allowlisted
-shared-file proposal as Sol, and verify its focused/native proof before D04.
-Do not redispatch the worker or act on stale historical next-action text below.
+PortableSSD briefly disconnected during native mapping verification and has now
+remounted. Sol verified coordinator8b41879 and clean worker58e1009 (not integrated).
+The SAME worker /root/m7_021_luna resumed its initial attempt; zero parent repairs.
+The failed environment run32pass/2fail is not GREEN. Pending: preserve resource
+symlink rejection, final focused/native mapping proof, then Sol review/readback.
+The interruption/recovery receipt is reviews/2026-11-03-m7-021-ssd-interruption.md.
+All local recovery copies, evidence and future scope drafts are preserved under
+/tmp/triomics-stage-d-evidence. Continue from this active worker, not a redispatch.
+M7/G7 closed; later scopes await verified dependencies. No private data or push.
 
 ## Current checkpoint — 29 October 2026, D-T11 stopped at the repair limit
 

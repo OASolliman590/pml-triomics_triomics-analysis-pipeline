@@ -41,7 +41,8 @@
       "model_requested": "gpt-6-luna",
       "effort_requested": "max",
       "effective_settings_exposed": false,
-      "base": "4e8c1c2ee24f8150ebc2b67e29a40c8595816fa9",
+      "base": "4e8c1c2",
+      "candidate": "58e100922cf5da0d435edae9593d3b09da0c9e8e",
       "worktree": "/tmp/triomics-m7-021-luna",
       "attempt": 1,
       "repair_attempts": 0,
@@ -49,7 +50,7 @@
     }
   ],
   "orchestration_control": {
-    "status": "m7_021_luna_running",
+    "status": "m7_021_luna_resumed_after_volume_recovery",
     "last_reconciled": "2026-11-03",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -5572,6 +5573,21 @@
       "candidate_commit": "4e8c1c2ee24f8150ebc2b67e29a40c8595816fa9",
       "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-precursor-verification.md",
       "disposition": "Scope pass; precursor1087+native23 pass; D02/D03 worker running. M7/G7 closed."
+    },
+    {
+      "event": "m7_021_external_volume_disconnected",
+      "date": "2026-11-03",
+      "worker": "/root/m7_021_luna",
+      "candidate_commit": "58e100922cf5da0d435edae9593d3b09da0c9e8e",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-ssd-interruption.md",
+      "disposition": "Worker stopped; no integration. Resume same initial attempt after actual Git metadata restored. No source identity bypass."
+    },
+    {
+      "event": "m7_021_external_volume_recovered",
+      "date": "2026-11-03",
+      "worker": "/root/m7_021_luna",
+      "candidate_commit": "58e100922cf5da0d435edae9593d3b09da0c9e8e",
+      "disposition": "Verified original Git identities and clean worker; same initial attempt resumed."
     }
   ],
   "packets": {

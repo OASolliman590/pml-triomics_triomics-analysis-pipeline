@@ -1,23 +1,22 @@
 # Tri-omics progress
 
-**Active; tested on synthetic fixtures.** We are completing the
-Stage D interpretation and publication layer from `b03cdef`. It must preserve
-where each result came from and refuse altered evidence before publication.
+**Active; synthetic-fixture evidence only.** We resumed from `b03cdef` to complete
+Stage D while keeping M7/G7 closed. The brief drive interruption is resolved;
+the existing worker and commits were recovered without restarting the cycle.
 
-Fresh verification passed 1,087 assertions across B export, C handoff and the D
-consumer, with zero failures or skips and one expected rejection warning.
-Native B → C → D run passed 23 assertions. The excluded sample’s time
-was saved as JSON null, and independent read-back matched the predecessor and
-published-generation hashes. The MOFA runtime now loads again.
+Fresh precursor verification passed 1,087 assertions with no failures or skips
+and one named expected warning. A native B → C → D run passed 23 assertions,
+including the excluded sample’s JSON null time and matching predecessor hashes.
+Astra approved the bounded mapping scope. The isolated MOFA runtime was restored.
 
-The records now distinguish historical acceptance from current revision evidence.
-Luna is completing native lipid and reaction mapping fixtures. Next come the
-measured-background enrichment route, resource completeness, general target
-profiles and unranked discovery. Conditional methods remain blocked without
-completion credit. No biological validity or clinical performance is established.
+Luna added pinned lipid/reaction mapping fixtures and a resource-path correction
+in candidate `58e1009`. Mapper unit checks passed 145 assertions. The candidate
+is not integrated: a path review correction and successful native verification
+remain pending. The interrupted run receives no passing credit.
 
-The next acceptance is the mapping packet’s verified native publication. M7/G7
-remain closed until every required packet, the full source suite, clean archive
-package gate, documentation and fresh Astra review pass on one snapshot. No new
-Omar decision is needed for this authorized work. Sync: local documents only;
-no GitHub push, Notion sync or private study run.
+Next come measured-background enrichment, resource completeness, general target
+profiles and unranked discovery. Final source, clean archive package, documentation
+and fresh Astra gates must all pass before M7/G7 acceptance. No biological or
+clinical validation is claimed, and conditional methods receive no completion
+credit. Needs Omar: none while the drive remains connected. Sync: local documents
+only; no push, Notion sync or private study run.
