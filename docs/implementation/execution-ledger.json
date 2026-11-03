@@ -45,8 +45,9 @@
       "worktree": "/tmp/triomics-m7-025-luna",
       "attempt": 1,
       "repair_attempts": 0,
-      "phase": "read_scope_then_behavioral_red",
-      "next_transition": "Sol_review_shared_proposal_then_freeze_candidate_for_committed_source_gates"
+      "phase": "initial_implementation_shared_routing_applied",
+      "next_transition": "Sol_review_shared_proposal_then_freeze_candidate_for_committed_source_gates",
+      "shared_sol_commit": "cc4f3ba05a10cc59a1ea43f8ecf1196cf4256593"
     }
   ],
   "orchestration_control": {
@@ -5923,6 +5924,22 @@
       "scope_commit": "c3df0c1bfb9fd7aed8ace1965cb8fefbbfc6b6ed",
       "scope_receipt_commit": "7b93d72",
       "disposition": "D11 and D01 dependencies verified; fresh D12 initial attempt. No repairs yet. Sol owns shared routing; committed-source GREEN gate avoids precommit attribution. M7/G7 closed."
+    },
+    {
+      "event": "m7_025_red_and_sol_shared_routing",
+      "date": "2026-11-04",
+      "base": "3aa28c576e3b2f44a48f0a9a248464bb37f8ee97",
+      "shared_sol_commit": "cc4f3ba05a10cc59a1ea43f8ecf1196cf4256593",
+      "red_counts": {
+        "pass": 0,
+        "fail": 2,
+        "error": 8,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 9,
+        "failure_cap_reached": true
+      },
+      "disposition": "Missing discovery path and overwritten/untyped qualifications reproduced. Sol only wires target slot and typed CLI bypass. Luna initial implementation continues, zero repairs; candidate must freeze before GREEN. No integration/acceptance."
     }
   ],
   "packets": {

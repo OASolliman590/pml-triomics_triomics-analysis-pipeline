@@ -53,7 +53,10 @@ is active. D12 dependency verification is satisfied; do not rerun this cycle.
 M7-025 discovery scope c3df0c1 passed fresh Astra, receipt committed7b93d72.
 Dependencies now verified. Fresh /root/m7_025_luna is active in
 /tmp/triomics-m7-025-luna from3aa28c5, initial attempt, zero repairs. Do not
-redispatch. Sol owns shared CLI/annotation routing and candidate commits if Git
+redispatch. Behavioral RED recorded: 2 failures/8 errors, zero pass, stopped at
+max failures after9blocks because discovery was absent. Sol shared routing is
+cc4f3ba in the worker; typed prepared-result bypass preserves overlap restrictions.
+Initial owned implementation continues, zero repairs. Sol owns candidate commits if Git
 metadata permissions block the worker; no alternate-index workaround.
 M7-026 neutral generation governance wording scope
 60fa3b8 passed fresh Astra; amendedf80e7f6 also passed its one focused scope
