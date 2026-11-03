@@ -12,9 +12,12 @@ force a winner. Astra passed the target repair, and Sol checked the persisted
 source measurements, selection history, dependencies and file hashes. Publication
 safeguards also passed their regression suite.
 
-D-T12 discovery is now being implemented. It must account for every candidate in
-a versioned universe, explain exclusions, retain exploratory status and expose
-reference-data overlap. Its scope passed audit; its implementation is not verified.
+D-T12 discovery is verified and integrated. It accounts for every member of a
+versioned target universe, explains exclusions and retains exploratory, unranked
+profiles. Tests reject reference data derived from the current evaluation data;
+unknown overlap leaves the affected evidence unassessable. Sol checked the native
+publication against its actual B/C predecessors and hashed inputs. The final
+wording cycle separates generated publications from coordinator acceptance.
 
 M7/G7 remain closed. Acceptance still requires every required packet on one frozen
 snapshot, full source and clean archive package checks, Terra documentation and a
