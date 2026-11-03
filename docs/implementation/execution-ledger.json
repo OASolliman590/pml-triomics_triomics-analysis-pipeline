@@ -44,10 +44,11 @@
       "base": "3aa28c576e3b2f44a48f0a9a248464bb37f8ee97",
       "worktree": "/tmp/triomics-m7-025-luna",
       "attempt": 1,
-      "repair_attempts": 0,
-      "phase": "initial_implementation_shared_routing_applied",
-      "next_transition": "Sol_review_shared_proposal_then_freeze_candidate_for_committed_source_gates",
-      "shared_sol_commit": "cc4f3ba05a10cc59a1ea43f8ecf1196cf4256593"
+      "repair_attempts": 1,
+      "phase": "repair1_committed_focused_native_verification",
+      "next_transition": "Sol_independent_readback_then_integrate_after_focused_Astra_pass",
+      "shared_sol_commit": "cc4f3ba05a10cc59a1ea43f8ecf1196cf4256593",
+      "candidate": "d80d23d04e5102c67cc01c15ff3a250f608a90e7"
     }
   ],
   "orchestration_control": {
@@ -5940,6 +5941,15 @@
         "failure_cap_reached": true
       },
       "disposition": "Missing discovery path and overwritten/untyped qualifications reproduced. Sol only wires target slot and typed CLI bypass. Luna initial implementation continues, zero repairs; candidate must freeze before GREEN. No integration/acceptance."
+    },
+    {
+      "event": "m7_025_repair1_and_focused_astra_pass",
+      "date": "2026-11-04",
+      "initial_candidate": "a1df98a254965204eed9071ffd72b2c8d6f10dc8",
+      "candidate": "d80d23d04e5102c67cc01c15ff3a250f608a90e7",
+      "repair_attempts": 1,
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-025-implementation-astra.md",
+      "disposition": "Initial two failures corrected; one repair remains. Focused Astra code review passes; committed-source regressions/native verification pending. M7/G7 closed."
     }
   ],
   "packets": {
@@ -6627,7 +6637,7 @@
       }
     },
     "D-T12": {
-      "status": "m7_025_implementation_active_unaccepted",
+      "status": "m7_025_repair1_verification_unaccepted",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
