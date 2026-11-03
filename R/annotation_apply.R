@@ -376,14 +376,13 @@ triomics_d_target_slot <- function(investigation, config_path, evidence = NULL) 
                      "The quantitative target route is not approved for this command.",
                      "target_investigation.quantitative_method_ref")
   }
-  if (identical(investigation$mode, "discover")) {
-    triomics_d_abort("D_TARGET_UNIVERSE_REQUIRED", "This command does not build a discovery universe.",
-                     "target_investigation.mode")
-  }
   if (!triomics_target_string(investigation$context_ref) || !triomics_target_string(investigation$protocol_ref)) {
     triomics_d_abort("D_TARGET_INPUT_INVALID",
                      "An enabled target investigation needs a context and a protocol reference.",
                      "target_investigation")
+  }
+  if (identical(investigation$mode, "discover")) {
+    return(triomics_d_target_discovery_slot(investigation, config_path, evidence))
   }
   targets <- investigation$targets %||% list()
   if (!is.list(targets) || is.data.frame(targets) || !is.null(names(targets))) {

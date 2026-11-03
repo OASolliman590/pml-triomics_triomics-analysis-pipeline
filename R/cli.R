@@ -2636,6 +2636,25 @@ triomics_d_cli_route_status <- function(evidence) {
 }
 
 triomics_d_attach_target_profiles <- function(existing, investigation) {
+  investigation <- investigation %||% list()
+  if (isTRUE(investigation$enabled) && identical(investigation$mode, "discover")) {
+    discovery <- if (is.list(existing)) existing$discovery else NULL
+    valid <- is.list(existing) && !is.data.frame(existing) &&
+      identical(existing$mode, "discover") && is.list(discovery) &&
+      identical(discovery$format, "triomics.target-discovery") &&
+      identical(discovery$format_version, "1.0") &&
+      identical(discovery$mode, "discover") &&
+      identical(discovery$enumeration, "unranked") &&
+      triomics_d_sequence(discovery$members) &&
+      triomics_d_sequence(existing$profiles) && triomics_d_sequence(existing$results) &&
+      is.null(existing$selected_target)
+    if (!valid) {
+      triomics_d_abort("D_TARGET_DISCOVERY_INVALID",
+                       "Discovery publication requires its prepared unranked result.",
+                       "target_investigation")
+    }
+    return(existing)
+  }
   triomics_target_compose_assessment(existing, investigation)
 }
 
