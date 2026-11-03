@@ -21,15 +21,19 @@ Scope Astra passed 4e8c1c2. Clean precursor suites pass1087 with one named expec
 warning, zero failure/error/skip. Native B/C/D exits0/0/0, 23 assertions pass,
 SYN_12 persisted time:null and all predecessor/generation hashes read back.
 Receipt: reviews/2026-11-03-m7-021-precursor-verification.md.
-PortableSSD briefly disconnected during native mapping verification and has now
-remounted. Sol verified coordinator8b41879 and clean worker58e1009 (not integrated).
-The SAME worker /root/m7_021_luna resumed its initial attempt; zero parent repairs.
-The failed environment run32pass/2fail is not GREEN. Pending: preserve resource
-symlink rejection, final focused/native mapping proof, then Sol review/readback.
-The interruption/recovery receipt is reviews/2026-11-03-m7-021-ssd-interruption.md.
-All local recovery copies, evidence and future scope drafts are preserved under
-/tmp/triomics-stage-d-evidence. Continue from this active worker, not a redispatch.
-M7/G7 closed; later scopes await verified dependencies. No private data or push.
+M7-021 mapping completed and integrated through50ad1fc after Sol independent
+verification off173f38:229passes, zero failures/errors/warnings/skips. Native
+D02 and D03 B/C/D commands all exited0; same-root predecessor/generation hashes
+read back and nonempty mappings verified. Product trees R/tests/inst/man/NAMESPACE
+match the tested worker candidate. Registrations remain unaccepted for final M7
+snapshot reconciliation; downstream D04 dependency verification is satisfied.
+Receipt: reviews/2026-11-03-m7-021-mapping-sol-verification.md. The earlier drive
+interruption is resolved. Old M7-021 worker completed; no repair used.
+M7-022 scope e59b515 has fresh Astra pass. Next: dispatch ONE fresh Luna-max in
+/tmp/triomics-m7-022-luna for the frozen D04 scope; parent reviews/independently
+verifies before integration. Brief /tmp/triomics-stage-d-evidence/m7-022/luna-brief.md.
+D05 follows D04; later target/discovery drafts remain unaudited/unimplemented.
+M7/G7 closed; C07 not_run; C09 unqualified; no private data, AIU, fasting or push.
 
 ## Current checkpoint — 29 October 2026, D-T11 stopped at the repair limit
 

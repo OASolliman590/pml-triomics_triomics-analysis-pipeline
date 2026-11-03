@@ -25,8 +25,15 @@
   },
   "implementation_handoff": {
     "snapshot": "4e8c1c2",
-    "status": "worker_changes_pending_native_and_independent_review",
+    "status": "verified_synthetic_native_pending_final_M7_acceptance",
     "accepted": false,
-    "scope": "Pinned local synthetic lipid resource, config-relative local path resolution, and native D-T02 mapping evidence."
+    "scope": "Pinned local synthetic lipid resource, config-relative local path resolution, and native D-T02 mapping evidence.",
+    "candidate_commit": "f173f38b79b74ae048dad55fc5566b7e53e28eaa",
+    "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-mapping-sol-verification.md",
+    "native_exit_codes": [
+      0,
+      0,
+      0
+    ]
   }
 }

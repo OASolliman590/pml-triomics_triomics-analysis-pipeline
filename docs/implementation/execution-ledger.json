@@ -36,7 +36,7 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_021_verified_ready_to_integrate_then_D04",
+    "status": "m7_022_ready_for_fresh_Luna",
     "last_reconciled": "2026-11-03",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -5610,6 +5610,13 @@
       "candidate_commit": "f173f38b79b74ae048dad55fc5566b7e53e28eaa",
       "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-mapping-sol-verification.md",
       "disposition": "229passes all other counts0; both native B/C/D exits0/0/0, complete hashes read back. Integrate then dispatch audited M7-022 D04. M7/G7 closed."
+    },
+    {
+      "event": "m7_021_integrated_and_m7_022_released",
+      "date": "2026-11-03",
+      "integration_commit": "50ad1fc",
+      "candidate_commit": "f173f38b79b74ae048dad55fc5566b7e53e28eaa",
+      "disposition": "Verified product trees match; D04 scope audit passed; fresh bounded worker may start. No M7/G7 acceptance."
     }
   ],
   "packets": {
