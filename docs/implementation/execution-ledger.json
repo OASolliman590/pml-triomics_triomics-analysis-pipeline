@@ -46,9 +46,9 @@
       "attempt": 1,
       "repair_attempts": 1,
       "next_transition": "Sol_shared_CLI_patch_review_then_candidate_diff_and_independent_proof",
-      "phase": "combined_repair1",
+      "phase": "repair1_scoped_regressions",
       "shared_sol_commit": "2a022cb",
-      "candidate": "2715d7d0c474f4366cfa69a66ce4338ade72aee4"
+      "candidate": "760098c56a00d39e5a9cce60f0033d47c680b85a"
     }
   ],
   "orchestration_control": {
@@ -5761,6 +5761,24 @@
       "additional_conditional_file_activated": "R/resource_manifest.R",
       "evidence": "sol-unsafe-resource-red.json: symlink resource is unavailable rather than hard error",
       "disposition": "Initial native fixture errors plus scope-limited protocol/path/status proof corrections combined into repair1. File activation recorded before worker edits. One further repair and one focused Astra rereview remain."
+    },
+    {
+      "event": "m7_023_native_status_green",
+      "date": "2026-11-03",
+      "candidate_commit": "760098c56a00d39e5a9cce60f0033d47c680b85a",
+      "native_test_counts": {
+        "pass": 86,
+        "fail": 0,
+        "warn": 0,
+        "skip": 0
+      },
+      "unit_counts": {
+        "pass": 71,
+        "fail": 0,
+        "warn": 0,
+        "skip": 0
+      },
+      "disposition": "Worker native matrix green, Sol no-fit symlink probe now hardrejects. D01-D04+ORAshared regressions running. No final integration or dependent target release."
     }
   ],
   "packets": {

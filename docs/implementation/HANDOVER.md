@@ -35,11 +35,12 @@ N/K/n/k10/3/1/1,p=q.3, measured universe/set-family and predecessor hashes verif
 Astra focused rereview passed. Two repairs consumed; old worker completed.
 Receipt: reviews/2026-11-03-m7-022-ora-sol-verification.md. D05 dependency released.
 D05 scope cfed36a has fresh Astra pass. Fresh M7-023 Luna /root/m7_023_luna
-is RUNNING at /tmp/triomics-m7-023-luna, base749cf67, initial attempt. Sol
-shared CLI patch2a022cb is committed in the worker tree after Sol nativeRED
-proved missing persisted route_status on c2f7439. Luna initial implementation
-continues. Sol must independently verify and obtain fresh
-implementation Astra pass before target consumers. Do not duplicate dispatch.
+is RUNNING at /tmp/triomics-m7-023-luna, base749cf67, repair1 candidate760098c.
+Sol shared CLI2a022cb is in that branch. Initial implementation Astra required
+protocol/path/fixture corrections; repair1 native matrix86pass and units71pass,
+all0fail/warn/skip. D01-D04+ORAshared regressions are running. One repair and
+one focused Astra rereview remain. Sol independent native proof and implementation
+Astra pass must precede target consumers. Do not duplicate dispatch.
 M7-024 target scope b1c7b4c passed fresh Astra; implementation waits on D05.
 M7-025 discovery scope c3df0c1 passed fresh Astra; implementation waits on D11.
 M7-026 neutral generation governance wording scope
