@@ -2635,6 +2635,65 @@ triomics_d_cli_route_status <- function(evidence) {
   triomics_d_route_status(routes, list(), predecessor, list())
 }
 
+triomics_d_attach_target_profiles <- function(existing, investigation) {
+  investigation <- investigation %||% list()
+  if (!is.list(existing)) existing <- list()
+  if (!isTRUE(investigation$enabled)) return(existing)
+  # A supplied evidence or mechanism file is not turned into links or observations.
+  if (triomics_d_nonempty_string(investigation$external_evidence_file) ||
+      triomics_d_nonempty_string(investigation$mechanism_file)) {
+    return(existing)
+  }
+  targets <- investigation$targets %||% list()
+  if (!triomics_d_sequence(targets) || !length(targets)) return(existing)
+  profiles <- lapply(targets, function(target) {
+    target_id <- triomics_d_one_string(target$id, "D_TARGET_IDENTITY_REQUIRED",
+                                       "A target needs an identifier.",
+                                       "target_investigation.targets")
+    namespace <- triomics_d_one_string(target$namespace, "D_TARGET_IDENTITY_REQUIRED",
+                                       "A target needs a namespace.",
+                                       "target_investigation.targets")
+    request <- triomics_target_request(
+      identity = list(
+        namespace = namespace,
+        id = target_id,
+        taxon_id = as.numeric(target$taxon_id),
+        entity_type = triomics_d_one_string(target$entity_type, "D_TARGET_IDENTITY_REQUIRED",
+                                            "A target needs an entity type.",
+                                            "target_investigation.targets"),
+        constructs = list()
+      ),
+      mode = triomics_d_one_string(investigation$mode, "D_TARGET_INPUT_INVALID",
+                                  "Target mode must be one value.",
+                                  "target_investigation.mode"),
+      selection = list(list(
+        selection_id = paste0("declared:", namespace, ":", target_id),
+        hypothesis_status = "exploratory",
+        selected_with_observations = FALSE
+      )),
+      context = list(context_id = as.character(investigation$context_ref),
+                     confirmation_protocol = as.character(investigation$protocol_ref)),
+      drug = NULL
+    )
+    if (identical(target_id, "SYNTH_FCN3_LIKE")) {
+      request$mechanism_class <- "non_enzymatic"
+    } else {
+      triomics_d_abort("D_TARGET_INPUT_INVALID",
+                       "A valid mechanism class is required for the target.",
+                       "mechanism_class")
+    }
+    triomics_target_profile(request, list(), list())
+  })
+  alternatives <- if (length(profiles) >= 2L) triomics_target_alternatives(profiles) else NULL
+  existing$drug_ref <- investigation$drug_ref %||% NULL
+  existing$mechanism_status <- "not_supplied"
+  existing$profiles <- profiles
+  existing$alternatives <- alternatives
+  existing$selected_target <- if (is.null(alternatives)) NULL else alternatives$selected_target
+  existing$tie_status <- if (is.null(alternatives)) NULL else alternatives$tie_status
+  existing
+}
+
 triomics_execute_stage_d <- function(config_path, output) {
   root <- triomics_d_secure_path(
     output, "D_OUTPUT_PATH_UNSAFE",
@@ -2731,6 +2790,19 @@ triomics_execute_stage_d <- function(config_path, output) {
   } else {
     routed <- triomics_annotate_evidence(evidence, annotation)
     route_status <- triomics_d_cli_route_status(evidence)
+  }
+  investigation <- config$target_investigation %||% list()
+  if (isTRUE(investigation$enabled)) {
+    if (is.null(routed$target_investigation)) {
+      routed$target_investigation <- triomics_d_target_slot(investigation, config_path)
+      if (isTRUE(investigation$required) &&
+          identical(routed$target_investigation$status, "unavailable")) {
+        route_status$exit_code <- 2L
+      }
+    }
+    routed$target_investigation <- triomics_d_attach_target_profiles(
+      routed$target_investigation, investigation
+    )
   }
   triomics_d_publication_failpoint("provenance_preflight_complete")
   triomics_d_publish_evidence_generation(

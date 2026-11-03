@@ -505,6 +505,67 @@ test_that('mechanism class is required and the synthetic target is nonenzymatic'
   expect_identical(t11_code(triomics_target_profile(request, list(), list())), 'D_TARGET_INPUT_INVALID')
 })
 
+t11_investigation <- function(targets = list(list(namespace = 'synthetic', id = 'SYNTH_FCN3_LIKE', taxon_id = 9606, entity_type = 'protein'))) {
+  list(enabled = TRUE, mode = 'assess', targets = targets, drug_ref = NULL,
+       context_ref = 'synthetic_context', external_evidence_file = NULL,
+       mechanism_file = NULL, protocol_ref = 'synthetic_target_protocol', required = FALSE)
+}
+
+test_that('stage D records one unmeasured profile and does not choose an alternative', {
+  slot <- list(status = 'unavailable', reason_code = 'D_TARGET_EVIDENCE_ABSENT', results = list())
+  attached <- triomics_d_attach_target_profiles(slot, t11_investigation())
+  expect_identical(attached$status, 'unavailable')
+  expect_identical(attached$reason_code, 'D_TARGET_EVIDENCE_ABSENT')
+  expect_identical(length(attached$profiles), 1L)
+  expect_identical(attached$profiles[[1]]$request$mechanism_class, 'non_enzymatic')
+  expect_null(attached$profiles[[1]]$request$drug)
+  expect_identical(attached$profiles[[1]]$coverage, 'unmeasured')
+  expect_identical(attached$profiles[[1]]$independent_count, 0L)
+  expect_length(attached$profiles[[1]]$links, 0L)
+  expect_null(attached$alternatives)
+  expect_null(attached$selected_target)
+  expect_null(attached$tie_status)
+  expect_identical(attached$mechanism_status, 'not_supplied')
+})
+
+test_that('stage D compares profiles only when two declared targets have a known class', {
+  targets <- list(
+    list(namespace = 'synthetic', id = 'SYNTH_FCN3_LIKE', taxon_id = 9606, entity_type = 'protein'),
+    list(namespace = 'synthetic', id = 'SYNTH_FCN3_LIKE', taxon_id = 9606, entity_type = 'protein')
+  )
+  attached <- triomics_d_attach_target_profiles(list(status = 'unavailable', reason_code = 'D_TARGET_EVIDENCE_ABSENT', results = list()), t11_investigation(targets))
+  expect_identical(length(attached$profiles), 2L)
+  expect_identical(attached$alternatives$comparability, 'noncomparable')
+  expect_null(attached$alternatives$selected_target)
+  expect_identical(attached$alternatives$tie_status, 'unresolved')
+  expect_null(attached$selected_target)
+  other <- t11_investigation(list(list(namespace = 'synthetic', id = 'OTHER_TARGET', taxon_id = 9606, entity_type = 'protein')))
+  expect_identical(t11_code(triomics_d_attach_target_profiles(list(), other)), 'D_TARGET_INPUT_INVALID')
+})
+
+test_that('stage D does not invent profiles from an evidence or mechanism file', {
+  slot <- list(status = 'recorded', reason_code = NULL, results = list(list(kept = TRUE)))
+  evidence <- t11_investigation()
+  evidence$external_evidence_file <- 'evidence.json'
+  kept <- triomics_d_attach_target_profiles(slot, evidence)
+  expect_null(kept$profiles)
+  expect_identical(kept$results[[1]]$kept, TRUE)
+  mechanism <- t11_investigation()
+  mechanism$mechanism_file <- 'mechanism.json'
+  kept <- triomics_d_attach_target_profiles(slot, mechanism)
+  expect_null(kept$profiles)
+  disabled <- t11_investigation()
+  disabled$enabled <- FALSE
+  kept <- triomics_d_attach_target_profiles(slot, disabled)
+  expect_null(kept$profiles)
+})
+
+test_that('stage D execution calls the target profile attachment', {
+  expect_true(any(grepl('triomics_d_attach_target_profiles', deparse(body(triomics_execute_stage_d)), fixed = TRUE)))
+  expect_true(any(grepl('triomics_target_profile', deparse(body(triomics_d_attach_target_profiles)), fixed = TRUE)))
+  expect_true(any(grepl('triomics_target_alternatives', deparse(body(triomics_d_attach_target_profiles)), fixed = TRUE)))
+})
+
 test_that('observations inherit the specific cited path', {
   link <- t11_link(); link$link_id <- 'l2'; link$sign <- 'negative'; link$context_id <- 'other_ctx'
   obs <- t11_obs('a', 'support'); obs$link_id <- 'l2'
