@@ -44,10 +44,11 @@
       "base": "749cf679077d2da60936981b354e81eb20fd1fc0",
       "worktree": "/tmp/triomics-m7-023-luna",
       "attempt": 1,
-      "repair_attempts": 0,
+      "repair_attempts": 1,
       "next_transition": "Sol_shared_CLI_patch_review_then_candidate_diff_and_independent_proof",
-      "phase": "initial_resource_status_implementation",
-      "shared_sol_commit": "2a022cb"
+      "phase": "combined_repair1",
+      "shared_sol_commit": "2a022cb",
+      "candidate": "2715d7d0c474f4366cfa69a66ce4338ade72aee4"
     }
   ],
   "orchestration_control": {
@@ -5751,6 +5752,15 @@
       "red_ref": "docs/implementation/evidence/2026-11-03-m7-023/sol-red-publication-status.json",
       "shared_sol_commit": "2a022cb",
       "disposition": "NativeB/C/D0/0/0 but persisted route_status absent, assertionexit1. Sol-only CLI patch in worker tree persists final status for both branches and marks required target unavailability incomplete. Luna initial implementation continues; not integrated."
+    },
+    {
+      "event": "m7_023_combined_repair1",
+      "date": "2026-11-03",
+      "candidate": "2715d7d0c474f4366cfa69a66ce4338ade72aee4",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-023-implementation-astra.md",
+      "additional_conditional_file_activated": "R/resource_manifest.R",
+      "evidence": "sol-unsafe-resource-red.json: symlink resource is unavailable rather than hard error",
+      "disposition": "Initial native fixture errors plus scope-limited protocol/path/status proof corrections combined into repair1. File activation recorded before worker edits. One further repair and one focused Astra rereview remain."
     }
   ],
   "packets": {

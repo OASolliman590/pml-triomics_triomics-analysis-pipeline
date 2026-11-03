@@ -1,0 +1,6 @@
+{
+  "commit": "2715d7d0c474f4366cfa69a66ce4338ade72aee4",
+  "case": "symlink source",
+  "status": "unavailable",
+  "reason_code": "D_RESOURCE_HASH_MISMATCH"
+}
