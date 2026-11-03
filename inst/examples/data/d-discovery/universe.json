@@ -1,0 +1,79 @@
+{
+  "format": "triomics.target-discovery-universe",
+  "format_version": "1.0",
+  "universe_id": "triomics_d_t12_fixture_universe",
+  "version": "1.0",
+  "enumeration_rule_id": "all-declared-members-v1",
+  "members": [
+    {
+      "member_id": "target-a",
+      "disposition": "included",
+      "reason": "Included by the declared finite synthetic universe.",
+      "identity": {
+        "namespace": "synthetic_protein",
+        "id": "SYNTHETIC_TARGET_A",
+        "taxon_id": 9606,
+        "entity_type": "protein",
+        "constructs": ["synthetic_construct_A"]
+      },
+      "mechanism_class": "non_enzymatic",
+      "links": [
+        {
+          "link_id": "synthetic_path_A",
+          "relation": "regulatory",
+          "sign": "unknown",
+          "context_id": "synthetic_context",
+          "source_id": "SYNTHETIC_TEST_ASSERTION_ONLY_A",
+          "feature_namespace": "synthetic",
+          "feature_id": "SYN_3_001",
+          "expected_direction": "unknown"
+        }
+      ],
+      "selection_history": [],
+      "reference_sources": []
+    },
+    {
+      "member_id": "target-b",
+      "disposition": "included",
+      "reason": "Included by the declared finite synthetic universe.",
+      "identity": {
+        "namespace": "synthetic_protein",
+        "id": "SYNTHETIC_TARGET_B",
+        "taxon_id": 9606,
+        "entity_type": "protein",
+        "constructs": ["synthetic_construct_B"]
+      },
+      "mechanism_class": "non_enzymatic",
+      "links": [
+        {
+          "link_id": "synthetic_path_B",
+          "relation": "regulatory",
+          "sign": "unknown",
+          "context_id": "synthetic_context",
+          "source_id": "SYNTHETIC_TEST_ASSERTION_ONLY_B",
+          "feature_namespace": "synthetic",
+          "feature_id": "SYN_3_002",
+          "expected_direction": "unknown"
+        }
+      ],
+      "selection_history": [],
+      "reference_sources": []
+    },
+    {
+      "member_id": "target-c",
+      "disposition": "excluded",
+      "reason": "Excluded by the declared synthetic universe eligibility rule.",
+      "identity": {
+        "namespace": "synthetic_protein",
+        "id": "SYNTHETIC_TARGET_C",
+        "taxon_id": 9606,
+        "entity_type": "protein",
+        "constructs": ["synthetic_construct_C"]
+      },
+      "mechanism_class": "unknown",
+      "links": [],
+      "selection_history": [],
+      "reference_sources": []
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "packet_id": "D-T12",
+  "request_type": "registration_request",
+  "accepted": false,
+  "namespace_edits": false,
+  "local_files": [
+    "R/target_discovery.R",
+    "tests/testthat/test-D-T12.R",
+    "tests/testthat/test-D-discovery-shared.R",
+    "inst/examples/tickets/D-T12.yaml",
+    "inst/examples/data/d-discovery/",
+    "docs/implementation/registrations/D-T12.json"
+  ],
+  "owned_functions": [
+    "triomics_d_target_discovery_slot",
+    "triomics_d_target_discovery_profile",
+    "triomics_d_target_discovery_source_overlap",
+    "triomics_d_target_discovery_members",
+    "triomics_d_target_discovery_protocol"
+  ],
+  "integration_request": "Sol owns shared discover routing and profile attachment. D-T12 supplies a typed triomics.target-discovery result with a versioned byte-hashed universe, complete member accounting and unranked profiles. Preserve source overlap qualifications during publication; do not reinterpret the discovery enumeration protocol as a confirmation protocol.",
+  "current_revision_verification": {
+    "cycle": "M7-025",
+    "status": "worker_candidate_pending",
+    "milestone_acceptance": false
+  },
+  "next_action": "Keep this request unaccepted until Sol's independent readback and the packet acceptance gate. M7/G7 remain closed."
+}

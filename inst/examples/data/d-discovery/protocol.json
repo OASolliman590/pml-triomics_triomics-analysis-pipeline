@@ -1,0 +1,20 @@
+{
+  "format": "triomics.target-discovery-protocol",
+  "format_version": "1.0",
+  "protocol_id": "synthetic_target_discovery_protocol",
+  "version": "1.0",
+  "context_ref": "synthetic_context",
+  "drug_ref": "synthetic_drug_request",
+  "drug_identity": {
+    "namespace": "synthetic_compound",
+    "id": "SYNTHETIC_COMPOUND_A",
+    "label": "Synthetic test compound A"
+  },
+  "universe_sha256": "ca64a78b01d037d0567978b462fa2d9dbc83c4c9496091cd838a7c8d8585db99",
+  "enumeration_rule": {
+    "rule_id": "all-declared-members-v1",
+    "method": "declared-disposition",
+    "ordering": "input-order",
+    "ranking": "none"
+  }
+}

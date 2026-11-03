@@ -1,0 +1,239 @@
+# Packet D-T11 synthetic target fixture; annotation resources are disabled.
+schema_version: '2.0'
+study_id: triomics_d_t11_fixture
+data_class: synthetic
+sources:
+  - source_id: sample_metadata
+    file: ../data/c04/metadata.tsv
+    format: tsv
+    role: sample_metadata
+    selection_history: full_unselected
+    selection_evidence: Public synthetic software fixture; no participant data.
+  - source_id: block_1
+    file: ../data/independent/proteomics.tsv
+    format: tsv
+    role: measurement_matrix
+    selection_history: full_unselected
+    selection_evidence: Public synthetic software fixture; no outcome-based selection.
+  - source_id: block_2
+    file: ../data/independent/metabolomics.tsv
+    format: tsv
+    role: measurement_matrix
+    selection_history: full_unselected
+    selection_evidence: Public synthetic software fixture; no outcome-based selection.
+metadata:
+  file: ../data/c04/metadata.tsv
+  sample_id: sample_id
+  subject_id: null
+  column_types:
+    sample_id: string
+    score: numeric
+  factor_levels: {}
+blocks:
+  - block_id: block_1
+    name: Synthetic proteome
+    profile: proteomics
+    profile_spec_ref: null
+    file: ../data/independent/proteomics.tsv
+    feature_id_column: feature_id
+    id_namespace: synthetic
+    feature_metadata: null
+    source_refs:
+      - block_1
+    sample_map: null
+    missing_tokens: [NA, '']
+    measurement:
+      quantity: intensity
+      scale: linear
+      units: synthetic_arbitrary_units
+      acquisition: Explicit public synthetic software fixture.
+      missingness_assumption: unknown
+      missingness_evidence: No missing values are required for this fixture.
+      upstream_steps: []
+      original_mask_status: known
+      denominator_ref: null
+    preprocessing:
+      context_id: c06_fixture
+      filter:
+        prevalence: 0.7
+        min_observed: 1
+        scope: global
+        stratum: null
+        selection_justification: Synthetic fixture choice only.
+      transform:
+        method: none
+        zero_policy: error
+        zero_value: null
+        reference_set: null
+        log_base: null
+      normalisation:
+        method: none
+        reference: none
+        reference_file: null
+        metadata_column: null
+        standards_map: null
+        qualification_ref: null
+      imputation:
+        method: none
+        tail_probability: null
+        scale_multiplier: null
+        k: null
+        trees: null
+        qualification_ref: null
+      derive: []
+    annotation_route: none
+  - block_id: block_2
+    name: Synthetic metabolome
+    profile: metabolomics
+    profile_spec_ref: null
+    file: ../data/independent/metabolomics.tsv
+    feature_id_column: feature_id
+    id_namespace: synthetic
+    feature_metadata: null
+    source_refs:
+      - block_2
+    sample_map: null
+    missing_tokens: [NA, '']
+    measurement:
+      quantity: intensity
+      scale: linear
+      units: synthetic_arbitrary_units
+      acquisition: Explicit public synthetic software fixture.
+      missingness_assumption: unknown
+      missingness_evidence: No missing values are required for this fixture.
+      upstream_steps: []
+      original_mask_status: known
+      denominator_ref: null
+    preprocessing:
+      context_id: c06_fixture
+      filter:
+        prevalence: 0.7
+        min_observed: 1
+        scope: global
+        stratum: null
+        selection_justification: Synthetic fixture choice only.
+      transform:
+        method: none
+        zero_policy: error
+        zero_value: null
+        reference_set: null
+        log_base: null
+      normalisation:
+        method: none
+        reference: none
+        reference_file: null
+        metadata_column: null
+        standards_map: null
+        qualification_ref: null
+      imputation:
+        method: none
+        tail_probability: null
+        scale_multiplier: null
+        k: null
+        trees: null
+        qualification_ref: null
+      derive: []
+    annotation_route: none
+analyses:
+  - analysis_id: d_t11_synthetic_exploratory
+    block_ids: [block_1, block_2]
+    preparation_context_id: c06_fixture
+    design:
+      kind: independent
+      condition: score
+      condition_type: continuous
+      subject_id: null
+      repeated: false
+      representation: levels
+      reference_level: null
+      target_level: null
+      between_group: null
+      visit_column: null
+      reference_visit: null
+      target_visit: null
+      covariates: []
+      missing_visits: error
+      time_column: null
+      time_unit: null
+      time_origin: null
+      spline_knots: []
+      spline_boundary: []
+      residual_contract_ref: null
+    statistics:
+      method: limma
+      contrasts:
+        - contrast_id: score_slope
+          weights: {intercept: 0, continuous.score: 1}
+          interpretation: Synthetic software fixture only; no scientific inference.
+      trend: false
+      robust: false
+      q_threshold: 0.05
+      effect_threshold: 0.5
+      effect_unit: per_unit_beta
+      family_scope: one_scalar_contrast_all_retained_features
+      selection_validity: qualified
+      selection_justification: Synthetic fixture; no scientific inference is claimed.
+      dependence_justification: Synthetic fixture; no scientific inference is claimed.
+      rank_sensitivity: false
+      count_metadata: null
+      fallback: none
+    integration:
+      - integration_id: d_t11_concat_pca
+        method: concat_pca
+        required: true
+        outcome: null
+        n_components: 2
+        scale_features: false
+        block_scaling: none
+        score_definition: native
+        design_matrix: null
+        keepX: {}
+        keepY: null
+        tuning_grid_ref: null
+        prediction_rule: null
+        mofa_convergence: not_applicable
+        mofa_seed_repeats: 1
+        native_options_ref: null
+        selection: {method: none, value: null}
+        evaluation:
+          mode: exploratory
+          generalization_unit: sample
+          outer_folds: 1
+          inner_folds: 1
+          repeats: 1
+          stratification: null
+          temporal_rule_ref: null
+          primary_metric: none
+          max_fits: 1
+          uncertainty_protocol_ref: null
+    completeness: strict
+clinical:
+  enabled: false
+  dictionary_file: null
+  observations_file: null
+  links_file: null
+  objectives: []
+annotation:
+  resources: []
+  requests: []
+target_investigation:
+  enabled: true
+  mode: discover
+  targets: []
+  drug_ref: synthetic_drug_request
+  context_ref: synthetic_context
+  universe_ref: ../data/d-discovery/universe.json
+  external_evidence_file: ../data/d-target/external-assays.json
+  mechanism_file: null
+  protocol_ref: ../data/d-discovery/protocol.json
+  quantitative_method_ref: null
+  required: false
+execution:
+  seed: 20260920
+  network_policy: offline
+  workers: 1
+  cpu_limit: 1
+  memory_gib: 2
+  max_fits: 40
+  audience: synthetic_demo
+  disclosure_policy_ref: null
