@@ -7,11 +7,12 @@ features, ambiguous identities and unmapped observations. Sol independently
 verified229assertions and both B → C → D publications, including their hashes.
 
 Enrichment now uses the eligible measured background rather than only selected
-molecules. Its focused synthetic checks pass102assertions, with a hand-checked
-example giving p=q=0.3. Another554routing/mapping regression assertions passed;
-one expected warning records rejection of stale paired signs. Astra found
-ambiguous protocol parsing, so Luna is completing the final bounded repair before
-independent verification and focused rereview. Enrichment is not yet integrated.
+molecules. Sol independently verified122focused assertions and a fresh B → C → D
+publication:10measured entities,3pathway members,1selected and1overlap give p=q=0.3.
+Protocol, mapping, measured-background, set-family and predecessor hashes matched.
+Astra's focused rereview passed the parser repair, and the change is integrated.
+The554affected regression assertions passed with one expected stale-sign warning.
+These checks prove software behavior on synthetic inputs, not pathway activation.
 
 Next are resource completeness, general target profiles and unranked discovery,
 following their verified dependencies. Their design scopes have passed audit.

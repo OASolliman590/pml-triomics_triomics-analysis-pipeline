@@ -1,0 +1,10 @@
+{
+  "commit": "225529ab1cc9cd022224ed171a641b0590ddebe0",
+  "results": {
+    "valid": "accepted",
+    "duplicate_top": "accepted",
+    "duplicate_claim": "accepted",
+    "duplicate_set": "accepted"
+  },
+  "receipt_note": "Original results restored from captured Sol tool output after a later probe wrote the same path; GREEN saved separately."
+}

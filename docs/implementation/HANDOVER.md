@@ -29,17 +29,15 @@ match the tested worker candidate. Registrations remain unaccepted for final M7
 snapshot reconciliation; downstream D04 dependency verification is satisfied.
 Receipt: reviews/2026-11-03-m7-021-mapping-sol-verification.md. The earlier drive
 interruption is resolved. Old M7-021 worker completed; one targeted review repair used.
-M7-022 final Luna candidate36abc874 completed122focusedpasses,0fail/warn/skip;
-regressions554pass/0fail/1expectedstale-signwarning/0skip. Two repairs consumed.
-Fresh Astra implementation audit required changes at225529a; its one focused
-rereview passed36abc874. Luna is idle/completed. Sol independent focused check
-session44211 is running, followed by persistent native B/C/D readback before
-integration and D05 release. No additional M7-022 repair is available.
-D05 scope cfed36a has fresh Astra pass, but implementation waits on D04.
+M7-022 verified and integrated throughec8876a. Tested worker36abc874:
+Sol independent122pass/0fail/error/warn/skip; nativeB/C/D0/0/0 with persisted
+N/K/n/k10/3/1/1,p=q.3, measured universe/set-family and predecessor hashes verified.
+Astra focused rereview passed. Two repairs consumed; old worker completed.
+Receipt: reviews/2026-11-03-m7-022-ora-sol-verification.md. D05 dependency released.
+D05 scope cfed36a has fresh Astra pass; fresh M7-023 Luna dispatch is next.
 M7-024 target scope b1c7b4c passed fresh Astra; implementation waits on D05.
 M7-025 discovery scope c3df0c1 passed fresh Astra; implementation waits on D11.
-D04 worker reproduced native RED atcf2e2b5 (B/C0, D2), then added tests at5518045;
-implementation continues. M7-026 neutral generation governance wording scope
+M7-026 neutral generation governance wording scope
 60fa3b8 passed fresh Astra; implementation waits on D12 and precedes final gates.
 M7/G7 closed; C07 not_run; C09 unqualified; no private data, AIU, fasting or push.
 

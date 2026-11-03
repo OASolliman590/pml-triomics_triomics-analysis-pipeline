@@ -1,0 +1,9 @@
+{
+  "commit": "36abc874da479b4c6397d598056461db730d9c26",
+  "results": {
+    "valid": "accepted",
+    "duplicate_top": "D_ORA_PROTOCOL_INVALID",
+    "duplicate_claim": "D_ORA_PROTOCOL_INVALID",
+    "duplicate_set": "D_ORA_PROTOCOL_INVALID"
+  }
+}

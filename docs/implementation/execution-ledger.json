@@ -5712,6 +5712,14 @@
       "named_warning": "D-T01 refuses stale paired signs and preserves the old pointer: expected system2 status2",
       "review_ref": "docs/implementation/reviews/2026-11-03-m7-022-implementation-astra.md",
       "disposition": "Astra focused pass. Sol independent focused session44211 then fresh native persistent readback. No integration or M7/G7 acceptance yet."
+    },
+    {
+      "event": "m7_022_integrated",
+      "date": "2026-11-03",
+      "candidate_commit": "36abc874da479b4c6397d598056461db730d9c26",
+      "integration_commit": "ec8876a",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-022-ora-sol-verification.md",
+      "disposition": "Sol independent122pass0fail/error/warn/skip; nativeB/C/D0/0/0,counts and all hashes verified; Astra focusedpass. D05 implementation dependency released. M7/G7 closed."
     }
   ],
   "packets": {
@@ -6239,6 +6247,13 @@
         "snapshot": "b03cdef",
         "finding": "ORA implemented as function, public route unavailable; measured universe integration missing.",
         "accepted": false
+      },
+      "current_revision_verification": {
+        "cycle": "M7-022",
+        "commit": "36abc874da479b4c6397d598056461db730d9c26",
+        "status": "verified_synthetic_native_for_D05_dependency",
+        "review_ref": "docs/implementation/reviews/2026-11-03-m7-022-ora-sol-verification.md",
+        "milestone_acceptance": false
       }
     },
     "D-T05": {
