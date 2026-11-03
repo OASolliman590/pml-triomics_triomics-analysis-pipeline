@@ -262,6 +262,16 @@ triomics_d_annotate_local_resources <- function(evidence, annotation, cache_dir,
   annotation <- annotation %||% list()
   requests <- triomics_d_request_list(annotation)
   resources <- triomics_d_index_resources(annotation)
+  config_root <- dirname(normalizePath(config_path, winslash = "/", mustWork = TRUE))
+  for (resource_id in names(resources)) {
+    source_path <- as.character(resources[[resource_id]]$local_file %||% "")
+    if (!triomics_d_nonempty_string(source_path) ||
+        grepl("^(?:https?|ftp)://", source_path, ignore.case = TRUE)) next
+    if (!grepl("^(?:[A-Za-z]:[/\\\\]|/)", source_path)) {
+      source_path <- file.path(config_root, source_path)
+    }
+    resources[[resource_id]]$local_file <- normalizePath(source_path, winslash = "/", mustWork = FALSE)
+  }
   by_route <- list()
   for (request in requests) {
     route <- triomics_d_one_string(request$route, "D_ROUTE_INVALID",

@@ -7,12 +7,12 @@ d_foundation_cli_run <- function(config_path, stage, output_root) {
   cli <- triomics_test_resource("exec", "triomics")
   previous_wd <- setwd(dirname(cli))
   on.exit(setwd(previous_wd), add = TRUE)
-  output <- system2(
+  output <- suppressWarnings(system2(
     file.path(R.home("bin"), "Rscript"),
     c("--vanilla", shQuote(basename(cli)), "--config", shQuote(config_path),
       "--stage", shQuote(stage), "--output", shQuote(output_root)),
     stdout = TRUE, stderr = TRUE
-  )
+  ))
   exit_code <- attr(output, "status")
   if (is.null(exit_code)) exit_code <- 0L
   list(exit_code = as.integer(exit_code), output = output)
@@ -75,7 +75,7 @@ testthat::test_that("D-T02 and D-T03 tickets pin local mapping resources by cont
     required <- c("source_namespace", "source_id", "taxon_id", "target_namespace",
                   "target_id", "relation", "resolution", "evidence_ref", "resource_id")
     testthat::expect_true(all(required %in% names(table)), info = case$ticket)
-    testthat::expect_gt(nrow(table), 0L, info = case$ticket)
+    testthat::expect_gt(nrow(table), 0L)
     testthat::expect_true(all(table$resource_id == resource$resource_id), info = case$ticket)
     testthat::expect_true(all(metadata$feature_id %in% c("PC(34:1)", "PE(36:2)", "TG(50:1)",
                                                         "SYN-GENE-001", "SYN-GENE-002", "SYN-GENE-003")),
@@ -90,7 +90,8 @@ testthat::test_that("D-T02 and D-T03 map actual same-root native B and C nominat
   )
   for (case in cases) {
     fixture <- d_foundation_ticket(case$ticket)
-    output_root <- tempfile(paste0("d-foundation-", case$route, "-"), tmpdir = "/private/tmp")
+    output_root <- tempfile(paste0("d-foundation-", case$route, "-"),
+                            tmpdir = normalizePath(tempdir(), winslash = "/", mustWork = TRUE))
     dir.create(output_root, recursive = TRUE, showWarnings = FALSE)
     on.exit(unlink(output_root, recursive = TRUE, force = TRUE), add = TRUE)
 
