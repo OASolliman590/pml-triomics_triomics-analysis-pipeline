@@ -230,8 +230,8 @@ contracts and do not infer undeclared scientific choices.
 
 \code{annotate_evidence()} and \code{triomics_annotate_evidence()} require
 persisted producer provenance that binds the exact B-T07 and C-06 payload and
-envelope bytes. D publication retains C-06 as unaccepted, C-07 controls as
-\code{not_run}, and C-09 as conditional and unqualified; unavailable or
+envelope bytes. D publication is not a C-06, M7, or G7 acceptance receipt.
+It retains C-07 controls as \code{not_run} and C-09 as conditional and unqualified; unavailable or
 disabled annotation methods do not imply biological absence.
 
 The simulator deliberately has no seed argument. Stage A orchestration must
