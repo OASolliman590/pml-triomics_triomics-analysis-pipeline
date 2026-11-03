@@ -34,22 +34,7 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_022_luna",
-      "role": "bounded_D04_implementation",
-      "model_requested": "gpt-6-luna",
-      "effort_requested": "max",
-      "effective_settings_exposed": false,
-      "base": "c78555ae50688089075913a1d27c3ff72abc18a1",
-      "worktree": "/tmp/triomics-m7-022-luna",
-      "attempt": 1,
-      "repair_attempts": 2,
-      "next_transition": "Sol_independent_verification_and_one_focused_Astra_rereview",
-      "candidate": "225529a",
-      "phase": "finish_regressions_then_combined_repair2"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
     "status": "m7_022_luna_running",
     "last_reconciled": "2026-11-03",
@@ -5707,6 +5692,26 @@
       "candidate_commit": "225529ab1cc9cd022224ed171a641b0590ddebe0",
       "review_ref": "docs/implementation/reviews/2026-11-03-m7-022-implementation-astra.md",
       "disposition": "One combined repair2 issued to same Luna for duplicate keys and original JSON shape/type validation. No additional repair in this cycle. One focused Astra rereview remains."
+    },
+    {
+      "event": "m7_022_worker_and_focused_audit_complete",
+      "date": "2026-11-03",
+      "candidate_commit": "36abc874da479b4c6397d598056461db730d9c26",
+      "focused_counts": {
+        "pass": 122,
+        "fail": 0,
+        "warn": 0,
+        "skip": 0
+      },
+      "regression_counts": {
+        "pass": 554,
+        "fail": 0,
+        "warn": 1,
+        "skip": 0
+      },
+      "named_warning": "D-T01 refuses stale paired signs and preserves the old pointer: expected system2 status2",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-022-implementation-astra.md",
+      "disposition": "Astra focused pass. Sol independent focused session44211 then fresh native persistent readback. No integration or M7/G7 acceptance yet."
     }
   ],
   "packets": {
