@@ -2636,63 +2636,7 @@ triomics_d_cli_route_status <- function(evidence) {
 }
 
 triomics_d_attach_target_profiles <- function(existing, investigation) {
-  investigation <- investigation %||% list()
-  if (!is.list(existing)) existing <- list()
-  if (!isTRUE(investigation$enabled)) return(existing)
-  # A supplied evidence or mechanism file is not turned into links or observations.
-  if (triomics_d_nonempty_string(investigation$external_evidence_file) ||
-      triomics_d_nonempty_string(investigation$mechanism_file)) {
-    return(existing)
-  }
-  targets <- investigation$targets %||% list()
-  if (!triomics_d_sequence(targets) || !length(targets)) return(existing)
-  profiles <- list()
-  for (target in targets) {
-    target_id <- triomics_d_one_string(target$id, "D_TARGET_IDENTITY_REQUIRED",
-                                       "A target needs an identifier.",
-                                       "target_investigation.targets")
-    if (!identical(target_id, "SYNTH_FCN3_LIKE")) {
-      existing$skipped <- c(existing$skipped, list(list(
-        id = target_id, reason = "mechanism_class_not_declared"
-      )))
-      next
-    }
-    namespace <- triomics_d_one_string(target$namespace, "D_TARGET_IDENTITY_REQUIRED",
-                                       "A target needs a namespace.",
-                                       "target_investigation.targets")
-    request <- triomics_target_request(
-      identity = list(
-        namespace = namespace,
-        id = target_id,
-        taxon_id = as.numeric(target$taxon_id),
-        entity_type = triomics_d_one_string(target$entity_type, "D_TARGET_IDENTITY_REQUIRED",
-                                            "A target needs an entity type.",
-                                            "target_investigation.targets"),
-        constructs = list()
-      ),
-      mode = triomics_d_one_string(investigation$mode, "D_TARGET_INPUT_INVALID",
-                                  "Target mode must be one value.",
-                                  "target_investigation.mode"),
-      selection = list(list(
-        selection_id = paste0("declared:", namespace, ":", target_id),
-        hypothesis_status = "exploratory",
-        selected_with_observations = FALSE
-      )),
-      context = list(context_id = as.character(investigation$context_ref),
-                     confirmation_protocol = as.character(investigation$protocol_ref)),
-      drug = NULL
-    )
-    request$mechanism_class <- "non_enzymatic"
-    profiles[[length(profiles) + 1L]] <- triomics_target_profile(request, list(), list())
-  }
-  alternatives <- if (length(profiles) >= 2L) triomics_target_alternatives(profiles) else NULL
-  existing$drug_ref <- investigation$drug_ref %||% NULL
-  existing$mechanism_status <- "not_supplied"
-  existing$profiles <- profiles
-  existing$alternatives <- alternatives
-  existing$selected_target <- NULL
-  existing$tie_status <- if (is.null(alternatives)) NULL else alternatives$tie_status
-  existing
+  triomics_target_compose_assessment(existing, investigation)
 }
 
 triomics_execute_stage_d <- function(config_path, output) {
@@ -2794,7 +2738,7 @@ triomics_execute_stage_d <- function(config_path, output) {
   investigation <- config$target_investigation %||% list()
   if (isTRUE(investigation$enabled)) {
     if (is.null(routed$target_investigation)) {
-      routed$target_investigation <- triomics_d_target_slot(investigation, config_path)
+      routed$target_investigation <- triomics_d_target_slot(investigation, config_path, evidence = evidence)
     }
     if (isTRUE(investigation$required) &&
         identical(routed$target_investigation$status, "unavailable")) {
@@ -2804,7 +2748,9 @@ triomics_execute_stage_d <- function(config_path, output) {
     routed$target_investigation <- triomics_d_attach_target_profiles(
       routed$target_investigation, investigation
     )
-    routed$target_investigation$protein_metabolites <- triomics_protein_metabolite_report(investigation)
+    routed$target_investigation$protein_metabolites <- triomics_target_merge_protein_metabolites(
+      triomics_protein_metabolite_report(investigation), routed$target_investigation
+    )
   }
   routed$route_status <- route_status
   triomics_d_publication_failpoint("provenance_preflight_complete")
