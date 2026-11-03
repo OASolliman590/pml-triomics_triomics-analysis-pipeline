@@ -266,6 +266,353 @@ triomics_d_resolve_resource_path <- function(path, config_root) {
   file.path(config_root, path)
 }
 
+triomics_d_ora_validate_protocol <- function(protocol, protocol_ref, analysis_id, mapping_resource_ids) {
+  abort <- function(message, key = "annotation.requests.ora.protocol_ref") {
+    triomics_d_abort("D_ORA_PROTOCOL_INVALID", message, key)
+  }
+  top_fields <- c("schema_version", "artifact_type", "protocol_id", "mapping_rule",
+                  "aggregation_rule", "ambiguity_rule", "claims")
+  if (!is.list(protocol) || !setequal(names(protocol), top_fields) ||
+      !identical(as.character(protocol$schema_version), "1.0") ||
+      !identical(as.character(protocol$artifact_type), "declared_universe_ora_protocol") ||
+      !identical(as.character(protocol$protocol_id), protocol_ref) ||
+      !identical(as.character(protocol$mapping_rule), "unique_resolved_entity") ||
+      !identical(as.character(protocol$aggregation_rule), "unique_target_entity_across_measured_features") ||
+      !identical(as.character(protocol$ambiguity_rule), "exclude_unmapped_and_multi_entity_rows") ||
+      !is.list(protocol$claims) || !length(protocol$claims)) {
+    abort("The pinned ORA protocol does not match the supported typed protocol contract.")
+  }
+  claims <- lapply(protocol$claims, function(claim) {
+    if (!is.list(claim)) abort("Every ORA claim must be an object.")
+    branch <- as.character(claim$source_branch %||% "")
+    required <- c("analysis_id", "block_id", "source_branch", "claim_id", "mapping_resource_id",
+                  "mapping_operation", "source_namespace", "taxon_id", "source_resolution",
+                  "target_namespace", "set_family")
+    if (identical(branch, "integration_selection")) required <- c(required, "integration_id")
+    if (!setequal(names(claim), required) ||
+        !all(vapply(c("analysis_id", "block_id", "source_branch", "claim_id", "mapping_resource_id",
+                      "mapping_operation", "source_namespace", "taxon_id", "source_resolution",
+                      "target_namespace"), function(field) triomics_d_nonempty_string(as.character(claim[[field]])),
+                    logical(1))) ||
+        !identical(as.character(claim$analysis_id), analysis_id) ||
+        !branch %in% c("primary_statistics", "integration_selection") ||
+        !as.character(claim$mapping_operation) %in% c("gene_reaction", "lipid_ontology") ||
+        !as.character(claim$mapping_resource_id) %in% mapping_resource_ids) {
+      abort("An ORA claim has a missing, unsupported, or mismatched analysis, branch, or resource identity.")
+    }
+    if (identical(branch, "integration_selection")) {
+      if (!triomics_d_nonempty_string(as.character(claim$integration_id)) ||
+          !identical(as.character(claim$integration_id), as.character(claim$claim_id))) {
+        abort("An integration-selection claim must name its exact integration as claim_id and integration_id.")
+      }
+    }
+    sets <- claim$set_family
+    if (!is.list(sets) || !length(sets)) abort("Every ORA claim must predeclare a non-empty complete set family.")
+    normalized_sets <- lapply(sets, function(set) {
+      set_fields <- c("set_id", "members", "eligible")
+      members <- triomics_ora_characters(set$members)
+      if (!is.list(set) || !setequal(names(set), set_fields) ||
+          !triomics_d_nonempty_string(as.character(set$set_id)) || anyNA(members) ||
+          any(!nzchar(members)) || anyDuplicated(members) ||
+          !is.logical(set$eligible) || length(set$eligible) != 1L || is.na(set$eligible)) {
+        abort("Each predeclared ORA set needs a unique ID, exact members, and explicit eligibility.")
+      }
+      list(set_id = as.character(set$set_id), members = members, eligible = set$eligible)
+    })
+    set_ids <- vapply(normalized_sets, `[[`, character(1), "set_id")
+    if (anyDuplicated(set_ids)) abort("The ORA set family repeats a set identifier.")
+    claim$set_family <- normalized_sets
+    claim
+  })
+  claim_keys <- vapply(claims, function(claim) paste(
+    claim$analysis_id, claim$source_branch, claim$block_id, claim$claim_id, sep = "\r"
+  ), character(1))
+  if (anyDuplicated(claim_keys)) abort("The ORA protocol repeats one analysis, block, branch, and claim family.")
+  claims
+}
+
+triomics_d_ora_candidate_rows <- function(resolved_claim, mapping_operation) {
+  eligible <- list()
+  excluded <- list()
+  identity_incompatible <- FALSE
+  for (row in resolved_claim$feature_rows) {
+    reason <- NULL
+    if (!identical(as.character(row$source_role), "measurement_matrix")) {
+      reason <- "source_role_not_measurement_matrix"
+    } else if (!identical(as.character(row$measured_or_derived), "measured")) {
+      reason <- "feature_not_measured"
+    } else if (identical(as.character(resolved_claim$source_branch), "primary_statistics") &&
+               !identical(as.character(row$producer_status), "estimated")) {
+      reason <- "producer_row_not_estimated"
+    } else if (!identical(as.character(row$taxon_status), "declared") ||
+               !identical(as.character(row$resolution_status), "declared") ||
+               !identical(as.character(row$capability_status), "declared") ||
+               !triomics_d_nonempty_string(row$original_id) ||
+               !triomics_d_nonempty_string(row$source_namespace) ||
+               !triomics_d_nonempty_string(row$taxon_id) ||
+               !triomics_d_nonempty_string(row$resolution)) {
+      reason <- "feature_mapping_identity_incomplete"
+      identity_incompatible <- TRUE
+    } else if (!mapping_operation %in% triomics_ora_characters(row$capabilities)) {
+      reason <- "mapping_capability_not_declared"
+      identity_incompatible <- TRUE
+    }
+    if (is.null(reason)) {
+      eligible[[length(eligible) + 1L]] <- row
+    } else {
+      excluded[[length(excluded) + 1L]] <- list(
+        feature_key = as.character(row$feature_key), original_id = as.character(row$original_id),
+        source_id = as.character(row$source_id), reason = reason
+      )
+    }
+  }
+  list(rows = unname(eligible), excluded = unname(excluded),
+       identity_incompatible = identity_incompatible)
+}
+
+triomics_d_ora_mapper_rows <- function(feature_rows, nominations) {
+  lapply(feature_rows, function(row) {
+    matched <- Filter(function(nomination) identical(as.character(nomination$feature_key),
+                                                     as.character(row$feature_key)), nominations)
+    mapper_nominations <- lapply(matched, function(nomination) {
+      list(nomination_id = as.character(nomination$nomination_id),
+           source_branch = as.character(nomination$source_branch))
+    })
+    list(
+      feature_key = as.character(row$feature_key), source_id = as.character(row$original_id),
+      source_namespace = as.character(row$source_namespace), taxon_id = as.character(row$taxon_id),
+      resolution = as.character(row$resolution), nominations = mapper_nominations, aliases = list()
+    )
+  })
+}
+
+triomics_d_ora_mapping_contract <- function(path) {
+  table <- tryCatch(utils::read.delim(
+    path, colClasses = "character", check.names = FALSE,
+    quote = "", comment.char = "", na.strings = character()
+  ), error = function(error) {
+    triomics_d_abort("D_ORA_MAPPING_INVALID", "The pinned ORA mapping table cannot be parsed.", "mapping_resource")
+  })
+  required <- c("source_namespace", "source_id", "taxon_id", "target_namespace", "target_id",
+                "relation", "resolution", "evidence_ref", "resource_id")
+  if (anyDuplicated(names(table)) || !all(required %in% names(table)) ||
+      any(!vapply(table[required], function(column) all(!is.na(column) & nzchar(trimws(column))), logical(1)))) {
+    triomics_d_abort("D_ORA_MAPPING_INVALID", "The pinned ORA mapping table lacks valid D02/D03 mapping fields.",
+                     "mapping_resource")
+  }
+  list(
+    namespaces = unique(table$source_namespace), organisms = unique(table$taxon_id),
+    resolutions = unique(table$resolution), target_namespaces = unique(table$target_namespace),
+    table_resource_ids = unique(table$resource_id)
+  )
+}
+
+triomics_d_ora_empty_universe <- function(feature_rows, claim, reason) {
+  excluded <- lapply(feature_rows, function(row) list(
+    feature_key = as.character(row$feature_key), original_id = as.character(row$original_id),
+    source_id = as.character(row$source_id), reason = reason
+  ))
+  list(
+    universe = list(ids = character(), source = "measured", target_namespace = as.character(claim$target_namespace),
+                    taxon_id = as.character(claim$taxon_id), mapping_rule = "unique_resolved_entity",
+                    included = list(), excluded = unname(excluded),
+                    mapping_counts = list(feature_count = as.integer(length(feature_rows)),
+                                          uniquely_resolved_feature_count = 0L, unique_entity_count = 0L,
+                                          ambiguous_feature_count = 0L, unmapped_feature_count = 0L,
+                                          duplicate_entity_feature_count = 0L)),
+    selected_ids = character(), nominated_feature_keys = list(), nominated_excluded = list()
+  )
+}
+
+triomics_d_ora_run_claim <- function(evidence, protocol_claim, protocol, protocol_sha256,
+                                     resources, cache_dir) {
+  resolved <- triomics_ora_resolve_claim(evidence, protocol_claim)
+  inventory <- triomics_ora_inventory_status(
+    vapply(resolved$feature_rows, `[[`, character(1), "source_id"), evidence$source_by_id
+  )
+  candidate <- triomics_d_ora_candidate_rows(resolved, protocol_claim$mapping_operation)
+  mapping_resource <- resources[[as.character(protocol_claim$mapping_resource_id)]]
+  access <- triomics_d_resource_access(
+    mapping_resource, as.character(protocol_claim$mapping_operation),
+    as.character(mapping_resource$version), as.character(mapping_resource$sha256),
+    cache_dir, network_policy = "offline"
+  )
+  mapping_result <- NULL
+  compatibility <- list(status = "incompatible", reason_code = "D_ORA_MAPPING_INCOMPATIBLE",
+                         reason = "The local mapping resource is unavailable.")
+  if (identical(access$status, "available")) {
+    contract <- triomics_d_ora_mapping_contract(access$path)
+    if (length(contract$table_resource_ids) != 1L ||
+        !identical(contract$table_resource_ids[[1L]], as.character(protocol_claim$mapping_resource_id))) {
+      triomics_d_abort("D_ORA_MAPPING_INVALID", "The mapping table resource_id disagrees with its ResourceManifest.",
+                       as.character(protocol_claim$mapping_resource_id))
+    }
+    compatibility <- triomics_ora_mapping_compatibility(protocol_claim, contract, candidate$rows)
+    if (isTRUE(candidate$identity_incompatible)) {
+      compatibility <- list(status = "incompatible", reason_code = "D_ORA_MAPPING_INCOMPATIBLE",
+                            reason = "At least one producer feature lacks a complete declared mapping identity.")
+    }
+    mapper_rows <- triomics_d_ora_mapper_rows(candidate$rows, resolved$nominations)
+    mapping_result <- if (identical(as.character(protocol_claim$mapping_operation), "lipid_ontology")) {
+      triomics_map_lipids(mapper_rows, mapping_resource, as.character(protocol_claim$mapping_operation),
+                          as.character(mapping_resource$version), as.character(mapping_resource$sha256), cache_dir)
+    } else {
+      triomics_map_reactions(mapper_rows, mapping_resource, as.character(protocol_claim$mapping_operation),
+                             as.character(mapping_resource$version), as.character(mapping_resource$sha256), cache_dir)
+    }
+    if (!identical(mapping_result$status, "available")) {
+      compatibility <- list(status = "incompatible", reason_code = mapping_result$reason_code %||% "D_RESOURCE_MISSING",
+                            reason = mapping_result$reason %||% "The local mapping resource is unavailable.")
+    }
+  }
+  if (is.list(mapping_result) && identical(mapping_result$status, "available")) {
+    resolved_entities <- triomics_ora_unique_entities(
+      candidate$rows, mapping_result, as.character(protocol_claim$target_namespace),
+      as.character(protocol_claim$taxon_id), intersect(resolved$nomination_feature_keys,
+                                                       vapply(candidate$rows, `[[`, character(1), "feature_key"))
+    )
+  } else {
+    resolved_entities <- triomics_d_ora_empty_universe(candidate$rows, protocol_claim,
+                                                       "mapping_resource_unavailable")
+  }
+  producer_excluded <- candidate$excluded
+  selected_excluded <- Filter(function(row) row$feature_key %in% resolved$nomination_feature_keys,
+                              producer_excluded)
+  resolved_entities$universe$excluded <- c(resolved_entities$universe$excluded, producer_excluded)
+  resolved_entities$nominated_excluded <- c(resolved_entities$nominated_excluded, selected_excluded)
+  resolved_entities$universe$producer_feature_count <- as.integer(length(resolved$feature_rows))
+  resolved_entities$universe$eligible_measured_feature_count <- as.integer(length(candidate$rows))
+  resolved_entities$universe$source_inventory <- inventory$sources
+  mapping_status <- if (identical(compatibility$status, "compatible") &&
+                        is.list(mapping_result) && identical(mapping_result$status, "available")) {
+    "compatible"
+  } else {
+    "incompatible"
+  }
+  family_result <- triomics_ora_family(
+    resolved_entities$universe, protocol_claim$set_family, resolved_entities$selected_ids,
+    inventory, mapping = list(rule = as.character(protocol$mapping_rule), status = mapping_status)
+  )
+  mapping_reason <- if (!identical(mapping_status, "compatible")) compatibility$reason_code else NULL
+  inventory_reason <- if (!isTRUE(inventory$qualified)) "D_ORA_INVENTORY_UNQUALIFIED" else NULL
+  claim_status <- if (identical(mapping_status, "compatible") && isTRUE(inventory$qualified)) {
+    "complete"
+  } else {
+    "unavailable"
+  }
+  universe_artifact <- list(
+    identity = list(study_id = as.character(evidence$study_id), analysis_id = resolved$analysis_id,
+                    preparation_context_id = resolved$preparation_context_id,
+                    representation_id = resolved$representation_id, block_id = resolved$block_id,
+                    source_branch = resolved$source_branch, claim_id = resolved$claim_id,
+                    family_id = resolved$family_id),
+    source = resolved_entities$universe$source,
+    source_inventory = inventory,
+    mapping_rule = as.character(protocol$mapping_rule),
+    target_namespace = as.character(protocol_claim$target_namespace),
+    taxon_id = as.character(protocol_claim$taxon_id),
+    ids = resolved_entities$universe$ids,
+    included = resolved_entities$universe$included,
+    excluded = resolved_entities$universe$excluded,
+    mapping_counts = resolved_entities$universe$mapping_counts
+  )
+  universe_sha256 <- triomics_hash_text(triomics_canonical_json(universe_artifact))
+  set_family_sha256 <- triomics_hash_text(triomics_canonical_json(protocol_claim$set_family))
+  mapping_sha256 <- as.character((mapping_result$resource %||% access)$content_sha256 %||% mapping_resource$sha256)
+  list(
+    status = claim_status, reason_code = mapping_reason %||% inventory_reason,
+    identity = list(
+      study_id = as.character(evidence$study_id), analysis_id = resolved$analysis_id,
+      preparation_context_id = resolved$preparation_context_id,
+      representation_id = resolved$representation_id,
+      block_id = resolved$block_id, source_branch = resolved$source_branch,
+      claim_id = resolved$claim_id, integration_id = resolved$integration_id,
+      family_id = resolved$family_id,
+      source_ids = as.list(unique(vapply(resolved$feature_rows, `[[`, character(1), "source_id"))),
+      nomination_ids = as.list(vapply(resolved$nominations, `[[`, character(1), "nomination_id"))
+    ),
+    protocol = list(resource_id = as.character(protocol$protocol_id), sha256 = protocol_sha256,
+                    mapping_rule = as.character(protocol$mapping_rule),
+                    aggregation_rule = as.character(protocol$aggregation_rule),
+                    ambiguity_rule = as.character(protocol$ambiguity_rule)),
+    mapping = list(status = mapping_status, reason_code = compatibility$reason_code,
+                   reason = compatibility$reason, resource = mapping_result$resource %||% access,
+                   observations = mapping_result$observations %||% list(),
+                   edges = mapping_result$edges %||% list()),
+    inventory = inventory,
+    measured_universe = c(universe_artifact, list(sha256 = universe_sha256)),
+    selected_entities = list(feature_keys = as.list(resolved$nomination_feature_keys),
+                             entity_ids = as.list(resolved_entities$selected_ids),
+                             excluded = resolved_entities$nominated_excluded),
+    set_family = list(sha256 = set_family_sha256,
+                      declared = protocol_claim$set_family,
+                      declared_count = as.integer(family_result$full_family_size),
+                      result = family_result),
+    bindings = list(protocol_sha256 = protocol_sha256, mapping_sha256 = mapping_sha256,
+                    set_family_sha256 = set_family_sha256,
+                    measured_universe_sha256 = universe_sha256),
+    interpretation = "over_representation_not_pathway_activation_or_patient_score"
+  )
+}
+
+triomics_d_ora_run <- function(evidence, request, resources, cache_dir) {
+  protocol_ref <- as.character(request$protocol_ref %||% "")
+  if (!triomics_d_nonempty_string(protocol_ref) || is.null(resources[[protocol_ref]])) {
+    triomics_d_abort("D_ORA_PROTOCOL_INVALID", "annotation request.protocol_ref must identify a local ORA protocol ResourceManifest.",
+                     "annotation.requests.protocol_ref")
+  }
+  request_resource_ids <- as.character(unlist(request$resource_ids %||% list(), use.names = FALSE))
+  protocol_resource <- resources[[protocol_ref]]
+  protocol_access <- triomics_d_resource_access(
+    protocol_resource, "ora_protocol", as.character(protocol_resource$version),
+    as.character(protocol_resource$sha256), cache_dir, network_policy = "offline"
+  )
+  if (!identical(protocol_access$status, "available")) {
+    return(list(
+      route = list(status = "unavailable", reason_code = protocol_access$reason_code,
+                   protocol_resource = protocol_access, claims = list(),
+                   interpretation = "not_pathway_activation"),
+      enrichment = list(status = "unavailable", reason_code = protocol_access$reason_code,
+                        test_count = 0L, results = list())
+    ))
+  }
+  protocol <- tryCatch(jsonlite::read_json(protocol_access$path, simplifyVector = FALSE), error = function(error) NULL)
+  protocol_sha256 <- triomics_sha256(protocol_access$path)
+  normalized_claims <- triomics_d_ora_validate_protocol(
+    protocol, protocol_ref, as.character(evidence$analysis_id), request_resource_ids
+  )
+  claims <- lapply(normalized_claims, function(claim) {
+    triomics_d_ora_run_claim(evidence, claim, protocol, protocol_sha256, resources, cache_dir)
+  })
+  claim_statuses <- vapply(claims, `[[`, character(1), "status")
+  route_status <- if (all(claim_statuses == "complete")) "complete" else "unavailable"
+  route_reason <- if (identical(route_status, "complete")) NULL else {
+    first <- which(claim_statuses != "complete")[[1L]]
+    claims[[first]]$reason_code %||% "D_ORA_CLAIM_UNAVAILABLE"
+  }
+  summaries <- lapply(claims, function(claim) list(
+    identity = claim$identity,
+    status = claim$status,
+    family_size = claim$set_family$result$full_family_size,
+    tests_in_bh = claim$set_family$result$tests_in_bh,
+    estimable_count = claim$set_family$result$estimable_count,
+    sets = claim$set_family$result$sets,
+    interpretation = "not_pathway_activation"
+  ))
+  list(
+    route = list(status = route_status, reason_code = route_reason,
+                 protocol_resource = protocol_access, claims = claims,
+                 family_scope = "BH is applied separately within each predeclared claim family",
+                 interpretation = "not_pathway_activation"),
+    enrichment = list(
+      status = route_status, reason_code = route_reason,
+      test_count = as.integer(sum(vapply(claims, function(claim) claim$set_family$result$tests_in_bh,
+                                        integer(1)))),
+      results = unname(summaries)
+    )
+  )
+}
+
 triomics_d_annotate_local_resources <- function(evidence, annotation, cache_dir,
                                                      target_investigation, config_path) {
   annotation <- annotation %||% list()
@@ -339,6 +686,11 @@ triomics_d_annotate_local_resources <- function(evidence, annotation, cache_dir,
     }
     routed$routes[[route]]$mappings <- mappings
   }
+  if (!is.null(by_route$ora)) {
+    ora <- triomics_d_ora_run(evidence, by_route$ora$request, resources, cache_dir)
+    routed$routes$ora <- ora$route
+    routed$enrichment <- ora$enrichment
+  }
   provenance <- evidence$immutable_inputs
   predecessor <- list(
     b_sha256 = as.character(provenance$b_bundle_sha256),
@@ -350,6 +702,11 @@ triomics_d_annotate_local_resources <- function(evidence, annotation, cache_dir,
   for (route in names(by_route)) {
     status_routes[[route]]$enabled <- TRUE
     status_routes[[route]]$required <- isTRUE(by_route[[route]]$request$required)
+    if (identical(route, "ora")) {
+      status_routes[[route]]$status <- as.character(routed$routes$ora$status)
+      status_routes[[route]]$reason_code <- routed$routes$ora$reason_code %||% NULL
+      next
+    }
     if (!route %in% c("gene_reaction", "lipid_ontology")) {
       # These routes stay unavailable: no measured enrichment universe is declared,
       # and the conditional MOFA and BioPAN adapters are not approved.

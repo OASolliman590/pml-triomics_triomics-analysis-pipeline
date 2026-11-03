@@ -2,15 +2,65 @@ d_ora_cli_run <- function(config_path, stage, output_root) {
   cli <- triomics_test_resource("exec", "triomics")
   previous_wd <- setwd(dirname(cli))
   on.exit(setwd(previous_wd), add = TRUE)
-  output <- system2(
+  stdout_path <- tempfile("d-ora-command-stdout-", tmpdir = normalizePath(tempdir(), winslash = "/", mustWork = TRUE))
+  stderr_path <- tempfile("d-ora-command-stderr-", tmpdir = normalizePath(tempdir(), winslash = "/", mustWork = TRUE))
+  on.exit(unlink(c(stdout_path, stderr_path), force = TRUE), add = TRUE)
+  exit_code <- system2(
     file.path(R.home("bin"), "Rscript"),
     c("--vanilla", shQuote(basename(cli)), "--config", shQuote(config_path),
       "--stage", shQuote(stage), "--output", shQuote(output_root)),
-    stdout = TRUE, stderr = TRUE
+    stdout = stdout_path, stderr = stderr_path
   )
-  exit_code <- attr(output, "status")
-  if (is.null(exit_code)) exit_code <- 0L
+  output <- c(readLines(stdout_path, warn = FALSE), readLines(stderr_path, warn = FALSE))
   list(exit_code = as.integer(exit_code), output = output)
+}
+
+d_ora_copy_fixture <- function() {
+  root <- tempfile("d-ora-fixture-", tmpdir = normalizePath(tempdir(), winslash = "/", mustWork = TRUE))
+  ticket_dir <- file.path(root, "tickets")
+  data_root <- file.path(root, "data")
+  dir.create(ticket_dir, recursive = TRUE, showWarnings = FALSE)
+  for (directory in c("c04", "independent", "d-ora")) {
+    dir.create(file.path(data_root, directory), recursive = TRUE, showWarnings = FALSE)
+  }
+  source_config <- triomics_test_resource("examples", "tickets", "D-T04.yaml")
+  config <- file.path(ticket_dir, "D-T04.yaml")
+  testthat::expect_true(file.copy(source_config, config, overwrite = TRUE))
+  files <- list(
+    c("c04", "metadata.tsv"),
+    c("independent", "proteomics.tsv"),
+    c("independent", "metabolomics.tsv"),
+    c("d-ora", "gene-feature-metadata.tsv"),
+    c("d-ora", "gene-mapping.tsv"),
+    c("d-ora", "ora-protocol.json")
+  )
+  for (parts in files) {
+    source <- do.call(triomics_test_resource, as.list(c("examples", "data", parts)))
+    destination <- do.call(file.path, as.list(c(data_root, parts)))
+    testthat::expect_true(file.copy(source, destination, overwrite = TRUE))
+  }
+  list(root = root, config = config, protocol = file.path(data_root, "d-ora", "ora-protocol.json"),
+       mapping = file.path(data_root, "d-ora", "gene-mapping.tsv"))
+}
+
+d_ora_read_native_bundle <- function(config_path, output_root) {
+  config <- triomics_read_config(config_path)
+  ingested <- triomics_ingest_configured_study(config, config_path)
+  analysis <- config$analyses[[1L]]
+  current_metadata <- list(
+    sample_metadata = ingested$sample_metadata,
+    sample_registry = ingested$sample_registry,
+    declared_factor_levels = ingested$declared_factor_levels
+  )
+  triomics_d_read_evidence_bundle(
+    output_root, as.character(config$study_id), as.character(analysis$analysis_id),
+    ingested$source_manifests, ingested$feature_registry,
+    imported_statistics = list(),
+    routing_metadata = triomics_d_routing_metadata(config, config_path, ingested$feature_registry),
+    current_config_sha256 = as.character(attr(config, "config_sha256")),
+    current_metadata = current_metadata,
+    current_count_metadata = analysis$statistics$count_metadata %||% NULL
+  )
 }
 
 d_ora_hash <- function(value) digest::digest(value, algo = "sha256", serialize = FALSE)
@@ -113,7 +163,7 @@ d_ora_mapper_fixture <- function() {
   })
   resource <- list(resource_id = "d-ora-unit-map", source_url = "local://d-ora/mapping.tsv",
                    version = "synthetic-1", sha256 = triomics_sha256(path), local_file = path,
-                   terms_url = "https://example.invalid/terms", rights_status = "verified",
+                   terms_url = "https://www.gnu.org/licenses/gpl-3.0.html", rights_status = "verified",
                    permitted_operation = list("gene_reaction"), redistribution = "allowed")
   mapping <- triomics_map_reactions(rows, resource, "gene_reaction", resource$version,
                                     resource$sha256, file.path(directory, "cache"))
@@ -121,20 +171,78 @@ d_ora_mapper_fixture <- function() {
 }
 
 testthat::test_that("D-T04 executes declared-universe ORA after native B and C", {
-  config <- triomics_test_resource("examples", "tickets", "D-T04.yaml")
-  output_root <- tempfile("d-ora-native-output-", tmpdir = "/private/tmp")
+  fixture <- d_ora_copy_fixture()
+  on.exit(unlink(fixture$root, recursive = TRUE, force = TRUE), add = TRUE)
+  output_root <- tempfile("d-ora-native-output-", tmpdir = normalizePath(tempdir(), winslash = "/", mustWork = TRUE))
   dir.create(output_root, recursive = TRUE, showWarnings = FALSE)
   on.exit(unlink(output_root, recursive = TRUE, force = TRUE), add = TRUE)
 
-  b_run <- d_ora_cli_run(config, "B", output_root)
+  b_run <- d_ora_cli_run(fixture$config, "B", output_root)
   testthat::expect_identical(b_run$exit_code, 0L, info = paste(b_run$output, collapse = "\n"))
   if (b_run$exit_code != 0L) return(invisible(NULL))
-  c_run <- d_ora_cli_run(config, "C", output_root)
+  c_run <- d_ora_cli_run(fixture$config, "C", output_root)
   testthat::expect_identical(c_run$exit_code, 0L, info = paste(c_run$output, collapse = "\n"))
   if (c_run$exit_code != 0L) return(invisible(NULL))
-  d_run <- d_ora_cli_run(config, "D", output_root)
+  native_bundle <- d_ora_read_native_bundle(fixture$config, output_root)
+  native_b_claim <- triomics_ora_resolve_claim(
+    native_bundle,
+    list(analysis_id = "d_t04_synthetic_exploratory", block_id = "block_1",
+         source_branch = "primary_statistics", claim_id = "score_slope")
+  )
+  testthat::expect_length(native_b_claim$feature_keys, 10L)
+  testthat::expect_setequal(native_b_claim$feature_keys,
+                            vapply(native_b_claim$producer_rows, `[[`, character(1), "feature_key"))
+  native_b_nominations <- native_bundle$c$candidate_nominations$branches$primary_statistics$nominations
+  testthat::expect_true(any(vapply(native_b_nominations, function(nomination) {
+    identical(as.character(nomination$result_ref$block_id), "block_1") &&
+      identical(as.character(nomination$result_ref$claim_id), "score_slope")
+  }, logical(1))))
+  d_run <- d_ora_cli_run(fixture$config, "D", output_root)
 
   testthat::expect_identical(d_run$exit_code, 0L, info = paste(d_run$output, collapse = "\n"))
+  if (d_run$exit_code != 0L) return(invisible(NULL))
+
+  pointer_path <- file.path(output_root, "registries", "current-D.json")
+  pointer <- jsonlite::read_json(pointer_path, simplifyVector = FALSE)
+  payload_path <- file.path(output_root, "D", "generations", pointer$generation_id, "evidence-routing.json")
+  payload <- jsonlite::read_json(payload_path, simplifyVector = FALSE)
+  claim <- payload$routes$ora$claims[[1L]]
+  family <- claim$set_family$result
+  first_set <- family$sets[[1L]]
+  testthat::expect_identical(payload$routes$ora$status, "complete")
+  testthat::expect_identical(claim$identity$source_branch, "integration_selection")
+  testthat::expect_identical(claim$identity$claim_id, "d_t04_concat_pca")
+  testthat::expect_identical(claim$inventory$status, "full_unselected")
+  testthat::expect_equal(unlist(first_set[c("N", "K", "n", "k")]), c(N = 10, K = 3, n = 1, k = 1))
+  testthat::expect_equal(first_set$p, 0.3)
+  testthat::expect_equal(first_set$q, 0.3)
+  testthat::expect_equal(family$full_family_size, 3L)
+  testthat::expect_equal(family$estimable_count, 1L)
+  testthat::expect_equal(family$empty_set_count, 1L)
+  testthat::expect_equal(family$ineligible_set_count, 1L)
+  testthat::expect_true(length(claim$measured_universe$included) > 0L)
+  testthat::expect_true(is.list(claim$measured_universe$excluded))
+  for (binding in unlist(claim$bindings, use.names = FALSE)) {
+    testthat::expect_match(binding, "^[0-9a-f]{64}$")
+  }
+  testthat::expect_identical(claim$bindings$protocol_sha256, triomics_sha256(fixture$protocol))
+  testthat::expect_identical(claim$bindings$mapping_sha256, triomics_sha256(fixture$mapping))
+  universe <- claim$measured_universe
+  universe_sha <- universe$sha256
+  universe$sha256 <- NULL
+  testthat::expect_identical(triomics_hash_text(triomics_canonical_json(universe)), universe_sha)
+  testthat::expect_identical(payload$interpretation, "no_biological_absence_inferred")
+  testthat::expect_match(payload$immutable_inputs$b_bundle_sha256, "^[0-9a-f]{64}$")
+  testthat::expect_match(payload$immutable_inputs$c_manifest_sha256, "^[0-9a-f]{64}$")
+
+  generation_id <- pointer$generation_id
+  payload_sha256 <- triomics_sha256(payload_path)
+  write(" ", file = fixture$protocol, append = TRUE)
+  failed_d <- d_ora_cli_run(fixture$config, "D", output_root)
+  testthat::expect_identical(failed_d$exit_code, 2L)
+  current <- jsonlite::read_json(pointer_path, simplifyVector = FALSE)
+  testthat::expect_identical(current$generation_id, generation_id)
+  testthat::expect_identical(triomics_sha256(payload_path), payload_sha256)
 })
 
 testthat::test_that("ORA counts unique resolved entities and preserves ambiguous and unmapped source rows", {

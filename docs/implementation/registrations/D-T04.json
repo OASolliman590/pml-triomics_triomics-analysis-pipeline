@@ -4,16 +4,28 @@
   "accepted": false,
   "namespace_edits": false,
   "local_files": [
+    "R/annotation_apply.R",
     "R/enrichment_ora.R",
     "R/enrichment_family.R",
     "tests/testthat/test-D-T04.R",
+    "tests/testthat/test-D-ora-shared.R",
     "inst/examples/tickets/D-T04.yaml",
+    "inst/examples/data/d-ora/gene-feature-metadata.tsv",
+    "inst/examples/data/d-ora/gene-mapping.tsv",
+    "inst/examples/data/d-ora/ora-protocol.json",
     "docs/implementation/registrations/D-T04.json"
   ],
   "owned_functions": [
     "triomics_ora_upper_tail",
-    "triomics_ora_family"
+    "triomics_ora_family",
+    "triomics_ora_inventory_status",
+    "triomics_ora_mapping_compatibility",
+    "triomics_ora_unique_entities",
+    "triomics_ora_resolve_claim",
+    "triomics_d_ora_validate_protocol",
+    "triomics_d_ora_run_claim",
+    "triomics_d_ora_run"
   ],
-  "integration_request": "Sol: register the owned functions and integrate the declared universe, resolved entity IDs, set family and qualified inventory, mapping rule and mapping status with triomics_execute_stage_d. triomics_execute_stage_d does not call them. The fixture declares an ORA request but supplies no resources; execution and scientific qualification require a verified local handoff and mapping rule.",
-  "repair": "D-T04 repair 1"
+  "integration_request": "Sol: register and expose the allowlisted ORA helpers through the shared package metadata, then review the local Stage D wiring. The worker integrates typed protocol ResourceManifest bytes, verified primary B claim or C integration input lineage, complete measured feature backgrounds, SourceManifest qualification, qualified D02/D03 mapping, the frozen set family, unchanged hypergeometric/BH calculations and SHA256 bindings in the D generation. A native synthetic B-to-C-to-D run is included. The worker made no CLI, NAMESPACE or manual edits; this request remains unaccepted pending Sol's integration and milestone review.",
+  "repair": "D-T04 implementation candidate"
 }

@@ -42,7 +42,16 @@ triomics_ora_family <- function(universe, sets, nominated, inventory, mapping = 
     adjusted <- stats::p.adjust(vapply(rows[estimable], `[[`, numeric(1), 'p'), method = 'BH')
     for (i in seq_along(estimable)) rows[[estimable[[i]]]]['q'] <- list(adjusted[[i]])
   }
-  list(family_size = length(sets), tests_in_bh = length(estimable),
+  statuses <- vapply(rows, `[[`, character(1), "status")
+  empty_sets <- sum(vapply(sets, function(set) length(unique(set$members)) == 0L, logical(1)))
+  ineligible_sets <- sum(!vapply(sets, `[[`, logical(1), "eligible"))
+  list(family_size = length(sets), full_family_size = as.integer(length(sets)),
+       estimable_count = as.integer(length(estimable)),
+       non_estimable_count = as.integer(sum(statuses == "non_estimable")),
+       unavailable_count = as.integer(sum(statuses == "unavailable")),
+       empty_set_count = as.integer(empty_sets),
+       ineligible_set_count = as.integer(ineligible_sets),
+       tests_in_bh = length(estimable),
        nominated_outside_universe = length(setdiff(nominations, ids)),
        mapping_rule = mapping$rule, mapping_status = mapping$status, sets = rows)
 }
