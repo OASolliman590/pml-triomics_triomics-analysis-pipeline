@@ -595,7 +595,9 @@ test_that('observations inherit the specific cited path', {
   expect_identical(p$observations[[1]]$path_context, 'other_ctx')
 })
 
-t11_external_kd_profile <- function(target_id) {
+t11_external_assay_profile <- function(target_id, axis = 'binding', endpoint = 'Kd',
+                                       claim_axis_attribute = FALSE,
+                                       claim_endpoint_attribute = FALSE) {
   request <- triomics_target_request(
     list(namespace = 'synthetic_protein', id = target_id, taxon_id = 9606,
          entity_type = 'protein', constructs = list('construct_a')),
@@ -605,7 +607,8 @@ t11_external_kd_profile <- function(target_id) {
   )
   request$mechanism_class <- 'non_enzymatic'
   record <- list(
-    evidence_id = paste0('kd_', target_id), axis = 'binding', endpoint = 'Kd', units = 'nM', relation = '=',
+    evidence_id = paste0(tolower(endpoint), '_', target_id), axis = axis, endpoint = endpoint,
+    units = 'nM', relation = '=',
     source_id = 'synthetic_assay_source', publication_group = 'synthetic_kd_publication',
     measured_by_pipeline = FALSE, value = 4.2, target_namespace = 'synthetic_protein',
     target_id = target_id, target_entity_type = 'protein', taxon_id = 9606,
@@ -613,8 +616,14 @@ t11_external_kd_profile <- function(target_id) {
     compound_namespace = 'synthetic_compound', compound_id = 'COMPOUND_A',
     assay_limitations = 'Synthetic test record only.'
   )
+  if (claim_axis_attribute) record$axis <- structure(record$axis, binding_probability = 0.9)
+  if (claim_endpoint_attribute) record$endpoint <- structure(record$endpoint, binding_probability = 0.9)
   external <- triomics_target_external_evidence(request, list(record))
   triomics_target_profile(request, list(), list(), external_evidence = external)
+}
+
+t11_external_kd_profile <- function(target_id) {
+  t11_external_assay_profile(target_id)
 }
 
 test_that('canonical alternatives compare explicit molecular coverage and fail closed when it is incomplete', {
@@ -667,6 +676,46 @@ test_that('exact identity-matched external Kd stays admissible in two-target alt
   comparison <- triomics_target_alternatives(profiles)
   expect_null(comparison$selected_target)
   expect_identical(comparison$tie_status, 'unresolved')
+})
+
+test_that('typed external Ki and functional activity records stay admissible', {
+  for (assay in list(list(axis = 'binding', endpoint = 'Ki'),
+                     list(axis = 'function', endpoint = 'activity'))) {
+    profiles <- list(
+      t11_external_assay_profile('SYNTHETIC_TARGET_A', assay$axis, assay$endpoint),
+      t11_external_assay_profile('SYNTHETIC_TARGET_B', assay$axis, assay$endpoint)
+    )
+
+    comparison <- triomics_target_alternatives(profiles)
+    expect_identical(comparison$comparability, 'comparable')
+    expect_null(comparison$selected_target)
+    expect_identical(comparison$tie_status, 'unresolved')
+    evidence <- profiles[[1L]]$external_evidence[[1L]]
+    expect_identical(evidence$axis, assay$axis)
+    expect_identical(evidence$endpoint, assay$endpoint)
+    expect_identical(evidence$value, 4.2)
+    expect_identical(evidence$units, 'nM')
+    expect_identical(evidence$dependency_group, 'publication:synthetic_kd_publication')
+  }
+})
+
+test_that('validated external axis and endpoint attributes remain visible to the claim guard', {
+  ordinary <- t11_external_kd_profile('SYNTHETIC_TARGET_B')
+  axis_attribute <- t11_external_assay_profile(
+    'SYNTHETIC_TARGET_A', claim_axis_attribute = TRUE
+  )
+  expect_identical(
+    t11_code(triomics_target_alternatives(list(axis_attribute, ordinary))),
+    'D_TARGET_CLAIM_COLLAPSED'
+  )
+
+  endpoint_attribute <- t11_external_assay_profile(
+    'SYNTHETIC_TARGET_A', claim_endpoint_attribute = TRUE
+  )
+  expect_identical(
+    t11_code(triomics_target_alternatives(list(endpoint_attribute, ordinary))),
+    'D_TARGET_CLAIM_COLLAPSED'
+  )
 })
 
 test_that('external evidence cannot hide arbitrary mechanistic claim metadata', {

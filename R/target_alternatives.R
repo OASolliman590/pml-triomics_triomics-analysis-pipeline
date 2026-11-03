@@ -133,19 +133,32 @@ triomics_target_alternatives <- function(profiles) {
       return(unchanged)
     }
 
-    sanitize_kd_record <- function(record) {
-      if (is.list(record) && identical(as.character(record$axis), 'binding') &&
-          triomics_target_string(record$endpoint) && identical(tolower(record$endpoint), 'kd')) {
-        record$axis <- 'sourced_external_assay'
-        record$endpoint <- 'dissociation_constant'
+    normalize_label <- function(value, replacement) {
+      normalized <- replacement
+      value_attributes <- attributes(value)
+      if (!is.null(value_attributes)) attributes(normalized) <- value_attributes
+      normalized
+    }
+    sanitize_external_record <- function(record) {
+      if (!is.list(record)) return(record)
+      axis <- record[['axis', exact = TRUE]]
+      endpoint <- record[['endpoint', exact = TRUE]]
+      if (triomics_target_string(axis) && axis %in% c('binding', 'function', 'engagement', 'association')) {
+        record[['axis']] <- normalize_label(axis, 'sourced_external_assay')
+      }
+      if (triomics_target_string(endpoint) && tolower(endpoint) %in% claim_names) {
+        record[['endpoint']] <- normalize_label(endpoint, 'sourced_assay_endpoint')
       }
       record
     }
     guard_profile <- profile
-    guard_profile$external_evidence <- lapply(records, sanitize_kd_record)
-    guard_profile$evidence_axes$direct_binding$evidence <- lapply(
-      profile$evidence_axes$direct_binding$evidence, sanitize_kd_record
-    )
+    guard_profile$external_evidence <- lapply(records, sanitize_external_record)
+    guard_profile$external_associations <- lapply(profile$external_associations, sanitize_external_record)
+    for (axis_name in c('functional_perturbation', 'cellular_tissue_engagement', 'direct_binding')) {
+      guard_profile$evidence_axes[[axis_name]]$evidence <- lapply(
+        profile$evidence_axes[[axis_name]]$evidence, sanitize_external_record
+      )
+    }
     list(profile = guard_profile, valid = TRUE)
   }
 
