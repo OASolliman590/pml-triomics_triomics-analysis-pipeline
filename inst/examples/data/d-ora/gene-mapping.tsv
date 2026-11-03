@@ -1,0 +1,11 @@
+source_namespace	source_id	taxon_id	target_namespace	target_id	relation	resolution	evidence_ref	resource_id
+synthetic_gene	SYN_1_001	9606	Reactome	ORA-ENTITY-001	maps_to	gene	synthetic://d-ora/gene-mapping.tsv#1	d-ora-gene-map
+synthetic_gene	SYN_1_002	9606	Reactome	ORA-ENTITY-002	maps_to	gene	synthetic://d-ora/gene-mapping.tsv#2	d-ora-gene-map
+synthetic_gene	SYN_1_003	9606	Reactome	ORA-ENTITY-003	maps_to	gene	synthetic://d-ora/gene-mapping.tsv#3	d-ora-gene-map
+synthetic_gene	SYN_1_004	9606	Reactome	ORA-ENTITY-004	maps_to	gene	synthetic://d-ora/gene-mapping.tsv#4	d-ora-gene-map
+synthetic_gene	SYN_1_005	9606	Reactome	ORA-ENTITY-005	maps_to	gene	synthetic://d-ora/gene-mapping.tsv#5	d-ora-gene-map
+synthetic_gene	SYN_1_006	9606	Reactome	ORA-ENTITY-006	maps_to	gene	synthetic://d-ora/gene-mapping.tsv#6	d-ora-gene-map
+synthetic_gene	SYN_1_007	9606	Reactome	ORA-ENTITY-007	maps_to	gene	synthetic://d-ora/gene-mapping.tsv#7	d-ora-gene-map
+synthetic_gene	SYN_1_008	9606	Reactome	ORA-ENTITY-008	maps_to	gene	synthetic://d-ora/gene-mapping.tsv#8	d-ora-gene-map
+synthetic_gene	SYN_1_009	9606	Reactome	ORA-ENTITY-009	maps_to	gene	synthetic://d-ora/gene-mapping.tsv#9	d-ora-gene-map
+synthetic_gene	SYN_1_010	9606	Reactome	ORA-ENTITY-010	maps_to	gene	synthetic://d-ora/gene-mapping.tsv#10	d-ora-gene-map

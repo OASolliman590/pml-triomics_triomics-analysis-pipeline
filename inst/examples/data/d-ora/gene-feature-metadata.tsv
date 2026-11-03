@@ -1,0 +1,11 @@
+feature_id	taxon_id	resolution	capabilities	provenance_ref
+SYN_1_001	9606	gene	gene_reaction	synthetic://d-ora/gene-feature-metadata.tsv
+SYN_1_002	9606	gene	gene_reaction	synthetic://d-ora/gene-feature-metadata.tsv
+SYN_1_003	9606	gene	gene_reaction	synthetic://d-ora/gene-feature-metadata.tsv
+SYN_1_004	9606	gene	gene_reaction	synthetic://d-ora/gene-feature-metadata.tsv
+SYN_1_005	9606	gene	gene_reaction	synthetic://d-ora/gene-feature-metadata.tsv
+SYN_1_006	9606	gene	gene_reaction	synthetic://d-ora/gene-feature-metadata.tsv
+SYN_1_007	9606	gene	gene_reaction	synthetic://d-ora/gene-feature-metadata.tsv
+SYN_1_008	9606	gene	gene_reaction	synthetic://d-ora/gene-feature-metadata.tsv
+SYN_1_009	9606	gene	gene_reaction	synthetic://d-ora/gene-feature-metadata.tsv
+SYN_1_010	9606	gene	gene_reaction	synthetic://d-ora/gene-feature-metadata.tsv

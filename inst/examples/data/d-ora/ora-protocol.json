@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "declared_universe_ora_protocol",
+  "protocol_id": "d-ora-protocol",
+  "mapping_rule": "unique_resolved_entity",
+  "aggregation_rule": "unique_target_entity_across_measured_features",
+  "ambiguity_rule": "exclude_unmapped_and_multi_entity_rows",
+  "claims": [
+    {
+      "analysis_id": "d_t04_synthetic_exploratory",
+      "block_id": "block_1",
+      "source_branch": "integration_selection",
+      "claim_id": "d_t04_concat_pca",
+      "integration_id": "d_t04_concat_pca",
+      "mapping_resource_id": "d-ora-gene-map",
+      "mapping_operation": "gene_reaction",
+      "source_namespace": "synthetic_gene",
+      "taxon_id": "9606",
+      "source_resolution": "gene",
+      "target_namespace": "Reactome",
+      "set_family": [
+        {
+          "set_id": "synthetic_pathway_alpha",
+          "members": ["ORA-ENTITY-001", "ORA-ENTITY-002", "ORA-ENTITY-003"],
+          "eligible": true
+        },
+        {
+          "set_id": "synthetic_empty_set",
+          "members": [],
+          "eligible": true
+        },
+        {
+          "set_id": "synthetic_ineligible_set",
+          "members": ["ORA-ENTITY-001"],
+          "eligible": false
+        }
+      ]
+    }
+  ]
+}

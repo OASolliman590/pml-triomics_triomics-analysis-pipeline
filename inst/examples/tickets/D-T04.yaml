@@ -36,8 +36,8 @@ blocks:
     profile_spec_ref: null
     file: ../data/independent/proteomics.tsv
     feature_id_column: feature_id
-    id_namespace: synthetic
-    feature_metadata: null
+    id_namespace: synthetic_gene
+    feature_metadata: ../data/d-ora/gene-feature-metadata.tsv
     source_refs:
       - block_1
     sample_map: null
@@ -194,7 +194,7 @@ analyses:
         mofa_convergence: not_applicable
         mofa_seed_repeats: 1
         native_options_ref: null
-        selection: {method: none, value: null}
+        selection: {method: top_k, value: 1}
         evaluation:
           mode: exploratory
           generalization_unit: sample
@@ -214,14 +214,32 @@ clinical:
   links_file: null
   objectives: []
 annotation:
-  resources: []
+  resources:
+    - resource_id: d-ora-protocol
+      source_url: local://triomics/d-ora/ora-protocol.json
+      version: synthetic-2026.1
+      sha256: 0706da52b6dca88934030d72ad36b2b465dda998d4df5c429b2854e73796a10e
+      local_file: ../data/d-ora/ora-protocol.json
+      terms_url: https://www.gnu.org/licenses/gpl-3.0.html
+      rights_status: verified
+      permitted_operation: [ora_protocol]
+      redistribution: allowed
+    - resource_id: d-ora-gene-map
+      source_url: local://triomics/d-ora/gene-mapping.tsv
+      version: synthetic-2026.1
+      sha256: 86f27bf7c6c70bfc9ab068c73ada87df16b3d0f484b42e62a54081dc67a35d9c
+      local_file: ../data/d-ora/gene-mapping.tsv
+      terms_url: https://www.gnu.org/licenses/gpl-3.0.html
+      rights_status: verified
+      permitted_operation: [gene_reaction]
+      redistribution: allowed
   requests:
     - request_id: d_t04_ora
       analysis_id: d_t04_synthetic_exploratory
       route: ora
-      resource_ids: []
+      resource_ids: [d-ora-gene-map]
       required: true
-      protocol_ref: synthetic_declared_universe
+      protocol_ref: d-ora-protocol
 target_investigation:
   enabled: false
   mode: assess
