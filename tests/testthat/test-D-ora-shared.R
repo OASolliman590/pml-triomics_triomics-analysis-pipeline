@@ -28,11 +28,11 @@ d_ora_copy_fixture <- function() {
   testthat::expect_true(file.copy(source_config, config, overwrite = TRUE))
   files <- list(
     c("c04", "metadata.tsv"),
-    c("independent", "proteomics.tsv"),
     c("independent", "metabolomics.tsv"),
     c("d-ora", "gene-feature-metadata.tsv"),
     c("d-ora", "gene-mapping.tsv"),
-    c("d-ora", "ora-protocol.json")
+    c("d-ora", "ora-protocol.json"),
+    c("d-ora", "proteomics.tsv")
   )
   for (parts in files) {
     source <- do.call(triomics_test_resource, as.list(c("examples", "data", parts)))
@@ -227,6 +227,10 @@ testthat::test_that("D-T04 executes declared-universe ORA after native B and C",
   }
   testthat::expect_identical(claim$bindings$protocol_sha256, triomics_sha256(fixture$protocol))
   testthat::expect_identical(claim$bindings$mapping_sha256, triomics_sha256(fixture$mapping))
+  declared_family <- claim$set_family$declared
+  set_family_sha <- claim$set_family$sha256
+  testthat::expect_identical(set_family_sha, claim$bindings$set_family_sha256)
+  testthat::expect_identical(triomics_hash_text(triomics_canonical_json(declared_family)), set_family_sha)
   universe <- claim$measured_universe
   universe_sha <- universe$sha256
   universe$sha256 <- NULL
@@ -235,14 +239,19 @@ testthat::test_that("D-T04 executes declared-universe ORA after native B and C",
   testthat::expect_match(payload$immutable_inputs$b_bundle_sha256, "^[0-9a-f]{64}$")
   testthat::expect_match(payload$immutable_inputs$c_manifest_sha256, "^[0-9a-f]{64}$")
 
-  generation_id <- pointer$generation_id
-  payload_sha256 <- triomics_sha256(payload_path)
   write(" ", file = fixture$protocol, append = TRUE)
+  cached_d <- d_ora_cli_run(fixture$config, "D", output_root)
+  testthat::expect_identical(cached_d$exit_code, 0L, info = paste(cached_d$output, collapse = "\n"))
+  cached_pointer <- jsonlite::read_json(pointer_path, simplifyVector = FALSE)
+  cached_payload_path <- file.path(output_root, "D", "generations", cached_pointer$generation_id,
+                                  "evidence-routing.json")
+  cached_payload_sha256 <- triomics_sha256(cached_payload_path)
+  unlink(file.path(output_root, "D", "resource-cache"), recursive = TRUE, force = TRUE)
   failed_d <- d_ora_cli_run(fixture$config, "D", output_root)
   testthat::expect_identical(failed_d$exit_code, 2L)
   current <- jsonlite::read_json(pointer_path, simplifyVector = FALSE)
-  testthat::expect_identical(current$generation_id, generation_id)
-  testthat::expect_identical(triomics_sha256(payload_path), payload_sha256)
+  testthat::expect_identical(current$generation_id, cached_pointer$generation_id)
+  testthat::expect_identical(triomics_sha256(cached_payload_path), cached_payload_sha256)
 })
 
 testthat::test_that("ORA counts unique resolved entities and preserves ambiguous and unmapped source rows", {
@@ -252,9 +261,10 @@ testthat::test_that("ORA counts unique resolved entities and preserves ambiguous
   )
   testthat::expect_setequal(resolved$universe$ids, c("ORA-1", "ORA-2"))
   testthat::expect_setequal(resolved$selected_ids, "ORA-1")
-  testthat::expect_setequal(vapply(resolved$included, `[[`, character(1), "feature_key"),
+  testthat::expect_setequal(vapply(resolved$universe$included, `[[`, character(1), "feature_key"),
                             c("feature_a", "feature_b", "feature_e"))
-  excluded <- stats::setNames(resolved$excluded, vapply(resolved$excluded, `[[`, character(1), "feature_key"))
+  excluded <- stats::setNames(resolved$universe$excluded,
+                              vapply(resolved$universe$excluded, `[[`, character(1), "feature_key"))
   testthat::expect_identical(excluded$feature_c$reason, "ambiguous_target_entity")
   testthat::expect_identical(excluded$feature_d$reason, "unmapped")
 
@@ -271,10 +281,10 @@ testthat::test_that("ORA counts unique resolved entities and preserves ambiguous
 
 testthat::test_that("ORA inventory qualification comes from the measured source manifests", {
   sources <- list(
-    full = list(source_id = "full", selection_history = "full_unselected"),
-    panel = list(source_id = "panel", selection_history = "prespecified_panel"),
-    unknown = list(source_id = "unknown", selection_history = "unknown"),
-    selected = list(source_id = "selected", selection_history = "outcome_selected")
+    full = list(source_id = "full", role = "measurement_matrix", selection_history = "full_unselected"),
+    panel = list(source_id = "panel", role = "measurement_matrix", selection_history = "prespecified_panel"),
+    unknown = list(source_id = "unknown", role = "measurement_matrix", selection_history = "unknown"),
+    selected = list(source_id = "selected", role = "measurement_matrix", selection_history = "outcome_selected")
   )
   testthat::expect_identical(triomics_ora_inventory_status("full", sources)$status, "full_unselected")
   testthat::expect_identical(triomics_ora_inventory_status(c("full", "panel"), sources)$status,

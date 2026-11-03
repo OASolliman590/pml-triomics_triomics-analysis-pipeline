@@ -10,7 +10,7 @@ sources:
     selection_history: full_unselected
     selection_evidence: Public synthetic software fixture; no participant data.
   - source_id: block_1
-    file: ../data/independent/proteomics.tsv
+    file: ../data/d-ora/proteomics.tsv
     format: tsv
     role: measurement_matrix
     selection_history: full_unselected
@@ -34,7 +34,7 @@ blocks:
     name: Synthetic proteome
     profile: proteomics
     profile_spec_ref: null
-    file: ../data/independent/proteomics.tsv
+    file: ../data/d-ora/proteomics.tsv
     feature_id_column: feature_id
     id_namespace: synthetic_gene
     feature_metadata: ../data/d-ora/gene-feature-metadata.tsv

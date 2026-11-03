@@ -13,6 +13,7 @@
     "inst/examples/data/d-ora/gene-feature-metadata.tsv",
     "inst/examples/data/d-ora/gene-mapping.tsv",
     "inst/examples/data/d-ora/ora-protocol.json",
+    "inst/examples/data/d-ora/proteomics.tsv",
     "docs/implementation/registrations/D-T04.json"
   ],
   "owned_functions": [
