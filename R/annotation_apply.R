@@ -257,6 +257,15 @@ triomics_d_target_slot <- function(investigation, config_path) {
        results = results)
 }
 
+triomics_d_resolve_resource_path <- function(path, config_root) {
+  if (!triomics_d_nonempty_string(path) ||
+      grepl("^(?:https?|ftp)://", path, ignore.case = TRUE) ||
+      grepl("^(?:[A-Za-z]:[/\\\\]|/)", path)) {
+    return(path)
+  }
+  file.path(config_root, path)
+}
+
 triomics_d_annotate_local_resources <- function(evidence, annotation, cache_dir,
                                                      target_investigation, config_path) {
   annotation <- annotation %||% list()
@@ -265,12 +274,8 @@ triomics_d_annotate_local_resources <- function(evidence, annotation, cache_dir,
   config_root <- dirname(normalizePath(config_path, winslash = "/", mustWork = TRUE))
   for (resource_id in names(resources)) {
     source_path <- as.character(resources[[resource_id]]$local_file %||% "")
-    if (!triomics_d_nonempty_string(source_path) ||
-        grepl("^(?:https?|ftp)://", source_path, ignore.case = TRUE)) next
-    if (!grepl("^(?:[A-Za-z]:[/\\\\]|/)", source_path)) {
-      source_path <- file.path(config_root, source_path)
-    }
-    resources[[resource_id]]$local_file <- normalizePath(source_path, winslash = "/", mustWork = FALSE)
+    # Preserve the leaf path so resource access can reject a symlink before hashing it.
+    resources[[resource_id]]$local_file <- triomics_d_resolve_resource_path(source_path, config_root)
   }
   by_route <- list()
   for (request in requests) {

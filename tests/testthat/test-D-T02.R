@@ -166,6 +166,28 @@ testthat::test_that('D-T02 namespace and taxon mismatches stay unmapped', {
     testthat::expect_length(x$edges, 0L)
   }
 })
+testthat::test_that('D config-relative resource paths preserve symbolic-link checks', {
+  config_root <- tempfile('d-t02-relative-resource-')
+  dir.create(config_root)
+  on.exit(unlink(config_root, recursive=TRUE), add=TRUE)
+  resource_path <- triomics_test_resource('examples', 'data', 'd-foundation', 'lipid-mapping.tsv')
+  link_path <- file.path(config_root, 'mapping-link.tsv')
+  testthat::expect_true(file.symlink(resource_path, link_path))
+
+  resolved <- triomics_d_resolve_resource_path('mapping-link.tsv', config_root)
+  testthat::expect_identical(resolved, link_path)
+  testthat::expect_true(triomics_is_symlink(resolved))
+  resource <- list(resource_id='d-foundation-lipid', source_url='local://synthetic/lipid',
+                   version='synthetic-2026.1', sha256=triomics_sha256(resource_path),
+                   local_file=resolved, terms_url='local://synthetic/terms',
+                   rights_status='verified', permitted_operation=list('lipid_ontology'),
+                   redistribution='allowed')
+  failure <- tryCatch(triomics_d_resource_access(
+    resource, 'lipid_ontology', resource$version, resource$sha256,
+    file.path(config_root, 'cache'), 'offline'
+  ), error=function(error) error)
+  testthat::expect_identical(failure$code, 'D_RESOURCE_HASH_MISMATCH')
+})
 testthat::test_that('D-T02 repair rejects non-row and bundle inputs', {
   f <- d_t02_fixture()
   testthat::expect_identical(d_t02_code(triomics_map_lipids('bad', f$resource, 'lipid_ontology', '1', f$hash, file.path(f$root,'cache'))), 'D_LIPID_INPUT_INVALID')
