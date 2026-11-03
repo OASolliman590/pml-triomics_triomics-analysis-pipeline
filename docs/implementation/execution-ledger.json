@@ -34,23 +34,7 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_023_luna",
-      "role": "bounded_D05_implementation",
-      "model_requested": "gpt-6-luna",
-      "effort_requested": "max",
-      "effective_settings_exposed": false,
-      "base": "749cf679077d2da60936981b354e81eb20fd1fc0",
-      "worktree": "/tmp/triomics-m7-023-luna",
-      "attempt": 1,
-      "repair_attempts": 1,
-      "next_transition": "Sol_shared_CLI_patch_review_then_candidate_diff_and_independent_proof",
-      "phase": "repair1_scoped_regressions",
-      "shared_sol_commit": "2a022cb",
-      "candidate": "760098c56a00d39e5a9cce60f0033d47c680b85a"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
     "status": "m7_022_luna_running",
     "last_reconciled": "2026-11-03",
@@ -5779,6 +5763,22 @@
         "skip": 0
       },
       "disposition": "Worker native matrix green, Sol no-fit symlink probe now hardrejects. D01-D04+ORAshared regressions running. No final integration or dependent target release."
+    },
+    {
+      "event": "m7_023_worker_and_focused_audit_complete",
+      "date": "2026-11-03",
+      "candidate_commit": "760098c56a00d39e5a9cce60f0033d47c680b85a",
+      "counts": {
+        "native_pass": 86,
+        "unit_pass": 71,
+        "regression_pass": 596,
+        "fail": 0,
+        "skip": 0,
+        "regression_warn": 1
+      },
+      "warning": "D-T01 refuses stale paired signs and preserves the old pointer: expected system2 exit2 at test-D-T01.R962",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-023-implementation-astra.md",
+      "disposition": "One implementation repair used, one focused rereview used; Sol native session31395 running. No integration yet. Earlier progress-column failure report was corrected: it was a warning, not failure."
     }
   ],
   "packets": {

@@ -30,3 +30,14 @@ explicitly activated for the reproduced unsafe-resource/cache classification
 failure. Record before edit: split unsafe source/cache structure from regular
 content mismatch at the existing access guard, preserving hard rejection. No
 publisher, provenance, schema, statistical or scientific-method change.
+
+## Focused rereview — pass
+
+One focused read-only rereview of immutable760098c56a00d39e5a9cce60f0033d47c680b85a
+returned **audit_pass: yes**. Previous blockers resolved; no material regression
+found. Protocol hash failures remain fatal; unsafe structures are not translated
+to availability statuses; native tests cover partial mapping, predecessor hashes,
+route accounting and old-pointer preservation with portable temp paths.
+Reported counts: native86, D05unit71, affectedregressions596pass; no failures or
+skips, one expected exit2 warning. Astra ran no tests/edits/children. Sol independent
+persistent native matrix is still required before integration. No M7/G7 acceptance.
