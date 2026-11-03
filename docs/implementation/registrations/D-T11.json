@@ -26,5 +26,13 @@
   "reconciliation_2026_11_03": {
     "snapshot": "b03cdef",
     "finding": "Prior capped cycle stays closed. Later commits 3b8792f/dd31dd6/5d34462 are present. Profile publication still special-cases SYNTH_FCN3_LIKE and bypasses supplied evidence/mechanism; new bounded cycle authorized."
-  }
+  },
+  "current_revision_verification": {
+    "cycle": "M7-027",
+    "commit": "eed7cb251c229399de0b5c110f516c4013197314",
+    "status": "verified_synthetic_native_for_D12_dependency",
+    "review_ref": "docs/implementation/reviews/2026-11-04-m7-027-sol-verification.md",
+    "milestone_acceptance": false
+  },
+  "next_action": "Preserve historical attempts; final same-snapshot M7 acceptance gates remain pending. M7/G7 closed."
 }

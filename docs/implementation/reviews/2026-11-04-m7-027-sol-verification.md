@@ -5,7 +5,7 @@ Candidate **eed7cb251c229399de0b5c110f516c4013197314**, clean source in
 candidate6e73239 remains a blocked historical cycle, not retrospectively accepted.
 M7-027 initialf9abc42 used one combined repaireed7cb2; one repair remains.
 Initial implementation Astra no and its exact two findings are in the 3November
-implementation review. Its single focused rereview is pending at this receipt.
+implementation review. Its single focused rereview passed on 4November; see the appended Astra receipt.
 
 Sol inspected the bounded source diff. The assay guard reconstructs the typed
 ledger/profile against the actual request before treating experimental labels as
@@ -46,3 +46,13 @@ Astra pass and Sol integration. Final same-snapshot packet/full-source/archive,
 Terra documentation and fresh milestone Astra gates remain mandatory. C06 is
 unaccepted, C07 not_run, C09 unqualified; conditional D06/07/14 have no completion
 credit. M7/G7 stay closed. No private data, push, AIU or fasting run.
+
+Sol integrated the four candidate commits as58695a1,565845a,4c64838,28b7f76.
+The integrated product trees R/tests/inst/man/NAMESPACE/DESCRIPTION match the
+verified eed7cb2 bytes exactly. The separate required D01 regression completed on clean eed7cb2: exit 0,
+PASS 325, FAIL 0, ERROR 0, WARN 1, SKIP 0, 19 blocks. Named warning:
+"D-T01 refuses stale paired signs and preserves the old pointer" — expected
+native subprocess exit 2; the previous pointer is asserted unchanged. This is
+its existing disposition, with no new warning and no suppression. Full receipt
+is sol-d01-regression.json in the adjacent evidence directory. D12 dependency
+verification is now satisfied; its already-audited scope may be implemented.

@@ -21,3 +21,15 @@ appended fixtures, but native B/C/D verification is pending. Sol requests one
 combined repair1 for these findings within the approved allowlist, then focused
 and native proof before the single focused Astra rereview. One repair remains
 after repair1; do not reset the cap or accept M7/G7 from this record.
+
+## Focused rereview — 4 November
+
+**audit_pass yes**, clean eed7cb251c229399de0b5c110f516c4013197314.
+The same read-only Astra reviewer used the one focused rereview. Both initial P1s
+are resolved. Independent bounded probes confirm valid matched Kd/Ki/activity
+accept, while axis/endpoint attributes, unknown metadata and nested probability
+claims reject with D_TARGET_CLAIM_COLLAPSED. Exact ledger revalidation, four-axis
+coverage, unresolved/noncomparable handling and no-winner behavior are preserved.
+No new concrete blocker. Receipts support Sol359focused passes, zero conditions,
+six native exits0 and144independent artifact assertions. No edits/fits/broad tests.
+Full-source/archive/final milestone gates remain pending; no M7/G7 acceptance.

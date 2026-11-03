@@ -34,19 +34,9 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_027_implementation_astra",
-      "role": "read_only_focused_implementation_rereview",
-      "model_requested": "gpt-6-astra",
-      "effort_requested": "low",
-      "effective_settings_exposed": false,
-      "candidate_commit": "eed7cb251c229399de0b5c110f516c4013197314",
-      "next_transition": "Sol_records_verdict_integrates_only_if_pass"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_027_focused_astra_running",
+    "status": "m7_025_ready",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -5886,6 +5876,29 @@
       "candidate_commit": "eed7cb251c229399de0b5c110f516c4013197314",
       "review_ref": "docs/implementation/reviews/2026-11-04-m7-027-sol-verification.md",
       "disposition": "Worker completed; no process active. Sol359focused pass0conditions and144independent artifact readback assertions. Focused Astra pending; no integration/acceptance yet."
+    },
+    {
+      "event": "m7_027_focused_astra_pass_and_product_integration",
+      "date": "2026-11-04",
+      "candidate_commit": "eed7cb251c229399de0b5c110f516c4013197314",
+      "integration_commit": "28b7f7661009bcf8f54f164612a3f97a154a85d0",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-027-implementation-astra.md",
+      "disposition": "Product trees match tested candidate. D01 focused regression running before D12 dispatch. No worker/reviewer active; parent session79722. M7/G7 closed."
+    },
+    {
+      "event": "m7_027_dependency_verification_complete",
+      "date": "2026-11-04",
+      "candidate_commit": "eed7cb251c229399de0b5c110f516c4013197314",
+      "integration_commit": "28b7f7661009bcf8f54f164612a3f97a154a85d0",
+      "D01_counts": {
+        "pass": 325,
+        "fail": 0,
+        "error": 0,
+        "warn": 1,
+        "skip": 0
+      },
+      "warning": "D-T01 refuses stale paired signs and preserves the old pointer: expected native exit2",
+      "disposition": "M7-027 verified; D12 implementation dependency released. M7-024 remains blocked history. M7/G7 closed."
     }
   ],
   "packets": {
@@ -6515,14 +6528,14 @@
       "blockers": []
     },
     "D-T10": {
-      "status": "m7_027_bounded_successor_active_unaccepted",
+      "status": "verified_candidate_pending_same_snapshot_acceptance",
       "attempts": 3,
       "commit": "9e1499df1e8d4216f57e7afc9a67dfbf79932c2a",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t10-targets.md"
       ],
       "blockers": [
-        "M7-024 candidate6e73239 failed fresh Astra comparison coverage/external-evidence audit at its repair cap. M7-027 is separately scoped/audited and active; native proof and fresh implementation review remain required."
+        "Final same-snapshot required packet/source/archive/documentation/Astra gates remain pending."
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -6534,17 +6547,24 @@
           "Stage D CLI does not call triomics_target_request or triomics_target_external_evidence. Sol owns that integration."
         ],
         "commit": "9e1499df1e8d4216f57e7afc9a67dfbf79932c2a"
+      },
+      "current_revision_verification": {
+        "cycle": "M7-027",
+        "commit": "eed7cb251c229399de0b5c110f516c4013197314",
+        "status": "verified_synthetic_native_for_D12_dependency",
+        "review_ref": "docs/implementation/reviews/2026-11-04-m7-027-sol-verification.md",
+        "milestone_acceptance": false
       }
     },
     "D-T11": {
-      "status": "m7_027_bounded_successor_active_unaccepted",
+      "status": "verified_candidate_pending_same_snapshot_acceptance",
       "attempts": 3,
       "commit": null,
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t11-blocked.md"
       ],
       "blockers": [
-        "M7-024 candidate6e73239 failed fresh Astra comparison coverage/external-evidence audit at its repair cap. M7-027 is separately scoped/audited and active; native proof and fresh implementation review remain required."
+        "Final same-snapshot required packet/source/archive/documentation/Astra gates remain pending."
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -6556,6 +6576,13 @@
           "Repair limit reached. Endpoint binding_probability is still accepted as a measured profile axis. Astra high audit_pass no. Candidate is uncommitted on draft/d-t11."
         ],
         "commit": null
+      },
+      "current_revision_verification": {
+        "cycle": "M7-027",
+        "commit": "eed7cb251c229399de0b5c110f516c4013197314",
+        "status": "verified_synthetic_native_for_D12_dependency",
+        "review_ref": "docs/implementation/reviews/2026-11-04-m7-027-sol-verification.md",
+        "milestone_acceptance": false
       }
     },
     "D-T12": {

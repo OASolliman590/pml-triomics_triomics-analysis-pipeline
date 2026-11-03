@@ -40,19 +40,16 @@ assertions pass, one expectedD01stale-signwarning, nofail/skip. Sol independent
 11nativecommands/readbacks and40predecessor files passed; currentgeneration
 memberhashes revalidated after true rejections. Receipt:
 reviews/2026-11-03-m7-023-status-sol-verification.md. Target dependency released.
-M7-024 is blocked and incomplete at its two-repair cap. Luna completed clean
-candidate6e73239; fresh Astra implementation audit found unequal-coverage fallback
-and external-Kd comparison rejection. Both workers are complete; no test process
-active. Do not redispatch or integrate it as finished work. Last318 focused passes
-preceded two appended tests; native proof pending. Preserved candidate is the base
-for separately scoped M7-027. Read reviews/2026-11-03-m7-024-implementation-astra.md
-and change-records/M7-027-target-comparison-evidence-boundary.md. Scope11085b1 passed fresh Astra, recorded6c83d73. Fresh Luna /root/m7_027_luna
-is running in /tmp/triomics-m7-027-luna from6e73239. Initialcandidatef9abc42
-passed341focused assertions; Astra no found Ki/activity rejection and axis-attribute
-bypass. Combined repair1 authorized, one further repair maximum. Read the
-M7-027 implementation review; native proof remains pending.
-Do not duplicate dispatch; Sol independent nativeproof and fresh implementation
-Astra precede D12. M7/G7 remain closed.
+M7-024 stays blocked at its two-repair cap; candidate6e73239 is preserved.
+Its successor M7-027 is verified on clean eed7cb2: Sol359 focused assertions,
+zero conditions; six native producer exits0 and144 independent artifact checks.
+Focused Astra passed. Initialf9abc42 used one combined repaireed7cb2; no second
+repair was used. Sol integrated54f0b69/6e73239/f9abc42/eed7cb2 as58695a1/565845a/
+4c64838/28b7f76. Product trees match the tested candidate. Read the 4November
+M7-027 Sol verification and the appended focused Astra verdict.
+Both agents completed. Sol D01 regression on clean eed7cb2 passed 325, with
+one existing named stale-sign warning and no failure/error/skip. No test process
+is active. D12 dependency verification is satisfied; do not rerun this cycle.
 M7-025 discovery scope c3df0c1 passed fresh Astra; implementation waits on D11.
 M7-026 neutral generation governance wording scope
 60fa3b8 passed fresh Astra; amendedf80e7f6 also passed its one focused scope
@@ -60,7 +57,17 @@ rereview to allow Sol-only stale manual sentence correction. Implementation
 waits on D12 and precedes final gates.
 M7/G7 closed; C07 not_run; C09 unqualified; no private data, AIU, fasting or push.
 
-## Current checkpoint — 29 October 2026, D-T11 stopped at the repair limit
+## Current literal resume instruction
+
+Dispatch fresh Luna-max D12 from the committed coordinator snapshot under
+already-audited M7-025 scope. Use the prepared brief at
+/tmp/triomics-stage-d-evidence/m7-025/prepared-luna-brief.md and a fresh worktree.
+Do not rerun completed target repairs or Astra reviews. After D12 verification
+and audit, complete M7-026 wording and the final same-snapshot source/archive/
+Terra/Astra/Sol acceptance sequence.
+M7/G7 remain closed; private data and GitHub push remain excluded.
+
+## Historical checkpoint — 29 October 2026, D-T11 stopped at the repair limit
 
 D-T11 is not landed. Terra used the initial attempt and both repairs. The focused
 suite on the uncommitted candidate passed 42. Opus 5.5 rereview of repair 2
@@ -1016,7 +1023,7 @@ exited 2 with `C_SCORE_BACKEND_UNAVAILABLE` before ingest. Shared registration
 is not applied, and C-03 is not accepted. The rank guard currently measures
 the first predictor block only; native component mismatch still fails closed.
 
-## Literal resume instruction
+## Historical literal resume instruction (superseded by current checkpoint)
 
 Read the current M7-014 checkpoint, integration receipt and execution ledger.
 The authorized seam is verified and integrated at359a1d0; no worker or proof
@@ -1041,7 +1048,7 @@ accepted results. B-T07/M7 acceptance, G7 and Stage D remain closed in this
 cycle. Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.
 
-Active cap note (3 November): M7-022225529a is repair1 of the initial890cf46
+Historical cap note (3 November, superseded by the verified M7-022 receipt): M7-022225529a is repair1 of the initial890cf46
 implementation, including internal rounds. One further targeted repair maximum.
 Product/fixture baseline RED before implementation is retained separately. Fresh
 Astra implementation review is required for the risky D04 diff before D05 release;

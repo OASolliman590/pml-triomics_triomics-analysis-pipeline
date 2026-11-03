@@ -24,5 +24,13 @@
   "reconciliation_2026_11_03": {
     "snapshot": "b03cdef",
     "finding": "Target slot invokes request/external evidence. Exact identity/context/construct and CLI negative cases still need fresh acceptance evidence."
-  }
+  },
+  "current_revision_verification": {
+    "cycle": "M7-027",
+    "commit": "eed7cb251c229399de0b5c110f516c4013197314",
+    "status": "verified_synthetic_native_for_D12_dependency",
+    "review_ref": "docs/implementation/reviews/2026-11-04-m7-027-sol-verification.md",
+    "milestone_acceptance": false
+  },
+  "next_action": "Preserve historical attempts; final same-snapshot M7 acceptance gates remain pending. M7/G7 closed."
 }
