@@ -47,7 +47,9 @@ shared patches and final diff, independently verifies, then obtains fresh Astra
 implementation pass before D12. Do not duplicate dispatch.
 M7-025 discovery scope c3df0c1 passed fresh Astra; implementation waits on D11.
 M7-026 neutral generation governance wording scope
-60fa3b8 passed fresh Astra; implementation waits on D12 and precedes final gates.
+60fa3b8 passed fresh Astra; amendedf80e7f6 also passed its one focused scope
+rereview to allow Sol-only stale manual sentence correction. Implementation
+waits on D12 and precedes final gates.
 M7/G7 closed; C07 not_run; C09 unqualified; no private data, AIU, fasting or push.
 
 ## Current checkpoint — 29 October 2026, D-T11 stopped at the repair limit

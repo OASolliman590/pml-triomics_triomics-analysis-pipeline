@@ -5817,6 +5817,13 @@
       "base": "8246369",
       "shared_sol_commit": "54f0b69",
       "disposition": "Behavioral identityRED60pass4fail; shared absentresolver/profileRED established. Initial implementation77pass7fail plus contextbuildererror and25newsharedpass. Repair1 combines compatibility/explicitmismatch/typedrejection fixes. Sol thin CLI connects existing evidence and generic profiles/compatibility binding merge. Helpers remain internal; no public export/Rd usage expansion."
+    },
+    {
+      "event": "m7_026_amended_scope_focused_pass",
+      "date": "2026-11-03",
+      "candidate_commit": "f80e7f6",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-026-scope-astra.md",
+      "disposition": "Sol-only existingmanualwording correction allowed; Luna allowlistunchanged. D12prerequisite remains, no implementation or M7/G7acceptance."
     }
   ],
   "packets": {
