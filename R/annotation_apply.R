@@ -201,6 +201,9 @@ triomics_d_target_slot <- function(investigation, config_path) {
                      "An enabled target investigation needs a context and a protocol reference.",
                      "target_investigation")
   }
+  if (triomics_d_sequence(investigation$targets) && !length(investigation$targets)) {
+    return(list(status = "unavailable", reason_code = "D_TARGET_EVIDENCE_ABSENT", results = list()))
+  }
   evidence_file <- investigation$external_evidence_file
   if (!triomics_d_nonempty_string(evidence_file)) {
     return(list(status = "unavailable", reason_code = "D_TARGET_EVIDENCE_ABSENT", results = list()))

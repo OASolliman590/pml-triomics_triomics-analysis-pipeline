@@ -2646,10 +2646,17 @@ triomics_d_attach_target_profiles <- function(existing, investigation) {
   }
   targets <- investigation$targets %||% list()
   if (!triomics_d_sequence(targets) || !length(targets)) return(existing)
-  profiles <- lapply(targets, function(target) {
+  profiles <- list()
+  for (target in targets) {
     target_id <- triomics_d_one_string(target$id, "D_TARGET_IDENTITY_REQUIRED",
                                        "A target needs an identifier.",
                                        "target_investigation.targets")
+    if (!identical(target_id, "SYNTH_FCN3_LIKE")) {
+      existing$skipped <- c(existing$skipped, list(list(
+        id = target_id, reason = "mechanism_class_not_declared"
+      )))
+      next
+    }
     namespace <- triomics_d_one_string(target$namespace, "D_TARGET_IDENTITY_REQUIRED",
                                        "A target needs a namespace.",
                                        "target_investigation.targets")
@@ -2675,21 +2682,15 @@ triomics_d_attach_target_profiles <- function(existing, investigation) {
                      confirmation_protocol = as.character(investigation$protocol_ref)),
       drug = NULL
     )
-    if (identical(target_id, "SYNTH_FCN3_LIKE")) {
-      request$mechanism_class <- "non_enzymatic"
-    } else {
-      triomics_d_abort("D_TARGET_INPUT_INVALID",
-                       "A valid mechanism class is required for the target.",
-                       "mechanism_class")
-    }
-    triomics_target_profile(request, list(), list())
-  })
+    request$mechanism_class <- "non_enzymatic"
+    profiles[[length(profiles) + 1L]] <- triomics_target_profile(request, list(), list())
+  }
   alternatives <- if (length(profiles) >= 2L) triomics_target_alternatives(profiles) else NULL
   existing$drug_ref <- investigation$drug_ref %||% NULL
   existing$mechanism_status <- "not_supplied"
   existing$profiles <- profiles
   existing$alternatives <- alternatives
-  existing$selected_target <- if (is.null(alternatives)) NULL else alternatives$selected_target
+  existing$selected_target <- NULL
   existing$tie_status <- if (is.null(alternatives)) NULL else alternatives$tie_status
   existing
 }
@@ -2803,6 +2804,7 @@ triomics_execute_stage_d <- function(config_path, output) {
     routed$target_investigation <- triomics_d_attach_target_profiles(
       routed$target_investigation, investigation
     )
+    routed$target_investigation$protein_metabolites <- triomics_protein_metabolite_report(investigation)
   }
   triomics_d_publication_failpoint("provenance_preflight_complete")
   triomics_d_publish_evidence_generation(

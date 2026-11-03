@@ -540,7 +540,10 @@ test_that('stage D compares profiles only when two declared targets have a known
   expect_identical(attached$alternatives$tie_status, 'unresolved')
   expect_null(attached$selected_target)
   other <- t11_investigation(list(list(namespace = 'synthetic', id = 'OTHER_TARGET', taxon_id = 9606, entity_type = 'protein')))
-  expect_identical(t11_code(triomics_d_attach_target_profiles(list(), other)), 'D_TARGET_INPUT_INVALID')
+  skipped <- triomics_d_attach_target_profiles(list(), other)
+  expect_length(skipped$profiles, 0L)
+  expect_identical(skipped$skipped[[1]]$id, 'OTHER_TARGET')
+  expect_identical(skipped$skipped[[1]]$reason, 'mechanism_class_not_declared')
 })
 
 test_that('stage D does not invent profiles from an evidence or mechanism file', {
