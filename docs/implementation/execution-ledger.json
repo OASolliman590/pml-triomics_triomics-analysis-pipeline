@@ -36,7 +36,7 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_027_scope_prepared",
+    "status": "m7_027_luna_ready",
     "last_reconciled": "2026-11-03",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -5818,6 +5818,15 @@
       "astra_verdict": "audit_pass_no",
       "review_ref": "docs/implementation/reviews/2026-11-03-m7-024-implementation-astra.md",
       "disposition": "Two comparison defects; no integration. Fresh M7-027 bounded successor scope prepared under standing authorization. Worker/reviewer complete; no test process active."
+    },
+    {
+      "event": "m7_027_scope_pass",
+      "date": "2026-11-03",
+      "scope_commit": "11085b175b0a3dc321130f6efe0a63f2e8c6da29",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-027-scope-astra.md",
+      "base_candidate": "6e73239ebbca95bc0aab24bb7b7faf78d6a640cf",
+      "worktree": "/tmp/triomics-m7-027-luna",
+      "disposition": "New initial attempt authorized; old M7-024 cap preserved. M7/G7 closed."
     }
   ],
   "packets": {
