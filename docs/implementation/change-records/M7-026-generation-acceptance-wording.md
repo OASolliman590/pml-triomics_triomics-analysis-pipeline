@@ -45,3 +45,14 @@ integration. Initial plus two targeted repairs; one scope audit plus one focused
 rereview. Final uninterrupted source suite, clean git-archive Status: OK and fresh
 Astra review must follow this product change before Sol accepts M7/G7.
 No private study data, push, AIU, fasting run or later report work.
+
+## Bounded documentation amendment before implementation
+
+Sol found the same permanent C-06-unaccepted claim in the existing details
+paragraph of man/triomics-api.Rd. Extend only Sol's shared documentation ownership
+to update that sentence to the same publication-versus-acceptance distinction,
+keeping C-07/C-09 qualifications unchanged. Do not add exports, aliases, usage
+entries or scientific claims. The two-file Luna allowlist remains unchanged.
+This amended record needs its one focused read-only Astra scope rereview before
+M7-026 implementation; the original60fa3b8 scope pass remains historical.
+No product edit in this amendment, and D12 remains the prerequisite.

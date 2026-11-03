@@ -44,9 +44,10 @@
       "base": "8246369b159691dcdd4aca547289b17a5a9ab270",
       "worktree": "/tmp/triomics-m7-024-luna",
       "attempt": 1,
-      "repair_attempts": 0,
+      "repair_attempts": 1,
       "next_transition": "Sol_shared_patch_review_then_independent_target_proof_and_Astra",
-      "phase": "initial_RED"
+      "phase": "repair1_target_implementation",
+      "shared_sol_commit": "54f0b69"
     }
   ],
   "orchestration_control": {
@@ -5809,6 +5810,13 @@
       "agent": "/root/m7_024_luna",
       "scope_audit": "b1c7b4cb054b4f99af585e68470f53f212726409",
       "disposition": "D05 verified dependency satisfied; fresh isolated target worker. Sol owns shared CLI/exports/manual. M7/G7 closed."
+    },
+    {
+      "event": "m7_024_red_shared_wiring_repair1",
+      "date": "2026-11-03",
+      "base": "8246369",
+      "shared_sol_commit": "54f0b69",
+      "disposition": "Behavioral identityRED60pass4fail; shared absentresolver/profileRED established. Initial implementation77pass7fail plus contextbuildererror and25newsharedpass. Repair1 combines compatibility/explicitmismatch/typedrejection fixes. Sol thin CLI connects existing evidence and generic profiles/compatibility binding merge. Helpers remain internal; no public export/Rd usage expansion."
     }
   ],
   "packets": {
