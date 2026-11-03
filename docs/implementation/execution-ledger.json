@@ -36,11 +36,11 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "d_t11_blocked_repair_limit",
-    "last_reconciled": "2026-10-29",
+    "status": "m7_021_reconciliation_scope_audit_pending",
+    "last_reconciled": "2026-11-03",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "D-T11 stopped after two repairs. The uncommitted candidate passed 42 focused tests. Opus 5.5 audit_pass yes. Astra high audit_pass no because endpoint binding_probability is still accepted. Do not start repair 3 or D-T12. D-T02 through D-T10 remain unaccepted. Stage D CLI wiring stays a Sol blocker. M7 and G7 stay closed."
+    "disposition": "User authorizes new bounded cycles from b03cdef to finish required M7 Stage D scope. Preserve prior caps and all historical receipts. Reconcile outdated records against code; no acceptance inferred. Scope audit, predecessor verification, then Luna integration. M7/G7 closed."
   },
   "orchestration_events": [
     {
@@ -3737,711 +3737,7 @@
     {
       "event": "b_t05_b_t06_reopening_diagnostics_completed_records_proposed",
       "date": "2026-10-15",
-      "packets": ["B-T05", "B-T06"],
-      "candidate_commits": {
-        "B-T05": "efd830884b894d79441af5a948fa3b600ff8e4db",
-        "B-T06": "9b85bbd616a797c03f133fb43a5f0cce1260bb7d"
-      },
-      "candidate_tests": {
-        "B-T05": {"passed": 63, "failed": 0, "warned": 0, "skipped": 0},
-        "B-T06": {"passed": 52, "failed": 0, "warned": 0, "skipped": 0}
-      },
-      "reproduced_failures": {
-        "B-T05": "A missing-count level request with explicit_limma bypasses B-T05 and returns generic unavailable without requested method, named reason or fallback.",
-        "B-T06": "Weights control=0 and treatment=1e-9 incorrectly return completed wilcoxon_rank_sum sensitivity."
-      },
-      "investigation_refs": [
-        "docs/implementation/investigations/B-T05-dispatch-reopening.md",
-        "docs/implementation/investigations/B-T06-scale-invariant-rank-eligibility.md"
-      ],
-      "change_record_refs": [
-        "docs/implementation/change-records/M4-003-b-t05-dispatch-reopening.md",
-        "docs/implementation/change-records/M4-004-b-t06-scale-invariant-rank-eligibility.md"
-      ],
-      "allowed_next_transition": "dispatch separate fresh Astra low read-only audits; no implementation before Omar explicitly accepts each audited record",
-      "disposition": "Both records preserve the frozen scientific scope and propose only bounded second targeted repairs. Private study data were not read or fitted."
-    },
-    {
-      "event": "b_t04_repair_1_integrated_packet_accepted_m4_blocked",
-      "date": "2026-10-15",
-      "packet": "B-T04",
-      "initial_candidate_commit": "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
-      "repair_commit": "9e5f08ea3e962119490381bb842523cd373ad2bd",
-      "integration_commits": [
-        "753ae47",
-        "af69a9e"
-      ],
-      "review_agent_name": "/root/bt04_sol_review",
-      "initial_review_verdict": "accept",
-      "focused_rereview_verdict": "accept",
-      "review_ref": "docs/implementation/reviews/B-T04-review.md",
-      "tests": {
-        "b_t04_expectations_passed": 302,
-        "full_suite_expectations_passed": 2706,
-        "failures": 0,
-        "warnings": 0,
-        "skips": 0,
-        "cli_exit": 0,
-        "package_check_status": "Status: OK",
-        "build_log_sha256": "9923a71b7a38fddfe501ed620738b8392647702de6ddde9e337e8bccf645a8a0",
-        "check_log_sha256": "6baea0de66a2c4012af2a5097797d0aab734a2d29adc9a2df1b9baa944dbf63f"
-      },
-      "scientific_disposition": "The ordinary one-cell result remains fail at 23/400 and upper 0.0804819. The production-aligned moderated route passes all five frozen cells without seed, generator or threshold changes.",
-      "disposition": "B-T04 is accepted as synthetic software/calibration evidence. B-T05 and B-T06 still block B-T07 and G4; no downstream packet is legal."
-    },
-    {
-      "event": "b_t04_repair_1_completed_focused_rereview_dispatched",
-      "date": "2026-10-15",
-      "worker_agent_name": "/root/bt04_repair",
-      "review_agent_name": "/root/bt04_sol_review",
-      "packet": "B-T04",
-      "repair_commit": "9e5f08e",
-      "repair_base_commit": "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "review_package_ref": ".superpowers/sdd/M4-002-b-t04-production-statistic-calibration/review-bb0181b..9e5f08e.diff",
-      "worker_tests": {
-        "expectations_passed": 302,
-        "failures": 0,
-        "warnings": 0,
-        "skips": 0,
-        "cli_exit": 0,
-        "package_check_status": "Status: OK",
-        "build_log_sha256": "318c28b877abd875d48133b2568fca25911f20109f824073f3dcb3113f2322fa",
-        "check_log_sha256": "09aa9723befc47b7d2e7500947a551e9d873b424133e58bce187a0c14034a5fe"
-      },
-      "allowed_next_transition": "reconcile focused verdict; integrate only if accepted",
-      "disposition": "Repair is limited to R/design_repeated.R and tests/testthat/test-B-T04.R; model and calibration controls are unchanged."
-    },
-    {
-      "event": "b_t04_integrated_package_gate_failed_repair_1_dispatched",
-      "date": "2026-10-15",
-      "worker_agent_name": "/root/bt04_repair",
-      "packet": "B-T04",
-      "integrated_candidate_commit": "753ae47",
-      "source_candidate_commit": "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "failure_evidence": {
-        "package_check_exit": 1,
-        "check_log_sha256": "52b5eb5b5adc5fac71fdc045bcabdb0839a4102276cad6cfaa7b6ea3383c9188",
-        "test_failure": "installed-package test cannot open source-only inst/exec/triomics, causing status 2 and JSON parse error",
-        "check_note": "triomics_b04_dispatch_fit has no visible global definition for b_t04_original"
-      },
-      "allowed_next_transition": "receive minimal two-file repair; reconcile; dispatch one focused re-review to the original Sol reviewer",
-      "disposition": "Full integrated behavioral suite passed 2699/2699, but package check is mandatory and failed. B-T04 remains unaccepted."
-    },
-    {
-      "event": "b_t04_initial_sol_review_accepted_integrated_verification_started",
-      "date": "2026-10-15",
-      "review_agent_name": "/root/bt04_sol_review",
-      "verdict": "accept",
-      "candidate_commit": "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
-      "integration_commit": "753ae47",
-      "review_ref": ".superpowers/sdd/M4-002-b-t04-production-statistic-calibration/task-1-sol-review.md",
-      "independent_tests": {
-        "test_cases": 11,
-        "expectations_passed": 295,
-        "failures": 0,
-        "warnings": 0,
-        "skips": 0,
-        "cli_exit_on_fresh_output": 0
-      },
-      "disposition": "Initial review accepted with one nonblocking hardening suggestion; integration remained subject to fresh package verification."
-    },
-    {
-      "event": "b_t04_candidate_reconciled_sol_review_dispatched",
-      "date": "2026-10-15",
-      "worker_agent_name": "/root/bt04_repair",
-      "review_agent_name": "/root/bt04_sol_review",
-      "packet": "B-T04",
-      "candidate_commit": "bb0181bd07acd3d18bf3a91abb1c1e943879a2bd",
-      "base_commit": "fc4872a",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "review_package_ref": ".superpowers/sdd/M4-002-b-t04-production-statistic-calibration/review-fc4872a..bb0181b.diff",
-      "worker_tests": {
-        "test_cases": 11,
-        "expectations_passed": 295,
-        "failures": 0,
-        "warnings": 0,
-        "skips": 0,
-        "cli_exit": 0
-      },
-      "allowed_next_transition": "reconcile reviewer verdict; no integration before acceptance",
-      "disposition": "Candidate contains exactly the five allowlisted files. The original ordinary 23/400 failure remains recorded; private study data were not used."
-    },
-    {
-      "event": "b_t04_calibration_repair_dispatched",
-      "date": "2026-10-15",
-      "agent_name": "/root/bt04_repair",
-      "packet": "B-T04",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "worktree": ".worktrees/b-t04-calibration-repair",
-      "branch": "codex/b-t04-calibration-repair",
-      "base_commit": "fc4872a",
-      "change_record_ref": "docs/implementation/change-records/M4-002-b-t04-production-statistic-calibration.md",
-      "brief_ref": ".superpowers/sdd/M4-002-b-t04-production-statistic-calibration/task-1-brief.md",
-      "allowed_next_transition": "receive candidate; reconcile; dispatch fresh Sol 6.1 high review; no integration before review acceptance",
-      "disposition": "Single heavy model-fitting worker active; private studies excluded; exact B-T04 allowlist enforced."
-    },
-    {
-      "event": "b_t04_change_record_accepted",
-      "date": "2026-10-15",
-      "accepted_by": "Omar",
-      "change_record_ref": "docs/implementation/change-records/M4-002-b-t04-production-statistic-calibration.md",
-      "authorized_next_transition": "dispatch one bounded test-first B-T04 repair to a fresh isolated Luna max worker, then obtain fresh Sol 6.1 high review before integration",
-      "disposition": "The frozen controls remain unchanged. Acceptance authorizes repair work but does not pre-accept the packet."
-    },
-    {
-      "event": "b_t04_calibration_spike_focused_rereview_passed",
-      "date": "2026-10-15",
-      "agent_name": "/root/bt04_spike_audit",
-      "verdict": "pass",
-      "review_ref": "docs/implementation/reviews/B-T04-calibration-spike-astra-audit.md",
-      "change_record_ref": "docs/implementation/change-records/M4-002-b-t04-production-statistic-calibration.md",
-      "minimum_study_level_coverage_lower_bound": 0.9461728,
-      "disposition": "All initial required changes are addressed. M4-002 awaits Omar's explicit acceptance; B-T04 remains blocked and no worker is active."
-    },
-    {
-      "event": "b_t04_calibration_spike_focused_rereview_dispatched",
-      "date": "2026-10-15",
-      "agent_name": "/root/bt04_spike_audit",
-      "scope": "initial required changes only",
-      "candidate_ref": "docs/implementation/change-records/M4-002-b-t04-production-statistic-calibration.md",
-      "allowed_next_transition": "reconcile focused verdict; if pass, request Omar's explicit acceptance; do not implement",
-      "disposition": "This is the one permitted focused re-review. B-T04 remains blocked."
-    },
-    {
-      "event": "b_t04_calibration_spike_audit_reconciled_change_record_proposed",
-      "date": "2026-10-15",
-      "agent_name": "/root/bt04_spike_audit",
-      "verdict": "pass_with_required_changes",
-      "review_ref": "docs/implementation/reviews/B-T04-calibration-spike-astra-audit.md",
-      "change_record_ref": "docs/implementation/change-records/M4-002-b-t04-production-statistic-calibration.md",
-      "probe_sha256": "ae16976c4ad3ae0f63bca343e2738b98b4065ee21d8a38daf519d8e655ab9fa4",
-      "report_sha256": "343b4ccf139301f0941a83148825cb777a8219d3d39d1327a0074ac1d26a1e3d",
-      "required_conditions": [
-        "preserve the ordinary 23/400 failure and QR/SE/df evidence",
-        "qualify robust=FALSE only",
-        "use matching moderated p/SE/df/contrast provenance",
-        "treat pooled interval-level coverage as descriptive and gate on an independent-study lower bound",
-        "do not extend covariance or missingness scope"
-      ],
-      "disposition": "M4-002 is proposed and not accepted. B-T04 stays blocked; no worker may implement until Omar explicitly accepts the record."
-    },
-    {
-      "event": "b_t04_calibration_spike_audit_dispatched",
-      "date": "2026-10-15",
-      "agent_name": "/root/bt04_spike_audit",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "candidate_ref": "docs/implementation/investigations/B-T04-calibration-spike.md",
-      "probe_ref": "docs/implementation/investigations/B-T04-calibration-spike.R",
-      "probe_sha256": "ae16976c4ad3ae0f63bca343e2738b98b4065ee21d8a38daf519d8e655ab9fa4",
-      "held_repeated_source_sha256": "bbca07fa0d06cc915f09c2b698f760cb8da96d13a2abe53d91613e5627976ecb",
-      "held_trajectory_source_sha256": "93af979eb8c86e1e4bd9a2c18b9ea4c60c504aaac0c77e53bba0b33f7292d3b4",
-      "allowed_next_transition": "reconcile verdict; if acceptable, draft an explicit change record for Omar acceptance; do not implement",
-      "disposition": "Read-only audit uses public specification and synthetic evidence only; private study inputs are excluded."
-    },
-    {
-      "event": "b_t09_registration_rereview_accepted_m4_blocked",
-      "date": "2026-10-14",
-      "review_thread_id": "01a13a74-71bb-7901-a86d-27b2263df49a",
-      "wait_cursor": "d5f9bed4-5b0d-4317-9f69-3b7c91be6208:33",
-      "registration_commit": "15f5031",
-      "registration_repair_commit": "219b9b2",
-      "review_ref": "docs/implementation/reviews/B-T09-review.md",
-      "verdict": "accepted",
-      "tests": {
-        "b_t09_passed": 83,
-        "b_t08_regression_passed": 139,
-        "cli_probes_passed": 13,
-        "full_suite_passed": 2404,
-        "full_suite_failures": 0,
-        "full_suite_warnings": 0,
-        "full_suite_skips": 0,
-        "package_check_status": "Status: OK",
-        "package_check_exit": 0,
-        "build_log_sha256": "d8b558aa37e27eca723b52ece7974568c614682c5a24af4ae8297b9f5d4d1ab4",
-        "check_log_sha256": "c92dad89ffdb5a342bd8247c7f177d5da21dbdd09520833b2751a54a460b644e"
-      },
-      "disposition": "B-T09 is accepted as synthetic software evidence. M4 cannot enter G4 because B-T04, B-T05 and B-T06 remain blocked."
-    },
-    {
-      "event": "b_t09_registration_review_changes_required_repair_1_dispatched",
-      "date": "2026-10-14",
-      "review_thread_id": "01a13a74-71bb-7901-a86d-27b2263df49a",
-      "initial_snapshot_commit": "15f5031",
-      "repair_commit": "219b9b2",
-      "verdict": "changes_required",
-      "finding": "Source-tree CLI bypassed the non-fixture longitudinal fail-closed guard for within_person, baseline_to_later and effect_modification modes.",
-      "tests_passed_after_repair": 83,
-      "disposition": "Narrow Sol repair 1 moved the guard to both source and installed paths; the single focused registration re-review is active."
-    },
-    {
-      "event": "b_t05_focused_rereview_blocked",
-      "date": "2026-10-14",
-      "worker_thread_id": "01a13a51-1b06-7040-8341-3405f4d99166",
-      "review_thread_id": "01a13a60-0604-77b3-a42b-cbbc951ec81c",
-      "candidate_commit": "efd830884b894d79441af5a948fa3b600ff8e4db",
-      "verdict": "changes_required",
-      "tests_passed": 63,
-      "adjacent_tests_passed": 516,
-      "blocking_finding": "Missing count metadata bypasses B-T05 handling, suppressing requested method identity, named unavailability and explicit limma fallback for level requests.",
-      "disposition": "The one permitted focused re-review is exhausted. B-T05 remains unintegrated and blocked; shared path, dependency and serialization work cannot repair the packet dispatch gate."
-    },
-    {
-      "event": "b_t09_cross_cutting_registration_review_dispatched",
-      "date": "2026-10-14",
-      "snapshot_commit": "15f5031",
-      "client_thread_id": "client-new-thread:353030f6-675b-4f04-b222-92e80b398f64",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "disposition": "Fresh review covers only the Sol-owned schema/NAMESPACE/CLI registration and installed-package delivery before B-T09 release."
-    },
-    {
-      "event": "b_t09_packet_accepted_integrated_registration_implemented",
-      "date": "2026-10-14",
-      "review_thread_id": "01a13a5e-446b-7f53-ba70-435b976f59ee",
-      "candidate_commit": "0ca50369e2fb52c819a54abdfc8ff4480d9efc88",
-      "integration_commits": ["f7973fe", "2da6c09"],
-      "review_ref": "docs/implementation/reviews/B-T09-review.md",
-      "change_record_ref": "docs/implementation/change-records/M4-001-b-t09-longitudinal-cli-registration.md",
-      "verdict": "accepted_subject_to_sol_registration",
-      "tests_passed_after_registration": 80,
-      "source_cli_exit": 0,
-      "installed_cli_exit": 0,
-      "disposition": "Packet defects are resolved. Shared schema/NAMESPACE/CLI registration is implemented by Sol and awaits a fresh independent cross-cutting review before release."
-    },
-    {
-      "event": "b_t09_repair_1_completed_focused_rereview_dispatched",
-      "date": "2026-10-14",
-      "worker_thread_id": "01a13a51-2ef1-7ad3-aa40-fc7611d98b7e",
-      "review_thread_id": "01a13a5e-446b-7f53-ba70-435b976f59ee",
-      "candidate_commit": "0ca50369e2fb52c819a54abdfc8ff4480d9efc88",
-      "tests_passed": 73,
-      "cli_exit": 0,
-      "adversarial_within_person_cli_exit": 2,
-      "disposition": "Four-file targeted repair stopped; the one permitted focused re-review is active. Sol-owned schema/NAMESPACE/CLI registration remains explicitly pending."
-    },
-    {
-      "event": "b_t06_focused_rereview_blocked",
-      "date": "2026-10-14",
-      "review_thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a",
-      "candidate_commit": "9b85bbd616a797c03f133fb43a5f0cce1260bb7d",
-      "verdict": "blocked",
-      "tests_passed": 52,
-      "targeted_probes_passed": 13,
-      "targeted_probes_failed": 1,
-      "blocking_finding": "The max(1, ...) tolerance is not scale invariant; weights control=0 and treatment=1e-9 still trigger Wilcoxon for a treatment-mean contrast.",
-      "disposition": "The one permitted focused re-review is exhausted. B-T06 remains unintegrated and blocked; no further repair was dispatched."
-    },
-    {
-      "event": "b_t05_review_changes_required_repair_1_dispatched",
-      "date": "2026-10-14",
-      "review_thread_id": "01a13a60-0604-77b3-a42b-cbbc951ec81c",
-      "worker_thread_id": "01a13a51-1b06-7040-8341-3405f4d99166",
-      "candidate_commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
-      "verdict": "changes_required",
-      "findings": [
-        "the packet CLI hook was overwritten by older wrappers and never reached qualified or fallback execution",
-        "incompatible assay/effect units were trusted and copied into results",
-        "delta count summaries included observations not used in the feature-specific fit"
-      ],
-      "disposition": "Targeted repair 1 must address only the three packet-owned defects; lock, config-relative path and serialization registration remain Sol-owned acceptance prerequisites."
-    },
-    {
-      "event": "b_t06_repair_1_completed_focused_rereview_dispatched",
-      "date": "2026-10-14",
-      "worker_thread_id": "01a13a51-245d-7f03-9caa-9418378fc3a0",
-      "review_thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a",
-      "candidate_commit": "9b85bbd616a797c03f133fb43a5f0cce1260bb7d",
-      "tests_passed": 52,
-      "cli_exit": 0,
-      "disposition": "Three-file targeted repair stopped; the one permitted focused re-review is active."
-    },
-    {
-      "event": "b_t09_review_changes_required_repair_1_dispatched",
-      "date": "2026-10-14",
-      "review_thread_id": "01a13a5e-446b-7f53-ba70-435b976f59ee",
-      "worker_thread_id": "01a13a51-2ef1-7ad3-aa40-fc7611d98b7e",
-      "candidate_commit": "be1b52df2777e4cefbce6b23e9d10e536a6ca082",
-      "verdict": "changes_required",
-      "findings": [
-        "measurement timestamps were discarded, allowing after-baseline information into baseline models",
-        "a within_person CLI request silently produced between_person results",
-        "omitted outcome_estimand crashed instead of returning typed unavailability"
-      ],
-      "disposition": "Targeted repair 1 must fix packet-owned fail-closed behavior and specify the exact Sol-owned schema registration; shared schema/CLI files remain forbidden to the worker."
-    },
-    {
-      "event": "b_t06_review_changes_required_repair_1_dispatched",
-      "date": "2026-10-14",
-      "review_thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a",
-      "worker_thread_id": "01a13a51-245d-7f03-9caa-9418378fc3a0",
-      "candidate_commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
-      "verdict": "changes_required",
-      "findings": [
-        "selection validation leaked across blocks and changed block_1 q values",
-        "missing selection inventory was treated as complete instead of failing closed",
-        "an incompatible treatment-mean contrast silently triggered two-group Wilcoxon"
-      ],
-      "disposition": "Targeted repair 1 may address only the three findings and add regressions, then must stop for the single focused re-review."
-    },
-    {
-      "event": "b_t05_worker_completed_review_dispatched",
-      "date": "2026-10-14",
-      "worker_thread_id": "01a13a51-1b06-7040-8341-3405f4d99166",
-      "candidate_commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
-      "tests_passed": 43,
-      "cli_exit": 0,
-      "review_client_thread_id": "client-new-thread:183da223-b4ba-4137-8eeb-01bf5672e8e1",
-      "declared_handoffs": [
-        "config-relative count-path resolution",
-        "optional dependency and lock registration",
-        "Stage B serialization provenance"
-      ],
-      "disposition": "Candidate stopped for independent review; it is not integrated."
-    },
-    {
-      "event": "b_t06_b_t09_workers_completed_reviews_dispatched",
-      "date": "2026-10-14",
       "packets": {
-        "B-T06": {
-          "worker_thread_id": "01a13a51-245d-7f03-9caa-9418378fc3a0",
-          "candidate_commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
-          "tests_passed": 43,
-          "cli_exit": 0,
-          "review_thread_id": "01a13a5d-e5b7-7bf0-b5a6-4ea15b858c0a"
-        },
-        "B-T09": {
-          "worker_thread_id": "01a13a51-2ef1-7ad3-aa40-fc7611d98b7e",
-          "candidate_commit": "be1b52df2777e4cefbce6b23e9d10e536a6ca082",
-          "tests_passed": 54,
-          "cli_exit": 0,
-          "review_client_thread_id": "client-new-thread:58eedb71-cc1c-4852-aff7-1a2c6a3f431b",
-          "declared_gap": "Shared closed config schema cannot yet express horizon, baseline-adjustment or modifier fields; reviewer must decide the registration-handoff disposition."
-        }
-      },
-      "disposition": "Both candidates stopped for independent review; neither is integrated."
-    },
-    {
-      "event": "stage_b_b_t05_b_t06_b_t09_workers_dispatched",
-      "date": "2026-10-14",
-      "base_commit": "ea3a47c",
-      "packets": ["B-T05", "B-T06", "B-T09"],
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "disposition": "Dependencies and G3 are satisfied and file allowlists are disjoint. Three fresh isolated workers are active within the four-slot host cap."
-    },
-    {
-      "event": "g3_focused_astra_rereview_passed_gate_accepted",
-      "date": "2026-10-14",
-      "thread_id": "01a13a4b-9f1f-7e90-ad6a-2d9d06256cdb",
-      "wait_cursor": "27acbcb1-ac84-4a42-ad50-91056c6f17ff:1",
-      "snapshot_commit": "af323f80dc91fd0f70e1ca9fc7664ab3956aaea5",
-      "review_ref": "docs/implementation/reviews/M3-astra-review.md",
-      "verdict": "pass",
-      "independent_assertions_passed": 580,
-      "findings_addressed": ["G3-01", "G3-02", "G3-03"],
-      "disposition": "Sol accepted G3 as a synthetic-software milestone. Real-data scientific validation remains outstanding and kNN/RF remain unavailable in v2."
-    },
-    {
-      "event": "g3_focused_astra_rereview_dispatched",
-      "date": "2026-10-14",
-      "client_thread_id": "client-new-thread:c8c198e2-31ab-4754-aa7a-c5d69903af32",
-      "snapshot_commit": "af323f80dc91fd0f70e1ca9fc7664ab3956aaea5",
-      "requested_model": "gpt-6-astra",
-      "requested_effort": "low",
-      "snapshot_tests": {
-        "focused_passed": 885,
-        "failures": 0,
-        "warnings": 0,
-        "skips": 0,
-        "package_check_exit": 0,
-        "package_check_status": "Status: OK",
-        "build_log_sha256": "7cd0863442994d1d7f9dc0b45b33543c8b75ebe16e3f789553d8dac5988b5789",
-        "check_log_sha256": "8e43b0af9a0043a1002f36d9f205397c6b58d12f8b33a79648e2031b0820f2bf"
-      },
-      "disposition": "One allowed focused M3 re-review covers only G3-01, G3-02 and G3-03 on a clean immutable A-only repair diff."
-    },
-    {
-      "event": "a_t05_option1_accepted_integrated_verified",
-      "date": "2026-10-14",
-      "candidate_commit": "6845d5c6aa8d8de6f115ce5e122d0775659551e6",
-      "integration_commit": "a194a6b",
-      "review_ref": "docs/implementation/reviews/A-T05-G3-001-review.md",
-      "verdict": "accepted_pending_g3",
-      "tests": {
-        "packet_passed": 125,
-        "packet_failures": 0,
-        "packet_warnings": 0,
-        "packet_skips": 0,
-        "stage_a_cli_exit": 0,
-        "full_suite_passed": 2321,
-        "full_suite_failures": 0,
-        "full_suite_warnings": 0,
-        "full_suite_skips": 0,
-        "package_check_exit": 0,
-        "package_check_status": "Status: OK",
-        "build_log_sha256": "b97ba89aca85a093817a5e8a4e00a11efe9cc9341e1cacfe1dd8cf9cc7150777",
-        "check_log_sha256": "a6e3126f4db8e0bc8eba0d1ec24ec5220ebffbb95e032490a6ebf6c84377f71e"
-      },
-      "disposition": "Caller-authored qualification can no longer activate metabolomic kNN/RF in v2. The packet change is accepted; G3 remains pending its focused Astra re-review."
-    },
-    {
-      "event": "a_t05_option1_repair_1_completed_rereview_dispatched",
-      "date": "2026-10-14",
-      "worker_thread_id": "01a13a31-e30a-7321-8b3f-a13c009a30e9",
-      "review_thread_id": "01a13a3b-d273-7c53-b991-4ff940e0a2b3",
-      "candidate_commit": "6845d5c6aa8d8de6f115ce5e122d0775659551e6",
-      "tests": {
-        "packet_passed": 125,
-        "packet_failures": 0,
-        "packet_skips": 0,
-        "diff_check_exit": 0
-      },
-      "disposition": "The committed receipt was removed; the candidate now names only the three authorized files. Focused Sol re-review is active."
-    },
-    {
-      "event": "a_t05_option1_review_changes_required",
-      "date": "2026-10-14",
-      "review_thread_id": "01a13a3b-d273-7c53-b991-4ff940e0a2b3",
-      "candidate_commit": "e969279d356c1891204e9eae5be9c3d94d44c4df",
-      "review_ref": "docs/implementation/reviews/A-T05-G3-001-review.md",
-      "verdict": "changes_required",
-      "finding": "A local acceptance receipt was committed outside the exact A-T05 allowlist; no production correctness blocker was found.",
-      "disposition": "Focused repair 1 was sent to the same Luna worker. It may remove only the committed evidence file, rerun A-T05, and stop for focused re-review."
-    },
-    {
-      "event": "a_t05_option1_worker_completed_review_dispatched",
-      "date": "2026-10-14",
-      "worker_thread_id": "01a13a31-e30a-7321-8b3f-a13c009a30e9",
-      "review_client_thread_id": "client-new-thread:a913f744-efe1-4484-8cb9-2a87205e44cb",
-      "candidate_commit": "e969279d356c1891204e9eae5be9c3d94d44c4df",
-      "tests": {
-        "red_exit": 1,
-        "red_failures": 8,
-        "red_passed": 107,
-        "packet_passed": 125,
-        "packet_failures": 0,
-        "packet_skips": 0,
-        "stage_a_cli_exit": 0,
-        "full_suite_passed": 2321,
-        "full_suite_failures": 0,
-        "full_suite_skips": 0
-      },
-      "disposition": "Worker stopped after one allowlisted code/test/registration change plus a committed local evidence receipt. Fresh Sol 6.1 high review is active; no integration has occurred."
-    },
-    {
-      "event": "a_t05_option1_luna_dispatched",
-      "date": "2026-10-14",
-      "client_thread_id": "client-new-thread:375945ff-63db-4c43-8070-623a622ff1fc",
-      "base_commit": "11e3cf7",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "disposition": "One isolated test-first implementation of G3-001 is active. Exact A-T05 allowlist only; next legal transition is fresh Sol 6.1 high review."
-    },
-    {
-      "event": "a_t05_option1_authorized",
-      "date": "2026-10-14",
-      "change_record_ref": "docs/implementation/change-records/G3-001-metabolomics-imputation-fail-closed.md",
-      "evidence_ref": "reports/2026-10-14-metabolomics-imputation-validity-survey.md",
-      "disposition": "User-approved contract disposition keeps metabolomic kNN/RF unavailable in v2 with reason qualification_unavailable_in_v2. None and training-median remain supported. One bounded change implementation, fresh Sol review, integrated M3 verification, and focused Astra re-review are authorized."
-    },
-    {
-      "event": "g3_initial_review_changes_required",
-      "date": "2026-10-14",
-      "snapshot_commit": "d96ca310cea5715f40e2cae72d59a29d411713bb",
-      "review_ref": "docs/implementation/reviews/M3-astra-review.md",
-      "verdict": "changes_required",
-      "findings": [
-        "A-T08 cached-state payload and hash were not validated before reuse",
-        "A-T06 weighted endpoints and ratios inherited incorrect quantity/unit labels",
-        "A-T05 qualification could name nonexistent native fit/apply APIs"
-      ],
-      "disposition": "G3 remains closed. One bounded repair attempt per affected packet is authorized, followed by fresh Sol packet review and one focused Astra re-review."
-    },
-    {
-      "event": "a_t05_g3_repair_1_changes_required",
-      "date": "2026-10-14",
-      "candidate_commit": "4c51fcca5e0306c83e4aac539414443fd692ebed",
-      "review_ref": "docs/implementation/reviews/A-T05-G3-repair1-review.md",
-      "verdict": "changes_required",
-      "disposition": "Nonexistent APIs are rejected, but copied labels can still self-qualify without a resolved version-bound artifact. Final repair_2 dispatched."
-    },
-    {
-      "event": "a_t08_g3_repair_1_accepted",
-      "date": "2026-10-14",
-      "candidate_commit": "a8761b0d4589b8dd5816c0d36b502b99b056479f",
-      "integration_commit": "610a732",
-      "review_ref": "docs/implementation/reviews/A-T08-G3-repair1-review.md",
-      "verdict": "accepted",
-      "disposition": "Referenced fit-state payload integrity is verified before reuse; missing, corrupt and malformed state triggers bounded descendant refresh."
-    },
-    {
-      "event": "a_t06_g3_repair_1_accepted",
-      "date": "2026-10-14",
-      "candidate_commit": "6903639f86cc54a3c6b1e4c2cde9b8ef84aefd36",
-      "integration_commit": "62b2e7d",
-      "review_ref": "docs/implementation/reviews/A-T06-G3-repair1-review.md",
-      "verdict": "accepted",
-      "disposition": "Weighted carbon/double-bond endpoints now carry property-count index units and the saturation ratio is dimensionless without implying molar weighting."
-    },
-    {
-      "event": "a_t05_g3_repair_2_blocked",
-      "date": "2026-10-14",
-      "candidate_commit": "d21f6b0472ca6ed809768d9ff45ac71026aa7dd0",
-      "review_ref": "docs/implementation/reviews/A-T05-G3-repair2-review.md",
-      "verdict": "blocked",
-      "tests": {
-        "packet_passed": 169,
-        "failures": 0,
-        "warnings": 0,
-        "skips": 0,
-        "stage_a_cli_exit": 0,
-        "adversarial_self_qualification_reproduced": true
-      },
-      "disposition": "Repair budget exhausted. Neither A-T05 candidate was integrated; fingerprints cannot substitute for authoritative qualification approval."
-    },
-    {
-      "event": "g3_stopped_blocked",
-      "date": "2026-10-14",
-      "accepted_repair_integration_commits": [
-        "610a732",
-        "62b2e7d"
-      ],
-      "integrated_focused_tests": {
-        "A-T06_and_A-T08_passed": 455,
-        "failures": 0,
-        "warnings": 0,
-        "skips": 0
-      },
-      "disposition": "G3 cannot enter focused Astra re-review because A-T05 remains blocked. B-T04, B-T05, B-T06 and B-T09 all require G3; no unrelated implementation packet is legal."
-    },
-    {
-      "event": "g2_accepted_and_run_paused",
-      "date": "2026-10-14",
-      "integration_commit": "e691ab9c9d798e650a73802e98bac78b9598bfd9",
-      "snapshot_commit": "8b0754c1ea581ba18c4bb2e7eb862c26eeb625a7",
-      "review_ref": "docs/implementation/reviews/M2-astra-review.md",
-      "disposition": "Astra focused re-review accepted all three repaired findings. Sol accepted G2 as synthetic software evidence, documented the missed-handoff control failure, and paused before G3."
-    },
-    {
-      "event": "g2_repairs_integrated_and_verified",
-      "date": "2026-10-14",
-      "integration_commit": "e691ab9c9d798e650a73802e98bac78b9598bfd9",
-      "tests": {
-        "full_suite_passed": 2296,
-        "failures": 0,
-        "warnings": 0,
-        "skips": 0,
-        "snapshot_focused_passed": 512,
-        "integrated_package_check": "passed",
-        "snapshot_package_check": "Status: OK"
-      },
-      "disposition": "A-T03 and A-T09 focused Sol re-reviews accepted; coordinator cherry-picked serially and reran combined verification."
-    },
-    {
-      "event": "continue_from_b_t05",
-      "date": "2026-10-12",
-      "workflow": "triomics-implement-5",
-      "disposition": "B-T04 stays blocked. Centered and raw ordinary fits both reject 23/400 on the one-cell pattern, upper bound 0.08048. DEqMS 1.30.0 is installed. The next run starts at B-T05, which depends on B-T01 and B-T03."
-    },
-    {
-      "event": "b_t02_b_t03_b_t08_verified_b_t04_blocked",
-      "date": "2026-10-12",
-      "commit": "bded42a",
-      "disposition": "Sol reran B-T02, B-T03, and B-T08 after removing the unfinished B-T04 sources. B-T04 was not merged."
-    },
-    {
-      "event": "wave_a_t03_b_t01_sol_verified",
-      "date": "2026-10-12",
-      "commit": "ddc0ae5",
-      "integration_commit": "2e4971e",
-      "tests": {
-        "A-T03": 123,
-        "A-T09": 126,
-        "A-T04": 165,
-        "A-T05": 140,
-        "A-T06": 165,
-        "A-T07": 140,
-        "A-T08": 251,
-        "B-T01": 241
-      },
-      "disposition": "Sol reran each filter with zero failures. Stage B CLI exited 0. Stage B validate-only still exits 3. The A-T01 environment-capture test exceeded its 30s timeout after limma resolution; the capture command itself exited 0 in about 31s. G3 has not had a separate Astra review."
-    },
-    {
-      "event": "a_t02_sol_verified",
-      "date": "2026-10-12",
-      "commit": "12021f9",
-      "integration_commit": "99bc6b9",
-      "disposition": "A-T02 tests passed 218/0. A-T01 regression passed 72/0. Stage A CLI exited 0 after Sol enabled stage A execution and exported simulate_study. B, C, D, report, and all stay closed."
-    },
-    {
-      "event": "g1_accepted",
-      "date": "2026-10-11",
-      "workflow": "triomics-m1-review",
-      "effective_model": "grok-4.7",
-      "verdict": "pass",
-      "disposition": "Astra-role review found no P0 or P1. Sol accepted G1 for required A-T01 behavior. The Mac host lock was not regenerated."
-    },
-    {
-      "event": "a_t01_sol_verified",
-      "date": "2026-10-11",
-      "commit": "0f2f53f5fe5237bf7a164bc1943dcc644fe6871b",
-      "integration_commit": "ee9fd36250414904b438bb14e782aa89179d2774",
-      "disposition": "Independent Sol rerun: testthat 72 passed, 0 failed, 0 skipped. Fresh validate-only CLI exited 0. A second run against the existing acceptance summary exited 4 and left the file unchanged. The workflow verifier had treated that second run as a product failure."
-    },
-    {
-      "event": "implement_workflow_started",
-      "date": "2026-10-11",
-      "workflow": "triomics-implement",
-      "worktree": ".worktrees/a-t01-repair",
-      "branch": "repair/a-t01",
-      "disposition": "Serial packet workflow started at the A-T01 repair. Workers do not commit. Sol reviews and lands."
-    },
-    {
-      "event": "redundancy_debate_clear",
-      "date": "2026-10-11",
-      "workflow": "triomics-redundancy-debate",
-      "effective_model": "grok-4.7",
-      "findings": 0,
-      "disposition": "Four read-only scanners found no live double ownership. Spec hash unchanged. gpt-6-astra was not available."
-    },
-    {
-      "event": "windows_worker_absent",
-      "packet": "A-T01",
-      "disposition": "The registered A-T01 worktree gitdir still points at E:/. The repair tests remain on disk under .worktrees/a-t01 and were not integrated."
-    },
-    {
-      "event": "app_thread_setup_unregistered",
-      "client_thread_id": "client-new-thread:cf06dc8c-d2bd-47ed-8d79-db76540885a8",
-      "disposition": "No stable thread ID after bounded waits; no duplicate app worker observed."
-    },
-    {
-      "event": "worktree_relocated",
-      "packet": "A-T01",
-      "disposition": "The run-created external worktrees were verified clean and removed; the worker test was moved from the integration checkout into the ignored isolated worktree at E:/PML MultiOmics Analysis Pipeline/.worktrees/a-t01."
-    },
-    {
-      "event": "worker_recovered",
-      "packet": "A-T01",
-      "from": "/root/luna_a_t01",
-      "to": "/root/luna_a_t01_resume",
-      "disposition": "Original worker remained pending_init after interruption; replacement Luna max continued the same initial attempt from preserved state."
-    },
-    {
-      "event": "packet_review_failed",
-      "packet": "A-T01",
-      "candidate_commit": "aa1595f94f0556fb3210702192307b5a4ab7bccb",
-      "review_ref": "docs/implementation/reviews/A-T01-initial-review.md",
-      "disposition": "Three P1 spec gaps, one P2 taxonomy gap, and a non-reproducible Sol test required bounded repair 1."
-    }
-  ],
-  "packets": {
     "A-T01": {
       "status": "accepted",
       "attempts": 1,
@@ -4626,7 +3922,14 @@
         "docs/implementation/reviews/M4-005B-integration-verification.md",
         "docs/implementation/reviews/M4-005-shared-astra-audit.md"
       ],
-      "integration_commits": ["09d33f6", "03b9ab0", "45eb7e5", "cc21eb5", "d76e564", "053d8ae"],
+      "integration_commits": [
+        "09d33f6",
+        "03b9ab0",
+        "45eb7e5",
+        "cc21eb5",
+        "d76e564",
+        "053d8ae"
+      ],
       "blockers": []
     },
     "B-T06": {
@@ -4643,7 +3946,12 @@
         "docs/implementation/reviews/M4-007-sol-review.md",
         "docs/implementation/reviews/M4-005-shared-astra-audit.md"
       ],
-      "integration_commits": ["f486232", "053d8ae", "d76bc1e", "8ef8c9b"],
+      "integration_commits": [
+        "f486232",
+        "053d8ae",
+        "d76bc1e",
+        "8ef8c9b"
+      ],
       "blockers": []
     },
     "B-T08": {
@@ -4651,7 +3959,10 @@
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "bded42a",
-      "repair_candidate_commits": ["1718ed3", "44a0f0d"],
+      "repair_candidate_commits": [
+        "1718ed3",
+        "44a0f0d"
+      ],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T08-acceptance-review.md",
         "docs/implementation/reviews/M4-009-astra-audit.md",
@@ -4677,7 +3988,12 @@
         "docs/implementation/reviews/B-T09-review.md"
       ],
       "blockers": [],
-      "integration_commits": ["f7973fe", "2da6c09", "15f5031", "219b9b2"]
+      "integration_commits": [
+        "f7973fe",
+        "2da6c09",
+        "15f5031",
+        "219b9b2"
+      ]
     },
     "B-T07": {
       "status": "accepted",
@@ -4701,7 +4017,10 @@
       "package_exception_repair_integration_commit": "cbe5400",
       "package_exception_repair_review_ref": "docs/implementation/reviews/M4-014-source-path-focused-rereview.md",
       "package_exception_gate_ref": "docs/implementation/reviews/M4-014-integration-package-gate.md",
-      "integration_commits": ["8cf2d38", "4a33f01"],
+      "integration_commits": [
+        "8cf2d38",
+        "4a33f01"
+      ],
       "acceptance_refs": [
         "docs/implementation/reviews/B-T07-initial-review.md",
         "docs/implementation/reviews/B-T07-repair1-rereview.md",
@@ -4793,12 +4112,35 @@
       "attempts": 1,
       "repair_attempts": 2,
       "commit": "de9ea9e73e3bb24d69c6e1232b25225408c200a9",
-      "integration_commits": ["98f73c3", "6713603", "996087f"],
-      "shared_candidate_commits": ["c23a3c845cdca5d84961ddc74c08182a45482c00", "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e"],
-      "shared_repair1_commits": ["604a8683bd87a1b2dddc9db40c9426010253af07", "b2aafd6e200964f1cc39267f118e01ff89485542"],
-      "shared_integration_commits": ["91107d3", "164eda5", "c9613de", "40bc026"],
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c09-sol-review.md", "docs/implementation/reviews/2026-10-21-c09-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c09-shared-integration-verification.md", "docs/implementation/reviews/2026-10-22-m6-focused-astra-rereview.md", "docs/implementation/reviews/2026-10-22-m6-sol-acceptance.md"],
-      "blockers": ["No concrete real endpoint/model/deployment and uncertainty protocol was supplied. The verified synthetic fixture receives no C-09 packet completion credit; no clinical performance or benefit claim is qualified."]
+      "integration_commits": [
+        "98f73c3",
+        "6713603",
+        "996087f"
+      ],
+      "shared_candidate_commits": [
+        "c23a3c845cdca5d84961ddc74c08182a45482c00",
+        "d5aaa1e7843af442bb7f651b719a2b16ebb0c34e"
+      ],
+      "shared_repair1_commits": [
+        "604a8683bd87a1b2dddc9db40c9426010253af07",
+        "b2aafd6e200964f1cc39267f118e01ff89485542"
+      ],
+      "shared_integration_commits": [
+        "91107d3",
+        "164eda5",
+        "c9613de",
+        "40bc026"
+      ],
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-10-20-c09-sol-review.md",
+        "docs/implementation/reviews/2026-10-21-c09-repair1-rereview.md",
+        "docs/implementation/reviews/2026-10-21-c09-shared-integration-verification.md",
+        "docs/implementation/reviews/2026-10-22-m6-focused-astra-rereview.md",
+        "docs/implementation/reviews/2026-10-22-m6-sol-acceptance.md"
+      ],
+      "blockers": [
+        "No concrete real endpoint/model/deployment and uncertainty protocol was supplied. The verified synthetic fixture receives no C-09 packet completion credit; no clinical performance or benefit claim is qualified."
+      ]
     },
     "C-06": {
       "status": "accepted_synthetic_software_evidence",
@@ -4806,53 +4148,125 @@
       "repair_attempts": 1,
       "shared_repair_attempts": 2,
       "commit": "a60a7a56eec1250bd4a9e44253597f83a3e565fd",
-      "integration_commits": ["7d29da4", "634c29f", "32ab4d1", "a658398", "3753be0"],
+      "integration_commits": [
+        "7d29da4",
+        "634c29f",
+        "32ab4d1",
+        "a658398",
+        "3753be0"
+      ],
       "shared_candidate_commit": "1cc35048907ab4dd866d7129759ddcb7672d05eb",
       "shared_repair_candidate": "be2a4e4",
       "shared_repair2_candidate": "29e1e19",
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-20-c06-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c06-shared-sol-review.md", "docs/implementation/reviews/2026-10-21-c06-shared-repair1-rereview.md", "docs/implementation/reviews/2026-10-21-c06-shared-integration-verification.md", "docs/implementation/reviews/2026-10-22-m6-focused-astra-rereview.md", "docs/implementation/reviews/2026-10-22-m6-sol-acceptance.md"],
-      "blockers": []
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-10-20-c06-sol-review.md",
+        "docs/implementation/reviews/2026-10-21-c06-repair1-rereview.md",
+        "docs/implementation/reviews/2026-10-21-c06-shared-sol-review.md",
+        "docs/implementation/reviews/2026-10-21-c06-shared-repair1-rereview.md",
+        "docs/implementation/reviews/2026-10-21-c06-shared-integration-verification.md",
+        "docs/implementation/reviews/2026-10-22-m6-focused-astra-rereview.md",
+        "docs/implementation/reviews/2026-10-22-m6-sol-acceptance.md"
+      ],
+      "blockers": [],
+      "reconciliation_2026_11_03": {
+        "snapshot": "b03cdeff4afb550ccc3f04149b60e596910f0b33",
+        "finding": "M6 acceptance is historical. Current native-provenance registration remains false pending fresh revision-specific verification and Sol acceptance; do not erase history.",
+        "accepted_by_this_reconciliation": false
+      }
     },
     "D-T01": {
       "status": "blocked_m7_001_exception_exhausted",
       "attempts": 2,
       "exceptional_repair_attempts": 1,
       "commit": "88f1591",
-      "candidate_commits": ["98bf4c54a52cb8bab7fd3824fabb88deda579a23", "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3"],
-      "m7_001_candidate_commits": ["0d82e9f6a3b78899ee1ccd2c389c01e273ba65cc", "1b44a84e71139ca52b496bbe562e2e2a70142b2f"],
-      "integration_commits": ["d2db62d", "88f1591"],
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-22-d-t01-packet-review.md", "docs/implementation/reviews/2026-10-23-m7-001-focused-sol-rereview.md"],
+      "candidate_commits": [
+        "98bf4c54a52cb8bab7fd3824fabb88deda579a23",
+        "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3"
+      ],
+      "m7_001_candidate_commits": [
+        "0d82e9f6a3b78899ee1ccd2c389c01e273ba65cc",
+        "1b44a84e71139ca52b496bbe562e2e2a70142b2f"
+      ],
+      "integration_commits": [
+        "d2db62d",
+        "88f1591"
+      ],
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-10-22-d-t01-packet-review.md",
+        "docs/implementation/reviews/2026-10-23-m7-001-focused-sol-rereview.md"
+      ],
       "blockers": [
         "M7-001's single exceptional repair passed 268 named expectations but focused review reproduced five Important gaps: FeatureRegistry drift, incomplete paired/repeated metadata freshness, DEqMS producer/consumer identity mismatch, unsafe model-hash traversal for a valid contrast id, and D-leaf symlink failure after registry rollover. The candidate was not integrated. Initial plus two ordinary repairs and the one authorized exceptional repair are consumed; no further product edit is authorized."
-      ]
+      ],
+      "reconciliation_2026_11_03": {
+        "snapshot": "b03cdeff4afb550ccc3f04149b60e596910f0b33",
+        "finding": "Historical blocked receipt retained. Native consumer implemented; fresh same-snapshot C06/B07/D01 verification and current producer revision acceptance required.",
+        "accepted_by_this_reconciliation": false
+      }
     },
     "D-T02": {
       "status": "implemented_unaccepted",
       "attempts": 2,
       "commit": "fcc05b67573797dce6a8d7295de9a2dc4bb3310b",
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-29-d-t02-lipid-mapping.md"],
-      "blockers": ["Stage D CLI does not call triomics_map_lipids. The ticket has no pinned lipid table or lipid block. Sol owns that integration."]
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-10-29-d-t02-lipid-mapping.md"
+      ],
+      "blockers": [
+        "Stage D CLI does not call triomics_map_lipids. The ticket has no pinned lipid table or lipid block. Sol owns that integration."
+      ],
+      "reconciliation_2026_11_03": {
+        "snapshot": "b03cdeff4afb550ccc3f04149b60e596910f0b33",
+        "finding": "At b03cdef local annotation calls lipid mapper. Original missing-CLI blocker is stale; exact packet fixture, resource manifest and fresh publication evidence still required.",
+        "accepted_by_this_reconciliation": false
+      }
     },
     "D-T03": {
       "status": "implemented_unaccepted",
       "attempts": 2,
       "commit": "1d420e6a28cb1b5caff42af201be47dabb423ef6",
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-29-d-t03-reaction-mapping.md"],
-      "blockers": ["Stage D CLI does not call triomics_map_reactions. The ticket has no pinned mapping table. Sol owns that integration."]
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-10-29-d-t03-reaction-mapping.md"
+      ],
+      "blockers": [
+        "Stage D CLI does not call triomics_map_reactions. The ticket has no pinned mapping table. Sol owns that integration."
+      ],
+      "reconciliation_2026_11_03": {
+        "snapshot": "b03cdeff4afb550ccc3f04149b60e596910f0b33",
+        "finding": "At b03cdef local annotation calls reaction mapper. Original missing-CLI blocker is stale; pinned fixture and fresh publication evidence still required.",
+        "accepted_by_this_reconciliation": false
+      }
     },
     "D-T04": {
       "status": "implemented_unaccepted",
       "attempts": 2,
       "commit": "4b8eb123387e2f64040787ed9e016bc20be32186",
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-29-d-t04-ora.md"],
-      "blockers": ["Stage D CLI does not call triomics_ora_family. Sol owns that integration."]
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-10-29-d-t04-ora.md"
+      ],
+      "blockers": [
+        "Stage D CLI does not call triomics_ora_family. Sol owns that integration."
+      ],
+      "reconciliation_2026_11_03": {
+        "snapshot": "b03cdeff4afb550ccc3f04149b60e596910f0b33",
+        "finding": "ORA function exists but public route deliberately unavailable. Freeze and bind measured eligible universe, mapping resolution and full set family; integrate and verify.",
+        "accepted_by_this_reconciliation": false
+      }
     },
     "D-T05": {
       "status": "implemented_unaccepted",
       "attempts": 2,
       "commit": "62421b13ee528a0b94b81b288126a181f4cd0637",
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-29-d-t05-status.md"],
-      "blockers": ["Stage D CLI does not call triomics_d_route_status. Sol owns that integration."]
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-10-29-d-t05-status.md"
+      ],
+      "blockers": [
+        "Stage D CLI does not call triomics_d_route_status. Sol owns that integration."
+      ],
+      "reconciliation_2026_11_03": {
+        "snapshot": "b03cdeff4afb550ccc3f04149b60e596910f0b33",
+        "finding": "At b03cdef route status and public exit-code propagation exist. Original missing-call blocker is stale; required/optional native resource cases still require proof.",
+        "accepted_by_this_reconciliation": false
+      }
     },
     "D-T06": {
       "status": "not_started",
@@ -4872,22 +4286,45 @@
       "status": "implemented_unaccepted",
       "attempts": 3,
       "commit": "9e1499df1e8d4216f57e7afc9a67dfbf79932c2a",
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-29-d-t10-targets.md"],
-      "blockers": ["Stage D CLI does not call triomics_target_request or triomics_target_external_evidence. Sol owns that integration."]
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-10-29-d-t10-targets.md"
+      ],
+      "blockers": [
+        "Stage D CLI does not call triomics_target_request or triomics_target_external_evidence. Sol owns that integration."
+      ],
+      "reconciliation_2026_11_03": {
+        "snapshot": "b03cdeff4afb550ccc3f04149b60e596910f0b33",
+        "finding": "Target slot invokes request/external evidence. Exact identity/context/construct and CLI negative cases still need fresh acceptance evidence.",
+        "accepted_by_this_reconciliation": false
+      }
     },
     "D-T11": {
       "status": "blocked_repair_limit",
       "attempts": 3,
       "commit": null,
-      "acceptance_refs": ["docs/implementation/reviews/2026-10-29-d-t11-blocked.md"],
-      "blockers": ["Repair limit reached. Endpoint binding_probability is still accepted as a measured profile axis. Astra high audit_pass no. Candidate is uncommitted on draft/d-t11."]
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-10-29-d-t11-blocked.md"
+      ],
+      "blockers": [
+        "Repair limit reached. Endpoint binding_probability is still accepted as a measured profile axis. Astra high audit_pass no. Candidate is uncommitted on draft/d-t11."
+      ],
+      "reconciliation_2026_11_03": {
+        "snapshot": "b03cdeff4afb550ccc3f04149b60e596910f0b33",
+        "finding": "Prior capped cycle stays closed. Later commits 3b8792f/dd31dd6/5d34462 are present. Profile publication still special-cases SYNTH_FCN3_LIKE and bypasses supplied evidence/mechanism; new bounded cycle authorized.",
+        "accepted_by_this_reconciliation": false
+      }
     },
     "D-T12": {
       "status": "not_started",
       "attempts": 0,
       "commit": null,
       "acceptance_refs": [],
-      "blockers": []
+      "blockers": [],
+      "reconciliation_2026_11_03": {
+        "snapshot": "b03cdeff4afb550ccc3f04149b60e596910f0b33",
+        "finding": "Required and absent. Release implementation after D11 dependency verified; unranked versioned enumeration only.",
+        "accepted_by_this_reconciliation": false
+      }
     },
     "D-T14": {
       "status": "not_started",
@@ -4996,6 +4433,21 @@
       "implemented_scope": "synthetic_fixture_only",
       "benefit_guaranteed": false,
       "remaining_qualification": "No concrete real endpoint/model/deployment and uncertainty protocol, independent validation, biological validity, clinical performance, or benefit is qualified."
+    },
+    "D-T06": {
+      "status": "blocked_without_completion_credit",
+      "reason": "Release-pinned native model/input/null/resource qualification has not passed.",
+      "review_pending": true
+    },
+    "D-T07": {
+      "status": "blocked_without_completion_credit",
+      "reason": "Lawful local quantitative execution/input/comparison contract is not qualified.",
+      "review_pending": true
+    },
+    "D-T14": {
+      "status": "blocked_without_completion_credit",
+      "reason": "Quantitative method/null/leakage/validation protocol is unapproved; no estimator invented.",
+      "review_pending": true
     }
   },
   "usage": {

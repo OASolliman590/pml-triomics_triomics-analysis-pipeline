@@ -13,5 +13,9 @@
     "triomics_map_lipids"
   ],
   "integration_request": "Sol: register triomics_map_lipids, add the pinned CLI mapping table file and resource declaration, and call the mapper from the Stage D executor in R/cli.R using verified routed measured rows. The ticket leaves resources empty because the pinned table is outside this packet allowlist. Review and rerun gates.",
-  "repair": "D-T02 repair 1: structural ambiguity, normalized edges, alias-only mapping, and removal of bundle branch."
+  "repair": "D-T02 repair 1: structural ambiguity, normalized edges, alias-only mapping, and removal of bundle branch.",
+  "reconciliation_2026_11_03": {
+    "snapshot": "b03cdef",
+    "finding": "At b03cdef local annotation calls lipid mapper. Original missing-CLI blocker is stale; exact packet fixture, resource manifest and fresh publication evidence still required."
+  }
 }

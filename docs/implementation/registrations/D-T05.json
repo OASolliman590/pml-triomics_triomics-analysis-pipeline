@@ -3,7 +3,18 @@
   "request_type": "registration_request",
   "accepted": false,
   "namespace_edits": false,
-  "local_files": ["R/annotation_status.R", "tests/testthat/test-D-T05.R", "inst/examples/tickets/D-T05.yaml", "docs/implementation/registrations/D-T05.json"],
-  "owned_functions": ["triomics_d_route_status"],
-  "integration_request": "triomics_execute_stage_d does not call triomics_d_route_status. Sol must integrate the status inputs and apply its exit_code at the Stage D dispatch in triomics_main (R/cli.R, call to triomics_execute_stage_d); currently that result is discarded and the dispatcher returns 0."
+  "local_files": [
+    "R/annotation_status.R",
+    "tests/testthat/test-D-T05.R",
+    "inst/examples/tickets/D-T05.yaml",
+    "docs/implementation/registrations/D-T05.json"
+  ],
+  "owned_functions": [
+    "triomics_d_route_status"
+  ],
+  "integration_request": "triomics_execute_stage_d does not call triomics_d_route_status. Sol must integrate the status inputs and apply its exit_code at the Stage D dispatch in triomics_main (R/cli.R, call to triomics_execute_stage_d); currently that result is discarded and the dispatcher returns 0.",
+  "reconciliation_2026_11_03": {
+    "snapshot": "b03cdef",
+    "finding": "At b03cdef route status and public exit-code propagation exist. Original missing-call blocker is stale; required/optional native resource cases still require proof."
+  }
 }

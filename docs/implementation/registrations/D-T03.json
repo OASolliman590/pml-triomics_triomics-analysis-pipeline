@@ -13,5 +13,9 @@
     "triomics_map_reactions"
   ],
   "integration_request": "Sol: register triomics_map_reactions and integrate verified measured rows into triomics_execute_stage_d; that executor does not call this function. The ticket leaves annotation.resources empty because a pinned CLI table is outside this packet's allowlist. Review and rerun gates.",
-  "repair": "D-T03 repair 1: spec-shaped tables, namespace-derived edge types, per-type ambiguity, and nomination lineage."
+  "repair": "D-T03 repair 1: spec-shaped tables, namespace-derived edge types, per-type ambiguity, and nomination lineage.",
+  "reconciliation_2026_11_03": {
+    "snapshot": "b03cdef",
+    "finding": "At b03cdef local annotation calls reaction mapper. Original missing-CLI blocker is stale; pinned fixture and fresh publication evidence still required."
+  }
 }

@@ -14,5 +14,9 @@
     "triomics_target_profile",
     "triomics_target_alternatives"
   ],
-  "integration_request": "Sol: register the owned functions and integrate target profiles and alternatives at triomics_execute_stage_d in R/cli.R. triomics_execute_stage_d does not call them. triomics_target_request does not set mechanism_class; the profile caller must set it to non_enzymatic or enzymatic, and SYNTH_FCN3_LIKE is non_enzymatic."
+  "integration_request": "Sol: register the owned functions and integrate target profiles and alternatives at triomics_execute_stage_d in R/cli.R. triomics_execute_stage_d does not call them. triomics_target_request does not set mechanism_class; the profile caller must set it to non_enzymatic or enzymatic, and SYNTH_FCN3_LIKE is non_enzymatic.",
+  "reconciliation_2026_11_03": {
+    "snapshot": "b03cdef",
+    "finding": "Prior capped cycle stays closed. Later commits 3b8792f/dd31dd6/5d34462 are present. Profile publication still special-cases SYNTH_FCN3_LIKE and bypasses supplied evidence/mechanism; new bounded cycle authorized."
+  }
 }

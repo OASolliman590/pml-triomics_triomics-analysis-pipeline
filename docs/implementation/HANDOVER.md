@@ -1,5 +1,25 @@
 # Implementation handover
 
+## Active 3 November 2026 — M7 completion from b03cdef
+
+User authorizes new bounded cycles for remaining required Stage D/M7 work.
+Coordinator branch codex/m7-021-stage-d-closure begins at exact b03cdef.
+Original draft/stage-d-wire and spec/harden-v2-20260920 are preserved.
+M7/G7 stay closed. Earlier caps/receipts remain historical, never reset.
+
+M7-021 reconciles records and verifies C06/B07/D01, then completes native local
+mapping/status packet evidence. Subsequent separately scoped cycles cover ORA,
+general target profiles and D12 discovery; each needs Astra scope approval and
+one fresh Luna-max worker, initial plus at most two repairs. Sol owns shared CLI,
+namespace/manual integration via reviewed proposals. All consumers await their
+verified dependencies. Final same-snapshot receipts, full source, clean archive
+Status: OK, Terra DOC-M7 and fresh Astra pass precede Sol acceptance.
+
+Current MOFA2/mofapy2 temporary runtime is incomplete and needs restoration before
+full gates. No private data, AIU run, fasting checks or GitHub push in this scope.
+Resume: audit M7-021 record, verify predecessor suites from clean committed source,
+then dispatch Luna. Do not act on the stale historical next-action text below.
+
 ## Current checkpoint — 29 October 2026, D-T11 stopped at the repair limit
 
 D-T11 is not landed. Terra used the initial attempt and both repairs. The focused

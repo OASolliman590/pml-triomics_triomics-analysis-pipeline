@@ -10,6 +10,13 @@
     "inst/examples/tickets/D-T10.yaml",
     "docs/implementation/registrations/D-T10.json"
   ],
-  "owned_functions": ["triomics_target_request", "triomics_target_external_evidence"],
-  "integration_request": "Sol: register the owned functions and integrate the target request and external evidence at triomics_execute_stage_d in R/cli.R. triomics_execute_stage_d does not call them."
+  "owned_functions": [
+    "triomics_target_request",
+    "triomics_target_external_evidence"
+  ],
+  "integration_request": "Sol: register the owned functions and integrate the target request and external evidence at triomics_execute_stage_d in R/cli.R. triomics_execute_stage_d does not call them.",
+  "reconciliation_2026_11_03": {
+    "snapshot": "b03cdef",
+    "finding": "Target slot invokes request/external evidence. Exact identity/context/construct and CLI negative cases still need fresh acceptance evidence."
+  }
 }
