@@ -7,12 +7,12 @@ d_foundation_cli_run <- function(config_path, stage, output_root) {
   cli <- triomics_test_resource("exec", "triomics")
   previous_wd <- setwd(dirname(cli))
   on.exit(setwd(previous_wd), add = TRUE)
-  output <- suppressWarnings(system2(
+  output <- system2(
     file.path(R.home("bin"), "Rscript"),
     c("--vanilla", shQuote(basename(cli)), "--config", shQuote(config_path),
       "--stage", shQuote(stage), "--output", shQuote(output_root)),
     stdout = TRUE, stderr = TRUE
-  ))
+  )
   exit_code <- attr(output, "status")
   if (is.null(exit_code)) exit_code <- 0L
   list(exit_code = as.integer(exit_code), output = output)
