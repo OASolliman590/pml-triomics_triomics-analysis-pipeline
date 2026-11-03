@@ -47,7 +47,10 @@ active. Do not redispatch or integrate it as finished work. Last318 focused pass
 preceded two appended tests; native proof pending. Preserved candidate is the base
 for separately scoped M7-027. Read reviews/2026-11-03-m7-024-implementation-astra.md
 and change-records/M7-027-target-comparison-evidence-boundary.md. Scope11085b1 passed fresh Astra, recorded6c83d73. Fresh Luna /root/m7_027_luna
-is running in /tmp/triomics-m7-027-luna from6e73239: initialattempt, zero repairs.
+is running in /tmp/triomics-m7-027-luna from6e73239. Initialcandidatef9abc42
+passed341focused assertions; Astra no found Ki/activity rejection and axis-attribute
+bypass. Combined repair1 authorized, one further repair maximum. Read the
+M7-027 implementation review; native proof remains pending.
 Do not duplicate dispatch; Sol independent nativeproof and fresh implementation
 Astra precede D12. M7/G7 remain closed.
 M7-025 discovery scope c3df0c1 passed fresh Astra; implementation waits on D11.

@@ -44,13 +44,14 @@
       "base": "6e73239ebbca95bc0aab24bb7b7faf78d6a640cf",
       "worktree": "/tmp/triomics-m7-027-luna",
       "attempt": 1,
-      "repair_attempts": 0,
-      "phase": "behavioral_red_then_initial_implementation",
-      "next_transition": "Sol_diff_and_independent_native_verification_then_fresh_Astra"
+      "repair_attempts": 1,
+      "phase": "targeted_repair1",
+      "next_transition": "Sol_commit_then_focused_nativeproof_then_focused_Astra",
+      "candidate_commit": "f9abc42713387c3b5e33ba87766eea5d150e7222"
     }
   ],
   "orchestration_control": {
-    "status": "m7_027_luna_running",
+    "status": "m7_027_repair1_running",
     "last_reconciled": "2026-11-03",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -5846,6 +5847,27 @@
       "event": "current_packet_states_reconciled_without_acceptance",
       "date": "2026-11-03",
       "disposition": "C06/D01-05 top-level states now distinguish verified candidate evidence from final acceptance; stale historical blockers preserved in historical_state_before_m7_closure. D10/D11 successor active. No acceptance changed."
+    },
+    {
+      "event": "m7_027_initial_candidate_frozen",
+      "date": "2026-11-03",
+      "candidate_commit": "f9abc42713387c3b5e33ba87766eea5d150e7222",
+      "focused_counts": {
+        "pass": 341,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0
+      },
+      "repairs_used": 0,
+      "disposition": "Sol committed allowlist after worker Git sandbox denial; no workaround. Independent no-fit probes show sourced Ki/activity still rejected; fresh Astra initial review open, worker paused. Native proof not run."
+    },
+    {
+      "event": "m7_027_initial_audit_no_repair1_dispatched",
+      "date": "2026-11-03",
+      "candidate_commit": "f9abc42713387c3b5e33ba87766eea5d150e7222",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-027-implementation-astra.md",
+      "disposition": "Combine external Ki/activity rejection and confirmed axis-attribute bypass. One repair remaining after this round. Native proof pending; M7/G7 closed."
     }
   ],
   "packets": {
