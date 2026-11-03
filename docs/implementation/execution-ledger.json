@@ -34,25 +34,9 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_025_luna",
-      "role": "bounded_D12_implementation",
-      "model_requested": "gpt-6-luna",
-      "effort_requested": "max",
-      "effective_settings_exposed": false,
-      "base": "3aa28c576e3b2f44a48f0a9a248464bb37f8ee97",
-      "worktree": "/tmp/triomics-m7-025-luna",
-      "attempt": 1,
-      "repair_attempts": 1,
-      "phase": "repair1_committed_focused_native_verification",
-      "next_transition": "Sol_independent_readback_then_integrate_after_focused_Astra_pass",
-      "shared_sol_commit": "cc4f3ba05a10cc59a1ea43f8ecf1196cf4256593",
-      "candidate": "d80d23d04e5102c67cc01c15ff3a250f608a90e7"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_025_luna_running",
+    "status": "m7_025_verified_m7_026_ready",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -5950,6 +5934,23 @@
       "repair_attempts": 1,
       "review_ref": "docs/implementation/reviews/2026-11-04-m7-025-implementation-astra.md",
       "disposition": "Initial two failures corrected; one repair remains. Focused Astra code review passes; committed-source regressions/native verification pending. M7/G7 closed."
+    },
+    {
+      "event": "m7_025_verified_integrated",
+      "date": "2026-11-04",
+      "candidate": "d80d23d04e5102c67cc01c15ff3a250f608a90e7",
+      "integration_commit": "94b2b912dd765dbd1f23a403bcf0fd5cff79cb81",
+      "focused_pass": 44,
+      "regression_pass": 652,
+      "expected_warning_count": 1,
+      "native_exit_codes": [
+        0,
+        0,
+        0
+      ],
+      "sol_readback_assertions": 107,
+      "astra_focused": "pass",
+      "disposition": "Worker/reviewers completed; M7-026 dependency released, M7/G7 closed."
     }
   ],
   "packets": {
@@ -6637,16 +6638,18 @@
       }
     },
     "D-T12": {
-      "status": "m7_025_repair1_verification_unaccepted",
+      "status": "verified_candidate_pending_same_snapshot_acceptance",
       "attempts": 1,
-      "commit": null,
+      "commit": "d80d23d04e5102c67cc01c15ff3a250f608a90e7",
       "acceptance_refs": [],
       "blockers": [],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
         "finding": "Required implementation absent; dependency D11 must verify first.",
         "accepted": false
-      }
+      },
+      "repair_attempts": 1,
+      "verification_ref": "docs/implementation/reviews/2026-11-04-m7-025-sol-verification.md"
     },
     "D-T14": {
       "status": "not_started",

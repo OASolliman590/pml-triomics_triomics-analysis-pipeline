@@ -1,0 +1,12 @@
+{
+  "commit": "d80d23d04e5102c67cc01c15ff3a250f608a90e7",
+  "counts": {
+    "pass": 44,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 10
+  },
+  "conditions": []
+}

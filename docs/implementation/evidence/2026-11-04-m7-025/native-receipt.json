@@ -1,0 +1,65 @@
+[
+  {
+    "ticket": "inst/examples/tickets/D-T12.yaml",
+    "commit": "d80d23d04e5102c67cc01c15ff3a250f608a90e7",
+    "root": "/private/tmp/triomics-stage-d-evidence/m7-025/native/D-T12",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T12.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-025/native/D-T12"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T12.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-025/native/D-T12"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T12.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-025/native/D-T12"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "a2ea7befa6a65cca46a2a93d22e779be25fdc424b5d6249ad28b5d75b113d16f",
+    "four_b_predecessors_verified": true,
+    "files": {
+      "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/bundle.json": "ba20e5151f6a9cb138a9d86f7f1af9764f72695c0efc66f53e932e662da8dd3f",
+      "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/bundle.envelope.json": "46d64e335355e6f37f5097df348af63295fa2e6ee792a6adb6f9c2de0b3e009f",
+      "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/stage-handoff-provenance.json": "72cd04878f5da8a134c3613b6201b0dc5df477f8436236b0961f5bfb748905fd",
+      "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/stage-handoff-provenance.envelope.json": "65273241dcbee66213f61de6ebb2051d6fe5b6d2d5401860929cac366c80ee37",
+      "D/stage-handoff-provenance.json": "c5fc5b108fae9e1b230ffe97d51c8596ad99a559644f79d5c98040c8db18af43",
+      "D/stage-handoff-provenance.envelope.json": "5d6a3af0a204c15b2892e0cf35a6a3350509f5c5de8e421977e612da8d3ae0ba",
+      "D/generations/a2ea7befa6a65cca46a2a93d22e779be25fdc424b5d6249ad28b5d75b113d16f/generation-manifest.json": "a2ea7befa6a65cca46a2a93d22e779be25fdc424b5d6249ad28b5d75b113d16f",
+      "registries/current-D.json": "a8a90bd60d25b5619dd29f8c0713a89d8168cf310c69d9583ba09f404f05c6fc",
+      "D/generations/a2ea7befa6a65cca46a2a93d22e779be25fdc424b5d6249ad28b5d75b113d16f/evidence-routing.envelope.json": "6f7036d6d333e0f65f317d80d9bfbf6f7f17ecff3c1c7b3bbef5c1fccba21513",
+      "D/generations/a2ea7befa6a65cca46a2a93d22e779be25fdc424b5d6249ad28b5d75b113d16f/evidence-routing.json": "f0697491710b40fef296a55de75d88fa58ab4c81d1d7bb0de12e8237815bdf92"
+    }
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "commit": "a1df98a254965204eed9071ffd72b2c8d6f10dc8",
+  "counts": {
+    "pass": 37,
+    "fail": 1,
+    "error": 1,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 10
+  },
+  "conditions": [
+    {
+      "test": "D-T12 enumerates and hashes every member while keeping equal profiles unranked",
+      "file": "test-D-T12.R",
+      "type": "expectation_failure",
+      "message": "Expected `result$profiles[[1L]]$evidence_axes` to be identical to `result$profiles[[2L]]$evidence_axes`.\nDifferences:\nactual$metabolic_multiomics_compatibility$links[[1]]$link_id vs expected$metabolic_multiomics_compatibility$links[[1]]$link_id\n- \"path-TARGET_A\"\n+ \"path-TARGET_B\"\n\nactual$metabolic_multiomics_compatibility$links[[1]]$source_id vs expected$metabolic_multiomics_compatibility$links[[1]]$source_id\n- \"curated-path:path-TARGET_A\"\n+ \"curated-path:path-TARGET_B\"\n\nactual$metabolic_multiomics_compatibility$observations[[1]]$link_id vs expected$metabolic_multiomics_compatibility$observations[[1]]$link_id\n- \"path-TARGET_A\"\n+ \"path-TARGET_B\"\n"
+    },
+    {
+      "test": "D-T12 marks only the overlap-unknown axis unassessable and retains valid external assay evidence",
+      "file": "test-D-T12.R",
+      "type": "expectation_error",
+      "message": "<triomics_error/error/condition>\nError: Mechanistic claim axes are not permitted."
+    }
+  ]
+}

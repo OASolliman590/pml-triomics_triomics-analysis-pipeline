@@ -51,15 +51,12 @@ Both agents completed. Sol D01 regression on clean eed7cb2 passed 325, with
 one existing named stale-sign warning and no failure/error/skip. No test process
 is active. D12 dependency verification is satisfied; do not rerun this cycle.
 M7-025 discovery scope c3df0c1 passed fresh Astra, receipt committed7b93d72.
-Dependencies verified. Fresh /root/m7_025_luna remains active in
-/tmp/triomics-m7-025-luna. Initial a1df98a had one failed assertion and one
-error (37 passed): mismatched path IDs in equal-evidence fixture, and overlap
-qualification before canonical comparison. Repair1 d80d23d preserves the full
-assertion and compares canonical base profiles before applying qualifications
-consistently. One repair remains. Initial Astra found these two issues and no
-additional P0/P1; fresh focused rereview passed d80d23d code. No tests were
-inferred from that review. Worker is running committed focused/regression/native
-proofs; Sol independent readback remains required. M7/G7 stay closed.
+M7-025 verified and integrated through94b2b91. Clean d80d23d has44focused and
+652regression passes, zero failure/error/skip, one expected D01stale-sign warning.
+Native B/C/D exits0 and Sol107independent readback checks passed. Unequal coverage
+remains noncomparable, no winner. One repair used; initial Astra no, focused yes.
+Worker/reviewers completed. Read4NovemberM7-025Sol receipt. D12 is unaccepted
+pending final same-snapshot gates; M7-026 dependency is satisfied.
 M7-026 neutral generation governance wording scope
 60fa3b8 passed fresh Astra; amendedf80e7f6 also passed its one focused scope
 rereview to allow Sol-only stale manual sentence correction. Implementation
@@ -68,12 +65,11 @@ M7/G7 closed; C07 not_run; C09 unqualified; no private data, AIU, fasting or pus
 
 ## Current literal resume instruction
 
-Continue active /root/m7_025_luna verification on clean d80d23d in
-/tmp/triomics-m7-025-luna; do not duplicate it. One repair used, one remains.
-Focused Astra code rereview passed; review exact test/native results and perform
-Sol independent artifact readback before integration. Then complete audited
-M7-026 wording, final same-snapshot source/archive/Terra/Astra/Sol acceptance.
-M7/G7 remain closed; no private data or push. No parent verification process active.
+Implement already-audited M7-026 governance wording with one fresh Luna-max
+worker. D12 is verified/integrated, old worker complete; do not rerun it.
+Sol owns the stale manual sentence. Then freeze combined product and run final
+same-snapshot source/native/archive/Terra/Astra/Sol gates. M7/G7 remain closed.
+No private data or push, no active parent verification process.
 
 ## Historical checkpoint — 29 October 2026, D-T11 stopped at the repair limit
 

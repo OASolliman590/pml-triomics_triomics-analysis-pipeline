@@ -1,0 +1,73 @@
+{
+  "commit": "3aa28c576e3b2f44a48f0a9a248464bb37f8ee97",
+  "counts": {
+    "pass": 0,
+    "fail": 2,
+    "error": 8,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 9
+  },
+  "conditions": [
+    {
+      "test": "the Stage D discovery marker preserves overlap qualifications during attachment",
+      "file": "test-D-discovery-shared.R",
+      "type": "expectation_failure",
+      "message": "Expected `attached` to be identical to `prepared`.\nDifferences:\n`actual` is length 6\n`expected` is length 7\n\n    names(actual)      | names(expected)      \n[1] \"status\"           | \"status\"          [1]\n[2] \"mode\"             | \"mode\"            [2]\n[3] \"discovery\"        - \"selected_target\" [3]\n[4] \"profiles\"         - \"discovery\"       [4]\n[5] \"results\"          - \"profiles\"        [5]\n[6] \"mechanism_status\" - \"alternatives\"    [6]\n                       - \"results\"         [7]\n\n`actual$profiles` is length 0\n`expected$profiles` is length 1\n\n`actual$profiles[[1]]` is absent\n`expected$profiles[[1]]` is a list\n\n`actual$mechanism_status` is a character vector ('unassessable')\n`expected$mechanism_status` is absent\n\n`actual$selected_target` is absent\n`expected$selected_target` is NULL\n\n`actual$alternatives` is absent\n`expected$alternatives` is NULL\n"
+    },
+    {
+      "test": "the Stage D discovery marker preserves overlap qualifications during attachment",
+      "file": "test-D-discovery-shared.R",
+      "type": "expectation_error",
+      "message": "<subscriptOutOfBoundsError/error/condition>\nError in `attached$profiles[[1L]]`: subscript out of bounds"
+    },
+    {
+      "test": "the Stage D discovery attachment rejects an untyped prepared result",
+      "file": "test-D-discovery-shared.R",
+      "type": "expectation_failure",
+      "message": "Expected `d12_shared_code(...)` to be identical to \"D_TARGET_DISCOVERY_INVALID\".\nDifferences:\n`actual`:   NA                          \n`expected`: \"D_TARGET_DISCOVERY_INVALID\"\n"
+    },
+    {
+      "test": "D-T12 enumerates and hashes every member while keeping equal profiles unranked",
+      "file": "test-D-T12.R",
+      "type": "expectation_error",
+      "message": "Error in `triomics_d_target_discovery_slot(case$investigation, case$config_path, evidence)`: could not find function \"triomics_d_target_discovery_slot\""
+    },
+    {
+      "test": "Stage D routes an enabled discover request through the bounded universe",
+      "file": "test-D-T12.R",
+      "type": "expectation_error",
+      "message": "<triomics_error/error/condition>\nError: This command does not build a discovery universe."
+    },
+    {
+      "test": "D-T12 rejects duplicate and incomplete namespaced member identities",
+      "file": "test-D-T12.R",
+      "type": "expectation_error",
+      "message": "Error in `triomics_d_target_discovery_slot(case$investigation, case$config_path, evidence)`: could not find function \"triomics_d_target_discovery_slot\""
+    },
+    {
+      "test": "D-T12 rejects universe bytes that differ from the protocol-pinned hash",
+      "file": "test-D-T12.R",
+      "type": "expectation_error",
+      "message": "Error in `triomics_d_target_discovery_slot(case$investigation, case$config_path, evidence)`: could not find function \"triomics_d_target_discovery_slot\""
+    },
+    {
+      "test": "D-T12 preserves prior selection history and actual same-run B evidence lineage",
+      "file": "test-D-T12.R",
+      "type": "expectation_error",
+      "message": "Error in `triomics_d_target_discovery_slot(case$investigation, case$config_path, evidence)`: could not find function \"triomics_d_target_discovery_slot\""
+    },
+    {
+      "test": "D-T12 rejects reference signatures with exact current evaluation source identity",
+      "file": "test-D-T12.R",
+      "type": "expectation_error",
+      "message": "Error in `triomics_d_target_discovery_slot(case$investigation, case$config_path, evidence)`: could not find function \"triomics_d_target_discovery_slot\""
+    },
+    {
+      "test": "D-T12 marks only the overlap-unknown axis unassessable and retains valid external assay evidence",
+      "file": "test-D-T12.R",
+      "type": "expectation_error",
+      "message": "Error in `triomics_d_target_discovery_slot(case$investigation, case$config_path, evidence)`: could not find function \"triomics_d_target_discovery_slot\""
+    }
+  ]
+}

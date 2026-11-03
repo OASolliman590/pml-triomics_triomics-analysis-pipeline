@@ -1,0 +1,21 @@
+{
+  "target_a_binding_status": "measured",
+  "target_a_binding_coverage": {
+    "expected_records": 1,
+    "measured_records": 1,
+    "unmeasured_records": 0,
+    "unresolved_records": 0,
+    "independent_publication_groups": 1
+  },
+  "target_b_binding_status": "unresolved",
+  "target_b_binding_coverage": {
+    "expected_records": 1,
+    "measured_records": 0,
+    "unmeasured_records": 0,
+    "unresolved_records": 1,
+    "independent_publication_groups": 1
+  },
+  "alternatives_comparability": "noncomparable",
+  "selected_target": null,
+  "enumeration": "unranked"
+}

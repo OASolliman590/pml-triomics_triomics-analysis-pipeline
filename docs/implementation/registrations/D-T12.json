@@ -21,7 +21,10 @@
   "integration_request": "Sol owns shared discover routing and profile attachment. D-T12 supplies a typed triomics.target-discovery result with a versioned byte-hashed universe, complete member accounting and unranked profiles. Preserve source overlap qualifications during publication; do not reinterpret the discovery enumeration protocol as a confirmation protocol.",
   "current_revision_verification": {
     "cycle": "M7-025",
-    "status": "worker_candidate_pending",
+    "status": "verified_candidate_pending_same_snapshot_acceptance",
+    "commit": "d80d23d04e5102c67cc01c15ff3a250f608a90e7",
+    "integration_commit": "94b2b912dd765dbd1f23a403bcf0fd5cff79cb81",
+    "review_ref": "docs/implementation/reviews/2026-11-04-m7-025-sol-verification.md",
     "milestone_acceptance": false
   },
   "next_action": "Keep this request unaccepted until Sol's independent readback and the packet acceptance gate. M7/G7 remain closed."
