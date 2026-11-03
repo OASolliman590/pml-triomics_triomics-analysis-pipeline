@@ -34,9 +34,22 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m7_022_luna",
+      "role": "bounded_D04_implementation",
+      "model_requested": "gpt-6-luna",
+      "effort_requested": "max",
+      "effective_settings_exposed": false,
+      "base": "c78555ae50688089075913a1d27c3ff72abc18a1",
+      "worktree": "/tmp/triomics-m7-022-luna",
+      "attempt": 1,
+      "repair_attempts": 0,
+      "next_transition": "Sol_diff_review_and_independent_D04_verification"
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_022_ready_for_fresh_Luna",
+    "status": "m7_022_luna_running",
     "last_reconciled": "2026-11-03",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -5617,6 +5630,13 @@
       "integration_commit": "50ad1fc",
       "candidate_commit": "f173f38b79b74ae048dad55fc5566b7e53e28eaa",
       "disposition": "Verified product trees match; D04 scope audit passed; fresh bounded worker may start. No M7/G7 acceptance."
+    },
+    {
+      "event": "m7_022_luna_dispatched",
+      "date": "2026-11-03",
+      "base": "c78555ae50688089075913a1d27c3ff72abc18a1",
+      "agent": "/root/m7_022_luna",
+      "disposition": "Both scope audit and D02/D03 dependency verification passed. One fresh isolated D04 worker."
     }
   ],
   "packets": {
