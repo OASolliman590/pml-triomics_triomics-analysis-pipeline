@@ -47,15 +47,6 @@
       "attempt": 1,
       "repair_attempts": 0,
       "next_transition": "Sol_diff_review_then_focused_native_verification"
-    },
-    {
-      "agent": "/root/m7_022_scope_astra",
-      "role": "read_only_D04_scope_audit",
-      "model_requested": "gpt-6-astra",
-      "effort_requested": "low",
-      "effective_settings_exposed": false,
-      "base": "e59b515",
-      "next_transition": "scope_verdict_record_then_mapping_verification_before_any_D04_worker"
     }
   ],
   "orchestration_control": {
@@ -5604,6 +5595,13 @@
       "candidate_commit": "e59b515",
       "agent": "/root/m7_022_scope_astra",
       "disposition": "Read-only immutable design audit; implementation remains gated on independent D02/D03 verification."
+    },
+    {
+      "event": "m7_022_scope_audit_pass",
+      "date": "2026-11-03",
+      "candidate_commit": "e59b515",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-022-scope-astra.md",
+      "disposition": "Scope only. D04 worker still blocked on Sol D02/D03 verification."
     }
   ],
   "packets": {
