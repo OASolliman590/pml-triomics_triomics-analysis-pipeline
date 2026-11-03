@@ -34,9 +34,24 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m7_026_luna",
+      "role": "bounded_generation_governance_wording",
+      "model_requested": "gpt-6-luna",
+      "effort_requested": "max",
+      "effective_settings_exposed": false,
+      "worktree": "/tmp/triomics-m7-026-luna",
+      "base": "a303877",
+      "shared_sol_commit": "49347e2ac97037d2b6e39a8674cd9676f8a39a85",
+      "attempt": 1,
+      "repair_attempts": 0,
+      "phase": "initial_RED_and_implementation",
+      "next_transition": "Sol_commit_clean_candidate_then_B07_C06_D01_native_verification"
+    }
+  ],
   "orchestration_control": {
-    "status": "m7_025_verified_m7_026_ready",
+    "status": "m7_026_luna_running",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -5951,6 +5966,22 @@
       "sol_readback_assertions": 107,
       "astra_focused": "pass",
       "disposition": "Worker/reviewers completed; M7-026 dependency released, M7/G7 closed."
+    },
+    {
+      "event": "m7_026_fresh_luna_dispatched",
+      "date": "2026-11-04",
+      "agent": "/root/m7_026_luna",
+      "role": "bounded_generation_governance_wording",
+      "model_requested": "gpt-6-luna",
+      "effort_requested": "max",
+      "effective_settings_exposed": false,
+      "worktree": "/tmp/triomics-m7-026-luna",
+      "base": "a303877",
+      "shared_sol_commit": "49347e2ac97037d2b6e39a8674cd9676f8a39a85",
+      "attempt": 1,
+      "repair_attempts": 0,
+      "phase": "initial_RED_and_implementation",
+      "next_transition": "Sol_commit_clean_candidate_then_B07_C06_D01_native_verification"
     }
   ],
   "packets": {

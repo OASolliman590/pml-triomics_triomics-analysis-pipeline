@@ -59,14 +59,16 @@ Worker/reviewers completed. Read4NovemberM7-025Sol receipt. D12 is unaccepted
 pending final same-snapshot gates; M7-026 dependency is satisfied.
 M7-026 neutral generation governance wording scope
 60fa3b8 passed fresh Astra; amendedf80e7f6 also passed its one focused scope
-rereview to allow Sol-only stale manual sentence correction. Implementation
-waits on D12 and precedes final gates.
+rereview to allow Sol-only stale manual sentence correction. Implementation is now active with fresh /root/m7_026_luna in
+/tmp/triomics-m7-026-luna froma303877, initial attempt, zero repairs. Sol-only
+manual correction committed49347e2; worker owns only router and D01tests.
 M7/G7 closed; C07 not_run; C09 unqualified; no private data, AIU, fasting or push.
 
 ## Current literal resume instruction
 
-Implement already-audited M7-026 governance wording with one fresh Luna-max
-worker. D12 is verified/integrated, old worker complete; do not rerun it.
+Continue active /root/m7_026_luna in /tmp/triomics-m7-026-luna. Initial attempt,
+zero repairs; Sol manual49347e2 committed. Do not duplicate the worker.
+D12 is verified/integrated, old worker complete; do not rerun it.
 Sol owns the stale manual sentence. Then freeze combined product and run final
 same-snapshot source/native/archive/Terra/Astra/Sol gates. M7/G7 remain closed.
 No private data or push, no active parent verification process.
