@@ -34,7 +34,21 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m7_023_luna",
+      "role": "bounded_D05_implementation",
+      "model_requested": "gpt-6-luna",
+      "effort_requested": "max",
+      "effective_settings_exposed": false,
+      "base": "749cf679077d2da60936981b354e81eb20fd1fc0",
+      "worktree": "/tmp/triomics-m7-023-luna",
+      "attempt": 1,
+      "repair_attempts": 0,
+      "next_transition": "Sol_shared_CLI_patch_review_then_candidate_diff_and_independent_proof",
+      "phase": "initial_RED"
+    }
+  ],
   "orchestration_control": {
     "status": "m7_022_luna_running",
     "last_reconciled": "2026-11-03",
@@ -5720,6 +5734,14 @@
       "integration_commit": "ec8876a",
       "review_ref": "docs/implementation/reviews/2026-11-03-m7-022-ora-sol-verification.md",
       "disposition": "Sol independent122pass0fail/error/warn/skip; nativeB/C/D0/0/0,counts and all hashes verified; Astra focusedpass. D05 implementation dependency released. M7/G7 closed."
+    },
+    {
+      "event": "m7_023_luna_dispatched",
+      "date": "2026-11-03",
+      "base": "749cf679077d2da60936981b354e81eb20fd1fc0",
+      "agent": "/root/m7_023_luna",
+      "scope_audit": "cfed36a7a7fac470b95b729da43e209e94a57831",
+      "disposition": "D04 verified dependency satisfied; fresh isolated D05 worker. Sol owns shared patch. M7/G7 remain closed."
     }
   ],
   "packets": {
