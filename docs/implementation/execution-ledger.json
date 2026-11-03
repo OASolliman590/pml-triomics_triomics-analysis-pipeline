@@ -34,24 +34,9 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_024_luna",
-      "role": "bounded_D10_D11_implementation",
-      "model_requested": "gpt-6-luna",
-      "effort_requested": "max",
-      "effective_settings_exposed": false,
-      "base": "8246369b159691dcdd4aca547289b17a5a9ab270",
-      "worktree": "/tmp/triomics-m7-024-luna",
-      "attempt": 1,
-      "repair_attempts": 1,
-      "next_transition": "Sol_shared_patch_review_then_independent_target_proof_and_Astra",
-      "phase": "repair1_target_implementation",
-      "shared_sol_commit": "54f0b69"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_022_luna_running",
+    "status": "m7_027_scope_prepared",
     "last_reconciled": "2026-11-03",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -5824,6 +5809,15 @@
       "candidate_commit": "f80e7f6",
       "review_ref": "docs/implementation/reviews/2026-11-03-m7-026-scope-astra.md",
       "disposition": "Sol-only existingmanualwording correction allowed; Luna allowlistunchanged. D12prerequisite remains, no implementation or M7/G7acceptance."
+    },
+    {
+      "event": "m7_024_blocked_at_cap",
+      "date": "2026-11-03",
+      "candidate_commit": "6e73239ebbca95bc0aab24bb7b7faf78d6a640cf",
+      "repair_attempts": 2,
+      "astra_verdict": "audit_pass_no",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-024-implementation-astra.md",
+      "disposition": "Two comparison defects; no integration. Fresh M7-027 bounded successor scope prepared under standing authorization. Worker/reviewer complete; no test process active."
     }
   ],
   "packets": {

@@ -40,11 +40,14 @@ assertions pass, one expectedD01stale-signwarning, nofail/skip. Sol independent
 11nativecommands/readbacks and40predecessor files passed; currentgeneration
 memberhashes revalidated after true rejections. Receipt:
 reviews/2026-11-03-m7-023-status-sol-verification.md. Target dependency released.
-M7-024 target implementation. No worker edit or duplicate dispatch.
-M7-024 target scope b1c7b4c passed fresh Astra. Fresh Luna /root/m7_024_luna
-is RUNNING in /tmp/triomics-m7-024-luna, base8246369, initial attempt. Sol reviews
-shared patches and final diff, independently verifies, then obtains fresh Astra
-implementation pass before D12. Do not duplicate dispatch.
+M7-024 is blocked and incomplete at its two-repair cap. Luna completed clean
+candidate6e73239; fresh Astra implementation audit found unequal-coverage fallback
+and external-Kd comparison rejection. Both workers are complete; no test process
+active. Do not redispatch or integrate it as finished work. Last318 focused passes
+preceded two appended tests; native proof pending. Preserved candidate is the base
+for separately scoped M7-027. Read reviews/2026-11-03-m7-024-implementation-astra.md
+and change-records/M7-027-target-comparison-evidence-boundary.md. New scope audit
+must pass before a fresh Luna worker; M7/G7 remain closed.
 M7-025 discovery scope c3df0c1 passed fresh Astra; implementation waits on D11.
 M7-026 neutral generation governance wording scope
 60fa3b8 passed fresh Astra; amendedf80e7f6 also passed its one focused scope
