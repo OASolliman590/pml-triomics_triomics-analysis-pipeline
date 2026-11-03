@@ -43,3 +43,8 @@ remain unaccepted pending final same-snapshot packet/milestone receipt reconcili
 M7/G7 closed. D04 scope already has independent Astra pass ate59b515. D05 follows
 D04; later target/discovery work remains. C07 not_run, C09 unqualified, conditional
 D06/07/14 no completion credit. No private study data, push, AIU or fasting run.
+
+Attempt-accounting clarification: the symlink/warning correction0588b42/f173f38
+counts as one targeted review repair after58e1009. No post-final-return repair
+was needed; that earlier phrasing does not mean zero total review corrections.
+The SSD interruption was environmental and did not consume a product repair.

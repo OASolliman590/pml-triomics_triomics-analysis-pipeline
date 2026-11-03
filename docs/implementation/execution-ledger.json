@@ -44,10 +44,10 @@
       "base": "c78555ae50688089075913a1d27c3ff72abc18a1",
       "worktree": "/tmp/triomics-m7-022-luna",
       "attempt": 1,
-      "repair_attempts": 0,
+      "repair_attempts": 1,
       "next_transition": "Sol_diff_review_and_independent_D04_verification",
-      "candidate": "cf2e2b5",
-      "phase": "RED_reproduced_implementation_running"
+      "candidate": "225529a",
+      "phase": "repair1_focused_run"
     }
   ],
   "orchestration_control": {
@@ -5675,6 +5675,19 @@
       "candidate_commit": "60fa3b8886ad9b59ffca46f1d4d20d9cedefe709",
       "review_ref": "docs/implementation/reviews/2026-11-03-m7-026-scope-astra.md",
       "disposition": "Scope only. Neutral governance wording implementation waits on D12/dependencies; all final gates follow."
+    },
+    {
+      "event": "m7_022_repair1_running",
+      "date": "2026-11-03",
+      "initial_candidate": "890cf46",
+      "candidate_commit": "225529a",
+      "repair_attempts": 1,
+      "disposition": "Initial scoped candidate had8shared assertion failures; repair1 corrects synthetic fixtures/roles, retains original q/effect thresholds, adds set-family hash readback and valid pinned-cache behavior. One targeted repair remains, including internal rounds."
+    },
+    {
+      "event": "m7_021_attempt_accounting_clarified",
+      "date": "2026-11-03",
+      "disposition": "M7-021 completed with one targeted Sol-review correction round (0588b42/f173f38 after58e1009), even though no post-final-return repair was needed. Earlier receipt wording no returned parent repair is not a claim of zero total corrections. SSD interruption was environmental. Cycle remains complete; no further edits authorized under it."
     }
   ],
   "packets": {

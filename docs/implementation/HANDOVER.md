@@ -28,10 +28,11 @@ read back and nonempty mappings verified. Product trees R/tests/inst/man/NAMESPA
 match the tested worker candidate. Registrations remain unaccepted for final M7
 snapshot reconciliation; downstream D04 dependency verification is satisfied.
 Receipt: reviews/2026-11-03-m7-021-mapping-sol-verification.md. The earlier drive
-interruption is resolved. Old M7-021 worker completed; no repair used.
+interruption is resolved. Old M7-021 worker completed; one targeted review repair used.
 M7-022 scope e59b515 has fresh Astra pass. Fresh Luna /root/m7_022_luna is
 RUNNING in /tmp/triomics-m7-022-luna, clean base c78555a, initial attempt and
-zero parent repairs. Reconcile its result; parent reviews and independently
+repair1 now running at225529a after initial890cf46; one targeted repair remains.
+Reconcile its result; parent reviews and independently
 verifies before integration. Do not duplicate dispatch. Brief /tmp/triomics-stage-d-evidence/m7-022/luna-brief.md.
 D05 scope cfed36a has fresh Astra pass, but implementation waits on D04.
 M7-024 target scope b1c7b4c passed fresh Astra; implementation waits on D05.
@@ -1021,3 +1022,9 @@ M6/G6 and the accepted public synthetic contract foundation remain historical
 accepted results. B-T07/M7 acceptance, G7 and Stage D remain closed in this
 cycle. Do not loosen the B-T04 0.08 bound, reroll seeds 1001:1400, edit frozen
 `discovery/spec-v2` content, read private study data, or push to GitHub.
+
+Active cap note (3 November): M7-022225529a is repair1 of the initial890cf46
+implementation, including internal rounds. One further targeted repair maximum.
+Product/fixture baseline RED before implementation is retained separately. Fresh
+Astra implementation review is required for the risky D04 diff before D05 release;
+scope approval alone is not that review.
