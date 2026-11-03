@@ -1,4 +1,4 @@
-# M7-021 — reconciled Stage D foundation and native mapping/status proof
+# M7-021 — reconciled Stage D foundation and native mapping proof
 
 Authorization: Omar, 3 November 2026, resume from immutable b03cdef and use
 new bounded Luna/Astra cycles to finish required M7 work. No M7/G7 release until
@@ -24,26 +24,28 @@ C07 stays not_run and C09 unqualified. If precursor checks fail, scope the exact
 failure separately; don't send Luna downstream on an unverified baseline.
 
 After precursor verification and Astra scope pass, one fresh Luna-max worker
-completes D02/D03/D05 native fixture/integration evidence. Existing methods remain:
+completes D02/D03 native fixture/integration evidence. Existing methods remain:
 local lipid ambiguity-preserving mapping, taxon/namespace-qualified reaction
-mapping, and optional/required resource status. Native examples must exercise
+mapping, with resource availability recorded. Native examples must exercise
 actual mapped features from B/C, pinned public synthetic local resources and the
 existing resource-rights service. No empty-output smoke substitutes for mappings.
 Test missing resource, stale content/rights, mixed taxon/namespace and alias/one-to-
-many ambiguity without multiplying measured observations. D05 requires optional
-versus required failure and preservation of valid B/C evidence. No biology claim.
+many ambiguity without multiplying measured observations. D05 coding/completion is deferred until D04 verifies, as packets.json requires.
+Existing status behavior may be regression-tested but gains no completion credit.
+No biology claim.
 
-Luna write allowlist: R/annotation_apply.R, R/annotation_status.R,
+Luna write allowlist: R/annotation_apply.R,
 R/annotation_lipids.R, R/annotation_reactions.R, R/resource_manifest.R;
-tests/testthat/test-D-T02.R, test-D-T03.R, test-D-T05.R and a new
+tests/testthat/test-D-T02.R, test-D-T03.R and a new
  test-D-foundation-shared.R; inst/examples/tickets/D-T02.yaml, D-T03.yaml,
-D-T05.yaml; public synthetic fixture files under inst/examples/data/d-foundation/;
-registrations D-T02.json, D-T03.json and D-T05.json (accepted remains false).
+public synthetic fixture files under inst/examples/data/d-foundation/;
+registrations D-T02.json and D-T03.json (accepted remains false).
 No deletion/weakening of existing assertions, numeric references or provenance.
 
 Sol alone applies shared-file proposals (R/cli.R only existing Stage D dispatch,
 NAMESPACE and matching man/triomics-api.Rd usage if needed). Luna returns those
-as patches outside the checkout, not direct shared-file edits. No new schema,
+as patches outside the checkout, not direct shared-file edits. Any resource service change requires fresh D01 regression and review before
+downstream release. No new schema,
 statistical method, dependencies, runtime locks or source identity change. Any
 necessary wider change gets a separately audited bounded scope, never a silent
 allowlist expansion. No other product files, frozen spec or study data.
@@ -56,7 +58,7 @@ native tests is mandatory; untracked logs stay outside checkout.
 
 ## Subsequent authorized cycles and final closure
 
-D04 ORA, D10/D11 general target publication, and D12 unranked discovery each get
+D04 ORA, then D05 status completion, D10/D11 general target publication, and D12 unranked discovery each get
 a separate frozen scope audit and fresh Luna worker only after prerequisites
 verify. D06/D07/D14 are blocked without completion credit; no method invented.
 Scope changes require new bounded records under existing user authorization.

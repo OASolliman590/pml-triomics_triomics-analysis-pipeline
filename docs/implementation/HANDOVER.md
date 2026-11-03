@@ -8,7 +8,7 @@ Original draft/stage-d-wire and spec/harden-v2-20260920 are preserved.
 M7/G7 stay closed. Earlier caps/receipts remain historical, never reset.
 
 M7-021 reconciles records and verifies C06/B07/D01, then completes native local
-mapping/status packet evidence. Subsequent separately scoped cycles cover ORA,
+mapping packet evidence; D05 follows verified D04. Subsequent separately scoped cycles cover ORA,
 general target profiles and D12 discovery; each needs Astra scope approval and
 one fresh Luna-max worker, initial plus at most two repairs. Sol owns shared CLI,
 namespace/manual integration via reviewed proposals. All consumers await their
