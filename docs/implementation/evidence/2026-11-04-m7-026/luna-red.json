@@ -1,0 +1,85 @@
+{
+  "commit": "49347e2ac97037d2b6e39a8674cd9676f8a39a85",
+  "counts": {
+    "pass": 116,
+    "fail": 6,
+    "error": 1,
+    "warn": 5,
+    "skip": 0,
+    "blocks": 19
+  },
+  "conditions": [
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "file": "test-D-T01.R",
+      "type": "expectation_warning",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-1751a295fa3c0/tickets/D-T01.yaml' --stage 'B' --output '/private/tmp/d-t01-paired-native-output-1751a45f7a778' 2>&1' had status 2"
+    },
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `b_run$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics B_EXPORT_INCOMPLETE: Native B provenance requires the executing package source revision; a supplied working_ref must match it."
+    },
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "file": "test-D-T01.R",
+      "type": "expectation_warning",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-1751a295fa3c0/tickets/D-T01.yaml' --stage 'C' --output '/private/tmp/d-t01-paired-native-output-1751a45f7a778' 2>&1' had status 2"
+    },
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `c_run$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics C_EXPORT_PREDECESSOR_MISSING: C-06 publication requires a native B handoff produced in this output root."
+    },
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "file": "test-D-T01.R",
+      "type": "expectation_warning",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-1751a295fa3c0/tickets/D-T01.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-1751a45f7a778' 2>&1' had status 2"
+    },
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `d_run$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics D_OUTPUT_PATH_UNSAFE: D publication requires safe B/C directories and an available exclusive lock."
+    },
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `file.exists(pointer_path)` to be TRUE.\nDifferences:\n`actual`:   FALSE\n`expected`: TRUE \n"
+    },
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "file": "test-D-T01.R",
+      "type": "expectation_error",
+      "message": "Error: The file does not exist: /private/tmp/d-t01-paired-native-output-1751a45f7a778/registries/current-D.json"
+    },
+    {
+      "test": "D-T01 publishes a complete generation from actual native B and C CLI handoffs",
+      "file": "test-D-T01.R",
+      "type": "expectation_warning",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/triomics-m7-026-luna/inst/examples/tickets/D-T01.yaml' --stage 'B' --output '/private/tmp/d-t01-native-cli-1751a6df1fc62' 2>&1' had status 2"
+    },
+    {
+      "test": "D-T01 publishes a complete generation from actual native B and C CLI handoffs",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `b$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics B_EXPORT_INCOMPLETE: Native B provenance requires the executing package source revision; a supplied working_ref must match it."
+    },
+    {
+      "test": "D-T01 revalidates native DEqMS group sign, time maps, counts and source bytes",
+      "file": "test-D-T01.R",
+      "type": "expectation_warning",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-source-mutation-fixture-1751a3d416caa/tickets/D-T01.yaml' --stage 'B' --output '/private/tmp/d-t01-source-mutation-output-1751a12452c51' 2>&1' had status 2"
+    },
+    {
+      "test": "D-T01 revalidates native DEqMS group sign, time maps, counts and source bytes",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `b$status` to be identical to 0L.\nDifferences:\n  `actual`: 2\n`expected`: 0\n\ntriomics B_EXPORT_INCOMPLETE: Native B provenance requires the executing package source revision; a supplied working_ref must match it."
+    }
+  ]
+}

@@ -61,13 +61,16 @@ M7-026 neutral generation governance wording scope
 60fa3b8 passed fresh Astra; amendedf80e7f6 also passed its one focused scope
 rereview to allow Sol-only stale manual sentence correction. Implementation is now active with fresh /root/m7_026_luna in
 /tmp/triomics-m7-026-luna froma303877, initial attempt, zero repairs. Sol-only
-manual correction committed49347e2; worker owns only router and D01tests.
+manual correction committed49347e2; test-onlyRED17a3fb2 reached3intended
+wording failures with342pass/0error/1expectedwarning/0skip. Sol reviewed and
+committed initialsourceb2c83de; worker runsB07/C06/D01 and nativeGREEN. Zero
+repairs used; independent Sol readback then integration remain.
 M7/G7 closed; C07 not_run; C09 unqualified; no private data, AIU, fasting or push.
 
 ## Current literal resume instruction
 
 Continue active /root/m7_026_luna in /tmp/triomics-m7-026-luna. Initial attempt,
-zero repairs; Sol manual49347e2 committed. Do not duplicate the worker.
+zero repairs; clean initialcandidateb2c83de in GREEN verification. Do not duplicate.
 D12 is verified/integrated, old worker complete; do not rerun it.
 Sol owns the stale manual sentence. Then freeze combined product and run final
 same-snapshot source/native/archive/Terra/Astra/Sol gates. M7/G7 remain closed.

@@ -46,8 +46,9 @@
       "shared_sol_commit": "49347e2ac97037d2b6e39a8674cd9676f8a39a85",
       "attempt": 1,
       "repair_attempts": 0,
-      "phase": "initial_RED_and_implementation",
-      "next_transition": "Sol_commit_clean_candidate_then_B07_C06_D01_native_verification"
+      "phase": "committed_initial_GREEN_regressions_then_native",
+      "next_transition": "Sol_readback_then_integration_final_snapshot",
+      "candidate": "b2c83de378ade395774f356c1741425fdd898747"
     }
   ],
   "orchestration_control": {
@@ -5982,6 +5983,21 @@
       "repair_attempts": 0,
       "phase": "initial_RED_and_implementation",
       "next_transition": "Sol_commit_clean_candidate_then_B07_C06_D01_native_verification"
+    },
+    {
+      "event": "m7_026_clean_RED_then_initial_candidate",
+      "date": "2026-11-04",
+      "red_commit": "17a3fb2e4994ad8914a5aa178167973b0e5ef081",
+      "red_counts": {
+        "pass": 342,
+        "fail": 3,
+        "error": 0,
+        "warn": 1,
+        "skip": 0
+      },
+      "candidate": "b2c83de378ade395774f356c1741425fdd898747",
+      "repair_attempts": 0,
+      "disposition": "Earlier dirty-source RED failed before target behavior and is setup evidence only. Clean RED has exactly3new wording failures. Sol reviewed exact2router sites; clean GREEN/native running. M7/G7 closed."
     }
   ],
   "packets": {

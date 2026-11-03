@@ -1,0 +1,37 @@
+{
+  "commit": "17a3fb2e4994ad8914a5aa178167973b0e5ef081",
+  "counts": {
+    "pass": 342,
+    "fail": 3,
+    "error": 0,
+    "warn": 1,
+    "skip": 0,
+    "blocks": 19
+  },
+  "conditions": [
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "file": "test-D-T01.R",
+      "type": "expectation_warning",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-1764d4d805a51/tickets/d-t01-paired-sign-stale-1764d1c591163.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-1764d25a9a397' 2>&1' had status 2"
+    },
+    {
+      "test": "D-T01 publishes a complete generation from actual native B and C CLI handoffs",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `all(...)` to be TRUE.\nDifferences:\n`actual`:   FALSE\n`expected`: TRUE \n"
+    },
+    {
+      "test": "D-T01 publishes a complete generation from actual native B and C CLI handoffs",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `\"C-06 remains unaccepted.\" %in% ...` to be FALSE.\nDifferences:\n`actual`:   TRUE \n`expected`: FALSE\n"
+    },
+    {
+      "test": "D-T01 publishes a complete generation from actual native B and C CLI handoffs",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `inherits(outcome, \"error\")` to be FALSE.\nDifferences:\n`actual`:   TRUE \n`expected`: FALSE\n\nThe exact new publication limitation must validate. The D generation omits the preserved C-06/C-07/C-09 qualifications."
+    }
+  ]
+}
