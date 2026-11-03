@@ -24,6 +24,7 @@
     "triomics_ora_unique_entities",
     "triomics_ora_resolve_claim",
     "triomics_d_ora_validate_protocol",
+    "triomics_d_ora_parse_protocol_text",
     "triomics_d_ora_run_claim",
     "triomics_d_ora_run"
   ],

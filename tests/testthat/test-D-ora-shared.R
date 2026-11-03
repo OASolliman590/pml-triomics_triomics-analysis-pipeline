@@ -140,6 +140,32 @@ d_ora_test_bundle <- function(branch = "primary_statistics") {
   )
 }
 
+d_ora_protocol_fixture <- function() {
+  claim <- function(source_branch, claim_id, integration = FALSE, members = list("ENTITY-1")) {
+    value <- list(
+      analysis_id = "analysis_1", block_id = "block_1", source_branch = source_branch,
+      claim_id = claim_id, mapping_resource_id = "map_1", mapping_operation = "gene_reaction",
+      source_namespace = "synthetic_gene", taxon_id = "9606", source_resolution = "gene",
+      target_namespace = "Reactome",
+      set_family = list(
+        list(set_id = paste0(claim_id, "_set"), members = members, eligible = TRUE),
+        list(set_id = paste0(claim_id, "_empty"), members = list(), eligible = TRUE)
+      )
+    )
+    if (integration) value$integration_id <- claim_id
+    value
+  }
+  list(
+    schema_version = "1.0", artifact_type = "declared_universe_ora_protocol",
+    protocol_id = "ora-protocol", mapping_rule = "unique_resolved_entity",
+    aggregation_rule = "unique_target_entity_across_measured_features",
+    ambiguity_rule = "exclude_unmapped_and_multi_entity_rows",
+    claims = list(claim("primary_statistics", "claim_1"),
+                  claim("integration_selection", "integration_1", integration = TRUE,
+                        members = list("ENTITY-2")))
+  )
+}
+
 d_ora_mapper_fixture <- function() {
   directory <- tempfile("d-ora-mapper-", tmpdir = normalizePath(tempdir(), winslash = "/", mustWork = TRUE))
   dir.create(directory, recursive = TRUE, showWarnings = FALSE)
@@ -239,6 +265,31 @@ testthat::test_that("D-T04 executes declared-universe ORA after native B and C",
   testthat::expect_match(payload$immutable_inputs$b_bundle_sha256, "^[0-9a-f]{64}$")
   testthat::expect_match(payload$immutable_inputs$c_manifest_sha256, "^[0-9a-f]{64}$")
 
+  protocol_text <- paste(readLines(fixture$protocol, warn = FALSE), collapse = "\n")
+  duplicate_protocol <- sub('"protocol_id": "d-ora-protocol"',
+                            '"protocol_id": "d-ora-protocol", "protocol_id": "d-ora-protocol"',
+                            protocol_text, fixed = TRUE)
+  invalid_protocol_path <- file.path(fixture$root, "data", "d-ora", "duplicate-protocol.json")
+  writeLines(duplicate_protocol, invalid_protocol_path, useBytes = TRUE)
+  invalid_annotation <- triomics_read_config(fixture$config)$annotation
+  protocol_resource_index <- which(vapply(invalid_annotation$resources, function(resource) {
+    identical(as.character(resource$resource_id), "d-ora-protocol")
+  }, logical(1)))
+  testthat::expect_length(protocol_resource_index, 1L)
+  invalid_annotation$resources[[protocol_resource_index]]$local_file <- invalid_protocol_path
+  invalid_annotation$resources[[protocol_resource_index]]$sha256 <- triomics_sha256(invalid_protocol_path)
+  pointer_before_invalid_protocol <- jsonlite::read_json(pointer_path, simplifyVector = FALSE)
+  pointer_sha256_before_invalid_protocol <- triomics_sha256(pointer_path)
+  invalid_protocol_code <- d_ora_code(triomics_d_annotate_local_resources(
+    native_bundle, invalid_annotation, file.path(output_root, "D", "resource-cache"),
+    list(enabled = FALSE), fixture$config
+  ))
+  testthat::expect_identical(invalid_protocol_code, "D_ORA_PROTOCOL_INVALID")
+  pointer_after_invalid_protocol <- jsonlite::read_json(pointer_path, simplifyVector = FALSE)
+  testthat::expect_identical(pointer_after_invalid_protocol$generation_id,
+                             pointer_before_invalid_protocol$generation_id)
+  testthat::expect_identical(triomics_sha256(pointer_path), pointer_sha256_before_invalid_protocol)
+
   write(" ", file = fixture$protocol, append = TRUE)
   cached_d <- d_ora_cli_run(fixture$config, "D", output_root)
   testthat::expect_identical(cached_d$exit_code, 0L, info = paste(cached_d$output, collapse = "\n"))
@@ -331,5 +382,43 @@ testthat::test_that("ORA mapping protocol refuses namespace, taxon, resolution, 
     wrong[[field]] <- paste0("wrong_", wrong[[field]])
     testthat::expect_identical(triomics_ora_mapping_compatibility(wrong, contract)$status,
                                "incompatible", info = field)
+  }
+})
+
+testthat::test_that("ORA protocol parsing rejects duplicate keys and malformed JSON types", {
+  duplicate_documents <- c(
+    '{"protocol_id":"ora-protocol","protocol_id":"ora-protocol"}',
+    '{"claims":[{"claim_id":"claim_1","claim_id":"claim_1"}]}',
+    '{"set_family":[{"set_id":"set_1","set_id":"set_1"}]}'
+  )
+  for (document in duplicate_documents) {
+    testthat::expect_identical(d_ora_code(triomics_d_ora_parse_protocol_text(document)),
+                               "D_ORA_PROTOCOL_INVALID")
+  }
+
+  valid <- triomics_d_ora_validate_protocol(d_ora_protocol_fixture(), "ora-protocol", "analysis_1", "map_1")
+  testthat::expect_length(valid, 2L)
+  testthat::expect_setequal(vapply(valid, `[[`, character(1), "claim_id"), c("claim_1", "integration_1"))
+  testthat::expect_length(valid[[1L]]$set_family[[2L]]$members, 0L)
+  testthat::expect_length(valid[[2L]]$set_family, 2L)
+
+  malformed <- lapply(list(1, TRUE, NULL, list(list("ENTITY-1")),
+                          list(nested = "ENTITY-1"), "ENTITY-1"), function(members) {
+    protocol <- d_ora_protocol_fixture()
+    protocol$claims[[1L]]$set_family[[1L]]$members <- members
+    protocol
+  })
+  bad_identity <- d_ora_protocol_fixture()
+  bad_identity$claims[[1L]]$analysis_id <- 1
+  bad_claim_array <- d_ora_protocol_fixture()
+  names(bad_claim_array$claims) <- "not_an_array"
+  bad_set_array <- d_ora_protocol_fixture()
+  names(bad_set_array$claims[[1L]]$set_family) <- "not_an_array"
+  malformed <- c(malformed, list(bad_identity, bad_claim_array, bad_set_array))
+  for (protocol in malformed) {
+    testthat::expect_identical(
+      d_ora_code(triomics_d_ora_validate_protocol(protocol, "ora-protocol", "analysis_1", "map_1")),
+      "D_ORA_PROTOCOL_INVALID"
+    )
   }
 })

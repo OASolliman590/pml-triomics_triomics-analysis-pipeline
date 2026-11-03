@@ -266,54 +266,207 @@ triomics_d_resolve_resource_path <- function(path, config_root) {
   file.path(config_root, path)
 }
 
+triomics_d_ora_scan_unique_json_keys <- function(text) {
+  characters <- strsplit(enc2utf8(text), "", fixed = TRUE)[[1L]]
+  position <- 1L
+  size <- length(characters)
+  skip_whitespace <- function() {
+    while (position <= size && characters[[position]] %in% c(" ", "\t", "\r", "\n")) {
+      position <<- position + 1L
+    }
+  }
+  read_string <- function() {
+    if (position > size || !identical(characters[[position]], '"')) stop("Expected a JSON string.", call. = FALSE)
+    start <- position
+    position <<- position + 1L
+    escaped <- FALSE
+    while (position <= size) {
+      character <- characters[[position]]
+      if (escaped) {
+        escaped <- FALSE
+        position <<- position + 1L
+        next
+      }
+      if (identical(character, "\\")) {
+        escaped <- TRUE
+        position <<- position + 1L
+        next
+      }
+      if (identical(character, '"')) {
+        token <- paste0(characters[start:position], collapse = "")
+        position <<- position + 1L
+        decoded <- jsonlite::fromJSON(token, simplifyVector = FALSE)
+        if (!is.character(decoded) || length(decoded) != 1L) stop("Invalid JSON string.", call. = FALSE)
+        return(decoded)
+      }
+      position <<- position + 1L
+    }
+    stop("Unterminated JSON string.", call. = FALSE)
+  }
+  parse_value <- NULL
+  parse_array <- function() {
+    position <<- position + 1L
+    skip_whitespace()
+    if (position <= size && identical(characters[[position]], "]")) {
+      position <<- position + 1L
+      return(invisible(NULL))
+    }
+    repeat {
+      parse_value()
+      skip_whitespace()
+      if (position > size) stop("Unterminated JSON array.", call. = FALSE)
+      if (identical(characters[[position]], "]")) {
+        position <<- position + 1L
+        break
+      }
+      if (!identical(characters[[position]], ",")) stop("Invalid JSON array separator.", call. = FALSE)
+      position <<- position + 1L
+    }
+    invisible(NULL)
+  }
+  parse_object <- function() {
+    position <<- position + 1L
+    skip_whitespace()
+    if (position <= size && identical(characters[[position]], "}")) {
+      position <<- position + 1L
+      return(invisible(NULL))
+    }
+    keys <- character()
+    repeat {
+      skip_whitespace()
+      key <- read_string()
+      if (key %in% keys) stop("A JSON object repeats a key.", call. = FALSE)
+      keys <- c(keys, key)
+      skip_whitespace()
+      if (position > size || !identical(characters[[position]], ":")) {
+        stop("Invalid JSON object member.", call. = FALSE)
+      }
+      position <<- position + 1L
+      parse_value()
+      skip_whitespace()
+      if (position > size) stop("Unterminated JSON object.", call. = FALSE)
+      if (identical(characters[[position]], "}")) {
+        position <<- position + 1L
+        break
+      }
+      if (!identical(characters[[position]], ",")) stop("Invalid JSON object separator.", call. = FALSE)
+      position <<- position + 1L
+    }
+    invisible(NULL)
+  }
+  parse_value <- function() {
+    skip_whitespace()
+    if (position > size) stop("Missing JSON value.", call. = FALSE)
+    current <- characters[[position]]
+    if (identical(current, "{")) return(parse_object())
+    if (identical(current, "[")) return(parse_array())
+    if (identical(current, '"')) {
+      read_string()
+      return(invisible(NULL))
+    }
+    start <- position
+    while (position <= size && !(characters[[position]] %in% c(",", "]", "}", " ", "\t", "\r", "\n"))) {
+      position <<- position + 1L
+    }
+    if (start == position) stop("Invalid JSON value.", call. = FALSE)
+    invisible(NULL)
+  }
+  parse_value()
+  skip_whitespace()
+  if (position <= size) stop("Unexpected trailing JSON content.", call. = FALSE)
+  invisible(TRUE)
+}
+
+triomics_d_ora_parse_protocol_text <- function(text) {
+  if (!is.character(text) || length(text) != 1L || is.na(text)) {
+    triomics_d_abort("D_ORA_PROTOCOL_INVALID", "The pinned ORA protocol must be one UTF-8 JSON document.",
+                     "annotation.requests.ora.protocol_ref")
+  }
+  tryCatch(
+    triomics_d_ora_scan_unique_json_keys(text),
+    error = function(error) {
+      triomics_d_abort("D_ORA_PROTOCOL_INVALID",
+                       "The pinned ORA protocol contains invalid JSON or a repeated object key.",
+                       "annotation.requests.ora.protocol_ref")
+    }
+  )
+  protocol <- tryCatch(jsonlite::fromJSON(text, simplifyVector = FALSE), error = function(error) NULL)
+  if (!is.list(protocol)) {
+    triomics_d_abort("D_ORA_PROTOCOL_INVALID", "The pinned ORA protocol must have a JSON object at its root.",
+                     "annotation.requests.ora.protocol_ref")
+  }
+  protocol
+}
+
+triomics_d_ora_json_array <- function(value) {
+  is.list(value) && !is.data.frame(value) && is.null(names(value))
+}
+
+triomics_d_ora_json_object <- function(value, fields = NULL) {
+  is.list(value) && !is.data.frame(value) && !is.null(names(value)) &&
+    !anyDuplicated(names(value)) &&
+    (is.null(fields) || identical(sort(names(value), method = "radix"), sort(fields, method = "radix")))
+}
+
+triomics_d_ora_json_string <- function(value) {
+  is.character(value) && length(value) == 1L && !is.na(value) && nzchar(trimws(value))
+}
+
 triomics_d_ora_validate_protocol <- function(protocol, protocol_ref, analysis_id, mapping_resource_ids) {
   abort <- function(message, key = "annotation.requests.ora.protocol_ref") {
     triomics_d_abort("D_ORA_PROTOCOL_INVALID", message, key)
   }
   top_fields <- c("schema_version", "artifact_type", "protocol_id", "mapping_rule",
                   "aggregation_rule", "ambiguity_rule", "claims")
-  if (!is.list(protocol) || !setequal(names(protocol), top_fields) ||
-      !identical(as.character(protocol$schema_version), "1.0") ||
-      !identical(as.character(protocol$artifact_type), "declared_universe_ora_protocol") ||
-      !identical(as.character(protocol$protocol_id), protocol_ref) ||
-      !identical(as.character(protocol$mapping_rule), "unique_resolved_entity") ||
-      !identical(as.character(protocol$aggregation_rule), "unique_target_entity_across_measured_features") ||
-      !identical(as.character(protocol$ambiguity_rule), "exclude_unmapped_and_multi_entity_rows") ||
-      !is.list(protocol$claims) || !length(protocol$claims)) {
+  if (!triomics_d_ora_json_object(protocol, top_fields) ||
+      !identical(protocol$schema_version, "1.0") ||
+      !identical(protocol$artifact_type, "declared_universe_ora_protocol") ||
+      !identical(protocol$protocol_id, protocol_ref) ||
+      !identical(protocol$mapping_rule, "unique_resolved_entity") ||
+      !identical(protocol$aggregation_rule, "unique_target_entity_across_measured_features") ||
+      !identical(protocol$ambiguity_rule, "exclude_unmapped_and_multi_entity_rows") ||
+      !triomics_d_ora_json_array(protocol$claims) || !length(protocol$claims)) {
     abort("The pinned ORA protocol does not match the supported typed protocol contract.")
   }
   claims <- lapply(protocol$claims, function(claim) {
-    if (!is.list(claim)) abort("Every ORA claim must be an object.")
-    branch <- as.character(claim$source_branch %||% "")
+    if (!is.list(claim) || is.data.frame(claim) || is.null(names(claim)) || anyDuplicated(names(claim))) {
+      abort("Every ORA claim must be a JSON object with unique keys.")
+    }
+    branch <- claim$source_branch
     required <- c("analysis_id", "block_id", "source_branch", "claim_id", "mapping_resource_id",
                   "mapping_operation", "source_namespace", "taxon_id", "source_resolution",
                   "target_namespace", "set_family")
     if (identical(branch, "integration_selection")) required <- c(required, "integration_id")
-    if (!setequal(names(claim), required) ||
+    if (!triomics_d_ora_json_object(claim, required) ||
         !all(vapply(c("analysis_id", "block_id", "source_branch", "claim_id", "mapping_resource_id",
                       "mapping_operation", "source_namespace", "taxon_id", "source_resolution",
-                      "target_namespace"), function(field) triomics_d_nonempty_string(as.character(claim[[field]])),
+                      "target_namespace"), function(field) triomics_d_ora_json_string(claim[[field]]),
                     logical(1))) ||
-        !identical(as.character(claim$analysis_id), analysis_id) ||
+        !identical(claim$analysis_id, analysis_id) ||
         !branch %in% c("primary_statistics", "integration_selection") ||
-        !as.character(claim$mapping_operation) %in% c("gene_reaction", "lipid_ontology") ||
-        !as.character(claim$mapping_resource_id) %in% mapping_resource_ids) {
+        !claim$mapping_operation %in% c("gene_reaction", "lipid_ontology") ||
+        !claim$mapping_resource_id %in% mapping_resource_ids) {
       abort("An ORA claim has a missing, unsupported, or mismatched analysis, branch, or resource identity.")
     }
     if (identical(branch, "integration_selection")) {
-      if (!triomics_d_nonempty_string(as.character(claim$integration_id)) ||
-          !identical(as.character(claim$integration_id), as.character(claim$claim_id))) {
+      if (!triomics_d_ora_json_string(claim$integration_id) ||
+          !identical(claim$integration_id, claim$claim_id)) {
         abort("An integration-selection claim must name its exact integration as claim_id and integration_id.")
       }
     }
     sets <- claim$set_family
-    if (!is.list(sets) || !length(sets)) abort("Every ORA claim must predeclare a non-empty complete set family.")
+    if (!triomics_d_ora_json_array(sets) || !length(sets)) {
+      abort("Every ORA claim must predeclare a non-empty complete set-family array.")
+    }
     normalized_sets <- lapply(sets, function(set) {
       set_fields <- c("set_id", "members", "eligible")
-      members <- triomics_ora_characters(set$members)
-      if (!is.list(set) || !setequal(names(set), set_fields) ||
-          !triomics_d_nonempty_string(as.character(set$set_id)) || anyNA(members) ||
-          any(!nzchar(members)) || anyDuplicated(members) ||
+      if (!triomics_d_ora_json_object(set, set_fields) ||
+          !triomics_d_ora_json_string(set$set_id) || !triomics_d_ora_json_array(set$members) ||
+          !all(vapply(set$members, triomics_d_ora_json_string, logical(1)))) {
+        abort("Each predeclared ORA set needs a unique ID, a flat string member array, and explicit eligibility.")
+      }
+      members <- vapply(set$members, identity, character(1))
+      if (anyDuplicated(members) ||
           !is.logical(set$eligible) || length(set$eligible) != 1L || is.na(set$eligible)) {
         abort("Each predeclared ORA set needs a unique ID, exact members, and explicit eligibility.")
       }
@@ -576,7 +729,9 @@ triomics_d_ora_run <- function(evidence, request, resources, cache_dir) {
                         test_count = 0L, results = list())
     ))
   }
-  protocol <- tryCatch(jsonlite::read_json(protocol_access$path, simplifyVector = FALSE), error = function(error) NULL)
+  protocol_text <- tryCatch(paste(readLines(protocol_access$path, warn = FALSE), collapse = "\n"),
+                            error = function(error) NA_character_)
+  protocol <- triomics_d_ora_parse_protocol_text(protocol_text)
   protocol_sha256 <- triomics_sha256(protocol_access$path)
   normalized_claims <- triomics_d_ora_validate_protocol(
     protocol, protocol_ref, as.character(evidence$analysis_id), request_resource_ids
