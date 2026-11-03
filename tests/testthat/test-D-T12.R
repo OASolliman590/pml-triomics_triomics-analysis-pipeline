@@ -24,7 +24,7 @@ d12_member <- function(id, disposition = "included", reason = paste("declared", 
                        feature_id = "SYN_FEATURE_001", history = list(), reference_sources = list()) {
   list(member_id = paste0("member-", id), disposition = disposition, reason = reason,
        identity = d12_identity(id), mechanism_class = "non_enzymatic",
-       links = if (identical(disposition, "included")) list(d12_link(paste0("path-", id), feature_id)) else list(),
+       links = if (identical(disposition, "included")) list(d12_link("shared-path", feature_id)) else list(),
        selection_history = history, reference_sources = reference_sources)
 }
 

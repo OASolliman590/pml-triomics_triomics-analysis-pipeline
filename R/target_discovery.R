@@ -266,12 +266,6 @@ triomics_d_target_discovery_profile <- function(entry, protocol, universe, evide
   profile$input_provenance <- input_provenance
   overlap <- triomics_d_target_discovery_source_overlap(entry$reference_sources, evidence,
                                                         as.character(member$member_id))
-  if (identical(overlap$status, "unknown")) {
-    axis <- profile$evidence_axes$metabolic_multiomics_compatibility
-    axis$status <- "unassessable"
-    axis$reason_code <- overlap$reason_code
-    profile$evidence_axes$metabolic_multiomics_compatibility <- axis
-  }
   profile$discovery <- list(
     status = "exploratory_unranked",
     universe_id = as.character(universe$universe_id),
@@ -290,6 +284,15 @@ triomics_d_target_discovery_profile <- function(entry, protocol, universe, evide
                      mechanism_declarations = list(), links = entry$links,
                      observations = observations, external_evidence = external_ledger,
                      input_provenance = input_provenance))
+}
+
+triomics_d_target_discovery_qualify_profile <- function(profile) {
+  if (!identical(profile$discovery$reference_overlap$status, "unknown")) return(profile)
+  axis <- profile$evidence_axes$metabolic_multiomics_compatibility
+  axis$status <- "unassessable"
+  axis$reason_code <- profile$discovery$reference_overlap$reason_code
+  profile$evidence_axes$metabolic_multiomics_compatibility <- axis
+  profile
 }
 
 triomics_d_target_discovery_slot <- function(investigation, config_path, evidence = NULL) {
@@ -374,10 +377,18 @@ triomics_d_target_discovery_slot <- function(investigation, config_path, evidenc
   built <- lapply(included, triomics_d_target_discovery_profile, protocol = protocol,
                   universe = universe, evidence = evidence, external_records = external_records,
                   input_provenance = input_provenance)
-  profiles <- lapply(built, `[[`, "profile")
+  base_profiles <- lapply(built, `[[`, "profile")
   results <- lapply(built, `[[`, "result")
-  alternatives <- if (length(profiles) >= 2L) triomics_target_alternatives(profiles) else NULL
-  if (!is.null(alternatives)) alternatives$selected_target <- NULL
+  alternatives <- if (length(base_profiles) >= 2L) triomics_target_alternatives(base_profiles) else NULL
+  unknown_overlap <- vapply(base_profiles, function(profile) {
+    identical(profile$discovery$reference_overlap$status, "unknown")
+  }, logical(1))
+  profiles <- lapply(base_profiles, triomics_d_target_discovery_qualify_profile)
+  if (!is.null(alternatives)) {
+    alternatives$profiles <- profiles
+    alternatives$selected_target <- NULL
+    if (any(unknown_overlap)) alternatives$comparability <- "noncomparable"
+  }
   accounted <- lapply(members, function(entry) {
     member <- entry$member
     overlap <- if (identical(member$disposition, "included")) {
