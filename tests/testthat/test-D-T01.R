@@ -1249,9 +1249,82 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
   testthat::expect_identical(pointer$generation_manifest$digest, pointer$generation_id)
   testthat::expect_identical(as.numeric(pointer$generation_manifest$size_bytes),
                              as.numeric(file.info(manifest_path)$size))
-  testthat::expect_true(all(c("C-06 remains unaccepted.", "C-07 controls remain not_run.",
-                              "C-09 remains unqualified and conditional.") %in%
-                            unlist(manifest$limitations, use.names = FALSE)))
+  testthat::expect_true(all(c(
+    "This publication is not a C-06, M7, or G7 acceptance receipt.",
+    "C-07 controls remain not_run.",
+    "C-09 remains unqualified and conditional."
+  ) %in% unlist(manifest$limitations, use.names = FALSE)))
+  testthat::expect_false("C-06 remains unaccepted." %in%
+                           unlist(manifest$limitations, use.names = FALSE))
+
+  limitation_root <- clone_native_root()
+  limitation_pointer <- triomics_d_validate_current_pointer(
+    limitation_root, file.path(limitation_root, "registries", "current-D.json")
+  )
+  limitation_generation_dir <- limitation_pointer$generation$paths$generation
+  limitation_manifest_path <- file.path(limitation_generation_dir, "generation-manifest.json")
+  limitation_manifest <- jsonlite::read_json(limitation_manifest_path, simplifyVector = FALSE)
+  rewrite_limitation_variant <- function(limitations, mutate = identity) {
+    updated <- limitation_manifest
+    updated$limitations <- as.list(limitations)
+    updated <- mutate(updated)
+    manifest_path <- file.path(limitation_generation_dir, "generation-manifest.json")
+    write_raw(manifest_path, triomics_b07_prov_canonical_value(updated))
+    generation_id <- triomics_sha256(manifest_path)
+    next_generation_dir <- file.path(dirname(limitation_generation_dir), generation_id)
+    if (!identical(limitation_generation_dir, next_generation_dir)) {
+      renamed <- file.rename(limitation_generation_dir, next_generation_dir)
+      testthat::expect_true(renamed)
+      if (renamed) limitation_generation_dir <<- next_generation_dir
+    }
+    generation_id
+  }
+  expect_valid_limitations <- function(generation_id, wording) {
+    outcome <- tryCatch(triomics_d_validate_generation(limitation_root, generation_id),
+                        error = identity)
+    testthat::expect_false(inherits(outcome, "error"),
+                           info = paste(wording, if (inherits(outcome, "error")) {
+                             conditionMessage(outcome)
+                           } else ""))
+  }
+  c07_limitation <- "C-07 controls remain not_run."
+  c09_limitation <- "C-09 remains unqualified and conditional."
+  current_limitation <- "This publication is not a C-06, M7, or G7 acceptance receipt."
+  historical_limitation <- "C-06 remains unaccepted."
+  current_generation_id <- rewrite_limitation_variant(
+    c(current_limitation, c07_limitation, c09_limitation,
+      "Disabled annotation routes do not make biological absence claims.")
+  )
+  expect_valid_limitations(current_generation_id, "The exact new publication limitation must validate.")
+  historical_generation_id <- rewrite_limitation_variant(
+    c(historical_limitation, c07_limitation, c09_limitation,
+      "Disabled annotation routes do not make biological absence claims.")
+  )
+  expect_valid_limitations(historical_generation_id, "The exact historical limitation must remain valid.")
+  historical_tampered_id <- rewrite_limitation_variant(
+    c(historical_limitation, c07_limitation, c09_limitation,
+      "Disabled annotation routes do not make biological absence claims."),
+    function(value) {
+      value$provenance$b$profile$payload_sha256 <- paste(rep("0", 64L), collapse = "")
+      value
+    }
+  )
+  expect_d_code(function() triomics_d_validate_generation(limitation_root, historical_tampered_id),
+                "D_PROVENANCE_INVALID")
+  missing_acceptance_id <- rewrite_limitation_variant(c(c07_limitation, c09_limitation))
+  expect_d_code(function() triomics_d_validate_generation(limitation_root, missing_acceptance_id),
+                "D_PROVENANCE_INVALID")
+  false_claim_id <- rewrite_limitation_variant(
+    c("C-06 is accepted.", c07_limitation, c09_limitation)
+  )
+  expect_d_code(function() triomics_d_validate_generation(limitation_root, false_claim_id),
+                "D_PROVENANCE_INVALID")
+  missing_c07_id <- rewrite_limitation_variant(c(current_limitation, c09_limitation))
+  expect_d_code(function() triomics_d_validate_generation(limitation_root, missing_c07_id),
+                "D_PROVENANCE_INVALID")
+  missing_c09_id <- rewrite_limitation_variant(c(historical_limitation, c07_limitation))
+  expect_d_code(function() triomics_d_validate_generation(limitation_root, missing_c09_id),
+                "D_PROVENANCE_INVALID")
   routing_path <- file.path(generation, "evidence-routing.json")
   routing <- jsonlite::read_json(routing_path, simplifyVector = FALSE)
   testthat::expect_setequal(names(routing$routes), c("gene_reaction", "lipid_ontology", "ora", "mofa_native", "biopan"))
