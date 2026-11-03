@@ -1,0 +1,25 @@
+{
+  "commit": "f9abc42713387c3b5e33ba87766eea5d150e7222",
+  "counts": {
+    "pass": 342,
+    "fail": 1,
+    "error": 1,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 54
+  },
+  "conditions": [
+    {
+      "test": "typed external Ki and functional activity records stay admissible",
+      "file": "test-D-T11.R",
+      "type": "expectation_error",
+      "message": "<triomics_error/error/condition>\nError: Mechanistic claim axes are not permitted."
+    },
+    {
+      "test": "validated external axis and endpoint attributes remain visible to the claim guard",
+      "file": "test-D-T11.R",
+      "type": "expectation_failure",
+      "message": "Expected `t11_code(triomics_target_alternatives(list(axis_attribute, ordinary)))` to be identical to \"D_TARGET_CLAIM_COLLAPSED\".\nDifferences:\n`actual`:   NA                        \n`expected`: \"D_TARGET_CLAIM_COLLAPSED\"\n"
+    }
+  ]
+}

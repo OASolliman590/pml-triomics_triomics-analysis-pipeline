@@ -1,0 +1,34 @@
+{
+  "commit": "f9abc42713387c3b5e33ba87766eea5d150e7222",
+  "results": [
+    {
+      "axis": "binding",
+      "endpoint": "Kd",
+      "attachment": "request",
+      "result": {
+        "status": "accepted",
+        "comparability": "comparable"
+      }
+    },
+    {
+      "axis": "binding",
+      "endpoint": "Ki",
+      "attachment": "request",
+      "result": {
+        "status": "rejected",
+        "code": "D_TARGET_CLAIM_COLLAPSED",
+        "message": "Mechanistic claim axes are not permitted."
+      }
+    },
+    {
+      "axis": "function",
+      "endpoint": "activity",
+      "attachment": "request",
+      "result": {
+        "status": "rejected",
+        "code": "D_TARGET_CLAIM_COLLAPSED",
+        "message": "Mechanistic claim axes are not permitted."
+      }
+    }
+  ]
+}

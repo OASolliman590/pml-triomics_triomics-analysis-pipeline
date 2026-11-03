@@ -1,0 +1,32 @@
+{
+  "commit": "eed7cb251c229399de0b5c110f516c4013197314",
+  "results": [
+    {
+      "axis": "binding",
+      "endpoint": "Kd",
+      "attachment": "request",
+      "result": {
+        "status": "accepted",
+        "comparability": "comparable"
+      }
+    },
+    {
+      "axis": "binding",
+      "endpoint": "Ki",
+      "attachment": "request",
+      "result": {
+        "status": "accepted",
+        "comparability": "comparable"
+      }
+    },
+    {
+      "axis": "function",
+      "endpoint": "activity",
+      "attachment": "request",
+      "result": {
+        "status": "accepted",
+        "comparability": "comparable"
+      }
+    }
+  ]
+}

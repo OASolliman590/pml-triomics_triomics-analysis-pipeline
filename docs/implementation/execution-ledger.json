@@ -36,23 +36,18 @@
   },
   "active_workers": [
     {
-      "agent": "/root/m7_027_luna",
-      "role": "bounded_target_comparison_implementation",
-      "model_requested": "gpt-6-luna",
-      "effort_requested": "max",
+      "agent": "/root/m7_027_implementation_astra",
+      "role": "read_only_focused_implementation_rereview",
+      "model_requested": "gpt-6-astra",
+      "effort_requested": "low",
       "effective_settings_exposed": false,
-      "base": "6e73239ebbca95bc0aab24bb7b7faf78d6a640cf",
-      "worktree": "/tmp/triomics-m7-027-luna",
-      "attempt": 1,
-      "repair_attempts": 1,
-      "phase": "targeted_repair1",
-      "next_transition": "Sol_commit_then_focused_nativeproof_then_focused_Astra",
-      "candidate_commit": "f9abc42713387c3b5e33ba87766eea5d150e7222"
+      "candidate_commit": "eed7cb251c229399de0b5c110f516c4013197314",
+      "next_transition": "Sol_records_verdict_integrates_only_if_pass"
     }
   ],
   "orchestration_control": {
-    "status": "m7_027_repair1_running",
-    "last_reconciled": "2026-11-03",
+    "status": "m7_027_focused_astra_running",
+    "last_reconciled": "2026-11-04",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
     "disposition": "New bounded cycles authorized from b03cdef. Reconcile stale records, verify predecessors, then complete required Stage D through audited scopes. Historical caps preserved. M7/G7 closed."
@@ -5868,6 +5863,29 @@
       "candidate_commit": "f9abc42713387c3b5e33ba87766eea5d150e7222",
       "review_ref": "docs/implementation/reviews/2026-11-03-m7-027-implementation-astra.md",
       "disposition": "Combine external Ki/activity rejection and confirmed axis-attribute bypass. One repair remaining after this round. Native proof pending; M7/G7 closed."
+    },
+    {
+      "event": "m7_027_repair1_focused_green",
+      "date": "2026-11-03",
+      "candidate_commit": "eed7cb251c229399de0b5c110f516c4013197314",
+      "focused_counts": {
+        "pass": 359,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 54
+      },
+      "repairs_used": 1,
+      "repairs_remaining": 1,
+      "disposition": "Sol reviewed/committed 2file repair. Native proof pending; one focused Astra rereview remains. M7/G7 closed."
+    },
+    {
+      "event": "m7_027_worker_and_sol_proof_complete",
+      "date": "2026-11-04",
+      "candidate_commit": "eed7cb251c229399de0b5c110f516c4013197314",
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-027-sol-verification.md",
+      "disposition": "Worker completed; no process active. Sol359focused pass0conditions and144independent artifact readback assertions. Focused Astra pending; no integration/acceptance yet."
     }
   ],
   "packets": {

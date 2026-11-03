@@ -1,0 +1,128 @@
+[
+  {
+    "ticket": "inst/examples/tickets/D-T10.yaml",
+    "commit": "eed7cb251c229399de0b5c110f516c4013197314",
+    "root": "/private/tmp/triomics-stage-d-evidence/m7-027/native-worker/D-T10",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T10.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-027/native-worker/D-T10"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T10.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-027/native-worker/D-T10"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T10.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-027/native-worker/D-T10"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "347c84a1d32fb1e5d9869a5345a4ac40ac43d479ef97d51d0baaf406fb43f75c",
+    "four_b_predecessors_verified": true,
+    "files": {
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/bundle.json": "53dfb6edf473487640b74fd8f80cb716ef06f9107d052ad282e39c425a4f1981",
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/bundle.envelope.json": "4678886d5456892698f6c43696eafda0ac895be2bb783d8677f907ca33ab6e2c",
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/stage-handoff-provenance.json": "72397a0767c1db3a0837ad69e75393830e356b1c32c9950c6aef624d933f3fba",
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/stage-handoff-provenance.envelope.json": "01458afa5f156ad5d89154c44a95ef4aa2e9d1c5817c09eb7f713478b4d8ab36",
+      "D/stage-handoff-provenance.json": "af2876df06d4d464cc5350e4601d1c1c9d9274556a393274eb5d5d977faa998e",
+      "D/stage-handoff-provenance.envelope.json": "7539eee5b96a4353f9966739767e98ec31a81e776d77f2587b3881842c9e9aca",
+      "D/generations/347c84a1d32fb1e5d9869a5345a4ac40ac43d479ef97d51d0baaf406fb43f75c/generation-manifest.json": "347c84a1d32fb1e5d9869a5345a4ac40ac43d479ef97d51d0baaf406fb43f75c",
+      "registries/current-D.json": "4f50f58f5442d0452f132feeaa7ef41dd8e4f60e4a93673b21444d296db536be",
+      "D/generations/347c84a1d32fb1e5d9869a5345a4ac40ac43d479ef97d51d0baaf406fb43f75c/evidence-routing.envelope.json": "e73b2031e12cb73b7bc36d839e3e9854c8fb2ba18930c21a9b246292f7931991",
+      "D/generations/347c84a1d32fb1e5d9869a5345a4ac40ac43d479ef97d51d0baaf406fb43f75c/evidence-routing.json": "4a73bc15e5306430879a56aca27bb022ad0688c09fea965c0f6f5294710bdb06"
+    }
+  },
+  {
+    "ticket": "inst/examples/tickets/D-T11.yaml",
+    "commit": "eed7cb251c229399de0b5c110f516c4013197314",
+    "root": "/private/tmp/triomics-stage-d-evidence/m7-027/native-worker/D-T11",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T11.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-027/native-worker/D-T11"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T11.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-027/native-worker/D-T11"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T11.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-027/native-worker/D-T11"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "71109a0e8b6188388b31232e8c795f76cb5381244c15f5e99964c7038ead5316",
+    "four_b_predecessors_verified": true,
+    "files": {
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/bundle.json": "b454dc06a8021704a4e902c2d34dc29308ee3e7f28b825745d7938a8ddd900c4",
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/bundle.envelope.json": "a5fb429391cf9afedba5191df3c4136507ee0ee84ad1c0c8aa5c2c33f21ac9c7",
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/stage-handoff-provenance.json": "0c15466c3569c8dcebd7ee79e526f980f3421b1861d71ae9960bac0fdf6046b2",
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/stage-handoff-provenance.envelope.json": "ad9d6ea29d04334e29eb3a78bfaeb02c3599ad6300c46e977477f1d470502a92",
+      "D/stage-handoff-provenance.json": "b01b5308defb993d93bcaf0b8323109a1d0e64e2240b64c686ba0fb2b4d89a6b",
+      "D/stage-handoff-provenance.envelope.json": "fefcfde910633701fee8ab4b7f91e3596016b9c6edc99534f279024aeeb0e995",
+      "D/generations/71109a0e8b6188388b31232e8c795f76cb5381244c15f5e99964c7038ead5316/generation-manifest.json": "71109a0e8b6188388b31232e8c795f76cb5381244c15f5e99964c7038ead5316",
+      "registries/current-D.json": "97a2f977ed69858b451caae9f445d4674c2d17a8c9ea327d9e7325e9a6aac46e",
+      "D/generations/71109a0e8b6188388b31232e8c795f76cb5381244c15f5e99964c7038ead5316/evidence-routing.envelope.json": "c0b24cc49a507aba56370d677b2f6441b45dd548266da5a31be6a61716c5ed1f",
+      "D/generations/71109a0e8b6188388b31232e8c795f76cb5381244c15f5e99964c7038ead5316/evidence-routing.json": "d535cd3ba8105fede1ccc556847370d45cf7cfad19bd93214d882d9b7f51f1c6"
+    }
+  }
+]
