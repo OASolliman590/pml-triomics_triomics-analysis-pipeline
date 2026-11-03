@@ -138,14 +138,30 @@ triomics_target_resolve_observations <- function(request, links, evidence) {
 
 triomics_target_external_axis <- function(records, axis) {
   matched <- Filter(function(record) identical(as.character(record$axis), axis), records)
+  publication_groups <- if (length(matched)) {
+    vapply(matched, function(record) {
+      as.character(record$dependency_group %||% record$publication_group %||% "")
+    }, character(1))
+  } else character()
+  coverage <- list(
+    expected_records = as.integer(length(matched)),
+    measured_records = 0L,
+    unmeasured_records = 0L,
+    unresolved_records = 0L,
+    independent_publication_groups = as.integer(length(unique(publication_groups[nzchar(publication_groups)])))
+  )
   if (!length(matched)) {
-    return(list(status = "unmeasured", reason_code = "D_TARGET_EVIDENCE_ABSENT", evidence = list()))
+    return(list(status = "unmeasured", reason_code = "D_TARGET_EVIDENCE_ABSENT",
+                coverage = coverage, evidence = list()))
   }
   attached <- vapply(matched, function(record) identical(record$attachment, "request"), logical(1))
   available <- vapply(matched, function(record) identical(record$availability, "available"), logical(1))
+  coverage$measured_records <- as.integer(sum(attached & available))
+  coverage$unmeasured_records <- as.integer(sum(attached & !available))
+  coverage$unresolved_records <- as.integer(sum(!attached))
   status <- if (any(attached & available)) "measured" else if (any(attached)) "unmeasured" else "unresolved"
   list(status = status, reason_code = if (identical(status, "unresolved")) "D_TARGET_IDENTITY_UNRESOLVED" else NULL,
-       evidence = matched)
+       coverage = coverage, evidence = matched)
 }
 
 triomics_target_profile <- function(request, links, observations, external_evidence = NULL) {
@@ -205,7 +221,17 @@ triomics_target_profile <- function(request, links, observations, external_evide
     observation$coverage <- if (is.null(observation$value)) "unmeasured" else "measured"
     observation
   })
-  external_records <- if (is.list(external_evidence$records)) external_evidence$records else list()
+  external_records <- list()
+  if (!is.null(external_evidence)) {
+    if (!is.list(external_evidence) || is.data.frame(external_evidence) ||
+        !identical(as.character(external_evidence$request_id), as.character(request$request_id)) ||
+        !is.list(external_evidence$records) || is.data.frame(external_evidence$records) ||
+        !is.null(names(external_evidence$records))) {
+      invalid("External assay evidence must be a typed ledger for the actual target request.", "external_evidence")
+    }
+    external_ledger <- triomics_target_external_evidence(request, external_evidence$records)
+    external_records <- external_ledger$records
+  }
   if (length(external_records) && !all(vapply(external_records, function(record) {
     is.list(record) && triomics_target_string(record$axis) &&
       record$axis %in% c("binding", "function", "engagement", "association")

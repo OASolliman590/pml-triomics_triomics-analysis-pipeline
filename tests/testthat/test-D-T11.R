@@ -594,3 +594,88 @@ test_that('observations inherit the specific cited path', {
   expect_identical(p$observations[[1]]$path_sign, 'negative')
   expect_identical(p$observations[[1]]$path_context, 'other_ctx')
 })
+
+t11_external_kd_profile <- function(target_id) {
+  request <- triomics_target_request(
+    list(namespace = 'synthetic_protein', id = target_id, taxon_id = 9606,
+         entity_type = 'protein', constructs = list('construct_a')),
+    'assess', list(),
+    context = list(context_id = 'synthetic_context'),
+    drug = list(namespace = 'synthetic_compound', drug_id = 'COMPOUND_A', label = 'Synthetic compound A')
+  )
+  request$mechanism_class <- 'non_enzymatic'
+  record <- list(
+    evidence_id = paste0('kd_', target_id), axis = 'binding', endpoint = 'Kd', units = 'nM', relation = '=',
+    source_id = 'synthetic_assay_source', publication_group = 'synthetic_kd_publication',
+    measured_by_pipeline = FALSE, value = 4.2, target_namespace = 'synthetic_protein',
+    target_id = target_id, target_entity_type = 'protein', taxon_id = 9606,
+    context_id = 'synthetic_context', construct = 'construct_a',
+    compound_namespace = 'synthetic_compound', compound_id = 'COMPOUND_A',
+    assay_limitations = 'Synthetic test record only.'
+  )
+  external <- triomics_target_external_evidence(request, list(record))
+  triomics_target_profile(request, list(), list(), external_evidence = external)
+}
+
+test_that('canonical alternatives compare explicit molecular coverage and fail closed when it is incomplete', {
+  first_link <- t11_link()
+  first_link$link_id <- 'l1'
+  second_link <- t11_link()
+  second_link$link_id <- 'l2'
+  measured_first <- t11_obs('measured_first', 'support')
+  measured_first$link_id <- 'l1'
+  missing_second <- t11_obs('missing_second', 'unmeasured', value = NULL)
+  missing_second$link_id <- 'l2'
+
+  two_expected <- triomics_target_profile(
+    t11_request(), list(first_link, second_link), list(measured_first, missing_second)
+  )
+  one_expected <- triomics_target_profile(t11_request(), list(first_link), list(measured_first))
+
+  expect_identical(two_expected$coverage, 'measured')
+  expect_identical(one_expected$coverage, 'measured')
+  expect_false(identical(
+    two_expected$evidence_axes$metabolic_multiomics_compatibility$coverage,
+    one_expected$evidence_axes$metabolic_multiomics_compatibility$coverage
+  ))
+  expect_true(all(vapply(two_expected$evidence_axes, function(axis) is.list(axis$coverage), logical(1))))
+  comparison <- triomics_target_alternatives(list(two_expected, one_expected))
+  expect_identical(comparison$comparability, 'noncomparable')
+  expect_null(comparison$selected_target)
+
+  partial <- one_expected
+  partial$evidence_axes$direct_binding$coverage <- NULL
+  partial_comparison <- triomics_target_alternatives(list(one_expected, partial))
+  expect_identical(partial_comparison$comparability, 'noncomparable')
+  expect_null(partial_comparison$selected_target)
+})
+
+test_that('exact identity-matched external Kd stays admissible in two-target alternatives', {
+  profiles <- list(t11_external_kd_profile('SYNTHETIC_TARGET_A'),
+                   t11_external_kd_profile('SYNTHETIC_TARGET_B'))
+
+  for (profile in profiles) {
+    evidence <- profile$evidence_axes$direct_binding$evidence[[1L]]
+    expect_identical(evidence$endpoint, 'Kd')
+    expect_identical(evidence$value, 4.2)
+    expect_identical(evidence$units, 'nM')
+    expect_identical(evidence$attachment, 'request')
+    expect_identical(evidence$measured_by_pipeline, FALSE)
+    expect_identical(evidence$dependency_group, 'publication:synthetic_kd_publication')
+  }
+
+  comparison <- triomics_target_alternatives(profiles)
+  expect_null(comparison$selected_target)
+  expect_identical(comparison$tie_status, 'unresolved')
+})
+
+test_that('external evidence cannot hide arbitrary mechanistic claim metadata', {
+  first <- t11_external_kd_profile('SYNTHETIC_TARGET_A')
+  second <- t11_external_kd_profile('SYNTHETIC_TARGET_B')
+  first$external_evidence[[1L]]$assay_limitations <- 'binding_probability'
+
+  expect_identical(
+    t11_code(triomics_target_alternatives(list(first, second))),
+    'D_TARGET_CLAIM_COLLAPSED'
+  )
+})
