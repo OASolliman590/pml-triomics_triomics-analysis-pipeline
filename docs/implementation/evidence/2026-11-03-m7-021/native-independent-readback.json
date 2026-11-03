@@ -1,0 +1,20 @@
+{
+  "root": "/private/tmp/m7-021-sol-native-output-ce8474029cb9",
+  "generation_id": "161fb953e8ff18d9a34ab025f9bee1aa58c789dc786984f999a79c49d1979599",
+  "persisted_time": null,
+  "excluded_source": "SYN_12",
+  "four_b_predecessors_verified": true,
+  "files": {
+    "B/handoffs/b603fd22641a03da4301a6f770e7baedd138ccf8d748729e791fc50313aaafb0/bundle.json": "bc59a37245edfc38da29c28f84efcf5b6aba23d865644e6d4892b42c8d0e7070",
+    "B/handoffs/b603fd22641a03da4301a6f770e7baedd138ccf8d748729e791fc50313aaafb0/bundle.envelope.json": "584962ebf33f9831c873e762a1c2d7361cf7fa6576a2ba9da771c3ec7b588613",
+    "B/handoffs/b603fd22641a03da4301a6f770e7baedd138ccf8d748729e791fc50313aaafb0/stage-handoff-provenance.json": "b330bb0f67c1f616060e82c4142f6c97172d0f150f95c0dc4ef3b49670fa76bb",
+    "B/handoffs/b603fd22641a03da4301a6f770e7baedd138ccf8d748729e791fc50313aaafb0/stage-handoff-provenance.envelope.json": "7cbe7ecafaf2096ab9b63d7f4247ba20069db4f7448ab780ce12722de2aa534d",
+    "D/stage-handoff-provenance.json": "7a626c910c7691a89d702aab16f89dfc8b55706861e1a67d586b030e26e7b101",
+    "D/stage-handoff-provenance.envelope.json": "d3cd12aeccfca734a66b88004ba376ec0b9cc92ebf5fe71dba66966f56aa5305",
+    "D/generations/161fb953e8ff18d9a34ab025f9bee1aa58c789dc786984f999a79c49d1979599/generation-manifest.json": "161fb953e8ff18d9a34ab025f9bee1aa58c789dc786984f999a79c49d1979599",
+    "registries/current-D.json": "ad8dbba7e2a722bcc7e5056931dee63b902342fd147b0290bd51df3500d82de8",
+    "C/score-endpoints/integration-01.json": "6f63d224d7bcd7f29b74a62898c4fab48b3a366f50977f790eb3685d76546b86",
+    "D/generations/161fb953e8ff18d9a34ab025f9bee1aa58c789dc786984f999a79c49d1979599/evidence-routing.envelope.json": "d42bc77dee6cf54c6113c4bae19d58701c7fa1bbbcce06d51982a6513fbc1952",
+    "D/generations/161fb953e8ff18d9a34ab025f9bee1aa58c789dc786984f999a79c49d1979599/evidence-routing.json": "e545861a1dd0f22251e4196e0b21093613101488e9097ae0f41e8cc3e40678ca"
+  }
+}

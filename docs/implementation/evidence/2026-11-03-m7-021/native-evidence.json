@@ -1,0 +1,19 @@
+{
+  "candidate_head": "4e8c1c2ee24f8150ebc2b67e29a40c8595816fa9",
+  "fixture_root": "/private/tmp/c06-shared-trajectory-fixture-ce84536c7856",
+  "output_root": "/private/tmp/m7-021-sol-native-output-ce8474029cb9",
+  "excluded_source": "SYN_12",
+  "b_analysis_unit_map_digest": "c57c63efb3ab79cd1b94d5762c24f96c4cc7abf693322a1ad89fed4e5bf219af",
+  "b_analysis_unit_map_row_identity_sha256": "6c2710fe937eceeb63f87d359c720ee26c801fcaecd8281750d841415db15a8b",
+  "b_bundle_sha256": "bc59a37245edfc38da29c28f84efcf5b6aba23d865644e6d4892b42c8d0e7070",
+  "endpoint_bundle_sha256": "6432f58f9c57feeb5245ee49d23af40fbc1ce73b757855f5689c397527ec6363",
+  "endpoint_sha256": "512a2514fc64a9ccac5c1d1b57cb22fb8d408234c579affa302c2a8d68f3ed91",
+  "endpoint_file_sha256": "6f63d224d7bcd7f29b74a62898c4fab48b3a366f50977f790eb3685d76546b86",
+  "d_pointer_sha256": "ad8dbba7e2a722bcc7e5056931dee63b902342fd147b0290bd51df3500d82de8",
+  "d_generation_id": "161fb953e8ff18d9a34ab025f9bee1aa58c789dc786984f999a79c49d1979599",
+  "d_manifest_sha256": "161fb953e8ff18d9a34ab025f9bee1aa58c789dc786984f999a79c49d1979599",
+  "d_provenance_sha256": "7a626c910c7691a89d702aab16f89dfc8b55706861e1a67d586b030e26e7b101",
+  "manifest_file": "/tmp/triomics-stage-d-evidence/m7-021/native-sha256-manifest.txt",
+  "manifest_sha256": "4dcf18ce8a70514872112243d3c1d533a6402a674b6fad0f5fc0f6f7d36316dd",
+  "files_hashed": 58
+}

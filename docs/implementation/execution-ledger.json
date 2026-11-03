@@ -36,16 +36,20 @@
   },
   "active_workers": [
     {
-      "agent": "/root/m7_021_scope_astra",
-      "role": "read_only_scope_audit",
-      "model_requested": "gpt-6-astra",
-      "effort_requested": "low",
+      "agent": "/root/m7_021_luna",
+      "role": "D02_D03_bounded_implementation",
+      "model_requested": "gpt-6-luna",
+      "effort_requested": "max",
       "effective_settings_exposed": false,
-      "next_transition": "scope_pass_and_predecessor_green_then_fresh_Luna"
+      "base": "4e8c1c2ee24f8150ebc2b67e29a40c8595816fa9",
+      "worktree": "/tmp/triomics-m7-021-luna",
+      "attempt": 1,
+      "repair_attempts": 0,
+      "next_transition": "Sol_diff_review_then_focused_native_verification"
     }
   ],
   "orchestration_control": {
-    "status": "m7_021_scope_audit_pending",
+    "status": "m7_021_luna_running",
     "last_reconciled": "2026-11-03",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -5561,6 +5565,13 @@
       "candidate_commit": "aa1595f94f0556fb3210702192307b5a4ab7bccb",
       "review_ref": "docs/implementation/reviews/A-T01-initial-review.md",
       "disposition": "Three P1 spec gaps, one P2 taxonomy gap, and a non-reproducible Sol test required bounded repair 1."
+    },
+    {
+      "event": "m7_021_precursor_verified_and_luna_dispatched",
+      "date": "2026-11-03",
+      "candidate_commit": "4e8c1c2ee24f8150ebc2b67e29a40c8595816fa9",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-precursor-verification.md",
+      "disposition": "Scope pass; precursor1087+native23 pass; D02/D03 worker running. M7/G7 closed."
     }
   ],
   "packets": {
@@ -6241,7 +6252,7 @@
       "gate_release": "G6"
     },
     "M7": {
-      "status": "not_started",
+      "status": "in_progress_not_accepted",
       "review_ref": null,
       "commit": null
     },
@@ -6295,5 +6306,5 @@
       "docs/implementation/notion-sync/2026-10-17-three-study-dataset-handover.md"
     ]
   },
-  "close_state": "paused"
+  "close_state": "active"
 }

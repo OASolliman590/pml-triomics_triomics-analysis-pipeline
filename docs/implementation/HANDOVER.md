@@ -15,10 +15,18 @@ namespace/manual integration via reviewed proposals. All consumers await their
 verified dependencies. Final same-snapshot receipts, full source, clean archive
 Status: OK, Terra DOC-M7 and fresh Astra pass precede Sol acceptance.
 
-Current MOFA2/mofapy2 temporary runtime is incomplete and needs restoration before
-full gates. No private data, AIU run, fasting checks or GitHub push in this scope.
-Resume: audit M7-021 record, verify predecessor suites from clean committed source,
-then dispatch Luna. Do not act on the stale historical next-action text below.
+Current runtime is restored: `/tmp/triomics-runtime-20261103/R` (MOFA2 1.22.1),
+`/tmp/triomics-runtime-20261103/python/bin/python` (mofapy2 0.7.5).
+Scope Astra passed 4e8c1c2. Clean precursor suites pass1087 with one named expected
+warning, zero failure/error/skip. Native B/C/D exits0/0/0, 23 assertions pass,
+SYN_12 persisted time:null and all predecessor/generation hashes read back.
+Receipt: reviews/2026-11-03-m7-021-precursor-verification.md.
+Fresh Luna `/root/m7_021_luna` works in `/tmp/triomics-m7-021-luna`, base4e8c1c2,
+on D02/D03 only. Initial attempt; no repairs used. Sol coordinator remains in
+`/tmp/triomics-m7-021`. No private data, AIU, fasting or push.
+Resume: reconcile the running Luna result, review its diff, apply any allowlisted
+shared-file proposal as Sol, and verify its focused/native proof before D04.
+Do not redispatch the worker or act on stale historical next-action text below.
 
 ## Current checkpoint — 29 October 2026, D-T11 stopped at the repair limit
 
