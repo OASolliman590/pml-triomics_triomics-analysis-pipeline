@@ -1,0 +1,4 @@
+feature_id	taxon_id	resolution	capabilities	provenance_ref
+PC(34:1)	9606	sum_composition	lipid_ontology	synthetic://d-foundation/lipid-feature-metadata.tsv
+PE(36:2)	9606	sum_composition	lipid_ontology	synthetic://d-foundation/lipid-feature-metadata.tsv
+TG(50:1)	9606	sum_composition	lipid_ontology	synthetic://d-foundation/lipid-feature-metadata.tsv

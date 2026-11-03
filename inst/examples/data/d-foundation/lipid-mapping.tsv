@@ -1,0 +1,5 @@
+source_namespace	source_id	taxon_id	target_namespace	target_id	relation	resolution	evidence_ref	resource_id
+synthetic_lipid	PC(34:1)	9606	synthetic_lipid_ontology	LIPID:PC34:A	candidate_equivalent	sum_composition	synthetic://d-foundation/lipid-map.tsv#PC-A	d-foundation-lipid
+synthetic_lipid	PC(34:1)	9606	synthetic_lipid_ontology	LIPID:PC34:B	candidate_equivalent	sum_composition	synthetic://d-foundation/lipid-map.tsv#PC-B	d-foundation-lipid
+synthetic_lipid	PE(36:2)	9606	synthetic_lipid_ontology	LIPID:PE36:A	candidate_equivalent	sum_composition	synthetic://d-foundation/lipid-map.tsv#PE-A	d-foundation-lipid
+synthetic_lipid	TG(50:1)	10090	synthetic_lipid_ontology	LIPID:TG50:A	candidate_equivalent	sum_composition	synthetic://d-foundation/lipid-map.tsv#TG-mouse	d-foundation-lipid

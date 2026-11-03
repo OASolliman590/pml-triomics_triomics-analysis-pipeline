@@ -4,9 +4,14 @@
   "accepted": false,
   "namespace_edits": false,
   "local_files": [
+    "R/annotation_apply.R",
     "R/annotation_reactions.R",
     "tests/testthat/test-D-T03.R",
+    "tests/testthat/test-D-foundation-shared.R",
     "inst/examples/tickets/D-T03.yaml",
+    "inst/examples/data/d-foundation/gene-measurements.tsv",
+    "inst/examples/data/d-foundation/gene-feature-metadata.tsv",
+    "inst/examples/data/d-foundation/gene-reaction-mapping.tsv",
     "docs/implementation/registrations/D-T03.json"
   ],
   "owned_functions": [
@@ -17,5 +22,11 @@
   "reconciliation_2026_11_03": {
     "snapshot": "b03cdef",
     "finding": "At b03cdef local annotation calls reaction mapper. Original missing-CLI blocker is stale; pinned fixture and fresh publication evidence still required."
+  },
+  "implementation_handoff": {
+    "snapshot": "4e8c1c2",
+    "status": "worker_changes_pending_native_and_independent_review",
+    "accepted": false,
+    "scope": "Pinned local synthetic gene/reaction resource, config-relative local path resolution, and native D-T03 mapping evidence."
   }
 }

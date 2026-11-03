@@ -35,6 +35,12 @@ testthat::test_that('D-T03 AC1 AC2 AC4 retain distinct mappings and shared linea
   testthat::expect_identical(x$observations[[4]]$mapping_status, 'unmapped')
   testthat::expect_false(any(vapply(x$edges, function(e) e$feature_key == 'unknown', logical(1))))
   testthat::expect_length(x$observations[[1]]$nominations, 2L)
+  testthat::expect_identical(vapply(x$observations[[1]]$nominations, `[[`, '', 'nomination_id'), c('B','C'))
+  testthat::expect_identical(vapply(x$observations[[1]]$nominations, `[[`, '', 'source_branch'),
+                             c('primary_statistics','integration'))
+  testthat::expect_identical(x$observations[[1]]$source_id, 'P1;P2')
+  testthat::expect_identical(x$observations[[1]]$source_namespace, 'protein_group')
+  testthat::expect_identical(x$observations[[1]]$taxon_id, '9606')
   testthat::expect_false(x$observations[[1]]$independent_corroboration)
   testthat::expect_identical(x$observations[[1]]$evidence_lineage, x$edges[[1]]$evidence_lineage)
 })
@@ -63,6 +69,16 @@ testthat::test_that('D-T03 AC3 enforces the resource service', {
   testthat::expect_identical(d_t03_code(d_t03_map(f, resource=bad, hash=bad$sha256, cache=file.path(f$root,'bad'))), 'D_RESOURCE_HASH_MISMATCH')
   bad <- f$resource; bad$rights_status <- 'unverified'
   testthat::expect_identical(d_t03_code(d_t03_map(f, resource=bad)), 'D_RESOURCE_RIGHTS')
+})
+testthat::test_that('D-T03 namespace and taxon mismatches stay unmapped', {
+  f <- d_t03_fixture()
+  for (field in c('source_namespace', 'taxon_id')) {
+    row <- f$rows[[1]]
+    row[[field]] <- if (field == 'source_namespace') 'other_gene' else '10090'
+    x <- d_t03_map(f, rows=list(row))
+    testthat::expect_identical(x$observations[[1]]$mapping_status, 'unmapped')
+    testthat::expect_length(x$edges, 0L)
+  }
 })
 
 d_t03_table <- function(f, change) {

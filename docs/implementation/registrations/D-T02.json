@@ -4,9 +4,14 @@
   "accepted": false,
   "namespace_edits": false,
   "local_files": [
+    "R/annotation_apply.R",
     "R/annotation_lipids.R",
     "tests/testthat/test-D-T02.R",
+    "tests/testthat/test-D-foundation-shared.R",
     "inst/examples/tickets/D-T02.yaml",
+    "inst/examples/data/d-foundation/lipid-measurements.tsv",
+    "inst/examples/data/d-foundation/lipid-feature-metadata.tsv",
+    "inst/examples/data/d-foundation/lipid-mapping.tsv",
     "docs/implementation/registrations/D-T02.json"
   ],
   "owned_functions": [
@@ -17,5 +22,11 @@
   "reconciliation_2026_11_03": {
     "snapshot": "b03cdef",
     "finding": "At b03cdef local annotation calls lipid mapper. Original missing-CLI blocker is stale; exact packet fixture, resource manifest and fresh publication evidence still required."
+  },
+  "implementation_handoff": {
+    "snapshot": "4e8c1c2",
+    "status": "worker_changes_pending_native_and_independent_review",
+    "accepted": false,
+    "scope": "Pinned local synthetic lipid resource, config-relative local path resolution, and native D-T02 mapping evidence."
   }
 }

@@ -1,4 +1,4 @@
-# Packet D-T03 synthetic fixture; the local mapping resource is not registered here.
+# Packet D-T03 public synthetic fixture; mapping ambiguity is not biological evidence.
 schema_version: '2.0'
 study_id: triomics_d_t03_fixture
 data_class: synthetic
@@ -10,7 +10,7 @@ sources:
     selection_history: full_unselected
     selection_evidence: Public synthetic software fixture; no participant data.
   - source_id: block_1
-    file: ../data/independent/proteomics.tsv
+    file: ../data/d-foundation/gene-measurements.tsv
     format: tsv
     role: measurement_matrix
     selection_history: full_unselected
@@ -34,10 +34,10 @@ blocks:
     name: Synthetic proteome
     profile: proteomics
     profile_spec_ref: null
-    file: ../data/independent/proteomics.tsv
+    file: ../data/d-foundation/gene-measurements.tsv
     feature_id_column: feature_id
-    id_namespace: synthetic
-    feature_metadata: null
+    id_namespace: synthetic_gene
+    feature_metadata: ../data/d-foundation/gene-feature-metadata.tsv
     source_refs:
       - block_1
     sample_map: null
@@ -81,7 +81,7 @@ blocks:
         trees: null
         qualification_ref: null
       derive: []
-    annotation_route: none
+    annotation_route: gene_reaction
   - block_id: block_2
     name: Synthetic metabolome
     profile: metabolomics
@@ -167,8 +167,8 @@ analyses:
           interpretation: Synthetic software fixture only; no scientific inference.
       trend: false
       robust: false
-      q_threshold: 0.05
-      effect_threshold: 0.5
+      q_threshold: 1.0
+      effect_threshold: 0.0
       effect_unit: per_unit_beta
       family_scope: one_scalar_contrast_all_retained_features
       selection_validity: qualified
@@ -194,7 +194,7 @@ analyses:
         mofa_convergence: not_applicable
         mofa_seed_repeats: 1
         native_options_ref: null
-        selection: {method: none, value: null}
+        selection: {method: top_k, value: 1}
         evaluation:
           mode: exploratory
           generalization_unit: sample
@@ -214,12 +214,21 @@ clinical:
   links_file: null
   objectives: []
 annotation:
-  resources: []
+  resources:
+    - resource_id: d-foundation-gene
+      source_url: local://triomics/d-foundation/gene-reaction-mapping.tsv
+      version: synthetic-2026.1
+      sha256: a8cd2564bda65ca84b7a90ed4433e1777da8c3e577c2070630e479d0cc08dc85
+      local_file: ../data/d-foundation/gene-reaction-mapping.tsv
+      terms_url: https://www.gnu.org/licenses/gpl-3.0.html
+      rights_status: verified
+      permitted_operation: [gene_reaction]
+      redistribution: allowed
   requests:
     - request_id: d_t03_gene_reaction
       analysis_id: d_t03_synthetic_exploratory
       route: gene_reaction
-      resource_ids: []
+      resource_ids: [d-foundation-gene]
       required: true
       protocol_ref: synthetic-local-mapping
 target_investigation:

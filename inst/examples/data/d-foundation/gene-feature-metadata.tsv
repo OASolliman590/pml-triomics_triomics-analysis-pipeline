@@ -1,0 +1,4 @@
+feature_id	taxon_id	resolution	capabilities	provenance_ref
+SYN-GENE-001	9606	gene	gene_reaction	synthetic://d-foundation/gene-feature-metadata.tsv
+SYN-GENE-002	9606	gene	gene_reaction	synthetic://d-foundation/gene-feature-metadata.tsv
+SYN-GENE-003	9606	gene	gene_reaction	synthetic://d-foundation/gene-feature-metadata.tsv

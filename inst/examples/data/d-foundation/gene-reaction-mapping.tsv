@@ -1,0 +1,6 @@
+source_namespace	source_id	taxon_id	target_namespace	target_id	relation	resolution	evidence_ref	resource_id
+synthetic_gene	SYN-GENE-001	9606	Reactome	R-SYN-001	maps_to	gene	synthetic://d-foundation/gene-map.tsv#R1	d-foundation-gene
+synthetic_gene	SYN-GENE-001	9606	Reactome	R-SYN-002	maps_to	gene	synthetic://d-foundation/gene-map.tsv#R2	d-foundation-gene
+synthetic_gene	SYN-GENE-001	9606	GO	GO:0000001	function	gene	synthetic://d-foundation/gene-map.tsv#GO1	d-foundation-gene
+synthetic_gene	SYN-GENE-002	10090	Reactome	R-SYN-MOUSE	maps_to	gene	synthetic://d-foundation/gene-map.tsv#mouse	d-foundation-gene
+other_gene	SYN-GENE-003	9606	Reactome	R-SYN-OTHER-NS	maps_to	gene	synthetic://d-foundation/gene-map.tsv#namespace	d-foundation-gene

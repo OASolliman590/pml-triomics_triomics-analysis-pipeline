@@ -19,14 +19,17 @@ d_t02_fixture <- function() {
   )
   list(root=root, path=path, hash=hash, resource=resource, rows=rows)
 }
-d_t02_map <- function(f, resource=f$resource, version='1', hash=f$hash, cache=file.path(f$root, 'cache')) {
-  triomics_map_lipids(f$rows, resource, 'lipid_ontology', version, hash, cache)
+d_t02_map <- function(f, resource=f$resource, version='1', hash=f$hash, cache=file.path(f$root, 'cache'), rows=f$rows) {
+  triomics_map_lipids(rows, resource, 'lipid_ontology', version, hash, cache)
 }
 testthat::test_that('D-T02 AC1 AC2 AC4 parse local mappings without multiplying observations', {
   f <- d_t02_fixture(); x <- d_t02_map(f)
   testthat::expect_identical(x$status, 'available')
   testthat::expect_length(x$observations, 3L)
   testthat::expect_identical(x$observations[[1]]$class, 'PC')
+  testthat::expect_identical(x$observations[[1]]$source_id, 'PC(34:1)')
+  testthat::expect_identical(x$observations[[1]]$source_namespace, 'lipid')
+  testthat::expect_identical(x$observations[[1]]$taxon_id, '9606')
   testthat::expect_identical(x$observations[[1]]$carbons, 34L)
   testthat::expect_identical(x$observations[[1]]$unsaturations, 1L)
   testthat::expect_identical(x$observations[[1]]$resolution, 'sum_composition')
@@ -131,6 +134,37 @@ testthat::test_that('D-T02 repair maps an alias-only identity without adding obs
   testthat::expect_identical(x$edges[[1]]$target_entity_id, 'PC34A')
   f$rows[[1]]$aliases <- list()
   testthat::expect_length(d_t02_map(f)$edges, 0L)
+})
+testthat::test_that('D-T02 preserves one measured observation when an approved alias is ambiguous', {
+  f <- d_t02_fixture()
+  f <- d_t02_table(f, function(t) {
+    alias <- t[t$source_id == 'PC alias', , drop=FALSE]
+    alias$target_id <- 'PC34B'
+    alias$evidence_ref <- 'synthetic:alias-2'
+    rbind(t, alias)
+  })
+  row <- list(feature_key='alias-row', source_id='unlisted lipid', source_namespace='lipid',
+              taxon_id='9606', resolution='sum_composition',
+              aliases=list(list(source_id='PC alias', source_namespace='lipid',
+                                provenance_ref='synthetic:approved-alias')))
+  x <- d_t02_map(f, rows=list(row))
+  testthat::expect_length(x$observations, 1L)
+  testthat::expect_identical(x$observations[[1]]$source_id, 'unlisted lipid')
+  testthat::expect_identical(x$observations[[1]]$aliases[[1]]$provenance_ref,
+                             'synthetic:approved-alias')
+  testthat::expect_setequal(vapply(x$edges, `[[`, '', 'target_entity_id'), c('PC34A', 'PC34B'))
+  testthat::expect_identical(x$edges[[1]]$ambiguity_group, x$edges[[2]]$ambiguity_group)
+})
+testthat::test_that('D-T02 namespace and taxon mismatches stay unmapped', {
+  f <- d_t02_fixture()
+  for (field in c('source_namespace', 'taxon_id')) {
+    row <- f$rows[[1]]
+    row$aliases <- list()
+    row[[field]] <- if (field == 'source_namespace') 'other_lipid' else '10090'
+    x <- d_t02_map(f, rows=list(row))
+    testthat::expect_identical(x$observations[[1]]$mapping_status, 'unmapped')
+    testthat::expect_length(x$edges, 0L)
+  }
 })
 testthat::test_that('D-T02 repair rejects non-row and bundle inputs', {
   f <- d_t02_fixture()
