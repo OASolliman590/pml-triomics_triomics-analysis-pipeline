@@ -1,0 +1,60 @@
+{
+  "format": "triomics.target-mechanism",
+  "format_version": "1.0",
+  "protocol_ref": "synthetic_target_protocol",
+  "context_ref": "synthetic_context",
+  "drug_ref": "synthetic_drug_request",
+  "drug_identity": {
+    "namespace": "synthetic_compound",
+    "id": "SYNTHETIC_COMPOUND_A",
+    "label": "Synthetic test compound A"
+  },
+  "targets": [
+    {
+      "identity": {
+        "namespace": "synthetic_protein",
+        "id": "SYNTHETIC_TARGET_A",
+        "taxon_id": 9606,
+        "entity_type": "protein",
+        "constructs": ["synthetic_construct_A"]
+      },
+      "mechanism_class": "non_enzymatic",
+      "links": [
+        {
+          "link_id": "synthetic_path_A",
+          "relation": "regulatory",
+          "sign": "unknown",
+          "context_id": "synthetic_context",
+          "source_id": "SYNTHETIC_TEST_ASSERTION_ONLY_A",
+          "feature_namespace": "synthetic",
+          "feature_id": "SYN_3_001",
+          "expected_direction": "unknown"
+        }
+      ],
+      "selection_history": []
+    },
+    {
+      "identity": {
+        "namespace": "synthetic_protein",
+        "id": "SYNTHETIC_TARGET_B",
+        "taxon_id": 9606,
+        "entity_type": "protein",
+        "constructs": ["synthetic_construct_B"]
+      },
+      "mechanism_class": "non_enzymatic",
+      "links": [
+        {
+          "link_id": "synthetic_path_B",
+          "relation": "regulatory",
+          "sign": "unknown",
+          "context_id": "synthetic_context",
+          "source_id": "SYNTHETIC_TEST_ASSERTION_ONLY_B",
+          "feature_namespace": "synthetic",
+          "feature_id": "SYN_3_002",
+          "expected_direction": "unknown"
+        }
+      ],
+      "selection_history": []
+    }
+  ]
+}

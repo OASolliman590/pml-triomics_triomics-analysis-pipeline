@@ -220,15 +220,19 @@ target_investigation:
   enabled: true
   mode: assess
   targets:
-    - namespace: synthetic
-      id: SYNTH_FCN3_LIKE
+    - namespace: synthetic_protein
+      id: SYNTHETIC_TARGET_A
       taxon_id: 9606
       entity_type: protein
-  drug_ref: null
+    - namespace: synthetic_protein
+      id: SYNTHETIC_TARGET_B
+      taxon_id: 9606
+      entity_type: protein
+  drug_ref: synthetic_drug_request
   context_ref: synthetic_context
   universe_ref: null
-  external_evidence_file: null
-  mechanism_file: null
+  external_evidence_file: ../data/d-target/external-assays.json
+  mechanism_file: ../data/d-target/mechanisms.json
   protocol_ref: synthetic_target_protocol
   quantitative_method_ref: null
   required: false

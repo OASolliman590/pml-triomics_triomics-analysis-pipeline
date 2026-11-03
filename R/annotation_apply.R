@@ -181,7 +181,192 @@ triomics_d_measured_rows <- function(route_name, nominations, registry) {
   unname(rows)
 }
 
-triomics_d_target_slot <- function(investigation, config_path) {
+triomics_d_target_read_json_input <- function(path, config_path, key) {
+  if (!triomics_d_nonempty_string(path) || grepl("^(?:https?|ftp)://", path, ignore.case = TRUE)) {
+    triomics_d_abort("D_TARGET_INPUT_INVALID", "A target evidence input must be a local JSON file.", key)
+  }
+  config_root <- dirname(normalizePath(config_path, winslash = "/", mustWork = TRUE))
+  candidate <- if (grepl("^(?:[A-Za-z]:[/\\\\]|/)", path)) path else file.path(config_root, path)
+  if (!file.exists(candidate) || dir.exists(candidate)) {
+    return(list(status = "unavailable", value = NULL, sha256 = NULL))
+  }
+  components <- strsplit(candidate, "[/\\\\]+", perl = TRUE)[[1L]]
+  current <- if (grepl("^(?:[A-Za-z]:[/\\\\]|/)", candidate)) {
+    if (startsWith(candidate, "/")) "/" else paste0(components[[1L]], "/")
+  } else ""
+  walk <- if (grepl("^[A-Za-z]:[/\\\\]", candidate)) components[-1L] else components
+  for (component in walk[nzchar(walk)]) {
+    if (identical(component, ".")) next
+    if (identical(component, "..")) {
+      current <- dirname(current)
+      next
+    }
+    current <- if (identical(current, "/") || grepl("^[A-Za-z]:[/\\\\]$", current)) {
+      paste0(current, component)
+    } else file.path(current, component)
+    if (triomics_is_symlink(current)) {
+      triomics_d_abort("D_TARGET_INPUT_INVALID", "A target evidence path crosses a symbolic link.", key)
+    }
+  }
+  absolute <- normalizePath(candidate, winslash = "/", mustWork = TRUE)
+  text <- tryCatch(readChar(absolute, nchars = file.info(absolute)$size, useBytes = TRUE),
+                   error = function(error) NULL)
+  valid_json <- !is.null(text) && tryCatch({
+    triomics_d_ora_scan_unique_json_keys(text)
+    TRUE
+  }, error = function(error) FALSE)
+  if (!valid_json) {
+    triomics_d_abort("D_TARGET_INPUT_INVALID", "Target evidence JSON is malformed or repeats an object field.", key)
+  }
+  value <- tryCatch(jsonlite::fromJSON(text, simplifyVector = FALSE), error = function(error) NULL)
+  if (!is.list(value) || is.data.frame(value) || is.null(names(value)) || anyDuplicated(names(value))) {
+    triomics_d_abort("D_TARGET_INPUT_INVALID", "Target evidence JSON must contain one typed object.", key)
+  }
+  list(status = "available", value = value, sha256 = triomics_sha256(absolute))
+}
+
+triomics_d_target_identity_record <- function(value, key, allow_constructs = FALSE) {
+  fields <- if (allow_constructs) c("namespace", "id", "taxon_id", "entity_type", "constructs") else
+    c("namespace", "id", "taxon_id", "entity_type")
+  if (!is.list(value) || is.data.frame(value) || is.null(names(value)) || anyDuplicated(names(value)) ||
+      !setequal(names(value), fields) || !triomics_target_string(value$namespace) ||
+      !triomics_target_string(value$id) || !triomics_target_taxon(value$taxon_id) ||
+      !triomics_target_string(value$entity_type) ||
+      !value$entity_type %in% c("protein", "complex", "pathway", "other_declared")) {
+    triomics_d_abort("D_TARGET_IDENTITY_REQUIRED", "Target identity must be a typed namespace, ID, integer taxon and entity type.", key)
+  }
+  identity <- value[c("namespace", "id", "taxon_id", "entity_type")]
+  if (allow_constructs) {
+    if (!triomics_target_constructs(value$constructs)) {
+      triomics_d_abort("D_TARGET_IDENTITY_REQUIRED", "Target constructs must be unique declared identifiers.", key)
+    }
+    identity$constructs <- value$constructs
+  }
+  identity
+}
+
+triomics_d_target_mechanism_document <- function(input, investigation) {
+  if (!identical(input$status, "available")) return(list(status = "not_supplied", declarations = list(), drug = NULL))
+  document <- input$value
+  expected_fields <- c("format", "format_version", "protocol_ref", "context_ref", "drug_ref", "drug_identity", "targets")
+  if (!identical(sort(names(document), method = "radix"), sort(expected_fields, method = "radix")) ||
+      !identical(document$format, "triomics.target-mechanism") ||
+      !identical(document$format_version, "1.0") ||
+      !triomics_target_string(document$protocol_ref) ||
+      !triomics_target_string(document$context_ref) ||
+      !identical(document$protocol_ref, investigation$protocol_ref) ||
+      !identical(document$context_ref, investigation$context_ref) ||
+      !identical(document$drug_ref, investigation$drug_ref) ||
+      !is.list(document$targets) || is.data.frame(document$targets) || !is.null(names(document$targets))) {
+    triomics_d_abort("D_TARGET_INPUT_INVALID", "The mechanism file has an invalid version or mismatched protocol, drug or context reference.",
+                     "target_investigation.mechanism_file")
+  }
+  drug <- NULL
+  if (is.null(investigation$drug_ref)) {
+    if (!is.null(document$drug_identity)) {
+      triomics_d_abort("D_TARGET_INPUT_INVALID", "A drug identity cannot be declared without drug_ref.",
+                       "target_investigation.mechanism_file.drug_identity")
+    }
+  } else {
+    value <- document$drug_identity
+    if (!is.list(value) || is.data.frame(value) || is.null(names(value)) ||
+        anyDuplicated(names(value)) || !setequal(names(value), c("namespace", "id", "label")) ||
+        !triomics_target_string(value$namespace) || !triomics_target_string(value$id) ||
+        !triomics_target_string(value$label)) {
+      triomics_d_abort("D_TARGET_INPUT_INVALID", "drug_ref needs a typed drug namespace, ID and label in the mechanism file.",
+                       "target_investigation.mechanism_file.drug_identity")
+    }
+    drug <- list(namespace = value$namespace, drug_id = value$id, label = value$label)
+  }
+  declarations <- lapply(document$targets, function(declaration) {
+    allowed <- c("identity", "mechanism_class", "links", "selection_history")
+    if (!is.list(declaration) || is.data.frame(declaration) || is.null(names(declaration)) ||
+        anyDuplicated(names(declaration)) || any(!names(declaration) %in% allowed) ||
+        !all(c("identity", "mechanism_class", "links") %in% names(declaration))) {
+      triomics_d_abort("D_TARGET_INPUT_INVALID", "Each mechanism declaration must name a typed target, class and links.",
+                       "target_investigation.mechanism_file.targets")
+    }
+    identity <- triomics_d_target_identity_record(declaration$identity,
+                                                  "target_investigation.mechanism_file.targets.identity",
+                                                  allow_constructs = TRUE)
+    mechanism_class <- declaration$mechanism_class
+    if (!is.null(mechanism_class) && !triomics_target_string(mechanism_class)) {
+      triomics_d_abort("D_TARGET_INPUT_INVALID", "A mechanism class must be one string or null.",
+                       "target_investigation.mechanism_file.targets.mechanism_class")
+    }
+    links <- declaration$links
+    if (!is.list(links) || is.data.frame(links) || !is.null(names(links))) {
+      triomics_d_abort("D_TARGET_INPUT_INVALID", "Mechanism links must be an array.",
+                       "target_investigation.mechanism_file.targets.links")
+    }
+    links <- lapply(links, function(link) {
+      required <- c("link_id", "relation", "sign", "context_id", "source_id", "feature_namespace", "feature_id")
+      allowed_link_fields <- c(required, "expected_direction")
+      if (!is.list(link) || is.data.frame(link) || is.null(names(link)) || anyDuplicated(names(link)) ||
+          any(!names(link) %in% allowed_link_fields) || !all(required %in% names(link)) ||
+          !all(vapply(link[required], triomics_target_string, logical(1))) ||
+          (!is.null(link$expected_direction) && (!triomics_target_string(link$expected_direction) ||
+            !link$expected_direction %in% c("positive", "negative", "unknown", "unsigned")))) {
+        triomics_d_abort("D_TARGET_INPUT_INVALID", "A mechanism link has an invalid path or measured feature identity.",
+                         "target_investigation.mechanism_file.targets.links")
+      }
+      link
+    })
+    link_ids <- if (length(links)) vapply(links, `[[`, character(1), "link_id") else character()
+    if (anyDuplicated(link_ids)) {
+      triomics_d_abort("D_TARGET_INPUT_INVALID", "Mechanism link identifiers must be unique per target.",
+                       "target_investigation.mechanism_file.targets.links")
+    }
+    history <- declaration$selection_history %||% list()
+    if (!is.list(history) || is.data.frame(history) || !is.null(names(history))) {
+      triomics_d_abort("D_TARGET_INPUT_INVALID", "Target selection history must be an array.",
+                       "target_investigation.mechanism_file.targets.selection_history")
+    }
+    history <- lapply(history, function(selection) {
+      required_selection <- c("selection_id", "hypothesis_status", "selected_with_observations")
+      allowed_selection <- c(required_selection, "selection_source", "selection_evidence_ref")
+      if (!is.list(selection) || is.data.frame(selection) || is.null(names(selection)) ||
+          anyDuplicated(names(selection)) || any(!names(selection) %in% allowed_selection) ||
+          !all(required_selection %in% names(selection)) ||
+          !triomics_target_string(selection$selection_id) ||
+          !triomics_target_string(selection$hypothesis_status) ||
+          !selection$hypothesis_status %in% c("exploratory", "confirmed") ||
+          !is.logical(selection$selected_with_observations) ||
+          length(selection$selected_with_observations) != 1L || is.na(selection$selected_with_observations) ||
+          (!is.null(selection$selection_source) && !triomics_target_string(selection$selection_source)) ||
+          (!is.null(selection$selection_evidence_ref) && !triomics_target_string(selection$selection_evidence_ref))) {
+        triomics_d_abort("D_TARGET_INPUT_INVALID", "Target selection history has invalid typed fields.",
+                         "target_investigation.mechanism_file.targets.selection_history")
+      }
+      selection
+    })
+    selection_ids <- if (length(history)) vapply(history, `[[`, character(1), "selection_id") else character()
+    if (anyDuplicated(selection_ids)) {
+      triomics_d_abort("D_TARGET_INPUT_INVALID", "Target selection history identifiers must be unique.",
+                       "target_investigation.mechanism_file.targets.selection_history")
+    }
+    list(identity = identity, mechanism_class = mechanism_class, links = links,
+         selection_history = history)
+  })
+  list(status = "supplied", declarations = declarations, drug = drug)
+}
+
+triomics_d_target_selection_history <- function(target, declaration = NULL) {
+  history <- if (is.list(declaration)) declaration$selection_history else list()
+  if (!length(history)) {
+    return(list(list(selection_id = paste0("declared:", target$namespace, ":", target$id),
+                     hypothesis_status = "exploratory", selected_with_observations = TRUE,
+                     selection_source = "configuration_request", independent_confirmation = FALSE)))
+  }
+  lapply(history, function(selection) {
+    selection$recorded_hypothesis_status <- selection$hypothesis_status
+    selection$hypothesis_status <- "exploratory"
+    selection$independent_confirmation <- FALSE
+    selection
+  })
+}
+
+triomics_d_target_slot <- function(investigation, config_path, evidence = NULL) {
   investigation <- investigation %||% list()
   if (!isTRUE(investigation$enabled)) {
     return(list(status = "not_requested", reason_code = NULL, results = list()))
@@ -191,70 +376,100 @@ triomics_d_target_slot <- function(investigation, config_path) {
                      "The quantitative target route is not approved for this command.",
                      "target_investigation.quantitative_method_ref")
   }
-  if (identical(as.character(investigation$mode %||% ""), "discover")) {
-    triomics_d_abort("D_TARGET_UNIVERSE_REQUIRED",
-                     "This command does not build a discovery universe.", "target_investigation.mode")
+  if (identical(investigation$mode, "discover")) {
+    triomics_d_abort("D_TARGET_UNIVERSE_REQUIRED", "This command does not build a discovery universe.",
+                     "target_investigation.mode")
   }
-  if (!triomics_d_nonempty_string(investigation$context_ref) ||
-      !triomics_d_nonempty_string(investigation$protocol_ref)) {
+  if (!triomics_target_string(investigation$context_ref) || !triomics_target_string(investigation$protocol_ref)) {
     triomics_d_abort("D_TARGET_INPUT_INVALID",
                      "An enabled target investigation needs a context and a protocol reference.",
                      "target_investigation")
   }
-  if (triomics_d_sequence(investigation$targets) && !length(investigation$targets)) {
-    return(list(status = "unavailable", reason_code = "D_TARGET_EVIDENCE_ABSENT", results = list()))
-  }
-  evidence_file <- investigation$external_evidence_file
-  if (!triomics_d_nonempty_string(evidence_file)) {
-    return(list(status = "unavailable", reason_code = "D_TARGET_EVIDENCE_ABSENT", results = list()))
-  }
-  root <- dirname(normalizePath(config_path, winslash = "/", mustWork = TRUE))
-  resolved <- if (grepl("^(?:[A-Za-z]:[/\\\\]|/)", evidence_file)) evidence_file else file.path(root, evidence_file)
-  if (!file.exists(resolved) || dir.exists(resolved)) {
-    return(list(status = "unavailable", reason_code = "D_TARGET_EVIDENCE_ABSENT", results = list()))
-  }
-  records <- tryCatch(jsonlite::read_json(resolved, simplifyVector = FALSE),
-                      error = function(error) {
-                        triomics_d_abort("D_TARGET_INPUT_INVALID",
-                                         "The external target evidence file is not valid JSON.",
-                                         "target_investigation.external_evidence_file")
-                      })
-  if (is.list(records) && !is.null(records$records) && is.list(records$records)) records <- records$records
   targets <- investigation$targets %||% list()
-  if (!triomics_d_sequence(targets) || !length(targets)) {
-    triomics_d_abort("D_TARGET_INPUT_INVALID",
-                     "An enabled target investigation needs at least one declared target.",
-                     "target_investigation.targets")
+  if (!is.list(targets) || is.data.frame(targets) || !is.null(names(targets))) {
+    triomics_d_abort("D_TARGET_INPUT_INVALID", "Declared targets must be an array.", "target_investigation.targets")
   }
-  mode <- triomics_d_one_string(investigation$mode, "D_TARGET_INPUT_INVALID",
-                                "Target mode must be one value.", "target_investigation.mode")
-  results <- lapply(targets, function(target) {
+  if (!length(targets)) {
+    return(list(status = "unavailable", reason_code = "D_TARGET_EVIDENCE_ABSENT", results = list(),
+                input_provenance = list()))
+  }
+  identities <- lapply(targets, triomics_d_target_identity_record,
+                       key = "target_investigation.targets", allow_constructs = FALSE)
+  mode <- investigation$mode
+  if (!triomics_target_string(mode) || !mode %in% c("assess", "compare")) {
+    triomics_d_abort("D_TARGET_INPUT_INVALID", "Target mode must be assess or compare for this command.",
+                     "target_investigation.mode")
+  }
+  config_root <- dirname(normalizePath(config_path, winslash = "/", mustWork = TRUE))
+  mechanism_input <- if (triomics_d_nonempty_string(investigation$mechanism_file)) {
+    triomics_d_target_read_json_input(investigation$mechanism_file, config_path,
+                                      "target_investigation.mechanism_file")
+  } else list(status = "not_supplied", value = NULL, sha256 = NULL)
+  mechanism <- triomics_d_target_mechanism_document(mechanism_input, investigation)
+  external_input <- if (triomics_d_nonempty_string(investigation$external_evidence_file)) {
+    triomics_d_target_read_json_input(investigation$external_evidence_file, config_path,
+                                      "target_investigation.external_evidence_file")
+  } else list(status = "unavailable", value = NULL, sha256 = NULL)
+  external_records <- list()
+  if (identical(external_input$status, "available")) {
+    allowed <- c("format", "format_version", "records")
+    document <- external_input$value
+    if (!setequal(names(document), "records") &&
+        !(setequal(names(document), allowed) && identical(document$format, "triomics.external-target-evidence") &&
+          identical(document$format_version, "1.0"))) {
+      triomics_d_abort("D_TARGET_INPUT_INVALID", "External assay input must contain one records array and optional format version.",
+                       "target_investigation.external_evidence_file")
+    }
+    external_records <- document$records
+    if (!is.list(external_records) || is.data.frame(external_records) || !is.null(names(external_records))) {
+      triomics_d_abort("D_TARGET_INPUT_INVALID", "External assay records must be an array.",
+                       "target_investigation.external_evidence_file.records")
+    }
+  }
+  input_provenance <- list()
+  if (identical(mechanism_input$status, "available")) {
+    input_provenance[["mechanism_file"]] <- list(status = "consumed", sha256 = mechanism_input$sha256)
+  }
+  if (identical(external_input$status, "available")) {
+    input_provenance[["external_evidence_file"]] <- list(status = "consumed", sha256 = external_input$sha256)
+  }
+  results <- lapply(identities, function(identity) {
+    matches <- Filter(function(declaration) {
+      identical(declaration$identity$namespace, identity$namespace) &&
+        identical(declaration$identity$id, identity$id) &&
+        identical(as.numeric(declaration$identity$taxon_id), as.numeric(identity$taxon_id)) &&
+        identical(declaration$identity$entity_type, identity$entity_type)
+    }, mechanism$declarations)
+    declaration <- if (length(matches) == 1L) matches[[1L]] else NULL
+    request_identity <- identity
+    request_identity$constructs <- if (is.null(declaration)) list() else declaration$identity$constructs
+    selection <- triomics_d_target_selection_history(identity, declaration)
     request <- triomics_target_request(
-      identity = list(
-        namespace = triomics_d_one_string(target$namespace, "D_TARGET_IDENTITY_REQUIRED",
-                                          "A target needs a namespace.", "target_investigation.targets"),
-        id = triomics_d_one_string(target$id, "D_TARGET_IDENTITY_REQUIRED",
-                                   "A target needs an identifier.", "target_investigation.targets"),
-        taxon_id = as.numeric(target$taxon_id),
-        entity_type = triomics_d_one_string(target$entity_type, "D_TARGET_IDENTITY_REQUIRED",
-                                            "A target needs an entity type.", "target_investigation.targets"),
-        constructs = list()
-      ),
-      mode = mode,
-      selection = list(list(
-        selection_id = paste0("declared:", target$namespace, ":", target$id),
-        hypothesis_status = "exploratory",
-        selected_with_observations = FALSE
-      )),
-      context = list(context_id = as.character(investigation$context_ref),
-                     confirmation_protocol = as.character(investigation$protocol_ref)),
-      drug = NULL
+      identity = request_identity, mode = mode, selection = selection,
+      context = list(context_id = investigation$context_ref,
+                     confirmation_protocol = investigation$protocol_ref),
+      drug = mechanism$drug
     )
-    triomics_target_external_evidence(request, records)
+    mechanism_class <- if (length(matches) == 1L && triomics_target_string(declaration$mechanism_class)) {
+      declaration$mechanism_class
+    } else "unknown"
+    request$mechanism_class <- mechanism_class
+    links <- if (length(matches) == 1L) declaration$links else list()
+    observations <- if (identical(mechanism_class, "enzymatic") || identical(mechanism_class, "non_enzymatic")) {
+      if (is.null(evidence)) list() else triomics_target_resolve_observations(request, links, evidence)
+    } else list()
+    external <- triomics_target_external_evidence(request, external_records)
+    list(request = request, mechanism_status = if (length(matches) == 0L) "not_declared" else
+      if (length(matches) > 1L) "ambiguous" else if (mechanism_class %in% c("enzymatic", "non_enzymatic")) "assessable" else "unassessable",
+      mechanism_declarations = matches, links = links, observations = observations,
+      external_evidence = external, input_provenance = input_provenance)
   })
-  list(status = "recorded", reason_code = NULL, drug_ref = investigation$drug_ref %||% NULL,
-       mechanism_status = if (triomics_d_nonempty_string(investigation$mechanism_file)) "not_applied" else "not_supplied",
-       results = results)
+  status <- if (identical(external_input$status, "available")) "recorded" else "unavailable"
+  list(status = status,
+       reason_code = if (identical(status, "unavailable")) "D_TARGET_EVIDENCE_ABSENT" else NULL,
+       drug_ref = investigation$drug_ref %||% NULL,
+       mechanism_status = if (identical(mechanism$status, "supplied")) "supplied" else "not_supplied",
+       input_provenance = input_provenance, results = results)
 }
 
 triomics_d_resolve_resource_path <- function(path, config_root) {
@@ -901,7 +1116,7 @@ triomics_d_annotate_local_resources <- function(evidence, annotation, cache_dir,
     }
   }
   route_status <- triomics_d_route_status(status_routes, list(), predecessor, list())
-  target <- triomics_d_target_slot(target_investigation %||% list(), config_path)
+  target <- triomics_d_target_slot(target_investigation %||% list(), config_path, evidence = evidence)
   if (isTRUE((target_investigation %||% list())$required) && identical(target$status, "unavailable")) {
     route_status$exit_code <- 2L
   }

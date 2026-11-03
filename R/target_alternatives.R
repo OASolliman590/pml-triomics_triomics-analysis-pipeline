@@ -126,10 +126,37 @@ triomics_target_alternatives <- function(profiles) {
     }, logical(1)))
   if (!valid) triomics_d_abort('D_TARGET_INPUT_INVALID', 'At least two valid target profiles are required.', 'profiles')
 
-  same_axes <- all(vapply(profiles, function(p) {
-    setequal(p[['axes', exact = TRUE]], profiles[[1]][['axes', exact = TRUE]])
+  canonical_axes <- c('metabolic_multiomics_compatibility', 'functional_perturbation',
+                      'cellular_tissue_engagement', 'direct_binding')
+  has_axis_coverage <- all(vapply(profiles, function(profile) {
+    evidence_axes <- profile[['evidence_axes', exact = TRUE]]
+    is.list(evidence_axes) && identical(names(evidence_axes), canonical_axes) &&
+      all(vapply(evidence_axes, function(axis) is.list(axis) &&
+        triomics_target_string(axis$status) &&
+        is.list(axis$coverage), logical(1)))
   }, logical(1)))
-  measured <- all(vapply(profiles, function(p) p[['coverage', exact = TRUE]] == 'measured', logical(1)))
-  list(profiles = profiles, comparability = if (same_axes && measured) 'comparable' else 'noncomparable',
+  same_axes <- all(vapply(profiles, function(profile) {
+    setequal(profile[['axes', exact = TRUE]], profiles[[1]][['axes', exact = TRUE]])
+  }, logical(1)))
+  if (has_axis_coverage) {
+    coverage_signatures <- lapply(profiles, function(profile) {
+      lapply(profile[['evidence_axes', exact = TRUE]], function(axis) {
+        list(status = axis$status, coverage = axis$coverage)
+      })
+    })
+    same_coverage <- all(vapply(coverage_signatures[-1L], function(signature) {
+      identical(triomics_canonical_json(signature), triomics_canonical_json(coverage_signatures[[1L]]))
+    }, logical(1)))
+    each_has_comparable_evidence <- all(vapply(profiles, function(profile) {
+      statuses <- vapply(profile[['evidence_axes', exact = TRUE]], `[[`, character(1), 'status')
+      any(statuses == 'measured') && !any(statuses %in% c('unresolved', 'unassessable'))
+    }, logical(1)))
+    same_coverage <- same_coverage && each_has_comparable_evidence
+  } else {
+    measured <- all(vapply(profiles, function(profile) profile[['coverage', exact = TRUE]] == 'measured', logical(1)))
+    same_coverage <- measured
+  }
+  list(profiles = profiles, comparison_axes = if (has_axis_coverage) canonical_axes else NULL,
+       comparability = if (same_axes && same_coverage) 'comparable' else 'noncomparable',
        selected_target = NULL, tie_status = 'unresolved')
 }

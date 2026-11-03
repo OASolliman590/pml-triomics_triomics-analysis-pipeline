@@ -2,7 +2,7 @@ d10_code <- function(expr) tryCatch({ force(expr); NULL }, error = function(e) e
 d10_identity <- function() list(namespace='synthetic', id='SYNTH_FCN3_LIKE', taxon_id=9606L, entity_type='protein', constructs=list('a'))
 d10_selection <- function() list(list(selection_id='s1', hypothesis_status='exploratory', selected_with_observations=TRUE), list(selection_id='s2', hypothesis_status='confirmed', selected_with_observations=TRUE))
 d10_request <- function(identity=d10_identity()) triomics_target_request(identity, 'assess', d10_selection(), context=list(context_id='ctx', confirmation_protocol='protocol'))
-d10_row <- function(id, axis, endpoint, units, value=1) list(evidence_id=id, axis=axis, endpoint=endpoint, units=units, relation='=', source_id=paste0('source-',id), publication_group='paper', measured_by_pipeline=FALSE, value=value)
+d10_row <- function(id, axis, endpoint, units, value=1) list(evidence_id=id, axis=axis, endpoint=endpoint, units=units, relation='=', source_id=paste0('source-',id), publication_group='paper', measured_by_pipeline=FALSE, value=value, target_namespace='synthetic', target_id='SYNTH_FCN3_LIKE', target_entity_type='protein')
 
 testthat::test_that('AC1 records target context and qualified selection history', {
   x <- d10_request()
@@ -56,7 +56,7 @@ testthat::test_that('AC4 ambiguity, context and publication dependency survive',
   testthat::expect_identical(y$independent_group_count, 1L)
   a$taxon_id <- 10090L; b$context_id <- 'other'
   y <- triomics_target_external_evidence(d10_request(), list(a,b))
-  testthat::expect_equal(vapply(y$records, `[[`, '', 'attachment'), c('context_mismatch','context_mismatch'))
+  testthat::expect_equal(vapply(y$records, `[[`, '', 'attachment'), c('taxon_mismatch','context_mismatch'))
   b$evidence_id <- 'a'
   testthat::expect_identical(d10_code(triomics_target_external_evidence(d10_request(), list(a,b))), 'D_TARGET_INPUT_INVALID')
 })
@@ -94,7 +94,7 @@ testthat::test_that('repair 1 attaches only completely matching assay identity a
   missing_namespace <- row; missing_namespace$compound_namespace <- NULL
   testthat::expect_identical(attach(missing_namespace), 'unresolved')
   other_namespace <- row; other_namespace$compound_namespace <- 'other'
-  testthat::expect_identical(attach(other_namespace), 'unresolved')
+  testthat::expect_identical(attach(other_namespace), 'compound_mismatch')
   for (bad in list('', NA_character_, c('a', 'b'), 1)) {
     invalid <- row; invalid$compound_namespace <- bad
     testthat::expect_identical(d10_code(triomics_target_external_evidence(request, list(invalid))), 'D_TARGET_INPUT_INVALID')
@@ -102,14 +102,45 @@ testthat::test_that('repair 1 attaches only completely matching assay identity a
   missing <- row; missing$taxon_id <- NULL
   testthat::expect_identical(attach(missing), 'unresolved')
   other <- row; other$compound_id <- 'other'
-  testthat::expect_identical(attach(other), 'unresolved')
+  testthat::expect_identical(attach(other), 'compound_mismatch')
   other <- row; other$construct <- 'other'
-  testthat::expect_identical(attach(other), 'unresolved')
+  testthat::expect_identical(attach(other), 'construct_mismatch')
   mismatch <- row; mismatch$taxon_id <- 10090L; mismatch$compound_id <- NULL
-  testthat::expect_identical(attach(mismatch), 'context_mismatch')
+  testthat::expect_identical(attach(mismatch), 'taxon_mismatch')
   mismatch <- row; mismatch$context_id <- 'other'; mismatch$construct <- NULL
   testthat::expect_identical(attach(mismatch), 'context_mismatch')
   pathway <- d10_identity(); pathway$entity_type <- 'pathway'
   pathway_request <- triomics_target_request(pathway, 'assess', d10_selection(), list(context_id='ctx'), drug)
   testthat::expect_identical(attach(row, pathway_request), 'not_binding_target')
+})
+
+testthat::test_that('assay attachment requires the exact declared target identity', {
+  drug <- list(namespace='synthetic_drug', drug_id='drug1', label='Drug one')
+  request <- triomics_target_request(d10_identity(), 'assess', d10_selection(),
+                                    list(context_id='ctx'), drug)
+  row <- d10_row('b','binding','Kd','nM')
+  row$taxon_id <- 9606L; row$context_id <- 'ctx'; row$construct <- 'a'
+  row$compound_id <- 'drug1'; row$compound_namespace <- 'synthetic_drug'
+  attach <- function(value) triomics_target_external_evidence(request, list(value))$records[[1]]$attachment
+
+  testthat::expect_identical(attach(row), 'request')
+  wrong_target <- row; wrong_target$target_id <- 'DIFFERENT_TARGET_B'
+  testthat::expect_identical(attach(wrong_target), 'target_mismatch')
+  wrong_namespace <- row; wrong_namespace$target_namespace <- 'other_namespace'
+  testthat::expect_identical(attach(wrong_namespace), 'target_mismatch')
+  wrong_entity <- row; wrong_entity$target_entity_type <- 'complex'
+  testthat::expect_identical(attach(wrong_entity), 'target_mismatch')
+  missing_identity <- row; missing_identity$target_id <- NULL
+  testthat::expect_identical(attach(missing_identity), 'unresolved')
+})
+
+testthat::test_that('external binding_probability labels cannot masquerade as measured endpoints', {
+  drug <- list(namespace='synthetic_drug', drug_id='drug1', label='Drug one')
+  request <- triomics_target_request(d10_identity(), 'assess', d10_selection(),
+                                    list(context_id='ctx'), drug)
+  row <- d10_row('b','binding','binding_probability','fraction')
+  row$taxon_id <- 9606L; row$context_id <- 'ctx'
+  row$construct <- 'a'; row$compound_id <- 'drug1'; row$compound_namespace <- 'synthetic_drug'
+  testthat::expect_identical(d10_code(triomics_target_external_evidence(request, list(row))),
+                             'D_TARGET_AXIS_COLLAPSED')
 })

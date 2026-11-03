@@ -496,13 +496,16 @@ test_that('claim attributes take precedence over earlier invalid endpoint labels
   expect_identical(result$profiles[[2]]$observations, observation)
 })
 
-test_that('mechanism class is required and the synthetic target is nonenzymatic', {
+test_that('unknown mechanism class is unassessable and classes are never hardcoded by target ID', {
   request <- t11_request(); request$mechanism_class <- NULL
-  expect_identical(t11_code(triomics_target_profile(request, list(), list())), 'D_TARGET_INPUT_INVALID')
+  unknown <- triomics_target_profile(request, list(), list())
+  expect_identical(unknown$mechanism_status, 'unassessable')
   request$mechanism_class <- 'enzymatic'
-  expect_identical(t11_code(triomics_target_profile(request, list(), list())), 'D_TARGET_INPUT_INVALID')
+  declared <- triomics_target_profile(request, list(), list())
+  expect_identical(declared$mechanism_status, 'assessable')
+  expect_identical(declared$mechanism_class, 'enzymatic')
   request$mechanism_class <- 'unknown'
-  expect_identical(t11_code(triomics_target_profile(request, list(), list())), 'D_TARGET_INPUT_INVALID')
+  expect_identical(triomics_target_profile(request, list(), list())$mechanism_status, 'unassessable')
 })
 
 t11_investigation <- function(targets = list(list(namespace = 'synthetic', id = 'SYNTH_FCN3_LIKE', taxon_id = 9606, entity_type = 'protein'))) {
@@ -512,61 +515,76 @@ t11_investigation <- function(targets = list(list(namespace = 'synthetic', id = 
 }
 
 test_that('stage D records one unmeasured profile and does not choose an alternative', {
-  slot <- list(status = 'unavailable', reason_code = 'D_TARGET_EVIDENCE_ABSENT', results = list())
-  attached <- triomics_d_attach_target_profiles(slot, t11_investigation())
+  request <- triomics_target_request(
+    list(namespace = 'synthetic', id = 'SYNTHETIC_TARGET_A', taxon_id = 9606,
+         entity_type = 'protein', constructs = list()),
+    'assess', list(), context = list(context_id = 'synthetic_context'))
+  request$mechanism_class <- 'unknown'
+  assay_ledger <- list(request_id = request$request_id, records = list(), independent_group_count = 0L)
+  slot <- list(status = 'unavailable', reason_code = 'D_TARGET_EVIDENCE_ABSENT',
+               results = list(list(request = request, mechanism_status = 'not_declared',
+                                   mechanism_declarations = list(), links = list(), observations = list(),
+                                   external_evidence = assay_ledger, input_provenance = list())))
+  attached <- triomics_target_compose_assessment(slot, t11_investigation())
   expect_identical(attached$status, 'unavailable')
   expect_identical(attached$reason_code, 'D_TARGET_EVIDENCE_ABSENT')
   expect_identical(length(attached$profiles), 1L)
-  expect_identical(attached$profiles[[1]]$request$mechanism_class, 'non_enzymatic')
+  expect_identical(attached$profiles[[1]]$mechanism_status, 'unassessable')
+  expect_identical(attached$profiles[[1]]$request$mechanism_class, 'unknown')
   expect_null(attached$profiles[[1]]$request$drug)
   expect_identical(attached$profiles[[1]]$coverage, 'unmeasured')
   expect_identical(attached$profiles[[1]]$independent_count, 0L)
   expect_length(attached$profiles[[1]]$links, 0L)
+  expect_identical(names(attached$profiles[[1]]$evidence_axes), c(
+    'metabolic_multiomics_compatibility', 'functional_perturbation',
+    'cellular_tissue_engagement', 'direct_binding'))
   expect_null(attached$alternatives)
   expect_null(attached$selected_target)
   expect_null(attached$tie_status)
-  expect_identical(attached$mechanism_status, 'not_supplied')
+  expect_identical(attached$mechanism_status, 'unassessable')
 })
 
-test_that('stage D compares profiles only when two declared targets have a known class', {
+test_that('stage D keeps ordinary unknown targets unassessable and alternatives unranked', {
   targets <- list(
-    list(namespace = 'synthetic', id = 'SYNTH_FCN3_LIKE', taxon_id = 9606, entity_type = 'protein'),
-    list(namespace = 'synthetic', id = 'SYNTH_FCN3_LIKE', taxon_id = 9606, entity_type = 'protein')
+    list(namespace = 'synthetic', id = 'SYNTHETIC_TARGET_A', taxon_id = 9606, entity_type = 'protein'),
+    list(namespace = 'synthetic', id = 'SYNTHETIC_TARGET_B', taxon_id = 9606, entity_type = 'protein')
   )
-  attached <- triomics_d_attach_target_profiles(list(status = 'unavailable', reason_code = 'D_TARGET_EVIDENCE_ABSENT', results = list()), t11_investigation(targets))
+  records <- lapply(targets, function(target) {
+    request <- triomics_target_request(c(target, list(constructs = list())), 'assess', list(),
+                                       context = list(context_id = 'synthetic_context'))
+    request$mechanism_class <- 'unknown'
+    list(request = request, mechanism_status = 'not_declared', mechanism_declarations = list(),
+         links = list(), observations = list(),
+         external_evidence = list(request_id = request$request_id, records = list(), independent_group_count = 0L),
+         input_provenance = list())
+  })
+  attached <- triomics_target_compose_assessment(
+    list(status = 'unavailable', reason_code = 'D_TARGET_EVIDENCE_ABSENT', results = records),
+    t11_investigation(targets))
   expect_identical(length(attached$profiles), 2L)
   expect_identical(attached$alternatives$comparability, 'noncomparable')
   expect_null(attached$alternatives$selected_target)
   expect_identical(attached$alternatives$tie_status, 'unresolved')
   expect_null(attached$selected_target)
-  other <- t11_investigation(list(list(namespace = 'synthetic', id = 'OTHER_TARGET', taxon_id = 9606, entity_type = 'protein')))
-  skipped <- triomics_d_attach_target_profiles(list(), other)
-  expect_length(skipped$profiles, 0L)
-  expect_identical(skipped$skipped[[1]]$id, 'OTHER_TARGET')
-  expect_identical(skipped$skipped[[1]]$reason, 'mechanism_class_not_declared')
+  expect_identical(vapply(attached$profiles, `[[`, character(1), 'mechanism_status'),
+                   c('unassessable', 'unassessable'))
 })
 
-test_that('stage D does not invent profiles from an evidence or mechanism file', {
+test_that('profile composition does not accept unprepared file references as evidence', {
   slot <- list(status = 'recorded', reason_code = NULL, results = list(list(kept = TRUE)))
   evidence <- t11_investigation()
   evidence$external_evidence_file <- 'evidence.json'
-  kept <- triomics_d_attach_target_profiles(slot, evidence)
-  expect_null(kept$profiles)
-  expect_identical(kept$results[[1]]$kept, TRUE)
-  mechanism <- t11_investigation()
-  mechanism$mechanism_file <- 'mechanism.json'
-  kept <- triomics_d_attach_target_profiles(slot, mechanism)
-  expect_null(kept$profiles)
+  expect_identical(t11_code(triomics_target_compose_assessment(slot, evidence)), 'D_TARGET_INPUT_INVALID')
   disabled <- t11_investigation()
   disabled$enabled <- FALSE
-  kept <- triomics_d_attach_target_profiles(slot, disabled)
+  kept <- triomics_target_compose_assessment(slot, disabled)
   expect_null(kept$profiles)
 })
 
 test_that('stage D execution calls the target profile attachment', {
   expect_true(any(grepl('triomics_d_attach_target_profiles', deparse(body(triomics_execute_stage_d)), fixed = TRUE)))
-  expect_true(any(grepl('triomics_target_profile', deparse(body(triomics_d_attach_target_profiles)), fixed = TRUE)))
-  expect_true(any(grepl('triomics_target_alternatives', deparse(body(triomics_d_attach_target_profiles)), fixed = TRUE)))
+  expect_true(any(grepl('triomics_target_compose_assessment',
+                        deparse(body(triomics_d_attach_target_profiles)), fixed = TRUE)))
 })
 
 test_that('observations inherit the specific cited path', {

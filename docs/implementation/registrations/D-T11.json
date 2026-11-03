@@ -4,17 +4,25 @@
   "accepted": false,
   "namespace_edits": false,
   "local_files": [
+    "R/target_request.R",
+    "R/target_evidence.R",
     "R/target_assessment.R",
     "R/target_alternatives.R",
+    "R/annotation_apply.R",
     "tests/testthat/test-D-T11.R",
+    "tests/testthat/test-D-target-shared.R",
     "inst/examples/tickets/D-T11.yaml",
+    "inst/examples/data/d-target/",
     "docs/implementation/registrations/D-T11.json"
   ],
   "owned_functions": [
     "triomics_target_profile",
-    "triomics_target_alternatives"
+    "triomics_target_resolve_observations",
+    "triomics_target_alternatives",
+    "triomics_target_compose_assessment",
+    "triomics_target_merge_protein_metabolites"
   ],
-  "integration_request": "Sol: register the owned functions and integrate target profiles and alternatives at triomics_execute_stage_d in R/cli.R. triomics_execute_stage_d does not call them. triomics_target_request does not set mechanism_class; the profile caller must set it to non_enzymatic or enzymatic, and SYNTH_FCN3_LIKE is non_enzymatic.",
+  "integration_request": "Sol owns the shared R/cli.R publication adapter and package namespace. Target classes and profiles are now prepared from typed local declarations; no target ID has a hardcoded class. Keep this registration request unaccepted until independent review and packet acceptance.",
   "reconciliation_2026_11_03": {
     "snapshot": "b03cdef",
     "finding": "Prior capped cycle stays closed. Later commits 3b8792f/dd31dd6/5d34462 are present. Profile publication still special-cases SYNTH_FCN3_LIKE and bypasses supplied evidence/mechanism; new bounded cycle authorized."

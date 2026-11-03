@@ -1,0 +1,48 @@
+{
+  "format": "triomics.external-target-evidence",
+  "format_version": "1.0",
+  "records": [
+    {
+      "evidence_id": "synthetic_assay_A",
+      "axis": "binding",
+      "endpoint": "Kd",
+      "units": "nM",
+      "relation": "=",
+      "source_id": "SYNTHETIC_ASSAY_SOURCE_ONLY_A",
+      "publication_group": "synthetic_assay_publication_A",
+      "measured_by_pipeline": false,
+      "value": null,
+      "target_namespace": "synthetic_protein",
+      "target_id": "SYNTHETIC_TARGET_A",
+      "target_entity_type": "protein",
+      "taxon_id": 9606,
+      "context_id": "synthetic_context",
+      "construct": "synthetic_construct_A",
+      "compound_namespace": "synthetic_compound",
+      "compound_id": "SYNTHETIC_COMPOUND_A",
+      "assay": "synthetic software fixture assay",
+      "assay_limitations": "Synthetic test record only; no biological claim or measured affinity."
+    },
+    {
+      "evidence_id": "synthetic_assay_B",
+      "axis": "binding",
+      "endpoint": "Kd",
+      "units": "nM",
+      "relation": "=",
+      "source_id": "SYNTHETIC_ASSAY_SOURCE_ONLY_B",
+      "publication_group": "synthetic_assay_publication_B",
+      "measured_by_pipeline": false,
+      "value": null,
+      "target_namespace": "synthetic_protein",
+      "target_id": "SYNTHETIC_TARGET_B",
+      "target_entity_type": "protein",
+      "taxon_id": 9606,
+      "context_id": "synthetic_context",
+      "construct": "synthetic_construct_B",
+      "compound_namespace": "synthetic_compound",
+      "compound_id": "SYNTHETIC_COMPOUND_A",
+      "assay": "synthetic software fixture assay",
+      "assay_limitations": "Synthetic test record only; no biological claim or measured affinity."
+    }
+  ]
+}
