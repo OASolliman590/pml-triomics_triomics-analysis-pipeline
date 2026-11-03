@@ -46,15 +46,6 @@
       "attempt": 1,
       "repair_attempts": 0,
       "next_transition": "Sol_diff_review_and_independent_D04_verification"
-    },
-    {
-      "agent": "/root/m7_024_scope_astra",
-      "role": "read_only_D10_D11_scope_audit",
-      "model_requested": "gpt-6-astra",
-      "effort_requested": "low",
-      "effective_settings_exposed": false,
-      "base": "b1c7b4cb054b4f99af585e68470f53f212726409",
-      "next_transition": "scope_verdict_then_verified_dependencies_before_implementation"
     }
   ],
   "orchestration_control": {
@@ -5653,6 +5644,13 @@
       "candidate_commit": "cfed36a7a7fac470b95b729da43e209e94a57831",
       "review_ref": "docs/implementation/reviews/2026-11-03-m7-023-scope-astra.md",
       "disposition": "Design only. D05 worker remains gated on D04 verification."
+    },
+    {
+      "event": "m7_024_scope_pass",
+      "date": "2026-11-03",
+      "candidate_commit": "b1c7b4cb054b4f99af585e68470f53f212726409",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-024-scope-astra.md",
+      "disposition": "Scope only; implementation waits on D05/dependencies."
     }
   ],
   "packets": {
