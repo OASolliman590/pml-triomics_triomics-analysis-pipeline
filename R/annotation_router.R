@@ -532,13 +532,18 @@ triomics_d_validate_generation <- function(root, generation_id) {
                        paste0("generation.provenance.", stage, ".members"))
     }
   }
+  acceptance_limitations <- c(
+    "This publication is not a C-06, M7, or G7 acceptance receipt.",
+    "C-06 remains unaccepted."
+  )
   required_limitations <- c(
-    "C-06 remains unaccepted.",
     "C-07 controls remain not_run.",
     "C-09 remains unqualified and conditional."
   )
-  if (!all(required_limitations %in% unlist(manifest$limitations, use.names = FALSE))) {
-    triomics_d_abort("D_PROVENANCE_INVALID", "The D generation omits the preserved C-06/C-07/C-09 qualifications.",
+  published_limitations <- unlist(manifest$limitations, use.names = FALSE)
+  if (!any(acceptance_limitations %in% published_limitations) ||
+      !all(required_limitations %in% published_limitations)) {
+    triomics_d_abort("D_PROVENANCE_INVALID", "The D generation omits the required C-06/C-07/C-09 publication limitations.",
                      "generation.limitations")
   }
   member_fields <- c(
@@ -1008,7 +1013,7 @@ triomics_d_publish_evidence_generation <- function(result, output_root, config_s
     ),
     provenance = triomics_d_generation_provenance(provenance),
     limitations = list(
-      "C-06 remains unaccepted.",
+      "This publication is not a C-06, M7, or G7 acceptance receipt.",
       "C-07 controls remain not_run.",
       "C-09 remains unqualified and conditional.",
       "Disabled annotation routes do not make biological absence claims."
