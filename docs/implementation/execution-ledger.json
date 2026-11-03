@@ -47,6 +47,15 @@
       "attempt": 1,
       "repair_attempts": 0,
       "next_transition": "Sol_diff_review_then_focused_native_verification"
+    },
+    {
+      "agent": "/root/m7_022_scope_astra",
+      "role": "read_only_D04_scope_audit",
+      "model_requested": "gpt-6-astra",
+      "effort_requested": "low",
+      "effective_settings_exposed": false,
+      "base": "e59b515",
+      "next_transition": "scope_verdict_record_then_mapping_verification_before_any_D04_worker"
     }
   ],
   "orchestration_control": {
@@ -5588,6 +5597,13 @@
       "worker": "/root/m7_021_luna",
       "candidate_commit": "58e100922cf5da0d435edae9593d3b09da0c9e8e",
       "disposition": "Verified original Git identities and clean worker; same initial attempt resumed."
+    },
+    {
+      "event": "m7_022_scope_audit_dispatched",
+      "date": "2026-11-03",
+      "candidate_commit": "e59b515",
+      "agent": "/root/m7_022_scope_astra",
+      "disposition": "Read-only immutable design audit; implementation remains gated on independent D02/D03 verification."
     }
   ],
   "packets": {
