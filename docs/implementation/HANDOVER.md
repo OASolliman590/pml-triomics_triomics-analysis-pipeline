@@ -35,8 +35,10 @@ N/K/n/k10/3/1/1,p=q.3, measured universe/set-family and predecessor hashes verif
 Astra focused rereview passed. Two repairs consumed; old worker completed.
 Receipt: reviews/2026-11-03-m7-022-ora-sol-verification.md. D05 dependency released.
 D05 scope cfed36a has fresh Astra pass. Fresh M7-023 Luna /root/m7_023_luna
-is RUNNING at /tmp/triomics-m7-023-luna, base749cf67, initial attempt. Sol must
-review/apply any shared CLI proposal, then independently verify and obtain fresh
+is RUNNING at /tmp/triomics-m7-023-luna, base749cf67, initial attempt. Sol
+shared CLI patch2a022cb is committed in the worker tree after Sol nativeRED
+proved missing persisted route_status on c2f7439. Luna initial implementation
+continues. Sol must independently verify and obtain fresh
 implementation Astra pass before target consumers. Do not duplicate dispatch.
 M7-024 target scope b1c7b4c passed fresh Astra; implementation waits on D05.
 M7-025 discovery scope c3df0c1 passed fresh Astra; implementation waits on D11.

@@ -46,7 +46,8 @@
       "attempt": 1,
       "repair_attempts": 0,
       "next_transition": "Sol_shared_CLI_patch_review_then_candidate_diff_and_independent_proof",
-      "phase": "initial_RED"
+      "phase": "initial_resource_status_implementation",
+      "shared_sol_commit": "2a022cb"
     }
   ],
   "orchestration_control": {
@@ -5742,6 +5743,14 @@
       "agent": "/root/m7_023_luna",
       "scope_audit": "cfed36a7a7fac470b95b729da43e209e94a57831",
       "disposition": "D04 verified dependency satisfied; fresh isolated D05 worker. Sol owns shared patch. M7/G7 remain closed."
+    },
+    {
+      "event": "m7_023_shared_cli_red_and_repair",
+      "date": "2026-11-03",
+      "red_snapshot": "c2f7439d93eb204c0cae32d55845508ec3a35b23",
+      "red_ref": "docs/implementation/evidence/2026-11-03-m7-023/sol-red-publication-status.json",
+      "shared_sol_commit": "2a022cb",
+      "disposition": "NativeB/C/D0/0/0 but persisted route_status absent, assertionexit1. Sol-only CLI patch in worker tree persists final status for both branches and marks required target unavailability incomplete. Luna initial implementation continues; not integrated."
     }
   ],
   "packets": {

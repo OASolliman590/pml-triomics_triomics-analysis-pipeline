@@ -1,0 +1,13 @@
+{
+  "commit": "c2f7439d93eb204c0cae32d55845508ec3a35b23",
+  "native_exit_codes": [
+    0,
+    0,
+    0
+  ],
+  "generation_id": "39e2fc55b518b47e626ab6dd7418b02edc26e0f3ef0f02447084d250d3cd6f3b",
+  "assertion": "Published route_status.run_completeness must be complete for all-disabled D",
+  "route_status_present": false,
+  "actual": null,
+  "result": "FAIL"
+}
