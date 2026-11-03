@@ -1,0 +1,134 @@
+[
+  {
+    "ticket": "inst/examples/tickets/D-T02.yaml",
+    "commit": "f173f38b79b74ae048dad55fc5566b7e53e28eaa",
+    "root": "/private/tmp/triomics-stage-d-evidence/m7-021/sol-native/D-T02",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T02.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-021/sol-native/D-T02"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T02.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-021/sol-native/D-T02"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T02.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-021/sol-native/D-T02"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "route": "lipid_ontology",
+    "observation_count": 3,
+    "edge_count": 3,
+    "generation_id": "f4242ac3dc0b1830e0bda6ab26f77ea64320191b8f1bc798eceb9d7b644ff85e",
+    "four_b_predecessors_verified": true,
+    "files": {
+      "B/handoffs/e5d40283cf9a4d5e59d2acea3c8c49ceefd33990ade87f86cbd44da01dfaa5c7/bundle.json": "b2593387cb55a983569b89a2d8c21796512a9d419fb4c9249ead4c6eefef79b2",
+      "B/handoffs/e5d40283cf9a4d5e59d2acea3c8c49ceefd33990ade87f86cbd44da01dfaa5c7/bundle.envelope.json": "668faa822a855012eef093d78dfed84c13661c5ef16912765dc5c40325755965",
+      "B/handoffs/e5d40283cf9a4d5e59d2acea3c8c49ceefd33990ade87f86cbd44da01dfaa5c7/stage-handoff-provenance.json": "dc5debf36de71bbf9812f737d007980add654ac4c4a1b1550a0b6bc72c1b6025",
+      "B/handoffs/e5d40283cf9a4d5e59d2acea3c8c49ceefd33990ade87f86cbd44da01dfaa5c7/stage-handoff-provenance.envelope.json": "fdc7469391341dd0ee52cda82fe9f67a4d179848196ded4fafaceedbbc8470a8",
+      "D/stage-handoff-provenance.json": "7ba347757b2f3525cd235ebc700343dec7e3625b6215deee4ef1c061bf1dc4df",
+      "D/stage-handoff-provenance.envelope.json": "5f1895ebc31add29e13a3752b36d96bd4d3861d45c422cb11c22ae3feab574a1",
+      "D/generations/f4242ac3dc0b1830e0bda6ab26f77ea64320191b8f1bc798eceb9d7b644ff85e/generation-manifest.json": "f4242ac3dc0b1830e0bda6ab26f77ea64320191b8f1bc798eceb9d7b644ff85e",
+      "registries/current-D.json": "2fba1aa33a4590a09857e10386aaf9bb5058ae939509a7b3617b8b0fdaf3d6a2",
+      "D/generations/f4242ac3dc0b1830e0bda6ab26f77ea64320191b8f1bc798eceb9d7b644ff85e/evidence-routing.envelope.json": "83b8457b3cf81881581a3c843051dd1e66f8a2baee31a9ab9dc44d2199c09dea",
+      "D/generations/f4242ac3dc0b1830e0bda6ab26f77ea64320191b8f1bc798eceb9d7b644ff85e/evidence-routing.json": "8010c744db0acbecbf6f3c83697bf85227da4f71445b6a3fb5297ec52e49413c"
+    }
+  },
+  {
+    "ticket": "inst/examples/tickets/D-T03.yaml",
+    "commit": "f173f38b79b74ae048dad55fc5566b7e53e28eaa",
+    "root": "/private/tmp/triomics-stage-d-evidence/m7-021/sol-native/D-T03",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T03.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-021/sol-native/D-T03"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T03.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-021/sol-native/D-T03"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T03.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-021/sol-native/D-T03"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "route": "gene_reaction",
+    "observation_count": 3,
+    "edge_count": 3,
+    "generation_id": "4cce634f1f3c2f6732f0634de7b9c2211d4bf82f43912ec99383f3ee564a8108",
+    "four_b_predecessors_verified": true,
+    "files": {
+      "B/handoffs/d5216c305e81c8a1147360ad5558850b2396dd28396803df3c27b03aa61b9685/bundle.json": "ae21cb2cd9371c8ef8e943bcfd8fbe5bdcce17746694bba7856a8c40c2c40462",
+      "B/handoffs/d5216c305e81c8a1147360ad5558850b2396dd28396803df3c27b03aa61b9685/bundle.envelope.json": "2168ab9eea16b06d872708c739ae3d92d8e7cbd70c7614469a4b57ab2fbba6db",
+      "B/handoffs/d5216c305e81c8a1147360ad5558850b2396dd28396803df3c27b03aa61b9685/stage-handoff-provenance.json": "81239d9d71cd58f7bd50e9a45cf2a58c8fc79b115008f2919bc4cb50ef6a1d1b",
+      "B/handoffs/d5216c305e81c8a1147360ad5558850b2396dd28396803df3c27b03aa61b9685/stage-handoff-provenance.envelope.json": "61ebfd2a7baa0a0be0dcf8b9c500134b6c8ce25560e17c5ba7de06aa0efd29f2",
+      "D/stage-handoff-provenance.json": "71d0d40a9f02eb98263f65e901412a43d77a182833313a9c750d9a5a2424fc2f",
+      "D/stage-handoff-provenance.envelope.json": "ff2f9817e4a5380e718d9c03199d3f66ec73062ef5960bac170a53ee768104b6",
+      "D/generations/4cce634f1f3c2f6732f0634de7b9c2211d4bf82f43912ec99383f3ee564a8108/generation-manifest.json": "4cce634f1f3c2f6732f0634de7b9c2211d4bf82f43912ec99383f3ee564a8108",
+      "registries/current-D.json": "09aec473f011bfaac896ce9a5fcf07a8685e68c39c5eb493cb23b5d68eea9cba",
+      "D/generations/4cce634f1f3c2f6732f0634de7b9c2211d4bf82f43912ec99383f3ee564a8108/evidence-routing.envelope.json": "71de243e17b91637005df29ff884071591e07ee2758af62e5125946a7ef4ef7a",
+      "D/generations/4cce634f1f3c2f6732f0634de7b9c2211d4bf82f43912ec99383f3ee564a8108/evidence-routing.json": "f7c376d1d99bb028db4ff543976cf969fb0eaaad9444e53c81a026ee713dab23"
+    }
+  }
+]

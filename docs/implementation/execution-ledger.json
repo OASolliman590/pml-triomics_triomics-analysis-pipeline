@@ -34,23 +34,9 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_021_luna",
-      "role": "D02_D03_bounded_implementation",
-      "model_requested": "gpt-6-luna",
-      "effort_requested": "max",
-      "effective_settings_exposed": false,
-      "base": "4e8c1c2",
-      "candidate": "58e100922cf5da0d435edae9593d3b09da0c9e8e",
-      "worktree": "/tmp/triomics-m7-021-luna",
-      "attempt": 1,
-      "repair_attempts": 0,
-      "next_transition": "Sol_diff_review_then_focused_native_verification"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_021_luna_resumed_after_volume_recovery",
+    "status": "m7_021_verified_ready_to_integrate_then_D04",
     "last_reconciled": "2026-11-03",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -5602,6 +5588,28 @@
       "candidate_commit": "e59b515",
       "review_ref": "docs/implementation/reviews/2026-11-03-m7-022-scope-astra.md",
       "disposition": "Scope only. D04 worker still blocked on Sol D02/D03 verification."
+    },
+    {
+      "event": "m7_021_luna_returned",
+      "date": "2026-11-03",
+      "candidate_commit": "f173f38b79b74ae048dad55fc5566b7e53e28eaa",
+      "counts": {
+        "D-T02": 87,
+        "D-T03": 62,
+        "D-foundation-shared": 80,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0
+      },
+      "disposition": "Diff within allowlist. Sol independent focused and persistent-output native proof running before integration."
+    },
+    {
+      "event": "m7_021_sol_verification_pass",
+      "date": "2026-11-03",
+      "candidate_commit": "f173f38b79b74ae048dad55fc5566b7e53e28eaa",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-mapping-sol-verification.md",
+      "disposition": "229passes all other counts0; both native B/C/D exits0/0/0, complete hashes read back. Integrate then dispatch audited M7-022 D04. M7/G7 closed."
     }
   ],
   "packets": {
@@ -6084,6 +6092,13 @@
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
         "finding": "At b03cdef local annotation calls lipid mapper. Original missing-CLI blocker is stale; exact packet fixture, resource manifest and fresh publication evidence still required."
+      },
+      "current_revision_verification": {
+        "cycle": "M7-021",
+        "commit": "f173f38b79b74ae048dad55fc5566b7e53e28eaa",
+        "status": "verified_synthetic_native_for_D04_dependency",
+        "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-mapping-sol-verification.md",
+        "milestone_acceptance": false
       }
     },
     "D-T03": {
@@ -6099,6 +6114,13 @@
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
         "finding": "At b03cdef local annotation calls reaction mapper. Original missing-CLI blocker is stale; pinned fixture and fresh publication evidence still required."
+      },
+      "current_revision_verification": {
+        "cycle": "M7-021",
+        "commit": "f173f38b79b74ae048dad55fc5566b7e53e28eaa",
+        "status": "verified_synthetic_native_for_D04_dependency",
+        "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-mapping-sol-verification.md",
+        "milestone_acceptance": false
       }
     },
     "D-T04": {
