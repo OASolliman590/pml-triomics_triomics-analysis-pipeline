@@ -34,8 +34,9 @@ RUNNING in /tmp/triomics-m7-022-luna, clean base c78555a, initial attempt and
 zero parent repairs. Reconcile its result; parent reviews and independently
 verifies before integration. Do not duplicate dispatch. Brief /tmp/triomics-stage-d-evidence/m7-022/luna-brief.md.
 D05 scope cfed36a has fresh Astra pass, but implementation waits on D04.
-M7-024 target scope b1c7b4c is in fresh read-only audit /root/m7_024_scope_astra;
-its implementation waits on D05. D12 remains an unaudited external draft.
+M7-024 target scope b1c7b4c passed fresh Astra; implementation waits on D05.
+M7-025 discovery scope c3df0c1 passed fresh Astra; implementation waits on D11.
+D04 worker reproduced native RED atcf2e2b5 (B/C0, D2); implementation continues.
 M7/G7 closed; C07 not_run; C09 unqualified; no private data, AIU, fasting or push.
 
 ## Current checkpoint — 29 October 2026, D-T11 stopped at the repair limit

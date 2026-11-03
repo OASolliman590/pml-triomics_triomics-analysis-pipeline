@@ -45,7 +45,9 @@
       "worktree": "/tmp/triomics-m7-022-luna",
       "attempt": 1,
       "repair_attempts": 0,
-      "next_transition": "Sol_diff_review_and_independent_D04_verification"
+      "next_transition": "Sol_diff_review_and_independent_D04_verification",
+      "candidate": "cf2e2b5",
+      "phase": "RED_reproduced_implementation_running"
     }
   ],
   "orchestration_control": {
@@ -5651,6 +5653,21 @@
       "candidate_commit": "b1c7b4cb054b4f99af585e68470f53f212726409",
       "review_ref": "docs/implementation/reviews/2026-11-03-m7-024-scope-astra.md",
       "disposition": "Scope only; implementation waits on D05/dependencies."
+    },
+    {
+      "event": "m7_025_scope_pass",
+      "date": "2026-11-03",
+      "agent": "/root/m7_025_scope_astra",
+      "candidate_commit": "c3df0c1bfb9fd7aed8ace1965cb8fefbbfc6b6ed",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-025-scope-astra.md",
+      "disposition": "Read-only scope pass; D12 implementation prohibited until D11 verification."
+    },
+    {
+      "event": "m7_022_native_RED",
+      "date": "2026-11-03",
+      "agent": "/root/m7_022_luna",
+      "candidate_commit": "cf2e2b5",
+      "disposition": "Clean committed native RED: B/C exit0, D exit2; 2pass/1fail/1process warning/0skip. Implementation continuing."
     }
   ],
   "packets": {
