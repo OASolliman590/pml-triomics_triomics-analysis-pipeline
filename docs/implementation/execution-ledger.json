@@ -34,7 +34,21 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m7_024_luna",
+      "role": "bounded_D10_D11_implementation",
+      "model_requested": "gpt-6-luna",
+      "effort_requested": "max",
+      "effective_settings_exposed": false,
+      "base": "8246369b159691dcdd4aca547289b17a5a9ab270",
+      "worktree": "/tmp/triomics-m7-024-luna",
+      "attempt": 1,
+      "repair_attempts": 0,
+      "next_transition": "Sol_shared_patch_review_then_independent_target_proof_and_Astra",
+      "phase": "initial_RED"
+    }
+  ],
   "orchestration_control": {
     "status": "m7_022_luna_running",
     "last_reconciled": "2026-11-03",
@@ -5787,6 +5801,14 @@
       "integration_commit": "0e4041a",
       "review_ref": "docs/implementation/reviews/2026-11-03-m7-023-status-sol-verification.md",
       "disposition": "Sol11native command checks,40predecessor files and final memberhashes pass; Astra focusedpass. Target implementation dependency released. M7/G7 closed."
+    },
+    {
+      "event": "m7_024_luna_dispatched",
+      "date": "2026-11-03",
+      "base": "8246369b159691dcdd4aca547289b17a5a9ab270",
+      "agent": "/root/m7_024_luna",
+      "scope_audit": "b1c7b4cb054b4f99af585e68470f53f212726409",
+      "disposition": "D05 verified dependency satisfied; fresh isolated target worker. Sol owns shared CLI/exports/manual. M7/G7 closed."
     }
   ],
   "packets": {

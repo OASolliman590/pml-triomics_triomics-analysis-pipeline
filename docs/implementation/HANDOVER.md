@@ -41,7 +41,10 @@ assertions pass, one expectedD01stale-signwarning, nofail/skip. Sol independent
 memberhashes revalidated after true rejections. Receipt:
 reviews/2026-11-03-m7-023-status-sol-verification.md. Target dependency released.
 M7-024 target implementation. No worker edit or duplicate dispatch.
-M7-024 target scope b1c7b4c passed fresh Astra; implementation waits on D05.
+M7-024 target scope b1c7b4c passed fresh Astra. Fresh Luna /root/m7_024_luna
+is RUNNING in /tmp/triomics-m7-024-luna, base8246369, initial attempt. Sol reviews
+shared patches and final diff, independently verifies, then obtains fresh Astra
+implementation pass before D12. Do not duplicate dispatch.
 M7-025 discovery scope c3df0c1 passed fresh Astra; implementation waits on D11.
 M7-026 neutral generation governance wording scope
 60fa3b8 passed fresh Astra; implementation waits on D12 and precedes final gates.
