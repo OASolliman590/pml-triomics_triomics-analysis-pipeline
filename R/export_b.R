@@ -549,6 +549,258 @@ triomics_b07_prov_ordered_ids_sha256 <- function(values) {
   triomics_b07_prov_value_sha256(unname(as.list(values)))
 }
 
+triomics_b07_clinical_artifact_specs <- function() {
+  list(
+    clinical_associations = list(path = "B/clinical-associations.json", type = "clinical_association_results"),
+    clinical_longitudinal_associations = list(path = "B/clinical-longitudinal-associations.json", type = "clinical_association_results")
+  )
+}
+
+triomics_b07_clinical_string <- function(value) {
+  if (is.null(value)) return(NA_character_)
+  values <- as.character(unlist(value, use.names = FALSE))
+  if (length(values) != 1L || is.na(values[[1L]]) || !nzchar(values[[1L]])) return(NA_character_)
+  values[[1L]]
+}
+
+triomics_b07_clinical_integer <- function(value) {
+  if (is.null(value)) return(NA_integer_)
+  values <- suppressWarnings(as.integer(unlist(value, use.names = FALSE)))
+  if (length(values) != 1L || is.na(values[[1L]])) return(NA_integer_)
+  values[[1L]]
+}
+
+triomics_b07_clinical_values_equal <- function(left, right) {
+  if (is.null(left)) left <- list()
+  if (is.null(right)) right <- list()
+  identical(triomics_b07_prov_canonical_value(left), triomics_b07_prov_canonical_value(right))
+}
+
+triomics_b07_clinical_family_consistent <- function(payload, objective) {
+  family <- payload$family
+  members <- as.character(unlist(family$member_ids, use.names = FALSE))
+  results <- if (is.list(payload$results)) payload$results else list()
+  endpoints <- vapply(results, function(result) triomics_b07_clinical_string(result$endpoint_id), character(1L))
+  statuses <- vapply(results, function(result) triomics_b07_clinical_string(result$estimation_status), character(1L))
+  estimated <- sum(statuses == "estimated")
+  typed_dispositions <- vapply(seq_along(results), function(index) {
+    result <- results[[index]]
+    status <- statuses[[index]]
+    if (is.na(status)) return(FALSE)
+    if (identical(status, "estimated")) {
+      is.numeric(result$effect) && length(result$effect) == 1L && is.finite(result$effect) &&
+        is.numeric(result$p) && length(result$p) == 1L && is.finite(result$p) &&
+        result$p >= 0 && result$p <= 1 &&
+        !is.na(triomics_b07_clinical_string(result$effect_unit))
+    } else {
+      !is.na(triomics_b07_clinical_string(result$estimation_reason))
+    }
+  }, logical(1L))
+  current_endpoint <- triomics_b07_clinical_string(objective$endpoint_ref)
+  if (!is.list(family) || !length(members) || anyNA(members) || any(!nzchar(members)) ||
+      anyDuplicated(members) || length(results) != length(members) ||
+      anyNA(endpoints) || anyDuplicated(endpoints) ||
+      !identical(sort(members, method = "radix"), sort(endpoints, method = "radix")) ||
+      !current_endpoint %in% members || anyNA(statuses) || any(!typed_dispositions) ||
+      any(!statuses %in% c("estimated", "failed", "unavailable")) ||
+      !identical(triomics_b07_clinical_string(family$family_id),
+                 triomics_b07_clinical_string(objective$family_ref)) ||
+      !identical(triomics_b07_clinical_integer(family$n_declared), as.integer(length(members))) ||
+      !identical(triomics_b07_clinical_integer(family$n_estimated), as.integer(estimated)) ||
+      !identical(triomics_b07_clinical_integer(family$n_failed), as.integer(length(members) - estimated)) ||
+      !identical(triomics_b07_clinical_string(family$member_hash), triomics_b_hash(members))) {
+    return(FALSE)
+  }
+  TRUE
+}
+
+triomics_b07_clinical_b08_registry_matches <- function(registry, objective) {
+  population <- registry$population
+  same_string <- function(actual, expected) {
+    identical(triomics_b07_clinical_string(actual), triomics_b07_clinical_string(expected))
+  }
+  same_string(registry$objective_id, objective$objective_id) &&
+    same_string(registry$analysis_id, objective$analysis_id) &&
+    same_string(registry$mode, objective$mode) &&
+    same_string(registry$response_ref, objective$response_ref) &&
+    same_string(registry$predictor_ref, objective$predictor_ref) &&
+    same_string(registry$endpoint_ref, objective$endpoint_ref) &&
+    same_string(registry$time_window_ref, objective$time_window_ref) &&
+    same_string(population$visit_id, objective$time_window_ref) &&
+    same_string(registry$missingness_policy, objective$missingness_policy) &&
+    same_string(population$missingness_policy, objective$missingness_policy) &&
+    same_string(registry$family_ref, objective$family_ref) &&
+    same_string(registry$family_id, objective$family_ref) &&
+    same_string(registry$hypothesis_status, objective$hypothesis_status) &&
+    same_string(registry$protocol_ref, objective$protocol_ref) &&
+    triomics_b07_clinical_values_equal(registry$adjustments, objective$adjustments)
+}
+
+triomics_b07_clinical_b09_registry_matches <- function(registry, result, objective) {
+  audit <- result$objective_audit
+  if (!is.list(audit) || !triomics_b07_clinical_values_equal(registry, audit)) return(FALSE)
+  same_string <- function(actual, expected) {
+    identical(triomics_b07_clinical_string(actual), triomics_b07_clinical_string(expected))
+  }
+  time_window <- audit$time_window
+  mode <- triomics_b07_clinical_string(objective$mode)
+  expected_visits <- if (mode %in% c("within_person", "baseline_to_later")) {
+    as.character(c(objective$baseline_visit_ref, objective$later_visit_ref))
+  } else if (is.null(objective$time_window_ref)) {
+    character()
+  } else {
+    as.character(objective$time_window_ref)
+  }
+  actual_visits <- as.character(unlist(time_window$visit_ids, use.names = FALSE))
+  identical(audit$objective_id, objective$objective_id) &&
+    same_string(audit$mode, objective$mode) &&
+    identical(actual_visits, expected_visits) &&
+    triomics_b07_clinical_values_equal(time_window$baseline_visit, objective$baseline_visit_ref) &&
+    triomics_b07_clinical_values_equal(time_window$later_visit, objective$later_visit_ref) &&
+    triomics_b07_clinical_values_equal(time_window$declared_horizon_days, objective$horizon_days) &&
+    triomics_b07_clinical_values_equal(time_window$baseline_adjustment, objective$baseline_adjustment) &&
+    same_string(audit$missingness$policy, objective$missingness_policy)
+}
+
+triomics_b07_clinical_result_matches <- function(result, objective, lane) {
+  same_string <- function(actual, expected) {
+    identical(triomics_b07_clinical_string(actual), triomics_b07_clinical_string(expected))
+  }
+  if (!same_string(result$objective_id, objective$objective_id) ||
+      !same_string(result$analysis_id, objective$analysis_id) ||
+      !same_string(result$endpoint_id, objective$endpoint_ref) ||
+      !same_string(result$predictor_ref, objective$predictor_ref) ||
+      !same_string(result$mode, objective$mode) ||
+      !same_string(result$hypothesis_status, objective$hypothesis_status) ||
+      !triomics_b07_clinical_values_equal(result$adjustment, objective$adjustments) ||
+      !triomics_b07_clinical_string(result$estimation_status) %in% c("estimated", "failed", "unavailable") ||
+      !identical(triomics_b07_clinical_string(objective$response_ref),
+                 triomics_b07_clinical_string(objective$endpoint_ref))) return(FALSE)
+  if (identical(lane, "clinical_associations")) {
+    return(same_string(result$missingness_policy, objective$missingness_policy))
+  }
+  audit <- result$objective_audit
+  is.list(audit) &&
+    same_string(audit$missingness$policy, objective$missingness_policy) &&
+    triomics_b07_clinical_b09_registry_matches(audit, result, objective)
+}
+
+triomics_b07_clinical_output_accounting <- function(config, analysis_id, clinical_artifacts) {
+  clinical <- if (is.list(config$clinical)) config$clinical else list()
+  enabled <- isTRUE(clinical$enabled)
+  declared <- if (is.list(clinical$objectives)) clinical$objectives else list()
+  current <- Filter(function(objective) {
+    identical(triomics_b07_clinical_string(objective$analysis_id),
+              triomics_b07_clinical_string(analysis_id))
+  }, declared)
+  objective_ids <- vapply(current, function(objective) {
+    triomics_b07_clinical_string(objective$objective_id)
+  }, character(1L))
+  if (anyNA(objective_ids) || anyDuplicated(objective_ids)) {
+    triomics_b07_abort("B_EXPORT_INCOMPLETE", "Current-analysis clinical objective ids are missing or duplicated.",
+                       "clinical.objectives", "Keep one stable objective id per declared route in the current analysis.")
+  }
+  by_objective <- stats::setNames(vector("list", length(current)), objective_ids)
+  claims_by_objective <- stats::setNames(vector("list", length(current)), objective_ids)
+  for (objective in current) {
+    route_id <- triomics_b07_clinical_string(objective$objective_id)
+    claims <- list()
+    for (lane in names(triomics_b07_clinical_artifact_specs())) {
+      item <- clinical_artifacts[[lane]]
+      if (is.null(item)) next
+      payload <- item$payload
+      registry <- if (is.list(payload$objectives)) payload$objectives else list()
+      results <- if (is.list(payload$results)) payload$results else list()
+      registry_hits <- Filter(function(entry) {
+        identical(triomics_b07_clinical_string(entry$objective_id), route_id)
+      }, registry)
+      result_hits <- Filter(function(result) {
+        result_id <- result$objective_id
+        if (is.null(result_id) && is.list(result$objective_audit)) result_id <- result$objective_audit$objective_id
+        identical(triomics_b07_clinical_string(result_id), route_id)
+      }, results)
+      if (!length(registry_hits) && !length(result_hits)) next
+      evidence <- list(
+        artifact_id = as.character(item$envelope$artifact_id),
+        payload_sha256 = as.character(item$payload_sha256),
+        envelope_sha256 = as.character(item$envelope_sha256),
+        status = as.character(item$status),
+        result_sha256 = if (length(result_hits)) triomics_b07_prov_value_sha256(result_hits) else NULL
+      )
+      claims[[lane]] <- list(
+        registry = registry_hits, results = result_hits, item = item, evidence = evidence
+      )
+    }
+    claims_by_objective[[route_id]] <- claims
+    accounted <- FALSE
+    matched_status <- NULL
+    if (enabled && length(claims) == 1L) {
+      lane <- names(claims)[[1L]]
+      claim <- claims[[1L]]
+      payload <- claim$item$payload
+      result <- if (length(claim$results) == 1L) claim$results[[1L]] else NULL
+      registry <- if (length(claim$registry) == 1L) claim$registry[[1L]] else NULL
+      family_ok <- triomics_b07_clinical_family_consistent(payload, objective)
+      metadata_ok <- identical(triomics_b07_clinical_string(payload$analysis_id),
+                               triomics_b07_clinical_string(objective$analysis_id)) &&
+        is.list(result) && triomics_b07_clinical_result_matches(result, objective, lane) &&
+        family_ok
+      if (identical(lane, "clinical_associations")) {
+        metadata_ok <- metadata_ok && is.list(registry) &&
+          triomics_b07_clinical_b08_registry_matches(registry, objective)
+        if (metadata_ok) {
+          fitted <- identical(triomics_b07_clinical_string(result$estimation_status), "estimated")
+          expected_registry_status <- if (fitted) "fitted" else "unavailable"
+          metadata_ok <- identical(isTRUE(registry$fitted), fitted) &&
+            identical(triomics_b07_clinical_string(registry$status), expected_registry_status) &&
+            triomics_b07_clinical_values_equal(registry$reason, result$estimation_reason)
+        }
+      } else {
+        metadata_ok <- metadata_ok && is.list(registry) &&
+          triomics_b07_clinical_b09_registry_matches(registry, result, objective)
+      }
+      accounted <- isTRUE(metadata_ok)
+      if (accounted) matched_status <- as.character(claim$item$status)
+    }
+    by_objective[[route_id]] <- list(accounted = accounted, status = matched_status)
+  }
+  all_accounted <- !enabled || !length(current) || all(vapply(by_objective, function(item) {
+    isTRUE(item$accounted)
+  }, logical(1L)))
+  dispositions <- list()
+  for (lane in names(triomics_b07_clinical_artifact_specs())) {
+    if (lane %in% names(clinical_artifacts)) {
+      item <- clinical_artifacts[[lane]]
+      dispositions[[lane]] <- list(status = item$status, reason = NULL)
+    } else if (!enabled) {
+      dispositions[[lane]] <- list(status = "not_requested", reason = "clinical_disabled")
+    } else if (!length(current)) {
+      dispositions[[lane]] <- list(status = "not_requested", reason = "no_declared_objectives_for_analysis")
+    } else if (all_accounted) {
+      dispositions[[lane]] <- list(status = "not_requested", reason = "objectives_accounted_for_by_present_artifacts")
+    } else {
+      dispositions[[lane]] <- list(status = "unavailable", reason = "requested_artifact_missing")
+    }
+  }
+  list(enabled = enabled, objectives = current, by_objective = by_objective,
+       claims_by_objective = claims_by_objective, all_accounted = all_accounted,
+       dispositions = dispositions)
+}
+
+triomics_b07_clinical_route_analysis <- function(config, objective, current_analysis) {
+  route_analysis_id <- triomics_b07_clinical_string(objective$analysis_id)
+  if (identical(route_analysis_id, current_analysis$analysis_id)) return(current_analysis)
+  analysis_specs <- if (is.list(config$analyses)) config$analyses else list()
+  hits <- Filter(function(analysis) {
+    identical(triomics_b07_clinical_string(analysis$analysis_id), route_analysis_id)
+  }, analysis_specs)
+  if (length(hits) != 1L) {
+    triomics_b07_abort("B_EXPORT_INCOMPLETE", "A clinical route for another analysis has no unique declared analysis contract.",
+                       route_analysis_id, "Keep each clinical route bound to one validated analysis declaration.")
+  }
+  hits[[1L]]
+}
+
 triomics_b07_prov_entity_id <- function(role, scope_key) {
   paste0(role, "-", substr(triomics_b07_prov_value_sha256(scope_key), 1L, 20L))
 }
@@ -1501,60 +1753,76 @@ triomics_b07_build_provenance_profile <- function(context, config_sha256, bundle
     generated_by_activity_id = export_activity,
     derived_from_entity_ids = c(block_results_entity_id, predecessor_payload_entity_id)
   ))
+  clinical_accounting <- triomics_b07_clinical_output_accounting(
+    context$config, analysis_id, clinical_artifacts
+  )
   declared_routes <- list()
   route_entity_ids <- character()
   objectives <- if (is.list(context$config$clinical)) context$config$clinical$objectives else list()
   if (is.null(objectives)) objectives <- list()
+  declared_objective_ids <- vapply(objectives, function(objective) {
+    triomics_b07_clinical_string(objective$objective_id)
+  }, character(1L))
+  if (anyNA(declared_objective_ids) || anyDuplicated(declared_objective_ids)) {
+    triomics_b07_abort("B_EXPORT_INCOMPLETE", "Declared clinical route ids are missing or duplicated.",
+                       "clinical.objectives", "Keep one stable objective id per declared route.")
+  }
   for (objective in objectives) {
-    route_id <- if (is.null(objective$objective_id)) NULL else as.character(objective$objective_id)
-    if (!triomics_b_string(route_id)) {
-      triomics_b07_abort("B_EXPORT_INCOMPLETE", "A declared clinical objective has no stable route id.",
-                         "clinical.objectives", "Keep the route ids declared in the validated producer configuration.")
+    route_id <- triomics_b07_clinical_string(objective$objective_id)
+    route_analysis <- triomics_b07_clinical_route_analysis(context$config, objective,
+                                                           context$analysis_spec)
+    route_analysis_id <- as.character(route_analysis$analysis_id)
+    route_preparation_context_id <- as.character(route_analysis$preparation_context_id)
+    route_representation_id <- if (identical(route_analysis_id, analysis_id)) {
+      representation_id
+    } else {
+      as.character(route_analysis$design$representation)
     }
+    route_requested <- isTRUE(context$config$clinical$enabled) &&
+      identical(route_analysis_id, analysis_id)
+    route_accounting <- clinical_accounting$by_objective[[route_id]]
+    route_claims <- clinical_accounting$claims_by_objective[[route_id]]
     matched_artifacts <- list()
-    route_status <- if (!isTRUE(context$config$clinical$enabled)) "not_requested" else "unavailable"
-    for (name in names(clinical_artifacts)) {
-      item <- clinical_artifacts[[name]]
-      result_hits <- if (is.list(item$payload$results)) Filter(function(result) {
-        identical(as.character(result$objective_id), route_id)
-      }, item$payload$results) else list()
-      if (length(result_hits)) {
-        matched_artifacts[[name]] <- list(
-          artifact_id = as.character(item$envelope$artifact_id),
-          payload_sha256 = as.character(item$payload_sha256),
-          envelope_sha256 = as.character(item$envelope_sha256),
-          status = as.character(item$status),
-          result_sha256 = triomics_b07_prov_value_sha256(result_hits)
-        )
-        route_status <- as.character(item$status)
-      }
+    if (route_requested && is.list(route_claims) && length(route_claims)) {
+      matched_artifacts <- lapply(route_claims, `[[`, "evidence")
+    }
+    route_status <- if (!route_requested) {
+      "not_requested"
+    } else if (is.list(route_accounting) && isTRUE(route_accounting$accounted)) {
+      as.character(route_accounting$status)
+    } else {
+      "unavailable"
     }
     disposition_value <- list(
       route_id = route_id,
       route_kind = "clinical",
-      analysis_id = analysis_id,
-      preparation_context_id = preparation_context_id,
-      representation_id = representation_id,
+      analysis_id = route_analysis_id,
+      preparation_context_id = route_preparation_context_id,
+      representation_id = route_representation_id,
       objective_declaration = objective,
-      requested = isTRUE(context$config$clinical$enabled),
+      requested = route_requested,
       status = route_status,
       evidence = matched_artifacts,
-      declared_artifact_dispositions = clinical_dispositions
+      declared_artifact_dispositions = clinical_accounting$dispositions
     )
     declared_routes[[length(declared_routes) + 1L]] <- list(
-      route_id = route_id, route_kind = "clinical", analysis_id = analysis_id,
-      preparation_context_id = preparation_context_id,
-      representation_id = representation_id, method_id = NULL
+      route_id = route_id, route_kind = "clinical", analysis_id = route_analysis_id,
+      preparation_context_id = route_preparation_context_id,
+      representation_id = route_representation_id, method_id = NULL
     )
     route_entity_id <- triomics_b07_prov_entity_id("clinical_evidence", route_id)
     route_entity_ids <- c(route_entity_ids, route_entity_id)
     add_entity(triomics_b07_prov_embedded_entity(
       "clinical_evidence", route_entity_id, disposition_value, study_id,
-      triomics_b07_prov_scope(study_id, analysis_id = analysis_id,
-                              preparation_context_id = preparation_context_id,
-                              representation_id = representation_id, route_id = route_id),
+      triomics_b07_prov_scope(study_id, analysis_id = route_analysis_id,
+                              preparation_context_id = route_preparation_context_id,
+                              representation_id = route_representation_id, route_id = route_id),
       generated_by_activity_id = export_activity,
-      derived_from_entity_ids = c(source_entity_ids, block_results_entity_id),
+      derived_from_entity_ids = if (route_requested) {
+        c(source_entity_ids, block_results_entity_id)
+      } else {
+        source_entity_ids
+      },
       schema_uri = "urn:triomics:clinical-route-evidence:1.0"
     ))
   }
@@ -2373,12 +2641,8 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
   accounting <- triomics_b07_row_accounting(entries)
   method_dispositions <- triomics_b07_method_dispositions(block_results)
 
-  clinical_specs <- list(
-    clinical_associations = list(path = "B/clinical-associations.json", type = "clinical_association_results"),
-    clinical_longitudinal_associations = list(path = "B/clinical-longitudinal-associations.json", type = "clinical_association_results")
-  )
+  clinical_specs <- triomics_b07_clinical_artifact_specs()
   clinical_artifacts <- list()
-  clinical_dispositions <- list()
   clinical_enabled <- is.list(config$clinical) && isTRUE(config$clinical$enabled)
   for (name in names(clinical_specs)) {
     spec <- clinical_specs[[name]]
@@ -2387,16 +2651,15 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
       study_id = as.character(block_results$study_id), optional = TRUE
     )
     if (is.null(item)) {
-      if (clinical_enabled) {
-        clinical_dispositions[[name]] <- list(status = "unavailable", reason = "requested_artifact_missing")
-      } else {
-        clinical_dispositions[[name]] <- list(status = "not_requested", reason = "clinical_disabled")
-      }
+      next
     } else {
       clinical_artifacts[[name]] <- item
-      clinical_dispositions[[name]] <- list(status = item$status, reason = NULL)
     }
   }
+  clinical_accounting <- triomics_b07_clinical_output_accounting(
+    config, as.character(block_results$analysis_id), clinical_artifacts
+  )
+  clinical_dispositions <- clinical_accounting$dispositions
 
   matrix_bindings <- if (is.null(matrices)) list() else triomics_b07_matrix_bindings(block_results, matrices)
   if (length(matrix_bindings)) matrices <- matrices[names(matrix_bindings)]
@@ -2591,9 +2854,10 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
       "stage_c_matrices", "unavailable", root, reason_codes = matrix_reason
     )
   }
-  missing_requested_clinical <- clinical_enabled && any(vapply(clinical_dispositions, function(item) {
+  missing_requested_clinical <- clinical_enabled && !isTRUE(clinical_accounting$all_accounted)
+  missing_requested_clinical_artifact <- any(vapply(clinical_dispositions, function(item) {
     identical(item$status, "unavailable") && identical(item$reason, "requested_artifact_missing")
-  }, logical(1)))
+  }, logical(1L)))
   bundle_status <- if (is.null(matrix_artifact) || !matrix_source_verified || missing_requested_clinical) {
     "partial"
   } else {
@@ -2655,7 +2919,8 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
     inputs = bundle_inputs,
     reason_codes = c(
       if (identical(bundle_status, "partial") && is.null(matrix_artifact)) matrix_reason,
-      if (missing_requested_clinical) "requested_clinical_artifact_missing"
+      if (missing_requested_clinical_artifact) "requested_clinical_artifact_missing",
+      if (missing_requested_clinical && !missing_requested_clinical_artifact) "clinical_objective_evidence_unproven"
     ),
     privacy_class = as.character(artifact$envelope$privacy_class)
   )
@@ -2687,7 +2952,13 @@ triomics_b07_export_handoff <- function(output, config_path, matrices = NULL,
   }
   acceptance <- list(
     list(id = "AC1", verdict = if (!missing_requested_clinical) "pass" else "blocked",
-         detail = if (!missing_requested_clinical) "Public block rows, full family membership, nomination lineage and clinical dispositions are indexed." else "A requested clinical artifact has no verified payload/envelope."),
+         detail = if (!missing_requested_clinical) {
+           "Public block rows, full family membership, nomination lineage and clinical dispositions are indexed."
+         } else if (missing_requested_clinical_artifact) {
+           "A requested clinical artifact has no verified payload/envelope."
+         } else {
+           "A declared clinical objective lacks unique, consistent registry, result and family evidence."
+         }),
     list(id = "AC2", verdict = if (ac2_pass) "pass" else "blocked",
          detail = if (ac2_pass) "Independent, paired and unavailable-method Stage B smoke outputs were verified." else "Both independent and paired CLI outputs plus a visible unavailable-method output are required."),
     list(id = "AC3", verdict = if (!is.null(matrix_artifact) && matrix_source_verified) "pass" else "blocked",

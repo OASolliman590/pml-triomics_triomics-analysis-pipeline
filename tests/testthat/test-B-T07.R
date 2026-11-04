@@ -92,9 +92,17 @@ t07_write_artifact <- function(payload, path, artifact_type, artifact_id,
 }
 
 t07_public_bundle_fixture <- function(root, include_clinical = TRUE, ticket = "B-T08.yaml",
-                                      privacy_class = "synthetic") {
+                                      privacy_class = "synthetic",
+                                      clinical_objectives = NULL,
+                                      clinical_enabled = NULL) {
   config_path <- t07_ticket(ticket)
   config <- triomics_read_config(config_path)
+  if (!is.null(clinical_objectives) || !is.null(clinical_enabled)) {
+    if (!is.null(clinical_objectives)) config$clinical$objectives <- clinical_objectives
+    if (!is.null(clinical_enabled)) config$clinical$enabled <- clinical_enabled
+    yaml::write_yaml(unclass(config), config_path)
+    config <- triomics_read_config(config_path)
+  }
   config_sha256 <- attr(config, "config_sha256")
   source_sha256 <- triomics_hash_text("public synthetic B-T07 source")
   inputs <- list(list(artifact_id = "synthetic-measurement-source", sha256 = source_sha256))
@@ -244,6 +252,56 @@ t07_public_bundle_fixture <- function(root, include_clinical = TRUE, ticket = "B
        block_results_path = block_path, clinical_paths = clinical_paths)
 }
 
+t07_clinical_objective <- function(config_path, objective_id = "glucose_between",
+                                   analysis_id = "synthetic_primary",
+                                   endpoint_id = "synthetic_score",
+                                   predictor_id = "glucose", mode = "between_person",
+                                   family_id = "clinical_between_family") {
+  config <- triomics_read_config(config_path)
+  objective <- config$clinical$objectives[[1L]]
+  objective$objective_id <- objective_id
+  objective$analysis_id <- analysis_id
+  objective$mode <- mode
+  objective$response_ref <- endpoint_id
+  objective$endpoint_ref <- endpoint_id
+  objective$predictor_ref <- predictor_id
+  objective$family_ref <- family_id
+  objective
+}
+
+t07_write_producer_shaped_clinical_artifact <- function(fixture, lane, objectives,
+                                                        family_member_ids = NULL,
+                                                        mutate = NULL) {
+  config <- triomics_read_config(fixture$config_path)
+  analysis_id <- as.character(objectives[[1L]]$analysis_id)
+  endpoint_ids <- vapply(objectives, function(objective) as.character(objective$endpoint_ref), character(1))
+  members <- if (is.null(family_member_ids)) endpoint_ids else as.character(family_member_ids)
+  spec <- list(
+    objectives = objectives,
+    family = list(family_id = as.character(objectives[[1L]]$family_ref),
+                  member_ids = members, claim_scope = "synthetic_clinical_associations")
+  )
+  endpoint_bundle <- list(study_id = config$study_id, analysis_id = analysis_id, endpoints = list())
+  clinical_view <- list(study_id = config$study_id, dictionary = list(), observations = list(), links = list())
+  if (identical(lane, "clinical_associations")) {
+    fit <- triomics_associate_endpoints(endpoint_bundle, clinical_view, spec)
+    payload <- c(list(schema_version = "2.0"), triomics_clinical_association_export(fit))
+    path <- file.path(dirname(fixture$block_results_path), "clinical-associations.json")
+    artifact_id <- "b-t08-clinical-associations"
+  } else if (identical(lane, "clinical_longitudinal_associations")) {
+    fit <- triomics_associate_longitudinal_endpoints(endpoint_bundle, clinical_view, spec)
+    payload <- c(list(schema_version = "2.0"), fit)
+    path <- file.path(dirname(fixture$block_results_path), "clinical-longitudinal-associations.json")
+    artifact_id <- "b-t09-longitudinal-clinical-associations"
+  } else {
+    stop("Unknown clinical artifact lane: ", lane, call. = FALSE)
+  }
+  if (!is.null(mutate)) payload <- mutate(payload)
+  t07_write_artifact(payload, path, "clinical_association_results", artifact_id,
+                     fixture$config_sha256, as.character(fit$status))
+  path
+}
+
 t07_attempt_export <- function(...) {
   tryCatch(triomics_b07_export_handoff(...), error = function(error) error)
 }
@@ -314,7 +372,8 @@ t07_cli_smoke <- function(config_path, output) {
 
 testthat::test_that("B-T07 AC1 exports full public bundles without dropping failures or lineage", {
   root <- t07_test_root("ac1")
-  fixture <- t07_public_bundle_fixture(root, include_clinical = TRUE)
+  fixture <- t07_public_bundle_fixture(root, include_clinical = TRUE,
+                                       clinical_objectives = list())
   exported <- t07_expect_export_success(t07_attempt_export(
     output = root, config_path = fixture$config_path,
     command = "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/B-T07.yaml --stage B --output artifacts/acceptance/B-T07"
@@ -337,8 +396,240 @@ testthat::test_that("B-T07 AC1 exports full public bundles without dropping fail
                              "valid_q_and_reporting_effect_threshold")
   testthat::expect_identical(bundle$clinical_associations$status, "partial")
   testthat::expect_identical(bundle$clinical_longitudinal_associations$status, "unavailable")
+  testthat::expect_identical(t07_read_json_safe(fixture$clinical_paths[[1L]])$family$n_declared, 2L)
+  testthat::expect_identical(t07_read_json_safe(fixture$clinical_paths[[1L]])$family$n_failed, 1L)
   testthat::expect_identical(t07_item(bundle$method_dispositions)$status, "unavailable")
   testthat::expect_identical(t07_acceptance_verdict(receipt, "AC1"), "pass")
+})
+
+testthat::test_that("B-T07 accounts for a between-person objective supplied by B09 without requesting absent B08", {
+  root <- t07_test_root("clinical-b09-between-person")
+  fixture <- t07_public_bundle_fixture(root, include_clinical = FALSE)
+  objective <- t07_clinical_objective(fixture$config_path)
+  t07_write_producer_shaped_clinical_artifact(
+    fixture, "clinical_longitudinal_associations", list(objective)
+  )
+
+  exported <- t07_expect_export_success(t07_attempt_export(
+    output = root, config_path = fixture$config_path
+  ), "B09 between-person accounting")
+  bundle <- t07_read_json_safe(exported$bundle_path)
+
+  testthat::expect_identical(bundle$clinical_longitudinal_associations$status, "unavailable")
+  testthat::expect_identical(bundle$clinical_associations$status, "not_requested")
+  testthat::expect_identical(bundle$clinical_associations$reason,
+                             "objectives_accounted_for_by_present_artifacts")
+})
+
+testthat::test_that("B-T07 keeps absent clinical outputs not requested for disabled or objective-free analyses", {
+  no_objectives_root <- t07_test_root("clinical-no-objectives")
+  no_objectives <- t07_public_bundle_fixture(
+    no_objectives_root, include_clinical = FALSE, clinical_objectives = list()
+  )
+  no_objectives_export <- t07_expect_export_success(t07_attempt_export(
+    output = no_objectives_root, config_path = no_objectives$config_path
+  ), "enabled clinical dictionary without objectives")
+  no_objectives_bundle <- t07_read_json_safe(no_objectives_export$bundle_path)
+  testthat::expect_identical(no_objectives_bundle$clinical_associations$status, "not_requested")
+  testthat::expect_identical(no_objectives_bundle$clinical_longitudinal_associations$status,
+                             "not_requested")
+
+  base_config <- t07_ticket("B-T08.yaml")
+  objective <- t07_clinical_objective(base_config)
+  disabled_root <- t07_test_root("clinical-disabled")
+  disabled <- t07_public_bundle_fixture(
+    disabled_root, include_clinical = FALSE, clinical_objectives = list(objective),
+    clinical_enabled = FALSE
+  )
+  disabled_export <- t07_expect_export_success(t07_attempt_export(
+    output = disabled_root, config_path = disabled$config_path
+  ), "disabled clinical route")
+  disabled_bundle <- t07_read_json_safe(disabled_export$bundle_path)
+  testthat::expect_identical(disabled_bundle$clinical_associations$reason, "clinical_disabled")
+  testthat::expect_identical(disabled_bundle$clinical_longitudinal_associations$reason,
+                             "clinical_disabled")
+})
+
+testthat::test_that("B-T07 does not request a clinical artifact for objectives in another analysis", {
+  base_config <- t07_ticket("B-T08.yaml")
+  objective <- t07_clinical_objective(base_config, analysis_id = "other_analysis")
+  root <- t07_test_root("clinical-other-analysis")
+  fixture <- t07_public_bundle_fixture(
+    root, include_clinical = FALSE, clinical_objectives = list(objective)
+  )
+  exported <- t07_expect_export_success(t07_attempt_export(
+    output = root, config_path = fixture$config_path
+  ), "clinical objective for another analysis")
+  bundle <- t07_read_json_safe(exported$bundle_path)
+  receipt <- t07_read_json_safe(exported$acceptance_record_path)
+  config_after <- triomics_read_config(fixture$config_path)
+
+  testthat::expect_identical(bundle$clinical_associations$status, "not_requested")
+  testthat::expect_identical(bundle$clinical_longitudinal_associations$status, "not_requested")
+  testthat::expect_identical(config_after$clinical$objectives[[1L]]$analysis_id, "other_analysis")
+  testthat::expect_identical(t07_acceptance_verdict(receipt, "AC1"), "pass")
+})
+
+testthat::test_that("B-T07 preserves B08 family accounting when an absent B09 sibling is unrequested", {
+  root <- t07_test_root("clinical-b08-between-person")
+  fixture <- t07_public_bundle_fixture(root, include_clinical = FALSE)
+  objective <- t07_clinical_objective(fixture$config_path)
+  members <- c(objective$endpoint_ref, "SYN-UNREQUESTED-FAMILY-MEMBER")
+  path <- t07_write_producer_shaped_clinical_artifact(
+    fixture, "clinical_associations", list(objective), family_member_ids = members
+  )
+  clinical_payload <- t07_read_json_safe(path)
+
+  exported <- t07_expect_export_success(t07_attempt_export(
+    output = root, config_path = fixture$config_path
+  ), "B08 between-person accounting")
+  bundle <- t07_read_json_safe(exported$bundle_path)
+  family <- clinical_payload$family
+  result_statuses <- vapply(clinical_payload$results, function(row) row$estimation_status,
+                            character(1L))
+
+  testthat::expect_identical(bundle$clinical_associations$status, "unavailable")
+  testthat::expect_identical(bundle$clinical_longitudinal_associations$status, "not_requested")
+  testthat::expect_identical(family$n_declared, 2L)
+  testthat::expect_identical(family$n_failed, 2L)
+  testthat::expect_identical(unlist(family$member_ids, use.names = FALSE), members)
+  testthat::expect_identical(sum(result_statuses %in% c("failed", "unavailable")), 2L)
+})
+
+testthat::test_that("B-T07 checks B09 timing and missingness policy before accounting an objective", {
+  objective <- t07_clinical_objective(t07_ticket("B-T08.yaml"))
+  contradictions <- list(
+    time_policy = function(payload) {
+      payload$objectives[[1L]]$time_window$visit_ids <- list("V2")
+      payload$results[[1L]]$objective_audit$time_window$visit_ids <- list("V2")
+      payload
+    },
+    missingness = function(payload) {
+      payload$objectives[[1L]]$missingness$policy <- "qualified_method"
+      payload$results[[1L]]$objective_audit$missingness$policy <- "qualified_method"
+      payload
+    }
+  )
+  for (case_name in names(contradictions)) {
+    root <- t07_test_root(paste0("clinical-b09-contradiction-", case_name))
+    fixture <- t07_public_bundle_fixture(
+      root, include_clinical = FALSE, clinical_objectives = list(objective)
+    )
+    t07_write_producer_shaped_clinical_artifact(
+      fixture, "clinical_longitudinal_associations", list(objective),
+      mutate = contradictions[[case_name]]
+    )
+    exported <- t07_expect_export_success(t07_attempt_export(
+      output = root, config_path = fixture$config_path
+    ), paste("B09 policy contradiction", case_name))
+    bundle <- t07_read_json_safe(exported$bundle_path)
+    receipt <- t07_read_json_safe(exported$acceptance_record_path)
+    testthat::expect_identical(bundle$clinical_associations$reason,
+                               "requested_artifact_missing", info = case_name)
+    testthat::expect_identical(bundle$status, "partial", info = case_name)
+    testthat::expect_identical(t07_acceptance_verdict(receipt, "AC1"), "blocked", info = case_name)
+  }
+})
+
+testthat::test_that("B-T07 leaves a missing clinical sibling blocking when one of several objectives is unaccounted", {
+  root <- t07_test_root("clinical-mixed-objectives-missing")
+  first <- t07_clinical_objective(t07_ticket("B-T08.yaml"), objective_id = "glucose_between")
+  second <- t07_clinical_objective(t07_ticket("B-T08.yaml"), objective_id = "glucose_between_second",
+                                  endpoint_id = "second_score")
+  second$family_ref <- first$family_ref
+  fixture <- t07_public_bundle_fixture(
+    root, include_clinical = FALSE, clinical_objectives = list(first, second)
+  )
+  t07_write_producer_shaped_clinical_artifact(fixture, "clinical_associations", list(first))
+
+  exported <- t07_expect_export_success(t07_attempt_export(
+    output = root, config_path = fixture$config_path
+  ), "mixed clinical objectives with missing evidence")
+  bundle <- t07_read_json_safe(exported$bundle_path)
+  receipt <- t07_read_json_safe(exported$acceptance_record_path)
+
+  testthat::expect_identical(bundle$clinical_associations$status, "unavailable")
+  testthat::expect_identical(bundle$clinical_longitudinal_associations$status, "unavailable")
+  testthat::expect_identical(bundle$clinical_longitudinal_associations$reason,
+                             "requested_artifact_missing")
+  testthat::expect_identical(bundle$status, "partial")
+  testthat::expect_identical(t07_acceptance_verdict(receipt, "AC1"), "blocked")
+})
+
+testthat::test_that("B-T07 refuses duplicate and contradictory clinical objective coverage", {
+  base_config <- t07_ticket("B-T08.yaml")
+  objective <- t07_clinical_objective(base_config)
+  contradictory <- list(
+    analysis = function(payload) { payload$analysis_id <- "other_analysis"; payload },
+    objective = function(payload) { payload$results[[1L]]$objective_id <- "other_objective"; payload },
+    mode = function(payload) { payload$objectives[[1L]]$mode <- "within_person"; payload },
+    endpoint = function(payload) { payload$results[[1L]]$endpoint_id <- "other_score"; payload },
+    predictor = function(payload) { payload$results[[1L]]$predictor_ref <- "age"; payload },
+    adjustments = function(payload) { payload$results[[1L]]$adjustment <- list(); payload },
+    time_policy = function(payload) { payload$objectives[[1L]]$population$visit_id <- "V2"; payload },
+    missingness = function(payload) { payload$objectives[[1L]]$missingness_policy <- "qualified_method"; payload },
+    family = function(payload) { payload$family$family_id <- "contradictory_family"; payload },
+    duplicate_result = function(payload) { payload$results <- c(payload$results, payload$results[1L]); payload },
+    duplicate_registry = function(payload) { payload$objectives <- c(payload$objectives, payload$objectives[1L]); payload }
+  )
+  for (case_name in names(contradictory)) {
+    root <- t07_test_root(paste0("clinical-contradiction-", case_name))
+    fixture <- t07_public_bundle_fixture(
+      root, include_clinical = FALSE, clinical_objectives = list(objective)
+    )
+    t07_write_producer_shaped_clinical_artifact(
+      fixture, "clinical_associations", list(objective), mutate = contradictory[[case_name]]
+    )
+    exported <- t07_expect_export_success(t07_attempt_export(
+      output = root, config_path = fixture$config_path
+    ), paste("contradictory clinical evidence", case_name))
+    bundle <- t07_read_json_safe(exported$bundle_path)
+    receipt <- t07_read_json_safe(exported$acceptance_record_path)
+    testthat::expect_identical(bundle$clinical_longitudinal_associations$reason,
+                               "requested_artifact_missing", info = case_name)
+    testthat::expect_identical(bundle$status, "partial", info = case_name)
+    testthat::expect_identical(t07_acceptance_verdict(receipt, "AC1"), "blocked", info = case_name)
+  }
+
+  duplicate_root <- t07_test_root("clinical-duplicate-coverage")
+  duplicate_fixture <- t07_public_bundle_fixture(
+    duplicate_root, include_clinical = FALSE, clinical_objectives = list(objective)
+  )
+  t07_write_producer_shaped_clinical_artifact(
+    duplicate_fixture, "clinical_associations", list(objective)
+  )
+  t07_write_producer_shaped_clinical_artifact(
+    duplicate_fixture, "clinical_longitudinal_associations", list(objective)
+  )
+  duplicate_export <- t07_expect_export_success(t07_attempt_export(
+    output = duplicate_root, config_path = duplicate_fixture$config_path
+  ), "duplicate clinical coverage")
+  duplicate_bundle <- t07_read_json_safe(duplicate_export$bundle_path)
+  duplicate_receipt <- t07_read_json_safe(duplicate_export$acceptance_record_path)
+  testthat::expect_identical(duplicate_bundle$clinical_associations$status, "unavailable")
+  testthat::expect_identical(duplicate_bundle$clinical_longitudinal_associations$status, "unavailable")
+  testthat::expect_identical(duplicate_bundle$status, "partial")
+  testthat::expect_identical(t07_acceptance_verdict(duplicate_receipt, "AC1"), "blocked")
+})
+
+testthat::test_that("B-T07 rejects a tampered clinical result before objective accounting", {
+  root <- t07_test_root("clinical-tampered-payload")
+  fixture <- t07_public_bundle_fixture(root, include_clinical = FALSE)
+  objective <- t07_clinical_objective(fixture$config_path)
+  path <- t07_write_producer_shaped_clinical_artifact(
+    fixture, "clinical_associations", list(objective)
+  )
+  payload <- t07_read_json_safe(path)
+  payload$results[[1L]]$predictor_ref <- "tampered_predictor"
+  writeLines(as.character(jsonlite::toJSON(
+    payload, auto_unbox = TRUE, null = "null", digits = NA, pretty = TRUE, force = TRUE
+  )), path, useBytes = TRUE)
+
+  attempted <- t07_attempt_export(output = root, config_path = fixture$config_path)
+  testthat::expect_s3_class(attempted, "triomics_error")
+  if (inherits(attempted, "triomics_error")) {
+    testthat::expect_identical(attempted$code, "B_EXPORT_INCOMPLETE")
+  }
 })
 
 testthat::test_that("B-T07 AC2 independent and paired CLI smokes retain signed effects and unavailable methods", {
