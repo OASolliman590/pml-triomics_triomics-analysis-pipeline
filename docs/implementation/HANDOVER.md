@@ -2,7 +2,7 @@
 
 Immutable P2 `fabd6fa6bb7ae06f6eea1276517010829ea4cde1`: source7554/0fail/0error/15warn/0skip; installed7527/0fail/15warn/0skip; exact Status: OK. All54 native B/C/D commands and independent semantic/applicability readbacks passed. Driver80211 completed exit0; no test process active. Read reviews/2026-11-04-m7-final-rereview-gates.md and adjacent evidence. Do not rerun source/native/package gates or Luna.
 
-Next: fresh Terra-max DOC-M7 from these receipts, then the single remaining fresh read-only Astra-low focused final rereview of P2 plus immutable documentation records. Sol alone may accept current C06, required D packets and M7/release G7 after that pass. All current acceptance flags remain false; M7/G7 unreleased. All run-owned workers so far completed. Conditional D06/D07/D14 no credit; C07 not_run; C09 unqualified. Private data, push, AIU, fasting and M8/M9 are outside this run.
+Fresh Terra `/root/m7_doc_rereview_terra` is active from records c213ecc in managed m7-doc-rereview-terra, editing only milestones/M7.md. Join its documentation commit, inspect/cherry-pick, then freeze records for the single remaining fresh read-only Astra-low focused final rereview of P2. Sol alone may accept current C06, required D packets and M7/release G7 after that pass. All current acceptance flags remain false; M7/G7 unreleased. All run-owned workers so far completed. Conditional D06/D07/D14 no credit; C07 not_run; C09 unqualified. Private data, push, AIU, fasting and M8/M9 are outside this run.
 
 Literal resume: reconcile external orchestration.json, dispatch/finish DOC-M7 only once, freeze its record commit, then run the one focused final Astra rereview. Preserve P2 and all failed/capped history. Do not recreate completed gates.
 
