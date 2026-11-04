@@ -72,12 +72,13 @@ M7/G7 closed; C07 not_run; C09 unqualified; no private data, AIU, fasting or pus
 Initial final source gate48ca0c4 failed:7280pass3fail1error15namedwarnings0skip.
 Read reviews/2026-11-04-m7-initial-full-source-gate.md. Failures are B05 temporary
 CLI YAML written inside source tree, and obsolete protein-metabolite synthetic-ID
-shortcut expectation. M7-028 test-only scope is frozen for fresh Astra audit;
-do not implement until audit_pass yes. Then one fresh Luna-max two-file worker,
+shortcut expectation. M7-028 scope77834fd passed fresh Astra; receiptf5c1567. Fresh
+/root/m7_028_luna is active in /tmp/triomics-m7-028-luna fromf5c1567, initial
+attempt, zero repairs. Onlytest-B-T05.R/test-protein-metabolite.R. Next clean
+Solcommit before focused/native GREEN,
 Sol review, focused tests and fresh implementation Astra before repeated final
 same-snapshot source/native/archive/Terra/milestone-Astra/Sol gates. Keep failed
-48ca0c4 archive/logs intact; package check did not run. No worker/test process is
-active. M7/G7 closed; conditional3blocked, C07unrun/C09unqualified, no private/push.
+48ca0c4 archive/logs intact; package check did not run. No parent test process is active; the named Luna worker is active. M7/G7 closed; conditional3blocked, C07unrun/C09unqualified, no private/push.
 
 ## Historical checkpoint — 29 October 2026, D-T11 stopped at the repair limit
 
