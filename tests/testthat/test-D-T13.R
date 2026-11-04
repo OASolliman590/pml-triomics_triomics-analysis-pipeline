@@ -402,6 +402,74 @@ testthat::test_that("association-only producer profiles retain safe study and co
                              "unknown_not_recorded")
   testthat::expect_identical(unknown_section$tables$external_evidence$construction_lineage, "")
   testthat::expect_identical(unknown_section$tables$external_evidence$source_selection_history, "")
+
+  prose_association <- association
+  prose_association$construction_lineage <-
+    "Clinical score constructed from the same molecular features"
+  prose_association$source_selection_history <-
+    "All eligible features; no outcome selection"
+  prose_profile <- triomics_target_profile(
+    request, list(), list(),
+    external_evidence = triomics_target_external_evidence(request, list(prose_association))
+  )
+  testthat::expect_identical(prose_profile$external_associations[[1L]]$construction_lineage,
+                             "Clinical score constructed from the same molecular features")
+  testthat::expect_identical(prose_profile$external_associations[[1L]]$source_selection_history,
+                             "All eligible features; no outcome selection")
+  prose_section <- triomics_report_optional_sections(
+    list(d = list(target_investigation = d13_recorded_target(list(prose_profile)))),
+    list(target_enabled = TRUE, clinical_enabled = FALSE)
+  )$targets
+  testthat::expect_identical(
+    prose_section$tables$external_evidence$construction_lineage,
+    "Clinical score constructed from the same molecular features"
+  )
+  testthat::expect_identical(
+    prose_section$tables$external_evidence$source_selection_history,
+    "All eligible features; no outcome selection"
+  )
+
+  unsafe_association <- association
+  unsafe_association$construction_lineage <-
+    "Clinical score constructed from /private/association/source.tsv"
+  unsafe_association$source_selection_history <-
+    "<script>PRIVATE_SELECTION_NOTE</script>"
+  unsafe_profile <- triomics_target_profile(
+    request, list(), list(),
+    external_evidence = triomics_target_external_evidence(request, list(unsafe_association))
+  )
+  unsafe_section <- triomics_report_optional_sections(
+    list(d = list(target_investigation = d13_recorded_target(list(unsafe_profile)))),
+    list(target_enabled = TRUE, clinical_enabled = FALSE)
+  )$targets
+  unsafe_rows <- unsafe_section$tables$external_evidence
+  testthat::expect_identical(unsafe_rows$construction_lineage, "")
+  testthat::expect_identical(unsafe_rows$source_selection_history, "")
+  testthat::expect_false(grepl(
+    "PRIVATE_SELECTION_NOTE|/private/association/source.tsv|<script",
+    paste(unlist(unsafe_rows, use.names = FALSE), collapse = " ")
+  ))
+
+  nested_association <- association
+  nested_association$construction_lineage <- list(
+    subject_ids = list("PRIVATE_SUBJECT_13")
+  )
+  nested_association$source_selection_history <- "PRIVATE_SUBJECT_13"
+  nested_profile <- triomics_target_profile(
+    request, list(), list(),
+    external_evidence = triomics_target_external_evidence(request, list(nested_association))
+  )
+  nested_section <- triomics_report_optional_sections(
+    list(d = list(target_investigation = d13_recorded_target(list(nested_profile)))),
+    list(target_enabled = TRUE, clinical_enabled = FALSE)
+  )$targets
+  nested_rows <- nested_section$tables$external_evidence
+  testthat::expect_identical(nested_rows$construction_lineage, "")
+  testthat::expect_identical(nested_rows$source_selection_history, "")
+  testthat::expect_false(grepl(
+    "PRIVATE_SUBJECT_13",
+    paste(unlist(nested_rows, use.names = FALSE), collapse = " ")
+  ))
 })
 
 testthat::test_that("mismatched null assays retain source applicability and safe serialized evidence", {
