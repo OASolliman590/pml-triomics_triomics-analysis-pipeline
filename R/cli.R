@@ -2730,7 +2730,8 @@ triomics_execute_stage_d <- function(config_path, output) {
   if (length(requests) > 0L && !local_annotation) {
     triomics_d_abort("D_ROUTE_INVALID", "Annotation requests must be a list.", "annotation.requests")
   }
-  routing_metadata <- if (local_annotation) {
+  investigation <- config$target_investigation %||% list()
+  routing_metadata <- if (local_annotation || isTRUE(investigation$enabled)) {
     triomics_d_routing_metadata(config, config_path, ingested$feature_registry)
   } else {
     NULL
@@ -2754,7 +2755,6 @@ triomics_execute_stage_d <- function(config_path, output) {
     routed <- triomics_annotate_evidence(evidence, annotation)
     route_status <- triomics_d_cli_route_status(evidence)
   }
-  investigation <- config$target_investigation %||% list()
   if (isTRUE(investigation$enabled)) {
     if (is.null(routed$target_investigation)) {
       routed$target_investigation <- triomics_d_target_slot(investigation, config_path, evidence = evidence)
