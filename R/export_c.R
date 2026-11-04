@@ -906,6 +906,40 @@ triomics_c06_build_handoff <- function(primary_nominations = NULL,
   )
 }
 
+triomics_c06_attach_primary_nominations <- function(handoff, primary_nominations) {
+  if (!is.list(handoff) || !identical(handoff$artifact_type, "stage_c_d_handoff") ||
+      !is.list(handoff$integration_evidence) || !is.list(handoff$evaluation_evidence)) {
+    triomics_integration_abort(
+      "C_EXPORT_INPUT_INVALID", "A validated saved C integration handoff is required for B nomination attachment.",
+      key = "handoff"
+    )
+  }
+  primary <- triomics_c06_primary_branch(
+    primary_nominations, as.character(handoff$study_id), as.character(handoff$analysis_id)
+  )
+  context <- triomics_c06_handoff_context(
+    handoff$integration_evidence, primary, handoff$evaluation_evidence
+  )
+  integration_nominations <- triomics_c06_integration_nominations(handoff$integration_evidence)
+  source_runs <- lapply(handoff$integration_evidence, function(evidence) {
+    list(status = evidence$status, native_artifact_ref = evidence$native_artifact_ref %||% NULL)
+  })
+  handoff$preparation_context_id <- context$preparation_context_id
+  handoff$representation_id <- context$representation_id
+  handoff$nomination_branches$primary_statistics <- primary
+  handoff$nomination_branches$integration_selection <- list(
+    status = if (length(integration_nominations)) "complete" else "unavailable",
+    source_artifact_ids = lapply(handoff$integration_evidence, `[[`, "integration_id"),
+    nominations = integration_nominations
+  )
+  handoff$nominations <- c(primary$nominations, integration_nominations)
+  handoff$nomination_status <- if (length(handoff$nominations)) "complete" else "unavailable"
+  handoff$lineage_inputs <- triomics_c06_handoff_lineage(
+    primary, source_runs, handoff$evaluation_evidence
+  )
+  handoff
+}
+
 triomics_c06_provenance_abort <- function(code, message, key = "provenance") {
   triomics_integration_abort(code, message, key = key)
 }

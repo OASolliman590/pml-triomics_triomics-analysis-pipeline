@@ -1180,6 +1180,30 @@ testthat::test_that("nested C-02 Stage-C evaluation retains verified units for i
     file.path(output_root, "D", "integration-evidence.json"), simplifyVector = FALSE
   )$integrations[[1L]]
   testthat::expect_identical(nested_integration$status, "unavailable")
+  predecessor_payload_ids <- vapply(Filter(function(entity) {
+    identical(entity$scientific_role, "predecessor_payload")
+  }, c_profile$identity$entities), `[[`, character(1L), "entity_id")
+  integration_result <- Filter(function(entity) {
+    identical(entity$scientific_role, "integration_result")
+  }, c_profile$identity$entities)[[1L]]
+  c_fit_activities <- Filter(function(activity) {
+    identical(activity$stage, "C") && identical(activity$activity_type, "integration")
+  }, c_profile$identity$activities)
+  c_export_activity <- Filter(function(activity) {
+    identical(activity$stage, "C") && identical(activity$activity_type, "handoff_export")
+  }, c_profile$identity$activities)[[1L]]
+  testthat::expect_length(predecessor_payload_ids, 4L)
+  testthat::expect_length(c_fit_activities, 1L)
+  testthat::expect_length(intersect(predecessor_payload_ids,
+                                    unlist(c_fit_activities[[1L]]$used_entity_ids,
+                                           use.names = FALSE)), 0L)
+  testthat::expect_length(intersect(predecessor_payload_ids,
+                                    unlist(integration_result$derived_from_entity_ids,
+                                           use.names = FALSE)), 0L)
+  testthat::expect_setequal(intersect(predecessor_payload_ids,
+                                     unlist(c_export_activity$used_entity_ids,
+                                            use.names = FALSE)),
+                            predecessor_payload_ids)
   testthat::expect_length(c_profile$identity$declared_routes, 0L)
   b_current_hashes <- c(
     b_bundles[[1L]], sub("[.]json$", ".envelope.json", b_bundles[[1L]]),
