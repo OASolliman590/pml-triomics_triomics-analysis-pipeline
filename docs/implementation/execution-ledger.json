@@ -37,11 +37,11 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D_T08_runtime_blocked_no_workers",
+    "status": "D_T08_runtime_ready_for_fresh_Luna",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "M8/M9 goal authorized in packet order. D-T08 cannot begin without actual Quarto; user requires stop at absent runtime. G7 stays released, G8/G9 unreleased."
+    "disposition": "User authorized installation; actual Quarto smoke verified. Continue frozen D-T08 only, one fresh Luna; no M7 reopening."
   },
   "orchestration_events": [
     {
@@ -6610,6 +6610,17 @@
       "milestone_audit_consumed": false,
       "review_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md",
       "next": "Stop at runtime blocker receipt. Full G8/G9 goal incomplete; Quarto availability required."
+    },
+    {
+      "event": "D_T08_Quarto_installed_and_smoke_verified",
+      "date": "2026-11-04",
+      "quarto": "1.11.9",
+      "archive_sha256": "9fc24881f637612d80edbf16d62f01001fc7945a9a0c6ac247199002901e0a6d",
+      "version_exit_code": 0,
+      "render_exit_code": 0,
+      "review_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-ready.md",
+      "coding_attempts_consumed": 0,
+      "next": "One fresh Luna-max for frozen D-T08 allowlist."
     }
   ],
   "packets": {
@@ -8000,17 +8011,23 @@
       "disposition_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md"
     },
     "D-T08": {
-      "status": "blocked_runtime_before_implementation",
+      "status": "ready_for_initial_implementation",
       "attempts": 0,
       "commit": null,
       "acceptance_refs": [],
-      "blockers": [
-        "Quarto executable unavailable; fresh quarto --version exits127. User objective requires stopping before implementation."
-      ],
+      "blockers": [],
       "accepted": false,
       "completion_credit": false,
       "preflight_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md",
-      "implementation_attempts_consumed_by_preflight": 0
+      "implementation_attempts_consumed_by_preflight": 0,
+      "runtime_blocker_history": {
+        "status": "blocked_runtime_before_implementation",
+        "blockers": [
+          "Quarto executable unavailable; fresh quarto --version exits127. User objective requires stopping before implementation."
+        ],
+        "receipt": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md"
+      },
+      "runtime_receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-ready.md"
     },
     "D-T13": {
       "status": "not_started",
@@ -8139,12 +8156,10 @@
       "focused_final_rereviews_used": 1
     },
     "M8": {
-      "status": "blocked_D_T08_runtime_before_implementation",
+      "status": "in_progress",
       "review_ref": null,
       "commit": null,
-      "blocking_packets": [
-        "D-T08"
-      ],
+      "blocking_packets": [],
       "runtime_blocker_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md"
     },
     "M9": {
@@ -8205,5 +8220,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "M8_M9_goal_incomplete_D_T08_runtime_blocked"
+  "close_state": "active_M8_D_T08"
 }

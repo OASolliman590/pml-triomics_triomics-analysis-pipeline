@@ -9,16 +9,22 @@
     },
     {
       "id": "HOST-QUARTO",
-      "status": "blocked_runtime_confirmed_2026_11_04",
-      "evidence": "Fresh quarto --version exited127. PATH and nine standard executable paths had no Quarto. D-T08 stopped before implementation as explicitly required by the current goal.",
+      "status": "installed_and_smoke_verified",
+      "evidence": "Official Quarto1.11.9 checksum verified; version and actual local HTML render both exit0. Packet acceptance still pending.",
       "history": [
         {
           "id": "HOST-QUARTO",
           "status": "pending",
           "evidence": "Fresh check on 2026-10-18: quarto --version exited 127 because no Quarto executable is available."
+        },
+        {
+          "id": "HOST-QUARTO",
+          "status": "blocked_runtime_confirmed_2026_11_04",
+          "evidence": "Fresh quarto --version exited127. PATH and nine standard executable paths had no Quarto. D-T08 stopped before implementation as explicitly required by the current goal.",
+          "receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md"
         }
       ],
-      "receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md"
+      "receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-ready.md"
     },
     {
       "id": "GITHUB-AUTH",

@@ -1,3 +1,13 @@
+# Current checkpoint: Quarto installed, D-T08 ready
+
+The user authorized installation. Quarto1.11.9 now resolves on PATH and an actual local HTML smoke passed. Read reviews/2026-11-04-d-t08-runtime-ready.md. The earlier missing-runtime stop is historical. No D-T08 coding attempt has yet been consumed. M7/G7 stay accepted; G8/G9 remain unreleased.
+
+Next dispatch one fresh Luna-max in a fresh worktree for the exact frozen D-T08 seven-file allowlist. Sol owns mechanical shared registration, verification and acceptance. External runtime-env.json supplies pinned MOFA settings and internal APFS TMPDIR. Never output to /tmp or exFAT. Preserve blocked conditional routes and unrun/unqualified C limits. No private data or push.
+
+Literal resume: reconcile external orchestration.json for any active D-T08 Luna before dispatching. Finish that packet's bounded initial/repair cycle and real Quarto proof, then stop with its receipt. Do not reopen M7 or skip to D-T13/D-T15.
+
+## Historical checkpoints below
+
 # Current checkpoint: D-T08 runtime blocker before implementation
 
 The new goal is required Stage D completion through G8 and G9, one packet at a time: D-T08, D-T13, D-T15, M8 close, D-T09, M9 close. M7 remains accepted and G7 released on fabd6fa; do not reopen it. Current baseline is45d08c1. Read reviews/2026-11-04-d-t08-runtime-blocker.md.

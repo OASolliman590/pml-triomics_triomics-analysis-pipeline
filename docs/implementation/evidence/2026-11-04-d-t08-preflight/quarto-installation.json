@@ -1,0 +1,19 @@
+{
+  "installed_at_utc": "2026-11-04T10:39:33.618231+00:00",
+  "release": "1.11.9",
+  "official_source": "https://github.com/quarto-dev/quarto-cli/releases/tag/v1.11.9",
+  "archive_sha256": "9fc24881f637612d80edbf16d62f01001fc7945a9a0c6ac247199002901e0a6d",
+  "published_checksum_matches": true,
+  "version_command": "quarto --version",
+  "version_exit_code": 0,
+  "version": "1.11.9",
+  "render_exit_code": 0,
+  "html_sha256": "0f344eab24a9b1755c833f7b2ed640aca6623b7b978abbfc5e49c6bf17ece2c2",
+  "render_log_sha256": "8b7aafd1bba729d380ccca52845884fb41d57c11670f230ac10bf319e2671fe0",
+  "qualification": "Installation smoke only; does not accept D-T08 or M8.",
+  "install_scope": "user-local; executable linked in user-local bin already on PATH",
+  "render_command": "quarto render runtime-smoke.qmd --to html",
+  "runtime_remote_assets_detected": 0,
+  "evidence_storage": "internal APFS; exact local paths in external installation receipt",
+  "installation_authorization": "User explicitly instructed install it yourself, with AIU as an alternative; local installation preserves the requested APFS runtime."
+}

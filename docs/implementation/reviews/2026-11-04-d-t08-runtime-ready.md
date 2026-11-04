@@ -1,0 +1,9 @@
+# D-T08 runtime available
+
+The user explicitly authorized local Quarto installation after the earlier stop receipt. Sol installed the official macOS Quarto1.11.9 tarball in a user-local directory, with a symlink on the existing PATH. This supersedes the runtime blocker without erasing its accurate history.
+
+The release archive SHA-256 is `9fc24881f637612d80edbf16d62f01001fc7945a9a0c6ac247199002901e0a6d`, matching both official release metadata and the published checksum file. A slow run-owned transfer was stopped after preserving its bytes; all resumed ranges were verified and the assembled archive passed the checksum gate. A root `.` archive entry caused a metadata-summary script error after checksum verification. Sol corrected only that external script and did not repeat the download. No product repair attempt was consumed.
+
+`quarto --version` exited0 and printed1.11.9. Actual `quarto render runtime-smoke.qmd --to html` exited0 and wrote HTML SHA-256 `0f344eab24a9b1755c833f7b2ed640aca6623b7b978abbfc5e49c6bf17ece2c2`. The readback found the synthetic constant and zero remote runtime asset references. [Installation receipt](../evidence/2026-11-04-d-t08-preflight/quarto-installation.json) records these observations. This is an installation smoke, not D-T08 acceptance.
+
+Resume the existing frozen D-T08 packet with one fresh Luna-max in an isolated worktree. Its seven files_allowed and public render_report seam remain unchanged. Sol owns mechanical CLI/stage/NAMESPACE/manual registration. Test-first behavioral security, truthful status and actual Quarto rendering precede the packet receipt. One initial attempt and at most two targeted repairs. Output remains on internal APFS. No AIU execution, private workbook access, upstream method change, frozen spec edit or push. M7/G7 stay accepted; G8/G9 remain unreleased. No milestone Astra review has been consumed.
