@@ -187,8 +187,18 @@ b05_cli <- function(config, output) {
   suppressWarnings(system2(rscript, args, stdout = TRUE, stderr = TRUE, timeout = 60))
 }
 
-b05_cli_config <- function(count_metadata, fallback = "none") {
+b05_cli_config <- function(count_metadata, fallback = "none", root) {
   fixture <- triomics_test_resource("examples", "tickets", "B-T05.yaml")
+  dir.create(file.path(root, "tickets"), recursive = TRUE, showWarnings = FALSE)
+  data_root <- file.path(root, "data", "paired")
+  dir.create(data_root, recursive = TRUE, showWarnings = FALSE)
+  public_resources <- c(
+    triomics_test_resource("examples", "data", "paired", "metadata.tsv"),
+    triomics_test_resource("examples", "data", "paired", "proteomics.tsv")
+  )
+  copied <- file.copy(public_resources, data_root, overwrite = TRUE)
+  stopifnot(all(copied))
+
   source <- paste(readLines(fixture, warn = FALSE), collapse = "\n")
   value <- if (is.null(count_metadata)) "null" else {
     as.character(jsonlite::toJSON(count_metadata, auto_unbox = TRUE))
@@ -197,9 +207,40 @@ b05_cli_config <- function(count_metadata, fallback = "none") {
                 source, fixed = TRUE)
   source <- sub("      fallback: none", paste0("      fallback: ", fallback),
                 source, fixed = TRUE)
-  path <- tempfile("b-t05-cli-", tmpdir = dirname(fixture), fileext = ".yaml")
+  path <- file.path(root, "tickets", basename(fixture))
   writeLines(source, path, useBytes = TRUE)
   path
+}
+
+b05_expect_native_provenance <- function(output, expected_revision) {
+  handoff_root <- file.path(output, "B", "handoffs")
+  handoff_dirs <- if (dir.exists(handoff_root)) {
+    list.dirs(handoff_root, recursive = FALSE, full.names = TRUE)
+  } else {
+    character()
+  }
+  testthat::expect_length(handoff_dirs, 1L)
+  if (length(handoff_dirs) != 1L) return(invisible(NULL))
+
+  payload_path <- file.path(handoff_dirs[[1L]], "stage-handoff-provenance.json")
+  envelope_path <- file.path(handoff_dirs[[1L]], "stage-handoff-provenance.envelope.json")
+  testthat::expect_true(file.exists(payload_path),
+                        info = "The B-T05 CLI emitted no native provenance payload.")
+  testthat::expect_true(file.exists(envelope_path),
+                        info = "The B-T05 CLI emitted no native provenance envelope.")
+  if (!all(file.exists(c(payload_path, envelope_path)))) return(invisible(NULL))
+
+  payload <- jsonlite::read_json(payload_path, simplifyVector = FALSE)
+  envelope <- jsonlite::read_json(envelope_path, simplifyVector = FALSE)
+  testthat::expect_true(isTRUE(triomics_validate_stage_handoff_provenance(
+    payload, "b-t07-stage-handoff-provenance", "b-t07-stage-handoff-provenance-envelope"
+  )))
+  testthat::expect_true(triomics_validate_envelope(envelope_path))
+  testthat::expect_identical(envelope$payload_sha256, triomics_sha256(payload_path))
+  testthat::expect_match(expected_revision, "^(?:[0-9a-f]{40}|[0-9a-f]{64})$")
+  testthat::expect_identical(payload$producer$repository_commit, expected_revision)
+  testthat::expect_identical(envelope$producer_commit, expected_revision)
+  invisible(list(payload = payload, envelope = envelope))
 }
 
 testthat::test_that("B-T05 aligns count rows by feature identity and matches DEqMS 1.30.0 outputs", {
@@ -411,13 +452,18 @@ testthat::test_that("CLI startup routes qualified absolute-path DEqMS and explic
     match(count_table$sample_id, sample_ids) + 1L
   count_table$acquisition <- "synthetic_cli_acquisition"
   count_table$provenance <- "synthetic CLI test count fixture"
-  count_path <- tempfile("b-t05-counts-")
-  utils::write.table(count_table, count_path, sep = "\t", row.names = FALSE, quote = TRUE)
+  count_path <- tempfile("b-t05-counts-", tmpdir = "/private/tmp")
+  qualified_fixture_root <- tempfile("b-t05-qualified-fixture-", tmpdir = "/private/tmp")
+  fallback_fixture_root <- tempfile("b-t05-fallback-fixture-", tmpdir = "/private/tmp")
+  outputs <- c(tempfile("b-t05-qualified-out-", tmpdir = "/private/tmp"),
+               tempfile("b-t05-fallback-out-", tmpdir = "/private/tmp"))
+  on.exit(unlink(c(count_path, qualified_fixture_root, fallback_fixture_root, outputs),
+                 recursive = TRUE), add = TRUE)
 
-  qualified_config <- b05_cli_config(count_path)
-  fallback_config <- b05_cli_config(NULL, fallback = "explicit_limma")
-  outputs <- c(tempfile("b-t05-qualified-out-"), tempfile("b-t05-fallback-out-"))
-  on.exit(unlink(c(count_path, qualified_config, fallback_config, outputs), recursive = TRUE), add = TRUE)
+  utils::write.table(count_table, count_path, sep = "\t", row.names = FALSE, quote = TRUE)
+  qualified_config <- b05_cli_config(count_path, root = qualified_fixture_root)
+  fallback_config <- b05_cli_config(NULL, fallback = "explicit_limma", root = fallback_fixture_root)
+  expected_revision <- triomics_source_revision()
 
   qualified_log <- b05_cli(qualified_config, outputs[[1L]])
   qualified_status <- attr(qualified_log, "status")
@@ -425,7 +471,12 @@ testthat::test_that("CLI startup routes qualified absolute-path DEqMS and explic
                              info = paste(qualified_log, collapse = "\n"))
   qualified <- jsonlite::read_json(file.path(outputs[[1L]], "B", "block-results.json"),
                                    simplifyVector = FALSE)
+  qualified_envelope_path <- file.path(outputs[[1L]], "B", "block-results.envelope.json")
+  qualified_envelope <- jsonlite::read_json(qualified_envelope_path, simplifyVector = FALSE)
   testthat::expect_identical(qualified$status, "complete")
+  testthat::expect_true(triomics_validate_envelope(qualified_envelope_path))
+  testthat::expect_identical(qualified_envelope$status, "complete")
+  b05_expect_native_provenance(outputs[[1L]], expected_revision)
 
   fallback_log <- b05_cli(fallback_config, outputs[[2L]])
   fallback_status <- attr(fallback_log, "status")
@@ -453,4 +504,5 @@ testthat::test_that("CLI startup routes qualified absolute-path DEqMS and explic
   testthat::expect_identical(fallback$fallback_provenance$trigger_reason,
                              "count_metadata_missing")
   testthat::expect_true(isTRUE(fallback$fallback_provenance$user_declared))
+  b05_expect_native_provenance(outputs[[2L]], expected_revision)
 })
