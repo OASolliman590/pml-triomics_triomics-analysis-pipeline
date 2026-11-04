@@ -1345,13 +1345,13 @@ triomics_b04_execute_fixture <- function(config_path, output) {
     privacy_class = if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive"
   )
   triomics_write_envelope(envelope, file.path(output, "B", "block-results.envelope.json"))
-  triomics_write_json_atomic(list(
+  triomics_b_write_run_registry(list(
     schema_version = "2.0",
     run_id = "b-t04",
     study_id = config$study_id,
     stage = "B",
     status = fit$status
-  ), file.path(output, "registries", "run.json"))
+  ), output, attr(config, "config_sha256"))
   triomics_write_json_atomic(calibration, file.path(output, "calibration.json"))
   acceptance <- list(
     packet_id = "B-T04",
