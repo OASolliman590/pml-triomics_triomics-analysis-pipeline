@@ -2,7 +2,7 @@
 
 Initial final Astra audit of product126a30f with recordsf33b1fd returned audit_pass:no. Source7353/package7326 and Status: OK remain valid regression evidence, not acceptance. Two P1 boundaries remain: missing external assay details can become measured binding; molecular target matching ignores feature taxon. Read reviews/2026-11-04-m7-final-astra.md and change-records/M7-029-target-evidence-applicability.md.
 
-M7-029 scope at9f12f4b passed fresh Astra (reviews/2026-11-04-m7-029-scope-astra.md). Next: one fresh Luna-max worktree. Sol verifies focused/native proofs, integrates, repeats source/archive gates, refreshes DOC-M7, and requests the one remaining focused milestone Astra rereview. Current workers/reviewer completed. M7/G7 remain unreleased; C06 and required D acceptance false. No private data, push, later report work, frozen/statistical changes.
+M7-029 scope at9f12f4b passed fresh Astra (reviews/2026-11-04-m7-029-scope-astra.md). Fresh Luna /root/m7_029_luna is running its initial attempt in /tmp/triomics-m7-029-luna at basebcc8e3f; zero repairs used, two remaining. Sol verifies focused/native proofs, integrates, repeats source/archive gates, refreshes DOC-M7, and requests the one remaining focused milestone Astra rereview. Current workers/reviewer completed. M7/G7 remain unreleased; C06 and required D acceptance false. No private data, push, later report work, frozen/statistical changes.
 
 Literal resume: “Continue M7-029 from the ledger and current scope audit/worker state. Do not repeat old passed gates on126a30f or reopen capped historical cycles. Close the two final-Astra applicability findings under the approved bounded scope, then qualify the new snapshot before any M7/G7 acceptance.”
 

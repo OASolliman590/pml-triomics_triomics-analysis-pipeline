@@ -30,7 +30,7 @@
   "current_revision_verification": {
     "cycle": "M7 final same-snapshot qualification",
     "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
-    "status": "verified_pending_Terra_Astra_Sol_acceptance",
+    "status": "blocked_pending_M7_029_applicability_repair",
     "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
     "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T11",
     "test_counts": {
@@ -41,9 +41,10 @@
       "skip": 0,
       "blocks": 36
     },
-    "milestone_acceptance": false
+    "milestone_acceptance": false,
+    "final_audit_ref": "docs/implementation/reviews/2026-11-04-m7-final-astra.md"
   },
-  "next_action": "Terra DOC-M7 and fresh milestone Astra audit, then Sol decision on this exact tested product commit. M7/G7 remain closed.",
+  "next_action": "Complete audited M7-029 repair and new immutable gates, refresh DOC-M7, then focused final Astra and Sol decision. M7/G7 remain unreleased.",
   "pre_final_gate_record": {
     "current_revision_verification": {
       "cycle": "M7-027",

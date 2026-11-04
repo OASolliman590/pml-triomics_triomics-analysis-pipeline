@@ -35,11 +35,41 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_id": "/root/m7_029_luna",
+      "role": "Luna M7-029 implementation",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "status": "held_before_implementation_for_scope_origin_clarification",
+      "worktree": "/tmp/triomics-m7-029-luna",
+      "base": "bcc8e3f",
+      "repairs_used": 0,
+      "repairs_remaining": 2,
+      "next_transition": "Sol diff review and independent focused/native verification; then new immutable full source/archive gates and focused milestone Astra.",
+      "candidate_commit": "f5fc639a5ef7d96707fe604cd5710132ddd50f6d"
+    }
+  ],
   "orchestration_control": {
-    "status": "M7_029_scope_passed_ready_for_Luna",
+    "status": "M7_029_focused_scope_origin_rereview_pending",
     "last_reconciled": "2026-11-04",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_id": "/root/m7_029_luna",
+        "role": "Luna M7-029 implementation",
+        "requested_model": "gpt-6-luna",
+        "requested_effort": "max",
+        "effective_settings_exposed": false,
+        "status": "held_before_implementation_for_scope_origin_clarification",
+        "worktree": "/tmp/triomics-m7-029-luna",
+        "base": "bcc8e3f",
+        "repairs_used": 0,
+        "repairs_remaining": 2,
+        "next_transition": "Sol diff review and independent focused/native verification; then new immutable full source/archive gates and focused milestone Astra.",
+        "candidate_commit": "f5fc639a5ef7d96707fe604cd5710132ddd50f6d"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
     "disposition": "New bounded cycles authorized from b03cdef. Reconcile stale records, verify predecessors, then complete required Stage D through audited scopes. Historical caps preserved. M7/G7 closed."
   },
@@ -6190,6 +6220,37 @@
       "audit_pass": true,
       "review_ref": "docs/implementation/reviews/2026-11-04-m7-029-scope-astra.md",
       "next_transition": "One fresh Luna-max isolated worker; initial+2repairs; M7/G7 unreleased."
+    },
+    {
+      "event": "M7_029_Luna_dispatched",
+      "date": "2026-11-04",
+      "agent_id": "/root/m7_029_luna",
+      "role": "Luna M7-029 implementation",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "status": "running_initial_attempt",
+      "worktree": "/tmp/triomics-m7-029-luna",
+      "base": "bcc8e3f",
+      "repairs_used": 0,
+      "repairs_remaining": 2,
+      "next_transition": "Sol diff review and independent focused/native verification; then new immutable full source/archive gates and focused milestone Astra."
+    },
+    {
+      "event": "M7_029_clean_RED_and_origin_clarification",
+      "date": "2026-11-04",
+      "test_only_commit": "f5fc639a5ef7d96707fe604cd5710132ddd50f6d",
+      "counts": {
+        "fail": 56,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "pass": null
+      },
+      "note": "First clean RED has56 failed expectations despite collector shell0(stop_on_failure=FALSE). PASS/block counts were not captured and command metadata was inaccurate; worker preserves original and writes separate correction. No product edit/repair. Taxon-origin scope clarification pending focused review.",
+      "next_transition": "One focused scope rereview then resume initial implementation.",
+      "actual_command": "Rscript --vanilla /tmp/triomics-stage-d-evidence/m7-029/collect-clean-red.R",
+      "shell_exit_code": 0
     }
   ],
   "packets": {
@@ -6598,7 +6659,7 @@
       ]
     },
     "C-06": {
-      "status": "verified_pending_Terra_Astra_Sol_acceptance",
+      "status": "verified_pending_milestone_audit_and_Sol_acceptance",
       "attempts": 1,
       "repair_attempts": 1,
       "shared_repair_attempts": 2,
@@ -6623,7 +6684,7 @@
         "docs/implementation/reviews/2026-10-22-m6-sol-acceptance.md"
       ],
       "blockers": [
-        "Terra DOC-M7, fresh milestone Astra and Sol acceptance remain pending."
+        "Final milestone audit requires M7-029 repair before Sol acceptance."
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -6667,7 +6728,7 @@
       }
     },
     "D-T01": {
-      "status": "verified_pending_Terra_Astra_Sol_acceptance",
+      "status": "verified_pending_milestone_audit_and_Sol_acceptance",
       "attempts": 2,
       "exceptional_repair_attempts": 1,
       "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
@@ -6688,7 +6749,7 @@
         "docs/implementation/reviews/2026-10-23-m7-001-focused-sol-rereview.md"
       ],
       "blockers": [
-        "Terra DOC-M7, fresh milestone Astra and Sol acceptance remain pending."
+        "Final milestone audit requires M7-029 repair before Sol acceptance."
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -6734,14 +6795,14 @@
       }
     },
     "D-T02": {
-      "status": "verified_pending_Terra_Astra_Sol_acceptance",
+      "status": "verified_pending_milestone_audit_and_Sol_acceptance",
       "attempts": 2,
       "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t02-lipid-mapping.md"
       ],
       "blockers": [
-        "Terra DOC-M7, fresh milestone Astra and Sol acceptance remain pending."
+        "Final milestone audit requires M7-029 repair before Sol acceptance."
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -6786,14 +6847,14 @@
       }
     },
     "D-T03": {
-      "status": "verified_pending_Terra_Astra_Sol_acceptance",
+      "status": "verified_pending_milestone_audit_and_Sol_acceptance",
       "attempts": 2,
       "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t03-reaction-mapping.md"
       ],
       "blockers": [
-        "Terra DOC-M7, fresh milestone Astra and Sol acceptance remain pending."
+        "Final milestone audit requires M7-029 repair before Sol acceptance."
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -6838,14 +6899,14 @@
       }
     },
     "D-T04": {
-      "status": "verified_pending_Terra_Astra_Sol_acceptance",
+      "status": "verified_pending_milestone_audit_and_Sol_acceptance",
       "attempts": 2,
       "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t04-ora.md"
       ],
       "blockers": [
-        "Terra DOC-M7, fresh milestone Astra and Sol acceptance remain pending."
+        "Final milestone audit requires M7-029 repair before Sol acceptance."
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -6891,14 +6952,14 @@
       }
     },
     "D-T05": {
-      "status": "verified_pending_Terra_Astra_Sol_acceptance",
+      "status": "verified_pending_milestone_audit_and_Sol_acceptance",
       "attempts": 2,
       "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t05-status.md"
       ],
       "blockers": [
-        "Terra DOC-M7, fresh milestone Astra and Sol acceptance remain pending."
+        "Final milestone audit requires M7-029 repair before Sol acceptance."
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -6965,14 +7026,14 @@
       "completion_credit": false
     },
     "D-T10": {
-      "status": "verified_pending_Terra_Astra_Sol_acceptance",
+      "status": "blocked_pending_M7_029_applicability_repair",
       "attempts": 3,
       "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t10-targets.md"
       ],
       "blockers": [
-        "Terra DOC-M7, fresh milestone Astra and Sol acceptance remain pending."
+        "M7-FINAL-ASTRA-01"
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -7017,14 +7078,15 @@
       }
     },
     "D-T11": {
-      "status": "verified_pending_Terra_Astra_Sol_acceptance",
+      "status": "blocked_pending_M7_029_applicability_repair",
       "attempts": 3,
       "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t11-blocked.md"
       ],
       "blockers": [
-        "Terra DOC-M7, fresh milestone Astra and Sol acceptance remain pending."
+        "M7-FINAL-ASTRA-01",
+        "M7-FINAL-ASTRA-02"
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -7069,12 +7131,13 @@
       }
     },
     "D-T12": {
-      "status": "verified_pending_Terra_Astra_Sol_acceptance",
+      "status": "blocked_pending_M7_029_applicability_repair",
       "attempts": 1,
       "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
       "acceptance_refs": [],
       "blockers": [
-        "Terra DOC-M7, fresh milestone Astra and Sol acceptance remain pending."
+        "M7-FINAL-ASTRA-01",
+        "M7-FINAL-ASTRA-02"
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",

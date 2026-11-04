@@ -28,8 +28,8 @@ uncertainty. No scientific method or schema change is proposed.
    cannot be laundered through canonical comparison or discovery into measured
    binding or comparable qualified evidence. No absent value becomes measured.
 2. Close M7-FINAL-ASTRA-02. Molecular target observation composition must account
-   for feature taxon from the immutable B/C FeatureRegistry as well as namespace
-   and identifier. Only an explicitly declared matching taxon may supply applicable
+   for feature taxon from the verified evidence bundle's adapted FeatureRegistry as
+   well as namespace and identifier. Only an explicitly declared matching taxon may supply applicable
    molecular support/conflict or qualified C loading evidence for that request.
    Preserve the existing producer's legitimate taxon representation (canonical
    decimal identifiers may be strings); do not use lossy coercion to turn unknown,
@@ -46,6 +46,22 @@ uncertainty. No scientific method or schema change is proposed.
    synthetic positive fixtures may explicitly state their intended assay and
    taxon; retain negatives with the information genuinely absent or mismatched.
    No fabricated private assay, real-study identity or biological claim.
+
+## Factual provenance clarification (focused scope rereview required)
+
+`R/evidence_bundle.R:1255–1299` adapts the same-run registry with existing D
+routing metadata. The taxon value/status may originate in that declared metadata,
+with its `provenance_ref`, rather than in a raw B/C registry row. “FeatureRegistry”
+above means this existing adapted evidence object. Preserve its actual taxon
+status and recorded origin (`feature$provenance$routing_metadata$taxon` when
+present); never relabel it as a taxon measured or produced by B/C. An explicit
+unknown status cannot become declared merely because a plausible value is also
+present. Synthetic unit fixtures may explicitly declare their intended metadata
+origin; negative fixtures retain the missing/unknown state. No new source-origin
+proof is invented. Existing provenance/registry validators remain unchanged;
+`R/evidence_bundle.R` and `R/annotation_apply.R` stay outside the allowlist.
+This clarifies the existing data path, not a new scientific method or ownership
+expansion. Implementation waits for the one allowed focused scope rereview.
 
 ## Ownership and bounds
 
