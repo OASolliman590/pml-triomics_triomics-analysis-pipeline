@@ -8094,7 +8094,15 @@
       "implementation_base": "4a783be5d5ec005a0044a43cdc6dc8c4d6c35392",
       "active_worker": "/root/m8_d08_luna",
       "candidate_commit": "23b56893eee594b236bbc12440290f8e6405fecb",
-      "initial_review_ref": "docs/implementation/reviews/2026-11-04-d-t08-initial-review.md"
+      "initial_review_ref": "docs/implementation/reviews/2026-11-04-d-t08-initial-review.md",
+      "predecessor_repair": {
+        "id": "M8-D08-S01",
+        "scope_audit_pass": true,
+        "audited_snapshot": "593c89c82cc55c49503fe5391eae7fd0a4ef7abe",
+        "authority_receipt": "docs/implementation/reviews/2026-11-04-d08-s01-scope-rereview.md",
+        "implementation_status": "not_started_waiting_report_worker",
+        "milestone_acceptance": false
+      }
     },
     "D-T13": {
       "status": "not_started",

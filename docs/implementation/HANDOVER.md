@@ -1,12 +1,14 @@
-# Current checkpoint: D-T08 repair 1 active; native predecessor blocked
+# Current checkpoint: D-T08 repair 1 active; predecessor scope approved
 
-Initial candidate23b5689 is preserved and unintegrated. Source75/0fail/0error/0warn/0skip, 14blocks. Sol independently reproduced A exit0 then B exit4 on the unchanged same-root registry; canonical evidence is local sol-ab-registry-red. The worker's registry-removal workaround is rejected and has no acceptance credit. Read reviews/2026-11-04-d-t08-initial-review.md.
+Same Luna `/root/m8_d08_luna` is implementing consolidated report repair1 of2 from immutable23b5689 in the existing isolated worktree. Exact seven-file D-T08 scope; no native retry or registry removal. Join the existing worker, do not restart it. Initial candidate source75/0fail/0error/0warn/0skip,14blocks is historical, not a repair pass.
 
-Same Luna `/root/m8_d08_luna` is running consolidated repair1 of2 in the existing isolated worktree, exact seven-file D-T08 scope. No native retries or shared-file edits. Join that worker; do not restart it. Two independent Sol reviews found clinical type/interval mismatch, privacy gaps, stale B/D linkage, lost enrichment context and contradictory provider statuses. Fresh scope proposal M8-D08-S01 addresses the separate B registry collision; it is not implemented or accepted.
+Sol's valid native RED is local sol-ab-registry-red: A0 then B4, with A registry bytes unchanged. The worker's deleted-registry workaround is invalid evidence. Read reviews/2026-11-04-d-t08-initial-review.md for the two independent review findings and rejected workaround.
 
-M7/G7 remain accepted/released. D-T08 remains incomplete and unaccepted; G8/G9 remain unreleased. No D-T13/D-T15/D-T09 implementation, private data or push. Preserve the full goal. Stop at the bounded packet receipt with an honest blocker if the predecessor seam cannot legally be resolved; do not certify a harness that deletes registries.
+The separate M8-D08-S01 registry scope passed its one focused Astra rereview at593c89c; read reviews/2026-11-04-d08-s01-scope-rereview.md for exact standing-authority reconciliation. No predecessor implementation yet. After the active D-T08 worker returns, proceed serially: Sol owns the audited shared helper; a fresh bounded Luna owns only the two B publication call sites and named shared tests. Do not expand the current D-T08 worker allowlist or alter statistical/calibration semantics. The combined untouched native A/B/C/D/report proof remains mandatory before integration/acceptance.
 
-Literal resume: reconcile the active D-T08 repair1 worker and external orchestration.json, collect its immutable receipt, then take only the authorized scoped next transition. Preserve23b5689 and the Sol RED evidence. No lost-worker redispatch and no milestone release from unit test counts.
+M7/G7 remain historically accepted/released. D-T08 incomplete/unaccepted; G8/G9 unreleased. No D-T13/D-T15/D-T09 implementation, private data or push. The M8 milestone audit is still unconsumed; the completed Astra scope review is not acceptance.
+
+Literal resume: read external orchestration.json, join the existing D-T08 repair1 receipt, verify the immutable diff, then take the audited serial predecessor transition. Preserve23b5689, both repair caps and the Sol RED. Never redispatch a lost worker or certify registry-deletion evidence.
 
 ## Historical checkpoints below
 
