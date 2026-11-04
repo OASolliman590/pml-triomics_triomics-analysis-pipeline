@@ -1,3 +1,13 @@
+# Current checkpoint: M8-D15-S02 independently verified, held for S01
+
+Read [the scoped close receipt](reviews/2026-11-05-d15-s02-scoped-close.md). Candidate a136db4 passes independent full B-T07:505pass,0fail/error/warn/skip,33blocks. Fresh native A/C-scheduling/B exits0/0/0; refusal probes2/2 preserve bytes. B is complete, unrequested longitudinal files remain absent, and profile/envelope/hash readback passes. Both local reviews have no remaining finding. S02 initial+2repairs consumed; no repair3. Product remains isolated, not canonical-integrated.
+
+All run-owned workers/processes terminal; no child chats to archive. M7/G7/D08 accepted; S01/D15 incomplete, D13 blocked at cap, G8/G9 closed. No package/M8 Astra/render/private-data/server/push/Notion action.
+
+Literal resume: **Resume M8-D15-S01 at repair1of2, preserving the original initial attempt. Reconcile its original worker and candidate a136db4; fix the four recorded S01 defects and failure tests within its audited allowlist, then verify the combined source/native/numeric/no-refit/rollback route and risky-diff Astra before D15. No S02 repair3, D13 repair3 or G8/G9 release.**
+
+## Historical checkpoints below
+
 # Current checkpoint: M8-D15-S02 final repair2 assigned
 
 Read [repair1 review](reviews/2026-11-05-d15-s02-repair1-review.md). Repair1 at4a09b92 passes445 source assertions but still accepts contradictory withheld-q evidence, independently reproduced by Sol. Same Luna, same two-file allowlist, finalrepair2of2. No native run on repair1 and no product integration. S01 repairs0of2 remain separate.

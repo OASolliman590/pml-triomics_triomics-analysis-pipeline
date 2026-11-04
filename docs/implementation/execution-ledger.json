@@ -35,49 +35,19 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/d15_s02_luna",
-      "role": "Luna implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "effective_settings_exposed": false,
-      "base_commit": "5e4b81accdc3f63ad1d33b96176ee934c561f5db",
-      "branch": "codex/m8-d15-s02-luna",
-      "status": "repair1_assigned",
-      "attempt": 1,
-      "repairs": 1,
-      "allowed_next_transition": "Join repair1; focused local rereview and independent fullB-T07/native/profile proof.",
-      "cursor": null,
-      "candidate": "5519fc12f84daca952731bb5fbb1257189804de6"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "D15_S02_repair2_assigned",
+    "status": "D15_S02_scoped_verified_closed_goal_active",
     "last_reconciled": "2026-11-05",
-    "active_handoffs": [
-      {
-        "agent": "/root/d15_s02_luna",
-        "role": "Luna implementer",
-        "requested_model": "gpt-6-luna",
-        "requested_effort": "max",
-        "effective_settings_exposed": false,
-        "base_commit": "5e4b81accdc3f63ad1d33b96176ee934c561f5db",
-        "candidate": "4a09b92fd47aeafe5894389ce9c8fd1d4a8bd3bf",
-        "branch": "codex/m8-d15-s02-luna",
-        "status": "repair2_assigned",
-        "attempt": 1,
-        "repairs": 2,
-        "allowed_next_transition": "Join same Luna final repair2; inspect immutable diff and independently run full B-T07/native/profile readback; stop at S02 receipt. No repair3 or S01 edits.",
-        "cursor": null
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Scope audit passed; exact two-file owner correction, separate S01 repairs preserved.",
+    "disposition": "Resume M8-D15-S01 at repair1of2, preserving the original initial attempt. Reconcile its original worker and candidate a136db4; fix the four recorded S01 defects and failure tests within its audited allowlist, then verify the combined source/native/numeric/no-refit/rollback route and risky-diff Astra before D15. No S02 repair3, D13 repair3 or G8/G9 release.",
     "current_gate": {
-      "status": "changes_required",
-      "candidate": "4a09b92fd47aeafe5894389ce9c8fd1d4a8bd3bf",
-      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s02-repair1-review.md"
+      "status": "scoped_verification_passed_pending_combined_integration",
+      "candidate": "a136db4ee2d840ad04cdda7534a40a43a0f30791",
+      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s02-scoped-close.md",
+      "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-s02/receipt.json",
+      "M8_acceptance": false
     }
   },
   "orchestration_events": [
@@ -6996,6 +6966,34 @@
       "repairs_used": 2,
       "repairs_remaining": 0,
       "next": "Join same Luna final repair2; inspect immutable diff and independently run full B-T07/native/profile readback; stop at S02 receipt. No repair3 or S01 edits."
+    },
+    {
+      "event": "D15_S02_final_scoped_gate_passed_close",
+      "date": "2026-11-05",
+      "candidate": "a136db4ee2d840ad04cdda7534a40a43a0f30791",
+      "attempts": 1,
+      "repairs": 2,
+      "source_counts": {
+        "pass": 505,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 33
+      },
+      "native_exits": {
+        "fresh_original_C08": 0,
+        "A": 0,
+        "C_schedule": 0,
+        "C_missing_B": 2,
+        "B": 0,
+        "B_existing_refusal": 2
+      },
+      "provenance_readback_passed": true,
+      "canonical_product_integrated": false,
+      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s02-scoped-close.md",
+      "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-s02/receipt.json",
+      "next": "Resume M8-D15-S01 at repair1of2, preserving the original initial attempt. Reconcile its original worker and candidate a136db4; fix the four recorded S01 defects and failure tests within its audited allowlist, then verify the combined source/native/numeric/no-refit/rollback route and risky-diff Astra before D15. No S02 repair3, D13 repair3 or G8/G9 release."
     }
   ],
   "packets": {
@@ -8500,8 +8498,7 @@
       "commit": null,
       "acceptance_refs": [],
       "blockers": [
-        "Generic clinical Stage B endpoint consumer is not registered; C08 scheduling returns before C06/D publication. D15 renderer allowlist cannot supply these shared producers.",
-        "S01 candidate remains unintegrated: B-T07 treats an unrequested longitudinal lane as required; local authentication and saved-context defects also remain. See docs/implementation/reviews/2026-11-05-d15-s01-blocked-close.md"
+        "S02 B accounting correction independently verified in isolated a136db4; combined S01 source authentication, saved-context, registry-path and unsupported-disposition repairs/failure tests remain before renderer implementation."
       ],
       "repair_attempts": 0,
       "implementation_base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
@@ -8517,6 +8514,13 @@
         "exit_code": 2,
         "error_code": "B_DESIGN_UNSUPPORTED",
         "B_frame_produced": false
+      },
+      "predecessor_S02": {
+        "status": "verified_pending_combined_integration",
+        "candidate": "a136db4ee2d840ad04cdda7534a40a43a0f30791",
+        "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-s02/receipt.json",
+        "repairs_used": 2,
+        "accepted": false
       }
     },
     "D-T09": {
@@ -8709,5 +8713,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D15_S02_final_repair2_running_goal_active"
+  "close_state": "D15_S02_scoped_receipt_saved_full_goal_active"
 }

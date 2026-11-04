@@ -1,15 +1,15 @@
 # Pipeline progress — 5 November 2026
 
-The goal remains the report and synthetic walkthrough milestones, G8 and G9. The accepted M7/G7 baseline and offline D08 report remain in place.
+The goal remains the clinical report and synthetic walkthrough milestones, G8 and G9. M7/G7 and the offline D08 report remain accepted.
 
-The new candidate can now take a saved molecular score into the existing between-person clinical association method. The synthetic run completed A, initial C and B. It has not completed the clinical report or established biological validity.
+The B publication correction now passes independent checks. A fresh synthetic run produced the requested between-person clinical association and correctly left the unrequested longitudinal analysis absent. The saved molecular scores and clinical requests remained unchanged, and the published provenance matched the actual files.
 
-Later C publication failed for a specific reason: B treats an absent longitudinal analysis as missing required work, although this configuration requests only a between-person analysis. C correctly refuses that partial handoff. The fix belongs to a B export file outside this cycle’s audited scope.
+Review also caught inconsistent declarations about whether adjusted p-values were published. The final repair now rejects those contradictions while preserving valid published and withheld results, including unavailable members of a testing family. The independent B-T07 suite passed 505 assertions with no failures, warnings, errors or skips.
 
-Independent review also exposed incomplete safeguards for changed sample metadata, substituted saved evidence, an external registry link and unsupported missingness categories. The candidate is preserved, not integrated. The focused helper test recorded 53 passes and one error; no package pass or milestone acceptance is claimed.
+This is software evidence on synthetic fixtures. It does not establish a biological association, predictive benefit or clinical validity. The candidate is preserved in isolation; the clinical report is not finished.
 
-Next is an audited B publication correction and bounded repairs, followed by a real A/C/B/C/D check. D13 remains blocked at its repair cap. G8/G9 remain closed.
+Next is the already identified S01 repair: authenticate metadata and saved context, reject unsafe registry paths, and report unsupported missingness accurately. Combined pipeline and rollback checks must then pass before D15 resumes. D13 remains blocked at its repair cap; G8/G9 stay closed.
 
-Needs Omar: no new decision for routine authorized work. Sync: local records only; no Notion sync, push, private study analysis or server execution. Quarto 1.11.9 is installed.
+Needs Omar: no new decision. Sync: local records only; no Notion sync, push, private-data analysis or server run. Quarto1.11.9 is installed.
 
-Evidence: [cycle receipt](implementation/reviews/2026-11-05-d15-s01-blocked-close.md). Conditional scientific limits remain unchanged.
+Evidence: [scoped receipt](implementation/reviews/2026-11-05-d15-s02-scoped-close.md). Conditional scientific limits remain unchanged.
