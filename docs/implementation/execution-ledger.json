@@ -37,7 +37,7 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "M7_029_scope_pending_audit",
+    "status": "M7_029_scope_passed_ready_for_Luna",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -6181,6 +6181,15 @@
       ],
       "focused_rereviews_remaining": 1,
       "next_transition": "Fresh scope audit of M7-029, then fresh Luna-max after approval; no acceptance."
+    },
+    {
+      "event": "M7_029_scope_Astra_pass",
+      "date": "2026-11-04",
+      "scope_commit": "9f12f4b36272a5504cc56f34bb2a0c3b60eb7aad",
+      "agent_id": "/root/m7_029_scope_astra",
+      "audit_pass": true,
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-029-scope-astra.md",
+      "next_transition": "One fresh Luna-max isolated worker; initial+2repairs; M7/G7 unreleased."
     }
   ],
   "packets": {
