@@ -52,7 +52,7 @@
     }
   ],
   "orchestration_control": {
-    "status": "M7_030_scope_audit_pending",
+    "status": "M7_030_audited_Luna_dispatch_ready",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [
       {
@@ -6428,6 +6428,18 @@
       "scope_ref": "docs/implementation/change-records/M7-030-target-routing-metadata-caller.md",
       "M7": "unreleased",
       "G7": "unreleased"
+    },
+    {
+      "event": "M7_030_scope_Astra_pass",
+      "scope_commit": "76b34f336701d8baa8519db2ecbe6d1cef575068",
+      "reviewer": "/root/m7_030_scope_astra",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "effective_settings_exposed": false,
+      "audit_pass": true,
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-030-scope-astra.md",
+      "implementation_allowed": true,
+      "milestone_acceptance": false
     }
   ],
   "packets": {
