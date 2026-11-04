@@ -1,36 +1,55 @@
-# M8-D08-S01 — Stage B run-registry collision (scope proposal)
+# M8-D08-S01 — Stage B run-registry collision (scope proposal, revision 1)
 
-Status: proposed, awaiting a fresh read-only scope audit. No implementation. This is an implementation compatibility repair for the existing native stage sequence, not a scientific-contract or schema amendment and not a new packet identity.
+Status: proposed; initial Astra scope audit requested changes. This is the one documentation repair before a focused rereview. No implementation, packet acceptance or milestone release. The frozen scientific contracts and all41 packet identities remain unchanged.
 
-## Evidence and authority
+## Evidence and scope authority
 
-The authorized D-T08 packet requires real saved A/B/C/D artifacts from one output root. Immutable candidate23b5689 passes75 focused assertions but native A exits0 and B exits4. Both R/ingest.R and R/results_b.R publish registries/run.json with a non-overwriting atomic writer. The repeated-measures B producer has the same registry filename in R/design_repeated.R. C already uses run-C.json. Sol's preserved RED receipt is reviews/2026-11-04-d-t08-initial-review.md and its evidence. A's record must not be deleted to make a verification pass.
+D-T08 requires saved A/B/C/D artifacts from one output root. Candidate23b5689 passes75 focused assertions; Sol's untouched native A exits0 then B exits4. R/ingest.R and R/results_b.R both write registries/run.json with a non-overwriting atomic writer. R/design_repeated.R has the same B registry publication. See reviews/2026-11-04-d-t08-initial-review.md and its preserved RED evidence. The worker registry-removal workaround is excluded from acceptance.
 
-The user previously authorized new bounded cycles where needed and assigns shared registration to Sol. D-T08's worker allowlist does not include either B writer. This proposal does not silently extend that allowlist: any implementation must be an exclusive predecessor repair with its own audited scope. No implementation is permitted merely because a reviewer approves the document; the coordinator must reconcile the standing task authorization and exact scope first.
+The user previously authorized bounded cycles where needed and assigns shared registration to Sol. Neither B writer belongs to the D-T08 worker's allowlist. This is a proposed exclusive predecessor repair, not a silent expansion of that worker's scope. Scope-audit approval does not itself grant foreign-file editing authority; Sol must reconcile standing task authorization before any implementation.
 
-## Proposed behavior
+Ordinary C already uses run-C.json. The separate C-09 synthetic route in R/cli.R:2027–2047 still uses run.json. That route is explicitly excluded: do not execute, repair, qualify or reclassify it here. C-09 remains unqualified/synthetic_fixture_only/benefit_guaranteed=false.
 
-Stage B publishes its existing run-record shape to a fixed stage-owned registries/run-B.json. Preserve registries/run.json as a legacy first-stage record: create it for standalone B only when absent; never overwrite or delete an existing A record. Preserve A payload/envelope bytes. C and D registry/publication behavior stays unchanged. Do not introduce a new global mutable pointer, a new schema or a timestamp-based scientific identity.
+## Meaning of the records
 
-The narrow shared helper must validate the controlled registry directory and reject symlink/path escapes, malformed/conflicting records and cross-study use. A pre-existing A record requires its existing valid A artifact/envelope and matching study/configuration identity; do not bless an arbitrary file merely because its stage label says A. Existing B records are not silently replaced. Conflicts fail closed. Document exactly which per-stage record is authoritative and the compatibility meaning of the legacy filename.
+Preserve the existing B run-record fields and values. Their status describes the saved B producer artifacts at that call site; it is not proof of successful complete CLI execution, successful calibration, a valid handoff, scientific eligibility or milestone acceptance. This is particularly relevant to the existing repeated-measures call site, which precedes calibration/acceptance writes and a possible abort. Do not move that call or alter the calibration/control flow in this narrow repair.
 
-Preserve the existing atomic no-overwrite writer for payloads and envelopes. Do not patch it globally or temporarily hide a registry in the test harness. No recovery, concurrency, all-stage scheduler, scientific method, seed or numerical expectation is invented by this seam. Publication must not falsely mark a failed or incomplete stage complete.
+The new canonical B record is registries/run-B.json. Retain registries/run.json as the compatibility record for the first stage that wrote it. Standalone B still creates that legacy record when absent. A pre-existing valid A record stays byte-identical. C/D behavior remains unchanged. Registry presence alone must never substitute for the command exit and verified B provenance frame. A failed calibration or later B handoff must retain its nonzero exit/unqualified outcome even if a producer-artifact record exists.
 
-## Proposed exclusive file scope
+Do not create a new global current-run pointer, schema, automatic recovery protocol, scheduler or data-ancestry claim. In particular, the A registry/configuration identity check does not assert that A's matrix is the response ancestry of the B-T04 synthetic generator.
 
-- R/stage_registry.R: Sol-owned small registry-publication helper. Any alternate location requires a revised explicit scope before implementation.
-- R/results_b.R: replace only its run-registry publication call; no fitting, inference, result identity or provenance change.
-- R/design_repeated.R: the equivalent registry-publication call only; no B-T04 method, calibration, 0.08 bound or seeds1001:1400 edit.
-- tests/testthat/test-stage-run-registry.R: bounded shared regression tests; do not edit D-T08's active test file in this predecessor repair.
-- Sol-owned implementation receipts, ledger and handover only.
+## Admission and publication sequence
 
-Any larger implementation need stops with evidence. This document is a proposal, not permission to edit extra files opportunistically.
+A single pipeline writer is assumed, as in the accepted provenance route. Use fixed filenames beneath the validated output root. Before any new registry is published:
 
-## Required proof before integration
+- Reject any pre-existing run-B.json, including an identical record; no resume or overwrite is added.
+- Reject directory targets, dangling or resolving symlinks, and symlink/path escapes anywhere in the controlled registry path.
+- The legacy filename may be absent or a valid complete A record only. Existing B records, unsupported stages, malformed JSON, missing/extra identity fields, wrong schema/study/run identity and conflicting records fail closed.
+- A legacy A record must match its existing validated A/assays.json and exact envelope. Require the expected artifact type/ID, exact payload filename and SHA-256, study identity, current configuration SHA-256, and complete producer status. The legacy A record alone is insufficient because it omits configuration identity. Preserve all A bytes; do not fabricate predecessor artifacts or infer scientific ancestry from this administrative check.
 
-1. Native A then B in one untouched fresh root both exit0; A registry and A payload/envelope hashes stay unchanged, B's stage record and native provenance frame exist and validate.
-2. Standalone B retains its previous legacy registry behavior. Both ordinary and repeated B registry call paths use the fixed shared helper, with narrow tests that do not rerun or alter statistical calibration merely to test a filename.
-3. Invalid identity, symlink and pre-existing conflicting records fail closed with no replacement of previous registry bytes; exercise publication interruption/failure at the actual boundary supported by the implementation.
-4. Relevant existing A/B/C consumers still pass focused regressions. Then run the D-T08 same-root A/B/C/D/report proof without manual removal, copying fabricated producer evidence, or weakening assertions.
+When a valid A record exists, publish only run-B.json through the existing atomic non-overwrite writer. No A record is replaced, renamed or removed.
 
-The scope audit is not the M8 milestone audit and does not accept D-T08, M8 or G8. M7/G7 stay historically accepted; D-T06/07/14, C-07, C-09 and the pending frozen-kit audit keep their existing dispositions. No private data or push.
+When the legacy filename is absent, write the legacy B record first and the canonical run-B.json last. Both carry the same existing record shape and bytes. The canonical publication is the registry commit marker; the helper returns success only after verifying both files and their matching hashes. The legacy alias by itself is not a successful new registry publication.
+
+On an ordinary exception/failure during the second publication, remove only files newly created by this helper whose bytes still match this attempt, then propagate failure. Never remove or replace prior bytes. If the process is terminated between writes, a legacy-only orphan may remain; it is explicitly unpublished, cannot count as completed stage/handoff evidence and is rejected on a later attempt. This proposal does not promise power-loss durability, crash recovery or whole-Stage-B transactionality. Existing partially written B payload behavior is not silently relabelled as complete.
+
+## Exact proposed implementation scope
+
+- R/stage_registry.R: small Sol-owned shared registry-publication helper, using existing atomic and path-validation utilities.
+- R/results_b.R: replace only its registry-publication call with the helper; preserve fitting, result identity, status values and provenance behavior.
+- R/design_repeated.R: equivalent call replacement at its existing location only; preserve statistics, calibration, acceptance writes, failure control flow, bound0.08 and seeds1001:1400.
+- tests/testthat/test-stage-run-registry.R: bounded shared behavioral regressions, including both B call sites. No concurrent edit to D-T08's active tests.
+- Sol-owned implementation receipts, ledger and handover.
+
+Any larger need stops with evidence and requires a separately reconciled scope. Do not edit R/contracts.R, R/ingest.R, C-09, schemas, canonical spec, packet identities, lock files or scientific methods.
+
+## Required proof
+
+1. Native A then B in a fresh untouched root: both exit0; A registry/payload/envelope hashes unchanged; canonical B record and native B provenance frame validate. No harness deletion or relocation.
+2. Standalone B creates matching canonical and legacy records. Test both ordinary and repeated writer call paths without changing or rerunning numerical calibration merely to test registry filenames. Preserve the distinction between a producer record and later calibration/handoff success.
+3. Inject failures at actual legacy/canonical publication boundaries. Verify ordinary failure cleanup, immutable prior-A bytes, nonzero/throwing outcomes, and rejection of a simulated terminated legacy-only orphan. Neither partial publication nor an orphan alias is GREEN stage evidence.
+4. Reject all admission cases above, including identical canonical records, unsupported legacy stages, wrong A envelope/configuration identity, dangling symlinks and directory targets, without replacing prior files.
+5. Focused existing regressions: test-A-T09.R; test-M4-005-B-T05-integration.R; test-C-06-shared.R; test-D-T01.R. Add the shared registry suite and the affected ordinary/repeated B focused tests as justified by the call-site diff. Do not reroll seeds or relax numerical expectations.
+6. Finally the D-T08 same-root A/B/C/D/report command proof, exact byte lineage and actual Quarto read-back must pass on the combined immutable candidate. This proposal alone is not a report acceptance.
+
+The scope audit is separate from the future M8 milestone audit. M7/G7 retain their historical acceptance, D-T08 remains incomplete, G8/G9 stay unreleased, and all conditional/unrun/pending-audit dispositions remain. No private study data or push.
