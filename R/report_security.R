@@ -31,14 +31,45 @@ triomics_report_clean_text <- function(value) {
   value[is.na(value)] <- ""
   value <- gsub("[\\r\\n\\t]", " ", value, perl = TRUE)
   value <- gsub("[[:cntrl:]]", "", value, perl = TRUE)
-  value <- gsub("(?i)/(?:Users|Volumes|private|tmp|home|var|etc)(?:[/\\\\][^<>\\\"']*)?",
-                "[redacted local path]", value, perl = TRUE)
-  value <- gsub("(?i)[A-Z]:\\\\(?:Users|home|tmp|private|Documents and Settings)\\\\[^<>\\\"']*",
-                "[redacted local path]", value, perl = TRUE)
-  value <- gsub("(?i)\\b(?:password|secret|token|api[_-]?key|authorization)\\s*[:=]\\s*(?:bearer\\s+)?[^,;[:space:]]+(?:\\s+[^,;[:space:]]+)?",
-                "[redacted credential]", value, perl = TRUE)
-  gsub("(?i)\\bbearer\\s+[A-Za-z0-9._~+/-]+=*", "Bearer [redacted credential]", value,
-       perl = TRUE)
+  path_patterns <- c(
+    "(?i)\\bfile:(?:///?)[^,;<>\\\"'[:cntrl:]]+",
+    "(?i)(?<![[:alnum:]_])[A-Z]:[\\\\/][^,;<>\\\"'[:cntrl:]]+",
+    "(?<![[:alnum:]_])\\\\\\\\[^/\\\\[:space:]]+[\\\\/][^,;<>\\\"'[:cntrl:]]+",
+    "(?<![:/])//[^/[:space:]]+/[^,;<>\\\"'[:cntrl:]]+",
+    "(?<![/:[:alnum:]_.-])/(?:[^/[:space:],;<>\\\"']+/)+[^,;<>\\\"'[:cntrl:]]+"
+  )
+  for (pattern in path_patterns) {
+    value <- gsub(pattern, "[redacted local path]", value, perl = TRUE)
+  }
+  credential_patterns <- c(
+    "(?i)\\b(?:password|passwd|secret|token|api[_-]?key|authorization|credential)\\s*[:=]\\s*(?:bearer\\s+)?[^,;[:space:]<>\\\"']+",
+    "(?i)\\bbearer\\s+[A-Za-z0-9._~+/-]+=*"
+  )
+  for (pattern in credential_patterns) {
+    value <- gsub(pattern, "[redacted credential]", value, perl = TRUE)
+  }
+  value
+}
+
+triomics_report_contains_private_text <- function(value) {
+  value <- enc2utf8(as.character(value))
+  value[is.na(value)] <- ""
+  path_patterns <- c(
+    "(?i)\\bfile:(?:///?)[^,;<>\\\"'[:cntrl:]]+",
+    "(?i)(?<![[:alnum:]_])[A-Z]:[\\\\/][^,;<>\\\"'[:cntrl:]]+",
+    "(?<![[:alnum:]_])\\\\\\\\[^/\\\\[:space:]]+[\\\\/][^,;<>\\\"'[:cntrl:]]+",
+    "(?<![:/])//[^/[:space:]]+/[^,;<>\\\"'[:cntrl:]]+",
+    "(?<![/:[:alnum:]_.-])/(?:[^/[:space:],;<>\\\"']+/)+[^,;<>\\\"'[:cntrl:]]+"
+  )
+  credential_patterns <- c(
+    "(?i)\\b(?:password|passwd|secret|token|api[_-]?key|authorization|credential)\\s*[:=]\\s*(?:bearer\\s+)?[^,;[:space:]<>\\\"']+",
+    "(?i)\\bbearer\\s+[A-Za-z0-9._~+/-]+=*"
+  )
+  vapply(value, function(item) {
+    any(vapply(c(path_patterns, credential_patterns), function(pattern) {
+      grepl(pattern, item, perl = TRUE)
+    }, logical(1)))
+  }, logical(1))
 }
 
 triomics_report_html_escape <- function(value) {

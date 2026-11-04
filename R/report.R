@@ -54,8 +54,8 @@ triomics_report_config <- function(config_path) {
     path = config_path,
     config = config,
     config_sha256 = as.character(config_sha256),
-    study_id = as.character(config$study_id),
-    analysis_id = as.character(analysis$analysis_id),
+    study_id = triomics_report_identifier_value(config$study_id, "study_id"),
+    analysis_id = triomics_report_identifier_value(analysis$analysis_id, "analysis_id"),
     privacy_class = privacy_class,
     audience = audience,
     source_count = length(config$sources %||% list()),
@@ -65,34 +65,39 @@ triomics_report_config <- function(config_path) {
     target_required = isTRUE(config$target_investigation$enabled) &&
       isTRUE(config$target_investigation$required),
     route_requirements = setNames(lapply(requests, function(request) isTRUE(request$required)),
-                                  vapply(requests, function(request) as.character(request$route), character(1))),
+                                  vapply(requests, function(request) {
+                                    triomics_report_identifier(request, "route")
+                                  }, character(1))),
     integration_requirements = setNames(lapply(integrations, function(integration) isTRUE(integration$required)),
-                                        vapply(integrations, function(integration) as.character(integration$integration_id), character(1))),
+                                        vapply(integrations, function(integration) {
+                                          triomics_report_identifier(integration, "integration_id")
+                                        }, character(1))),
     blocks = lapply(seq_along(config$blocks), function(index) {
       block <- config$blocks[[index]]
       list(
-      block_id = as.character(block$block_id),
+      block_id = triomics_report_identifier(block, "block_id"),
       name = paste("Block", index),
-      profile = as.character(block$profile %||% "not_reported"),
-      quantity = as.character(block$measurement$quantity %||% "not_reported"),
-      scale = as.character(block$measurement$scale %||% "not_reported"),
-      units = as.character(block$measurement$units %||% "not_reported"),
-      preparation_context_id = as.character(block$preprocessing$context_id %||%
-                                               analysis$preparation_context_id %||% "not_reported"),
-      transform = as.character(block$preprocessing$transform$method %||% "not_reported"),
-      normalization = as.character(block$preprocessing$normalisation$method %||% "not_reported"),
-      imputation = as.character(block$preprocessing$imputation$method %||% "not_reported")
+      profile = triomics_report_identifier_value(as.character(block$profile %||% "not_reported"), "blocks.profile"),
+      quantity = triomics_report_identifier_value(as.character(block$measurement$quantity %||% "not_reported"), "blocks.measurement.quantity"),
+      scale = triomics_report_identifier_value(as.character(block$measurement$scale %||% "not_reported"), "blocks.measurement.scale"),
+      units = triomics_report_unit(as.character(block$measurement$units %||% "not_reported"), "blocks.measurement.units"),
+      preparation_context_id = triomics_report_identifier_value(as.character(
+        block$preprocessing$context_id %||% analysis$preparation_context_id %||% "not_reported"),
+        "blocks.preparation_context_id"),
+      transform = triomics_report_identifier_value(as.character(block$preprocessing$transform$method %||% "not_reported"), "blocks.transform"),
+      normalization = triomics_report_identifier_value(as.character(block$preprocessing$normalisation$method %||% "not_reported"), "blocks.normalization"),
+      imputation = triomics_report_identifier_value(as.character(block$preprocessing$imputation$method %||% "not_reported"), "blocks.imputation")
     )
     }),
     analysis = list(
-      preparation_context_id = as.character(analysis$preparation_context_id %||% "not_reported"),
-      design_kind = as.character(analysis$design$kind %||% "not_reported"),
-      condition_type = as.character(analysis$design$condition_type %||% "not_reported"),
-      representation = as.character(analysis$design$representation %||% "not_reported"),
-      statistics_method = as.character(analysis$statistics$method %||% "not_reported"),
+      preparation_context_id = triomics_report_identifier_value(as.character(analysis$preparation_context_id %||% "not_reported"), "analysis.preparation_context_id"),
+      design_kind = triomics_report_identifier_value(as.character(analysis$design$kind %||% "not_reported"), "analysis.design.kind"),
+      condition_type = triomics_report_identifier_value(as.character(analysis$design$condition_type %||% "not_reported"), "analysis.design.condition_type"),
+      representation = triomics_report_identifier_value(as.character(analysis$design$representation %||% "not_reported"), "analysis.design.representation"),
+      statistics_method = triomics_report_identifier_value(as.character(analysis$statistics$method %||% "not_reported"), "analysis.statistics.method"),
       contrasts = lapply(analysis$statistics$contrasts %||% list(), function(contrast) list(
-        contrast_id = as.character(contrast$contrast_id %||% "not_reported"),
-        effect_unit = as.character(analysis$statistics$effect_unit %||% "not_reported")
+        contrast_id = triomics_report_identifier_value(as.character(contrast$contrast_id %||% "not_reported"), "analysis.statistics.contrast_id"),
+        effect_unit = triomics_report_unit(as.character(analysis$statistics$effect_unit %||% "not_reported"), "analysis.statistics.effect_unit")
       ))
     ),
     objective_count = length(objectives)
@@ -341,6 +346,238 @@ triomics_report_bundle_from_root <- function(output_root, config_path) {
   bundle
 }
 
+triomics_report_verify_d_source_lineage <- function(b_reference, c_payload, c_envelope, d_payload) {
+  immutable <- d_payload$immutable_inputs
+  b_source <- immutable$b_artifacts$block_results
+  required_b <- c("artifact_type", "artifact_id", "path", "envelope_path", "sha256", "envelope_sha256")
+  if (!is.null(b_reference)) {
+    if (!is.list(b_source) || !all(required_b %in% names(b_source)) ||
+        !identical(as.character(b_source$artifact_type), as.character(b_reference$artifact_type)) ||
+        !identical(as.character(b_source$artifact_id), as.character(b_reference$artifact_id)) ||
+        !identical(as.character(b_source$path), as.character(b_reference$path)) ||
+        !identical(as.character(b_source$envelope_path), as.character(b_reference$envelope_path)) ||
+        !identical(as.character(b_source$sha256), as.character(b_reference$payload_sha256)) ||
+        !identical(as.character(b_source$envelope_sha256), as.character(b_reference$envelope_sha256))) {
+      triomics_report_abort("D_REPORT_SOURCE_INVALID",
+                            "The displayed B result bytes differ from the D generation's immutable B reference.",
+                            "D.immutable_inputs.b_artifacts.block_results")
+    }
+  }
+
+  c_source <- immutable$c_artifacts$integration_evidence
+  required_c <- c("artifact_type", "artifact_id", "payload_file", "payload_sha256",
+                  "envelope_file", "envelope_sha256")
+  if (!is.list(c_source) || !all(required_c %in% names(c_source)) ||
+      !identical(as.character(c_source$artifact_type), "integration_evidence_bundle") ||
+      !identical(as.character(c_source$artifact_id), "c06-integration-evidence") ||
+      !triomics_sha256_text(as.character(c_source$payload_sha256)) ||
+      !triomics_sha256_text(as.character(c_source$envelope_sha256))) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID",
+                          "The D generation lacks its hash-bound C integration evidence reference.",
+                          "D.immutable_inputs.c_artifacts.integration_evidence")
+  }
+  c_integrations <- c_payload$integrations %||% list()
+  d_integrations <- d_payload$inherited_evidence$integration_evidence$integrations %||% list()
+  inputs <- c_envelope$inputs %||% list()
+  if (!is.list(c_integrations) || !is.list(d_integrations) || !is.list(inputs)) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID", "C integration lineage records are malformed.",
+                          "C.integration_lineage")
+  }
+  c_ids <- vapply(seq_along(c_integrations), function(index) {
+    triomics_report_identifier(c_integrations[[index]], "integration_id")
+  }, character(1))
+  d_ids <- vapply(seq_along(d_integrations), function(index) {
+    triomics_report_identifier(d_integrations[[index]], "integration_id")
+  }, character(1))
+  if (anyDuplicated(c_ids) || anyDuplicated(d_ids) || !setequal(c_ids, d_ids)) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID",
+                          "C result integrations do not match the D hash-bound integration evidence identities.",
+                          "C.integration_lineage.integration_id")
+  }
+  input_pairs <- lapply(inputs, function(input) {
+    if (!is.list(input) || is.null(names(input)) ||
+        !triomics_d_nonempty_string(input$artifact_id) ||
+        !triomics_sha256_text(as.character(input$sha256))) {
+      triomics_report_abort("D_REPORT_SOURCE_INVALID", "A C envelope input reference is malformed.",
+                            "C.envelope.inputs")
+    }
+    list(artifact_id = as.character(input$artifact_id), sha256 = as.character(input$sha256))
+  })
+  for (id in c_ids) {
+    evidence <- d_integrations[[match(id, d_ids)]]
+    reference <- evidence$native_artifact_ref
+    c_item <- c_integrations[[match(id, c_ids)]]
+    if (identical(as.character(c_item$status), "complete")) {
+      if (!is.list(reference) || !triomics_d_nonempty_string(reference$artifact_id) ||
+          !triomics_sha256_text(as.character(reference$sha256)) ||
+          !any(vapply(input_pairs, function(input) {
+            identical(input$artifact_id, as.character(reference$artifact_id)) &&
+              identical(input$sha256, as.character(reference$sha256))
+          }, logical(1)))) {
+        triomics_report_abort("D_REPORT_SOURCE_INVALID",
+                              "A displayed C result is not bound to the native evidence referenced by D.",
+                              paste0("C.integration_lineage.", id))
+      }
+    }
+  }
+  invisible(TRUE)
+}
+
+triomics_report_verify_d_public_c_evidence <- function(root, d_payload, config) {
+  source <- d_payload$immutable_inputs$c_artifacts$integration_evidence
+  required <- c("artifact_type", "artifact_id", "payload_file", "payload_sha256",
+                "envelope_file", "envelope_sha256")
+  if (!is.list(source) || !all(required %in% names(source)) ||
+      !identical(as.character(source$artifact_type), "integration_evidence_bundle") ||
+      !identical(as.character(source$artifact_id), "c06-integration-evidence") ||
+      !identical(as.character(source$payload_file), "integration-evidence.json") ||
+      !identical(as.character(source$envelope_file), "integration-evidence.envelope.json") ||
+      !triomics_sha256_text(as.character(source$payload_sha256)) ||
+      !triomics_sha256_text(as.character(source$envelope_sha256))) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID",
+                          "The D generation lacks its fixed hash-bound C integration evidence artifact.",
+                          "D.immutable_inputs.c_artifacts.integration_evidence")
+  }
+  artifact <- triomics_report_artifact(
+    root, file.path("D", source$payload_file), source$artifact_type, source$artifact_id,
+    config$study_id, config$config_sha256, config$analysis_id, parse_payload = TRUE
+  )
+  if (!identical(artifact$reference$payload_sha256, as.character(source$payload_sha256)) ||
+      !identical(artifact$reference$envelope_sha256, as.character(source$envelope_sha256))) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID",
+                          "The public C integration evidence bytes differ from D's immutable reference.",
+                          "D.immutable_inputs.c_artifacts.integration_evidence")
+  }
+  inherited <- d_payload$inherited_evidence$integration_evidence
+  if (!is.list(inherited) ||
+      !identical(triomics_canonical_json(artifact$payload), triomics_canonical_json(inherited))) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID",
+                          "D's inherited C evidence differs from the hash-bound public C artifact.",
+                          "D.inherited_evidence.integration_evidence")
+  }
+  invisible(artifact$payload)
+}
+
+triomics_report_matrix_signature <- function(value, row_key, column_key, path) {
+  if (!is.list(value) || !is.list(value$rows) || !is.list(value$columns) ||
+      !is.list(value$values)) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID", "A C variance matrix has an invalid typed shape.", path)
+  }
+  rows <- if (!is.null(names(value$rows)) && row_key %in% names(value$rows)) value$rows[[row_key]] else value$rows
+  columns <- if (!is.null(names(value$columns)) && column_key %in% names(value$columns)) value$columns[[column_key]] else value$columns
+  if (!is.list(rows) || !is.list(columns) || length(value$values) != length(rows)) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID", "C variance matrix dimensions do not align.", path)
+  }
+  rows <- vapply(seq_along(rows), function(index) {
+    triomics_report_identifier_value(rows[[index]], paste0(path, ".rows[", index, "]"))
+  }, character(1))
+  columns <- vapply(seq_along(columns), function(index) {
+    triomics_report_identifier_value(columns[[index]], paste0(path, ".columns[", index, "]"))
+  }, character(1))
+  if (anyDuplicated(rows) || anyDuplicated(columns)) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID", "C variance matrix identifiers are duplicated.", path)
+  }
+  matrix_values <- lapply(value$values, function(row) {
+    if (!is.list(row) || length(row) != length(columns) ||
+        any(!vapply(row, function(cell) is.numeric(cell) && length(cell) == 1L &&
+                    is.finite(cell), logical(1)))) {
+      triomics_report_abort("D_REPORT_SOURCE_INVALID", "A C variance matrix row is malformed.", path)
+    }
+    as.numeric(unlist(row, use.names = FALSE))
+  })
+  list(rows = unlist(rows, use.names = FALSE), columns = unlist(columns, use.names = FALSE),
+       values = matrix_values)
+}
+
+triomics_report_verify_c_projection <- function(c_payload, c_envelope, d_payload) {
+  triomics_report_verify_d_source_lineage(NULL, c_payload, c_envelope, d_payload)
+  d_c_evidence <- d_payload$inherited_evidence$integration_evidence
+  c_integrations <- c_payload$integrations %||% list()
+  d_integrations <- d_c_evidence$integrations %||% list()
+  d_ids <- vapply(seq_along(d_integrations), function(index) {
+    as.character(d_integrations[[index]]$integration_id)
+  }, character(1))
+  for (field in c("preparation_context_id", "representation_id")) {
+    c_value <- triomics_report_identifier_value(c_payload[[field]], paste0("C.", field))
+    d_value <- triomics_report_identifier_value(d_c_evidence[[field]], paste0("D.C.", field))
+    if (!identical(c_value, d_value)) {
+      triomics_report_abort("D_REPORT_SOURCE_INVALID",
+                            "C preparation or representation context differs from D's hash-bound evidence.",
+                            paste0("C.", field))
+    }
+  }
+  for (integration in c_integrations) {
+    id <- triomics_report_identifier(integration, "integration_id")
+    evidence <- d_integrations[[match(id, d_ids)]]
+    if (!identical(as.character(integration$status), as.character(evidence$status)) ||
+        !identical(as.character(integration$method), as.character(evidence$backend))) {
+      triomics_report_abort("D_REPORT_SOURCE_INVALID",
+                            "A C integration status or method differs from the D hash-bound evidence.",
+                            paste0("C.integration_lineage.", id))
+    }
+    result <- integration$result %||% list()
+    common <- evidence$common %||% list()
+    parameters <- common$parameters %||% list()
+    if (identical(as.character(integration$status), "complete")) {
+      d_context <- evidence$context %||% list()
+      if (!identical(triomics_report_identifier_value(d_context$preparation_context_id,
+                                                      paste0("D.", id, ".preparation_context_id")),
+                     triomics_report_identifier_value(c_payload$preparation_context_id,
+                                                      paste0("C.", id, ".preparation_context_id"))) ||
+          !identical(triomics_report_identifier_value(d_context$representation_id,
+                                                      paste0("D.", id, ".representation_id")),
+                     triomics_report_identifier_value(c_payload$representation_id,
+                                                      paste0("C.", id, ".representation_id")))) {
+        triomics_report_abort("D_REPORT_SOURCE_INVALID",
+                              "C integration context differs from D's hash-bound evidence.",
+                              paste0("C.integration_lineage.", id, ".context"))
+      }
+    }
+    if (!identical(triomics_canonical_json(result$selected %||% list()),
+                   triomics_canonical_json(common$selected %||% list())) ||
+        !identical(triomics_canonical_json(result$params$rank_lineage %||% list()),
+                   triomics_canonical_json(parameters$rank_lineage %||% list())) ||
+        !identical(triomics_canonical_json(result$params$feature_flow %||% list()),
+                   triomics_canonical_json(parameters$feature_flow %||% list())) ||
+        !identical(as.character(result$params$retained_n_components %||% ""),
+                   as.character(parameters$retained_n_components %||% "")) ||
+        !identical(as.character(result$params$effective$selection$rule %||% ""),
+                   as.character(evidence$selection$rule$rule %||% ""))) {
+      triomics_report_abort("D_REPORT_SOURCE_INVALID",
+                            "Displayed C rank, selection, or retained-feature values differ from D evidence.",
+                            paste0("C.integration_lineage.", id))
+    }
+    c_variance <- result$variance
+    d_variance <- evidence$variance$common_values
+    if (is.null(c_variance) != is.null(d_variance)) {
+      triomics_report_abort("D_REPORT_SOURCE_INVALID",
+                            "Displayed C variance is not present in the D hash-bound evidence.",
+                            paste0("C.integration_lineage.", id, ".variance"))
+    }
+    if (!is.null(c_variance)) {
+      c_matrix <- triomics_report_matrix_signature(c_variance, "block_ids", "component_ids",
+                                                    paste0("C.", id, ".variance"))
+      d_matrix <- triomics_report_matrix_signature(d_variance, "rows", "columns",
+                                                    paste0("D.", id, ".variance"))
+      d_definition <- evidence$variance$common_definition %||% list()
+      definition_fields <- c("metric", "assay_space", "denominator", "semantics")
+      definitions_match <- all(vapply(definition_fields, function(field) {
+        identical(as.character(c_variance[[field]] %||% ""),
+                  as.character(d_definition[[field]] %||% ""))
+      }, logical(1)))
+      if (!identical(c_matrix$rows, d_matrix$rows) ||
+          !identical(c_matrix$columns, d_matrix$columns) ||
+          !identical(triomics_canonical_json(c_matrix$values), triomics_canonical_json(d_matrix$values)) ||
+          !definitions_match) {
+        triomics_report_abort("D_REPORT_SOURCE_INVALID",
+                              "Displayed C variance differs from the D hash-bound common evidence.",
+                              paste0("C.integration_lineage.", id, ".variance"))
+      }
+    }
+  }
+  invisible(TRUE)
+}
+
 triomics_report_verify_bundle <- function(bundle, config) {
   fields <- c("schema_version", "root", "config_path", "config_sha256", "study_id",
               "analysis_id", "privacy_class", "audience", "artifacts")
@@ -427,6 +664,9 @@ triomics_report_verify_bundle <- function(bundle, config) {
     envelopes$clinical <- clinical$envelope
   }
   d <- d_generation$payload
+  triomics_report_verify_d_public_c_evidence(root, d, config)
+  triomics_report_verify_d_source_lineage(bundle$artifacts$b, payloads$c, envelopes$c, d)
+  triomics_report_verify_c_projection(payloads$c, envelopes$c, d)
   if (!identical(as.character(payloads$b$analysis_id), config$analysis_id) ||
       !identical(as.character(payloads$c$analysis_id), config$analysis_id) ||
       !is.list(payloads$b$blocks) || !is.list(payloads$c$integrations) ||
@@ -448,6 +688,44 @@ triomics_report_text <- function(record, key, default = "") {
     triomics_report_abort("D_REPORT_SOURCE_INVALID", "A report label has an invalid scalar type.", key)
   }
   triomics_report_clean_text(value)
+}
+
+triomics_report_identifier_value <- function(value, key, default = "") {
+  if (is.null(value)) return(default)
+  if (!is.character(value) || length(value) != 1L || is.na(value)) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID", "A scientific identifier has an invalid scalar type.", key)
+  }
+  if (!nzchar(value)) return(default)
+  if (triomics_report_contains_private_text(value) || grepl("[[:cntrl:]]", value, perl = TRUE)) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID", "A scientific identifier contains unsafe private text.", key)
+  }
+  value
+}
+
+triomics_report_identifier <- function(record, key, default = "") {
+  value <- if (is.list(record)) record[[key]] else NULL
+  triomics_report_identifier_value(value, key, default)
+}
+
+triomics_report_unit <- function(value, key = "effect_unit") {
+  if (is.list(value)) value <- value[[key]]
+  if (is.null(value)) return("")
+  if (!is.character(value) || length(value) != 1L || is.na(value)) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID", "A scientific unit has an invalid scalar type.", key)
+  }
+  if (triomics_report_contains_private_text(value) || grepl("[[:cntrl:]]", value, perl = TRUE)) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID", "A scientific unit contains unsafe private text.", key)
+  }
+  value
+}
+
+triomics_report_identifier_collection <- function(value, key, default = "") {
+  if (is.null(value) || !length(value)) return(default)
+  values <- if (is.list(value)) value else as.list(value)
+  identifiers <- vapply(seq_along(values), function(index) {
+    triomics_report_identifier_value(values[[index]], paste0(key, "[", index, "]"))
+  }, character(1))
+  paste(identifiers, collapse = ";")
 }
 
 triomics_report_requirement <- function(requirements, name) {
@@ -490,7 +768,9 @@ triomics_report_rows <- function(block_results, blocks) {
     "representation_hash", "contrast_hash", "result_id"
   )
   records <- list()
-  block_names <- vapply(blocks, function(block) block$block_id, character(1))
+  block_names <- vapply(seq_along(blocks), function(index) {
+    triomics_report_identifier(blocks[[index]], "block_id")
+  }, character(1))
   block_labels <- vapply(seq_along(blocks), function(index) paste("Block", index), character(1))
   append_claim <- function(block_id, claim_id, claim, claim_type) {
     rows <- claim$rows %||% list()
@@ -505,7 +785,8 @@ triomics_report_rows <- function(block_results, blocks) {
       if (!is.list(row) || is.null(names(row))) {
         triomics_report_abort("D_REPORT_SOURCE_INVALID", "A B result row is not a named record.", claim_id)
       }
-      effect_unit <- triomics_report_text(row, "effect_unit", triomics_report_text(claim, "effect_unit"))
+      effect_unit_value <- if (!is.null(row$effect_unit)) row$effect_unit else claim$effect_unit
+      effect_unit <- triomics_report_unit(effect_unit_value)
       interval_lower <- if (!is.null(row$interval_lower)) triomics_report_number(row, "interval_lower") else
         if (!is.null(row$ci_lower)) triomics_report_number(row, "ci_lower") else NA_real_
       interval_upper <- if (!is.null(row$interval_upper)) triomics_report_number(row, "interval_upper") else
@@ -530,19 +811,22 @@ triomics_report_rows <- function(block_results, blocks) {
         "source_reported"
       } else if (length(count_ref)) "source_reference_withheld" else "not_reported"
       values <- list(
-        block_id = block_id, block_name = block_name,
-        feature_key = triomics_report_text(row, "feature_key"),
-        analysis_id = triomics_report_text(row, "analysis_id", as.character(block_results$analysis_id)),
-        preparation_context_id = as.character(block_results$preparation_context_id %||% "not_reported"),
-        representation_id = triomics_report_text(row, "representation_id",
-                                                 as.character(block_results$representation_id %||% "not_reported")),
-        claim_type = triomics_report_text(row, "claim_type", claim_type),
-        claim_id = claim_id,
-        contrast_id = triomics_report_text(row, "contrast_id", claim_id),
-        family_id = triomics_report_text(row, "family_id", triomics_report_text(family, "family_id")),
-        family_member_hash = triomics_report_text(family, "member_hash"),
-        family_claim_scope = triomics_report_text(family, "claim_scope"),
-        family_correction_method = triomics_report_text(family, "correction_method"),
+        block_id = triomics_report_identifier_value(block_id, "B.block_id"), block_name = block_name,
+        feature_key = triomics_report_identifier(row, "feature_key"),
+        analysis_id = triomics_report_identifier(row, "analysis_id",
+                                                 triomics_report_identifier_value(block_results$analysis_id, "B.analysis_id")),
+        preparation_context_id = triomics_report_identifier_value(
+          as.character(block_results$preparation_context_id %||% "not_reported"), "B.preparation_context_id"),
+        representation_id = triomics_report_identifier(row, "representation_id",
+          triomics_report_identifier_value(as.character(block_results$representation_id %||% "not_reported"),
+                                           "B.representation_id")),
+        claim_type = triomics_report_identifier(row, "claim_type", claim_type),
+        claim_id = triomics_report_identifier_value(claim_id, "B.claim_id"),
+        contrast_id = triomics_report_identifier(row, "contrast_id", claim_id),
+        family_id = triomics_report_identifier(row, "family_id", triomics_report_identifier(family, "family_id")),
+        family_member_hash = triomics_report_identifier(family, "member_hash"),
+        family_claim_scope = triomics_report_identifier(family, "claim_scope"),
+        family_correction_method = triomics_report_identifier(family, "correction_method"),
         family_n_declared = triomics_report_number(family, "n_declared"),
         family_n_eligible = triomics_report_number(family, "n_eligible"),
         family_n_evaluated = triomics_report_number(family, "n_evaluated"),
@@ -554,15 +838,15 @@ triomics_report_rows <- function(block_results, blocks) {
         uncertainty_status = uncertainty_status,
         interval_lower = interval_lower,
         interval_upper = interval_upper,
-        interval_method = triomics_report_text(row, "interval_method"),
+        interval_method = triomics_report_identifier(row, "interval_method"),
         interval_status = interval_status,
         statistic = triomics_report_number(row, "statistic"),
-        statistic_name = triomics_report_text(row, "statistic_name"),
+        statistic_name = triomics_report_identifier(row, "statistic_name"),
         ordinary_df = triomics_report_number(row, "ordinary_df"),
         effective_test_df = triomics_report_number(row, "effective_test_df"),
         p = triomics_report_number(row, "p"), q = triomics_report_number(row, "q"),
-        inferential_status = triomics_report_text(row, "inferential_status"),
-        estimation_status = triomics_report_text(row, "estimation_status"),
+        inferential_status = triomics_report_identifier(row, "inferential_status"),
+        estimation_status = triomics_report_identifier(row, "estimation_status"),
         estimation_reason = triomics_report_reason(row, "estimation_reason"),
         n_samples = triomics_report_number(row, "n_samples"),
         n_subjects = triomics_report_number(row, "n_subjects"),
@@ -571,17 +855,18 @@ triomics_report_rows <- function(block_results, blocks) {
         direction_numerator = triomics_report_number(row, "direction_numerator"),
         direction_denominator = triomics_report_number(row, "direction_denominator"),
         direction_zero_count = triomics_report_number(row, "direction_zero_count"),
-        direction_status = triomics_report_text(row, "direction_status"),
+        direction_status = triomics_report_identifier(row, "direction_status"),
         direction_reason = triomics_report_reason(row, "direction_reason"),
         count_prior_count = count_prior_count,
-        count_prior_type = count_prior_type,
-        count_prior_metadata_sha256 = count_prior_metadata,
+        count_prior_type = triomics_report_identifier_value(count_prior_type, "B.count_prior_type"),
+        count_prior_metadata_sha256 = triomics_report_identifier_value(count_prior_metadata,
+                                                                        "B.count_prior_metadata_sha256"),
         count_prior_status = count_prior_status,
-        source_hash = triomics_report_text(row, "source_hash"),
-        model_hash = triomics_report_text(row, "model_hash"),
-        representation_hash = triomics_report_text(row, "representation_hash"),
-        contrast_hash = triomics_report_text(row, "contrast_hash"),
-        result_id = triomics_report_text(row, "result_id")
+        source_hash = triomics_report_identifier(row, "source_hash"),
+        model_hash = triomics_report_identifier(row, "model_hash"),
+        representation_hash = triomics_report_identifier(row, "representation_hash"),
+        contrast_hash = triomics_report_identifier(row, "contrast_hash"),
+        result_id = triomics_report_identifier(row, "result_id")
       )
       values <- lapply(values, function(value) {
         if (is.null(value) || !length(value)) return(NA_character_)
@@ -688,12 +973,42 @@ triomics_report_assay_summary <- function(payload, config) {
                 stringsAsFactors = FALSE, check.names = FALSE)
 }
 
+triomics_report_clinical_adjustments <- function(row) {
+  adjustments <- row$adjustment %||% list()
+  if (!is.list(adjustments)) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID", "Clinical adjustments are not a typed record array.",
+                          "clinical.adjustment")
+  }
+  if (!length(adjustments)) {
+    return(list(count = 0L, variables = "", roles = "", forms = "", status = "none_declared"))
+  }
+  if (any(!vapply(adjustments, function(adjustment) {
+    is.list(adjustment) && !is.null(names(adjustment))
+  }, logical(1)))) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID", "A clinical adjustment is not a named record.",
+                          "clinical.adjustment")
+  }
+  variable <- vapply(seq_along(adjustments), function(index) {
+    triomics_report_identifier(adjustments[[index]], "variable")
+  }, character(1))
+  role <- vapply(seq_along(adjustments), function(index) {
+    triomics_report_identifier(adjustments[[index]], "role", "not_reported")
+  }, character(1))
+  form <- vapply(seq_along(adjustments), function(index) {
+    triomics_report_identifier(adjustments[[index]], "form", "not_reported")
+  }, character(1))
+  list(count = as.integer(length(adjustments)), variables = paste(variable, collapse = ";"),
+       roles = paste(role, collapse = ";"), forms = paste(form, collapse = ";"),
+       status = "source_reported")
+}
+
 triomics_report_clinical_rows <- function(payload) {
   columns <- c("objective_id", "endpoint_id", "clinical_variable", "effect", "effect_unit",
                "ordinary_se", "moderated_se", "uncertainty_status", "interval_lower",
                "interval_upper", "interval_method", "interval_status", "statistic",
                "statistic_name", "ordinary_df", "effective_test_df", "p", "q", "status",
-               "adjustment", "n_subjects", "n_rows_used", "family_id", "source_hash",
+               "adjustment_count", "adjustment_variables", "adjustment_roles", "adjustment_forms",
+               "adjustment_status", "n_subjects", "n_rows_used", "family_id", "source_hash",
                "model_hash", "result_id")
   rows <- payload$results %||% list()
   if (!is.list(rows)) {
@@ -706,35 +1021,43 @@ triomics_report_clinical_rows <- function(payload) {
       triomics_report_abort("D_REPORT_SOURCE_INVALID", "A clinical association result is not a named record.",
                             "clinical.results")
     }
-    lower <- if (!is.null(row$interval_lower)) triomics_report_number(row, "interval_lower") else NA_real_
-    upper <- if (!is.null(row$interval_upper)) triomics_report_number(row, "interval_upper") else NA_real_
+    lower <- if (!is.null(row$interval_low)) triomics_report_number(row, "interval_low") else
+      if (!is.null(row$interval_lower)) triomics_report_number(row, "interval_lower") else NA_real_
+    upper <- if (!is.null(row$interval_high)) triomics_report_number(row, "interval_high") else
+      if (!is.null(row$interval_upper)) triomics_report_number(row, "interval_upper") else NA_real_
     ordinary_se <- triomics_report_number(row, "ordinary_se")
     moderated_se <- triomics_report_number(row, "moderated_se")
+    adjustment <- triomics_report_clinical_adjustments(row)
     values <- list(
-      objective_id = paste("Objective", index),
-      endpoint_id = paste("Endpoint", index),
-      clinical_variable = paste("Clinical measure", index),
+      objective_id = triomics_report_identifier(row, "objective_id", "not_reported"),
+      endpoint_id = triomics_report_identifier(row, "endpoint_id", "not_reported"),
+      clinical_variable = triomics_report_identifier(row, "predictor_ref", "not_reported"),
       effect = triomics_report_number(row, "effect"),
-      effect_unit = triomics_report_text(row, "effect_unit"),
+      effect_unit = triomics_report_unit(row, "effect_unit"),
       ordinary_se = ordinary_se, moderated_se = moderated_se,
       uncertainty_status = if (is.finite(ordinary_se) || is.finite(moderated_se)) "source_reported_se" else "not_reported",
       interval_lower = lower, interval_upper = upper,
-      interval_method = triomics_report_text(row, "interval_method"),
+      interval_method = triomics_report_identifier(row, "interval_method", "not_reported"),
       interval_status = if (is.finite(lower) && is.finite(upper)) "source_reported" else "not_exported",
       statistic = triomics_report_number(row, "statistic"),
-      statistic_name = triomics_report_text(row, "statistic_name"),
+      statistic_name = triomics_report_identifier(row, "statistic_name", "not_reported"),
       ordinary_df = triomics_report_number(row, "ordinary_df"),
       effective_test_df = triomics_report_number(row, "effective_test_df"),
       p = triomics_report_number(row, "p"), q = triomics_report_number(row, "q"),
       status = triomics_report_reason(row, "status",
-                                      triomics_report_reason(row, "inferential_status", "not_reported")),
-      adjustment = triomics_report_text(row, "adjustment"),
+                 triomics_report_reason(row, "estimation_status",
+                   triomics_report_reason(row, "inferential_status", "not_reported"))),
+      adjustment_count = adjustment$count,
+      adjustment_variables = adjustment$variables,
+      adjustment_roles = adjustment$roles,
+      adjustment_forms = adjustment$forms,
+      adjustment_status = adjustment$status,
       n_subjects = triomics_report_number(row, "n_subjects"),
       n_rows_used = triomics_report_number(row, "n_rows_used"),
-      family_id = triomics_report_text(row, "family_id"),
-      source_hash = triomics_report_text(row, "source_hash"),
-      model_hash = triomics_report_text(row, "model_hash"),
-      result_id = triomics_report_text(row, "result_id")
+      family_id = triomics_report_identifier(row, "family_id", "not_reported"),
+      source_hash = triomics_report_identifier(row, "source_hash", "not_reported"),
+      model_hash = triomics_report_identifier(row, "model_hash", "not_reported"),
+      result_id = triomics_report_identifier(row, "result_id", "not_reported")
     )
     as.data.frame(values, stringsAsFactors = FALSE, check.names = FALSE)
   })
@@ -742,7 +1065,7 @@ triomics_report_clinical_rows <- function(payload) {
     columns,
     numeric_columns = c("effect", "ordinary_se", "moderated_se", "interval_lower", "interval_upper",
                         "statistic", "ordinary_df", "effective_test_df", "p", "q", "n_subjects",
-                        "n_rows_used")
+                        "n_rows_used", "adjustment_count")
   ))
   result <- do.call(rbind, records)
   rownames(result) <- NULL
@@ -763,7 +1086,7 @@ triomics_report_integration_rows <- function(payload, config, d = list()) {
     selection <- params$effective$selection %||% list()
     selected <- result$selected %||% list()
     selected_count <- sum(vapply(selected, function(items) if (is.list(items)) length(items) else 0L, integer(1)))
-    integration_id <- as.character(integration$integration_id %||% "not_reported")
+    integration_id <- triomics_report_identifier(integration, "integration_id")
     comparisons <- d$inherited_evidence$integration_comparisons %||% d$integration_comparisons %||% list()
     comparison_status <- as.character(comparisons$status %||% comparisons$comparisons$status %||% "unavailable")
     pairs <- comparisons$pairs %||% comparisons$comparisons$pairs %||% list()
@@ -771,8 +1094,8 @@ triomics_report_integration_rows <- function(payload, config, d = list()) {
     selected_from_rank <- triomics_report_number(rank, "selected_feature_count")
     list(
       integration_id = integration_id,
-      method = as.character(integration$method %||% "not_reported"),
-      status = as.character(integration$status %||% "unavailable"),
+      method = triomics_report_identifier(integration, "method", "not_reported"),
+      status = triomics_report_identifier(integration, "status", "unavailable"),
       required = triomics_report_requirement(config$integration_requirements, integration_id),
       eligibility_status = if (rank_available && identical(as.character(integration$status), "complete")) {
         "source_reported_eligible"
@@ -782,19 +1105,21 @@ triomics_report_integration_rows <- function(payload, config, d = list()) {
       numerical_rank = triomics_report_number(rank, "numerical_rank"),
       requested_components = triomics_report_number(rank, "requested_components"),
       rank_disposition = triomics_report_text(rank, "disposition", "not_reported"),
-      preparation_context_id = as.character(payload$preparation_context_id %||% "not_reported"),
-      representation_id = as.character(payload$representation_id %||% "not_reported"),
-      selection_rule = as.character(selection$rule %||% "not_reported"),
+      preparation_context_id = triomics_report_identifier_value(
+        payload$preparation_context_id %||% "not_reported", "C.preparation_context_id"),
+      representation_id = triomics_report_identifier_value(
+        payload$representation_id %||% "not_reported", "C.representation_id"),
+      selection_rule = triomics_report_identifier(selection, "rule", "not_reported"),
       selected_feature_count = if (is.finite(selected_from_rank)) as.integer(selected_from_rank) else
         as.integer(selected_count),
       retained_components = triomics_report_number(params, "retained_n_components"),
       stability_status = comparison_status,
       stability_comparison_count = as.integer(length(pairs)),
       stability_reason_code = triomics_report_reason(comparisons, "reason"),
-      variance_metric = as.character(variance$metric %||% "not_reported"),
-      variance_assay_space = as.character(variance$assay_space %||% "not_reported"),
-      variance_denominator = as.character(variance$denominator %||% "not_reported"),
-      variance_semantics = as.character(variance$semantics %||% "not_reported")
+      variance_metric = triomics_report_identifier(variance, "metric", "not_reported"),
+      variance_assay_space = triomics_report_identifier(variance, "assay_space", "not_reported"),
+      variance_denominator = triomics_report_identifier(variance, "denominator", "not_reported"),
+      variance_semantics = triomics_report_identifier(variance, "semantics", "not_reported")
     )
   })
   if (!length(records)) {
@@ -826,7 +1151,7 @@ triomics_report_integration_variance_rows <- function(payload) {
   }
   records <- list()
   for (integration in integrations) {
-    integration_id <- as.character(integration$integration_id %||% "not_reported")
+    integration_id <- triomics_report_identifier(integration, "integration_id")
     result <- integration$result %||% list()
     variance <- result$variance %||% list()
     row_ids <- variance$rows$block_ids %||% list()
@@ -849,15 +1174,15 @@ triomics_report_integration_variance_rows <- function(payload) {
           as.numeric(value)
         }
         records[[length(records) + 1L]] <- data.frame(
-          integration_id = triomics_report_clean_text(integration_id),
-          method = triomics_report_clean_text(as.character(integration$method %||% "not_reported")),
-          block = paste("Block", row_index),
-          component_id = triomics_report_clean_text(as.character(column_ids[[column_index]])),
+          integration_id = integration_id,
+          method = triomics_report_identifier(integration, "method", "not_reported"),
+          block_id = triomics_report_identifier_value(row_ids[[row_index]], "C.variance.block_id"),
+          component_id = triomics_report_identifier_value(column_ids[[column_index]], "C.variance.component_id"),
           variance_value = variance_value,
-          variance_metric = triomics_report_clean_text(as.character(variance$metric %||% "not_reported")),
-          variance_assay_space = triomics_report_clean_text(as.character(variance$assay_space %||% "not_reported")),
-          variance_denominator = triomics_report_clean_text(as.character(variance$denominator %||% "not_reported")),
-          variance_semantics = triomics_report_clean_text(as.character(variance$semantics %||% "not_reported")),
+          variance_metric = triomics_report_identifier(variance, "metric", "not_reported"),
+          variance_assay_space = triomics_report_identifier(variance, "assay_space", "not_reported"),
+          variance_denominator = triomics_report_identifier(variance, "denominator", "not_reported"),
+          variance_semantics = triomics_report_identifier(variance, "semantics", "not_reported"),
           stringsAsFactors = FALSE, check.names = FALSE
         )
       }
@@ -865,7 +1190,7 @@ triomics_report_integration_variance_rows <- function(payload) {
   }
   if (!length(records)) {
     return(triomics_report_empty_frame(
-      c("integration_id", "method", "block", "component_id", "variance_value",
+      c("integration_id", "method", "block_id", "component_id", "variance_value",
         "variance_metric", "variance_assay_space", "variance_denominator", "variance_semantics"),
       numeric_columns = "variance_value"
     ))
@@ -906,9 +1231,10 @@ triomics_report_integration_eligibility_rows <- function(payload) {
                               "C.feature_flow")
       }
       records[[length(records) + 1L]] <- data.frame(
-        integration_id = triomics_report_clean_text(as.character(integration$integration_id %||% "not_reported")),
-        method = triomics_report_clean_text(as.character(integration$method %||% "not_reported")),
-        block = paste("Block", index), eligibility_status = "source_reported",
+        integration_id = triomics_report_identifier(integration, "integration_id"),
+        method = triomics_report_identifier(integration, "method", "not_reported"),
+        block_id = triomics_report_identifier_value(names(feature_flow)[[index]], "C.feature_flow.block_id"),
+        eligibility_status = "source_reported",
         input_feature_count = as.integer(length(input)),
         selected_feature_count = as.integer(length(selected)),
         retained_feature_count = as.integer(length(retained)),
@@ -918,7 +1244,7 @@ triomics_report_integration_eligibility_rows <- function(payload) {
       )
     }
   }
-  columns <- c("integration_id", "method", "block", "eligibility_status", "input_feature_count",
+  columns <- c("integration_id", "method", "block_id", "eligibility_status", "input_feature_count",
                "selected_feature_count", "retained_feature_count", "zero_variance_feature_count",
                "excluded_by_selection_count")
   if (!length(records)) {
@@ -959,9 +1285,78 @@ triomics_report_enrichment_rows <- function(d) {
     triomics_report_abort("D_REPORT_SOURCE_INVALID", "D enrichment summaries are not a typed record array.",
                           "D.enrichment.results")
   }
+  route_claims <- d$routes$ora$claims %||% list()
+  if (!is.list(route_claims)) {
+    triomics_report_abort("D_REPORT_SOURCE_INVALID", "D ORA claim detail is not a typed record array.",
+                          "D.routes.ora.claims")
+  }
+  identity_fields <- c("study_id", "analysis_id", "preparation_context_id", "representation_id",
+                       "block_id", "source_branch", "claim_id", "integration_id", "family_id")
+  identity_key <- function(identity, key) {
+    if (!is.list(identity) || is.null(names(identity))) {
+      triomics_report_abort("D_REPORT_SOURCE_INVALID", "An enrichment claim identity is malformed.", key)
+    }
+    safe <- lapply(identity_fields, function(field) {
+      triomics_report_identifier(identity, field, if (identical(field, "integration_id")) "not_applicable" else "not_reported")
+    })
+    names(safe) <- identity_fields
+    triomics_canonical_json(safe)
+  }
   records <- list()
-  for (claim_index in seq_along(summaries)) {
-    summary <- summaries[[claim_index]]
+  for (summary in summaries) {
+    if (!is.list(summary) || is.null(names(summary))) {
+      triomics_report_abort("D_REPORT_SOURCE_INVALID", "A D enrichment summary is not a named record.",
+                            "D.enrichment.results")
+    }
+    identity <- summary$identity
+    key <- identity_key(identity, "D.enrichment.identity")
+    details <- Filter(function(claim) {
+      is.list(claim) && !is.null(names(claim)) &&
+        identical(identity_key(claim$identity, "D.routes.ora.claims.identity"), key)
+    }, route_claims)
+    if (length(details) > 1L) {
+      triomics_report_abort("D_REPORT_SOURCE_INVALID", "An enrichment claim has duplicate source detail.",
+                            "D.routes.ora.claims")
+    }
+    detail <- if (length(details)) details[[1L]] else NULL
+    detail_bindings <- detail$bindings %||% list()
+    protocol <- detail$protocol %||% list()
+    mapping <- detail$mapping %||% list()
+    universe <- detail$measured_universe %||% list()
+    set_family <- detail$set_family %||% list()
+    identity_values <- lapply(identity_fields, function(field) {
+      triomics_report_identifier(identity, field,
+        if (identical(field, "integration_id")) "not_applicable" else "not_reported")
+    })
+    names(identity_values) <- identity_fields
+    source_ids <- triomics_report_identifier_collection(identity$source_ids, "D.enrichment.source_ids")
+    nomination_ids <- triomics_report_identifier_collection(identity$nomination_ids,
+                                                             "D.enrichment.nomination_ids")
+    protocol_sha <- triomics_report_identifier(protocol, "sha256",
+      triomics_report_identifier(detail_bindings, "protocol_sha256", "not_reported"))
+    mapping_sha <- triomics_report_identifier(detail_bindings, "mapping_sha256", "not_reported")
+    universe_sha <- triomics_report_identifier(universe, "sha256",
+      triomics_report_identifier(detail_bindings, "measured_universe_sha256", "not_reported"))
+    set_family_sha <- triomics_report_identifier(set_family, "sha256",
+      triomics_report_identifier(detail_bindings, "set_family_sha256", "not_reported"))
+    mapping_resource <- mapping$resource %||% list()
+    mapping_resource_id <- triomics_report_identifier(mapping_resource, "resource_id",
+      triomics_report_identifier(mapping_resource, "artifact_id", "not_reported"))
+    mapping_resource_version <- triomics_report_identifier(mapping_resource, "version", "not_reported")
+    protocol_resource_id <- triomics_report_identifier(protocol, "resource_id", "not_reported")
+    mapping_rule <- triomics_report_identifier(protocol, "mapping_rule", "not_reported")
+    aggregation_rule <- triomics_report_identifier(protocol, "aggregation_rule", "not_reported")
+    ambiguity_rule <- triomics_report_identifier(protocol, "ambiguity_rule", "not_reported")
+    universe_source <- triomics_report_identifier(universe, "source", "not_reported")
+    interpretation <- triomics_report_identifier_value(
+      detail$interpretation %||% summary$interpretation,
+      "D.enrichment.interpretation", "not_reported"
+    )
+    claim_context_sha <- if (!is.null(detail)) triomics_hash_text(triomics_canonical_json(list(
+      identity = identity_values, protocol_sha256 = protocol_sha,
+      mapping_sha256 = mapping_sha, measured_universe_sha256 = universe_sha,
+      set_family_sha256 = set_family_sha
+    ))) else ""
     family_size <- triomics_report_number(summary, "family_size")
     tests_in_bh <- triomics_report_number(summary, "tests_in_bh")
     sets <- summary$sets %||% list()
@@ -975,8 +1370,32 @@ triomics_report_enrichment_rows <- function(d) {
                               "D.enrichment.sets")
       }
       records[[length(records) + 1L]] <- data.frame(
-        claim = paste("Enrichment claim", claim_index),
-        set_id = triomics_report_text(set, "set_id", "not_reported"),
+        study_id = identity_values$study_id,
+        analysis_id = identity_values$analysis_id,
+        preparation_context_id = identity_values$preparation_context_id,
+        representation_id = identity_values$representation_id,
+        block_id = identity_values$block_id,
+        source_branch = identity_values$source_branch,
+        claim_id = identity_values$claim_id,
+        integration_id = identity_values$integration_id,
+        family_id = identity_values$family_id,
+        source_ids = source_ids,
+        nomination_ids = nomination_ids,
+        protocol_resource_id = protocol_resource_id,
+        protocol_sha256 = protocol_sha,
+        mapping_resource_id = mapping_resource_id,
+        mapping_resource_version = mapping_resource_version,
+        mapping_sha256 = mapping_sha,
+        mapping_rule = mapping_rule,
+        aggregation_rule = aggregation_rule,
+        ambiguity_rule = ambiguity_rule,
+        universe_source = universe_source,
+        measured_universe_sha256 = universe_sha,
+        set_family_sha256 = set_family_sha,
+        interpretation = interpretation,
+        claim_context_sha256 = claim_context_sha,
+        lineage_status = if (is.null(detail)) "detail_not_reported" else "source_reported",
+        set_id = triomics_report_identifier(set, "set_id", "not_reported"),
         status = triomics_report_reason(set, "status", "not_reported"),
         population_N = triomics_report_number(set, "N"),
         set_members_K = triomics_report_number(set, "K"),
@@ -990,10 +1409,17 @@ triomics_report_enrichment_rows <- function(d) {
       )
     }
   }
-  columns <- c("claim", "set_id", "status", "population_N", "set_members_K", "nominated_n",
+  columns <- c("study_id", "analysis_id", "preparation_context_id", "representation_id", "block_id",
+               "source_branch", "claim_id", "integration_id", "family_id", "source_ids",
+               "nomination_ids", "protocol_resource_id", "protocol_sha256", "mapping_resource_id",
+               "mapping_resource_version", "mapping_sha256", "mapping_rule", "aggregation_rule",
+               "ambiguity_rule", "universe_source",
+               "measured_universe_sha256", "set_family_sha256", "interpretation", "claim_context_sha256",
+               "lineage_status", "set_id", "status", "population_N", "set_members_K", "nominated_n",
                "overlap_k", "p", "q", "family_size", "tests_in_bh")
   if (!length(records)) {
-    return(triomics_report_empty_frame(columns, numeric_columns = setdiff(columns, c("claim", "set_id", "status"))))
+    return(triomics_report_empty_frame(columns, numeric_columns = c("population_N", "set_members_K",
+      "nominated_n", "overlap_k", "p", "q", "family_size", "tests_in_bh")))
   }
   frame <- do.call(rbind, records)
   rownames(frame) <- NULL
@@ -1053,7 +1479,7 @@ triomics_report_optional_sections <- function(loaded, config) {
       tables = list()
     )
     provider <- get0(definition$function_name,
-                     envir = environment(triomics_report_optional_sections),
+                     envir = environment(),
                      mode = "function", inherits = TRUE)
     if (!is.function(provider)) return(fallback)
     value <- tryCatch(provider(loaded, config), error = function(error) NULL)
@@ -1079,6 +1505,7 @@ triomics_report_optional_sections <- function(loaded, config) {
       }
       frame
     })
+    value$reason_code <- triomics_report_reason(value, "reason_code")
     value
   })
   names(result) <- names(definitions)
@@ -1102,7 +1529,10 @@ triomics_report_optional_section_html <- function(section) {
          paste(parts, collapse = "\n"))
 }
 
-triomics_report_conditional_capabilities <- function(routes, c07_status, c09) {
+triomics_report_conditional_capabilities <- function(routes, c07_status, c09,
+                                                    extended_sections = NULL) {
+  targets <- extended_sections$targets %||% list(status = "unavailable")
+  clinical <- extended_sections$clinical %||% list(status = "unavailable")
   c09_status <- as.character(c09$status %||% "unavailable")
   if (isTRUE(c09$benefit_guaranteed)) {
     triomics_report_abort("D_REPORT_SOURCE_INVALID", "C-09 cannot claim guaranteed benefit.", "C09.benefit_guaranteed")
@@ -1112,22 +1542,41 @@ triomics_report_conditional_capabilities <- function(routes, c07_status, c09) {
                    "D-T13 target dossier", "D-T14 quantitative target method", "D-T15 clinical report"),
     status = c(routes$status[match("mofa_native", routes$route)],
                routes$status[match("biopan", routes$route)], c07_status, c09_status,
-               "not_implemented", "conditional_unapproved", "not_implemented"),
+               as.character(targets$status), "conditional_unapproved", as.character(clinical$status)),
     scope = c("D-T06", "D-T07", "C-07", as.character(c09$status_scope %||% c09$scope %||%
                                                          "synthetic_fixture_only"),
               "D-T13", "D-T14", "D-T15"),
     completion_policy = c("conditional", "conditional", "not_applicable",
                           as.character(c09$completion_policy %||% "conditional"),
-                          "not_started", "conditional", "not_started"),
+                          "conditional", "conditional", "conditional"),
     qualification_status = c("unqualified", "unqualified", "not_applicable",
                              as.character(c09$qualification_status %||% "unqualified"),
-                             "not_implemented", "unapproved", "not_implemented"),
+                             "not_evaluated", "unapproved", "not_evaluated"),
     benefit_guaranteed = c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),
     model_execution = c("not_reported", "not_reported", "not_applicable",
                         as.character(c09$model_execution %||% c09$status %||% "not_started"),
-                        "not_started", "not_started", "not_started"),
+                        "not_applicable", "not_started", "not_applicable"),
+    project_acceptance_status = rep("not_assessed", 7L),
     stringsAsFactors = FALSE
   )
+}
+
+triomics_report_optional_section_notes <- function(extended_sections) {
+  notes <- character()
+  for (entry in list(
+    list(packet = "D-T13", name = "target dossier", value = extended_sections$targets),
+    list(packet = "D-T15", name = "clinical report", value = extended_sections$clinical)
+  )) {
+    section <- entry$value %||% list(status = "unavailable", reason_code = "")
+    status <- triomics_report_identifier(section, "status", "unavailable")
+    if (status %in% c("unavailable", "partial")) {
+      reason <- triomics_report_reason(section, "reason_code")
+      suffix <- if (nzchar(reason)) paste0("; reason code ", reason) else ""
+      notes <- c(notes, paste0(entry$packet, " ", entry$name, " report section status: ",
+                               status, suffix, ". Project acceptance is not assessed."))
+    }
+  }
+  notes
 }
 
 triomics_report_sections <- function(config, loaded, results, clinical, integrations, routes, flow,
@@ -1385,11 +1834,10 @@ triomics_report_project <- function(loaded, config, quarto_version) {
   unavailable <- c(unavailable,
                    paste0("C-07 controls status: ", c07, "."),
                    paste0("C-09 clinical prediction status: ", c09, "."),
-                   "D-T13 specialized target dossier is not implemented by D-T08.",
-                   "D-T15 specialized clinical report is not implemented by D-T08.",
+                   triomics_report_optional_section_notes(extended_sections),
                    "D-T14 quantitative target method remains conditional and unapproved.")
   c09_record <- loaded$d$inherited_evidence$stage_status$clinical_prediction %||% list()
-  conditional <- triomics_report_conditional_capabilities(routes, c07, c09_record)
+  conditional <- triomics_report_conditional_capabilities(routes, c07, c09_record, extended_sections)
   if (anyNA(conditional$status)) conditional$status[is.na(conditional$status)] <- "unavailable"
   if (anyNA(conditional$status)) conditional$status[is.na(conditional$status)] <- "unavailable"
   notice <- switch(config$audience,
@@ -1637,31 +2085,45 @@ triomics_report_write_text <- function(value, path) {
 triomics_report_manifest_sources <- function(bundle) {
   refs <- bundle$artifacts
   names <- c("a", "b", "c", "d", "clinical")
+  manifest_producer <- function(producer, key) {
+    if (!is.list(producer) || is.null(names(producer)) ||
+        !identical(sort(names(producer)), sort(c("package", "version", "commit")))) {
+      triomics_report_abort("D_REPORT_SOURCE_INVALID", "A source producer identity is malformed.", key)
+    }
+    list(
+      package = triomics_report_identifier(producer, "package"),
+      version = triomics_report_identifier(producer, "version"),
+      commit = triomics_report_identifier(producer, "commit")
+    )
+  }
   records <- list()
   for (name in names) {
     reference <- refs[[name]]
     if (is.null(reference)) next
     if (identical(name, "d")) {
       records[[length(records) + 1L]] <- list(
-        stage = "D", pointer_path = reference$pointer_path,
-        pointer_sha256 = reference$pointer_sha256,
-        generation_id = reference$generation_id,
-        generation_manifest_path = reference$manifest_path,
-        generation_manifest_sha256 = reference$manifest_sha256,
-        payload_path = reference$payload_path, payload_sha256 = reference$payload_sha256,
-        envelope_path = reference$envelope_path, envelope_sha256 = reference$envelope_sha256,
-        producer = reference$producer,
-        status = reference$status
+        stage = "D", pointer_path = triomics_report_identifier(reference, "pointer_path"),
+        pointer_sha256 = triomics_report_identifier(reference, "pointer_sha256"),
+        generation_id = triomics_report_identifier(reference, "generation_id"),
+        generation_manifest_path = triomics_report_identifier(reference, "manifest_path"),
+        generation_manifest_sha256 = triomics_report_identifier(reference, "manifest_sha256"),
+        payload_path = triomics_report_identifier(reference, "payload_path"),
+        payload_sha256 = triomics_report_identifier(reference, "payload_sha256"),
+        envelope_path = triomics_report_identifier(reference, "envelope_path"),
+        envelope_sha256 = triomics_report_identifier(reference, "envelope_sha256"),
+        producer = manifest_producer(reference$producer, "D.producer"),
+        status = triomics_report_identifier(reference, "status")
       )
     } else {
       records[[length(records) + 1L]] <- list(
-        stage = toupper(name), path = reference$path,
-        artifact_type = reference$artifact_type, artifact_id = reference$artifact_id,
-        payload_sha256 = reference$payload_sha256,
-        envelope_path = reference$envelope_path,
-        envelope_sha256 = reference$envelope_sha256,
-        producer = reference$producer,
-        status = reference$status
+        stage = toupper(name), path = triomics_report_identifier(reference, "path"),
+        artifact_type = triomics_report_identifier(reference, "artifact_type"),
+        artifact_id = triomics_report_identifier(reference, "artifact_id"),
+        payload_sha256 = triomics_report_identifier(reference, "payload_sha256"),
+        envelope_path = triomics_report_identifier(reference, "envelope_path"),
+        envelope_sha256 = triomics_report_identifier(reference, "envelope_sha256"),
+        producer = manifest_producer(reference$producer, paste0(toupper(name), ".producer")),
+        status = triomics_report_identifier(reference, "status")
       )
     }
   }
@@ -1903,6 +2365,7 @@ render_report <- function(report_bundle, report_spec) {
     disclosure_status = if (identical(data$audience, "approved_aggregate")) "clinical_not_included" else
       if (identical(data$audience, "private_research")) "private_local" else "synthetic_or_nonclinical"
   )
+  report_manifest <- triomics_report_sanitize_value(report_manifest)
   triomics_write_json_atomic(report_manifest, file.path(staging, "report_manifest.json"))
   manifest_envelope <- triomics_artifact_envelope(
     artifact_type = "triomics.report-manifest", artifact_id = paste0("report-manifest-", substr(report_id, 1L, 16L)),
