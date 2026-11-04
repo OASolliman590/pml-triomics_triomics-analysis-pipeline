@@ -564,10 +564,27 @@ triomics_b07_clinical_string <- function(value) {
 }
 
 triomics_b07_clinical_integer <- function(value) {
-  if (is.null(value)) return(NA_integer_)
-  values <- suppressWarnings(as.integer(unlist(value, use.names = FALSE)))
-  if (length(values) != 1L || is.na(values[[1L]])) return(NA_integer_)
-  values[[1L]]
+  if (!is.numeric(value) || length(value) != 1L || !is.null(dim(value)) ||
+      is.na(value) || !is.finite(value) || value < 0 ||
+      value > .Machine$integer.max || value != trunc(value)) return(NA_integer_)
+  as.integer(value)
+}
+
+triomics_b07_clinical_correction_vector <- function(value, expected_length) {
+  if (is.list(value)) {
+    if (length(value) != expected_length || any(!vapply(value, function(item) {
+      is.numeric(item) && length(item) == 1L && is.null(dim(item)) &&
+        !is.na(item) && is.finite(item)
+    }, logical(1L)))) return(NULL)
+    values <- vapply(value, as.numeric, numeric(1L))
+  } else if (is.numeric(value) && is.null(dim(value)) &&
+             length(value) == expected_length && all(is.finite(value))) {
+    values <- as.numeric(value)
+  } else {
+    return(NULL)
+  }
+  if (anyNA(values) || any(!is.finite(values)) || any(values < 0 | values > 1)) return(NULL)
+  unname(values)
 }
 
 triomics_b07_clinical_values_equal <- function(left, right) {
@@ -577,12 +594,52 @@ triomics_b07_clinical_values_equal <- function(left, right) {
 }
 
 triomics_b07_clinical_family_consistent <- function(payload, objective) {
-  family <- payload$family
+  family <- if (is.list(payload$family)) payload$family else list()
   members <- as.character(unlist(family$member_ids, use.names = FALSE))
   results <- if (is.list(payload$results)) payload$results else list()
   endpoints <- vapply(results, function(result) triomics_b07_clinical_string(result$endpoint_id), character(1L))
   statuses <- vapply(results, function(result) triomics_b07_clinical_string(result$estimation_status), character(1L))
   estimated <- sum(statuses == "estimated")
+  expected_internal_p <- rep(1, length(results))
+  correction_rows_valid <- TRUE
+  for (index in seq_along(results)) {
+    result <- results[[index]]
+    result_p <- result[["p", exact = TRUE]]
+    result_q <- result[["q", exact = TRUE]]
+    if (identical(statuses[[index]], "estimated")) {
+      if (is.numeric(result_p) && length(result_p) == 1L && is.null(dim(result_p)) &&
+          is.finite(result_p) && result_p >= 0 && result_p <= 1) {
+        expected_internal_p[[index]] <- as.numeric(result_p)
+      } else {
+        correction_rows_valid <- FALSE
+      }
+    } else if (!is.null(result_p) || !is.null(result_q)) {
+      correction_rows_valid <- FALSE
+    }
+  }
+  internal_p <- triomics_b07_clinical_correction_vector(family$internal_p, length(members))
+  internal_q <- triomics_b07_clinical_correction_vector(family$internal_q, length(members))
+  expected_internal_q <- stats::p.adjust(expected_internal_p, method = "BH")
+  correction_vectors_valid <- correction_rows_valid && !is.null(internal_p) &&
+    !is.null(internal_q) && identical(triomics_b07_clinical_string(family$correction_method), "BH") &&
+    isTRUE(all.equal(internal_p, unname(expected_internal_p), tolerance = 1e-12,
+                     check.attributes = FALSE)) &&
+    isTRUE(all.equal(internal_q, unname(expected_internal_q), tolerance = 1e-12,
+                     check.attributes = FALSE))
+  if (isTRUE(family$q_published)) {
+    correction_vectors_valid <- correction_vectors_valid && all(vapply(seq_along(results), function(index) {
+      result <- results[[index]]
+      if (identical(statuses[[index]], "estimated")) {
+        result_q <- result[["q", exact = TRUE]]
+        is.numeric(result_q) && length(result_q) == 1L && is.null(dim(result_q)) &&
+          is.finite(result_q) && result_q >= 0 && result_q <= 1 &&
+          isTRUE(all.equal(as.numeric(result_q), unname(expected_internal_q[[index]]),
+                          tolerance = 1e-12, check.attributes = FALSE))
+      } else {
+        is.null(result$q)
+      }
+    }, logical(1L)))
+  }
   typed_dispositions <- vapply(seq_along(results), function(index) {
     result <- results[[index]]
     status <- statuses[[index]]
@@ -600,8 +657,9 @@ triomics_b07_clinical_family_consistent <- function(payload, objective) {
   if (!is.list(family) || !length(members) || anyNA(members) || any(!nzchar(members)) ||
       anyDuplicated(members) || length(results) != length(members) ||
       anyNA(endpoints) || anyDuplicated(endpoints) ||
-      !identical(sort(members, method = "radix"), sort(endpoints, method = "radix")) ||
+      !identical(members, endpoints) ||
       !current_endpoint %in% members || anyNA(statuses) || any(!typed_dispositions) ||
+      !correction_vectors_valid ||
       any(!statuses %in% c("estimated", "failed", "unavailable")) ||
       !identical(triomics_b07_clinical_string(family$family_id),
                  triomics_b07_clinical_string(objective$family_ref)) ||
@@ -644,6 +702,11 @@ triomics_b07_clinical_b09_registry_matches <- function(registry, result, objecti
   }
   time_window <- audit$time_window
   mode <- triomics_b07_clinical_string(objective$mode)
+  expected_predictor_visit <- if (identical(mode, "baseline_to_later")) {
+    objective$baseline_visit_ref
+  } else {
+    NULL
+  }
   expected_visits <- if (mode %in% c("within_person", "baseline_to_later")) {
     as.character(c(objective$baseline_visit_ref, objective$later_visit_ref))
   } else if (is.null(objective$time_window_ref)) {
@@ -655,6 +718,7 @@ triomics_b07_clinical_b09_registry_matches <- function(registry, result, objecti
   identical(audit$objective_id, objective$objective_id) &&
     same_string(audit$mode, objective$mode) &&
     identical(actual_visits, expected_visits) &&
+    triomics_b07_clinical_values_equal(time_window$predictor_visit, expected_predictor_visit) &&
     triomics_b07_clinical_values_equal(time_window$baseline_visit, objective$baseline_visit_ref) &&
     triomics_b07_clinical_values_equal(time_window$later_visit, objective$later_visit_ref) &&
     triomics_b07_clinical_values_equal(time_window$declared_horizon_days, objective$horizon_days) &&

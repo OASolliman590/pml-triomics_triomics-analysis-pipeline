@@ -321,6 +321,19 @@ t07_expect_export_success <- function(value, label) {
   if (is_triomics_error) list() else value
 }
 
+t07_expect_clinical_accounting_blocked <- function(attempted, root, missing_lane, label) {
+  if (inherits(attempted, "triomics_error")) {
+    testthat::expect_identical(attempted$code, "B_EXPORT_INCOMPLETE", info = label)
+    return(invisible(NULL))
+  }
+  bundle <- t07_read_json_safe(attempted$bundle_path)
+  receipt <- t07_read_json_safe(attempted$acceptance_record_path)
+  testthat::expect_identical(bundle[[missing_lane]]$status, "unavailable", info = label)
+  testthat::expect_identical(bundle[[missing_lane]]$reason, "requested_artifact_missing", info = label)
+  testthat::expect_identical(bundle$status, "partial", info = label)
+  testthat::expect_identical(t07_acceptance_verdict(receipt, "AC1"), "blocked", info = label)
+}
+
 t07_read_json_safe <- function(path) {
   if (!is.character(path) || length(path) != 1L || is.na(path) || !file.exists(path)) return(list())
   tryCatch(jsonlite::read_json(path, simplifyVector = FALSE), error = function(error) list())
@@ -528,6 +541,81 @@ testthat::test_that("B-T07 checks B09 timing and missingness policy before accou
                                "requested_artifact_missing", info = case_name)
     testthat::expect_identical(bundle$status, "partial", info = case_name)
     testthat::expect_identical(t07_acceptance_verdict(receipt, "AC1"), "blocked", info = case_name)
+  }
+})
+
+testthat::test_that("B-T07 blocks invalid clinical family scalar counts at the artifact boundary", {
+  objective <- t07_clinical_objective(t07_ticket("B-T08.yaml"))
+  invalid_counts <- list(
+    fractional_declared = list(field = "n_declared", value = 1.9),
+    fractional_estimated = list(field = "n_estimated", value = 0.9),
+    fractional_failed = list(field = "n_failed", value = 1.9),
+    negative_fractional_estimated = list(field = "n_estimated", value = -0.5),
+    numeric_string_declared = list(field = "n_declared", value = "1"),
+    nonfinite_failed = list(field = "n_failed", value = Inf)
+  )
+  for (case_name in names(invalid_counts)) {
+    root <- t07_test_root(paste0("clinical-invalid-count-", case_name))
+    fixture <- t07_public_bundle_fixture(
+      root, include_clinical = FALSE, clinical_objectives = list(objective)
+    )
+    case <- invalid_counts[[case_name]]
+    t07_write_producer_shaped_clinical_artifact(
+      fixture, "clinical_associations", list(objective),
+      mutate = function(payload) {
+        payload$family[[case$field]] <- case$value
+        payload
+      }
+    )
+    attempted <- t07_attempt_export(output = root, config_path = fixture$config_path)
+    t07_expect_clinical_accounting_blocked(
+      attempted, root, "clinical_longitudinal_associations", case_name
+    )
+  }
+})
+
+testthat::test_that("B-T07 rejects B09 predictor_visit contradictions in hashed artifacts", {
+  root <- t07_test_root("clinical-b09-predictor-visit-contradiction")
+  fixture <- t07_public_bundle_fixture(root, include_clinical = FALSE)
+  objective <- t07_clinical_objective(fixture$config_path)
+  t07_write_producer_shaped_clinical_artifact(
+    fixture, "clinical_longitudinal_associations", list(objective),
+    mutate = function(payload) {
+      payload$objectives[[1L]]$time_window$predictor_visit <- "V0"
+      payload$results[[1L]]$objective_audit$time_window$predictor_visit <- "V0"
+      payload
+    }
+  )
+
+  attempted <- t07_attempt_export(output = root, config_path = fixture$config_path)
+  t07_expect_clinical_accounting_blocked(
+    attempted, root, "clinical_associations", "B09 predictor_visit contradiction"
+  )
+})
+
+testthat::test_that("B-T07 keeps correction vectors aligned with every clinical family member", {
+  objective <- t07_clinical_objective(t07_ticket("B-T08.yaml"))
+  short_vector <- list(
+    internal_p = function(family) family$internal_p[-length(family$internal_p)],
+    internal_q = function(family) family$internal_q[-length(family$internal_q)]
+  )
+  for (case_name in names(short_vector)) {
+    root <- t07_test_root(paste0("clinical-short-family-vector-", case_name))
+    fixture <- t07_public_bundle_fixture(
+      root, include_clinical = FALSE, clinical_objectives = list(objective)
+    )
+    members <- c(objective$endpoint_ref, "SYN-UNAVAILABLE-FAMILY-MEMBER")
+    t07_write_producer_shaped_clinical_artifact(
+      fixture, "clinical_associations", list(objective), family_member_ids = members,
+      mutate = function(payload) {
+        payload$family[[case_name]] <- short_vector[[case_name]](payload$family)
+        payload
+      }
+    )
+    attempted <- t07_attempt_export(output = root, config_path = fixture$config_path)
+    t07_expect_clinical_accounting_blocked(
+      attempted, root, "clinical_longitudinal_associations", case_name
+    )
   }
 })
 
