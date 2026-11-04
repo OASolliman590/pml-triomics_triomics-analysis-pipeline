@@ -220,6 +220,99 @@ testthat::test_that("the original multivisit C08 score remains ineligible for a 
   testthat::expect_identical(error$code, "C_SCORE_TIME_MISMATCH")
 })
 
+testthat::test_that("saved requests and publication failures fail closed without partial C provenance", {
+  fixture <- cnh_test_between_person_config()
+  output_root <- tempfile("triomics-cnh-tamper-")
+  on.exit(unlink(c(fixture$fixture_root, output_root), recursive = TRUE, force = TRUE), add = TRUE)
+
+  triomics_execute_stage_c(fixture$config_path, output_root)
+  native <- triomics_cnh_prepare_stage_b(fixture$config_path, output_root)
+  request_path <- file.path(output_root, "B", "clinical-score-association-requests", "request-01.json")
+  request_envelope_path <- sub("[.]json$", ".envelope.json", request_path)
+  original_request <- readBin(request_path, what = "raw", n = file.info(request_path)$size)
+  original_request_envelope <- readBin(
+    request_envelope_path, what = "raw", n = file.info(request_envelope_path)$size
+  )
+  restore_request <- function() {
+    if (file.exists(request_path) || triomics_is_symlink(request_path)) unlink(request_path)
+    writeBin(original_request, request_path)
+    writeBin(original_request_envelope, request_envelope_path)
+  }
+
+  publication_error <- testthat::capture_error(
+    triomics_cnh_publish_stage_b(native, fixture$config_path, output_root)
+  )
+  testthat::expect_identical(publication_error$code, "B_SCORE_REQUEST_INVALID")
+  testthat::expect_false(file.exists(file.path(output_root, "B", "clinical-associations.json")))
+  testthat::expect_false(file.exists(file.path(output_root, "D", "stage-handoff-provenance.json")))
+
+  request <- jsonlite::read_json(request_path, simplifyVector = FALSE)
+  reordered <- request[rev(names(request))]
+  jsonlite::write_json(reordered, request_path, auto_unbox = TRUE, null = "null",
+                       pretty = TRUE, digits = NA)
+  reordered_error <- testthat::capture_error(
+    triomics_cnh_prepare_stage_b(fixture$config_path, output_root)
+  )
+  testthat::expect_identical(reordered_error$code, "B_SCORE_REQUEST_INVALID")
+  restore_request()
+
+  request <- jsonlite::read_json(request_path, simplifyVector = FALSE)
+  request$request_sha256 <- paste(rep("0", 64L), collapse = "")
+  jsonlite::write_json(request, request_path, auto_unbox = TRUE, null = "null",
+                       pretty = TRUE, digits = NA)
+  envelope <- jsonlite::read_json(request_envelope_path, simplifyVector = FALSE)
+  envelope$payload_sha256 <- triomics_sha256(request_path)
+  jsonlite::write_json(envelope, request_envelope_path, auto_unbox = TRUE, null = "null",
+                       pretty = TRUE, digits = NA)
+  rehashed_error <- testthat::capture_error(
+    triomics_cnh_prepare_stage_b(fixture$config_path, output_root)
+  )
+  testthat::expect_identical(rehashed_error$code, "B_SCORE_REQUEST_INVALID")
+  restore_request()
+
+  observations_path <- file.path(fixture$fixture_root, "data", "c08", "observations.tsv")
+  original_observations <- readBin(observations_path, what = "raw", n = file.info(observations_path)$size)
+  writeBin(c(original_observations, as.raw(0x0a)), observations_path)
+  source_error <- testthat::capture_error(
+    triomics_cnh_prepare_stage_b(fixture$config_path, output_root)
+  )
+  testthat::expect_identical(source_error$code, "B_SCORE_LINEAGE_INVALID")
+  writeBin(original_observations, observations_path)
+
+  external_request <- tempfile("triomics-cnh-external-request-")
+  writeBin(original_request, external_request)
+  unlink(request_path)
+  symlink_created <- file.symlink(external_request, request_path)
+  testthat::expect_true(symlink_created)
+  symlink_error <- testthat::capture_error(
+    triomics_cnh_prepare_stage_b(fixture$config_path, output_root)
+  )
+  testthat::expect_identical(symlink_error$code, "B_SCORE_REQUEST_INVALID")
+  unlink(request_path)
+  writeBin(original_request, request_path)
+  unlink(external_request)
+  testthat::expect_s3_class(
+    triomics_cnh_prepare_stage_b(fixture$config_path, output_root),
+    "ClinicalNativeHandoffContext"
+  )
+
+  context_path <- file.path(output_root, "C", "native-publication-context.json")
+  jsonlite::write_json(list(schema_version = "1.0"), context_path, auto_unbox = TRUE,
+                       null = "null", pretty = TRUE, digits = NA)
+  incomplete_context_error <- testthat::capture_error(
+    triomics_cnh_publish_saved_c(fixture$config_path, output_root)
+  )
+  testthat::expect_identical(incomplete_context_error$code, "C_PUBLICATION_CONTEXT_INVALID")
+  config <- triomics_read_config(fixture$config_path)
+  collision_error <- testthat::capture_error(triomics_cnh_save_initial_c(
+    integration_runs = list(list(status = "complete")), evaluation_controls = list(),
+    c_input_identity = list(), config = config, output = output_root,
+    source_inputs = list(), run_status = "complete"
+  ))
+  testthat::expect_identical(collision_error$code, "C_PUBLICATION_CONTEXT_CONFLICT")
+  testthat::expect_false(file.exists(file.path(output_root, "D", "stage-handoff-provenance.json")))
+})
+
 
 testthat::test_that("native B publishes unchanged association results and bound identifier-free coverage", {
   fixture <- cnh_test_between_person_config()
