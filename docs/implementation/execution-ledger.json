@@ -42,18 +42,20 @@
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "effective_settings_exposed": false,
-      "status": "clean_candidate_native_verification_running",
+      "status": "native_proof_complete_receipt_finalizing",
       "worktree": "/Users/megastore/.codex/worktrees/m7-030-target-metadata-caller/PML MultiOmics Analysis Pipeline",
       "base": "36547f5c132d1a97d7640607688bd4afea2db8f3",
       "repairs_used": 0,
       "repairs_remaining": 2,
       "candidate_commit": "a7ca4af8dbb088f36293f980a562b0c554b254ef",
       "native_session_id": 85352,
-      "Sol_focused_session_id": 96017
+      "Sol_focused_session_id": 96017,
+      "native_exit_code": 0,
+      "Sol_focused_exit_code": 0
     }
   ],
   "orchestration_control": {
-    "status": "M7_030_independent_verification_running",
+    "status": "M7_030_verified_integrated_final_gates_next",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [
       {
@@ -62,14 +64,16 @@
         "requested_model": "gpt-6-luna",
         "requested_effort": "max",
         "effective_settings_exposed": false,
-        "status": "clean_candidate_native_verification_running",
+        "status": "native_proof_complete_receipt_finalizing",
         "worktree": "/Users/megastore/.codex/worktrees/m7-030-target-metadata-caller/PML MultiOmics Analysis Pipeline",
         "base": "36547f5c132d1a97d7640607688bd4afea2db8f3",
         "repairs_used": 0,
         "repairs_remaining": 2,
         "candidate_commit": "a7ca4af8dbb088f36293f980a562b0c554b254ef",
         "native_session_id": 85352,
-        "Sol_focused_session_id": 96017
+        "Sol_focused_session_id": 96017,
+        "native_exit_code": 0,
+        "Sol_focused_exit_code": 0
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -6486,6 +6490,29 @@
       "native_gate_session": 85352,
       "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-030",
       "acceptance": false
+    },
+    {
+      "event": "M7_030_verified_and_integrated",
+      "date": "2026-11-04",
+      "candidate_commit": "a7ca4af8dbb088f36293f980a562b0c554b254ef",
+      "integration_commit": "37331a52cb9bb3053b1fe5b32a907e94b3934cb8",
+      "focused_counts": {
+        "pass": 948,
+        "fail": 0,
+        "error": 0,
+        "warn": 1,
+        "skip": 0,
+        "blocks": 90
+      },
+      "native_commands": 30,
+      "native_exit_codes": "all0",
+      "native_readback_assertions": 2060,
+      "Sol_independent_assertions": 323,
+      "repairs_used": 0,
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-030-sol-verification.md",
+      "final_same_snapshot_gates": "pending",
+      "M7": "unreleased",
+      "G7": "unreleased"
     }
   ],
   "packets": {
@@ -7501,7 +7528,7 @@
       "gate_release": "G6"
     },
     "M7": {
-      "status": "audit_changes_required",
+      "status": "repaired_candidate_pending_requalification",
       "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-astra.md",
       "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef"
     },

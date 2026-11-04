@@ -1,0 +1,39 @@
+{
+  "candidate": "a7ca4af8dbb088f36293f980a562b0c554b254ef",
+  "mapping": [
+    {
+      "worker_commit": "f5fc639a5ef7d96707fe604cd5710132ddd50f6d",
+      "integration_commit": "e1cd247e0d072e37801cd119c4139f9d15c25329"
+    },
+    {
+      "worker_commit": "3a1e1a14593012d33735a4ba8ed66a1fc5773fde",
+      "integration_commit": "7cfa4178c2c3da2830c39792cafd5a6e637abb74"
+    },
+    {
+      "worker_commit": "a460a8af4e7a2f9ea6c91fd755a89a6a2e248192",
+      "integration_commit": "816dc7bad58791d16096423a612b4d74ceeade2a"
+    },
+    {
+      "worker_commit": "42d61a88d8206172d24c661607d776dc121354e7",
+      "integration_commit": "e67c06c11183af94a59dba16b9c69b5118dad1ea"
+    },
+    {
+      "worker_commit": "7c961dae39d309de5fd0c9ebab31d5cdc74a1bd4",
+      "integration_commit": "61d99628ef880a50df0d9013832928ef9a65404d"
+    },
+    {
+      "worker_commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+      "integration_commit": "0d9cf7e2955315dab85c545b09d62abf0cfed273"
+    },
+    {
+      "worker_commit": "05122bcbda6f1fe3676f8b449114057215052d3f",
+      "integration_commit": "cbbd4656d60e32e058ce10a8a1eff54ac0dbd590"
+    },
+    {
+      "worker_commit": "a7ca4af8dbb088f36293f980a562b0c554b254ef",
+      "integration_commit": "37331a52cb9bb3053b1fe5b32a907e94b3934cb8"
+    }
+  ],
+  "only_docs_differ_from_tested_candidate": true,
+  "no_acceptance": true
+}

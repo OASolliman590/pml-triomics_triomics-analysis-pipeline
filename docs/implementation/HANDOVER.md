@@ -1,3 +1,13 @@
+# Current checkpoint — combined M7-029/M7-030 verified and integrated
+
+Worker a7ca4af passed Sol focused948 (zero fail/error/skip, one named expected D01 warning), 30 native commands/2,060 readback checks, and Sol independent323 canonical checks. Integrated serially through37331a5; only docs differ from the tested candidate. M7-030 used no implementation repairs. M7-029 history remains blocked/incomplete at cap, resolved prospectively by this audited successor proof. Read reviews/2026-11-04-m7-030-sol-verification.md.
+
+Next freeze this clean integrated snapshot for the single uninterrupted full source/native/archive qualification. Durable external driver and runtime are `/Users/megastore/.triomics-verification/m7-resume-20261104-01`; use a new `final-P2` root. The driver records active PID, exits and phase in gate-state.json. No product edits during gates; do not restart after compaction. Then Terra DOC-M7 and the one remaining focused final Astra on that same product. M7/G7 unreleased until Sol acceptance; C06/required D acceptance flags remain false. Conditional D06/D07/D14 no credit, C07 not_run, C09 unqualified. No private data, push, AIU, fasting or M8/M9.
+
+Literal resume: consult external orchestration.json and final-P2/gate-state.json, join the current gate session if present, record actual complete results, then Terra and focused final Astra. Do not rerun Luna or the completed candidate gates.
+
+## Historical checkpoints below
+
 # Current checkpoint — M7-030 caller scope
 
 M7-029 candidate 36547f5 is preserved, blocked/incomplete at its two-repair cap. Recovered focused gate: 886 pass, one expected D01 warning, no fail/error/skip. Native D10/D11/D12 positive chains and canonical readbacks passed on APFS. Matching-taxon control B/C/D exited 0 but remained unknown: R/cli.R loads metadata only when annotation.requests is nonempty. Do not weaken the declaration assertion or enable unrelated annotation to pass.

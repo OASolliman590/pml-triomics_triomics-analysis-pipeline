@@ -1,0 +1,16 @@
+{
+  "commit": "a7ca4af8dbb088f36293f980a562b0c554b254ef",
+  "command": [
+    "Rscript",
+    "--vanilla",
+    "/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/run-source.R",
+    "/Users/megastore/.codex/worktrees/m7-030-target-metadata-caller/PML MultiOmics Analysis Pipeline",
+    "/Users/megastore/.triomics-verification/m7-resume-20261104-01/m7-030-sol-focused",
+    "D-T01|D-T10|D-T11|D-T12|D-target-shared|D-discovery-shared"
+  ],
+  "started": "2026-11-04T08:13:39.753290+00:00",
+  "exit_code": 0,
+  "pid": 16069,
+  "finished": "2026-11-04T08:20:55.537321+00:00",
+  "log_sha256": "bd02a7b67c8aacbb584fbe0da966b1347f947af42a04d67520bfe5f7b0bec764"
+}

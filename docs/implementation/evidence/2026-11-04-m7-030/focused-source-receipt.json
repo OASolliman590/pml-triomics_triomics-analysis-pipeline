@@ -1,0 +1,79 @@
+{
+  "commit": "a7ca4af8dbb088f36293f980a562b0c554b254ef",
+  "command": "Rscript --vanilla '/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/run-source.R' '/Users/megastore/.codex/worktrees/m7-030-target-metadata-caller/PML MultiOmics Analysis Pipeline' '/Users/megastore/.triomics-verification/m7-resume-20261104-01/m7-030-sol-focused' 'D-T01|D-T10|D-T11|D-T12|D-target-shared|D-discovery-shared'",
+  "filter": "D-T01|D-T10|D-T11|D-T12|D-target-shared|D-discovery-shared",
+  "started": "2026-11-04 08:13:40 UTC",
+  "finished": "2026-11-04 08:20:54 UTC",
+  "counts": {
+    "pass": 948,
+    "fail": 0,
+    "error": 0,
+    "warn": 1,
+    "skip": 0,
+    "blocks": 90
+  },
+  "exit_code": 0,
+  "by_file": {
+    "test-D-discovery-shared.R": {
+      "pass": 3,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 2
+    },
+    "test-D-T01.R": {
+      "pass": 406,
+      "fail": 0,
+      "error": 0,
+      "warn": 1,
+      "skip": 0,
+      "blocks": 20
+    },
+    "test-D-T10.R": {
+      "pass": 83,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 11
+    },
+    "test-D-T11.R": {
+      "pass": 305,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 38
+    },
+    "test-D-T12.R": {
+      "pass": 48,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 9
+    },
+    "test-D-target-shared.R": {
+      "pass": 103,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 10
+    }
+  },
+  "conditions": [
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "file": "test-D-T01.R",
+      "type": "expectation_warning",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-3ec54d052401/tickets/d-t01-paired-sign-stale-3ec5ebd50f3.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-3ec5c7ee528' 2>&1' had status 2"
+    }
+  ],
+  "runtime": {
+    "R": "R version 4.6.1 (2026-06-24)",
+    "MOFA_library": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/runtime/R",
+    "python": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/runtime/python312/bin/python3"
+  }
+}
