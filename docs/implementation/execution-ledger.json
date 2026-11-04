@@ -35,11 +35,45 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_id": "/root/m8_d08_luna",
+      "role": "Luna D-T08 initial implementation",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "host_dispatch_accepted": true,
+      "effective_settings_exposed": false,
+      "worktree": "/Users/megastore/.codex/worktrees/m8-d-t08-luna/PML MultiOmics Analysis Pipeline",
+      "branch": "codex/m8-d-t08-luna",
+      "base": "4a783be5d5ec005a0044a43cdc6dc8c4d6c35392",
+      "status": "initial_implementation_running",
+      "attempt": 1,
+      "repairs_used": 0,
+      "repairs_remaining": 2,
+      "allowed_next_transition": "Sol inspect local commit/diff, mechanical shared registration, two-axis local review and independent focused/native Quarto verification; bounded repairs if reproduced."
+    }
+  ],
   "orchestration_control": {
-    "status": "D_T08_runtime_ready_for_fresh_Luna",
+    "status": "D_T08_Luna_initial_running",
     "last_reconciled": "2026-11-04",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_id": "/root/m8_d08_luna",
+        "role": "Luna D-T08 initial implementation",
+        "requested_model": "gpt-6-luna",
+        "requested_effort": "max",
+        "host_dispatch_accepted": true,
+        "effective_settings_exposed": false,
+        "worktree": "/Users/megastore/.codex/worktrees/m8-d-t08-luna/PML MultiOmics Analysis Pipeline",
+        "branch": "codex/m8-d-t08-luna",
+        "base": "4a783be5d5ec005a0044a43cdc6dc8c4d6c35392",
+        "status": "initial_implementation_running",
+        "attempt": 1,
+        "repairs_used": 0,
+        "repairs_remaining": 2,
+        "allowed_next_transition": "Sol inspect local commit/diff, mechanical shared registration, two-axis local review and independent focused/native Quarto verification; bounded repairs if reproduced."
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
     "disposition": "User authorized installation; actual Quarto smoke verified. Continue frozen D-T08 only, one fresh Luna; no M7 reopening."
   },
@@ -6621,6 +6655,31 @@
       "review_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-ready.md",
       "coding_attempts_consumed": 0,
       "next": "One fresh Luna-max for frozen D-T08 allowlist."
+    },
+    {
+      "event": "D_T08_fresh_Luna_dispatched",
+      "date": "2026-11-04",
+      "worker": {
+        "agent_id": "/root/m8_d08_luna",
+        "role": "Luna D-T08 initial implementation",
+        "requested_model": "gpt-6-luna",
+        "requested_effort": "max",
+        "host_dispatch_accepted": true,
+        "effective_settings_exposed": false,
+        "worktree": "/Users/megastore/.codex/worktrees/m8-d-t08-luna/PML MultiOmics Analysis Pipeline",
+        "branch": "codex/m8-d-t08-luna",
+        "base": "4a783be5d5ec005a0044a43cdc6dc8c4d6c35392",
+        "status": "initial_implementation_running",
+        "attempt": 1,
+        "repairs_used": 0,
+        "repairs_remaining": 2,
+        "allowed_next_transition": "Sol inspect local commit/diff, mechanical shared registration, two-axis local review and independent focused/native Quarto verification; bounded repairs if reproduced."
+      },
+      "quarto": "1.11.9_verified",
+      "M7": "accepted",
+      "G7": "released",
+      "G8": "unreleased",
+      "G9": "unreleased"
     }
   ],
   "packets": {
@@ -8011,8 +8070,8 @@
       "disposition_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md"
     },
     "D-T08": {
-      "status": "ready_for_initial_implementation",
-      "attempts": 0,
+      "status": "initial_implementation_running",
+      "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": [],
@@ -8027,7 +8086,10 @@
         ],
         "receipt": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md"
       },
-      "runtime_receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-ready.md"
+      "runtime_receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-ready.md",
+      "repair_attempts": 0,
+      "implementation_base": "4a783be5d5ec005a0044a43cdc6dc8c4d6c35392",
+      "active_worker": "/root/m8_d08_luna"
     },
     "D-T13": {
       "status": "not_started",

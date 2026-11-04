@@ -1,3 +1,13 @@
+# Current checkpoint: D-T08 Luna initial implementation running
+
+Quarto1.11.9 is installed, checksum-verified and passed a real HTML smoke. Fresh worker `/root/m8_d08_luna` runs in managed m8-d-t08-luna on codex/m8-d-t08-luna from4a783be. Seven-file frozen D-T08 allowlist only; Sol owns shared CLI/stage/exports/manual registration. Initial attempt1, repairs0of2. No parent product edit while the worker implements.
+
+The exact worker brief and durable orchestration/runtime env are under the internal APFS m8-20261104-01 proof root. Join the existing worker, inspect its diff/receipt, apply mechanical registration serially and independently verify real native A/B/C/D/report output. No D-T13/D-T15 or M8 milestone audit yet. M7/G7 remain accepted; G8/G9 unreleased. No private data or push.
+
+Literal resume: reconcile `/root/m8_d08_luna` and its current worktree before taking the authorized next transition. Do not redispatch or restart it. Finish D-T08 at its receipt with actual Quarto/readback proof, then stop that packet. Preserve the full G8/G9 goal and all conditional exclusions.
+
+## Historical checkpoints below
+
 # Current checkpoint: Quarto installed, D-T08 ready
 
 The user authorized installation. Quarto1.11.9 now resolves on PATH and an actual local HTML smoke passed. Read reviews/2026-11-04-d-t08-runtime-ready.md. The earlier missing-runtime stop is historical. No D-T08 coding attempt has yet been consumed. M7/G7 stay accepted; G8/G9 remain unreleased.
