@@ -108,6 +108,23 @@ testthat::test_that("native C publication JSON restores typed matrices and metad
   testthat::expect_identical(restored$analysis_unit_map$sample_ids, I(list("s1", "s2")))
 })
 
+testthat::test_that("saved C replay distinguishes fresh, partial, and longitudinal routes", {
+  between <- cnh_test_between_person_config()
+  output_root <- tempfile("triomics-cnh-fresh-c-route-")
+  longitudinal <- triomics_test_resource("examples", "tickets", "C-08.yaml")
+  on.exit(unlink(c(between$fixture_root, output_root), recursive = TRUE, force = TRUE), add = TRUE)
+
+  dir.create(output_root, recursive = TRUE)
+  testthat::expect_null(triomics_cnh_publish_saved_c(between$config_path, output_root))
+  dir.create(file.path(output_root, "C"), recursive = TRUE)
+  file.create(file.path(output_root, "C", "integration-results.json"))
+  partial_error <- testthat::capture_error(
+    triomics_cnh_publish_saved_c(between$config_path, output_root)
+  )
+  testthat::expect_identical(partial_error$code, "C_PUBLICATION_CONTEXT_MISSING")
+  testthat::expect_null(triomics_cnh_native_c_route(triomics_read_config(longitudinal)))
+})
+
 testthat::test_that("saved native C context replays the exact fit without refitting", {
   fixture <- cnh_test_between_person_config()
   output_root <- tempfile("triomics-cnh-saved-c-replay-")
