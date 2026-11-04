@@ -1,3 +1,13 @@
+# Current checkpoint: M8-D15-S01 initial Luna running
+
+Fresh /root/d15_s01_luna implements the exact five-file audited predecessor scope on codex/m8-d15-s01-luna from0ce7f2d. One initial attempt; repairs0of2. Scope audit passed929746c; no repeated audit. Sol owns R/cli.R serially after helper return. External brief/runtime/state are under d15-s01 in the internal APFS proof directory. No parent fit or gate is active.
+
+Join the worker; do not restart or redispatch. Inspect its diff, apply only scoped shared wiring, obtain local Standards/Spec review and independently prove focused regressions and untouched native A/C/B/C/D with unchanged saved C bytes/zero replay fits. No native wrapper or synthetic frame substitution counts. D15 waits on this proof; D13 remains blocked at cap; G8/G9 closed.
+
+Literal resume: **Join /root/d15_s01_luna and its actual running process if present, then take the recorded next transition. Do not finish while it is active. Stop at the bounded predecessor receipt.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D15 predecessor scope audit passed
 
 Fresh /root/d15_s01_scope_astra passed immutable929746c with no blockers. Read [scope audit and authority receipt](reviews/2026-11-04-d15-s01-scope-audit.md). No product code changed; no tests/native/package/report gate ran. One scope audit, no rereview. All run-owned agents/processes finished. Sol reconciled standing authority for the exact separate predecessor scope; the D15 renderer allowlist remains unchanged.
