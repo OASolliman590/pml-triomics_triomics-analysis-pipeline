@@ -1,3 +1,15 @@
+# Current checkpoint: D-T08 accepted; stop at its packet receipt
+
+Sol accepts D-T08 on immutable product `f85fa6def678f23cc61b791531dbcd7a5adea13b`. Read [the acceptance receipt](reviews/2026-11-04-d-t08-sol-acceptance.md). Independent focused gate: 1,640 pass, zero fail/error/skip, one named expected D-T01 stale-sign warning. Fresh native A/B/C/D/report all exit 0; three negative probes exit 3/3/2. Real Quarto 1.11.9 HTML passes offline inspection and 1,729 saved-output checks. Fresh local Sol review passed. S01 and S02 are integrated and verified. Both report repairs are consumed; preserve all earlier failed/historical evidence.
+
+The isolated product tree equals the verified f85fa6d bytes. Only acceptance/coordination records follow. No worker or gate process remains active. Canonical integration preserves the original dirty .Rbuildignore/.gitignore/renv/activate.R and untracked files; local integration readback records the final HEAD and protected hashes. No private inputs, push, AIU run or Notion sync.
+
+M7/G7 remain accepted. M8/G8 and M9/G9 are closed. D-T13, D-T15 and D-T09 are unstarted. D-T06/D-T07/D-T14 retain zero credit; C-07 not_run; C-09 unqualified/synthetic_fixture_only/benefit_guaranteed=false; frozen-kit independent audit pending. No M8 package Status or Astra milestone verdict is claimed.
+
+Literal resume: **Start the next bounded D-T13 target-dossier packet with one fresh Luna-max worker, using accepted D-T08 and D-T12. Do not redo D-T08 or reopen M7. Follow packet limits and review/verification gates, stop at its receipt, and keep G8/G9 closed until their complete milestone gates pass.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D-T08 final independent gates running
 
 Luna returned clean candidate `f85fa6def678f23cc61b791531dbcd7a5adea13b` after the final repair (2 of 2). Only the three report implementation/test files changed from the combined predecessor. Worker evidence: 154 pass, no failures/errors/warnings/skips; native A/B/C/D/report exit 0; three negative probes exit 3/3/2; real Quarto HTML and 1,729 saved-byte/numeric checks pass. Earlier capped RED and template-missing native failure remain preserved. No repair 3.

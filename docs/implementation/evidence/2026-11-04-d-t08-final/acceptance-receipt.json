@@ -1,0 +1,381 @@
+{
+  "schema_version": "1.0",
+  "packet_id": "D-T08",
+  "tested_commit": "f85fa6def678f23cc61b791531dbcd7a5adea13b",
+  "integrated_product_commit": "f0496be67c96850de22fa865ff5ea408d1cd26d1",
+  "accepted_by": "Sol coordinator",
+  "accepted": true,
+  "scope": "Public synthetic software evidence only; macOS internal APFS, saved-export source CLI and real Quarto 1.11.9.",
+  "source_counts": {
+    "pass": 1640,
+    "fail": 0,
+    "error": 0,
+    "warn": 1,
+    "skip": 0,
+    "blocks": 113
+  },
+  "source_by_file": {
+    "test-A-T09.R": {
+      "pass": 160,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 18
+    },
+    "test-B-T05.R": {
+      "pass": 131,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 9
+    },
+    "test-C-06-shared.R": {
+      "pass": 355,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 12
+    },
+    "test-D-T01.R": {
+      "pass": 406,
+      "fail": 0,
+      "error": 0,
+      "warn": 1,
+      "skip": 0,
+      "blocks": 20
+    },
+    "test-D-T08.R": {
+      "pass": 154,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 25
+    },
+    "test-D-target-shared.R": {
+      "pass": 103,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 10
+    },
+    "test-M4-005-B-T05-integration.R": {
+      "pass": 191,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 5
+    },
+    "test-stage-run-registry.R": {
+      "pass": 140,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 14
+    }
+  },
+  "source_filter": "^(stage-run-registry|A-T09|M4-005-B-T05-integration|C-06-shared|D-T01|D-T08|B-T05|D-target-shared)$",
+  "named_warnings": [
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "file": "test-D-T01.R",
+      "disposition": "Expected native D rejection, exit 2, while preserving the old pointer. One occurrence; unsuppressed. Fixture/output paths used the configured internal APFS temp root."
+    }
+  ],
+  "native_commands": [
+    {
+      "stage": "A",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "inst/examples/tickets/D-T08.yaml",
+        "--stage",
+        "A",
+        "--output",
+        "<local-proof>/native/output"
+      ],
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "B",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "inst/examples/tickets/D-T08.yaml",
+        "--stage",
+        "B",
+        "--output",
+        "<local-proof>/native/output"
+      ],
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "C",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "inst/examples/tickets/D-T08.yaml",
+        "--stage",
+        "C",
+        "--output",
+        "<local-proof>/native/output"
+      ],
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "D",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "inst/examples/tickets/D-T08.yaml",
+        "--stage",
+        "D",
+        "--output",
+        "<local-proof>/native/output"
+      ],
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "report",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "inst/examples/tickets/D-T08.yaml",
+        "--stage",
+        "report",
+        "--output",
+        "<local-proof>/native/output"
+      ],
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "command_path_note": "Host-bound exact argv and output roots remain in local native/native-receipt.json and source/source-receipt.json; public commands substitute <local-proof> for that root.",
+  "negative_probes": [
+    {
+      "name": "missing_producers",
+      "exit_code": 3,
+      "expected_error_code": "D_REPORT_REQUIRED_MISSING",
+      "log_sha256": "f3ed76ab15db4dd86efb1d86fce150b49be61eaf8e42c0d941f5e4424d7a0c7e"
+    },
+    {
+      "name": "missing_runtime",
+      "exit_code": 3,
+      "expected_error_code": "D_REPORT_RUNTIME_MISSING",
+      "log_sha256": "e1cda6319d3f89ef353392b5f343c9ae17f763a703a4e10116a3042488663990"
+    },
+    {
+      "name": "rehashed_B_result",
+      "exit_code": 2,
+      "expected_error_code": "D_REPORT_SOURCE_INVALID",
+      "log_sha256": "1b9cbdf940e0874e6e550030b8a7662adf55d05dfddbefc8f8ec1ab5f8617fa8"
+    }
+  ],
+  "native_lineage_verified": true,
+  "A_files_preserved_across_B": {
+    "registries/run.json": "8f2b3c31e43b55a939b92be6447a96c4dcc8e14ae82f1770260591a633da2cdd",
+    "A/assays.json": "b717fc7b0715bb989756c2cba6d255618a83bada7cdd1607f216b7762067aa41",
+    "A/assays.envelope.json": "12eaf8416053c6aab424e7cc995dd2c45fb218716f03aef9df39709c02bdf0e9"
+  },
+  "canonical_B_registry_sha256": "c8aabf897a9946e5dea0c8c4fb653988f39434b1733b1d05821136b553195f32",
+  "semantic_readback": {
+    "checks": 1729,
+    "B_rows": 20,
+    "C_variance_cells": 4,
+    "figures": 1,
+    "report_status": "complete",
+    "stage_statuses": {
+      "A": "complete",
+      "B": "complete",
+      "C": "complete",
+      "D": "complete",
+      "clinical": "not_requested",
+      "target": "not_requested"
+    }
+  },
+  "offline_inspection": {
+    "html_sha256": "d6a0ce0ab24402e9a1623fc62c893c48e70faf6b275202b72de4177c8a616307",
+    "counts": {
+      "tables": 12,
+      "images": 0,
+      "scripts": 0,
+      "styles": 2,
+      "headings": 19
+    },
+    "embedded_resources": [],
+    "issues": [],
+    "passed_structural_inspection": true,
+    "scientific_semantics": "separate readback required"
+  },
+  "artifacts": {
+    "B/handoffs/1f6c3799ec2ca22b0d5214deb8a2c45958db0c4e103b15049708df730dcfeb00/bundle.json": {
+      "sha256": "aad7df73497efd594536f6e6c871ccca5a99b17268d07f6d0721a4b1a75bcd05",
+      "bytes": 4505
+    },
+    "B/handoffs/1f6c3799ec2ca22b0d5214deb8a2c45958db0c4e103b15049708df730dcfeb00/bundle.envelope.json": {
+      "sha256": "048c26e6b8e57b7337518eaf83c651c07a0034ce27ce5ee5e4eb677003bbd1be",
+      "bytes": 1054
+    },
+    "B/handoffs/1f6c3799ec2ca22b0d5214deb8a2c45958db0c4e103b15049708df730dcfeb00/stage-handoff-provenance.json": {
+      "sha256": "72782e77c8eb6a93cedbbee89e3229a7142ef0945f01abe89e1faa244ef6a7ea",
+      "bytes": 31151
+    },
+    "B/handoffs/1f6c3799ec2ca22b0d5214deb8a2c45958db0c4e103b15049708df730dcfeb00/stage-handoff-provenance.envelope.json": {
+      "sha256": "1b0b42ee4536c4aa81c307bccc3bdc4c4e3a944867c6b2274e16e6e11a381c52",
+      "bytes": 826
+    },
+    "D/stage-handoff-provenance.json": {
+      "sha256": "0a806d9e5b33110d9243ae66a2553e077e0640e843e4a43f0748c0ae691050e4",
+      "bytes": 39268
+    },
+    "D/stage-handoff-provenance.envelope.json": {
+      "sha256": "6dde13b5b1cd4bea12ed2c4884d106a4f594ca906a57b3da462f77ae1e9158ff",
+      "bytes": 943
+    },
+    "registries/current-D.json": {
+      "sha256": "30402648bfd4c9b4f4db06d285aff505f7ad3e1d71696e8283f0402136b54eae",
+      "bytes": 419
+    },
+    "D/generations/cedef88e5fcf2bdf2348b08355ff60e66253a6f09ce9bc21cc5917fb1d24d737/generation-manifest.json": {
+      "sha256": "cedef88e5fcf2bdf2348b08355ff60e66253a6f09ce9bc21cc5917fb1d24d737",
+      "bytes": 4235
+    },
+    "report/integration_eligibility.tsv": {
+      "sha256": "659ba63787652aa2d92cf3d2a4f8f1b8fcccc09fe52ead067fcbfbf828133735",
+      "bytes": 336
+    },
+    "report/results.tsv": {
+      "sha256": "df8b69039836ddc9266638fc415df80503717c5423ae1626ec1537a6bb3eb110",
+      "bytes": 20753
+    },
+    "report/enrichment.tsv": {
+      "sha256": "a32b239f240ca74ea5da5f13346c038e573ad40a4aa205029a2b8def8f3ed337",
+      "bytes": 558
+    },
+    "report/clinical_results.tsv": {
+      "sha256": "3176d5fbe60072b27f167e414b80225215f3c72ac80a10562ea336f058776d62",
+      "bytes": 450
+    },
+    "report/section_statuses.tsv": {
+      "sha256": "c324d16a5357ebb0c39f7e3829d929e1f6d80e7af6071648b5d87c9408e5720a",
+      "bytes": 874
+    },
+    "report/report_manifest.json": {
+      "sha256": "8b081de565780ae3e43e0b04fb617618001b2688d6d362980b78e1d39361c3c5",
+      "bytes": 8621
+    },
+    "report/report_manifest.envelope.json": {
+      "sha256": "060c5b5f72b12fa4ef05c629d7ca6f4bdee018e2433229356cf35d66495273d7",
+      "bytes": 2230
+    },
+    "report/report.html": {
+      "sha256": "d6a0ce0ab24402e9a1623fc62c893c48e70faf6b275202b72de4177c8a616307",
+      "bytes": 61651
+    },
+    "report/report_data.json": {
+      "sha256": "b11ceeb4ee8e377e2c5c711dd515241bf5a68b4e0e5363dee8d7672ecb50713b",
+      "bytes": 64509
+    },
+    "report/integration_variance.tsv": {
+      "sha256": "74c41290eb65f4231cb4b4e7c2b3ee1442753ec8eb1805e7fa0337391e74808f",
+      "bytes": 947
+    },
+    "report/report_data.envelope.json": {
+      "sha256": "5f9b267cf1de16a53ebe34fdd430a38205287f490b92478fa373760f24cc43c7",
+      "bytes": 2078
+    }
+  },
+  "review": {
+    "reviewer": "/root/d08_final_sol_review",
+    "candidate": "f85fa6def678f23cc61b791531dbcd7a5adea13b",
+    "verdict": "pass",
+    "blocking_findings": [],
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "effective_settings_exposed": false,
+    "checks": [
+      "Three snapshot file blobs match candidate",
+      "Specified redactions and unit preservation",
+      "Counter invariants and evaluation-only projection",
+      "Successful-fit ancestry, context and variance guards retained",
+      "Valid ordinary Unix child, traversal rejection, two existing-symlink rejections",
+      "Source-template and missing-template failure"
+    ],
+    "limits": [
+      "Installed layout is fixture based",
+      "No suites or fits repeated by reviewer",
+      "Temporary fixture creation denied by sandbox; read-only filesystem checks used",
+      "Parent independent final gate subsequently passed on the same commit"
+    ],
+    "milestone_acceptance": false
+  },
+  "archive_sha256": "ff2668799d14c511116855649369f3eb9efb660363cffe8ad4ef070feb5ceb56",
+  "evidence_hashes": {
+    "gate-state.json": "e47c719b705ffd6b38f8e874dbb250a8c19936e1bef7de8c8d8cf99b5e77eaf6",
+    "source/source-receipt.json": "1a6d8dd080504f49711cb163f02d5c3b1fb84d8b5cb4eb518fa83384cd3295bf",
+    "source/testthat-results.rds": "f274b1132e786949b1e6bdc649188cb7de0913e2c242dab5a1cfd868f16a9a4f",
+    "source.log": "c696e88dec9fa380e7a89422a4863ea3c36f1c289c4fca8cda4200c32430ba53",
+    "native/native-receipt.json": "499d60648859b6ef341bb85d8872af3b50c1714269796bd6913ee146c15fe853",
+    "semantic-readback.json": "74711c32d91b38cc239a3ce7f1fffc0780a61d173e2fed7e57fdc672d5ec641c",
+    "offline-inspection.log": "fbcf6c3b2eed0b53e13f8585c5990c65f2abff2be9d3acf4820a7c9dc31bfe5f"
+  },
+  "acceptance_criteria": {
+    "D-T08-AC1": "Real Quarto HTML, complete stage/section statuses, no external assets/scripts.",
+    "D-T08-AC2": "Behavioral untrusted text/path/privacy rejection tests plus independent focused probes and saved-output inspection.",
+    "D-T08-AC3": "1729 readback checks preserve 20 B rows, 4 C variance cells, units, families, counts, uncertainty and source hashes; renderer consumes saved exports and executes no model code.",
+    "D-T08-AC4": "Unavailable routes remain visible; missing required producers exit3 with no partial report; incomplete section behavior covered by named tests."
+  },
+  "repair_attempts": 2,
+  "repairs_remaining": 0,
+  "historical_failures_preserved": [
+    "Initial invalid registry-deletion evidence is rejected permanently.",
+    "Earlier capped RED is not a complete-suite result.",
+    "Before S02, 1376-pass run is behavioral only because some tests used /private/tmp.",
+    "3b31269 native report exit3 D_REPORT_TEMPLATE_MISSING is preserved; f85fa6d resolves it."
+  ],
+  "milestone_status": {
+    "M7": "accepted",
+    "G7": "released",
+    "M8": "not_accepted",
+    "G8": "not_released",
+    "M9": "not_accepted",
+    "G9": "not_released"
+  },
+  "not_run_here": [
+    "M8 full source/archive package gate",
+    "M8 Terra documentation and fresh Astra milestone audit",
+    "D-T13",
+    "D-T15",
+    "D-T09",
+    "Private study analysis",
+    "GitHub push",
+    "AIU run"
+  ],
+  "remaining_limits": [
+    "Installed resource resolution has layout-fixture coverage; actual installed-pipeline qualification belongs to later gates.",
+    "D-T06, D-T07 and D-T14 remain blocked with zero completion credit.",
+    "C-07 four scientific checks remain not_run.",
+    "C-09 remains unqualified, synthetic_fixture_only, benefit_guaranteed=false.",
+    "Separate frozen-kit independent audit remains pending; pre-existing AGENTS/CLAUDE hash mismatch is preserved."
+  ]
+}

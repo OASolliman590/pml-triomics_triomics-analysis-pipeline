@@ -1,7 +1,7 @@
 {
   "packet_id": "D-T08",
   "request_type": "registration_request",
-  "request_status": "pending_sol_review",
+  "request_status": "applied_and_sol_accepted_synthetic_software",
   "namespace_edits": false,
   "local_files": [
     "R/report.R",
@@ -20,8 +20,12 @@
     "triomics_report_d_artifact"
   ],
   "public_namespace_request": {
-    "exports": ["render_report"],
-    "manual_pages": ["render_report.Rd"]
+    "exports": [
+      "render_report"
+    ],
+    "manual_pages": [
+      "render_report.Rd"
+    ]
   },
   "cli_stage_request": {
     "stage": "report",
@@ -43,13 +47,21 @@
     },
     "source_binding": "A/B/C envelopes are bound to the exact fixed payload filename and SHA256; D is bound to the validated current pointer, generation manifest, payload, and envelope bytes.",
     "render_identity": "The report identity binds source hashes, config hash, main Quarto template, stylesheet, fixed target/clinical section templates, rendering policy, and effective R/package/Quarto/platform/source revision.",
-    "primary_artifact_envelopes": ["report_data.envelope.json", "report_manifest.envelope.json"]
+    "primary_artifact_envelopes": [
+      "report_data.envelope.json",
+      "report_manifest.envelope.json"
+    ]
   },
   "fixed_section_composition": {
     "target_provider": "triomics_report_targets_section(loaded, config)",
     "clinical_provider": "triomics_report_clinical_section(loaded, config)",
     "provider_return_shape": {
-      "status": ["complete", "partial", "unavailable", "not_requested"],
+      "status": [
+        "complete",
+        "partial",
+        "unavailable",
+        "not_requested"
+      ],
       "reason_code": "One scalar string; use a stable code or an empty string.",
       "tables": "A named list of data.frames. Cell text is escaped and path/credential-sanitized by the shared report renderer. Do not include direct identifiers or raw clinical free text."
     },
@@ -59,5 +71,10 @@
     },
     "defaults": "When a provider or packaged section template is absent, the report renders an explicit not-implemented/unavailable section. No user-provided include, plugin, or code chunk is accepted."
   },
-  "integration_request": "Sol applies the public export/manual entry and serial report-stage registry/CLI changes. Preserve the report-specific exit mapping above, return the renderer's exit_code, and write the report directory beneath the existing output root. Review the resulting CLI behavior with this candidate before acceptance."
+  "integration_request": "Sol applies the public export/manual entry and serial report-stage registry/CLI changes. Preserve the report-specific exit mapping above, return the renderer's exit_code, and write the report directory beneath the existing output root. Review the resulting CLI behavior with this candidate before acceptance.",
+  "accepted": true,
+  "accepted_commit": "f85fa6def678f23cc61b791531dbcd7a5adea13b",
+  "acceptance_ref": "docs/implementation/reviews/2026-11-04-d-t08-sol-acceptance.md",
+  "acceptance_evidence_ref": "docs/implementation/evidence/2026-11-04-d-t08-final/acceptance-receipt.json",
+  "milestone_acceptance": false
 }

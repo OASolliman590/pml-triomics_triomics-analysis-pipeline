@@ -9,8 +9,8 @@
     },
     {
       "id": "HOST-QUARTO",
-      "status": "installed_and_smoke_verified",
-      "evidence": "Official Quarto1.11.9 checksum verified; version and actual local HTML render both exit0. Packet acceptance still pending.",
+      "status": "installed_and_D_T08_real_render_verified",
+      "evidence": "Quarto 1.11.9 official checksum/version and real D-T08 render passed; packet accepted on f85fa6d. M8 package and milestone gates remain pending.",
       "history": [
         {
           "id": "HOST-QUARTO",
@@ -24,7 +24,7 @@
           "receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md"
         }
       ],
-      "receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-ready.md"
+      "receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-sol-acceptance.md"
     },
     {
       "id": "GITHUB-AUTH",
@@ -56,8 +56,16 @@
     },
     {
       "id": "M7-010-SOURCE-GATE",
-      "status": "reviewed_integrated_source_verified_no_downstream_release",
-      "evidence": "At source snapshot 2a8e5d5 (product unchanged from reviewed integration 0afe2c5), the uninterrupted full source gate finished DONE, exit 0: FAIL 0, WARN 14, SKIP 0, ERROR 0, PASS 5893 across 352 test blocks. The fourteen C-05 warnings match the named M7-006 source baseline; no new warning. A-T01 passed 61 alone and in the full run; historical interrupted-run diagnostics did not recur and their cause is unproven. See reviews/2026-10-26-m7-010-resumed-source-gate.md. No new package gate or acceptance: the native B-T07 revision remains candidate/review_pending; M7/G7 and Stage D stay closed."
+      "status": "historical_record_reconciled_to_M7_acceptance",
+      "evidence": "Historical evidence below is preserved. Current native B-T07 and C-06 prerequisites were accepted with M7 on fabd6fa after source/package/native/Astra gates; G7 is released. D-T08 does not reopen that acceptance.",
+      "history": [
+        {
+          "id": "M7-010-SOURCE-GATE",
+          "status": "reviewed_integrated_source_verified_no_downstream_release",
+          "evidence": "At source snapshot 2a8e5d5 (product unchanged from reviewed integration 0afe2c5), the uninterrupted full source gate finished DONE, exit 0: FAIL 0, WARN 14, SKIP 0, ERROR 0, PASS 5893 across 352 test blocks. The fourteen C-05 warnings match the named M7-006 source baseline; no new warning. A-T01 passed 61 alone and in the full run; historical interrupted-run diagnostics did not recur and their cause is unproven. See reviews/2026-10-26-m7-010-resumed-source-gate.md. No new package gate or acceptance: the native B-T07 revision remains candidate/review_pending; M7/G7 and Stage D stay closed."
+        }
+      ],
+      "receipt_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md"
     },
     {
       "id": "C-01-RESUME",
@@ -91,8 +99,16 @@
     },
     {
       "id": "C-06-CROSS-BACKEND-HANDOFF",
-      "status": "accepted_synthetic_software_evidence",
-      "evidence": "Packet and shared CLI/D-handoff series are integrated through 3753be0. Fresh integrated C-06 tests passed 290 expectations with zero failures/warnings/skips; exact synthetic CLI exited 0 and all five D payload/envelope pairs plus the manifest envelope matched recorded SHA-256. Sol accepted C-06 at M6 after the clean gate and focused Astra pass. The D handoff remains honestly partial because all four C-07 controls were explicitly not run; no real-study or biological validation is claimed."
+      "status": "historical_record_reconciled_to_M7_acceptance",
+      "evidence": "Historical evidence below is preserved. Current native B-T07 and C-06 prerequisites were accepted with M7 on fabd6fa after source/package/native/Astra gates; G7 is released. D-T08 does not reopen that acceptance.",
+      "history": [
+        {
+          "id": "C-06-CROSS-BACKEND-HANDOFF",
+          "status": "accepted_synthetic_software_evidence",
+          "evidence": "Packet and shared CLI/D-handoff series are integrated through 3753be0. Fresh integrated C-06 tests passed 290 expectations with zero failures/warnings/skips; exact synthetic CLI exited 0 and all five D payload/envelope pairs plus the manifest envelope matched recorded SHA-256. Sol accepted C-06 at M6 after the clean gate and focused Astra pass. The D handoff remains honestly partial because all four C-07 controls were explicitly not run; no real-study or biological validation is claimed."
+        }
+      ],
+      "receipt_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md"
     },
     {
       "id": "C-09-CLINICAL-PREDICTION",
@@ -111,8 +127,16 @@
     },
     {
       "id": "B-T07-PACKAGE-GATE",
-      "status": "historical_baseline_accepted_native_revision_pending",
-      "evidence": "Historical baseline: M4-014 is integrated. Source and installed B-T07 passed 124/124, full suite passed 3,462/3,462 without warnings/skips, clean archive package check was Status: OK, focused Astra rereview passed, and Sol accepted B-T07/G4 on 2026-10-16. This does not accept the later native-provenance revision, which remains candidate/review_pending and accepted=false after M7-010 source verification."
+      "status": "historical_record_reconciled_to_M7_acceptance",
+      "evidence": "Historical evidence below is preserved. Current native B-T07 and C-06 prerequisites were accepted with M7 on fabd6fa after source/package/native/Astra gates; G7 is released. D-T08 does not reopen that acceptance.",
+      "history": [
+        {
+          "id": "B-T07-PACKAGE-GATE",
+          "status": "historical_baseline_accepted_native_revision_pending",
+          "evidence": "Historical baseline: M4-014 is integrated. Source and installed B-T07 passed 124/124, full suite passed 3,462/3,462 without warnings/skips, clean archive package check was Status: OK, focused Astra rereview passed, and Sol accepted B-T07/G4 on 2026-10-16. This does not accept the later native-provenance revision, which remains candidate/review_pending and accepted=false after M7-010 source verification."
+        }
+      ],
+      "receipt_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md"
     }
   ]
 }
