@@ -50,7 +50,7 @@ c06_shared_cli_run <- function(output_root, stage = "C", config_path = NULL,
 
 c06_shared_repeated_fixture <- function(kind) {
   source_config <- triomics_test_resource("examples", "tickets", "D-T01.yaml")
-  fixture_root <- tempfile(paste0("c06-shared-", kind, "-fixture-"), tmpdir = "/private/tmp")
+  fixture_root <- tempfile(paste0("c06-shared-", kind, "-fixture-"), tmpdir = tempdir())
   dir.create(file.path(fixture_root, "tickets"), recursive = TRUE)
   testthat::expect_true(file.copy(source_config, file.path(fixture_root, "tickets")))
   source_data <- normalizePath(file.path(dirname(source_config), "..", "data"),
@@ -547,7 +547,7 @@ testthat::test_that("C-06 Stage C rejects a fresh root without native B evidence
 testthat::test_that("Stage C composes paired and trajectory units from native B resolution", {
   for (kind in c("paired", "trajectory")) {
     fixture <- c06_shared_repeated_fixture(kind)
-    output_root <- tempfile(paste0("c06-shared-", kind, "-output-"), tmpdir = "/private/tmp")
+    output_root <- tempfile(paste0("c06-shared-", kind, "-output-"), tmpdir = tempdir())
     on.exit(unlink(fixture$root, recursive = TRUE, force = TRUE), add = TRUE)
     on.exit(unlink(output_root, recursive = TRUE, force = TRUE), add = TRUE)
 
@@ -600,7 +600,7 @@ testthat::test_that("Stage C composes paired and trajectory units from native B 
 
 testthat::test_that("native paired C retains per-block complete-pair exclusions through D", {
   fixture <- c06_shared_paired_attrition_fixture()
-  output_root <- tempfile("c06-paired-attrition-output-", tmpdir = "/private/tmp")
+  output_root <- tempfile("c06-paired-attrition-output-", tmpdir = tempdir())
   on.exit(unlink(c(fixture$root, output_root), recursive = TRUE, force = TRUE), add = TRUE)
 
   b_run <- c06_shared_cli_run(output_root, stage = "B", config_path = fixture$config,
@@ -655,7 +655,7 @@ testthat::test_that("native paired C retains per-block complete-pair exclusions 
 
 testthat::test_that("native trajectory C retains an absent-all B exclusion with unavailable time", {
   fixture <- c06_shared_trajectory_missing_time_fixture()
-  output_root <- tempfile("c06-trajectory-missing-time-output-", tmpdir = "/private/tmp")
+  output_root <- tempfile("c06-trajectory-missing-time-output-", tmpdir = tempdir())
   on.exit(unlink(c(fixture$root, output_root), recursive = TRUE, force = TRUE), add = TRUE)
 
   b_run <- c06_shared_cli_run(output_root, stage = "B", config_path = fixture$config,

@@ -452,11 +452,11 @@ testthat::test_that("CLI startup routes qualified absolute-path DEqMS and explic
     match(count_table$sample_id, sample_ids) + 1L
   count_table$acquisition <- "synthetic_cli_acquisition"
   count_table$provenance <- "synthetic CLI test count fixture"
-  count_path <- tempfile("b-t05-counts-", tmpdir = "/private/tmp")
-  qualified_fixture_root <- tempfile("b-t05-qualified-fixture-", tmpdir = "/private/tmp")
-  fallback_fixture_root <- tempfile("b-t05-fallback-fixture-", tmpdir = "/private/tmp")
-  outputs <- c(tempfile("b-t05-qualified-out-", tmpdir = "/private/tmp"),
-               tempfile("b-t05-fallback-out-", tmpdir = "/private/tmp"))
+  count_path <- tempfile("b-t05-counts-", tmpdir = tempdir())
+  qualified_fixture_root <- tempfile("b-t05-qualified-fixture-", tmpdir = tempdir())
+  fallback_fixture_root <- tempfile("b-t05-fallback-fixture-", tmpdir = tempdir())
+  outputs <- c(tempfile("b-t05-qualified-out-", tmpdir = tempdir()),
+               tempfile("b-t05-fallback-out-", tmpdir = tempdir()))
   on.exit(unlink(c(count_path, qualified_fixture_root, fallback_fixture_root, outputs),
                  recursive = TRUE), add = TRUE)
 
