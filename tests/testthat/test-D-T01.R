@@ -884,8 +884,8 @@ d_t01_cli_run_files <- function(config_path, stage, output_root) {
   cli <- triomics_test_resource("exec", "triomics")
   previous_wd <- setwd(dirname(cli))
   on.exit(setwd(previous_wd), add = TRUE)
-  stdout_path <- tempfile("d-t01-cli-stdout-", tmpdir = "/private/tmp")
-  stderr_path <- tempfile("d-t01-cli-stderr-", tmpdir = "/private/tmp")
+  stdout_path <- tempfile("d-t01-cli-stdout-", tmpdir = tempdir())
+  stderr_path <- tempfile("d-t01-cli-stderr-", tmpdir = tempdir())
   on.exit(unlink(c(stdout_path, stderr_path), force = TRUE), add = TRUE)
   status <- system2(
     file.path(R.home("bin"), "Rscript"),
@@ -901,7 +901,7 @@ d_t01_target_only_cli_fixture <- function() {
   source_config <- triomics_test_resource("examples", "tickets", "D-T11.yaml")
   source_data <- normalizePath(file.path(dirname(source_config), "..", "data"),
                                winslash = "/", mustWork = TRUE)
-  fixture_root <- tempfile("d-t01-target-only-native-fixture-", tmpdir = "/private/tmp")
+  fixture_root <- tempfile("d-t01-target-only-native-fixture-", tmpdir = tempdir())
   config_dir <- file.path(fixture_root, "tickets")
   data_dir <- file.path(fixture_root, "data")
   dir.create(config_dir, recursive = TRUE, showWarnings = FALSE)
@@ -939,7 +939,7 @@ d_t01_target_only_cli_fixture <- function() {
 
 d_t01_paired_cli_fixture <- function() {
   source_config <- triomics_test_resource("examples", "tickets", "D-T01.yaml")
-  fixture_root <- tempfile("d-t01-paired-native-fixture-", tmpdir = "/private/tmp")
+  fixture_root <- tempfile("d-t01-paired-native-fixture-", tmpdir = tempdir())
   dir.create(file.path(fixture_root, "tickets"), recursive = TRUE, showWarnings = FALSE)
   if (!file.copy(source_config, file.path(fixture_root, "tickets"))) {
     stop("Could not copy the public D-T01 synthetic config.", call. = FALSE)
@@ -988,7 +988,7 @@ d_t01_paired_cli_fixture <- function() {
 
 testthat::test_that("D-T01 refuses stale paired signs and preserves the old pointer", {
   fixture <- d_t01_paired_cli_fixture()
-  output_root <- tempfile("d-t01-paired-native-output-", tmpdir = "/private/tmp")
+  output_root <- tempfile("d-t01-paired-native-output-", tmpdir = tempdir())
   on.exit(unlink(c(fixture$root, output_root), recursive = TRUE, force = TRUE), add = TRUE)
 
   b_run <- d_t01_cli_run(fixture$config, "B", output_root)
@@ -1026,7 +1026,7 @@ testthat::test_that("D-T01 refuses stale paired signs and preserves the old poin
 
 testthat::test_that("D-T11 target-only CLI carries declared feature metadata and fails closed", {
   fixture <- d_t01_target_only_cli_fixture()
-  output_root <- tempfile("d-t01-target-only-native-output-", tmpdir = "/private/tmp")
+  output_root <- tempfile("d-t01-target-only-native-output-", tmpdir = tempdir())
   on.exit(unlink(c(fixture$root, output_root), recursive = TRUE, force = TRUE), add = TRUE)
 
   feature_ids <- utils::read.delim(fixture$metabolomics, check.names = FALSE,
@@ -1145,14 +1145,14 @@ testthat::test_that("D-T11 target-only CLI carries declared feature metadata and
 
 testthat::test_that("D-T01 publishes a complete generation from actual native B and C CLI handoffs", {
   config <- triomics_test_resource("examples", "tickets", "D-T01.yaml")
-  output_root <- tempfile("d-t01-native-cli-", tmpdir = "/private/tmp")
+  output_root <- tempfile("d-t01-native-cli-", tmpdir = tempdir())
   dir.create(output_root, recursive = TRUE, showWarnings = FALSE)
   output_root <- normalizePath(output_root, winslash = "/", mustWork = TRUE)
   clone_roots <- character()
   on.exit(unlink(c(output_root, clone_roots), recursive = TRUE, force = TRUE), add = TRUE)
 
   clone_native_root <- function() {
-    destination <- tempfile("d-t01-native-tamper-", tmpdir = "/private/tmp")
+    destination <- tempfile("d-t01-native-tamper-", tmpdir = tempdir())
     dir.create(destination, recursive = TRUE, showWarnings = FALSE)
     contents <- list.files(output_root, all.files = TRUE, no.. = TRUE, full.names = TRUE)
     copied <- file.copy(contents, destination, recursive = TRUE)
@@ -1273,7 +1273,7 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
 
   native_ancestor_root <- clone_native_root()
   native_directory <- file.path(native_ancestor_root, "C", "native-states")
-  native_external <- tempfile("d-t01-native-external-", tmpdir = "/private/tmp")
+  native_external <- tempfile("d-t01-native-external-", tmpdir = tempdir())
   on.exit(unlink(native_external, recursive = TRUE, force = TRUE), add = TRUE)
   testthat::expect_true(file.rename(native_directory, native_external))
   testthat::expect_true(file.symlink(native_external, native_directory))
@@ -1283,7 +1283,7 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
 
   native_parent_root <- clone_native_root()
   c_directory <- file.path(native_parent_root, "C")
-  c_external <- tempfile("d-t01-c-parent-", tmpdir = "/private/tmp")
+  c_external <- tempfile("d-t01-c-parent-", tmpdir = tempdir())
   on.exit(unlink(c_external, recursive = TRUE, force = TRUE), add = TRUE)
   testthat::expect_true(file.rename(c_directory, c_external))
   testthat::expect_true(file.symlink(c_external, c_directory))
@@ -1292,7 +1292,7 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
   native_envelope_root <- clone_native_root()
   native_envelope <- list.files(file.path(native_envelope_root, "C", "native-states"),
                                 pattern = "[.]envelope[.]json$", full.names = TRUE)[[1L]]
-  envelope_external <- tempfile("d-t01-native-envelope-", tmpdir = "/private/tmp")
+  envelope_external <- tempfile("d-t01-native-envelope-", tmpdir = tempdir())
   on.exit(unlink(envelope_external, force = TRUE), add = TRUE)
   testthat::expect_true(file.rename(native_envelope, envelope_external))
   testthat::expect_true(file.symlink(envelope_external, native_envelope))
@@ -1303,7 +1303,7 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
                                pattern = "[.]json$", full.names = TRUE)
   native_payload <- native_payload[!grepl("[.]envelope[.]json$", native_payload)]
   native_payload <- native_payload[[1L]]
-  payload_external <- tempfile("d-t01-native-payload-", tmpdir = "/private/tmp")
+  payload_external <- tempfile("d-t01-native-payload-", tmpdir = tempdir())
   on.exit(unlink(payload_external, force = TRUE), add = TRUE)
   testthat::expect_true(file.rename(native_payload, payload_external))
   testthat::expect_true(file.symlink(payload_external, native_payload))
@@ -1317,7 +1317,7 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
   dangling_native_payload <- dangling_native_payload[
     !grepl("[.]envelope[.]json$", dangling_native_payload)
   ][[1L]]
-  dangling_payload_target <- tempfile("d-t01-dangling-native-payload-", tmpdir = "/private/tmp")
+  dangling_payload_target <- tempfile("d-t01-dangling-native-payload-", tmpdir = tempdir())
   testthat::expect_true(unlink(dangling_native_payload) == 0L)
   testthat::expect_true(file.symlink(dangling_payload_target, dangling_native_payload))
   expect_d_code(function() read_native(root = dangling_native_payload_root), "D_OUTPUT_PATH_UNSAFE")
@@ -1327,14 +1327,14 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
     file.path(dangling_native_envelope_root, "C", "native-states"),
     pattern = "[.]envelope[.]json$", full.names = TRUE
   )[[1L]]
-  dangling_envelope_target <- tempfile("d-t01-dangling-native-envelope-", tmpdir = "/private/tmp")
+  dangling_envelope_target <- tempfile("d-t01-dangling-native-envelope-", tmpdir = tempdir())
   testthat::expect_true(unlink(dangling_native_envelope) == 0L)
   testthat::expect_true(file.symlink(dangling_envelope_target, dangling_native_envelope))
   expect_d_code(function() read_native(root = dangling_native_envelope_root), "D_OUTPUT_PATH_UNSAFE")
 
   dangling_native_root <- clone_native_root()
   dangling_native_dir <- file.path(dangling_native_root, "C", "native-states")
-  dangling_native_target <- tempfile("d-t01-missing-native-target-", tmpdir = "/private/tmp")
+  dangling_native_target <- tempfile("d-t01-missing-native-target-", tmpdir = tempdir())
   testthat::expect_true(unlink(dangling_native_dir, recursive = TRUE) == 0L)
   testthat::expect_true(file.symlink(dangling_native_target, dangling_native_dir))
   expect_d_code(function() read_native(root = dangling_native_root), "D_OUTPUT_PATH_UNSAFE")
@@ -1357,7 +1357,7 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
   write_raw(preparation_state, triomics_b07_prov_canonical_value(preparation_state_value))
   expect_d_code(function() read_native(root = preparation_state_root), "D_PROVENANCE_INVALID")
 
-  unsafe_root <- tempfile("d-t01-native-symlink-", tmpdir = "/private/tmp")
+  unsafe_root <- tempfile("d-t01-native-symlink-", tmpdir = tempdir())
   on.exit(unlink(unsafe_root), add = TRUE)
   testthat::expect_true(file.symlink(output_root, unsafe_root))
   expect_d_code(function() triomics_execute_stage_d(config, unsafe_root), "D_OUTPUT_PATH_UNSAFE")
@@ -1645,7 +1645,7 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
 
   generation_parent_root <- clone_native_root()
   generation_parent <- file.path(generation_parent_root, "D", "generations")
-  generation_parent_external <- tempfile("d-t01-generations-external-", tmpdir = "/private/tmp")
+  generation_parent_external <- tempfile("d-t01-generations-external-", tmpdir = tempdir())
   on.exit(unlink(generation_parent_external, recursive = TRUE, force = TRUE), add = TRUE)
   testthat::expect_true(file.rename(generation_parent, generation_parent_external))
   testthat::expect_true(file.symlink(generation_parent_external, generation_parent))
@@ -1654,7 +1654,7 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
 
   registry_parent_root <- clone_native_root()
   registry_parent <- file.path(registry_parent_root, "registries")
-  registry_parent_external <- tempfile("d-t01-registry-external-", tmpdir = "/private/tmp")
+  registry_parent_external <- tempfile("d-t01-registry-external-", tmpdir = tempdir())
   on.exit(unlink(registry_parent_external, recursive = TRUE, force = TRUE), add = TRUE)
   testthat::expect_true(file.rename(registry_parent, registry_parent_external))
   testthat::expect_true(file.symlink(registry_parent_external, registry_parent))
@@ -1663,7 +1663,7 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
 
   pointer_leaf_root <- clone_native_root()
   pointer_leaf <- file.path(pointer_leaf_root, "registries", "current-D.json")
-  pointer_leaf_external <- tempfile("d-t01-pointer-external-", tmpdir = "/private/tmp")
+  pointer_leaf_external <- tempfile("d-t01-pointer-external-", tmpdir = tempdir())
   on.exit(unlink(pointer_leaf_external, force = TRUE), add = TRUE)
   testthat::expect_true(file.rename(pointer_leaf, pointer_leaf_external))
   testthat::expect_true(file.symlink(pointer_leaf_external, pointer_leaf))
@@ -1672,14 +1672,14 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
 
   dangling_pointer_root <- clone_native_root()
   dangling_pointer <- file.path(dangling_pointer_root, "registries", "current-D.json")
-  dangling_pointer_target <- tempfile("d-t01-dangling-pointer-", tmpdir = "/private/tmp")
+  dangling_pointer_target <- tempfile("d-t01-dangling-pointer-", tmpdir = tempdir())
   testthat::expect_true(unlink(dangling_pointer) == 0L)
   testthat::expect_true(file.symlink(dangling_pointer_target, dangling_pointer))
   expect_d_code(function() triomics_execute_stage_d(config, dangling_pointer_root),
                  "D_OUTPUT_PATH_UNSAFE")
 
   recovery_probe_root <- clone_native_root()
-  recovery_probe_script <- tempfile("d-t01-recovery-probe-", tmpdir = "/private/tmp")
+  recovery_probe_script <- tempfile("d-t01-recovery-probe-", tmpdir = tempdir())
   on.exit(unlink(recovery_probe_script, force = TRUE), add = TRUE)
   exec_resource <- triomics_test_resource("exec", "triomics")
   source_root <- normalizePath(file.path(dirname(exec_resource), "..", ".."),
@@ -1726,13 +1726,13 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
     "current <- original_validate(root, file.path(root,'registries','current-D.json'))",
     "cat('current_after_ambiguous=', current$pointer$generation_id, '\\n', sep='')",
     "original_paths <- get('triomics_d_generation_paths', envir=publisher_env); current_id <- as.character(current$pointer$generation_id)",
-    "replacement_paths <- function(root, generation_id) { p <- original_paths(root,generation_id); if (!identical(as.character(generation_id),current_id) && !file.exists(p$generation) && !dir.exists(p$generation)) file.symlink('/private/tmp',p$generation); p }",
+    "replacement_paths <- function(root, generation_id) { p <- original_paths(root,generation_id); if (!identical(as.character(generation_id),current_id) && !file.exists(p$generation) && !dir.exists(p$generation)) file.symlink(tempdir(),p$generation); p }",
     "assign('triomics_d_generation_paths', replacement_paths, envir=publisher_env)",
     "args$producer_commit <- 'repair1-planned-leaf-probe'",
     "planned <- tryCatch(do.call(triomics_d_publish_evidence_generation, args), error=identity)",
     "assign('triomics_d_generation_paths', original_paths, envir=publisher_env)",
     "cat('planned_generation_leaf=', if (inherits(planned,'error')) planned$code else planned$status, '\\n', sep='')",
-    "external_temp_root <- tempfile('repair1-external-temp-', tmpdir='/private/tmp'); dir.create(external_temp_root)",
+    "external_temp_root <- tempfile('repair1-external-temp-', tmpdir=tempdir()); dir.create(external_temp_root)",
     "temp_generation_parent <- file.path(root,'D','generations','.temp-parent-link'); file.symlink(external_temp_root,temp_generation_parent)",
     "base_tempfile <- base::tempfile; tempfile_calls <- 0L",
     "replacement_tempfile <- function(pattern='',tmpdir=tempdir(),fileext='') { tempfile_calls <<- tempfile_calls + 1L; if (tempfile_calls == 1L) file.path(temp_generation_parent,'planned-generation') else base_tempfile(pattern,tmpdir,fileext) }",
@@ -1810,8 +1810,8 @@ testthat::test_that("D-T01 publishes a complete generation from actual native B 
 
 testthat::test_that("D-T01 revalidates native DEqMS group sign, time maps, counts and source bytes", {
   source_config <- triomics_test_resource("examples", "tickets", "D-T01.yaml")
-  fixture_root <- tempfile("d-t01-source-mutation-fixture-", tmpdir = "/private/tmp")
-  output_root <- tempfile("d-t01-source-mutation-output-", tmpdir = "/private/tmp")
+  fixture_root <- tempfile("d-t01-source-mutation-fixture-", tmpdir = tempdir())
+  output_root <- tempfile("d-t01-source-mutation-output-", tmpdir = tempdir())
   dir.create(fixture_root, recursive = TRUE, showWarnings = FALSE)
   dir.create(file.path(fixture_root, "tickets"), recursive = TRUE, showWarnings = FALSE)
   dir.create(output_root, recursive = TRUE, showWarnings = FALSE)
@@ -1989,7 +1989,7 @@ testthat::test_that("D-T01 revalidates native DEqMS group sign, time maps, count
     }
   }
 
-  count_tamper_root <- tempfile("d-t01-deqms-count-prior-tamper-", tmpdir = "/private/tmp")
+  count_tamper_root <- tempfile("d-t01-deqms-count-prior-tamper-", tmpdir = tempdir())
   dir.create(count_tamper_root, recursive = TRUE, showWarnings = FALSE)
   testthat::expect_true(all(file.copy(
     list.files(output_root, all.files = TRUE, no.. = TRUE, full.names = TRUE),

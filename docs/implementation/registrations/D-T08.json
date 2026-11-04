@@ -1,0 +1,63 @@
+{
+  "packet_id": "D-T08",
+  "request_type": "registration_request",
+  "request_status": "pending_sol_review",
+  "namespace_edits": false,
+  "local_files": [
+    "R/report.R",
+    "R/report_security.R",
+    "inst/report/triomics.qmd",
+    "inst/report/styles.css",
+    "tests/testthat/test-D-T08.R",
+    "inst/examples/tickets/D-T08.yaml",
+    "docs/implementation/registrations/D-T08.json"
+  ],
+  "owned_functions": [
+    "render_report",
+    "triomics_report_bundle_from_root",
+    "triomics_report_verify_bundle",
+    "triomics_report_artifact",
+    "triomics_report_d_artifact"
+  ],
+  "public_namespace_request": {
+    "exports": ["render_report"],
+    "manual_pages": ["render_report.Rd"]
+  },
+  "cli_stage_request": {
+    "stage": "report",
+    "enable_execution": true,
+    "input": "Existing A/B/C exports and the current validated D generation under the requested output root.",
+    "call": "bundle <- triomics:::triomics_report_bundle_from_root(options$output, options$config); rendered <- render_report(bundle, list(output_relative_path = 'report'))",
+    "behavior": "Render only saved versioned exports. Do not dispatch A/B/C/D, fit models, or access network resources.",
+    "exit_code_mapping": {
+      "complete": 0,
+      "partial_required_sections_or_D_REPORT_RENDER_FAILED": 4,
+      "D_REPORT_REQUIRED_MISSING_or_D_REPORT_RUNTIME_MISSING_or_D_REPORT_TEMPLATE_MISSING_or_D_REPORT_DISCLOSURE_UNQUALIFIED": 3,
+      "D_REPORT_REQUEST_INVALID_or_D_REPORT_BUNDLE_INVALID_or_D_REPORT_PATH_UNSAFE_or_D_REPORT_SOURCE_INVALID_or_D_REPORT_RENDER_UNSAFE_or_D_REPORT_TEMPLATE_UNSAFE_or_D_REPORT_OUTPUT_EXISTS": 2
+    }
+  },
+  "report_bundle_contract": {
+    "schema_version": "1.0",
+    "request_shape": {
+      "output_relative_path": "report"
+    },
+    "source_binding": "A/B/C envelopes are bound to the exact fixed payload filename and SHA256; D is bound to the validated current pointer, generation manifest, payload, and envelope bytes.",
+    "render_identity": "The report identity binds source hashes, config hash, main Quarto template, stylesheet, fixed target/clinical section templates, rendering policy, and effective R/package/Quarto/platform/source revision.",
+    "primary_artifact_envelopes": ["report_data.envelope.json", "report_manifest.envelope.json"]
+  },
+  "fixed_section_composition": {
+    "target_provider": "triomics_report_targets_section(loaded, config)",
+    "clinical_provider": "triomics_report_clinical_section(loaded, config)",
+    "provider_return_shape": {
+      "status": ["complete", "partial", "unavailable", "not_requested"],
+      "reason_code": "One scalar string; use a stable code or an empty string.",
+      "tables": "A named list of data.frames. Cell text is escaped and path/credential-sanitized by the shared report renderer. Do not include direct identifiers or raw clinical free text."
+    },
+    "fixed_qmd_resources": {
+      "targets": "inst/report/sections/targets.qmd must include targets-content.html.",
+      "clinical": "inst/report/sections/clinical.qmd must include clinical-content.html."
+    },
+    "defaults": "When a provider or packaged section template is absent, the report renders an explicit not-implemented/unavailable section. No user-provided include, plugin, or code chunk is accepted."
+  },
+  "integration_request": "Sol applies the public export/manual entry and serial report-stage registry/CLI changes. Preserve the report-specific exit mapping above, return the renderer's exit_code, and write the report directory beneath the existing output root. Review the resulting CLI behavior with this candidate before acceptance."
+}

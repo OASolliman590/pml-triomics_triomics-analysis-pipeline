@@ -69,9 +69,11 @@ triomics_validate_only <- function(config, config_path, stage, output) {
 }
 
 triomics_cli_exit <- function(error) {
-  if (identical(error$code, "A_STAGE_UNAVAILABLE")) {
+  if (error$code %in% c("A_STAGE_UNAVAILABLE", "D_REPORT_REQUIRED_MISSING",
+                         "D_REPORT_RUNTIME_MISSING", "D_REPORT_TEMPLATE_MISSING",
+                         "D_REPORT_DISCLOSURE_UNQUALIFIED")) {
     3L
-  } else if (identical(error$code, "A_ARTIFACT_FINALIZE")) {
+  } else if (error$code %in% c("A_ARTIFACT_FINALIZE", "D_REPORT_RENDER_FAILED")) {
     4L
   } else {
     2L
@@ -2822,6 +2824,10 @@ triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
     } else if (identical(options$stage, "D")) {
       stage_d_result <- triomics_execute_stage_d(options$config, options$output)
       return(as.integer(stage_d_result$exit_code))
+    } else if (identical(options$stage, "report")) {
+      bundle <- triomics_report_bundle_from_root(options$output, options$config)
+      rendered <- render_report(bundle, list(output_relative_path = "report"))
+      return(as.integer(rendered$exit_code))
     } else {
       triomics_abort("A_STAGE_UNAVAILABLE",
                      paste0("Execution is not implemented for stage '", options$stage, "'."),

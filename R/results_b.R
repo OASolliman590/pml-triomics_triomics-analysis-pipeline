@@ -565,13 +565,13 @@ triomics_execute_stage_b <- function(config_path, output) {
     !is.na(provenance_context$producer_method_ids) & nzchar(provenance_context$producer_method_ids)
   ]
   provenance_context$producer_method_ids <- sort(unique(provenance_context$producer_method_ids), method = "radix")
-  triomics_write_json_atomic(list(
+  triomics_b_write_run_registry(list(
     schema_version = "2.0",
     run_id = "b-t01",
     study_id = ingested$study_id,
     stage = "B",
     status = artifact_status
-  ), file.path(output, "registries", "run.json"))
+  ), output, attr(config, "config_sha256"))
   list(status = artifact_status, method_status = fit$status,
        payload_path = payload_path, limma_version = fit$limma_version,
        resolved_matrices = stats::setNames(lapply(block_ids, function(block_id) {

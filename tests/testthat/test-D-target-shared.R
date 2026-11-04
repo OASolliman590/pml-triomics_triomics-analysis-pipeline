@@ -275,8 +275,8 @@ testthat::test_that("external assay axes stay separate and a sourced Kd remains 
 })
 
 testthat::test_that("typed target JSON rejects repeated object fields before parsing", {
-  config_path <- tempfile("m7-024-config-", tmpdir = "/private/tmp", fileext = ".yaml")
-  input_path <- tempfile("m7-024-target-", tmpdir = "/private/tmp", fileext = ".json")
+  config_path <- tempfile("m7-024-config-", tmpdir = tempdir(), fileext = ".yaml")
+  input_path <- tempfile("m7-024-target-", tmpdir = tempdir(), fileext = ".json")
   writeLines("synthetic fixture", config_path)
   writeLines('{"records": [], "records": []}', input_path)
 
@@ -290,8 +290,8 @@ testthat::test_that("typed target JSON rejects repeated object fields before par
 })
 
 testthat::test_that("mechanism JSON rejects string taxon IDs before identity coercion", {
-  config_path <- tempfile("m7-024-config-", tmpdir = "/private/tmp", fileext = ".yaml")
-  mechanism_path <- tempfile("m7-024-mechanism-", tmpdir = "/private/tmp", fileext = ".json")
+  config_path <- tempfile("m7-024-config-", tmpdir = tempdir(), fileext = ".yaml")
+  mechanism_path <- tempfile("m7-024-mechanism-", tmpdir = tempdir(), fileext = ".json")
   writeLines("synthetic fixture", config_path)
   writeLines(paste0(
     '{"format":"triomics.target-mechanism","format_version":"1.0",',
@@ -313,9 +313,9 @@ testthat::test_that("mechanism JSON rejects string taxon IDs before identity coe
 })
 
 testthat::test_that("target results bind actual local file bytes and retain declared constructs", {
-  config_path <- tempfile("m7-024-config-", tmpdir = "/private/tmp", fileext = ".yaml")
-  mechanism_path <- tempfile("m7-024-mechanism-", tmpdir = "/private/tmp", fileext = ".json")
-  assay_path <- tempfile("m7-024-assays-", tmpdir = "/private/tmp", fileext = ".json")
+  config_path <- tempfile("m7-024-config-", tmpdir = tempdir(), fileext = ".yaml")
+  mechanism_path <- tempfile("m7-024-mechanism-", tmpdir = tempdir(), fileext = ".json")
+  assay_path <- tempfile("m7-024-assays-", tmpdir = tempdir(), fileext = ".json")
   writeLines("synthetic fixture", config_path)
   writeLines(paste0(
     '{"format":"triomics.target-mechanism","format_version":"1.0",',
