@@ -59,7 +59,7 @@
     ],
     "tests_or_fits_run_by_reviewers": false,
     "acceptance": false,
-    "parent_gates": "pending"
+    "parent_gates_at_review": "pending"
   },
   "native_commands": [
     {
