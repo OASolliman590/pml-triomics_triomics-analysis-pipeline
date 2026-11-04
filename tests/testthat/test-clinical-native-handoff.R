@@ -140,7 +140,7 @@ testthat::test_that("saved native C context replays the exact fit without refitt
   testthat::expect_identical(
     triomics_b07_prov_value_sha256(c_identity), context$c_input_identity_sha256
   )
-  testthat::expect_identical(c_identity$study_id, "triomics_c08_fixture")
+  testthat::expect_identical(c_identity$study_id, "triomics_c_08_fixture")
   testthat::expect_identical(nrow(c_identity$normalized_metadata$sample_metadata), 12L)
   testthat::expect_true(all(vapply(c_identity$blocks, function(block) {
     is.matrix(block$matrix) && identical(typeof(block$matrix), "double") &&
@@ -157,7 +157,10 @@ testthat::test_that("saved native C context replays the exact fit without refitt
   ) %in% input_paths))
   testthat::expect_false(file.exists(file.path(output_root, "D", "handoff-manifest.json")))
 
-  triomics_execute_stage_b(fixture$config_path, output_root)
+  b_exit <- triomics_main(c(
+    "--config", fixture$config_path, "--stage", "B", "--output", output_root
+  ))
+  testthat::expect_identical(b_exit, 0L)
   testthat::expect_true(file.exists(file.path(output_root, "B", "clinical-associations.json")))
 
   fit_calls <- 0L
