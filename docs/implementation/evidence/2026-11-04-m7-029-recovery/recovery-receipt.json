@@ -1,0 +1,19 @@
+{
+  "event": "M7_029_interruption_recovery",
+  "date": "2026-11-04",
+  "coordinator_recovered_from": "86dd1fdb94754e9f65a81ca35eb3d24ba4e375f4",
+  "candidate_commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+  "temporary_worktrees_evidence_runtime": "Absent after interruption; old running sessions and live agents unavailable. Git commits and committed receipts retained.",
+  "last_conversation_observation": "Luna and Sol focused542pass/0fail/error/warn/skip; Sol legacy status/null probe passed. Raw temporary proof unavailable, so regenerate rather than count as final acceptance.",
+  "interrupted_D01": "Completion unknown; session87896 unavailable. Re-run justified by missing evidence, not product repair.",
+  "repairs_used": 2,
+  "repairs_remaining": 0,
+  "replacement_worker": "/root/m7_029_verification_resume",
+  "replacement_scope": "Verification only; no product edits or repair3; durable external scripts/artifacts.",
+  "requested_model": "gpt-6-luna",
+  "requested_effort": "max",
+  "effective_settings_exposed": false,
+  "durable_evidence_root": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104",
+  "M7": "unreleased",
+  "G7": "unreleased"
+}

@@ -1,0 +1,157 @@
+{
+  "cases": [
+    {
+      "case_root": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2/cases/native-D10",
+      "commands": [
+        {
+          "command": [
+            "Rscript",
+            "--vanilla",
+            "inst/exec/triomics",
+            "--config",
+            "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2/cases/native-D10/config/D-T10.yaml",
+            "--stage",
+            "B",
+            "--output",
+            "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2/cases/native-D10/native-output"
+          ],
+          "cwd": "/Users/megastore/.codex/worktrees/m7-029-resume-candidate/PML MultiOmics Analysis Pipeline",
+          "exit_code": 0,
+          "finished_utc": "2026-11-04T07:38:14.678163+00:00",
+          "log": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2/logs/native-D10-B.log",
+          "log_bytes": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pid": 9308,
+          "stage": "B",
+          "started_utc": "2026-11-04T07:38:04.869366+00:00"
+        },
+        {
+          "command": [
+            "Rscript",
+            "--vanilla",
+            "inst/exec/triomics",
+            "--config",
+            "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2/cases/native-D10/config/D-T10.yaml",
+            "--stage",
+            "C",
+            "--output",
+            "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2/cases/native-D10/native-output"
+          ],
+          "cwd": "/Users/megastore/.codex/worktrees/m7-029-resume-candidate/PML MultiOmics Analysis Pipeline",
+          "exit_code": 0,
+          "finished_utc": "2026-11-04T07:38:31.226799+00:00",
+          "log": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2/logs/native-D10-C.log",
+          "log_bytes": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pid": 9344,
+          "stage": "C",
+          "started_utc": "2026-11-04T07:38:14.684043+00:00"
+        },
+        {
+          "command": [
+            "Rscript",
+            "--vanilla",
+            "inst/exec/triomics",
+            "--config",
+            "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2/cases/native-D10/config/D-T10.yaml",
+            "--stage",
+            "D",
+            "--output",
+            "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2/cases/native-D10/native-output"
+          ],
+          "cwd": "/Users/megastore/.codex/worktrees/m7-029-resume-candidate/PML MultiOmics Analysis Pipeline",
+          "exit_code": 2,
+          "finished_utc": "2026-11-04T07:38:41.581030+00:00",
+          "log": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2/logs/native-D10-D.log",
+          "log_bytes": 91,
+          "log_sha256": "1dcbcbd955059edb8a0f1fbb2d28092311ce8fbde0d519666394fb77fe3f0bb6",
+          "pid": 9410,
+          "stage": "D",
+          "started_utc": "2026-11-04T07:38:31.232988+00:00"
+        }
+      ],
+      "commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+      "external_assay_control": null,
+      "feature_taxon_control": null,
+      "input_hashes_from_source": {
+        "inst/examples/data/c04/metadata.tsv": "a1cbf0b086ab0126a4a875bbee06e0955cc9d5805fed603da58b523e978894ae",
+        "inst/examples/data/d-target/external-assays.json": "a59bc918cdb17d96d1c7c4d958f6da51087da580e792c342e8c1b8d221f18804",
+        "inst/examples/data/d-target/mechanisms.json": "93434242b0f8ab69023cc66e27f98f56797c5840026b23040a9f27bb750b79fa",
+        "inst/examples/data/independent/metabolomics.tsv": "2015689535ded9f0ef9909038932714f58d624b92bba912e5021d67d7d567e06",
+        "inst/examples/data/independent/metadata.tsv": "de9a7a6f45f296b07c9733de174521ea06e3b2cc7a74cb63547824f2a622fa2c",
+        "inst/examples/data/independent/proteomics.tsv": "e2744731cf39baaa9767cb66f8e419cde8cc1090e5105a39afbb1a691944a843"
+      },
+      "input_hashes_in_case": {
+        "data/._c04": "0515f39b42b7ea010e9d5c131ee107485656112439a4d5162597d045ad1399aa",
+        "data/._d-target": "0515f39b42b7ea010e9d5c131ee107485656112439a4d5162597d045ad1399aa",
+        "data/._independent": "0515f39b42b7ea010e9d5c131ee107485656112439a4d5162597d045ad1399aa",
+        "data/c04/._metadata.tsv": "0515f39b42b7ea010e9d5c131ee107485656112439a4d5162597d045ad1399aa",
+        "data/c04/metadata.tsv": "a1cbf0b086ab0126a4a875bbee06e0955cc9d5805fed603da58b523e978894ae",
+        "data/d-target/._external-assays.json": "0515f39b42b7ea010e9d5c131ee107485656112439a4d5162597d045ad1399aa",
+        "data/d-target/._mechanisms.json": "0515f39b42b7ea010e9d5c131ee107485656112439a4d5162597d045ad1399aa",
+        "data/d-target/external-assays.json": "a59bc918cdb17d96d1c7c4d958f6da51087da580e792c342e8c1b8d221f18804",
+        "data/d-target/mechanisms.json": "93434242b0f8ab69023cc66e27f98f56797c5840026b23040a9f27bb750b79fa",
+        "data/independent/._metabolomics.tsv": "0515f39b42b7ea010e9d5c131ee107485656112439a4d5162597d045ad1399aa",
+        "data/independent/._metadata.tsv": "0515f39b42b7ea010e9d5c131ee107485656112439a4d5162597d045ad1399aa",
+        "data/independent/._proteomics.tsv": "0515f39b42b7ea010e9d5c131ee107485656112439a4d5162597d045ad1399aa",
+        "data/independent/metabolomics.tsv": "2015689535ded9f0ef9909038932714f58d624b92bba912e5021d67d7d567e06",
+        "data/independent/metadata.tsv": "de9a7a6f45f296b07c9733de174521ea06e3b2cc7a74cb63547824f2a622fa2c",
+        "data/independent/proteomics.tsv": "e2744731cf39baaa9767cb66f8e419cde8cc1090e5105a39afbb1a691944a843"
+      },
+      "name": "native-D10",
+      "native_output": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2/cases/native-D10/native-output",
+      "public_synthetic_only": true,
+      "source_ticket_sha256": "07bed72d083a3271af4a4e4dd51ea1380c0ff602bca19be537c4a783cf65d858",
+      "ticket": "D-T10",
+      "ticket_adaptation": "none; shipped ticket copied exactly",
+      "ticket_path": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2/cases/native-D10/config/D-T10.yaml",
+      "ticket_sha256": "07bed72d083a3271af4a4e4dd51ea1380c0ff602bca19be537c4a783cf65d858"
+    }
+  ],
+  "commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+  "completed": false,
+  "control_adaptations": [
+    "D10/D11/D12 shipped tickets are copied and run unchanged for native positives.",
+    "D11 controlled copies may add feature taxon metadata and/or public synthetic numeric assay controls.",
+    "Pass the package entry script relative to source CWD because Rscript rewrites spaces in an absolute --file path.",
+    "Assay control values 12.5 and 25.0 nM are synthetic software controls, not biological measurements.",
+    "All source measurement matrices are copied byte-for-byte and their SHA256 values are checked.",
+    "The prior aggregate binding expectation is derived per record; an unavailable match plus a mismatch yields measured=0, unmeasured=1, unresolved=1.",
+    "No B/C bytes are synthesized; all B effects and C loadings are read from native persisted JSON.",
+    "D01 regression is outside this runner; its interrupted prior result remains unknown and is not reported as passed."
+  ],
+  "d01_regression": {
+    "note": "This bounded native D continuation does not infer or report a D01 pass.",
+    "prior_interrupted_result": "unknown",
+    "status": "not_run"
+  },
+  "default_expected_commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+  "expected_commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+  "expected_commit_environment_override": null,
+  "failure": "native-D10 stage D exited 2; see /Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2/logs/native-D10-D.log",
+  "failure_type": "AssertionError",
+  "failure_utc": "2026-11-04T07:38:41.587777+00:00",
+  "fixture_policy": "public synthetic fixture copies only; original source inputs are read-only",
+  "invocation": [
+    "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/runtime/python312/bin/python3",
+    "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/scripts/verify_m7_029_resume.py",
+    "/Users/megastore/.codex/worktrees/m7-029-resume-candidate/PML MultiOmics Analysis Pipeline",
+    "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2"
+  ],
+  "outer_exec_session_id": 62073,
+  "output_root": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2",
+  "runner_script_sha256_at_run": "785104d61d85403a40b24a24552cc04fef55f907b8937cbebba1531b0601c764",
+  "runtime_environment_applied_keys": [
+    "R_LIBS_USER",
+    "TRIOMICS_MOFA_LIBRARY",
+    "TRIOMICS_MOFA_PYTHON",
+    "RETICULATE_PYTHON"
+  ],
+  "runtime_environment_receipt": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/runtime/env.json",
+  "runtime_environment_receipt_sha256": "53e10996b23e39316888f7172c04a10ba679bb10988b5aa96dcb4695237081d0",
+  "schema": "triomics.m7-029-resume-verification-receipt",
+  "schema_version": "1.0",
+  "source": "/Users/megastore/.codex/worktrees/m7-029-resume-candidate/PML MultiOmics Analysis Pipeline",
+  "source_clean_at_start": true,
+  "started_utc": "2026-11-04T07:38:04.721231+00:00"
+}

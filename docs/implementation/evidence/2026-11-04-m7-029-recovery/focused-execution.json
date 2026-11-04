@@ -1,0 +1,12 @@
+{
+  "command": [
+    "Rscript",
+    "--vanilla",
+    "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/scripts/run-source.R",
+    "/Users/megastore/.codex/worktrees/m7-029-resume-candidate/PML MultiOmics Analysis Pipeline",
+    "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/focused-candidate",
+    "D-T01|D-T10|D-T11|D-T12|D-target-shared|D-discovery-shared"
+  ],
+  "cwd": "/Users/megastore/.codex/worktrees/m7-029-resume-candidate/PML MultiOmics Analysis Pipeline",
+  "exit_code": 0
+}

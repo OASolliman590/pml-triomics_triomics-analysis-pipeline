@@ -1,0 +1,23 @@
+[
+  {
+    "command": [
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/runtime/python312/bin/python3",
+      "-c",
+      "import sys,importlib.metadata,json,numpy;import mofapy2; print(json.dumps(dict(prefix=sys.prefix,python=sys.version,mofapy2=importlib.metadata.version(\"mofapy2\"),numpy=numpy.__version__)))"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"prefix\": \"/Users/megastore/.triomics-verification/m7-resume-20261104-01/runtime/python312\", \"python\": \"3.12.14 (main, Sep 24 2026, 17:46:36) [Clang 22.1.3 ]\", \"mofapy2\": \"0.7.5\", \"numpy\": \"2.5.4\"}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "-e",
+      "library(MOFA2); cat(\"MOFA2\",as.character(packageVersion(\"MOFA2\")),\"\\n\");reticulate::use_python(Sys.getenv(\"TRIOMICS_MOFA_PYTHON\"), required=TRUE);print(reticulate::import(\"mofapy2\"));cat(\"runtime_available\\n\")"
+    ],
+    "exit_code": 0,
+    "stdout": "MOFA2 1.22.1 \nModule(mofapy2)\nruntime_available\n",
+    "stderr": "\nAttaching package: \u2018MOFA2\u2019\n\nThe following object is masked from \u2018package:stats\u2019:\n\n    predict\n\n"
+  }
+]

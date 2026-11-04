@@ -37,37 +37,38 @@
   },
   "active_workers": [
     {
-      "agent_id": "/root/m7_029_luna",
-      "role": "Luna M7-029 implementation",
+      "agent_id": "/root/m7_029_verification_resume",
+      "role": "Luna verification-only recovery",
+      "status": "APFS_native_verification_running",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-029-resume-candidate/PML MultiOmics Analysis Pipeline",
+      "candidate_commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+      "repairs_used": 2,
+      "repairs_remaining": 0,
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "effective_settings_exposed": false,
-      "status": "repair_2_running",
-      "worktree": "/tmp/triomics-m7-029-luna",
-      "base": "bcc8e3f",
-      "repairs_used": 2,
-      "repairs_remaining": 0,
-      "next_transition": "Sol diff review and independent focused/native verification; then new immutable full source/archive gates and focused milestone Astra.",
-      "candidate_commit": "42d61a88d8206172d24c661607d776dc121354e7"
+      "evidence_root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01",
+      "session_id": 98269
     }
   ],
   "orchestration_control": {
-    "status": "M7_029_Luna_initial_running",
+    "status": "M7_029_recovered_verification_running",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [
       {
-        "agent_id": "/root/m7_029_luna",
-        "role": "Luna M7-029 implementation",
+        "agent_id": "/root/m7_029_verification_resume",
+        "role": "Luna verification-only recovery",
+        "status": "APFS_native_verification_running",
+        "worktree": "/Users/megastore/.codex/worktrees/m7-029-resume-candidate/PML MultiOmics Analysis Pipeline",
+        "candidate_commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+        "repairs_used": 2,
+        "repairs_remaining": 0,
         "requested_model": "gpt-6-luna",
         "requested_effort": "max",
         "effective_settings_exposed": false,
-        "status": "initial_implementation_after_clean_RED",
-        "worktree": "/tmp/triomics-m7-029-luna",
-        "base": "bcc8e3f",
-        "repairs_used": 0,
-        "repairs_remaining": 2,
-        "next_transition": "Sol diff review and independent focused/native verification; then new immutable full source/archive gates and focused milestone Astra.",
-        "candidate_commit": "3a1e1a14593012d33735a4ba8ed66a1fc5773fde"
+        "evidence_root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01",
+        "session_id": 98269,
+        "next_transition": "Join native proof, Sol readback, integrate verified commits, freeze P2 and run full source/archive gates; Terra DOC-M7 and focused final Astra before acceptance."
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -6364,6 +6365,47 @@
       "finding": "Profile normalization of an existing molecular observation lacking taxon qualification marks it unassessable but leaves B status support and removes named null feature_taxon_id. Original value1.75 remains.",
       "scope": "Retain named null unknown taxon fields and prevent support/conflict when observation applicability is unknown/inapplicable; preserve numeric/source/dependency evidence. Behavioral tests, focused+D01+native requalification on new commit.",
       "repairs_used": 2,
+      "repairs_remaining": 0
+    },
+    {
+      "event": "M7_029_interruption_recovery",
+      "date": "2026-11-04",
+      "coordinator_recovered_from": "86dd1fdb94754e9f65a81ca35eb3d24ba4e375f4",
+      "candidate_commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+      "temporary_worktrees_evidence_runtime": "Absent after interruption; old running sessions and live agents unavailable. Git commits and committed receipts retained.",
+      "last_conversation_observation": "Luna and Sol focused542pass/0fail/error/warn/skip; Sol legacy status/null probe passed. Raw temporary proof unavailable, so regenerate rather than count as final acceptance.",
+      "interrupted_D01": "Completion unknown; session87896 unavailable. Re-run justified by missing evidence, not product repair.",
+      "repairs_used": 2,
+      "repairs_remaining": 0,
+      "replacement_worker": "/root/m7_029_verification_resume",
+      "replacement_scope": "Verification only; no product edits or repair3; durable external scripts/artifacts.",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "durable_evidence_root": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104",
+      "M7": "unreleased",
+      "G7": "unreleased"
+    },
+    {
+      "event": "M7_029_recovered_focused_and_storage_verification",
+      "date": "2026-11-04",
+      "commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+      "focused_counts": {
+        "pass": 886,
+        "fail": 0,
+        "error": 0,
+        "warn": 1,
+        "skip": 0,
+        "blocks": 89
+      },
+      "actual_exit_code": 0,
+      "warning_test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "warning_disposition": "Expected deliberate stale-sign CLI exit2; warning retained.",
+      "SSD_run1": "B exit1 before analysis: absolute entry-script path space encoding; corrected external runner to documented relative invocation, no product edit.",
+      "SSD_run2": "B0/C0/D2: AppleDouble filesystem metadata rejected as undisclosed generation files; no publication credit, no prior pointer created.",
+      "APFS_runtime": "MOFA2 1.22.1 / mofapy2 0.7.5 loaded with exit0 after relocation.",
+      "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-029-recovery",
+      "native_proof_root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/native-candidate",
       "repairs_remaining": 0
     }
   ],

@@ -1,0 +1,79 @@
+{
+  "commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+  "command": "Rscript --vanilla '/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/scripts/run-source.R' '/Users/megastore/.codex/worktrees/m7-029-resume-candidate/PML MultiOmics Analysis Pipeline' '/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/focused-candidate' 'D-T01|D-T10|D-T11|D-T12|D-target-shared|D-discovery-shared'",
+  "filter": "D-T01|D-T10|D-T11|D-T12|D-target-shared|D-discovery-shared",
+  "started": "2026-11-04 07:31:18 UTC",
+  "finished": "2026-11-04 07:34:29 UTC",
+  "counts": {
+    "pass": 886,
+    "fail": 0,
+    "error": 0,
+    "warn": 1,
+    "skip": 0,
+    "blocks": 89
+  },
+  "exit_code": 0,
+  "by_file": {
+    "test-D-discovery-shared.R": {
+      "pass": 3,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 2
+    },
+    "test-D-T01.R": {
+      "pass": 344,
+      "fail": 0,
+      "error": 0,
+      "warn": 1,
+      "skip": 0,
+      "blocks": 19
+    },
+    "test-D-T10.R": {
+      "pass": 83,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 11
+    },
+    "test-D-T11.R": {
+      "pass": 305,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 38
+    },
+    "test-D-T12.R": {
+      "pass": 48,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 9
+    },
+    "test-D-target-shared.R": {
+      "pass": 103,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 10
+    }
+  },
+  "conditions": [
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "file": "test-D-T01.R",
+      "type": "expectation_warning",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-1bd5fd17a40/tickets/d-t01-paired-sign-stale-1bd527b3c9d4.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-1bd51b107dd' 2>&1' had status 2"
+    }
+  ],
+  "runtime": {
+    "R": "R version 4.6.1 (2026-06-24)",
+    "MOFA_library": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/runtime/R",
+    "python": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/runtime/python312/bin/python3"
+  }
+}

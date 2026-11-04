@@ -1,3 +1,13 @@
+# Recovery checkpoint — 4 November 2026
+
+Temporary worktrees, raw logs and runtime under /tmp are absent after interruption. Git preserves coordinator86dd1fd and final Luna repair36547f5. Current coordinator is the attached m7-029-resume-sol worktree, branch codex/m7-stage-d-resume-20261104; immutable candidate is attached m7-029-resume-candidate. Both M7-029 repairs are consumed. No product repair is reopened.
+
+The conversation records independent542focused passes and the corrected status/null probe before interruption; raw temporary proof is unavailable. The interrupted D01 completion is unknown. Recovered focused gate on 36547f5: 886 pass, 0 fail/error/skip, one named expected D01 stale-sign warning; actual exit 0. SSD native runs failed diagnostically (absolute entry-script space encoding, then AppleDouble generation files). Preserve them without publication credit. Native and final proof now use persistent internal APFS `/Users/megastore/.triomics-verification/m7-resume-20261104-01`; do not clean D outputs to bypass disclosure checks. Existing Luna /root/m7_029_verification_resume prepares and runs verification only, without source edits, after Sol restores the pinned runtime. Sol owns integration and full source/archive gates. One focused final milestone Astra rereview remains after fresh receipts and Terra DOC-M7 refresh. M7/G7 remain unreleased.
+
+Literal resume: reconcile the current verification-only Luna and durable recovery receipt; finish focused/native proof on36547f5, integrate if valid, then one new immutable full source/archive gate, updated DOC-M7 and focused final Astra. Do not reopen coding or treat old missing logs as acceptance evidence.
+
+## Historical checkpoints below
+
 # Current checkpoint — M7-029 final repair 2 authorized
 
 The initial final Astra audit rejected product `126a30f` despite passed software gates. M7-029 closes missing assay qualification and feature-species applicability; its initial and focused scope audits passed, latest scope `b3113ab`. Read `reviews/2026-11-04-m7-final-astra.md` and `change-records/M7-029-target-evidence-applicability.md`.
