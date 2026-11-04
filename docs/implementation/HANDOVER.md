@@ -1,10 +1,10 @@
-# Current checkpoint: D15 predecessor scope prepared for audit
+# Current checkpoint: D15 predecessor scope audit running
 
-M8-D15-S01 defines the missing native between-person clinical request consumer and later publication of the saved C fit. Read change-records/M8-D15-S01-native-clinical-handoff.md. Product code is unchanged. Fresh read-only Astra-low audit must pass before implementation; no Luna is active. C fit ancestry must not include later B results. D15 remains blocked until independently verified native predecessor evidence exists.
+M8-D15-S01 defines the missing native between-person clinical request consumer and later publication of the saved C fit. Read change-records/M8-D15-S01-native-clinical-handoff.md. Product code is unchanged. Fresh read-only /root/d15_s01_scope_astra is reviewing immutable929746c, archive SHA-256 ca62c63ed5b0e7ef2e2622bbd012098e8b397f2067c483b128429ff8e348310f. No Luna is active; no code while audit is open. C fit ancestry must not include later B results. D15 remains blocked until independently verified native predecessor evidence exists.
 
 D13 stays blocked at its repair cap. D08/C08/M7/G7 remain accepted. G8/G9 remain closed. No private data, push, AIU execution or Notion sync.
 
-Literal resume: **Freeze and audit M8-D15-S01; join that audit if dispatched. Apply at most one focused documentation repair/rereview. Do not start product edits without audit_pass yes; preserve old D13/D15 receipts.**
+Literal resume: **Join /root/d15_s01_scope_astra; do not redispatch. Apply at most one focused documentation repair/rereview. Do not start product edits without audit_pass yes; preserve old D13/D15 receipts.**
 
 ## Historical checkpoints below
 
