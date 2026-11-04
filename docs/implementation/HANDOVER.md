@@ -1,8 +1,8 @@
-# Current checkpoint: D-T13 targeted repair1
+# Current checkpoint: D-T13 final repair2
 
-Initial candidate94ede2d is preserved. Both fresh local reviews completed: Standards pass; Spec one P2 for lost supplied association overlap/construction lineage. Read [review](reviews/2026-11-04-d-t13-initial-review.md). Same Luna worker receives repair1of2 within the original five-file scope. No acceptance; G8/G9 closed.
+Read [repair1 review](reviews/2026-11-04-d-t13-repair1-review.md). Fresh reviewer reproduced safe construction/selection prose lost by token-only projection. Same Luna performs final repair2of2; preserve94ede2d,ed37578,c94cd1e and all evidence. No third repair. D13 unaccepted; G8/G9 closed.
 
-Literal resume: **Join /root/m8_d13_luna repair1, inspect its commit, focused read-only local review, then parent focused source and fresh native A/B/C/D/report plus saved dossier readback. Stop at D13 receipt. Do not restart initial work or start D15.**
+Literal resume: **Join /root/m8_d13_luna repair2; final local review and parent focused/native/actual-Quarto saved-output proof. Integrate only on passes; stop at D13 receipt. No D15 or M7 reopening.**
 
 ## Historical checkpoints below
 

@@ -38,40 +38,32 @@
   "active_workers": [
     {
       "agent_id": "/root/m8_d13_luna",
-      "role": "Luna D-T13 targeted repair1",
+      "role": "Luna D-T13 final repair2",
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
-      "host_dispatch_accepted": true,
       "effective_settings_exposed": false,
-      "base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
-      "branch": "codex/m8-d13-luna",
-      "worktree": "/Users/megastore/.codex/worktrees/m8-d13-luna/PML MultiOmics Analysis Pipeline",
-      "status": "repair1_running",
-      "attempt": 1,
-      "repairs_used": 1,
-      "repairs_remaining": 1,
-      "allowed_next_transition": "Join repair commit, focused review; parent focused source/native/render readback; acceptance receipt only after all pass."
+      "candidate": "c94cd1efe590ce5cf43aed23a95821f7d6ce3e33",
+      "status": "repair2_running",
+      "repairs_used": 2,
+      "repairs_remaining": 0,
+      "allowed_next_transition": "Join final repair, final local review and parent gate, or block; no repair3"
     }
   ],
   "orchestration_control": {
-    "status": "D_T13_repair1_running",
+    "status": "D_T13_repair2_running",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [
       {
         "agent_id": "/root/m8_d13_luna",
-        "role": "Luna D-T13 targeted repair1",
+        "role": "Luna D-T13 final repair2",
         "requested_model": "gpt-6-luna",
         "requested_effort": "max",
-        "host_dispatch_accepted": true,
         "effective_settings_exposed": false,
-        "base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
-        "branch": "codex/m8-d13-luna",
-        "worktree": "/Users/megastore/.codex/worktrees/m8-d13-luna/PML MultiOmics Analysis Pipeline",
-        "status": "repair1_running",
-        "attempt": 1,
-        "repairs_used": 1,
-        "repairs_remaining": 1,
-        "allowed_next_transition": "Join repair commit, focused review; parent focused source/native/render readback; acceptance receipt only after all pass."
+        "candidate": "c94cd1efe590ce5cf43aed23a95821f7d6ce3e33",
+        "status": "repair2_running",
+        "repairs_used": 2,
+        "repairs_remaining": 0,
+        "allowed_next_transition": "Join final repair, final local review and parent gate, or block; no repair3"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -6840,6 +6832,12 @@
       "spec": "changes_required",
       "candidate": "94ede2dda5e4f851c32fcf0a4a57746faa5da63f",
       "next": "same Luna repair1of2; then focused review and parent gates"
+    },
+    {
+      "event": "D13_repair1_review_joined",
+      "candidate": "ed37578ea157bc8bdfdb0cad469861a0555adcc2",
+      "verdict": "changes_required",
+      "next": "same Luna finalrepair2, safe prose lineage; no repair3"
     }
   ],
   "packets": {
@@ -8305,19 +8303,20 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "repair1_running",
+      "status": "repair2_running",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": [],
-      "repair_attempts": 1,
+      "repair_attempts": 2,
       "implementation_base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
       "active_worker": "/root/m8_d13_luna",
       "accepted": false,
       "completion_credit": false,
       "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t13-dispatch.md",
-      "candidate_commit": "94ede2dda5e4f851c32fcf0a4a57746faa5da63f",
-      "initial_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-initial-review.md"
+      "candidate_commit": "c94cd1efe590ce5cf43aed23a95821f7d6ce3e33",
+      "initial_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-initial-review.md",
+      "repair1_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-repair1-review.md"
     },
     "D-T15": {
       "status": "not_started",
