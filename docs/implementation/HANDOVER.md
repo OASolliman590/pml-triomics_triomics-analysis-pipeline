@@ -57,24 +57,27 @@ Native B/C/D exits0 and Sol107independent readback checks passed. Unequal covera
 remains noncomparable, no winner. One repair used; initial Astra no, focused yes.
 Worker/reviewers completed. Read4NovemberM7-025Sol receipt. D12 is unaccepted
 pending final same-snapshot gates; M7-026 dependency is satisfied.
-M7-026 neutral generation governance wording scope
-60fa3b8 passed fresh Astra; amendedf80e7f6 also passed its one focused scope
-rereview to allow Sol-only stale manual sentence correction. Implementation is now active with fresh /root/m7_026_luna in
-/tmp/triomics-m7-026-luna froma303877, initial attempt, zero repairs. Sol-only
-manual correction committed49347e2; test-onlyRED17a3fb2 reached3intended
-wording failures with342pass/0error/1expectedwarning/0skip. Sol reviewed and
-committed initialsourceb2c83de; worker runsB07/C06/D01 and nativeGREEN. Zero
-repairs used; independent Sol readback then integration remain.
+M7-026 verified on cleanb2c83de and integratedthrough75eedd1. Auditedscope
+60fa3b8/amendmentf80e7f6; zero implementation repairs. CleanRED342pass3fail;
+GREENB07/C06/D01:1106pass0fail/error/skip1expectedwarning. NativeB/C/D pass;
+first D /tmpalias rejected, canonicalsame-rootD retry passed without refitting.
+Sol independently rehashed all26B/C predecessorfiles unchanged and generation
+bytes/limitations. Exact neutral wording/C07/C09 preserved. Worker completed.
+Read4NovemberM7-026Sol receipt. Final combined gates are next; no further
+implementation is planned unless those gates reveal a concrete blocker.
 M7/G7 closed; C07 not_run; C09 unqualified; no private data, AIU, fasting or push.
 
 ## Current literal resume instruction
 
-Continue active /root/m7_026_luna in /tmp/triomics-m7-026-luna. Initial attempt,
-zero repairs; clean initialcandidateb2c83de in GREEN verification. Do not duplicate.
-D12 is verified/integrated, old worker complete; do not rerun it.
-Sol owns the stale manual sentence. Then freeze combined product and run final
-same-snapshot source/native/archive/Terra/Astra/Sol gates. M7/G7 remain closed.
-No private data or push, no active parent verification process.
+Freeze this clean integrated snapshot for final M7 qualification. All required
+D candidate implementations are integrated; workers/reviewers completed. Run one
+uninterrupted full source suite and native required-packet readbacks on that exact
+commit, then git-archive package check with exact Status: OK and named warnings.
+Terra writes DOC-M7 from immutable receipts; fresh Astra reviews that same product
+snapshot. Only then may Sol accept current C06, required D packets, M7 and G7.
+ConditionalD06/07/14blocked without credit; C07unrun/C09unqualified. No private
+study data, push, AIU, fasting, M8/M9 or report work. Keep source clean during gates;
+use external /tmp/triomics-stage-d-evidence/final for logs and orchestration state.
 
 ## Historical checkpoint — 29 October 2026, D-T11 stopped at the repair limit
 

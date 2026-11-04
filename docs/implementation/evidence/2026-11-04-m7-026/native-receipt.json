@@ -1,0 +1,151 @@
+[
+  {
+    "ticket": "D-T01.yaml",
+    "commit": "b2c83de378ade395774f356c1741425fdd898747",
+    "root": "/private/tmp/triomics-stage-d-evidence/m7-026/native-run.p73wHY",
+    "root_path_resolution": {
+      "passed_argument": "/tmp/triomics-stage-d-evidence/m7-026/native-run.p73wHY",
+      "canonical_path": "/private/tmp/triomics-stage-d-evidence/m7-026/native-run.p73wHY"
+    },
+    "attempts": [
+      {
+        "stage": "D",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "triomics",
+          "--config",
+          "/private/tmp/triomics-m7-026-luna/inst/examples/tickets/D-T01.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/tmp/triomics-stage-d-evidence/m7-026/native-run.p73wHY"
+        ],
+        "working_directory": "/private/tmp/triomics-m7-026-luna/inst/exec",
+        "log": "/private/tmp/triomics-stage-d-evidence/m7-026/native-D.log",
+        "exit_code": 2,
+        "error": "triomics D_OUTPUT_PATH_UNSAFE: Stage D requires the existing same-root B/C handoff directory and a safe local output root."
+      }
+    ],
+    "commands": [
+      {
+        "stage": "B",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "triomics",
+          "--config",
+          "/private/tmp/triomics-m7-026-luna/inst/examples/tickets/D-T01.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/tmp/triomics-stage-d-evidence/m7-026/native-run.p73wHY"
+        ],
+        "working_directory": "/private/tmp/triomics-m7-026-luna/inst/exec",
+        "log": "/private/tmp/triomics-stage-d-evidence/m7-026/native-B.log",
+        "exit_code": 0,
+        "environment": {
+          "R_LIBS_USER": "/tmp/triomics-runtime-20261103/R:/Users/megastore/Library/R/x86_64/4.6/library",
+          "TRIOMICS_MOFA_LIBRARY": "/tmp/triomics-runtime-20261103/R",
+          "TRIOMICS_MOFA_PYTHON": "/tmp/triomics-runtime-20261103/python/bin/python",
+          "RETICULATE_PYTHON": "/tmp/triomics-runtime-20261103/python/bin/python"
+        }
+      },
+      {
+        "stage": "C",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "triomics",
+          "--config",
+          "/private/tmp/triomics-m7-026-luna/inst/examples/tickets/D-T01.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/tmp/triomics-stage-d-evidence/m7-026/native-run.p73wHY"
+        ],
+        "working_directory": "/private/tmp/triomics-m7-026-luna/inst/exec",
+        "log": "/private/tmp/triomics-stage-d-evidence/m7-026/native-C.log",
+        "exit_code": 0,
+        "environment": {
+          "R_LIBS_USER": "/tmp/triomics-runtime-20261103/R:/Users/megastore/Library/R/x86_64/4.6/library",
+          "TRIOMICS_MOFA_LIBRARY": "/tmp/triomics-runtime-20261103/R",
+          "TRIOMICS_MOFA_PYTHON": "/tmp/triomics-runtime-20261103/python/bin/python",
+          "RETICULATE_PYTHON": "/tmp/triomics-runtime-20261103/python/bin/python"
+        }
+      },
+      {
+        "stage": "D",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "triomics",
+          "--config",
+          "/private/tmp/triomics-m7-026-luna/inst/examples/tickets/D-T01.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/m7-026/native-run.p73wHY"
+        ],
+        "working_directory": "/private/tmp/triomics-m7-026-luna/inst/exec",
+        "log": "/private/tmp/triomics-stage-d-evidence/m7-026/native-D-canonical.log",
+        "exit_code": 0,
+        "environment": {
+          "R_LIBS_USER": "/tmp/triomics-runtime-20261103/R:/Users/megastore/Library/R/x86_64/4.6/library",
+          "TRIOMICS_MOFA_LIBRARY": "/tmp/triomics-runtime-20261103/R",
+          "TRIOMICS_MOFA_PYTHON": "/tmp/triomics-runtime-20261103/python/bin/python",
+          "RETICULATE_PYTHON": "/tmp/triomics-runtime-20261103/python/bin/python"
+        }
+      }
+    ],
+    "generation_id": "ee3ed6de661e24ab4cdf648d5856574d42be7bdc712e84e1940970228af823da",
+    "four_b_predecessors_verified": true,
+    "b_c_hashes_unchanged_after_d_path_correction": true,
+    "b_c_file_count": 26,
+    "b_c_files_after_d": {
+      "B/block-results.envelope.json": "cfd52e709ddec2ac28f061fe13e86880828f7238a562300626fd631987b408ed",
+      "B/block-results.json": "2d1f160391c7628895750ffa8793442a7454ec6439006979d5e3a87d8ea53ec0",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/acceptance-record.envelope.json": "40aba954635cf274685c1b0dfd0620a8665de28910b749b8669a85de23fd1e52",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/acceptance-record.json": "17b2702911869c8f470efc7263f23bcf2f148b882e5f1e9b2b82295bd324b065",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/bundle.envelope.json": "a49e53cc96b450b9381074da712e35cc3689d22da7d165b23f43136fd9ca1688",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/bundle.json": "c22da49a37427c981ef9819bf158eada29f1f94aebbf7b006f6444ae94e17853",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/candidate-nominations.envelope.json": "4770cab4acfe9ece8dd780f95b06df8af43cd536b4c10b6531bca3f5f6e1fffa",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/candidate-nominations.json": "6fa454e14745aee87a513b6e9562c36449d7d349f5c38d0274d1db7fa2478bfe",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/family-ledger.envelope.json": "3e8695f96d4af9fdd3b98f75762acbf2d93a060c2b96fb7607989225cb19d7af",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/family-ledger.json": "4f6f707225ad1e7f7b6d3400bf21a838799b61db07b8259fdc1bab3abf5f05fb",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/reproduction.envelope.json": "d253baa271d606c22dfede4b0ef76d588f76a8b1f4a0a89e0994e43f1976bcd9",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/reproduction.md": "819a139412824bf5f5e84c2ce8edab8a651d2a91b045f4ecb8e59450316cc81d",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/stage-c-matrices.envelope.json": "c30be48f6af439d980dc9cb0c5cd634480cceb3b3eefbac6c95437c25c69f1e9",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/stage-c-matrices.json": "02e938629448c4f072d264a668f569bcb9cc62e2e97250421c439c536ab4235c",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/stage-c-matrix-values.envelope.json": "ad65fc8bc2e0c81089fdaceeb1e99d6f2139528aff9986c60b203598b9b85e23",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/stage-c-matrix-values.rds": "ff77c7da1932b0cbeb1598552035d91bfeeb84c7745b677057e13efc765889df",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/stage-handoff-provenance.envelope.json": "2fbee7bb392c595cb176f74a7a8849440fc77956e1e4d1c0ddcde5e5a980d947",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/stage-handoff-provenance.json": "09fc4eeec6a0992df5acab4fda7ba4090078b71836de6fc9303982c75b465c38",
+      "C/integration-results.envelope.json": "34d5b2c9d4dc4e41eed97a3e6090cfb358d8bdd36cee0857fef1bd309d66869f",
+      "C/integration-results.json": "9254a44f8e635c5db875e9d4a7ae38b68104d7cca9e42bf48d2d7894c7de0349",
+      "C/native-states/integration-01.envelope.json": "bbb84967151ebfa6be1a1bb8e6c73b38972971e0b3dfe2cdaf5334e35d350938",
+      "C/native-states/integration-01.json": "86348fc7ab4de43b573bdc20a215c0d9977ac019c41750ee75de9ecf9112eac5",
+      "C/preparation-states/st_33871595331e0f64cfe0.json": "7485efb4ccb59f2f64b7897fcfd52b336a1d1768adc543a6b4677e9f00e5cfa7",
+      "C/preparation-states/st_9e3795a252c263bafe7f.json": "3479c1693fbcd8cf5b9ca41e1af8f1186c96c23c9c1abeeb086e13f99ff87dd2",
+      "C/score-endpoints/integration-01.envelope.json": "72d9c3ab756eb74e9c6feeabafb1f194d892547aade08a30faaa7baac2dddaaa",
+      "C/score-endpoints/integration-01.json": "10c60a9f2973773a4e250460c7b22c010ebc08022849fcaf6e28b1efafcebbdb"
+    },
+    "new_publication_wording_verified": true,
+    "historical_wording_absent_from_new_generation": true,
+    "c07_c09_limitations_verified": true,
+    "generation_members_sha256_verified": true,
+    "old_generation_hash_stability_tested_by": "/private/tmp/triomics-stage-d-evidence/m7-026/luna-green-source.json",
+    "files": {
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/bundle.json": "c22da49a37427c981ef9819bf158eada29f1f94aebbf7b006f6444ae94e17853",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/bundle.envelope.json": "a49e53cc96b450b9381074da712e35cc3689d22da7d165b23f43136fd9ca1688",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/stage-handoff-provenance.json": "09fc4eeec6a0992df5acab4fda7ba4090078b71836de6fc9303982c75b465c38",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/stage-handoff-provenance.envelope.json": "2fbee7bb392c595cb176f74a7a8849440fc77956e1e4d1c0ddcde5e5a980d947",
+      "D/stage-handoff-provenance.json": "bc4c1d0ac267f556f387a58a4601d8c5324508f6509d1f953b2fac3e8a8574ee",
+      "D/stage-handoff-provenance.envelope.json": "6a3ab3d26b4ae3c6ed88388fb2917522068e2ee43bfcbc3548ff629f6f3322cc",
+      "D/generations/ee3ed6de661e24ab4cdf648d5856574d42be7bdc712e84e1940970228af823da/generation-manifest.json": "ee3ed6de661e24ab4cdf648d5856574d42be7bdc712e84e1940970228af823da",
+      "registries/current-D.json": "b52cbd3babd3b2029f67ed424742c2c7eb949806c3090ec8d83f70d9e3fd6cc1",
+      "D/generations/ee3ed6de661e24ab4cdf648d5856574d42be7bdc712e84e1940970228af823da/evidence-routing.envelope.json": "315fd5c0d4531dbf926c0fe73cb8e1d02f999714d42471e284197ecbe4db6b91",
+      "D/generations/ee3ed6de661e24ab4cdf648d5856574d42be7bdc712e84e1940970228af823da/evidence-routing.json": "2b8e05fc7515a1b1040e98dd6669e1c0dc1652a46997ee32852caa714d23c416"
+    }
+  }
+]

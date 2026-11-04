@@ -34,25 +34,9 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m7_026_luna",
-      "role": "bounded_generation_governance_wording",
-      "model_requested": "gpt-6-luna",
-      "effort_requested": "max",
-      "effective_settings_exposed": false,
-      "worktree": "/tmp/triomics-m7-026-luna",
-      "base": "a303877",
-      "shared_sol_commit": "49347e2ac97037d2b6e39a8674cd9676f8a39a85",
-      "attempt": 1,
-      "repair_attempts": 0,
-      "phase": "committed_initial_GREEN_regressions_then_native",
-      "next_transition": "Sol_readback_then_integration_final_snapshot",
-      "candidate": "b2c83de378ade395774f356c1741425fdd898747"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "m7_026_luna_running",
+    "status": "final_same_snapshot_gates_pending",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -5998,6 +5982,28 @@
       "candidate": "b2c83de378ade395774f356c1741425fdd898747",
       "repair_attempts": 0,
       "disposition": "Earlier dirty-source RED failed before target behavior and is setup evidence only. Clean RED has exactly3new wording failures. Sol reviewed exact2router sites; clean GREEN/native running. M7/G7 closed."
+    },
+    {
+      "event": "m7_026_verified_integrated_final_gates_ready",
+      "date": "2026-11-04",
+      "candidate": "b2c83de378ade395774f356c1741425fdd898747",
+      "integration_commit": "75eedd1479432f1ae56b8bb521bd5b8fad3f00a6",
+      "focused_counts": {
+        "pass": 1106,
+        "fail": 0,
+        "error": 0,
+        "warn": 1,
+        "skip": 0
+      },
+      "product_repairs": 0,
+      "native_exit_codes": [
+        0,
+        0,
+        0
+      ],
+      "prior_D_alias_rejection_exit": 2,
+      "unchanged_predecessor_files": 26,
+      "disposition": "Worker complete; Sol independent readback passed. Freeze integrated product for final source/native/archive/Terra/fresh Astra gates. M7/G7 closed."
     }
   ],
   "packets": {

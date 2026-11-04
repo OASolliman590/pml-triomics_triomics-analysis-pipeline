@@ -16,8 +16,8 @@ D-T12 discovery is verified and integrated. It accounts for every member of a
 versioned target universe, explains exclusions and retains exploratory, unranked
 profiles. Tests reject reference data derived from the current evaluation data;
 unknown overlap leaves the affected evidence unassessable. Sol checked the native
-publication against its actual B/C predecessors and hashed inputs. The final
-wording cycle separates generated publications from coordinator acceptance.
+publication against its actual B/C predecessors and hashed inputs. The verified publication wording separates generated outputs from coordinator
+acceptance. All required candidate implementations are now integrated.
 
 M7/G7 remain closed. Acceptance still requires every required packet on one frozen
 snapshot, full source and clean archive package checks, Terra documentation and a
