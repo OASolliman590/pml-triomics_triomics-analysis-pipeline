@@ -34,7 +34,8 @@ d12_evidence <- function() {
     artifact_type = "evidence_bundle", study_id = "synthetic-study", analysis_id = "synthetic-analysis",
     immutable_inputs = list(b_bundle_sha256 = d12_sha("a"), c_manifest_sha256 = d12_sha("b")),
     feature_registry = list(list(feature_key = "feature-key-1", id_namespace = "synthetic",
-                                 original_id = "SYN_FEATURE_001", source_id = "block-1")),
+                                 original_id = "SYN_FEATURE_001", taxon_id = 9606,
+                                 source_id = "block-1")),
     source_by_id = list(`block-1` = list(source_id = "block-1", sha256 = source_sha,
                                         selection_history = "all_unselected",
                                         selection_evidence = "Public synthetic fixture.")),
@@ -51,7 +52,9 @@ d12_external_record <- function(target_id = "TARGET_A") {
        measured_by_pipeline = FALSE, value = 12.5, target_namespace = "synthetic_protein",
        target_id = target_id, target_entity_type = "protein", taxon_id = 9606,
        context_id = "synthetic_context", construct = paste0("construct-", target_id),
-       compound_namespace = "synthetic_compound", compound_id = "SYNTHETIC_COMPOUND_A")
+       compound_namespace = "synthetic_compound", compound_id = "SYNTHETIC_COMPOUND_A",
+       assay = "synthetic assay fixture",
+       assay_limitations = "Synthetic software fixture only; no biological claim.")
 }
 
 d12_case <- function(members = list(
@@ -201,5 +204,19 @@ test_that("D-T12 marks only the overlap-unknown axis unassessable and retains va
   expect_identical(first$evidence_axes$direct_binding$status, "measured")
   expect_identical(first$external_evidence[[1L]]$attachment, "request")
   expect_identical(result$alternatives$comparability, "noncomparable")
+  expect_null(result$selected_target)
+})
+
+test_that("D-T12 keeps an external assay without limitations unresolved", {
+  record <- d12_external_record("TARGET_A")
+  record$assay_limitations <- NULL
+  result <- d12_slot(d12_case(records = list(record)))
+  profile <- result$profiles[[1L]]
+
+  expect_identical(profile$external_evidence[[1L]]$assay_qualification, "unresolved")
+  expect_identical(profile$external_evidence[[1L]]$assay_qualification_reason,
+                   "assay_limitations_missing")
+  expect_identical(profile$external_evidence[[1L]]$value, 12.5)
+  expect_identical(profile$evidence_axes$direct_binding$status, "unresolved")
   expect_null(result$selected_target)
 })

@@ -597,7 +597,9 @@ test_that('observations inherit the specific cited path', {
 
 t11_external_assay_profile <- function(target_id, axis = 'binding', endpoint = 'Kd',
                                        claim_axis_attribute = FALSE,
-                                       claim_endpoint_attribute = FALSE) {
+                                       claim_endpoint_attribute = FALSE,
+                                       assay = 'synthetic binding assay',
+                                       assay_limitations = 'Synthetic test record only.') {
   request <- triomics_target_request(
     list(namespace = 'synthetic_protein', id = target_id, taxon_id = 9606,
          entity_type = 'protein', constructs = list('construct_a')),
@@ -614,8 +616,10 @@ t11_external_assay_profile <- function(target_id, axis = 'binding', endpoint = '
     target_id = target_id, target_entity_type = 'protein', taxon_id = 9606,
     context_id = 'synthetic_context', construct = 'construct_a',
     compound_namespace = 'synthetic_compound', compound_id = 'COMPOUND_A',
-    assay_limitations = 'Synthetic test record only.'
+    assay = assay, assay_limitations = assay_limitations
   )
+  if (is.null(assay)) record$assay <- NULL
+  if (is.null(assay_limitations)) record$assay_limitations <- NULL
   if (claim_axis_attribute) record$axis <- structure(record$axis, binding_probability = 0.9)
   if (claim_endpoint_attribute) record$endpoint <- structure(record$endpoint, binding_probability = 0.9)
   external <- triomics_target_external_evidence(request, list(record))
@@ -680,7 +684,8 @@ test_that('exact identity-matched external Kd stays admissible in two-target alt
 
 test_that('typed external Ki and functional activity records stay admissible', {
   for (assay in list(list(axis = 'binding', endpoint = 'Ki'),
-                     list(axis = 'function', endpoint = 'activity'))) {
+                     list(axis = 'function', endpoint = 'activity'),
+                     list(axis = 'engagement', endpoint = 'occupancy'))) {
     profiles <- list(
       t11_external_assay_profile('SYNTHETIC_TARGET_A', assay$axis, assay$endpoint),
       t11_external_assay_profile('SYNTHETIC_TARGET_B', assay$axis, assay$endpoint)
@@ -695,8 +700,54 @@ test_that('typed external Ki and functional activity records stay admissible', {
     expect_identical(evidence$endpoint, assay$endpoint)
     expect_identical(evidence$value, 4.2)
     expect_identical(evidence$units, 'nM')
+    expect_identical(evidence$assay_qualification, 'qualified')
     expect_identical(evidence$dependency_group, 'publication:synthetic_kd_publication')
   }
+})
+
+test_that('missing assay description or limitations retain the supplied record as unresolved', {
+  for (missing_field in c('assay', 'assay_limitations')) {
+    profile <- if (identical(missing_field, 'assay')) {
+      t11_external_assay_profile('SYNTHETIC_TARGET_A', assay = NULL)
+    } else {
+      t11_external_assay_profile('SYNTHETIC_TARGET_A', assay_limitations = NULL)
+    }
+    record <- profile$external_evidence[[1L]]
+
+    expect_identical(record$assay_qualification, 'unresolved')
+    expect_identical(record$assay_qualification_reason,
+      if (identical(missing_field, 'assay')) 'assay_description_missing' else 'assay_limitations_missing')
+    expect_identical(record$attachment, 'request')
+    expect_identical(record$endpoint, 'Kd')
+    expect_identical(record$value, 4.2)
+    expect_identical(record$source_id, 'synthetic_assay_source')
+    expect_identical(profile$evidence_axes$direct_binding$status, 'unresolved')
+    expect_identical(profile$evidence_axes$direct_binding$coverage$measured_records, 0L)
+    expect_identical(profile$evidence_axes$direct_binding$coverage$unresolved_records, 1L)
+  }
+})
+
+test_that('one unresolved assay record prevents canonical comparison despite qualified records', {
+  profiles <- lapply(c('SYNTHETIC_TARGET_A', 'SYNTHETIC_TARGET_B'), function(target_id) {
+    qualified <- t11_external_kd_profile(target_id)
+    unresolved <- qualified$external_evidence[[1L]]
+    unresolved$evidence_id <- paste0('missing_assay_', target_id)
+    unresolved$assay <- NULL
+    unresolved$assay_qualification <- NULL
+    unresolved$assay_qualification_reason <- NULL
+    external <- triomics_target_external_evidence(qualified$request,
+      list(qualified$external_evidence[[1L]], unresolved))
+    triomics_target_profile(qualified$request, list(), list(), external_evidence = external)
+  })
+
+  for (profile in profiles) {
+    expect_identical(profile$evidence_axes$direct_binding$status, 'measured')
+    expect_identical(profile$evidence_axes$direct_binding$coverage$measured_records, 1L)
+    expect_identical(profile$evidence_axes$direct_binding$coverage$unresolved_records, 1L)
+  }
+  comparison <- triomics_target_alternatives(profiles)
+  expect_identical(comparison$comparability, 'noncomparable')
+  expect_null(comparison$selected_target)
 })
 
 test_that('validated external axis and endpoint attributes remain visible to the claim guard', {

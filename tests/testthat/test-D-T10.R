@@ -2,7 +2,7 @@ d10_code <- function(expr) tryCatch({ force(expr); NULL }, error = function(e) e
 d10_identity <- function() list(namespace='synthetic', id='SYNTH_FCN3_LIKE', taxon_id=9606L, entity_type='protein', constructs=list('a'))
 d10_selection <- function() list(list(selection_id='s1', hypothesis_status='exploratory', selected_with_observations=TRUE), list(selection_id='s2', hypothesis_status='confirmed', selected_with_observations=TRUE))
 d10_request <- function(identity=d10_identity()) triomics_target_request(identity, 'assess', d10_selection(), context=list(context_id='ctx', confirmation_protocol='protocol'))
-d10_row <- function(id, axis, endpoint, units, value=1) list(evidence_id=id, axis=axis, endpoint=endpoint, units=units, relation='=', source_id=paste0('source-',id), publication_group='paper', measured_by_pipeline=FALSE, value=value, target_namespace='synthetic', target_id='SYNTH_FCN3_LIKE', target_entity_type='protein')
+d10_row <- function(id, axis, endpoint, units, value=1) list(evidence_id=id, axis=axis, endpoint=endpoint, units=units, relation='=', source_id=paste0('source-',id), publication_group='paper', measured_by_pipeline=FALSE, value=value, target_namespace='synthetic', target_id='SYNTH_FCN3_LIKE', target_entity_type='protein', assay='synthetic assay fixture', assay_limitations='Synthetic software fixture only; no biological claim.')
 
 testthat::test_that('AC1 records target context and qualified selection history', {
   x <- d10_request()
@@ -143,4 +143,32 @@ testthat::test_that('external binding_probability labels cannot masquerade as me
   row$construct <- 'a'; row$compound_id <- 'drug1'; row$compound_namespace <- 'synthetic_drug'
   testthat::expect_identical(d10_code(triomics_target_external_evidence(request, list(row))),
                              'D_TARGET_AXIS_COLLAPSED')
+})
+
+testthat::test_that('assay identity remains matched while missing assay metadata is unresolved', {
+  drug <- list(namespace='synthetic_drug', drug_id='drug1', label='Synthetic drug')
+  request <- triomics_target_request(d10_identity(), 'assess', d10_selection(),
+                                     list(context_id='ctx'), drug)
+  base <- d10_row('qualified-kd', 'binding', 'Kd', 'nM', 4.2)
+  base$taxon_id <- 9606L; base$context_id <- 'ctx'; base$construct <- 'a'
+  base$compound_namespace <- 'synthetic_drug'; base$compound_id <- 'drug1'
+
+  for (missing_field in c('assay', 'assay_limitations')) {
+    incomplete <- base
+    incomplete[[missing_field]] <- NULL
+    ledger <- triomics_target_external_evidence(request, list(incomplete))
+    record <- ledger$records[[1L]]
+    profile <- triomics_target_profile(request, list(), list(), external_evidence=ledger)
+
+    testthat::expect_identical(record$attachment, 'request')
+    testthat::expect_identical(record$assay_qualification, 'unresolved')
+    testthat::expect_identical(record$assay_qualification_reason,
+      if (identical(missing_field, 'assay')) 'assay_description_missing' else 'assay_limitations_missing')
+    testthat::expect_identical(record$endpoint, 'Kd')
+    testthat::expect_identical(record$value, 4.2)
+    testthat::expect_identical(record$source_id, 'source-qualified-kd')
+    testthat::expect_identical(profile$evidence_axes$direct_binding$status, 'unresolved')
+    testthat::expect_identical(profile$evidence_axes$direct_binding$coverage$measured_records, 0L)
+    testthat::expect_identical(profile$evidence_axes$direct_binding$coverage$unresolved_records, 1L)
+  }
 })

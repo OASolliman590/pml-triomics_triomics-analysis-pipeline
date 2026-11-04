@@ -95,6 +95,71 @@ testthat::test_that("duplicate molecular identities remain ambiguous and unmeasu
   testthat::expect_false(any(vapply(observed, function(x) !is.null(x$result_id), logical(1))))
 })
 
+testthat::test_that("B effects and C loadings require a declared matching feature taxon", {
+  request <- td_target_request()
+  request$mechanism_class <- "non_enzymatic"
+  link <- td_target_link()
+  matched <- triomics_target_resolve_observations(request, list(link), td_target_evidence())
+  branches <- vapply(matched, `[[`, character(1), "source_branch")
+  testthat::expect_setequal(branches, c("primary_statistics", "integration_selection"))
+  testthat::expect_true(all(vapply(matched, function(observation) {
+    identical(observation$taxon_applicability, "matched") &&
+      identical(observation$request_taxon_id, 9606L) &&
+      identical(observation$feature_taxon_id, 9606L)
+  }, logical(1))))
+
+  string_taxon <- td_target_evidence()
+  string_taxon$feature_registry$feature_key_a$taxon_id <- "9606"
+  preserved <- triomics_target_resolve_observations(request, list(link), string_taxon)
+  testthat::expect_true(all(vapply(preserved, function(observation) {
+    identical(observation$taxon_applicability, "matched") &&
+      identical(observation$feature_taxon_id, "9606")
+  }, logical(1))))
+
+  cases <- list(
+    list(value = NULL, applicability = "unassessable", reason = "feature_taxon_unknown"),
+    list(value = "unknown", applicability = "unassessable", reason = "feature_taxon_unknown"),
+    list(value = "9606x", applicability = "unassessable", reason = "feature_taxon_malformed"),
+    list(value = 10090L, applicability = "inapplicable", reason = "feature_taxon_mismatch")
+  )
+  comparable <- triomics_target_profile(request, list(link), matched)
+  for (case in cases) {
+    evidence <- td_target_evidence()
+    evidence$feature_registry$feature_key_a$taxon_id <- case$value
+    observations <- triomics_target_resolve_observations(request, list(link), evidence)
+    testthat::expect_length(observations, 2L)
+    testthat::expect_true(all(vapply(observations, function(observation) {
+      identical(observation$taxon_applicability, case$applicability) &&
+        identical(observation$taxon_reason_code, case$reason) &&
+        identical(observation$status, "uninformative") &&
+        identical(observation$source_id, "source_a") &&
+        identical(observation$source_sha256, paste(rep("a", 64L), collapse = "")) &&
+        identical(observation$dependency_group, "molecular_feature:feature_key_a")
+    }, logical(1))))
+    branches <- vapply(observations, `[[`, character(1), "source_branch")
+    b <- observations[[match("primary_statistics", branches)]]
+    c <- observations[[match("integration_selection", branches)]]
+    testthat::expect_identical(b$effect, 1.75)
+    testthat::expect_identical(b$value, 1.75)
+    testthat::expect_identical(c$value, 0.25)
+
+    profile <- triomics_target_profile(request, list(link), observations)
+    testthat::expect_identical(profile$evidence_axes$metabolic_multiomics_compatibility$status,
+                               "unassessable")
+    testthat::expect_identical(profile$evidence_axes$metabolic_multiomics_compatibility$coverage$measured_features,
+                               0L)
+    testthat::expect_identical(triomics_target_alternatives(list(profile, comparable))$comparability,
+                               "noncomparable")
+
+    encoded <- as.character(jsonlite::toJSON(observations, auto_unbox = TRUE,
+                                             null = "null", na = "null", digits = NA))
+    decoded <- jsonlite::fromJSON(encoded, simplifyVector = FALSE)
+    testthat::expect_true("feature_taxon_id" %in% names(decoded[[1L]]))
+    if (is.null(case$value)) testthat::expect_null(decoded[[1L]]$feature_taxon_id)
+    else testthat::expect_identical(decoded[[1L]]$feature_taxon_id, case$value)
+  }
+})
+
 testthat::test_that("unknown mechanism class produces explicit unassessable canonical axes", {
   request <- td_target_request()
   request$mechanism_class <- "unknown"
@@ -118,6 +183,7 @@ testthat::test_that("external assay axes stay separate and a sourced Kd remains 
     target_id = "SYNTHETIC_TARGET_A", target_entity_type = "protein", taxon_id = 9606L,
     context_id = "synthetic_context", construct = "construct_a",
     compound_namespace = "synthetic_compound", compound_id = "COMPOUND_A",
+    assay = "synthetic Kd assay fixture",
     assay_limitations = "Synthetic test record only; no biological claim."
   )
   external <- triomics_target_external_evidence(request, list(record))
