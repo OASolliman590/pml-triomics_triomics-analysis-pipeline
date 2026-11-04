@@ -35,17 +35,47 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/d15_s02_luna",
+      "role": "Luna implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "base_commit": "5e4b81accdc3f63ad1d33b96176ee934c561f5db",
+      "branch": "codex/m8-d15-s02-luna",
+      "status": "running",
+      "attempt": 1,
+      "repairs": 0,
+      "allowed_next_transition": "Join candidate; two-file diff review; fresh local Standards/Spec review and independent B-T07/native B readback; stop at S02 receipt.",
+      "cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "D15_S01_blocked_outside_allowlist",
+    "status": "D15_S02_Luna_initial_running",
     "last_reconciled": "2026-11-05",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent": "/root/d15_s02_luna",
+        "role": "Luna implementer",
+        "requested_model": "gpt-6-luna",
+        "requested_effort": "max",
+        "effective_settings_exposed": false,
+        "base_commit": "5e4b81accdc3f63ad1d33b96176ee934c561f5db",
+        "branch": "codex/m8-d15-s02-luna",
+        "status": "running",
+        "attempt": 1,
+        "repairs": 0,
+        "allowed_next_transition": "Join candidate; two-file diff review; fresh local Standards/Spec review and independent B-T07/native B readback; stop at S02 receipt.",
+        "cursor": null
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Candidate unintegrated; first independent C replay fails at B route disposition ownership. Local findings preserved. New audited owning scope required; standing authorization retained.",
+    "disposition": "Scope audit passed; exact two-file owner correction, separate S01 repairs preserved.",
     "current_gate": {
-      "status": "blocked",
+      "status": "implementation_running",
       "candidate": "5e4b81accdc3f63ad1d33b96176ee934c561f5db",
-      "receipt_ref": "docs/implementation/reviews/2026-11-05-d15-s01-blocked-close.md"
+      "scope": "61b2706"
     }
   },
   "orchestration_events": [
@@ -6903,6 +6933,26 @@
       "review_ref": "docs/implementation/reviews/2026-11-05-d15-s01-blocked-close.md",
       "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-s01-blocked/receipt.json",
       "next": "Define a new bounded B-T07 clinical-route disposition scope, audit it before edits, and preserve candidate 5e4b81a. Address the four reproduced S01 validation/reporting defects and required failure tests in explicit allowlists; carry forward S01 initial attempt and repair counts. Do not restart Luna from scratch, bypass partial B acceptance, fabricate a longitudinal result, reopen D13 repair 3, or resume D15 before independent A/C/B/C/D proof. Keep G8/G9 closed."
+    },
+    {
+      "event": "d15_s02_scope_audit_pass",
+      "date": "2026-11-05",
+      "scope": "61b2706",
+      "audit_pass": true,
+      "scope_only": true,
+      "reviewer": "/root/d15_s02_scope_astra"
+    },
+    {
+      "event": "d15_s02_luna_dispatch",
+      "date": "2026-11-05",
+      "worker": "/root/d15_s02_luna",
+      "base": "5e4b81accdc3f63ad1d33b96176ee934c561f5db",
+      "allowlist": [
+        "R/export_b.R",
+        "tests/testthat/test-B-T07.R"
+      ],
+      "initial_attempt": 1,
+      "repairs": 0
     }
   ],
   "packets": {
@@ -8616,5 +8666,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D15_S01_receipt_recorded_goal_active"
+  "close_state": "D15_S02_Luna_running_goal_active"
 }

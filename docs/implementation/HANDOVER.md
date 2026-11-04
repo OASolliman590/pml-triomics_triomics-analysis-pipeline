@@ -1,3 +1,11 @@
+# Current checkpoint: M8-D15-S02 Luna initial running
+
+Scope61b2706 passed fresh Astra-low; [audit](reviews/2026-11-05-d15-s02-scope-audit.md). Fresh /root/d15_s02_luna owns only R/export_b.R and tests/testthat/test-B-T07.R from preserved5e4b81a. Initial attempt, repairs0of2. It must account for actual declared objective/family evidence, not infer a service from mode. No parent fitting job active.
+
+Literal resume: **Join /root/d15_s02_luna; do not redispatch. Inspect its two-file candidate, complete local review and independent B-T07/native B readback, then stop at S02 receipt. Preserve S01repairs0of2 and its four defects/failure tests for the original worker. No combined integration, D15 start, G8/G9 release or D13 repair3.**
+
+## Historical checkpoints below
+
 # Current checkpoint: M8-D15-S01 blocked at B route disposition boundary
 
 Read [the blocked receipt](reviews/2026-11-05-d15-s01-blocked-close.md) and [local review](reviews/2026-11-05-d15-s01-local-review.md). Luna initial candidate f5c46e5 plus Sol CLI wiring are preserved at isolated 5e4b81a, not integrated. Scope Astra passed; implementation review requires changes. Independent helper suite: 53 pass, one error, no warnings/skips. Native A/C/B succeeds; later C exits2 because B incorrectly requires the unrequested longitudinal artifact and publishes a partial bundle. No C provenance or D generation. Owning R/export_b.R is outside S01 scope. Initial attempt used; repairs0of2; no repair dispatched across that boundary.
