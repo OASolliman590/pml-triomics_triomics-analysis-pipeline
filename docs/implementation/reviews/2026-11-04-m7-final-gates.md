@@ -6,6 +6,8 @@ One uninterrupted full source run: **7353 pass, 0 fail, 0 error, 15 warnings, 0 
 
 Clean git archive: `1c1b0473df6285fe2a073dff2d3195bc0de0dd6e9be287213d8c64b1d6daa202`, 945 files, exported source stamp exactly P. Archive files were unchanged after checking. Exact package line: **`Status: OK`**. Installed testthat: **PASS 7326, FAIL 0, WARN 15, SKIP 0**.
 
+The 27-expectation source/installed difference is accounted for by existing layout-specific checks; see [count attribution](../evidence/2026-11-04-m7-final/count-attribution.md). Installed per-test counts in that note are static branch counts, not a second measured test report.
+
 The source and archive each contain the repaired M7-028 tests. Earlier failed 48ca0c4 evidence is preserved and is not credited here. No production code changed in M7-028. The original dirty SSD checkout was not tested or archived.
 
 All 24 fresh native B/C/D commands exited 0 on P. C predecessor digests matched all four B files in the same root. Sol separately checked actual B effects/C loadings, source/selection/dependency groups, external assay endpoints, unranked discovery and full member accounting, exact ORA counts/probabilities, resource statuses, generation manifests and raw file hashes. Shell success alone was not used.
