@@ -1,0 +1,25 @@
+{
+  "commit": "ed5e0002f35c984c8817a2ce16db9ac666cb53b8",
+  "counts": {
+    "pass": 764,
+    "fail": 2,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 82
+  },
+  "conditions": [
+    {
+      "test": "CLI startup routes qualified absolute-path DEqMS and explicit fallback",
+      "file": "test-B-T05.R",
+      "type": "expectation_failure",
+      "message": "Expected `envelope$producer_commit` to be identical to `expected_revision`.\nDifferences:\n`actual` is NULL\n`expected` is a character vector ('ed5e0002f35c984c8817a2ce16db9ac666cb53b8')\n"
+    },
+    {
+      "test": "CLI startup routes qualified absolute-path DEqMS and explicit fallback",
+      "file": "test-B-T05.R",
+      "type": "expectation_failure",
+      "message": "Expected `envelope$producer_commit` to be identical to `expected_revision`.\nDifferences:\n`actual` is NULL\n`expected` is a character vector ('ed5e0002f35c984c8817a2ce16db9ac666cb53b8')\n"
+    }
+  ]
+}

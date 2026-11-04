@@ -14,3 +14,15 @@ review. Nonblocking portability limitation: /private/tmp is macOS-specific;
 qualification remains on this host unless separately established elsewhere.
 No acceptance, M7/G7 release or private-data/push action. Initial audit complete;
 its one focused rereview remains unused if a subsequent repair is required.
+
+## Focused rereview after repair1
+
+**audit_pass yes — focused code rereview**,205e46575b9d3f3b462086e93a281ac7829f5646.
+Initial focused execution oned5e000 had764pass2fail0error/warn/skip: the new
+envelope check used a nonexistent flat producer_commit field. Sol inspected the
+actual native envelope and R/contracts.R:24–46; producer.commit is the existing
+contract. The sole repair changes that access path, retaining exact revision
+equality. No assertion weakening or introduced P0/P1; checkout clean. Rerun/native
+evidence pending; no test pass inferred. One implementation repair used, one
+remains; the single focused implementation rereview is now consumed. MacOS-only
+qualification remains. M7/G7 closed.

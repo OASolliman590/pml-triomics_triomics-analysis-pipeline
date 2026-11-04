@@ -44,10 +44,10 @@
       "worktree": "/tmp/triomics-m7-028-luna",
       "base": "f5c156758b7e53a5bc0f03372248ac51767f33b4",
       "attempt": 1,
-      "repair_attempts": 0,
-      "phase": "focused_native_verification",
+      "repair_attempts": 1,
+      "phase": "repair1_focused_native_verification",
       "next_transition": "Sol_native_readback_then_integrate_on_pass",
-      "candidate": "ed5e0002f35c984c8817a2ce16db9ac666cb53b8"
+      "candidate": "205e46575b9d3f3b462086e93a281ac7829f5646"
     }
   ],
   "orchestration_control": {
@@ -6065,6 +6065,22 @@
       "review_ref": "docs/implementation/reviews/2026-11-04-m7-028-implementation-astra.md",
       "repairs_used": 0,
       "disposition": "Code audit passed, focused/native execution pending. MacOS qualification only; no P0/P1. M7/G7 closed."
+    },
+    {
+      "event": "m7_028_repair1_correct_envelope_assertion",
+      "date": "2026-11-04",
+      "initial_candidate": "ed5e0002f35c984c8817a2ce16db9ac666cb53b8",
+      "initial_counts": {
+        "pass": 764,
+        "fail": 2,
+        "error": 0,
+        "warn": 0,
+        "skip": 0
+      },
+      "repair_commit": "205e46575b9d3f3b462086e93a281ac7829f5646",
+      "astra_focused_code": "pass",
+      "repairs_used": 1,
+      "disposition": "Existing envelope producer.commit field; exact source identity check retained. Rerun/native pending; M7/G7 closed."
     }
   ],
   "packets": {
