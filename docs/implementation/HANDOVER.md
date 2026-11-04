@@ -1,14 +1,14 @@
-# Current checkpoint: Sol combined verification running
+# Current checkpoint: S02 location-only test worker active; final report repair pending
 
-No coding worker is active. Report repair1 is immutable7c551b0 (124 pass, zero fail/error/warn/skip), with two remaining local-review findings: quoted credentials/single-component paths and truthful nested-CV evaluation versus unavailable single-fit evidence. Final report repair2 remains undispatched until native findings are consolidated.
+Only `/root/d08_s02_luna` is active, fresh managed m8-d08-s02-luna from8a5c762. Scope M8-D08-S02 passed fresh Astra audit at ec8dc88; read its change record and reviews/2026-11-04-d08-s02-scope-audit.md. Four existing test files only, temporary locations only, all assertions/fault injections unchanged. Parent/child temporary roots verified under internal APFS. Join the existing worker; do not redispatch.
 
-S01 worker returned7d78050: exactly the two B registry call sites plus dedicated test-stage-run-registry.R; 140 pass, zero fail/error/warn/skip,14blocks. Sol inspected the call-site diff and failure-boundary tests, then combined it with the frozen shared helper and mechanical report registration on isolated8a5c762. Canonical spec branch remains unchanged. No S01 repair has been used.
+Read reviews/2026-11-04-d08-combined-before-repair2.md. Combined source1376/0fail/error/skip/1namedD01warning is behavioral evidence only because legacy tests hard-coded/private/tmp. Native positive diagnostic A0 B0 C0 D0 report2 preserves A and passes independent B/C/D hash readback. Missing-producer negative also exits2instead3. Report wrapper rejects a valid nonexistent child because of double-leading-slash spelling. No report HTML yet.
 
-Sol's uncapped focused regression plus untouched native A/B/C/D/report driver is ACTIVE in exec session14305. Internal APFS state is sol-combined-before-repair2/gate-state.json under the existing proof root. Read external orchestration.json, join the session/state, and do not restart the gate. Current focused filter is stage-run-registry, A-T09, M4-005-B-T05-integration, C-06-shared, D-T01 and D-T08. Driver proceeds to native commands only after focused success.
+After S02 returns and its location-only diff/four focused suites are verified, combine serially on the isolated candidate and dispatch the original report Luna's final repair2 for all three remaining findings: path wrapper, quoted credentials/single-component paths, and nested-CV completed-evaluation versus unavailable-single-fit distinction. Keep the original seven-file report allowlist. No report repair3. Required final combined source/native/real Quarto and independent readback remain. Canonical checkout unchanged; all candidates and failures preserved.
 
-After the gate returns, inspect exact counts/named warnings and byte readback. Consolidate any actual report failure with the two recorded local findings for the one remaining report repair. Preserve all candidates, A0/B4 RED and the invalid-registry-deletion disposition. M7/G7 remain accepted; G8/G9 unreleased. No later packets, private data or push. All output internal APFS.
+No processes from14305 or28948 remain active. External orchestration.json names current worker and next transition. M7/G7 accepted, G8/G9 unreleased; no later packets/private data/push. All new outputs internal APFS, never/tmp or exFAT.
 
-Literal resume: join14305 or inspect its completed gate-state receipt; never rerun Luna or the gate merely because context was compacted. Finish the pending bounded transition from the actual result.
+Literal resume: join `/root/d08_s02_luna`; inspect its committed location-only diff and actual receipts; then take the consolidated final report repair transition. Do not rerun completed workers or claim the earlier path-noncompliant source run as qualification.
 
 ## Historical checkpoints below
 

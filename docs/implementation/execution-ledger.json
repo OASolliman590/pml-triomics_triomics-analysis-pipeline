@@ -35,7 +35,22 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_id": "/root/d08_s02_luna",
+      "role": "Luna location-only test repair",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "host_dispatch_accepted": true,
+      "effective_settings_exposed": false,
+      "worktree": "/Users/megastore/.codex/worktrees/m8-d08-s02-luna/PML MultiOmics Analysis Pipeline",
+      "branch": "codex/m8-d08-s02-luna",
+      "base": "8a5c7621372d8c3e03b0d64587929912407f653a",
+      "status": "initial_implementation_running",
+      "repairs_used": 0,
+      "allowed_next_transition": "Inspect location-only diff, parent-child APFS proof and four focused suites; integrate isolated candidate; then consolidated final D08 repair2."
+    }
+  ],
   "orchestration_control": {
     "status": "D_T08_Luna_initial_running",
     "last_reconciled": "2026-11-04",
@@ -60,10 +75,9 @@
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
     "disposition": "User authorized installation; actual Quarto smoke verified. Continue frozen D-T08 only, one fresh Luna; no M7 reopening.",
     "current_gate": {
-      "session_id": 14305,
+      "status": "completed_with_report_and_runtime_location_findings",
       "candidate": "8a5c7621372d8c3e03b0d64587929912407f653a",
-      "status": "focused_then_native_running",
-      "state_ref": "local sol-combined-before-repair2/gate-state.json"
+      "receipt": "docs/implementation/reviews/2026-11-04-d08-combined-before-repair2.md"
     }
   },
   "orchestration_events": [
@@ -6716,6 +6730,29 @@
       "combined_candidate": "8a5c7621372d8c3e03b0d64587929912407f653a",
       "session_id": 14305,
       "canonical_product_integrated": false
+    },
+    {
+      "event": "combined_verification_returned_S02_dispatched",
+      "date": "2026-11-04",
+      "counts": {
+        "pass": 1376,
+        "fail": 0,
+        "error": 0,
+        "warn": 1,
+        "skip": 0,
+        "blocks": 90
+      },
+      "runtime_qualification": "not_compliant_legacy_tmp_paths",
+      "native_exits": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "report": 2
+      },
+      "BCD_hash_readback": true,
+      "report_accepted": false,
+      "active_worker": "/root/d08_s02_luna"
     }
   ],
   "packets": {
@@ -8106,7 +8143,7 @@
       "disposition_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md"
     },
     "D-T08": {
-      "status": "Sol_combined_verification_running_before_final_report_repair",
+      "status": "S02_test_location_worker_active_before_final_report_repair",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
@@ -8143,7 +8180,15 @@
         "worker_commit": "7d7805092f69d228135cd9979872e8a6f1cf8334",
         "repairs_used": 0
       },
-      "repair1_review_ref": "docs/implementation/reviews/2026-11-04-d-t08-repair1-review.md"
+      "repair1_review_ref": "docs/implementation/reviews/2026-11-04-d-t08-repair1-review.md",
+      "verification_location_repair": {
+        "id": "M8-D08-S02",
+        "scope_audit_pass": true,
+        "snapshot": "ec8dc88fc3c1cfc9840e44477f728b46abf17035",
+        "worker": "/root/d08_s02_luna",
+        "implementation_status": "running",
+        "accepted": false
+      }
     },
     "D-T13": {
       "status": "not_started",
