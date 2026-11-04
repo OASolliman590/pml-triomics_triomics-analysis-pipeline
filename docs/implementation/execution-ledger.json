@@ -35,50 +35,16 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_id": "/root/m8_d15_luna",
-      "role": "Luna D-T15 initial implementation",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "host_dispatch_accepted": true,
-      "effective_settings_exposed": false,
-      "base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
-      "branch": "codex/m8-d15-luna",
-      "worktree": "/Users/megastore/.codex/worktrees/m8-d15-luna/PML MultiOmics Analysis Pipeline",
-      "status": "running",
-      "attempt": 1,
-      "repairs_used": 0,
-      "repairs_remaining": 2,
-      "allowed_next_transition": "Join initial receipt; if boundary blocker record it, otherwise inspect diff, two-axis local review, independent focused/native/real-render verification."
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "D_T15_initial_implementation_running",
+    "status": "D_T15_preflight_blocked_receipt_complete",
     "last_reconciled": "2026-11-04",
-    "active_handoffs": [
-      {
-        "agent_id": "/root/m8_d15_luna",
-        "role": "Luna D-T15 initial implementation",
-        "requested_model": "gpt-6-luna",
-        "requested_effort": "max",
-        "host_dispatch_accepted": true,
-        "effective_settings_exposed": false,
-        "base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
-        "branch": "codex/m8-d15-luna",
-        "worktree": "/Users/megastore/.codex/worktrees/m8-d15-luna/PML MultiOmics Analysis Pipeline",
-        "status": "running",
-        "attempt": 1,
-        "repairs_used": 0,
-        "repairs_remaining": 2,
-        "allowed_next_transition": "Join initial receipt; if boundary blocker record it, otherwise inspect diff, two-axis local review, independent focused/native/real-render verification."
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh independent D15 packet on accepted D08/C08/G7. D13 remains blocked at cap; no repair3.",
+    "disposition": "Fresh worker stopped at owner boundary with no edits; Sol reproduced Stage B refusal. Next explicit predecessor scope plus Astra audit, no implementation before approval.",
     "current_gate": {
-      "status": "worker_initial_native_seam_probe",
-      "candidate": null
+      "status": "blocked_native_clinical_predecessor",
+      "candidate": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07"
     }
   },
   "orchestration_events": [
@@ -6863,6 +6829,15 @@
       "allowlist": "frozen D-T15 fivefiles",
       "dependency_gate": "D08/C08 accepted, G7 released; D13 not dependency",
       "next": "Join initial receipt; if boundary blocker record it, otherwise inspect diff, two-axis local review, independent focused/native/real-render verification."
+    },
+    {
+      "event": "D15_preflight_worker_joined_Sol_reproduced",
+      "agent_id": "/root/m8_d15_luna",
+      "base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
+      "source_changes": false,
+      "parent_exit_code": 2,
+      "status": "blocked_before_product_implementation",
+      "next": "Explicit native clinical producer/publication predecessor scope and fresh Astra audit before code"
     }
   ],
   "packets": {
@@ -8362,17 +8337,28 @@
       ]
     },
     "D-T15": {
-      "status": "initial_implementation_running",
+      "status": "blocked_before_product_implementation",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
-      "blockers": [],
+      "blockers": [
+        "Generic clinical Stage B endpoint consumer is not registered; C08 scheduling returns before C06/D publication. D15 renderer allowlist cannot supply these shared producers."
+      ],
       "repair_attempts": 0,
       "implementation_base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
-      "active_worker": "/root/m8_d15_luna",
+      "active_worker": null,
       "accepted": false,
       "completion_credit": false,
-      "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t15-dispatch.md"
+      "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t15-dispatch.md",
+      "product_implementation_started": false,
+      "receipt_ref": "docs/implementation/evidence/2026-11-04-d-t15-preflight/blocked-receipt.json",
+      "review_ref": "docs/implementation/reviews/2026-11-04-d-t15-preflight-blocker.md",
+      "testthat_status": "not_run",
+      "native_parent_probe": {
+        "exit_code": 2,
+        "error_code": "B_DESIGN_UNSUPPORTED",
+        "B_frame_produced": false
+      }
     },
     "D-T09": {
       "status": "not_started",
@@ -8491,7 +8477,8 @@
       "review_ref": null,
       "commit": null,
       "blocking_packets": [
-        "D-T13"
+        "D-T13",
+        "D-T15"
       ],
       "runtime_blocker_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md",
       "remaining_packets": [
@@ -8563,5 +8550,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "active_M8_D_T15"
+  "close_state": "D_T15_preflight_blocked_receipt_complete_goal_active"
 }

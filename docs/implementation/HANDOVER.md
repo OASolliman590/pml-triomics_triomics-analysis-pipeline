@@ -1,3 +1,13 @@
+# Current checkpoint: D-T15 blocked before implementation
+
+Read [native clinical blocker](reviews/2026-11-04-d-t15-preflight-blocker.md). Fresh Luna returned clean basef747440, no product change/commit, no repairs used. Sol independently reproduced general clinical Stage B refusal (exit2 B_DESIGN_UNSUPPORTED), no B frame. Separate C08 endpoints and B08 fixture outputs are not a same-run lineage. C clinical scheduling also returns before C06/D publication. No D15 test/report/package/Astra gate ran. All workers/processes finished.
+
+D13 stays blocked at its two-repair cap; no repair3. D08/C08/M7/G7 remain accepted. G8/G9 closed. No private data, push, AIU execution or Notion sync.
+
+Literal resume: **Define the smallest explicit native clinical producer/publication predecessor scope and dispatch fresh read-only Astra-low scope audit before code. Preserve probe evidence; do not repeat D15 from scratch or substitute fixture endpoints. Resume D15 only after its upstream dependency is verified. Keep D13's exhausted cycle closed and G8/G9 unreleased.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D-T15 initial Luna running
 
 Fresh `/root/m8_d15_luna` works on `codex/m8-d15-luna` from f747440. Read [dispatch](reviews/2026-11-04-d-t15-dispatch.md) and local d15/luna-brief.md/runtime-env.json. One initial attempt, repairs0of2, exact five-file allowlist. First probe establishes actual clinical-enabled native producer/source-binding route. Stop worker on out-of-scope seam; no fabricated artifacts. No parent gate active.

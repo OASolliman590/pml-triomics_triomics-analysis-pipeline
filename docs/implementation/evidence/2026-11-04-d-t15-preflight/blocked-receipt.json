@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.0",
+  "packet_id": "D-T15",
+  "status": "blocked_before_product_implementation",
+  "accepted": false,
+  "completion_credit": false,
+  "base_commit": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
+  "worker": "/root/m8_d15_luna",
+  "requested_model": "gpt-6-luna",
+  "requested_effort": "max",
+  "effective_settings_exposed": false,
+  "worker_branch": "codex/m8-d15-luna",
+  "worker_commit": null,
+  "source_files_changed": [],
+  "worker_clean": true,
+  "dispatch_attempts": 1,
+  "repair_attempts": 0,
+  "product_implementation_started": false,
+  "independent_Sol_probe": {
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "inst/exec/triomics",
+      "--config",
+      "<local-proof>/probe-c08-between/C-08-between.yaml",
+      "--stage",
+      "B",
+      "--output",
+      "<local-proof>/sol-preflight-blocker/output"
+    ],
+    "exit_code": 2,
+    "error_code": "B_DESIGN_UNSUPPORTED",
+    "config_sha256": "d31a44869d8dd862d85863f2a3737b02bfee4c069e879686f888e772b781d8d6",
+    "log_sha256": "ce5328783d4c3d6c28fbb1b7aa6b7ef775ca02fb85457a0f52af1ade7642f58c",
+    "output_root_created": false,
+    "B_frame_produced": false,
+    "config_unchanged": true
+  },
+  "probe_config_note": "Local copy of public C-08 fixture; paths rebased to public fixtures, objective changed to between_person with V1, later-visit-only fields removed; actual C08 endpoint ref retained. No frozen ticket or product source edited.",
+  "source_findings": [
+    {
+      "file": "R/cli.R",
+      "lines": "118\u2013138",
+      "finding": "Non-fixture clinical-objective Stage B requests are refused without a registered eligible endpoint bundle and clinical view."
+    },
+    {
+      "file": "R/cli.R",
+      "lines": "2557\u20132572",
+      "finding": "Clinical Stage C returns after endpoint scheduling, before C06 provenance publication; no bypass proposed."
+    },
+    {
+      "file": "R/clinical_association.R",
+      "lines": "632\u2013735",
+      "finding": "Registered B08 CLI executes its public synthetic endpoint bundle; it is not a generic consumer of C08 score requests."
+    }
+  ],
+  "worker_reported_native_exits": [
+    {
+      "probe": "original C08 fresh root",
+      "stage": "C",
+      "exit_code": 0,
+      "result": "Integration results/endpoints/scheduled B request/run-C written; no C06/D provenance"
+    },
+    {
+      "probe": "original C08 C-first root",
+      "stage": "B",
+      "exit_code": 2,
+      "error_code": "B_DESIGN_UNSUPPORTED",
+      "result": "Unsupported longitudinal objective route; not predecessor-present evidence"
+    },
+    {
+      "probe": "original C08 C-first root",
+      "stage": "D",
+      "exit_code": 2,
+      "result": "Missing required safe B/C producer directories/frame; not predecessor-present D failure"
+    },
+    {
+      "probe": "B08 public fixture, rebased paths",
+      "stage": "B",
+      "exit_code": 0,
+      "result": "Native B frame plus partial clinical results"
+    },
+    {
+      "probe": "same B08 root, B then A",
+      "stage": "A",
+      "exit_code": 4,
+      "error_code": "A_ARTIFACT_FINALIZE",
+      "result": "Pre-existing artifact collision; failed ordering trial, not acceptance evidence"
+    },
+    {
+      "probe": "same no-integration B08 config",
+      "stage": "C",
+      "exit_code": 2,
+      "error_code": "C_SCORE_BACKEND_UNAVAILABLE",
+      "result": "No registered integration request; not a valid B-to-C clinical proof"
+    }
+  ],
+  "artifact_readback": {
+    "probe-c08": {
+      "same_run_group": "probe-c08",
+      "native_B_frames": 0,
+      "C_provenance_present": false,
+      "sha256": {
+        "registries/run-C.json": "e596d397395e7b8381065c05aa072a1a5ddf3e3273e24b0ba918951795f5e1e6",
+        "C/integration-results.json": "82d42b99749d1b6ec35a56b6d9b31528d34c1632626cac493ed9f48db4c124f0",
+        "C/integration-results.envelope.json": "f861ed49c7b009512648f700b7771f9a96a715cc27616889c1177debc7b61bdb",
+        "C/score-endpoints/integration-01.envelope.json": "92f85791649bf3c6581651bf640c4a2117f2aaa775e6af8ece0d8e75d93cf45d",
+        "C/score-endpoints/integration-01.json": "0363219499c17053cf6e7ea90feee1ed5a1dafcd60181bcc5eb3a02ac3eab7f6",
+        "B/clinical-score-association-requests/request-01.json": "e4f7fa2d6b93a6f7de4caf40e110fd6d4b9be3ee8c6ea362d4e68c5bb26fb445"
+      }
+    },
+    "probe-b08-c2/output": {
+      "same_run_group": "probe-b08-c2/output",
+      "native_B_frames": 1,
+      "C_provenance_present": false,
+      "sha256": {
+        "B/block-results.json": "95e608a2231f3536240d883aafd0e652081274b0410f22f704e8048a5ef4efd8",
+        "B/clinical-associations.envelope.json": "5c82f257b45daa4f98c4efa6703d8257d42239675078771a9beb19207bb428ca",
+        "B/clinical-associations.json": "50fa16c047f265a0fd43d7d6d36507f76cb39de7c1b81af9a2bedfd82040c2ba",
+        "B/handoffs/539ca522552e397e4ddd58f882cb148ef7edf7762e4f1227db13009bad761e9b/stage-handoff-provenance.json": "61f42f1e301d6fb60f7848492cfccd0c7b6675becaab7272a724f2ee0d3c240f",
+        "B/handoffs/539ca522552e397e4ddd58f882cb148ef7edf7762e4f1227db13009bad761e9b/stage-handoff-provenance.envelope.json": "5d1c2cf667190d27e5b77c7fe25f261851ec4685d0bfc9c3291ab6f877318825"
+      }
+    }
+  },
+  "artifact_limit": "The B08 and C08 probe roots have different config identities. Their artifacts cannot be combined into a same-run lineage or report proof. No predecessor-present C publication failure was demonstrated.",
+  "testthat_counts": null,
+  "testthat_status": "not_run: no D15 implementation or tests",
+  "named_testthat_warnings": null,
+  "Quarto_report": "not_run",
+  "package_status": "not_run",
+  "Astra_verdict": "not_run",
+  "local_review": "No implementation diff to review; Sol independently reproduced boundary guard.",
+  "known_clinical_source": {
+    "scope": "Sol readback of public synthetic B producer only, not report or packet acceptance",
+    "source_sha256": "50fa16c047f265a0fd43d7d6d36507f76cb39de7c1b81af9a2bedfd82040c2ba",
+    "status": "partial",
+    "family_counts": {
+      "n_declared": 3,
+      "n_estimated": 2,
+      "n_failed": 1
+    },
+    "rows": [
+      {
+        "endpoint_id": "synthetic_score",
+        "effect": 2,
+        "effect_unit": "score_unit per mmol/L",
+        "estimation_status": "estimated",
+        "estimation_reason": null,
+        "n_subjects": 10,
+        "n_rows_used": 10,
+        "inferential_status": "exploratory",
+        "independent_validation_released": false
+      },
+      {
+        "endpoint_id": "held_score",
+        "effect": 1,
+        "effect_unit": "score_unit per mmol/L",
+        "estimation_status": "estimated",
+        "estimation_reason": null,
+        "n_subjects": 10,
+        "n_rows_used": 10,
+        "inferential_status": "exploratory",
+        "independent_validation_released": false
+      },
+      {
+        "endpoint_id": "unsupplied_score",
+        "effect": null,
+        "effect_unit": null,
+        "estimation_status": "failed",
+        "estimation_reason": "endpoint_absent",
+        "n_subjects": 0,
+        "n_rows_used": 0,
+        "inferential_status": "not_estimable",
+        "independent_validation_released": false
+      }
+    ],
+    "lesson": "held_score is not held-out validation: source says exploratory and independent_validation_released=false",
+    "native_sequence_limit": "This output precedes a rejected B-then-A trial; not a valid complete pipeline/report gate."
+  },
+  "evidence_hashes": {
+    "sol-preflight-receipt.json": "693ac6fc3943b2142398d7c04130b390d71e5607ecc353bec153ac9305a2a908",
+    "sol-clinical-source-readback.json": "6168f41463325f807437b51e7c7a72c7a1e1d07341c06e725ebb74c7950549db"
+  },
+  "next": "Define and audit the bounded native clinical B-consumer/C-publication/source-binding predecessor scope before coding it; keep D15 incomplete and D13 exhausted cycle closed.",
+  "milestones": {
+    "M7": "accepted",
+    "G7": "released",
+    "M8": "incomplete",
+    "G8": "closed",
+    "M9": "not_started",
+    "G9": "closed"
+  },
+  "preserved_limits": [
+    "D06/D07/D14 zero credit",
+    "C07 not_run",
+    "C09 unqualified/synthetic_fixture_only/benefit_guaranteed=false",
+    "Frozen-kit audit pending",
+    "No private study data or push"
+  ],
+  "command_path_note": "Exact local argv and logs remain in the internal evidence root; public receipt substitutes placeholders."
+}

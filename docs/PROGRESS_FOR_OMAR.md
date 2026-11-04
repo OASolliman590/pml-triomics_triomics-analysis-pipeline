@@ -1,18 +1,18 @@
 # Tri-omics progress
 
-**D-T13, the target dossier, is blocked at its two-repair limit.** The goal remains to finish the required report sections and installed-pipeline walkthroughs before releasing G8 and G9. M7/G7 and the offline D-T08 report remain accepted on synthetic software evidence.
+**D-T15 stopped before implementation at a clinical pipeline boundary.** The goal remains to finish the required report sections and installed walkthroughs, then release G8 and G9. M7/G7 and the offline D-T08 report remain accepted on synthetic software evidence.
 
-The dossier draft separates four kinds of target evidence, keeps alternatives and missing measurements visible, and avoids inventing affinity or a winning target. Its final focused tests passed 260 assertions with no warnings or skips. However, fresh review found that ordinary descriptions containing numbers lose their construction and selection history. Sol reproduced that loss independently. The candidate is preserved but not integrated or accepted; passing tests do not override this counterexample.
+A fresh Luna worker checked whether real producer outputs could reach the clinical report. C-08 writes integration scores and schedules an association request, but the general B command refuses that request because its endpoint consumer is not registered. Sol reproduced the refusal. The existing B-T08 demonstration produces its own synthetic endpoints; they cannot stand in for C-08 scores. No report code was changed to hide this gap.
 
-No biological or clinical performance has been established in the three studies. D-T06/D-T07/D-T14 retain zero credit, C-07 remains unrun, C-09 unqualified and the frozen-kit audit pending. G8 also needs the clinical section, package check and Astra review. D-T15 is now running in one isolated Luna worker; it does not depend on D-T13. No third dossier repair is being opened. Needs Omar: none for that independent work. Sync: local only; no private-study analysis, AIU run, push or Notion sync.
+D-T13 also remains blocked: scientific descriptions containing numbers lose their history in its unaccepted draft. Its two repairs are exhausted. No new biological or clinical validation has been established in the three studies. The next step is to define and audit the narrow clinical producer/publication fix before coding. G8 still needs both report sections, the package check and Astra milestone review. Conditional routes retain their limits and zero credit. Needs Omar: none for preparing that scope audit. Sync: local only; no private-study analysis, push or Notion sync.
 
 | Outcome | Evidence state |
 |---|---|
 | Required M7 annotation/targets | Accepted on synthetic product fabd6fa |
 | D-T08 offline report | Accepted on synthetic product f85fa6d |
-| D-T13 target dossier | Blocked; final candidate 37663a1 not integrated |
-| D-T15 clinical objectives | Initial native-source check and implementation running |
+| D-T13 target dossier | Blocked at repair cap; candidate not integrated |
+| D-T15 clinical objectives | Blocked before implementation at native producer boundary |
 | D-T09 installed walkthroughs | Not started; awaits G8 |
-| Conditional scientific routes | Blocked or unqualified; zero credit |
+| Conditional scientific routes | D06/D07/D14 zero credit; C07 unrun; C09 unqualified; frozen-kit audit pending |
 
-Receipt: [D-T13 blocked close](implementation/reviews/2026-11-04-d-t13-blocked-close.md). Literal resume: join the existing D-T15 Luna worker; preserve D13's blocked state and keep G8/G9 closed.
+Receipt: [D-T15 predecessor blocker](implementation/reviews/2026-11-04-d-t15-preflight-blocker.md). Literal resume: define and audit the bounded clinical producer/publication scope before code; keep G8/G9 closed.
