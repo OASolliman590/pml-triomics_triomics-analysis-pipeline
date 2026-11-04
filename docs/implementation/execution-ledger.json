@@ -53,7 +53,7 @@
     }
   ],
   "orchestration_control": {
-    "status": "D15_S02_repair1_assigned",
+    "status": "D15_S02_repair2_assigned",
     "last_reconciled": "2026-11-05",
     "active_handoffs": [
       {
@@ -63,21 +63,21 @@
         "requested_effort": "max",
         "effective_settings_exposed": false,
         "base_commit": "5e4b81accdc3f63ad1d33b96176ee934c561f5db",
+        "candidate": "4a09b92fd47aeafe5894389ce9c8fd1d4a8bd3bf",
         "branch": "codex/m8-d15-s02-luna",
-        "status": "repair1_assigned",
+        "status": "repair2_assigned",
         "attempt": 1,
-        "repairs": 1,
-        "allowed_next_transition": "Join repair1; focused local rereview and independent fullB-T07/native/profile proof.",
-        "cursor": null,
-        "candidate": "5519fc12f84daca952731bb5fbb1257189804de6"
+        "repairs": 2,
+        "allowed_next_transition": "Join same Luna final repair2; inspect immutable diff and independently run full B-T07/native/profile readback; stop at S02 receipt. No repair3 or S01 edits.",
+        "cursor": null
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
     "disposition": "Scope audit passed; exact two-file owner correction, separate S01 repairs preserved.",
     "current_gate": {
       "status": "changes_required",
-      "candidate": "5519fc12f84daca952731bb5fbb1257189804de6",
-      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s02-initial-review.md"
+      "candidate": "4a09b92fd47aeafe5894389ce9c8fd1d4a8bd3bf",
+      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s02-repair1-review.md"
     }
   },
   "orchestration_events": [
@@ -6979,6 +6979,23 @@
       "worker": "/root/d15_s02_luna",
       "repair": 1,
       "review_ref": "docs/implementation/reviews/2026-11-05-d15-s02-initial-review.md"
+    },
+    {
+      "event": "D15_S02_repair1_joined_final_repair2_dispatched",
+      "date": "2026-11-05",
+      "candidate": "4a09b92fd47aeafe5894389ce9c8fd1d4a8bd3bf",
+      "source_counts": {
+        "pass": 445,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 30
+      },
+      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s02-repair1-review.md",
+      "repairs_used": 2,
+      "repairs_remaining": 0,
+      "next": "Join same Luna final repair2; inspect immutable diff and independently run full B-T07/native/profile readback; stop at S02 receipt. No repair3 or S01 edits."
     }
   ],
   "packets": {
@@ -8692,5 +8709,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D15_S02_Luna_running_goal_active"
+  "close_state": "D15_S02_final_repair2_running_goal_active"
 }

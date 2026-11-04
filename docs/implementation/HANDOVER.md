@@ -1,3 +1,11 @@
+# Current checkpoint: M8-D15-S02 final repair2 assigned
+
+Read [repair1 review](reviews/2026-11-05-d15-s02-repair1-review.md). Repair1 at4a09b92 passes445 source assertions but still accepts contradictory withheld-q evidence, independently reproduced by Sol. Same Luna, same two-file allowlist, finalrepair2of2. No native run on repair1 and no product integration. S01 repairs0of2 remain separate.
+
+Literal resume: **Join same Luna final repair2; inspect immutable diff and independently run full B-T07/native/profile readback; stop at S02 receipt. No repair3 or S01 edits. Preserve S01 and D13 caps; G8/G9 stay closed.**
+
+## Historical checkpoints below
+
 # Current checkpoint: M8-D15-S02 repair1 assigned
 
 Read [initial review](reviews/2026-11-05-d15-s02-initial-review.md). Same /root/d15_s02_luna repairs three independently reproduced accounting defects from5519fc1: fractional counts, predictor_visit contradiction, shortened correction vectors. Two-file allowlist unchanged. Initial source409pass/noerrors and nativeA/C/B0/0/0 do not override these findings; final worker profile validation was unverified. Parent confirmed no old process remains. Repair1of2, no cap reset.
