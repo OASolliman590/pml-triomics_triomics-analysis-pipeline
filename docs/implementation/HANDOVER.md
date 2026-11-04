@@ -1,3 +1,13 @@
+# Current checkpoint: D15 predecessor scope prepared for audit
+
+M8-D15-S01 defines the missing native between-person clinical request consumer and later publication of the saved C fit. Read change-records/M8-D15-S01-native-clinical-handoff.md. Product code is unchanged. Fresh read-only Astra-low audit must pass before implementation; no Luna is active. C fit ancestry must not include later B results. D15 remains blocked until independently verified native predecessor evidence exists.
+
+D13 stays blocked at its repair cap. D08/C08/M7/G7 remain accepted. G8/G9 remain closed. No private data, push, AIU execution or Notion sync.
+
+Literal resume: **Freeze and audit M8-D15-S01; join that audit if dispatched. Apply at most one focused documentation repair/rereview. Do not start product edits without audit_pass yes; preserve old D13/D15 receipts.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D-T15 blocked before implementation
 
 Read [native clinical blocker](reviews/2026-11-04-d-t15-preflight-blocker.md). Fresh Luna returned clean basef747440, no product change/commit, no repairs used. Sol independently reproduced general clinical Stage B refusal (exit2 B_DESIGN_UNSUPPORTED), no B frame. Separate C08 endpoints and B08 fixture outputs are not a same-run lineage. C clinical scheduling also returns before C06/D publication. No D15 test/report/package/Astra gate ran. All workers/processes finished.
