@@ -174,8 +174,8 @@ triomics_target_external_evidence <- function(request, records) {
     record$dependency_group <- paste0("publication:", record$publication_group)
     record$independent_replication <- FALSE
     record$availability <- if (is.null(record$value)) "unavailable" else "available"
-    assay_description_supplied <- triomics_target_string(record$assay)
-    assay_limitations_supplied <- triomics_target_string(record$assay_limitations)
+    assay_description_supplied <- triomics_target_string(record[["assay", exact = TRUE]])
+    assay_limitations_supplied <- triomics_target_string(record[["assay_limitations", exact = TRUE]])
     record$assay_qualification <- if (assay_description_supplied && assay_limitations_supplied) {
       "qualified"
     } else {

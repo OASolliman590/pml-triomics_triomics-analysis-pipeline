@@ -24,22 +24,24 @@ triomics_target_safe_taxon_value <- function(value) {
 }
 
 triomics_target_feature_taxon <- function(feature, request_taxon_id) {
-  routing_metadata <- if (is.list(feature$provenance)) feature$provenance$routing_metadata else NULL
-  declaration <- if (is.list(routing_metadata)) routing_metadata$taxon else NULL
+  provenance <- feature[["provenance", exact = TRUE]]
+  routing_metadata <- if (is.list(provenance)) provenance[["routing_metadata", exact = TRUE]] else NULL
+  declaration <- if (is.list(routing_metadata)) routing_metadata[["taxon", exact = TRUE]] else NULL
   declaration <- if (is.list(declaration)) declaration else NULL
-  declaration_status <- if (is.list(declaration)) declaration$status else NULL
-  adapted_status <- feature$taxon_status
+  declaration_status <- if (is.list(declaration)) declaration[["status", exact = TRUE]] else NULL
+  adapted_status <- feature[["taxon_status", exact = TRUE]]
   declaration_copy <- declaration
   if (is.list(declaration_copy) && "value" %in% names(declaration_copy)) {
-    declaration_copy["value"] <- list(triomics_target_safe_taxon_value(declaration_copy$value))
+    declaration_copy["value"] <- list(triomics_target_safe_taxon_value(declaration_copy[["value", exact = TRUE]]))
   }
   declaration_status_valid <- triomics_target_string(declaration_status) &&
     declaration_status %in% c("declared", "unknown")
-  provenance_ref <- if (is.list(declaration) && triomics_target_string(declaration$provenance_ref)) {
-    declaration$provenance_ref
+  provenance_ref_value <- if (is.list(declaration)) declaration[["provenance_ref", exact = TRUE]] else NULL
+  provenance_ref <- if (triomics_target_string(provenance_ref_value)) {
+    provenance_ref_value
   } else NULL
   feature_taxon_id <- if (identical(declaration_status, "declared") && is.list(declaration)) {
-    triomics_target_safe_taxon_value(declaration$value)
+    triomics_target_safe_taxon_value(declaration[["value", exact = TRUE]])
   } else NULL
   result <- list(
     applicability = "unassessable", reason_code = "feature_taxon_unknown",
@@ -58,17 +60,18 @@ triomics_target_feature_taxon <- function(feature, request_taxon_id) {
     result$reason_code <- "feature_taxon_malformed"
     return(result)
   }
-  if (!identical(declaration$value, feature$taxon_id)) {
+  declaration_value <- declaration[["value", exact = TRUE]]
+  if (!identical(declaration_value, feature[["taxon_id", exact = TRUE]])) {
     result$reason_code <- "feature_taxon_malformed"
     return(result)
   }
 
-  feature_token <- triomics_target_taxon_token(declaration$value)
+  feature_token <- triomics_target_taxon_token(declaration_value)
   if (is.null(feature_token)) {
-    unknown_value <- is.null(declaration$value) ||
-      (is.atomic(declaration$value) && length(declaration$value) == 1L && is.na(declaration$value)) ||
-      (is.character(declaration$value) && length(declaration$value) == 1L &&
-       identical(tolower(trimws(declaration$value)), "unknown"))
+    unknown_value <- is.null(declaration_value) ||
+      (is.atomic(declaration_value) && length(declaration_value) == 1L && is.na(declaration_value)) ||
+      (is.character(declaration_value) && length(declaration_value) == 1L &&
+       identical(tolower(trimws(declaration_value)), "unknown"))
     result$reason_code <- if (unknown_value) "feature_taxon_unknown" else "feature_taxon_malformed"
     return(result)
   }
@@ -285,7 +288,7 @@ triomics_target_external_axis <- function(records, axis) {
   }
   attached <- vapply(matched, function(record) identical(record$attachment, "request"), logical(1))
   assay_qualified <- vapply(matched, function(record) {
-    identical(record$assay_qualification, "qualified")
+    identical(record[["assay_qualification", exact = TRUE]], "qualified")
   }, logical(1))
   available <- vapply(matched, function(record) identical(record$availability, "available"), logical(1))
   applicable <- attached & assay_qualified
@@ -355,12 +358,13 @@ triomics_target_profile <- function(request, links, observations, external_evide
       triomics_d_abort("D_TARGET_CLAIM_COLLAPSED", "Observation endpoints cannot be converted to mechanistic claims.", "observations")
     }
     link <- links[[match(observation$link_id, link_ids)]]
-    if (!is.null(observation$taxon_applicability) &&
-        (!triomics_target_string(observation$taxon_applicability) ||
-         !observation$taxon_applicability %in% taxon_applicability_values)) {
+    taxon_applicability <- observation[["taxon_applicability", exact = TRUE]]
+    if (!is.null(taxon_applicability) &&
+        (!triomics_target_string(taxon_applicability) ||
+         !taxon_applicability %in% taxon_applicability_values)) {
       invalid("Feature taxon applicability must be matched, unassessable, or inapplicable.", "observations")
     }
-    if (triomics_target_string(observation$feature_key) && is.null(observation$taxon_applicability)) {
+    if (triomics_target_string(observation$feature_key) && is.null(taxon_applicability)) {
       observation$request_taxon_id <- request$taxon_id
       observation$feature_taxon_id <- NULL
       observation$feature_taxon_status <- "unknown"
@@ -371,9 +375,9 @@ triomics_target_profile <- function(request, links, observations, external_evide
     }
     observation$path_sign <- link$sign
     observation$path_context <- link$context_id
-    observation$coverage <- if (identical(observation$taxon_applicability, "inapplicable")) {
+    observation$coverage <- if (identical(observation[["taxon_applicability", exact = TRUE]], "inapplicable")) {
       "inapplicable"
-    } else if (identical(observation$taxon_applicability, "unassessable")) {
+    } else if (identical(observation[["taxon_applicability", exact = TRUE]], "unassessable")) {
       "unassessable"
     } else if (is.null(observation$value)) {
       "unmeasured"
@@ -405,11 +409,12 @@ triomics_target_profile <- function(request, links, observations, external_evide
   }, character(1))
   applicable_measurements <- vapply(rows, function(observation) {
     !is.null(observation$value) &&
-      (is.null(observation$taxon_applicability) || identical(observation$taxon_applicability, "matched"))
+      (is.null(observation[["taxon_applicability", exact = TRUE]]) ||
+         identical(observation[["taxon_applicability", exact = TRUE]], "matched"))
   }, logical(1))
   taxon_unassessable <- any(vapply(rows, function(observation) {
-    !is.null(observation$taxon_applicability) &&
-      observation$taxon_applicability %in% c("unassessable", "inapplicable")
+    !is.null(observation[["taxon_applicability", exact = TRUE]]) &&
+      observation[["taxon_applicability", exact = TRUE]] %in% c("unassessable", "inapplicable")
   }, logical(1)))
   measured_feature_count <- length(unique(by_feature[applicable_measurements]))
   unmeasured_feature_count <- length(unique(by_feature[!applicable_measurements]))
