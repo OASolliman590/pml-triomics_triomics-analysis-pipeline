@@ -1,3 +1,13 @@
+# Current checkpoint: D-T15 initial Luna running
+
+Fresh `/root/m8_d15_luna` works on `codex/m8-d15-luna` from f747440. Read [dispatch](reviews/2026-11-04-d-t15-dispatch.md) and local d15/luna-brief.md/runtime-env.json. One initial attempt, repairs0of2, exact five-file allowlist. First probe establishes actual clinical-enabled native producer/source-binding route. Stop worker on out-of-scope seam; no fabricated artifacts. No parent gate active.
+
+D13 blocked at its exhausted repair cap remains unintegrated. D15 is independent on accepted D08/C08/G7. G8/G9 closed; full goal active. No private data or push.
+
+Literal resume: **Join /root/m8_d15_luna; do not restart. On a legal candidate, inspect diff, two-axis local review and parent focused/native/real-Quarto saved-output verification. On concrete boundary block, preserve evidence. Stop at D15 receipt; do not reopen D13 or start M8 acceptance.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D-T13 blocked at its repair cap
 
 Read [blocked receipt](reviews/2026-11-04-d-t13-blocked-close.md). Final product37663a1 and worker recordef48615 preserved, not integrated. Worker focused tests260pass/36blocks/0fail/error/warn/skip. Final fresh Sol review found oneP2: legitimate numeric scientific lineage silently disappears; Sol independently reproduced it. Both repairs consumed; no repair3. No final native/package/Astra gate was run. No active worker or process.

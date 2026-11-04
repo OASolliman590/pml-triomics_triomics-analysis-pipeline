@@ -35,16 +35,50 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_id": "/root/m8_d15_luna",
+      "role": "Luna D-T15 initial implementation",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "host_dispatch_accepted": true,
+      "effective_settings_exposed": false,
+      "base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
+      "branch": "codex/m8-d15-luna",
+      "worktree": "/Users/megastore/.codex/worktrees/m8-d15-luna/PML MultiOmics Analysis Pipeline",
+      "status": "running",
+      "attempt": 1,
+      "repairs_used": 0,
+      "repairs_remaining": 2,
+      "allowed_next_transition": "Join initial receipt; if boundary blocker record it, otherwise inspect diff, two-axis local review, independent focused/native/real-render verification."
+    }
+  ],
   "orchestration_control": {
-    "status": "D_T13_blocked_receipt_complete",
+    "status": "D_T15_initial_implementation_running",
     "last_reconciled": "2026-11-04",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent_id": "/root/m8_d15_luna",
+        "role": "Luna D-T15 initial implementation",
+        "requested_model": "gpt-6-luna",
+        "requested_effort": "max",
+        "host_dispatch_accepted": true,
+        "effective_settings_exposed": false,
+        "base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
+        "branch": "codex/m8-d15-luna",
+        "worktree": "/Users/megastore/.codex/worktrees/m8-d15-luna/PML MultiOmics Analysis Pipeline",
+        "status": "running",
+        "attempt": 1,
+        "repairs_used": 0,
+        "repairs_remaining": 2,
+        "allowed_next_transition": "Join initial receipt; if boundary blocker record it, otherwise inspect diff, two-axis local review, independent focused/native/real-render verification."
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Both repairs consumed. Preserve failed candidate; no repair3. Independent D15 may proceed on accepted D08/C08/G7 in the next packet run.",
+    "disposition": "Fresh independent D15 packet on accepted D08/C08/G7. D13 remains blocked at cap; no repair3.",
     "current_gate": {
-      "status": "not_started_final_local_review_failed",
-      "candidate": "37663a12d285ee4cbc68146a40342caaed513c15"
+      "status": "worker_initial_native_seam_probe",
+      "candidate": null
     }
   },
   "orchestration_events": [
@@ -6821,6 +6855,14 @@
       "status": "blocked_at_repair_cap",
       "product_integrated": false,
       "next": "Independent D15 next packet run; no D13 repair3"
+    },
+    {
+      "event": "D15_initial_dispatch",
+      "agent_id": "/root/m8_d15_luna",
+      "base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
+      "allowlist": "frozen D-T15 fivefiles",
+      "dependency_gate": "D08/C08 accepted, G7 released; D13 not dependency",
+      "next": "Join initial receipt; if boundary blocker record it, otherwise inspect diff, two-axis local review, independent focused/native/real-render verification."
     }
   ],
   "packets": {
@@ -8320,11 +8362,17 @@
       ]
     },
     "D-T15": {
-      "status": "not_started",
-      "attempts": 0,
+      "status": "initial_implementation_running",
+      "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
-      "blockers": []
+      "blockers": [],
+      "repair_attempts": 0,
+      "implementation_base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
+      "active_worker": "/root/m8_d15_luna",
+      "accepted": false,
+      "completion_credit": false,
+      "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t15-dispatch.md"
     },
     "D-T09": {
       "status": "not_started",
@@ -8515,5 +8563,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D_T13_blocked_receipt_complete_goal_active"
+  "close_state": "active_M8_D_T15"
 }
