@@ -36,7 +36,7 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "m7_028_scope_audit_pending_after_full_source_failure",
+    "status": "m7_028_scope_pass_worker_ready",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -6019,6 +6019,14 @@
       },
       "ref": "docs/implementation/reviews/2026-11-04-m7-initial-full-source-gate.md",
       "disposition": "Source gate failed on two legacy test fixtures. No package/final-native/Terra/milestone-Astra yet. New bounded test-only scope requires fresh Astra before Luna. M7/G7 closed."
+    },
+    {
+      "event": "m7_028_scope_astra_pass",
+      "date": "2026-11-04",
+      "scope_commit": "77834fd6f893f43f348eab86b51a370d59052042",
+      "agent": "/root/m7_028_scope_astra",
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-028-scope-astra.md",
+      "disposition": "Only2testfiles authorized; fresh Luna next, no product repair or acceptance."
     }
   ],
   "packets": {
