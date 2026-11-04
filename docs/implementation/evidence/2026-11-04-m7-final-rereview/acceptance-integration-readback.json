@@ -1,0 +1,30 @@
+{
+  "timestamp": "2026-11-04T10:00:59.542004+00:00",
+  "branch": "spec/harden-v2-20260920",
+  "from_commit": "77fbc38f535a7163facb8ea8ec5b5ce934e2f617",
+  "target_acceptance_record": "e411a7d54d5d6565acb2df2a62f4b09d5e434814",
+  "tested_product": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+  "fast_forward_possible": true,
+  "dirty_sha256": {
+    ".Rbuildignore": "98395ba8935525b635905e993ef1ac41b5c611835330e0f40a0973a3074fe912",
+    ".gitignore": "0ed7239a482749586f85a8b0aa2689786126fef10571cdc362052b242e15d483",
+    "renv/activate.R": "bcfe1e7dac9c9e93228836b7459d8bd207c08c6f883a91ce757eba1a3521d6e5"
+  },
+  "tracked_dirty_files": [
+    ".Rbuildignore",
+    ".gitignore",
+    "renv/activate.R"
+  ],
+  "untracked_paths_before_count": 1370,
+  "new_tracked_paths_count": 211,
+  "new_path_collisions": [],
+  "product_changes_after_P2": false,
+  "integration_exit_code": 0,
+  "head_after": "e411a7d54d5d6565acb2df2a62f4b09d5e434814",
+  "dirty_bytes_preserved": true,
+  "all_preexisting_untracked_paths_preserved": true,
+  "untracked_paths_after_count": 1611,
+  "log_sha256": "013a5836bfb5b441aaabcd0fc99f1d6ee042b6c5cdef04bac48160efda83b32d",
+  "no_push": true,
+  "product_files_equal_P2": true
+}

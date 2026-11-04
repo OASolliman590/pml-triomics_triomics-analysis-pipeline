@@ -6566,6 +6566,21 @@
       "thread_inventory": "App list_threads reconciled 2026-11-04; current coordinator active, no run-owned child chats requiring archive.",
       "historical_caps_preserved": true,
       "M8_M9": "not_started"
+    },
+    {
+      "event": "M7_acceptance_fast_forward_verified_and_run_closed",
+      "date": "2026-11-04",
+      "branch": "spec/harden-v2-20260920",
+      "acceptance_record_commit": "e411a7d54d5d6565acb2df2a62f4b09d5e434814",
+      "integration_exit_code": 0,
+      "dirty_tracked_bytes_preserved": true,
+      "preexisting_untracked_paths_preserved": 1370,
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md",
+      "active_workers": [],
+      "active_processes": [],
+      "new_user_owned_chats": 0,
+      "archiving_disposition": "Native collaboration workers complete; no run-owned user chat to archive.",
+      "next": "M8 offline report/dossier; unstarted in this run."
     }
   ],
   "packets": {
@@ -8146,7 +8161,10 @@
       "docs/implementation/notion-sync/2026-10-17-pipeline-development-github-report.md",
       "docs/implementation/notion-sync/2026-10-17-three-study-dataset-handover.md"
     ],
-    "current_run_sync": "Local only; no push or Notion sync in this run. Final main-branch integration readback recorded separately; earlier sync metadata is historical."
+    "current_run_sync": "Local only; no push or Notion sync in this run. Final main-branch integration readback recorded separately; earlier sync metadata is historical.",
+    "local_integration_acceptance_record": "e411a7d54d5d6565acb2df2a62f4b09d5e434814",
+    "local_integration_verified": true,
+    "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
   "close_state": "M7_run_closed_project_incomplete"
 }
