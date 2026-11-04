@@ -35,7 +35,24 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent_id": "/root/m8_d13_luna",
+      "role": "Luna D-T13 initial implementation",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "host_dispatch_accepted": true,
+      "effective_settings_exposed": false,
+      "base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
+      "branch": "codex/m8-d13-luna",
+      "worktree": "/Users/megastore/.codex/worktrees/m8-d13-luna/PML MultiOmics Analysis Pipeline",
+      "status": "running",
+      "attempt": 1,
+      "repairs_used": 0,
+      "repairs_remaining": 2,
+      "allowed_next_transition": "Join commit; inspect five-file diff; fresh two-axis local review; bounded repair; independent focused/native/real-render readback."
+    }
+  ],
   "orchestration_control": {
     "status": "D_T08_Luna_initial_running",
     "last_reconciled": "2026-11-04",
@@ -6808,6 +6825,15 @@
       "readback_checks": 1729,
       "active_workers": [],
       "next": "D-T13 in the next packet turn; G8/G9 unreleased"
+    },
+    {
+      "event": "D13_fresh_Luna_initial_dispatch",
+      "date": "2026-11-04",
+      "agent_id": "/root/m8_d13_luna",
+      "base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
+      "gates": "D08/D12 accepted; G7 released",
+      "attempt": 1,
+      "repairs": 0
     }
   ],
   "packets": {
@@ -8273,11 +8299,17 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "not_started",
-      "attempts": 0,
+      "status": "initial_implementation_running",
+      "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
-      "blockers": []
+      "blockers": [],
+      "repair_attempts": 0,
+      "implementation_base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
+      "active_worker": "/root/m8_d13_luna",
+      "accepted": false,
+      "completion_credit": false,
+      "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t13-dispatch.md"
     },
     "D-T15": {
       "status": "not_started",
@@ -8473,5 +8505,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D_T08_packet_closed_full_G8_G9_goal_active"
+  "close_state": "active_M8_D_T13"
 }

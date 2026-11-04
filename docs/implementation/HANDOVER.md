@@ -1,3 +1,13 @@
+# Current checkpoint: D-T13 initial Luna implementation running
+
+Fresh `/root/m8_d13_luna` runs on `codex/m8-d13-luna`, base `92556411e4a7e129bc0d67f8e47fa4abdf27da0a`. Exact five-file scope; attempt1, repairs0of2. Read [dispatch](reviews/2026-11-04-d-t13-dispatch.md) and local d13/luna-brief.md. Quarto1.11.9 and internal APFS R tempdir verified. No parent gate active.
+
+D08/D12/M7/G7 remain accepted; do not repeat their gates. D13 consumes saved D profiles through the existing provider; no new method/schema/shared renderer edit. Preserve axes, overlap, alternatives, contradictions, missingness and unavailable quantities. G8/G9 closed. No private data, push or D15/D09 work.
+
+Literal resume: **Join `/root/m8_d13_luna`; inspect commit/allowlist, fresh two-axis local review and bounded repair if needed, then independent focused/native A/B/C/D/report plus dossier readback. Stop at D13 receipt. Never redispatch or accept from shell exit alone.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D-T08 accepted; stop at its packet receipt
 
 Sol accepts D-T08 on immutable product `f85fa6def678f23cc61b791531dbcd7a5adea13b`. Read [the acceptance receipt](reviews/2026-11-04-d-t08-sol-acceptance.md). Independent focused gate: 1,640 pass, zero fail/error/skip, one named expected D-T01 stale-sign warning. Fresh native A/B/C/D/report all exit 0; three negative probes exit 3/3/2. Real Quarto 1.11.9 HTML passes offline inspection and 1,729 saved-output checks. Fresh local Sol review passed. S01 and S02 are integrated and verified. Both report repairs are consumed; preserve all earlier failed/historical evidence.
