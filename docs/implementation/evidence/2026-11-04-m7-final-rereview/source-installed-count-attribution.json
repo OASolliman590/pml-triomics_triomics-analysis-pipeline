@@ -1,0 +1,34 @@
+[
+  {
+    "file": "test-C-03.R",
+    "test": "C-03 fixture is schema-valid and shared registration remains coordinator-owned",
+    "passed": 11,
+    "failed": 0,
+    "warning": 0,
+    "skipped": false
+  },
+  {
+    "file": "test-C-04.R",
+    "test": "C-04 registration request records the applied shared contract change",
+    "passed": 7,
+    "failed": 0,
+    "warning": 0,
+    "skipped": false
+  },
+  {
+    "file": "test-C-05.R",
+    "test": "C-05 environment check reports both runtimes as not loaded from an empty library and exits non-zero",
+    "passed": 5,
+    "failed": 0,
+    "warning": 0,
+    "skipped": false
+  },
+  {
+    "file": "test-C-05.R",
+    "test": "C-05 registration records the accepted synthetic-software-only route",
+    "passed": 16,
+    "failed": 0,
+    "warning": 0,
+    "skipped": false
+  }
+]

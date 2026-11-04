@@ -1,0 +1,512 @@
+[
+  {
+    "ticket": "inst/examples/tickets/D-T01.yaml",
+    "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+    "root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T01",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T01.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T01"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T01.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T01"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T01.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T01"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "6abcb78e2f8038afa31b2bd6f529ffafc88df40ded841f325b5eb455f435c2c0",
+    "four_b_predecessors_verified": true,
+    "files": {
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/bundle.json": "9fa6d35ec52c0f7b7ebf294b615ad621aa3de8d3004cad0b0cd880b1e15b70ce",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/bundle.envelope.json": "0353d67b40d2c4a1f460a0676c683ceb0461bf43f7720e86120ab9f685200541",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/stage-handoff-provenance.json": "8c6195ad13f29b24e107bf5ec038b467da4da7cd4e6b2798ae1f9ddd9913f358",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/stage-handoff-provenance.envelope.json": "dbd7b004516c343bd955a547d5a7c27693a259b3a863099772ad42b3cf6adf2b",
+      "D/stage-handoff-provenance.json": "aa86dba53729077422373a6352782896405e6de4589b2c3375284a612cf1cba6",
+      "D/stage-handoff-provenance.envelope.json": "3bb4c6f532c0c1f7044d86185c7e7ae30ea355bd9792cdae8d67057414bbc7d0",
+      "D/generations/6abcb78e2f8038afa31b2bd6f529ffafc88df40ded841f325b5eb455f435c2c0/generation-manifest.json": "6abcb78e2f8038afa31b2bd6f529ffafc88df40ded841f325b5eb455f435c2c0",
+      "registries/current-D.json": "b42acd25017ed81f1665744b3ce62bb3d757473b32d8350ba677ae8f008fc0a7",
+      "D/generations/6abcb78e2f8038afa31b2bd6f529ffafc88df40ded841f325b5eb455f435c2c0/evidence-routing.envelope.json": "7905d88ce4455bc8a360254ee61d8f435ffd9a2ea52bbc2f1ec4b106a281a233",
+      "D/generations/6abcb78e2f8038afa31b2bd6f529ffafc88df40ded841f325b5eb455f435c2c0/evidence-routing.json": "bcdd761a2c36fad2be15d1536f53c9ff3b71cc1c1bd51c03bb5a03a550861f27"
+    }
+  },
+  {
+    "ticket": "inst/examples/tickets/D-T02.yaml",
+    "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+    "root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T02",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T02.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T02"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T02.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T02"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T02.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T02"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "route": "lipid_ontology",
+    "observation_count": 3,
+    "edge_count": 3,
+    "generation_id": "5697122ff7cee4238dd57de9d772b125cf0081fde506b1a0249de774f5d3da2d",
+    "four_b_predecessors_verified": true,
+    "files": {
+      "B/handoffs/e5d40283cf9a4d5e59d2acea3c8c49ceefd33990ade87f86cbd44da01dfaa5c7/bundle.json": "2764218ebbb9c30aa2020758f2c971db7963d590c57cb15fb658784f506adda1",
+      "B/handoffs/e5d40283cf9a4d5e59d2acea3c8c49ceefd33990ade87f86cbd44da01dfaa5c7/bundle.envelope.json": "07ac570d22e0acec54e80e4eb0be1b36a1b1edb04b4ebd7175a5c2f47968f8fd",
+      "B/handoffs/e5d40283cf9a4d5e59d2acea3c8c49ceefd33990ade87f86cbd44da01dfaa5c7/stage-handoff-provenance.json": "9b334ef02e95a78a7882370b72842feb4c40e5760711d63924031a7664efd927",
+      "B/handoffs/e5d40283cf9a4d5e59d2acea3c8c49ceefd33990ade87f86cbd44da01dfaa5c7/stage-handoff-provenance.envelope.json": "afbeb50b10b03c898348eef2a754a12457d0810c308641f8cb2470e9e3768b85",
+      "D/stage-handoff-provenance.json": "b280bcd3d039d60aaae44a00e6c0276c039a19fd430891aa7e07762e1e99e32a",
+      "D/stage-handoff-provenance.envelope.json": "727ee32552c10b37c26ed38b8a4dbe5357c8c83775dc8e881aa7057face640de",
+      "D/generations/5697122ff7cee4238dd57de9d772b125cf0081fde506b1a0249de774f5d3da2d/generation-manifest.json": "5697122ff7cee4238dd57de9d772b125cf0081fde506b1a0249de774f5d3da2d",
+      "registries/current-D.json": "48251e89eda0f118db4af85997f28cfcc46fdf3aa19e58b2737eb5744b344940",
+      "D/generations/5697122ff7cee4238dd57de9d772b125cf0081fde506b1a0249de774f5d3da2d/evidence-routing.envelope.json": "746d52114b4efa6f87aea7d40534570f86ea3965cca0a4b50fd7d2c769bf98c1",
+      "D/generations/5697122ff7cee4238dd57de9d772b125cf0081fde506b1a0249de774f5d3da2d/evidence-routing.json": "4cb7cbdb9fe02a0d128f95ac28d60ce8ff2a2534cab362c83ad14fa255f34091"
+    }
+  },
+  {
+    "ticket": "inst/examples/tickets/D-T03.yaml",
+    "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+    "root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T03",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T03.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T03"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T03.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T03"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T03.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T03"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "route": "gene_reaction",
+    "observation_count": 3,
+    "edge_count": 3,
+    "generation_id": "c9a8e40c3d9bf1149417130969562cf66ee48a5903f1e959978c1bc209bf1821",
+    "four_b_predecessors_verified": true,
+    "files": {
+      "B/handoffs/d5216c305e81c8a1147360ad5558850b2396dd28396803df3c27b03aa61b9685/bundle.json": "7aeb344f6a06fa49342c73d2da3a1a032d34940d9083530c8fc951c7b25e7fe5",
+      "B/handoffs/d5216c305e81c8a1147360ad5558850b2396dd28396803df3c27b03aa61b9685/bundle.envelope.json": "acd29f58181499c99956dbf64a8a76107f21a37f58a596717cb86ec39910f9a3",
+      "B/handoffs/d5216c305e81c8a1147360ad5558850b2396dd28396803df3c27b03aa61b9685/stage-handoff-provenance.json": "aa3fd99304095bf33176ea8f63d90a79f4ec2eb0f56f0c4f3c556bcc2ee58c64",
+      "B/handoffs/d5216c305e81c8a1147360ad5558850b2396dd28396803df3c27b03aa61b9685/stage-handoff-provenance.envelope.json": "f603054964acb018332f971b696f0b1ccc907b16cd44afb6242190f7c311af0b",
+      "D/stage-handoff-provenance.json": "6d975fdeabdab6b86951ea4d408cf5a0f35cf22954a790838715c20caecac071",
+      "D/stage-handoff-provenance.envelope.json": "24cb23f936a7b0f05152c7a494ce7beb3ec5cc9cdac875e67121accde6afef84",
+      "D/generations/c9a8e40c3d9bf1149417130969562cf66ee48a5903f1e959978c1bc209bf1821/generation-manifest.json": "c9a8e40c3d9bf1149417130969562cf66ee48a5903f1e959978c1bc209bf1821",
+      "registries/current-D.json": "5f671a9aab5abd22113b764d7dcf74e2d3911053a81ae0a7fad6034b5933df77",
+      "D/generations/c9a8e40c3d9bf1149417130969562cf66ee48a5903f1e959978c1bc209bf1821/evidence-routing.envelope.json": "1d1bf5692188e7d5542ec95091b9566147fff0e2a6cd6dfc83454d0a5f97a043",
+      "D/generations/c9a8e40c3d9bf1149417130969562cf66ee48a5903f1e959978c1bc209bf1821/evidence-routing.json": "119b584fb824d1a04ec2f53069e1b2737449c609842bfaec46c3300c80890c7f"
+    }
+  },
+  {
+    "ticket": "inst/examples/tickets/D-T04.yaml",
+    "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+    "root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T04",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T04.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T04"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T04.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T04"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T04.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T04"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "2a251ae5c6c08b2ec21170339a45ebe4cbcc8566023da7dd4a2f1088bc8dc62b",
+    "four_b_predecessors_verified": true,
+    "files": {
+      "B/handoffs/984aa67506ab08f7605a308304d40b900942e996a8104080be1c5e2a3e33b7a0/bundle.json": "767b0f3acaa5e4a5e577982aa697d8f4d1abe04fb6df100a262994f02d432e90",
+      "B/handoffs/984aa67506ab08f7605a308304d40b900942e996a8104080be1c5e2a3e33b7a0/bundle.envelope.json": "0b3cf56668da97b3594c4eb46edccb6782ca939a71663607bde12a721587e484",
+      "B/handoffs/984aa67506ab08f7605a308304d40b900942e996a8104080be1c5e2a3e33b7a0/stage-handoff-provenance.json": "6ebf195c4f719bdd7380ed0dc442235e0331e45510ab32ea4038007ea49ae22d",
+      "B/handoffs/984aa67506ab08f7605a308304d40b900942e996a8104080be1c5e2a3e33b7a0/stage-handoff-provenance.envelope.json": "3bbf265eb7492c48aa869d21420207bab460ee164336f40157d2ee2b296aa6eb",
+      "D/stage-handoff-provenance.json": "af278775d154d180eb04c089d550965ce9f95acbe724e86aaa40056d2bf7be3e",
+      "D/stage-handoff-provenance.envelope.json": "b8ab8364ee601d254e2c6524e2cd68a2d42bc7e6fd7f1ddf68bdc1f6e30deb18",
+      "D/generations/2a251ae5c6c08b2ec21170339a45ebe4cbcc8566023da7dd4a2f1088bc8dc62b/generation-manifest.json": "2a251ae5c6c08b2ec21170339a45ebe4cbcc8566023da7dd4a2f1088bc8dc62b",
+      "registries/current-D.json": "f6e1e32debf86b19c4130cbb23bd3104430053b29afbe07bdfb3d2214723ea23",
+      "D/generations/2a251ae5c6c08b2ec21170339a45ebe4cbcc8566023da7dd4a2f1088bc8dc62b/evidence-routing.envelope.json": "2e7cfb87a9cf89dabf89ddbf4e171f86dccb4f3cbdbda1cf5978677da69acfbb",
+      "D/generations/2a251ae5c6c08b2ec21170339a45ebe4cbcc8566023da7dd4a2f1088bc8dc62b/evidence-routing.json": "6dd99eaab6db152863f8efa206380a70dae9c7ab8591a634f1521dad5d908d19"
+    }
+  },
+  {
+    "ticket": "inst/examples/tickets/D-T05.yaml",
+    "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+    "root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T05",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T05.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T05"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T05.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T05"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T05.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T05"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "bdad047a7a0ca8f72d58ac0607ea5130758cfab518488faa130be494f4e8e54f",
+    "four_b_predecessors_verified": true,
+    "files": {
+      "B/handoffs/41a58a3b08b66ede0691d29da697dae844b89c111e94dd8cb0fa087846b58ab2/bundle.json": "a6e9877a25cde20c13850aaab86457f25a3c3ff532855ba67625e4f4ada8743d",
+      "B/handoffs/41a58a3b08b66ede0691d29da697dae844b89c111e94dd8cb0fa087846b58ab2/bundle.envelope.json": "08782dc1942bfd20c3aafc0cef994e883ef8bae030b2a64594ecb9a4d2bdcecb",
+      "B/handoffs/41a58a3b08b66ede0691d29da697dae844b89c111e94dd8cb0fa087846b58ab2/stage-handoff-provenance.json": "d60d8edafb82a3f388a2cc9b86bcc4bb6ce54f1aa92de191936aba0b1bcdf61d",
+      "B/handoffs/41a58a3b08b66ede0691d29da697dae844b89c111e94dd8cb0fa087846b58ab2/stage-handoff-provenance.envelope.json": "eeed81346828f18a1b45f94dd1ca9add9e3a36f50d8d51d8d82880748a38ed52",
+      "D/stage-handoff-provenance.json": "9d6d69c82549291ea5c0c654270b8947a870bc2dc7c3ac55dcb720be3d3dd469",
+      "D/stage-handoff-provenance.envelope.json": "980d5336de21163d9f4935118245658d2f218a41b730d27c3cdc695e62d5709a",
+      "D/generations/bdad047a7a0ca8f72d58ac0607ea5130758cfab518488faa130be494f4e8e54f/generation-manifest.json": "bdad047a7a0ca8f72d58ac0607ea5130758cfab518488faa130be494f4e8e54f",
+      "registries/current-D.json": "4d7afd0123b8d0e6306c82becea953c4d20470e57339fc985f68fb9a4d9e79c0",
+      "D/generations/bdad047a7a0ca8f72d58ac0607ea5130758cfab518488faa130be494f4e8e54f/evidence-routing.envelope.json": "8ca953c73e45b3c0fd0c6f52d84fd9147c1285435c7e9e90651898168c3b4b82",
+      "D/generations/bdad047a7a0ca8f72d58ac0607ea5130758cfab518488faa130be494f4e8e54f/evidence-routing.json": "cd595f7b76e4377ef7fa3e349b7e0fc107e33d768495d31b98ea5d2c372a2e6e"
+    }
+  },
+  {
+    "ticket": "inst/examples/tickets/D-T10.yaml",
+    "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+    "root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T10",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T10.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T10"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T10.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T10"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T10.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T10"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "f240768dd68826ea5417f7bdfd71c66ec0a47042e74a1cd6defd72733b8d10f3",
+    "four_b_predecessors_verified": true,
+    "files": {
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/bundle.json": "7cb89c9b86524cb044db092209043ac7c740abf01985bfd43756fdaf8649210c",
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/bundle.envelope.json": "cb89dde03832f1a2904e7430f770d57cded2bb0231d01550f0ab272ff31b752a",
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/stage-handoff-provenance.json": "c30c7ff8453194b69146344a1d8785624e6b8e8b77de9b2f4939d9ab0151b344",
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/stage-handoff-provenance.envelope.json": "cf24dee2a1b9a7f6dffb5ac884a685ae4c903c61ada778ad98a39405140c7bd1",
+      "D/stage-handoff-provenance.json": "a1b9543e9abe660973d257e0a7b98327a85e1310d52977b9f3c46e7b3d4bc24f",
+      "D/stage-handoff-provenance.envelope.json": "213a075f3253fc5ff4507609f88865177d97cf2ba08049bc9b22ceba250dacb2",
+      "D/generations/f240768dd68826ea5417f7bdfd71c66ec0a47042e74a1cd6defd72733b8d10f3/generation-manifest.json": "f240768dd68826ea5417f7bdfd71c66ec0a47042e74a1cd6defd72733b8d10f3",
+      "registries/current-D.json": "5f1e8ec141ede3137bf975b7a89348cd1f00f9c91c8680c81d0fdf71439b2c23",
+      "D/generations/f240768dd68826ea5417f7bdfd71c66ec0a47042e74a1cd6defd72733b8d10f3/evidence-routing.envelope.json": "e9473cc137ee7ae1ea4545e1066fc1a4ddfc50ffbdb73cf9121e102b14b68dae",
+      "D/generations/f240768dd68826ea5417f7bdfd71c66ec0a47042e74a1cd6defd72733b8d10f3/evidence-routing.json": "68b65d73a80410b328683f2686135728429e385bbedd607ad56375aedf91f6b0"
+    }
+  },
+  {
+    "ticket": "inst/examples/tickets/D-T11.yaml",
+    "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+    "root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T11",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T11.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T11"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T11.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T11"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T11.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T11"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "68efe4a753f6c9466dc07abba9e7871a8484cbdf754950f626c58ecec8e6d0b9",
+    "four_b_predecessors_verified": true,
+    "files": {
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/bundle.json": "7ffe2b50fe53f9399a3040900802f9d3dffedc4ed23b2a6ca6d07a35095bfc96",
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/bundle.envelope.json": "eea556cb6eea4adced24b4709da8ef92b5226e280e7e7e5db80a4a59eab20ede",
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/stage-handoff-provenance.json": "39fc01aeb56a883ac88a3366f045baf7b15a6e9d66dd66bb1c0f2f877b8cd065",
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/stage-handoff-provenance.envelope.json": "c055e406f870f205d90733c35cd23ff31ffa0173adf95f4fb18517d29c73c21d",
+      "D/stage-handoff-provenance.json": "564f9e3e26db243a5954b8ec2119b7962c94b62a8ffd576c6612348cd0622d79",
+      "D/stage-handoff-provenance.envelope.json": "0a239e213d992c1205aa12f562a43139a8f4e27cb9e3cda418885bda6986132b",
+      "D/generations/68efe4a753f6c9466dc07abba9e7871a8484cbdf754950f626c58ecec8e6d0b9/generation-manifest.json": "68efe4a753f6c9466dc07abba9e7871a8484cbdf754950f626c58ecec8e6d0b9",
+      "registries/current-D.json": "cb6448b0cde9e376736c6f28cc98f10d51af34115bb30b7433d648bc059fcf50",
+      "D/generations/68efe4a753f6c9466dc07abba9e7871a8484cbdf754950f626c58ecec8e6d0b9/evidence-routing.envelope.json": "6b8d5ad7bc23cec9125ff5424b58b5324e8a3eb775bd906b616dcfb5f356a5fc",
+      "D/generations/68efe4a753f6c9466dc07abba9e7871a8484cbdf754950f626c58ecec8e6d0b9/evidence-routing.json": "be653af4064918aa03908366d42f8f278572a92a1a27d22e0d484a5202875277"
+    }
+  },
+  {
+    "ticket": "inst/examples/tickets/D-T12.yaml",
+    "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+    "root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T12",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T12.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T12"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T12.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T12"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T12.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T12"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "7cfd46be9193776224d444ac905cfac29312f3cbc13e48d19afc295ddcb026e0",
+    "four_b_predecessors_verified": true,
+    "files": {
+      "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/bundle.json": "32b2e81e0c8d9381f92af55c9fde39a8a5d05a6c81ee06ed9310b293191f0e91",
+      "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/bundle.envelope.json": "64794f71c48183dd50f3632242d392365e8746185bf647dbcbb930e70a334572",
+      "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/stage-handoff-provenance.json": "b41f62de9c92be99df853e36d99d3d5725a36de4c67795a06800ea1516cfb8da",
+      "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/stage-handoff-provenance.envelope.json": "c10d05b53ced6ab9319d6e2b91317d5d7236d8012e0bb5f413635d13da335021",
+      "D/stage-handoff-provenance.json": "95eb432bfe7905b82f2cb902fdd440ae607813bec38f48b5fb387117ed17a4e8",
+      "D/stage-handoff-provenance.envelope.json": "9abde0415d6bb3d0cdc8a526a47661a82381b672aeb55e883a9fb15ab3f11d41",
+      "D/generations/7cfd46be9193776224d444ac905cfac29312f3cbc13e48d19afc295ddcb026e0/generation-manifest.json": "7cfd46be9193776224d444ac905cfac29312f3cbc13e48d19afc295ddcb026e0",
+      "registries/current-D.json": "2bab6a38adea7c31e6ed58482ce30407294fed0f1c5a2922211d6d5eeec40d82",
+      "D/generations/7cfd46be9193776224d444ac905cfac29312f3cbc13e48d19afc295ddcb026e0/evidence-routing.envelope.json": "6adf10a2d613ba23350e163dc6dafec17548d80f151d06d75a1e7692b0fd723e",
+      "D/generations/7cfd46be9193776224d444ac905cfac29312f3cbc13e48d19afc295ddcb026e0/evidence-routing.json": "fe6a7a8790d6401d9553c874dd7ea0a9303444757662eb7c196d7b7913bcad54"
+    }
+  }
+]

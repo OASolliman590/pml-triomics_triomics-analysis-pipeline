@@ -84,23 +84,22 @@
   },
   "request": "This D-T01 packet includes the explicitly authorized D-only CLI executor, D enablement, namespace exports, and matching API documentation alongside six D-owned files. Preserve the ten-file allowlist; do not add dependencies or change schemas or statistics. D consumes only same-root B-T07/C-06 handoffs whose exact producer profiles, envelopes, members, current source manifests, normalized metadata, and FeatureRegistry identities validate. The D-T01 fixture declares zero annotation requests and offline resource access. This packet does not execute ORA, MOFA-native enrichment, BioPAN, or target investigation. C-06 remains unaccepted, C-07 controls remain not_run, and C-09 remains conditional and unqualified. Sol owns integration, commits, acceptance, ledger, and close.",
   "current_revision_verification": {
-    "cycle": "M7 final same-snapshot qualification",
-    "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
-    "status": "verified_pending_milestone_audit_and_Sol_acceptance",
-    "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
-    "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T01",
+    "cycle": "M7 repaired final same-snapshot qualification",
+    "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+    "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+    "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+    "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#D-T01",
     "test_counts": {
-      "pass": 344,
+      "pass": 406,
       "fail": 0,
       "error": 0,
       "warn": 1,
       "skip": 0,
-      "blocks": 19
+      "blocks": 20
     },
-    "milestone_acceptance": false,
-    "final_audit_ref": "docs/implementation/reviews/2026-11-04-m7-final-astra.md"
+    "milestone_acceptance": false
   },
-  "next_action": "Complete audited M7-029 repair and new immutable gates, refresh DOC-M7, then focused final Astra and Sol decision. M7/G7 remain unreleased.",
+  "next_action": "Refresh DOC-M7; one focused final Astra rereview of P2; Sol alone accepts after every gate passes. M7/G7 unreleased.",
   "pre_final_gate_record": {
     "current_revision_verification": {
       "cycle": "M7-021",
@@ -111,5 +110,24 @@
     },
     "next_action": "Preserve historical receipts; reconcile this current revision on the final immutable M7 source snapshot before Sol acceptance. M7/G7 remain closed.",
     "status": "registration_requested"
-  }
+  },
+  "verification_history": [
+    {
+      "cycle": "M7 final same-snapshot qualification",
+      "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+      "status": "verified_pending_milestone_audit_and_Sol_acceptance",
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
+      "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T01",
+      "test_counts": {
+        "pass": 344,
+        "fail": 0,
+        "error": 0,
+        "warn": 1,
+        "skip": 0,
+        "blocks": 19
+      },
+      "milestone_acceptance": false,
+      "final_audit_ref": "docs/implementation/reviews/2026-11-04-m7-final-astra.md"
+    }
+  ]
 }

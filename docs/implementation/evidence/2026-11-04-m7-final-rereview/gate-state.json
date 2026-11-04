@@ -1,0 +1,144 @@
+{
+  "product_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+  "acceptance": false,
+  "M7": "unreleased",
+  "G7": "unreleased",
+  "commands": [
+    {
+      "phase": "full_source",
+      "pid": 19355,
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/run-source.R",
+        "/Users/megastore/.codex/worktrees/m7-029-resume-sol/PML MultiOmics Analysis Pipeline",
+        "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/source"
+      ],
+      "working_directory": "/Users/megastore/.codex/worktrees/m7-029-resume-sol/PML MultiOmics Analysis Pipeline",
+      "exit_code": 0,
+      "log": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/source/full-source.log",
+      "log_sha256": "99141a1183cf47e6b9e34e50f41af30a0c60d3b6e0c6d573a41b3bbf33e0d019",
+      "started": "2026-11-04T08:28:30.909007+00:00",
+      "finished": "2026-11-04T09:00:23.626022+00:00"
+    },
+    {
+      "phase": "native_packets",
+      "pid": 26689,
+      "command": [
+        "python3",
+        "/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/native-packet-proof.py",
+        "/Users/megastore/.codex/worktrees/m7-029-resume-sol/PML MultiOmics Analysis Pipeline",
+        "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native",
+        "inst/examples/tickets/D-T01.yaml",
+        "inst/examples/tickets/D-T02.yaml",
+        "inst/examples/tickets/D-T03.yaml",
+        "inst/examples/tickets/D-T04.yaml",
+        "inst/examples/tickets/D-T05.yaml",
+        "inst/examples/tickets/D-T10.yaml",
+        "inst/examples/tickets/D-T11.yaml",
+        "inst/examples/tickets/D-T12.yaml"
+      ],
+      "working_directory": "/Users/megastore/.codex/worktrees/m7-029-resume-sol/PML MultiOmics Analysis Pipeline",
+      "exit_code": 0,
+      "log": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native-packets.log",
+      "log_sha256": "f128a4443a7b14d864930176c80c2f70bc0b148ed2a51c85d96322605d5bee40",
+      "started": "2026-11-04T09:00:23.733107+00:00",
+      "finished": "2026-11-04T09:06:43.962553+00:00"
+    },
+    {
+      "phase": "semantic_readbacks",
+      "pid": 28197,
+      "command": [
+        "python3",
+        "/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/run-semantic-readbacks.py",
+        "/Users/megastore/.codex/worktrees/m7-029-resume-sol/PML MultiOmics Analysis Pipeline",
+        "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2"
+      ],
+      "working_directory": "/Users/megastore/.codex/worktrees/m7-029-resume-sol/PML MultiOmics Analysis Pipeline",
+      "exit_code": 0,
+      "log": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/semantic-readbacks.log",
+      "log_sha256": "8d9e78de4f89619f7b4b95736faa05d30c3870bbab29321484ecc03bd1162527",
+      "started": "2026-11-04T09:06:43.969307+00:00",
+      "finished": "2026-11-04T09:06:46.065603+00:00"
+    },
+    {
+      "phase": "native_applicability",
+      "pid": 28263,
+      "command": [
+        "python3",
+        "/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/verify_m7_029_resume.py",
+        "/Users/megastore/.codex/worktrees/m7-029-resume-sol/PML MultiOmics Analysis Pipeline",
+        "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/applicability-native"
+      ],
+      "working_directory": "/Users/megastore/.codex/worktrees/m7-029-resume-sol/PML MultiOmics Analysis Pipeline",
+      "exit_code": 0,
+      "log": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/applicability-native.log",
+      "log_sha256": "36bbf23ac66d76e314c2462d51256a29fb51f775379e12ff03251c8a12290b70",
+      "started": "2026-11-04T09:06:46.067584+00:00",
+      "finished": "2026-11-04T09:13:47.534785+00:00"
+    },
+    {
+      "phase": "Sol_applicability_readback",
+      "pid": 29651,
+      "command": [
+        "python3",
+        "/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/sol-applicability-readback.py",
+        "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/applicability-native",
+        "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/sol-applicability-readback.json"
+      ],
+      "working_directory": "/Users/megastore/.codex/worktrees/m7-029-resume-sol/PML MultiOmics Analysis Pipeline",
+      "exit_code": 0,
+      "log": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/sol-applicability-readback.log",
+      "log_sha256": "f037d39a4350fc1b9e85b5f59c5f47cf40d2004ffca3fdb0fc2e1c25a772e47a",
+      "started": "2026-11-04T09:13:47.557878+00:00",
+      "finished": "2026-11-04T09:13:47.761705+00:00"
+    },
+    {
+      "phase": "packet_receipts",
+      "pid": 29653,
+      "command": [
+        "python3",
+        "/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/build-packet-receipts.py",
+        "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2"
+      ],
+      "working_directory": "/Users/megastore/.codex/worktrees/m7-029-resume-sol/PML MultiOmics Analysis Pipeline",
+      "exit_code": 0,
+      "log": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/packet-receipts.log",
+      "log_sha256": "e3be1ee02caf2c6b892889dbeff9ce07766281cfe41623b2cdcf17db0d2ed708",
+      "started": "2026-11-04T09:13:47.763208+00:00",
+      "finished": "2026-11-04T09:13:47.839775+00:00"
+    },
+    {
+      "phase": "package_check",
+      "pid": 29659,
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "tools/check-package.R",
+        "--root",
+        "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/archive",
+        "--output",
+        "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/package"
+      ],
+      "working_directory": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/archive",
+      "exit_code": 0,
+      "log": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/package-driver.log",
+      "log_sha256": "ad70a0ce244b42b4fc8995d098491c381a07a6cac5b038ab4b3abee839db4458",
+      "started": "2026-11-04T09:13:50.254209+00:00",
+      "finished": "2026-11-04T09:37:45.991287+00:00"
+    }
+  ],
+  "phase": "gates_complete_pending_Sol_warning_review_Terra_Astra",
+  "updated": "2026-11-04T09:37:46.720196+00:00",
+  "active_process": null,
+  "source_counts": {
+    "pass": 7554,
+    "fail": 0,
+    "error": 0,
+    "warn": 15,
+    "skip": 0,
+    "blocks": 500
+  },
+  "package_status": "Status: OK",
+  "package_warning_records": 15
+}

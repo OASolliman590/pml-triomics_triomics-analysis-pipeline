@@ -35,47 +35,11 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_id": "/root/m7_030_luna",
-      "role": "Luna M7-030 shared caller",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "effective_settings_exposed": false,
-      "status": "native_proof_complete_receipt_finalizing",
-      "worktree": "/Users/megastore/.codex/worktrees/m7-030-target-metadata-caller/PML MultiOmics Analysis Pipeline",
-      "base": "36547f5c132d1a97d7640607688bd4afea2db8f3",
-      "repairs_used": 0,
-      "repairs_remaining": 2,
-      "candidate_commit": "a7ca4af8dbb088f36293f980a562b0c554b254ef",
-      "native_session_id": 85352,
-      "Sol_focused_session_id": 96017,
-      "native_exit_code": 0,
-      "Sol_focused_exit_code": 0
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "M7_030_verified_integrated_final_gates_next",
+    "status": "P2_all_gates_pass_Terra_DOC_M7_next",
     "last_reconciled": "2026-11-04",
-    "active_handoffs": [
-      {
-        "agent_id": "/root/m7_030_luna",
-        "role": "Luna M7-030 shared caller",
-        "requested_model": "gpt-6-luna",
-        "requested_effort": "max",
-        "effective_settings_exposed": false,
-        "status": "native_proof_complete_receipt_finalizing",
-        "worktree": "/Users/megastore/.codex/worktrees/m7-030-target-metadata-caller/PML MultiOmics Analysis Pipeline",
-        "base": "36547f5c132d1a97d7640607688bd4afea2db8f3",
-        "repairs_used": 0,
-        "repairs_remaining": 2,
-        "candidate_commit": "a7ca4af8dbb088f36293f980a562b0c554b254ef",
-        "native_session_id": 85352,
-        "Sol_focused_session_id": 96017,
-        "native_exit_code": 0,
-        "Sol_focused_exit_code": 0
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
     "disposition": "New bounded cycles authorized from b03cdef. Reconcile stale records, verify predecessors, then complete required Stage D through audited scopes. Historical caps preserved. M7/G7 closed."
   },
@@ -6513,6 +6477,32 @@
       "final_same_snapshot_gates": "pending",
       "M7": "unreleased",
       "G7": "unreleased"
+    },
+    {
+      "event": "P2_all_software_gates_pass",
+      "date": "2026-11-04",
+      "product_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "driver_session": 80211,
+      "driver_exit": 0,
+      "source_counts": {
+        "pass": 7554,
+        "fail": 0,
+        "error": 0,
+        "warn": 15,
+        "skip": 0,
+        "blocks": 500
+      },
+      "package_counts": {
+        "fail": 0,
+        "warn": 15,
+        "skip": 0,
+        "pass": 7527
+      },
+      "package_status": "Status: OK",
+      "native_commands": 54,
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+      "M7": "unreleased",
+      "G7": "unreleased"
     }
   ],
   "packets": {
@@ -6774,10 +6764,10 @@
       ]
     },
     "B-T07": {
-      "status": "accepted",
+      "status": "verified_pending_focused_final_Astra_Sol_acceptance",
       "attempts": 1,
       "repair_attempts": 2,
-      "commit": "b7a9455bc14a4c2a062a92ad2d8a68e9c2d2dccd",
+      "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
       "repair_candidate_commit": "25415fbe4d88a684133267696024d43683e33f64",
       "shared_unit_a_candidate_commit": "814964b5f525f2104153777a5580f0a84f917ea4",
       "shared_unit_a_review_ref": "docs/implementation/reviews/M4-011-unit-a-sol-review.md",
@@ -6808,7 +6798,28 @@
         "docs/implementation/reviews/M4-G4-astra-review.md",
         "docs/implementation/reviews/M4-G4-focused-astra-rereview.md"
       ],
-      "blockers": []
+      "blockers": [
+        "Focused final Astra review and Sol acceptance pending"
+      ],
+      "verification_history": [
+        {}
+      ],
+      "current_revision_verification": {
+        "cycle": "M7 repaired final same-snapshot qualification",
+        "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+        "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#B-T07",
+        "test_counts": {
+          "pass": 320,
+          "fail": 0,
+          "error": 0,
+          "warn": 0,
+          "skip": 0,
+          "blocks": 19
+        },
+        "milestone_acceptance": false
+      }
     },
     "C-01": {
       "status": "accepted",
@@ -6921,11 +6932,11 @@
       ]
     },
     "C-06": {
-      "status": "verified_pending_milestone_audit_and_Sol_acceptance",
+      "status": "verified_pending_focused_final_Astra_Sol_acceptance",
       "attempts": 1,
       "repair_attempts": 1,
       "shared_repair_attempts": 2,
-      "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+      "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
       "integration_commits": [
         "7d29da4",
         "634c29f",
@@ -6946,7 +6957,7 @@
         "docs/implementation/reviews/2026-10-22-m6-sol-acceptance.md"
       ],
       "blockers": [
-        "Final milestone audit requires M7-029 repair before Sol acceptance."
+        "Focused final Astra review and Sol acceptance pending"
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -6959,11 +6970,11 @@
         "commit": "a60a7a56eec1250bd4a9e44253597f83a3e565fd"
       },
       "current_revision_verification": {
-        "cycle": "M7 final same-snapshot qualification",
-        "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
-        "status": "verified_pending_Terra_Astra_Sol_acceptance",
-        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
-        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#C-06",
+        "cycle": "M7 repaired final same-snapshot qualification",
+        "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+        "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#C-06",
         "test_counts": {
           "pass": 442,
           "fail": 0,
@@ -6987,13 +6998,31 @@
           "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-precursor-verification.md",
           "milestone_acceptance": false
         }
-      }
+      },
+      "verification_history": [
+        {
+          "cycle": "M7 final same-snapshot qualification",
+          "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+          "status": "verified_pending_Terra_Astra_Sol_acceptance",
+          "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
+          "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#C-06",
+          "test_counts": {
+            "pass": 442,
+            "fail": 0,
+            "error": 0,
+            "warn": 0,
+            "skip": 0,
+            "blocks": 22
+          },
+          "milestone_acceptance": false
+        }
+      ]
     },
     "D-T01": {
-      "status": "verified_pending_milestone_audit_and_Sol_acceptance",
+      "status": "verified_pending_focused_final_Astra_Sol_acceptance",
       "attempts": 2,
       "exceptional_repair_attempts": 1,
-      "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+      "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
       "candidate_commits": [
         "98bf4c54a52cb8bab7fd3824fabb88deda579a23",
         "c857d646eae7419a41cf31d6fa8b7e98c6f7abb3"
@@ -7011,7 +7040,7 @@
         "docs/implementation/reviews/2026-10-23-m7-001-focused-sol-rereview.md"
       ],
       "blockers": [
-        "Final milestone audit requires M7-029 repair before Sol acceptance."
+        "Focused final Astra review and Sol acceptance pending"
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -7026,18 +7055,18 @@
         "commit": "88f1591"
       },
       "current_revision_verification": {
-        "cycle": "M7 final same-snapshot qualification",
-        "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
-        "status": "verified_pending_Terra_Astra_Sol_acceptance",
-        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
-        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T01",
+        "cycle": "M7 repaired final same-snapshot qualification",
+        "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+        "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#D-T01",
         "test_counts": {
-          "pass": 344,
+          "pass": 406,
           "fail": 0,
           "error": 0,
           "warn": 1,
           "skip": 0,
-          "blocks": 19
+          "blocks": 20
         },
         "milestone_acceptance": false
       },
@@ -7054,28 +7083,46 @@
           "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-precursor-verification.md",
           "milestone_acceptance": false
         }
-      }
+      },
+      "verification_history": [
+        {
+          "cycle": "M7 final same-snapshot qualification",
+          "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+          "status": "verified_pending_Terra_Astra_Sol_acceptance",
+          "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
+          "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T01",
+          "test_counts": {
+            "pass": 344,
+            "fail": 0,
+            "error": 0,
+            "warn": 1,
+            "skip": 0,
+            "blocks": 19
+          },
+          "milestone_acceptance": false
+        }
+      ]
     },
     "D-T02": {
-      "status": "verified_pending_milestone_audit_and_Sol_acceptance",
+      "status": "verified_pending_focused_final_Astra_Sol_acceptance",
       "attempts": 2,
-      "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+      "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t02-lipid-mapping.md"
       ],
       "blockers": [
-        "Final milestone audit requires M7-029 repair before Sol acceptance."
+        "Focused final Astra review and Sol acceptance pending"
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
         "finding": "At b03cdef local annotation calls lipid mapper. Original missing-CLI blocker is stale; exact packet fixture, resource manifest and fresh publication evidence still required."
       },
       "current_revision_verification": {
-        "cycle": "M7 final same-snapshot qualification",
-        "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
-        "status": "verified_pending_Terra_Astra_Sol_acceptance",
-        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
-        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T02",
+        "cycle": "M7 repaired final same-snapshot qualification",
+        "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+        "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#D-T02",
         "test_counts": {
           "pass": 87,
           "fail": 0,
@@ -7106,28 +7153,46 @@
           "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-mapping-sol-verification.md",
           "milestone_acceptance": false
         }
-      }
+      },
+      "verification_history": [
+        {
+          "cycle": "M7 final same-snapshot qualification",
+          "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+          "status": "verified_pending_Terra_Astra_Sol_acceptance",
+          "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
+          "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T02",
+          "test_counts": {
+            "pass": 87,
+            "fail": 0,
+            "error": 0,
+            "warn": 0,
+            "skip": 0,
+            "blocks": 11
+          },
+          "milestone_acceptance": false
+        }
+      ]
     },
     "D-T03": {
-      "status": "verified_pending_milestone_audit_and_Sol_acceptance",
+      "status": "verified_pending_focused_final_Astra_Sol_acceptance",
       "attempts": 2,
-      "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+      "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t03-reaction-mapping.md"
       ],
       "blockers": [
-        "Final milestone audit requires M7-029 repair before Sol acceptance."
+        "Focused final Astra review and Sol acceptance pending"
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
         "finding": "At b03cdef local annotation calls reaction mapper. Original missing-CLI blocker is stale; pinned fixture and fresh publication evidence still required."
       },
       "current_revision_verification": {
-        "cycle": "M7 final same-snapshot qualification",
-        "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
-        "status": "verified_pending_Terra_Astra_Sol_acceptance",
-        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
-        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T03",
+        "cycle": "M7 repaired final same-snapshot qualification",
+        "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+        "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#D-T03",
         "test_counts": {
           "pass": 62,
           "fail": 0,
@@ -7158,17 +7223,35 @@
           "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-mapping-sol-verification.md",
           "milestone_acceptance": false
         }
-      }
+      },
+      "verification_history": [
+        {
+          "cycle": "M7 final same-snapshot qualification",
+          "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+          "status": "verified_pending_Terra_Astra_Sol_acceptance",
+          "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
+          "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T03",
+          "test_counts": {
+            "pass": 62,
+            "fail": 0,
+            "error": 0,
+            "warn": 0,
+            "skip": 0,
+            "blocks": 8
+          },
+          "milestone_acceptance": false
+        }
+      ]
     },
     "D-T04": {
-      "status": "verified_pending_milestone_audit_and_Sol_acceptance",
+      "status": "verified_pending_focused_final_Astra_Sol_acceptance",
       "attempts": 2,
-      "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+      "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t04-ora.md"
       ],
       "blockers": [
-        "Final milestone audit requires M7-029 repair before Sol acceptance."
+        "Focused final Astra review and Sol acceptance pending"
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -7176,11 +7259,11 @@
         "accepted": false
       },
       "current_revision_verification": {
-        "cycle": "M7 final same-snapshot qualification",
-        "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
-        "status": "verified_pending_Terra_Astra_Sol_acceptance",
-        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
-        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T04",
+        "cycle": "M7 repaired final same-snapshot qualification",
+        "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+        "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#D-T04",
         "test_counts": {
           "pass": 38,
           "fail": 0,
@@ -7211,28 +7294,46 @@
           "review_ref": "docs/implementation/reviews/2026-11-03-m7-022-ora-sol-verification.md",
           "milestone_acceptance": false
         }
-      }
+      },
+      "verification_history": [
+        {
+          "cycle": "M7 final same-snapshot qualification",
+          "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+          "status": "verified_pending_Terra_Astra_Sol_acceptance",
+          "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
+          "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T04",
+          "test_counts": {
+            "pass": 38,
+            "fail": 0,
+            "error": 0,
+            "warn": 0,
+            "skip": 0,
+            "blocks": 6
+          },
+          "milestone_acceptance": false
+        }
+      ]
     },
     "D-T05": {
-      "status": "verified_pending_milestone_audit_and_Sol_acceptance",
+      "status": "verified_pending_focused_final_Astra_Sol_acceptance",
       "attempts": 2,
-      "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+      "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t05-status.md"
       ],
       "blockers": [
-        "Final milestone audit requires M7-029 repair before Sol acceptance."
+        "Focused final Astra review and Sol acceptance pending"
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
         "finding": "At b03cdef route status and public exit-code propagation exist. Original missing-call blocker is stale; required/optional native resource cases still require proof."
       },
       "current_revision_verification": {
-        "cycle": "M7 final same-snapshot qualification",
-        "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
-        "status": "verified_pending_Terra_Astra_Sol_acceptance",
-        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
-        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T05",
+        "cycle": "M7 repaired final same-snapshot qualification",
+        "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+        "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#D-T05",
         "test_counts": {
           "pass": 71,
           "fail": 0,
@@ -7263,7 +7364,25 @@
           "review_ref": "docs/implementation/reviews/2026-11-03-m7-023-status-sol-verification.md",
           "milestone_acceptance": false
         }
-      }
+      },
+      "verification_history": [
+        {
+          "cycle": "M7 final same-snapshot qualification",
+          "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+          "status": "verified_pending_Terra_Astra_Sol_acceptance",
+          "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
+          "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T05",
+          "test_counts": {
+            "pass": 71,
+            "fail": 0,
+            "error": 0,
+            "warn": 0,
+            "skip": 0,
+            "blocks": 7
+          },
+          "milestone_acceptance": false
+        }
+      ]
     },
     "D-T06": {
       "status": "blocked_without_completion_credit",
@@ -7288,14 +7407,14 @@
       "completion_credit": false
     },
     "D-T10": {
-      "status": "blocked_pending_M7_029_applicability_repair",
+      "status": "verified_pending_focused_final_Astra_Sol_acceptance",
       "attempts": 3,
-      "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+      "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t10-targets.md"
       ],
       "blockers": [
-        "M7-FINAL-ASTRA-01"
+        "Focused final Astra review and Sol acceptance pending"
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -7309,18 +7428,18 @@
         "commit": "9e1499df1e8d4216f57e7afc9a67dfbf79932c2a"
       },
       "current_revision_verification": {
-        "cycle": "M7 final same-snapshot qualification",
-        "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
-        "status": "verified_pending_Terra_Astra_Sol_acceptance",
-        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
-        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T10",
+        "cycle": "M7 repaired final same-snapshot qualification",
+        "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+        "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#D-T10",
         "test_counts": {
-          "pass": 65,
+          "pass": 83,
           "fail": 0,
           "error": 0,
           "warn": 0,
           "skip": 0,
-          "blocks": 10
+          "blocks": 11
         },
         "milestone_acceptance": false
       },
@@ -7337,18 +7456,35 @@
           "review_ref": "docs/implementation/reviews/2026-11-04-m7-027-sol-verification.md",
           "milestone_acceptance": false
         }
-      }
+      },
+      "verification_history": [
+        {
+          "cycle": "M7 final same-snapshot qualification",
+          "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+          "status": "verified_pending_Terra_Astra_Sol_acceptance",
+          "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
+          "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T10",
+          "test_counts": {
+            "pass": 65,
+            "fail": 0,
+            "error": 0,
+            "warn": 0,
+            "skip": 0,
+            "blocks": 10
+          },
+          "milestone_acceptance": false
+        }
+      ]
     },
     "D-T11": {
-      "status": "blocked_pending_M7_029_applicability_repair",
+      "status": "verified_pending_focused_final_Astra_Sol_acceptance",
       "attempts": 3,
-      "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+      "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
       "acceptance_refs": [
         "docs/implementation/reviews/2026-10-29-d-t11-blocked.md"
       ],
       "blockers": [
-        "M7-FINAL-ASTRA-01",
-        "M7-FINAL-ASTRA-02"
+        "Focused final Astra review and Sol acceptance pending"
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -7362,18 +7498,18 @@
         "commit": null
       },
       "current_revision_verification": {
-        "cycle": "M7 final same-snapshot qualification",
-        "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
-        "status": "verified_pending_Terra_Astra_Sol_acceptance",
-        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
-        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T11",
+        "cycle": "M7 repaired final same-snapshot qualification",
+        "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+        "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#D-T11",
         "test_counts": {
-          "pass": 262,
+          "pass": 305,
           "fail": 0,
           "error": 0,
           "warn": 0,
           "skip": 0,
-          "blocks": 36
+          "blocks": 38
         },
         "milestone_acceptance": false
       },
@@ -7390,16 +7526,33 @@
           "review_ref": "docs/implementation/reviews/2026-11-04-m7-027-sol-verification.md",
           "milestone_acceptance": false
         }
-      }
+      },
+      "verification_history": [
+        {
+          "cycle": "M7 final same-snapshot qualification",
+          "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+          "status": "verified_pending_Terra_Astra_Sol_acceptance",
+          "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
+          "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T11",
+          "test_counts": {
+            "pass": 262,
+            "fail": 0,
+            "error": 0,
+            "warn": 0,
+            "skip": 0,
+            "blocks": 36
+          },
+          "milestone_acceptance": false
+        }
+      ]
     },
     "D-T12": {
-      "status": "blocked_pending_M7_029_applicability_repair",
+      "status": "verified_pending_focused_final_Astra_Sol_acceptance",
       "attempts": 1,
-      "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+      "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
       "acceptance_refs": [],
       "blockers": [
-        "M7-FINAL-ASTRA-01",
-        "M7-FINAL-ASTRA-02"
+        "Focused final Astra review and Sol acceptance pending"
       ],
       "reconciliation_2026_11_03": {
         "snapshot": "b03cdef",
@@ -7414,21 +7567,39 @@
         "blockers": []
       },
       "current_revision_verification": {
-        "cycle": "M7 final same-snapshot qualification",
-        "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
-        "status": "verified_pending_Terra_Astra_Sol_acceptance",
-        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
-        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T12",
+        "cycle": "M7 repaired final same-snapshot qualification",
+        "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+        "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+        "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+        "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#D-T12",
         "test_counts": {
-          "pass": 41,
+          "pass": 48,
           "fail": 0,
           "error": 0,
           "warn": 0,
           "skip": 0,
-          "blocks": 8
+          "blocks": 9
         },
         "milestone_acceptance": false
-      }
+      },
+      "verification_history": [
+        {
+          "cycle": "M7 final same-snapshot qualification",
+          "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+          "status": "verified_pending_Terra_Astra_Sol_acceptance",
+          "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
+          "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T12",
+          "test_counts": {
+            "pass": 41,
+            "fail": 0,
+            "error": 0,
+            "warn": 0,
+            "skip": 0,
+            "blocks": 8
+          },
+          "milestone_acceptance": false
+        }
+      ]
     },
     "D-T14": {
       "status": "blocked_without_completion_credit",
@@ -7528,9 +7699,9 @@
       "gate_release": "G6"
     },
     "M7": {
-      "status": "repaired_candidate_pending_requalification",
-      "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-astra.md",
-      "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef"
+      "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+      "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1"
     },
     "M8": {
       "status": "not_started",

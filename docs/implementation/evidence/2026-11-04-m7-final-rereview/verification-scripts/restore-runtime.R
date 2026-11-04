@@ -1,0 +1,8 @@
+root <- normalizePath(commandArgs(TRUE)[[1]], mustWork=TRUE)
+lib <- file.path(root,'runtime','R')
+.libPaths(c(lib,.libPaths()))
+options(repos=c(BioCsoft='https://bioconductor.org/packages/3.23/bioc',CRAN='https://cloud.r-project.org'),timeout=600)
+install.packages('MOFA2',lib=lib,type='binary',dependencies=NA)
+stopifnot(requireNamespace('MOFA2',quietly=TRUE), identical(as.character(packageVersion('MOFA2')),'1.22.1'))
+pkgs <- installed.packages(lib.loc=lib)
+jsonlite::write_json(list(R=R.version.string,library=lib,packages=lapply(seq_len(nrow(pkgs)),function(i)list(package=pkgs[i,'Package'],version=pkgs[i,'Version']))),file.path(root,'runtime','R-runtime.json'),auto_unbox=TRUE,pretty=TRUE)

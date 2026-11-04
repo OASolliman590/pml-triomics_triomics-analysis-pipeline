@@ -37,11 +37,11 @@
     ]
   },
   "current_revision_verification": {
-    "cycle": "M7 final same-snapshot qualification",
-    "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
-    "status": "verified_pending_milestone_audit_and_Sol_acceptance",
-    "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
-    "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T02",
+    "cycle": "M7 repaired final same-snapshot qualification",
+    "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+    "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+    "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+    "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#D-T02",
     "test_counts": {
       "pass": 87,
       "fail": 0,
@@ -50,10 +50,9 @@
       "skip": 0,
       "blocks": 11
     },
-    "milestone_acceptance": false,
-    "final_audit_ref": "docs/implementation/reviews/2026-11-04-m7-final-astra.md"
+    "milestone_acceptance": false
   },
-  "next_action": "Complete audited M7-029 repair and new immutable gates, refresh DOC-M7, then focused final Astra and Sol decision. M7/G7 remain unreleased.",
+  "next_action": "Refresh DOC-M7; one focused final Astra rereview of P2; Sol alone accepts after every gate passes. M7/G7 unreleased.",
   "pre_final_gate_record": {
     "current_revision_verification": {
       "cycle": "M7-021",
@@ -63,5 +62,24 @@
       "milestone_acceptance": false
     },
     "next_action": "Preserve historical receipts; reconcile this current revision on the final immutable M7 source snapshot before Sol acceptance. M7/G7 remain closed."
-  }
+  },
+  "verification_history": [
+    {
+      "cycle": "M7 final same-snapshot qualification",
+      "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+      "status": "verified_pending_milestone_audit_and_Sol_acceptance",
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
+      "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T02",
+      "test_counts": {
+        "pass": 87,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 11
+      },
+      "milestone_acceptance": false,
+      "final_audit_ref": "docs/implementation/reviews/2026-11-04-m7-final-astra.md"
+    }
+  ]
 }

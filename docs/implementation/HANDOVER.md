@@ -1,3 +1,13 @@
+# Current checkpoint — P2 software gates passed; final review pending
+
+Immutable P2 `fabd6fa6bb7ae06f6eea1276517010829ea4cde1`: source7554/0fail/0error/15warn/0skip; installed7527/0fail/15warn/0skip; exact Status: OK. All54 native B/C/D commands and independent semantic/applicability readbacks passed. Driver80211 completed exit0; no test process active. Read reviews/2026-11-04-m7-final-rereview-gates.md and adjacent evidence. Do not rerun source/native/package gates or Luna.
+
+Next: fresh Terra-max DOC-M7 from these receipts, then the single remaining fresh read-only Astra-low focused final rereview of P2 plus immutable documentation records. Sol alone may accept current C06, required D packets and M7/release G7 after that pass. All current acceptance flags remain false; M7/G7 unreleased. All run-owned workers so far completed. Conditional D06/D07/D14 no credit; C07 not_run; C09 unqualified. Private data, push, AIU, fasting and M8/M9 are outside this run.
+
+Literal resume: reconcile external orchestration.json, dispatch/finish DOC-M7 only once, freeze its record commit, then run the one focused final Astra rereview. Preserve P2 and all failed/capped history. Do not recreate completed gates.
+
+## Historical checkpoints below
+
 # Current checkpoint — combined M7-029/M7-030 verified and integrated
 
 Worker a7ca4af passed Sol focused948 (zero fail/error/skip, one named expected D01 warning), 30 native commands/2,060 readback checks, and Sol independent323 canonical checks. Integrated serially through37331a5; only docs differ from the tested candidate. M7-030 used no implementation repairs. M7-029 history remains blocked/incomplete at cap, resolved prospectively by this audited successor proof. Read reviews/2026-11-04-m7-030-sol-verification.md.

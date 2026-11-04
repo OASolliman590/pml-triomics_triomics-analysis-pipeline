@@ -1,0 +1,33 @@
+{
+  "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+  "generation_id": "bdad047a7a0ca8f72d58ac0607ea5130758cfab518488faa130be494f4e8e54f",
+  "routing_sha256": "cd595f7b76e4377ef7fa3e349b7e0fc107e33d768495d31b98ea5d2c372a2e6e",
+  "routes": {
+    "gene_reaction": {
+      "status": "complete",
+      "reason_code": null,
+      "required": null
+    },
+    "lipid_ontology": {
+      "status": "complete",
+      "reason_code": null,
+      "required": null
+    },
+    "ora": {
+      "status": "unavailable",
+      "reason_code": "D_RESOURCE_RIGHTS",
+      "required": null
+    },
+    "mofa_native": {
+      "status": "not_requested",
+      "reason_code": "D_ROUTE_DISABLED",
+      "required": null
+    },
+    "biopan": {
+      "status": "not_requested",
+      "reason_code": "D_ROUTE_DISABLED",
+      "required": null
+    }
+  },
+  "interpretation": "Required local mapping complete; optional ORA unavailable due unverified rights; conditional native routes disabled without completion credit."
+}

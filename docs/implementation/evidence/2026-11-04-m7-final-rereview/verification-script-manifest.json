@@ -1,0 +1,58 @@
+{
+  "run-semantic-readbacks.py": {
+    "sha256": "4163075a16e8208a10ba1899e416a689a2dfb04eabea4a61a281e446e95db81b",
+    "bytes": 2917
+  },
+  "sol-native-readback.py": {
+    "sha256": "40d189f24acb23eec16996e1ae061ee3b07449e182154654f9d06a3ef97da31d",
+    "bytes": 1765
+  },
+  "run-source.R": {
+    "sha256": "2517f2e031c327cb64c1b9842fbf74cae4b741bef574ecb5d17a0a0b9d80a787",
+    "bytes": 2240
+  },
+  "sol-applicability-readback.py": {
+    "sha256": "668e654c5813e00857ca4f984999e244b4deaf1bd7be3e923ea6eeb58c173df7",
+    "bytes": 4528
+  },
+  "native-packet-proof.py": {
+    "sha256": "3d363cc01e9b4beed1d26b0e5ae01faf7417e24974a263185828ebed5b128702",
+    "bytes": 4943
+  },
+  "run-final-gates.py": {
+    "sha256": "0f72bc588d6225d650fb1c697bc77336799d34d9936487e4b3046816ef0b39ee",
+    "bytes": 6766
+  },
+  "sol-discovery-readback.py": {
+    "sha256": "76877dbe994a1a8b93dd4c7dd41019545c4bf683504c3cf74b3006429c671d00",
+    "bytes": 11298
+  },
+  "restore-runtime.R": {
+    "sha256": "23dc20a914f5c9b746b71904ef79b763246e10fbec7bd61e59a24e37a67fdbaf",
+    "bytes": 697
+  },
+  "verify_m7_029_resume.executed-apfs-failed.py": {
+    "sha256": "33119b1371f4925f21568d7537548c0e7dce461af101be8199933680daca04ab",
+    "bytes": 46066
+  },
+  "sol-target-readback.py": {
+    "sha256": "8e8996cc0b4bcba8f2c04a1a38bf34429edd2acc337402ad6dc1bb04ae155c28",
+    "bytes": 9971
+  },
+  "build-packet-receipts.py": {
+    "sha256": "49ebf9d7a8d2cd4a06fed016f84430361375e6e5e0535297794d66c1a5119c8b",
+    "bytes": 2105
+  },
+  "assemble-rereview-evidence.py": {
+    "sha256": "bbbcfb0f0eb052a86c996cae00281489bd064a8b426dcb01b7b8cb9384c391e4",
+    "bytes": 3786
+  },
+  "verify_m7_029_resume.py": {
+    "sha256": "22b8b73b3c2afb80ed8509c4a4f000b95d2e86cbe5919936d2bed059facb95b1",
+    "bytes": 46102
+  },
+  "sol-ora-readback.py": {
+    "sha256": "46999a00c5ac12dde83f8e2b400f501d580aa25b542601c89705bf15654ea377",
+    "bytes": 2496
+  }
+}

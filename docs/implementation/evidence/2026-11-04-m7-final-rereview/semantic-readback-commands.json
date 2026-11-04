@@ -1,0 +1,38 @@
+{
+  "commands": [
+    [
+      "python3",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/sol-target-readback.py",
+      "/Users/megastore/.codex/worktrees/m7-029-resume-sol/PML MultiOmics Analysis Pipeline",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/targets-native-subset.json",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/target-readback.json"
+    ],
+    [
+      "python3",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/sol-discovery-readback.py",
+      "/Users/megastore/.codex/worktrees/m7-029-resume-sol/PML MultiOmics Analysis Pipeline",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/discovery-native-subset.json",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/discovery-readback.json"
+    ],
+    [
+      "python3",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/sol-ora-readback.py",
+      "/Users/megastore/.codex/worktrees/m7-029-resume-sol/PML MultiOmics Analysis Pipeline",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/D-T04",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/ora-readback.json"
+    ],
+    [
+      "python3",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/sol-native-readback.py",
+      "/Users/megastore/.codex/worktrees/m7-029-resume-sol/PML MultiOmics Analysis Pipeline",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/native/native-receipt.json",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2/generation-readback.json"
+    ]
+  ],
+  "exit_codes": [
+    0,
+    0,
+    0,
+    0
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "product_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+  "source_counts": {
+    "pass": 7554,
+    "fail": 0,
+    "error": 0,
+    "warn": 15,
+    "skip": 0,
+    "blocks": 500
+  },
+  "package_counts": {
+    "fail": 0,
+    "warn": 15,
+    "skip": 0,
+    "pass": 7527
+  },
+  "package_status": "Status: OK",
+  "archive_tar_sha256": "f07cfdd02b086ed35369ca37b50aec9f3d1f40041314dc15077a9b76d8f41be6",
+  "archive_file_count": 997,
+  "source_started": "2026-11-04 08:28:31 UTC",
+  "source_finished": "2026-11-04 09:00:21 UTC",
+  "source_warning_names": {
+    "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes": 11,
+    "C-05 real MOFA2 fits and extracts a missing sample-view capability cell": 3,
+    "D-T01 refuses stale paired signs and preserves the old pointer": 1
+  },
+  "package_warning_names": {
+    "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes": 11,
+    "C-05 real MOFA2 fits and extracts a missing sample-view capability cell": 3,
+    "D-T01 refuses stale paired signs and preserves the old pointer": 1
+  },
+  "acceptance": "pending Terra DOC-M7, focused final Astra and Sol decision",
+  "external_evidence_root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/final-P2",
+  "source_installed_pass_delta": 27,
+  "log_sha256": {
+    "source/full-source.log": "99141a1183cf47e6b9e34e50f41af30a0c60d3b6e0c6d573a41b3bbf33e0d019",
+    "source/testthat-results.rds": "fa5bc64cb7ff7d5c88acfea0cef581988aa8630097c5c46e12140aeb0576fdb9",
+    "package/testthat.Rout": "33079df4b197ea31017c66829e5e72304275f3589dde27d3c49c27105cb89a38",
+    "package/00check.log": "62ed9ed00da4ae2e73d04b3cf26f8628b7128e52e6fecff79d34c96e19be233b",
+    "package/check.log": "ced1da9d59e22329024aa08734308261450f51ad5203d794eceef66382341c2f",
+    "package/build.log": "98abf79fa1cc62771fcf15f9ca762c688185f2806da5d8680d56e347ea65a1db"
+  },
+  "source_warning_messages": [
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....",
+      "count": 3
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.\n",
+      "count": 4
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "no non-missing arguments to max; returning -Inf",
+      "count": 4
+    },
+    {
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....",
+      "count": 1
+    },
+    {
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "message": "All 2 factors were found to explain little or no variance so remove_inactive_factors option has been disabled.",
+      "count": 2
+    },
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-4b9b2e24aff9/tickets/d-t01-paired-sign-stale-4b9b196e0e0d.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-4b9b6a9d1c19' 2>&1' had status 2",
+      "count": 1
+    }
+  ],
+  "package_warning_messages": [
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....",
+      "count": 3
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.\n",
+      "count": 4
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "no non-missing arguments to max; returning -Inf",
+      "count": 4
+    },
+    {
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....",
+      "count": 1
+    },
+    {
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "message": "All 2 factors were found to explain little or no variance so remove_inactive_factors option has been disabled.",
+      "count": 2
+    },
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-75f637d92451/tickets/d-t01-paired-sign-stale-75f64ff8a037.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-75f610df5e7c' 2>&1' had status 2",
+      "count": 1
+    }
+  ],
+  "native_commands": 24,
+  "applicability_cases": 10,
+  "applicability_native_commands": 30,
+  "applicability_readback_assertions": 2060,
+  "warning_dispositions": {
+    "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes": "Native MOFA small-fixture power, correlation and low-variance diagnostics; retained without suppression.",
+    "C-05 real MOFA2 fits and extracts a missing sample-view capability cell": "Native MOFA small-fixture diagnostics; retained without suppression.",
+    "D-T01 refuses stale paired signs and preserves the old pointer": "Expected native CLI exit 2 from intentional stale-sign rejection; prior generation preservation is asserted."
+  },
+  "Sol_warning_review": "All 15 source and installed warnings have the same three test names, multiplicities and diagnostic categories as the prior qualified runtime. Exact messages retained; D01 temporary paths differ. No new warning name or suppression.",
+  "Sol_applicability_readback_assertions": 323
+}

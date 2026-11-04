@@ -1,0 +1,18 @@
+{
+  "baseline_product": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+  "product_P2": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+  "product_paths_changed": [
+    "R/cli.R",
+    "R/target_assessment.R",
+    "R/target_request.R",
+    "tests/testthat/test-D-T01.R",
+    "tests/testthat/test-D-T10.R",
+    "tests/testthat/test-D-T11.R",
+    "tests/testthat/test-D-T12.R",
+    "tests/testthat/test-D-target-shared.R"
+  ],
+  "spec_tree_before": "031f300f31bbeb9503a835b267fbfa32d59811c4",
+  "spec_tree_after": "031f300f31bbeb9503a835b267fbfa32d59811c4",
+  "same_product_as_worker_except_docs": true,
+  "B_T04_methods_threshold_seeds_unchanged_by_combined_repair": true
+}

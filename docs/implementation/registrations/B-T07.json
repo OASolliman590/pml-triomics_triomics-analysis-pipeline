@@ -119,7 +119,12 @@
     "red": {
       "stage": "pre-implementation public-seam RED at base 0d96c578a2144c58cf298905aa87c10f78bf3eea",
       "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'",
-      "summary": {"fail": 2, "warn": 8, "skip": 0, "pass": 218},
+      "summary": {
+        "fail": 2,
+        "warn": 8,
+        "skip": 0,
+        "pass": 218
+      },
       "assertions": [
         "Exact B-T07 CLI emits no native stage-handoff-provenance.json payload.",
         "Exact B-T07 CLI emits no native stage-handoff-provenance.envelope.json envelope."
@@ -129,32 +134,51 @@
       "state": "candidate_with_one_residual_ac3_expectation_failure",
       "attempt": "final authorized repair 2 of 2",
       "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'",
-      "summary": {"fail": 1, "warn": 0, "skip": 0, "pass": 261},
+      "summary": {
+        "fail": 1,
+        "warn": 0,
+        "skip": 0,
+        "pass": 261
+      },
       "blocking_error": "One AC3 assertion expects same$reason == incomplete but observes partial.",
       "failed_behavior": "The exact same-run B-T07 CLI, native profile/envelope, matrix/method identity, source mutation, tamper/missing-evidence and model_hash contrast-id checks pass. The remaining AC3 test calls direct export with caller_matrix_unverified input and no same-run provenance_context; missing native provenance keeps the candidate non-reusable and partial. The test still expects incomplete, and its expected status was not changed."
     },
     "directly_affected_stage_b_source_tests": [
       {
         "file": "tests/testthat/test-B-T01.R",
-        "summary": {"fail": 3, "warn": 3, "skip": 0, "pass": 574},
+        "summary": {
+          "fail": 3,
+          "warn": 3,
+          "skip": 0,
+          "pass": 574
+        },
         "evidence": "Two B-T02 CLI identity tests fail because the exporter reports that the Stage B runner omitted the exact same-run analysis unit map. A fixture test also cannot write into inst/examples/tickets because the managed worktree is read-only at that path."
       },
       {
         "file": "tests/testthat/test-B-T03.R",
-        "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 286}
+        "summary": {
+          "fail": 0,
+          "warn": 0,
+          "skip": 0,
+          "pass": 286
+        }
       }
     ],
     "limitations": [
       "All evidence uses public synthetic fixtures only; no scientific-validity claim is established.",
       "The exact same-run B-T07 CLI emits a valid native profile/envelope and passes matrix/method binding, source-mutation refusal, missing/tampered-evidence refusal and ordinary model_hash contrast-id behavior.",
       "The caller_matrix_unverified AC3 path has no same-run provenance_context and stays fail-closed as partial; its test expects incomplete. No further repair is authorized. The managed-worktree B-T01 write diagnostic remains an environment issue and was not changed."
-    ]
-    ,
+    ],
     "repair_1": {
       "red": {
         "unit_map_regression": {
           "command": "Rscript --vanilla -e 'pkgload::load_all(\".\", quiet = TRUE); ... testthat::expect_s3_class(normalized, \"data.frame\")'",
-          "summary": {"fail": 1, "warn": 0, "skip": 0, "pass": 0},
+          "summary": {
+            "fail": 1,
+            "warn": 0,
+            "skip": 0,
+            "pass": 0
+          },
           "cause": "The exact retained resolved$unit_map list was returned as a list rather than normalized to a data frame."
         },
         "matrix_identity": {
@@ -170,14 +194,27 @@
         "focused_unit_map_check": "The list-record assertions passed after normalization and also ran in test-B-T07.R.",
         "test_B_T07": {
           "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'",
-          "summary": {"fail": 9, "warn": 5, "skip": 0, "pass": 231},
+          "summary": {
+            "fail": 9,
+            "warn": 5,
+            "skip": 0,
+            "pass": 231
+          },
           "first_remaining_product_failure": "A_INTERNAL: unused arguments (row_identity_sha256 = ..., column_identity_sha256 = ...) from triomics_b07_prov_artifact_entity() while creating represented_matrix. That function signature does not accept these arguments. The native profile and envelope are not written.",
           "other_observed_failure": "The AC3 resume-reason assertion still observes partial where the test expects incomplete; profile creation did not complete, so no semantics relaxation was made."
         },
         "public_B_T02_identity_cli": {
           "commands": 2,
-          "exit_codes": [1, 1],
-          "summary": {"fail": 2, "warn": 2, "skip": 0, "pass": 0},
+          "exit_codes": [
+            1,
+            1
+          ],
+          "summary": {
+            "fail": 2,
+            "warn": 2,
+            "skip": 0,
+            "pass": 0
+          },
           "cause": "Both public B-T02 CLI runs now pass the prior unit-map rejection and reach the same represented_matrix unused-arguments error."
         }
       },
@@ -193,7 +230,12 @@
       "red": {
         "focused_artifact_identity_regression": {
           "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\", desc = \"B provenance artifact entities retain ordered matrix identity digests\")'",
-          "summary": {"fail": 1, "warn": 0, "skip": 0, "pass": 0},
+          "summary": {
+            "fail": 1,
+            "warn": 0,
+            "skip": 0,
+            "pass": 0
+          },
           "cause": "triomics_b07_prov_artifact_entity() rejected the represented-matrix caller's row_identity_sha256 and column_identity_sha256 arguments as unused."
         },
         "first_full_suite_after_forwarding": "Native profile construction reached the accepted public JSON Schema validator; it rejected both source_manifest entities because the producer omitted study_id and nullable scope fields."
@@ -203,21 +245,47 @@
         "Source-manifest entities now carry triomics_b07_prov_scope(study_id), satisfying the closed public entity schema without inventing role-specific scope values."
       ],
       "verification": {
-        "focused_artifact_identity_regression": {"fail": 0, "warn": 0, "skip": 0, "pass": 1},
+        "focused_artifact_identity_regression": {
+          "fail": 0,
+          "warn": 0,
+          "skip": 0,
+          "pass": 1
+        },
         "test_B_T07": {
           "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'",
-          "summary": {"fail": 1, "warn": 0, "skip": 0, "pass": 261},
+          "summary": {
+            "fail": 1,
+            "warn": 0,
+            "skip": 0,
+            "pass": 261
+          },
           "passing_behavior": "Exact B-T07 CLI produces a valid provenance payload and envelope; required roles, ordered matrix identities, method identities, predecessor bytes, missing/tampered evidence rejection, post-fit source mutation rejection, model_hash contrast-id treatment and unchanged block-results serialization pass.",
           "residual_failure": "AC3 direct caller_matrix_unverified export has no same-run provenance_context and therefore no native provenance frame; candidate resume reason is partial (fail-closed) while the assertion expects incomplete. The expectation was not changed because this scenario does not provide a fully constructed valid same-run profile proving current semantics wrong."
         },
         "public_B_T02_identity_cli": {
           "commands": 2,
-          "exit_codes": [0, 0],
+          "exit_codes": [
+            0,
+            0
+          ],
           "test_warnings": 0,
           "skips": 0,
-          "stdout_notes": ["Coefficients not estimable: condition.unobserved"]
+          "stdout_notes": [
+            "Coefficients not estimable: condition.unobserved"
+          ]
         },
-        "test_B_T03": {"command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T03.R\")'", "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 286}, "stdout_notes": ["Coefficients not estimable: between_group.unobserved"]}
+        "test_B_T03": {
+          "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T03.R\")'",
+          "summary": {
+            "fail": 0,
+            "warn": 0,
+            "skip": 0,
+            "pass": 286
+          },
+          "stdout_notes": [
+            "Coefficients not estimable: between_group.unobserved"
+          ]
+        }
       },
       "status": "candidate_review_pending_with_ac3_expectation_mismatch",
       "repairs_remaining_in_this_attempt": 0,
@@ -233,7 +301,12 @@
       "red": {
         "stage": "public B-T07 seam RED before implementation",
         "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'",
-        "summary": {"fail": 28, "warn": 0, "skip": 0, "pass": 270},
+        "summary": {
+          "fail": 28,
+          "warn": 0,
+          "skip": 0,
+          "pass": 270
+        },
         "assertions": [
           "A physically present but invalid envelope and an unreadable payload were incorrectly classified as partial.",
           "A readable base envelope with a mismatched payload hash and bad late evidence was not classified as hash_mismatch.",
@@ -249,7 +322,12 @@
       ],
       "green": {
         "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'",
-        "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 298},
+        "summary": {
+          "fail": 0,
+          "warn": 0,
+          "skip": 0,
+          "pass": 298
+        },
         "warnings": [],
         "verified_behavior": [
           "No payload is absent; payload without a physical bundle envelope is partial; a present declared-partial pair is incomplete.",
@@ -262,18 +340,35 @@
       "focused_crosschecks": {
         "public_B_T02_identity_cli": {
           "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T01.R\", desc = \"Stage B CLI writes unique, deterministic BlockResult identities across contrasts\")'",
-          "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 266},
+          "summary": {
+            "fail": 0,
+            "warn": 0,
+            "skip": 0,
+            "pass": 266
+          },
           "stdout_notes": []
         },
         "test_B_T03": {
           "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T03.R\")'",
-          "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 286},
-          "stdout_notes": ["Coefficients not estimable: between_group.unobserved"],
+          "summary": {
+            "fail": 0,
+            "warn": 0,
+            "skip": 0,
+            "pass": 286
+          },
+          "stdout_notes": [
+            "Coefficients not estimable: between_group.unobserved"
+          ],
           "warnings": []
         },
         "test_A_T08": {
           "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-A-T08.R\")'",
-          "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 284},
+          "summary": {
+            "fail": 0,
+            "warn": 0,
+            "skip": 0,
+            "pass": 284
+          },
           "warnings": []
         }
       },
@@ -282,35 +377,67 @@
         "review_basis": "Spec axis passed; standards axis required one Important repair because resume inspection wrote its schema probe under the finalized artifact directory.",
         "red": {
           "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\", desc = \"B-T07 resume inspects hash-mismatched bundles without probing the handoff directory\")'",
-          "summary": {"fail": 2, "warn": 1, "skip": 0, "pass": 10},
+          "summary": {
+            "fail": 2,
+            "warn": 1,
+            "skip": 0,
+            "pass": 10
+          },
           "warning": "Permission denied while attempting to write the schema probe beneath the read-only handoff directory."
         },
         "change": "Resume inspection now validates a temporary schema probe in the system temporary directory, copying the readable bundle payload beside it so the existing envelope validator still checks exact payload bytes. The artifact tree remains untouched.",
         "green": {
           "focused_regression": {
             "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\", desc = \"B-T07 resume inspects hash-mismatched bundles without probing the handoff directory\")'",
-            "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 17},
+            "summary": {
+              "fail": 0,
+              "warn": 0,
+              "skip": 0,
+              "pass": 17
+            },
             "verified_behavior": "The exported handoff resume path captures the unmodified candidate before the shared exported classifier; a readable complete-status bundle with a mismatched payload and incomplete evidence is classified hash_mismatch. The test chmod-protects the handoff and verifies no tempfile probe targets its tree."
           },
           "test_B_T07": {
             "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'",
-            "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 315},
+            "summary": {
+              "fail": 0,
+              "warn": 0,
+              "skip": 0,
+              "pass": 315
+            },
             "warnings": []
           },
           "public_B_T02_identity_cli": {
             "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T01.R\", desc = \"Stage B CLI writes unique, deterministic BlockResult identities across contrasts\")'",
-            "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 266},
+            "summary": {
+              "fail": 0,
+              "warn": 0,
+              "skip": 0,
+              "pass": 266
+            },
             "warnings": []
           },
           "test_B_T03": {
             "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T03.R\")'",
-            "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 286},
-            "stdout_notes": ["Coefficients not estimable: between_group.unobserved"],
+            "summary": {
+              "fail": 0,
+              "warn": 0,
+              "skip": 0,
+              "pass": 286
+            },
+            "stdout_notes": [
+              "Coefficients not estimable: between_group.unobserved"
+            ],
             "warnings": []
           },
           "test_A_T08": {
             "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-A-T08.R\")'",
-            "summary": {"fail": 0, "warn": 0, "skip": 0, "pass": 284},
+            "summary": {
+              "fail": 0,
+              "warn": 0,
+              "skip": 0,
+              "pass": 284
+            },
             "warnings": []
           }
         },
@@ -333,8 +460,20 @@
           "Rscript --vanilla -e 'testthat::test_local(filter = \"M4-005-stage-b-composition\", reporter = \"summary\")'"
         ],
         "summaries": {
-          "B-T04": {"fail": 1, "warn": 1, "skip": 0, "error": 0, "pass": 291},
-          "M4-005-stage-b-composition": {"fail": 2, "warn": 0, "skip": 0, "error": 0, "pass": 57}
+          "B-T04": {
+            "fail": 1,
+            "warn": 1,
+            "skip": 0,
+            "error": 0,
+            "pass": 291
+          },
+          "M4-005-stage-b-composition": {
+            "fail": 2,
+            "warn": 0,
+            "skip": 0,
+            "error": 0,
+            "pass": 57
+          }
         },
         "cause": "Both immutable-base slices failed at the documented B_EXPORT_INCOMPLETE seam because the custom B-T04 executor omitted same-run native provenance_context."
       },
@@ -350,9 +489,27 @@
           "Rscript --vanilla -e 'testthat::test_local(filter = \"B-T07\", reporter = \"check\")'"
         ],
         "summaries": {
-          "B-T04": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 410},
-          "M4-005-stage-b-composition": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 94},
-          "B-T07": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 315}
+          "B-T04": {
+            "fail": 0,
+            "warn": 0,
+            "skip": 0,
+            "error": 0,
+            "pass": 410
+          },
+          "M4-005-stage-b-composition": {
+            "fail": 0,
+            "warn": 0,
+            "skip": 0,
+            "error": 0,
+            "pass": 94
+          },
+          "B-T07": {
+            "fail": 0,
+            "warn": 0,
+            "skip": 0,
+            "error": 0,
+            "pass": 315
+          }
         },
         "verified_behavior": [
           "The B-T04 producer returns its complete same-run synthetic context and retains the uncentered matrix unchanged for Stage C.",
@@ -375,9 +532,21 @@
         "reviewed_commit": "52a5dfe7f75ca780e451f9a510240396d24ba6fc",
         "red": {
           "descriptor_metadata_command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T04.R\", desc = \"B-T04 producer returns a complete same-run synthetic lineage context\")'",
-          "descriptor_metadata_summary": {"fail": 2, "warn": 0, "skip": 0, "error": 0, "pass": 87},
+          "descriptor_metadata_summary": {
+            "fail": 2,
+            "warn": 0,
+            "skip": 0,
+            "error": 0,
+            "pass": 87
+          },
           "public_resume_command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T04.R\", desc = \"B-T04 context-free restart revalidates persisted protocol and calibration bytes\")'",
-          "public_resume_summary": {"fail": 5, "warn": 0, "skip": 0, "error": 0, "pass": 4},
+          "public_resume_summary": {
+            "fail": 5,
+            "warn": 0,
+            "skip": 0,
+            "error": 0,
+            "pass": 4
+          },
           "verified_red": [
             "Changing source_manifests[[1]]$original_sha256 or source_files[[1]]$selection_history was accepted by same-run context validation.",
             "The protocol hash was already present in bundle evidence, but the calibration hash was not.",
@@ -391,9 +560,27 @@
             "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T07.R\")'"
           ],
           "summaries": {
-            "B-T04": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 427},
-            "M4-005-stage-b-composition": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 94},
-            "B-T07": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 315}
+            "B-T04": {
+              "fail": 0,
+              "warn": 0,
+              "skip": 0,
+              "error": 0,
+              "pass": 427
+            },
+            "M4-005-stage-b-composition": {
+              "fail": 0,
+              "warn": 0,
+              "skip": 0,
+              "error": 0,
+              "pass": 94
+            },
+            "B-T07": {
+              "fail": 0,
+              "warn": 0,
+              "skip": 0,
+              "error": 0,
+              "pass": 315
+            }
           },
           "verified_behavior": [
             "The full approved source file and manifest descriptors are included in the synthetic context seal and exactly validated before export.",
@@ -416,14 +603,32 @@
         "finding": "When calibration.json was missing during same-run B-T04 validation, normalizePath(..., mustWork=TRUE) ran before the missing-file guard and exposed a plain simpleError rather than B_EXPORT_INCOMPLETE.",
         "red": {
           "command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T04.R\", desc = \"B-T04 same-run validation reports missing calibration as B_EXPORT_INCOMPLETE\")'",
-          "summary": {"fail": 1, "warn": 0, "skip": 0, "error": 0, "pass": 1},
+          "summary": {
+            "fail": 1,
+            "warn": 0,
+            "skip": 0,
+            "error": 0,
+            "pass": 1
+          },
           "observed": "Deleting calibration.json produced simpleError where the regression expected a triomics_error with code B_EXPORT_INCOMPLETE."
         },
         "green": {
           "named_regression_command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T04.R\", desc = \"B-T04 same-run validation reports missing calibration as B_EXPORT_INCOMPLETE\")'",
-          "named_regression_summary": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 3},
+          "named_regression_summary": {
+            "fail": 0,
+            "warn": 0,
+            "skip": 0,
+            "error": 0,
+            "pass": 3
+          },
           "focused_b_t04_command": "Rscript --vanilla -e 'setwd(\"tests/testthat\"); pkgload::load_all(\"../..\", quiet = TRUE); testthat::test_file(\"test-B-T04.R\")'",
-          "focused_b_t04_summary": {"fail": 0, "warn": 0, "skip": 0, "error": 0, "pass": 430},
+          "focused_b_t04_summary": {
+            "fail": 0,
+            "warn": 0,
+            "skip": 0,
+            "error": 0,
+            "pass": 430
+          },
           "verified_behavior": [
             "Missing calibration.json is rejected by triomics_b07_read_json() as a structured B_EXPORT_INCOMPLETE before normalizePath() runs.",
             "The same-run B-T04 regression observes triomics_error with code B_EXPORT_INCOMPLETE after deleting the persisted calibration file."
@@ -440,5 +645,22 @@
       }
     }
   },
-  "request": "M7-009 implementation and focused verification are complete in the bounded candidate. Keep status candidate/review_pending and accepted=false pending independent implementation review and Sol's acceptance/integration decision. No C/D/migration work, private data access or push."
+  "request": "M7-009 implementation and focused verification are complete in the bounded candidate. Keep status candidate/review_pending and accepted=false pending independent implementation review and Sol's acceptance/integration decision. No C/D/migration work, private data access or push.",
+  "current_revision_verification": {
+    "cycle": "M7 repaired final same-snapshot qualification",
+    "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+    "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+    "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+    "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#B-T07",
+    "test_counts": {
+      "pass": 320,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 19
+    },
+    "milestone_acceptance": false
+  },
+  "next_action": "Refresh DOC-M7; one focused final Astra rereview of P2; Sol alone accepts after every gate passes. M7/G7 unreleased."
 }

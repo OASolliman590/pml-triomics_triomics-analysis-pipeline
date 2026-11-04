@@ -1,0 +1,30 @@
+{
+  "product_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+  "qualification_scope": "Synthetic software verification on recorded macOS host and internal APFS output roots; no cross-platform or external-filesystem publication qualification.",
+  "observed_operating_limits": [
+    {
+      "boundary": "External SSD output filesystem",
+      "observation": "AppleDouble ._* sidecars caused D_PROVENANCE_INVALID undisclosed-generation-file rejection in prior 36547f5 recovery run.",
+      "disposition": "No publication credit. Preserve guard and diagnostics. Current gates use fresh internal APFS output roots; no sidecar removal to pass D validation."
+    },
+    {
+      "boundary": "Absolute entry-script argument containing spaces",
+      "observation": "Prior recovery run failed in entry-script bootstrap before Stage B analysis because Rscript encoded spaces as ~+~.",
+      "disposition": "No pass credited. Gate uses documented relative Rscript --vanilla inst/exec/triomics invocation from source cwd; no product repair or broad CLI portability claim."
+    }
+  ],
+  "provenance_interpretation": "Copied public-fixture inventories may contain supplementary files; inventories are not a claim that every copied file is response ancestry. Actual lineage is read from native B/C frames and exact result/loading/source relationships. Declared taxon metadata remains D routing metadata, not a B/C biological measurement.",
+  "scientific_limits": [
+    "No private study inputs analyzed.",
+    "C07 null/weak/strong/adversarial scientific evaluations remain not_run.",
+    "C09 unqualified, synthetic_fixture_only, benefit_guaranteed=false.",
+    "D06/D07/D14 blocked without completion credit.",
+    "Frozen-kit independent_audit_status pending is separate."
+  ],
+  "exclusions": [
+    "AIU",
+    "GitHub push",
+    "fasting software checks",
+    "M8/M9"
+  ]
+}

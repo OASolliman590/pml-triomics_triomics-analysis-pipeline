@@ -1,0 +1,107 @@
+{
+  "schema": "triomics.m7-030-worker-receipt",
+  "schema_version": "1.0",
+  "base_commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+  "branch": "codex/m7-030-target-metadata-caller",
+  "commits": {
+    "test_only_red": "05122bcbda6f1fe3676f8b449114057215052d3f",
+    "candidate": "a7ca4af8dbb088f36293f980a562b0c554b254ef",
+    "coordinator_integration": "37331a52cb9bb3053b1fe5b32a907e94b3934cb8"
+  },
+  "candidate_worktree": {
+    "status": "clean",
+    "head": "a7ca4af8dbb088f36293f980a562b0c554b254ef"
+  },
+  "changed_files": [
+    "R/cli.R",
+    "tests/testthat/test-D-T01.R"
+  ],
+  "implementation": "Reuse the existing D routing-metadata loader when local annotation is requested or target investigation is enabled; the target request is reused by the existing D path.",
+  "repair_count": 0,
+  "behavioral_red": {
+    "commit": "05122bcbda6f1fe3676f8b449114057215052d3f",
+    "command_argv": [
+      "Rscript",
+      "--vanilla",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/run-source.R",
+      "/Users/megastore/.codex/worktrees/m7-030-target-metadata-caller/PML MultiOmics Analysis Pipeline",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/m7-030-worker/red-05122bc",
+      "D-T01"
+    ],
+    "runtime_environment": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/runtime/env.json",
+    "exit_code": 1,
+    "counts": {
+      "pass": 388,
+      "fail": 18,
+      "error": 0,
+      "warn": 1,
+      "skip": 0,
+      "blocks": 20
+    },
+    "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+    "finding": "Target-linked rows lost declared taxon 9606 and provenance, stayed unknown/unassessable, and malformed metadata was accepted with a new current-D pointer. Absent feature declaration remained null/unknown.",
+    "warning": {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "count": 1,
+      "cause": "Expected stale D CLI exit status 2; exact warning is in the source receipt."
+    },
+    "receipt": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/m7-030-worker/red-05122bc/source-receipt.json",
+    "receipt_sha256": "7a413985d019fdc25c55af1d2258e678145cb69f9d65e808610df89d1419df33"
+  },
+  "green_focused_gate": {
+    "runner": "Sol independent combined focused gate",
+    "session_id": 96017,
+    "exit_code": 0,
+    "counts": {
+      "pass": 948,
+      "fail": 0,
+      "error": 0,
+      "warn": 1,
+      "skip": 0,
+      "blocks": 90
+    },
+    "warning": "D-T01 refuses stale paired signs and preserves the old pointer (expected CLI status 2)."
+  },
+  "green_native_verifier": {
+    "session_id": 85352,
+    "script": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/verify_m7_029_resume.py",
+    "script_sha256": "22b8b73b3c2afb80ed8509c4a4f000b95d2e86cbe5919936d2bed059facb95b1",
+    "command_argv": [
+      "python3",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/verify_m7_029_resume.py",
+      "/Users/megastore/.codex/worktrees/m7-030-target-metadata-caller/PML MultiOmics Analysis Pipeline",
+      "/Users/megastore/.triomics-verification/m7-resume-20261104-01/m7-030-native-candidate"
+    ],
+    "environment": {
+      "TRIOMICS_EXPECTED_COMMIT": "a7ca4af8dbb088f36293f980a562b0c554b254ef"
+    },
+    "exit_code": 0,
+    "case_count": 10,
+    "native_stage_commands": 30,
+    "readback_assertions_passed": 2060,
+    "cases": [
+      "native-D10",
+      "native-D11",
+      "native-D12",
+      "control-match-9606",
+      "control-mismatch-10090",
+      "control-unknown-taxon",
+      "control-missing-feature-taxon",
+      "control-missing-assay",
+      "control-missing-assay-limitations",
+      "control-both-assay-fields-absent"
+    ],
+    "b_c_invariance": "Across D-T11 controls: 2 actual B effects and 4 actual C loadings matched the native-D11 baseline.",
+    "d01_regression": "not_run by this verifier; covered by the separate focused gate.",
+    "native_stage_warnings": 0,
+    "receipt": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/m7-030-native-candidate/runner-receipt.json",
+    "receipt_sha256": "058109b2fd1607ef1367b03165c3e5c2f8561b9682062bdf910a5b881ce7c119"
+  },
+  "sol_canonical_readback": {
+    "runner": "Sol independent readback",
+    "exit_code": 0,
+    "assertions_passed": 323
+  },
+  "integration_note": "Coordinator integrated through 37331a52cb9bb3053b1fe5b32a907e94b3934cb8; only documentation differs from tested candidate.",
+  "acceptance": "Worker did not issue acceptance or release."
+}
