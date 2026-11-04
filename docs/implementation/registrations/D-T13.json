@@ -32,6 +32,21 @@
     "fixed_qmd_resource": "inst/report/sections/targets.qmd includes targets-content.html.",
     "scope": "Descriptive rendering only. The report does not fit models, estimate targets, infer affinity, or complete D-T14."
   },
+  "verification_evidence": {
+    "repair_attempt": "repair1of2",
+    "candidate_commit": "ed37578ea157bc8bdfdb0cad469861a0555adcc2",
+    "red": {
+      "status": "confirmed_behavioral_failure",
+      "observed_failures": 10,
+      "failure_output_capped": true
+    },
+    "source_tests": {
+      "filter": "^(D-T08|D-T13)$",
+      "D-T13": {"status": "passed", "pass": 99, "fail": 0, "error": 0, "warn": 0, "skip": 0},
+      "D-T08": {"status": "passed", "pass": 151, "fail": 0, "error": 0, "warn": 0, "skip": 0}
+    },
+    "native_render_readback": "pending_parent_verification"
+  },
   "accepted": false,
   "accepted_commit": null,
   "acceptance_ref": null,
