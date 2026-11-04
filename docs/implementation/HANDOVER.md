@@ -2,11 +2,11 @@
 
 Luna returned clean candidate `f85fa6def678f23cc61b791531dbcd7a5adea13b` after the final repair (2 of 2). Only the three report implementation/test files changed from the combined predecessor. Worker evidence: 154 pass, no failures/errors/warnings/skips; native A/B/C/D/report exit 0; three negative probes exit 3/3/2; real Quarto HTML and 1,729 saved-byte/numeric checks pass. Earlier capped RED and template-missing native failure remain preserved. No repair 3.
 
-Sol inspected the scope and fast-forwarded only isolated verification worktree `m8-d08-s01-sol`. Its source is immutable while parent exec session **66079** runs the final eight-suite union, untouched synthetic chain, semantic readback and offline HTML inspection. Durable external state: `sol-final-f85fa6d/gate-state.json`. Fresh read-only `/root/d08_final_sol_review` audits the archived same commit. Archive SHA-256: `ff2668799d14c511116855649369f3eb9efb660363cffe8ad4ef070feb5ceb56`. Neither gate is acceptance by itself.
+Sol inspected the scope and fast-forwarded only isolated verification worktree `m8-d08-s01-sol`. Its source is immutable while parent exec session **66079** runs the final eight-suite union, untouched synthetic chain, semantic readback and offline HTML inspection. Durable external state: `sol-final-f85fa6d/gate-state.json`. Fresh read-only `/root/d08_final_sol_review` passed the archived same commit with no blockers; its redaction, counts, path and source-template probes passed. Installed layout remains fixture-based; no fits or suites were repeated by the reviewer. Archive SHA-256: `ff2668799d14c511116855649369f3eb9efb660363cffe8ad4ef070feb5ceb56`. Neither gate is acceptance by itself.
 
 Canonical main remains `1388ae2`; original dirty files are unchanged. M7/G7 stay accepted. G8/G9 stay closed. No later packet, private data or push. On both passes, integrate serially, record the D08 receipt and stop that packet. Full G8/G9 goal remains active.
 
-Literal resume: join session 66079 and `/root/d08_final_sol_review`, read their actual completed receipts, and take the authorized integration transition only if both pass. Do not restart Luna or the tests, and do not add a report repair 3.
+Literal resume: join session 66079, preserve the completed local review pass, read the actual completed gate receipts, and take the authorized integration transition only if both pass. Do not restart Luna or the tests, and do not add a report repair 3.
 
 ## Historical checkpoints below
 

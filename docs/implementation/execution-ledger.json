@@ -35,19 +35,7 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_id": "/root/d08_final_sol_review",
-      "role": "fresh read-only local Sol review",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "host_dispatch_accepted": true,
-      "effective_settings_exposed": false,
-      "candidate": "f85fa6def678f23cc61b791531dbcd7a5adea13b",
-      "status": "running",
-      "allowed_next_transition": "Record verdict; no repair3. Integrate only after independent final gates and review pass."
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
     "status": "D_T08_Luna_initial_running",
     "last_reconciled": "2026-11-04",
@@ -6788,6 +6776,14 @@
       "local_reviewer": "/root/d08_final_sol_review",
       "parent_exec_session": 66079,
       "repairs_remaining": 0
+    },
+    {
+      "event": "D08_final_local_review_passed",
+      "date": "2026-11-04",
+      "candidate": "f85fa6def678f23cc61b791531dbcd7a5adea13b",
+      "reviewer": "/root/d08_final_sol_review",
+      "parent_exec_session": 66079,
+      "remaining": "Independent source/native/report readback; no repair3"
     }
   ],
   "packets": {
@@ -8178,7 +8174,7 @@
       "disposition_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md"
     },
     "D-T08": {
-      "status": "final_review_and_independent_gates",
+      "status": "local_review_passed_independent_gates_running",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
@@ -8231,10 +8227,16 @@
         }
       },
       "pending_gates": [
-        "Fresh focused local Sol review",
         "Independent combined source, native and report readback on f85fa6d"
       ],
-      "worker_receipt_ref": "d08-luna/repair2/final-receipt.json"
+      "worker_receipt_ref": "d08-luna/repair2/final-receipt.json",
+      "final_local_review": {
+        "reviewer": "/root/d08_final_sol_review",
+        "candidate": "f85fa6def678f23cc61b791531dbcd7a5adea13b",
+        "verdict": "pass",
+        "receipt": "final-review-snapshot/reviewer-receipt.json",
+        "milestone_acceptance": false
+      }
     },
     "D-T13": {
       "status": "not_started",
