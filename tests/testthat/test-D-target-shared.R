@@ -177,6 +177,64 @@ testthat::test_that("B effects and C loadings require a declared matching featur
   }
 })
 
+testthat::test_that("legacy and inapplicable molecular observations cannot retain support or conflict", {
+  request <- td_target_request()
+  request$mechanism_class <- "non_enzymatic"
+  link <- td_target_link()
+  fields <- c("request_taxon_id", "feature_taxon_id", "feature_taxon_status",
+              "feature_taxon_declaration", "feature_taxon_provenance_ref",
+              "taxon_applicability", "taxon_reason_code")
+  legacy <- triomics_target_resolve_observations(
+    request, list(link),
+    td_target_evidence(taxon_status = "unknown", taxon_value = NULL, routing_metadata_present = FALSE)
+  )
+  branches <- vapply(legacy, `[[`, character(1), "source_branch")
+  legacy[[match("primary_statistics", branches)]]$status <- "support"
+  legacy[[match("integration_selection", branches)]]$status <- "conflict"
+  legacy <- lapply(legacy, function(observation) {
+    observation[fields] <- NULL
+    observation
+  })
+  expected_identity <- lapply(legacy, function(observation) {
+    observation[c("observation_id", "value", "effect", "source_id", "dependency_group")]
+  })
+  legacy_profile <- triomics_target_profile(request, list(link), legacy)
+
+  testthat::expect_true(all(vapply(legacy_profile$observations, function(observation) {
+    identical(observation$status, "uninformative") &&
+      identical(observation$taxon_applicability, "unassessable") &&
+      identical(observation$coverage, "unassessable") &&
+      all(c("feature_taxon_id", "feature_taxon_declaration", "feature_taxon_provenance_ref") %in%
+            names(observation)) &&
+      is.null(observation$feature_taxon_id) &&
+      is.null(observation$feature_taxon_declaration) &&
+      is.null(observation$feature_taxon_provenance_ref)
+  }, logical(1))))
+  testthat::expect_identical(lapply(legacy_profile$observations, function(observation) {
+    observation[c("observation_id", "value", "effect", "source_id", "dependency_group")]
+  }), expected_identity)
+  testthat::expect_identical(
+    legacy_profile$evidence_axes$metabolic_multiomics_compatibility$status,
+    "unassessable"
+  )
+
+  mismatched <- triomics_target_resolve_observations(
+    request, list(link), td_target_evidence(taxon_status = "declared", taxon_value = "10090")
+  )
+  branches <- vapply(mismatched, `[[`, character(1), "source_branch")
+  mismatched[[match("primary_statistics", branches)]]$status <- "support"
+  mismatched[[match("integration_selection", branches)]]$status <- "conflict"
+  mismatched_profile <- triomics_target_profile(request, list(link), mismatched)
+  testthat::expect_true(all(vapply(mismatched_profile$observations, function(observation) {
+    identical(observation$status, "uninformative") &&
+      identical(observation$taxon_applicability, "inapplicable") &&
+      identical(observation$coverage, "inapplicable")
+  }, logical(1))))
+  testthat::expect_true(all(vapply(mismatched_profile$observations, function(observation) {
+    !observation$status %in% c("support", "conflict")
+  }, logical(1))))
+})
+
 testthat::test_that("unknown mechanism class produces explicit unassessable canonical axes", {
   request <- td_target_request()
   request$mechanism_class <- "unknown"
