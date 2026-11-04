@@ -320,6 +320,90 @@ testthat::test_that("same-study B and C observations keep shared source and depe
   testthat::expect_false("independent_count" %in% names(section$tables$profiles))
 })
 
+testthat::test_that("association-only producer profiles retain safe study and construction lineage", {
+  request <- triomics_target_request(
+    list(namespace = "synthetic_protein", id = "TARGET_ASSOCIATION", taxon_id = 9606,
+         entity_type = "protein"),
+    "assess",
+    list(list(selection_id = "association-selection", hypothesis_status = "exploratory",
+              selected_with_observations = FALSE)),
+    context = list(context_id = "association-context")
+  )
+  association <- list(
+    evidence_id = "association-evidence-1", axis = "association",
+    endpoint = "association_beta", units = "unitless", relation = "=",
+    source_id = "association-source", publication_group = "association-publication",
+    measured_by_pipeline = FALSE, value = NULL,
+    study_id = "synthetic_association_study", analysis_id = "synthetic_association_analysis",
+    subject_overlap_status = "shared_subjects",
+    construction_lineage = "clinical_association_source",
+    source_selection_history = "full_unselected",
+    raw_subject_ids = list("PRIVATE_SUBJECT_13"),
+    local_path = "/private/association/source.tsv",
+    unapproved_note = "<script>PRIVATE_ASSOCIATION_NOTE</script>"
+  )
+  external <- triomics_target_external_evidence(request, list(association))
+  profile <- triomics_target_profile(request, list(), list(), external_evidence = external)
+  testthat::expect_identical(profile$external_associations[[1L]]$study_id,
+                             "synthetic_association_study")
+  testthat::expect_identical(profile$external_associations[[1L]]$analysis_id,
+                             "synthetic_association_analysis")
+  testthat::expect_identical(profile$external_associations[[1L]]$subject_overlap_status,
+                             "shared_subjects")
+  testthat::expect_identical(profile$external_associations[[1L]]$construction_lineage,
+                             "clinical_association_source")
+  testthat::expect_identical(profile$external_associations[[1L]]$source_selection_history,
+                             "full_unselected")
+
+  section <- triomics_report_optional_sections(
+    list(d = list(target_investigation = d13_recorded_target(list(profile)))),
+    list(target_enabled = TRUE, clinical_enabled = FALSE)
+  )$targets
+  testthat::expect_identical(section$tables$profiles$study_ids,
+                             "synthetic_association_study")
+  testthat::expect_equal(section$tables$profiles$study_count, 1L)
+  testthat::expect_identical(section$tables$profiles$subject_overlap_status,
+                             "shared_subjects")
+  external_rows <- section$tables$external_evidence
+  testthat::expect_identical(external_rows$study_id, "synthetic_association_study")
+  testthat::expect_identical(external_rows$analysis_id, "synthetic_association_analysis")
+  testthat::expect_identical(external_rows$subject_overlap_status, "shared_subjects")
+  testthat::expect_identical(external_rows$construction_lineage,
+                             "clinical_association_source")
+  testthat::expect_identical(external_rows$source_selection_history, "full_unselected")
+  testthat::expect_identical(external_rows$independent_replication, FALSE)
+  testthat::expect_false(any(c("raw_subject_ids", "local_path", "unapproved_note") %in%
+                             names(external_rows)))
+  testthat::expect_false(grepl(
+    "PRIVATE_SUBJECT_13|PRIVATE_ASSOCIATION_NOTE|/private/association/source.tsv|<script",
+    paste(unlist(external_rows, use.names = FALSE), collapse = " ")
+  ))
+
+  missing_lineage <- association[setdiff(names(association), c(
+    "subject_overlap_status", "construction_lineage", "source_selection_history"
+  ))]
+  unknown_request <- triomics_target_request(
+    list(namespace = "synthetic_protein", id = "TARGET_ASSOCIATION_UNKNOWN", taxon_id = 9606,
+         entity_type = "protein"),
+    "assess",
+    list(list(selection_id = "association-selection-unknown", hypothesis_status = "exploratory",
+              selected_with_observations = FALSE)),
+    context = list(context_id = "association-context")
+  )
+  unknown_profile <- triomics_target_profile(
+    unknown_request, list(), list(),
+    external_evidence = triomics_target_external_evidence(unknown_request, list(missing_lineage))
+  )
+  unknown_section <- triomics_report_optional_sections(
+    list(d = list(target_investigation = d13_recorded_target(list(unknown_profile)))),
+    list(target_enabled = TRUE, clinical_enabled = FALSE)
+  )$targets
+  testthat::expect_identical(unknown_section$tables$profiles$subject_overlap_status,
+                             "unknown_not_recorded")
+  testthat::expect_identical(unknown_section$tables$external_evidence$construction_lineage, "")
+  testthat::expect_identical(unknown_section$tables$external_evidence$source_selection_history, "")
+})
+
 testthat::test_that("mismatched null assays retain source applicability and safe serialized evidence", {
   profile <- d13_target_profile()
   assay <- profile$external_evidence[[1L]]

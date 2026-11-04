@@ -34,6 +34,15 @@ triomics_report_target_text <- function(value, default = "") {
   paste(triomics_report_clean_text(values), collapse = "; ")
 }
 
+triomics_report_target_safe_association_token <- function(value) {
+  if (!is.character(value) || length(value) != 1L || is.na(value)) return("")
+  value <- trimws(value)
+  if (!nzchar(value) || nchar(value, type = "bytes") > 128L ||
+      !grepl("^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$", value, perl = TRUE) ||
+      triomics_report_contains_private_text(value)) return("")
+  value
+}
+
 triomics_report_target_number <- function(value) {
   if (is.numeric(value) && length(value) == 1L && !is.na(value) && is.finite(value)) {
     return(as.numeric(value))
@@ -122,12 +131,34 @@ triomics_report_target_profile_rows <- function(profiles) {
     observed_studies <- unique(Filter(nzchar, vapply(observations, function(observation) {
       triomics_report_target_text(triomics_report_target_field(observation, "study_id"))
     }, character(1))))
+    external_evidence <- triomics_report_target_records(
+      triomics_report_target_field(profile, "external_evidence")
+    )
+    associations <- Filter(function(record) {
+      identical(triomics_report_target_field(record, "axis"), "association")
+    }, external_evidence)
+    association_studies <- unique(Filter(nzchar, vapply(associations, function(record) {
+      triomics_report_target_safe_association_token(
+        triomics_report_target_field(record, "study_id")
+      )
+    }, character(1))))
+    observed_studies <- unique(c(observed_studies, association_studies))
     groups <- unique(Filter(nzchar, vapply(observations, function(observation) {
       triomics_report_target_text(triomics_report_target_field(observation, "dependency_group"))
     }, character(1))))
     discovery <- triomics_report_target_field(profile, "discovery")
-    overlap <- triomics_report_target_field(profile, "subject_overlap_status") %||%
-      triomics_report_target_field(triomics_report_target_field(profile, "overlap"), "status")
+    overlap <- triomics_report_target_safe_association_token(
+      triomics_report_target_field(profile, "subject_overlap_status") %||%
+        triomics_report_target_field(triomics_report_target_field(profile, "overlap"), "status")
+    )
+    if (!nzchar(overlap)) {
+      overlap <- unique(Filter(nzchar, vapply(c(observations, associations), function(record) {
+        triomics_report_target_safe_association_token(
+          triomics_report_target_field(record, "subject_overlap_status")
+        )
+      }, character(1))))
+      overlap <- if (length(overlap)) paste(overlap, collapse = "; ") else "unknown_not_recorded"
+    }
     c(identity, list(
       drug_namespace = triomics_report_target_field(drug, "namespace"),
       drug_id = triomics_report_target_field(drug, "drug_id"),
@@ -139,7 +170,7 @@ triomics_report_target_profile_rows <- function(profiles) {
       coverage = triomics_report_target_text(triomics_report_target_field(profile, "coverage"), "unmeasured"),
       study_ids = paste(observed_studies, collapse = "; "),
       study_count = length(observed_studies),
-      subject_overlap_status = triomics_report_target_text(overlap, "unknown_not_recorded"),
+      subject_overlap_status = overlap,
       dependency_group_count = length(groups),
       discovery_status = triomics_report_target_text(
         triomics_report_target_field(discovery, "status"), "not_applicable"
@@ -322,6 +353,9 @@ triomics_report_target_external_rows <- function(profiles, target) {
     records <- triomics_report_target_records(triomics_report_target_field(profile, "external_evidence"))
     source_hash <- triomics_report_target_input_hash(profile, target, "external_evidence_file")
     for (record in records) {
+      is_association <- identical(
+        triomics_report_target_field(record, "axis"), "association"
+      )
       raw_value <- triomics_report_target_field(record, "value")
       availability <- triomics_report_target_text(
         triomics_report_target_field(record, "availability"),
@@ -355,6 +389,21 @@ triomics_report_target_external_rows <- function(profiles, target) {
             triomics_report_target_field(record, "assay_qualification_reason"),
           if (is.null(raw_value)) "source_value_null" else ""
         ),
+        study_id = if (is_association) triomics_report_target_safe_association_token(
+          triomics_report_target_field(record, "study_id")
+        ) else "",
+        analysis_id = if (is_association) triomics_report_target_safe_association_token(
+          triomics_report_target_field(record, "analysis_id")
+        ) else "",
+        subject_overlap_status = if (is_association) triomics_report_target_safe_association_token(
+          triomics_report_target_field(record, "subject_overlap_status")
+        ) else "",
+        construction_lineage = if (is_association) triomics_report_target_safe_association_token(
+          triomics_report_target_field(record, "construction_lineage")
+        ) else "",
+        source_selection_history = if (is_association) triomics_report_target_safe_association_token(
+          triomics_report_target_field(record, "source_selection_history")
+        ) else "",
         source_id = triomics_report_target_field(record, "source_id"),
         source_sha256 = triomics_report_target_field(record, "source_sha256") %||% source_hash,
         publication_group = triomics_report_target_field(record, "publication_group"),
@@ -640,7 +689,9 @@ triomics_report_targets_section <- function(loaded, config) {
       "target_id", "evidence_id", "axis", "origin", "measured_by_pipeline", "target_namespace",
       "target_identity", "target_entity_type", "taxon_id", "compound_namespace", "compound_id", "construct",
       "assay", "endpoint", "relation", "units", "value", "value_display", "value_status", "value_reason",
-      "source_id", "source_sha256", "publication_group", "dependency_group", "attachment",
+      "study_id", "analysis_id", "subject_overlap_status", "construction_lineage",
+      "source_selection_history", "source_id", "source_sha256", "publication_group",
+      "dependency_group", "attachment",
       "target_identity_status", "assay_qualification", "context_id", "assay_limitations",
       "independent_replication", "replication_interpretation"
     ), numeric_columns = c("taxon_id", "value"),
