@@ -1,3 +1,13 @@
+# Current checkpoint: M8-D15-S01 blocked at B route disposition boundary
+
+Read [the blocked receipt](reviews/2026-11-05-d15-s01-blocked-close.md) and [local review](reviews/2026-11-05-d15-s01-local-review.md). Luna initial candidate f5c46e5 plus Sol CLI wiring are preserved at isolated 5e4b81a, not integrated. Scope Astra passed; implementation review requires changes. Independent helper suite: 53 pass, one error, no warnings/skips. Native A/C/B succeeds; later C exits2 because B incorrectly requires the unrequested longitudinal artifact and publishes a partial bundle. No C provenance or D generation. Owning R/export_b.R is outside S01 scope. Initial attempt used; repairs0of2; no repair dispatched across that boundary.
+
+All run-owned agents/processes completed and reconciled. Quarto1.11.9 is local. No install/server needed for this blocker. M7/G7/D08 accepted; D13 cap preserved; D15/G8/G9 unresolved. No private data, push or Notion sync.
+
+Literal resume: **Define a new bounded B-T07 clinical-route disposition scope, audit it before edits, and preserve candidate 5e4b81a. Address the four reproduced S01 validation/reporting defects and required failure tests in explicit allowlists; carry forward S01 initial attempt and repair counts. Do not restart Luna from scratch, bypass partial B acceptance, fabricate a longitudinal result, reopen D13 repair 3, or resume D15 before independent A/C/B/C/D proof. Keep G8/G9 closed.**
+
+## Historical checkpoints below
+
 # Current checkpoint: M8-D15-S01 initial Luna running
 
 Fresh /root/d15_s01_luna implements the exact five-file audited predecessor scope on codex/m8-d15-s01-luna from0ce7f2d. One initial attempt; repairs0of2. Scope audit passed929746c; no repeated audit. Sol owns R/cli.R serially after helper return. External brief/runtime/state are under d15-s01 in the internal APFS proof directory. No parent fit or gate is active.

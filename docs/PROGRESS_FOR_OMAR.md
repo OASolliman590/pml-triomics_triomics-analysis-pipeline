@@ -1,13 +1,15 @@
-# Pipeline progress — 4 November 2026
+# Pipeline progress — 5 November 2026
 
-The goal is to finish the report and synthetic walkthrough milestones, G8 and G9. The accepted M7/G7 baseline and offline D08 report remain in place; neither has been reopened.
+The goal remains the report and synthetic walkthrough milestones, G8 and G9. The accepted M7/G7 baseline and offline D08 report remain in place.
 
-The clinical report is blocked before implementation. C can create molecular scores and schedule a clinical association, but the normal B command cannot yet consume that saved request. A separate fixture calculation cannot replace the actual score or establish its ancestry.
+The new candidate can now take a saved molecular score into the existing between-person clinical association method. The synthetic run completed A, initial C and B. It has not completed the clinical report or established biological validity.
 
-Today, Astra reviewed and passed the bounded repair scope. It connects one supported between-person request to the existing association method, then publishes the already saved C fit. Publication must preserve the original score bytes and must not claim that later B results helped create those scores. No implementation, new test pass or scientific validation is claimed from this review.
+Later C publication failed for a specific reason: B treats an absent longitudinal analysis as missing required work, although this configuration requests only a between-person analysis. C correctly refuses that partial handoff. The fix belongs to a B export file outside this cycle’s audited scope.
 
-Next is one fresh Luna implementation, followed by independent source and native artifact checks. The target dossier D13 remains blocked at its repair cap. Both report packets must be resolved before M8 acceptance; G8/G9 remain closed.
+Independent review also exposed incomplete safeguards for changed sample metadata, substituted saved evidence, an external registry link and unsupported missingness categories. The candidate is preserved, not integrated. The focused helper test recorded 53 passes and one error; no package pass or milestone acceptance is claimed.
 
-Needs Omar: no new decision for the audited scope. Sync: local records only; no Notion update, GitHub push, private study analysis or AIU execution.
+Next is an audited B publication correction and bounded repairs, followed by a real A/C/B/C/D check. D13 remains blocked at its repair cap. G8/G9 remain closed.
 
-Evidence: [scope receipt](implementation/reviews/2026-11-04-d15-s01-scope-audit.md). Conditional D06/D07/D14 retain zero credit; C07 remains not_run; C09 remains unqualified; the separate frozen-kit audit is pending.
+Needs Omar: no new decision for routine authorized work. Sync: local records only; no Notion sync, push, private study analysis or server execution. Quarto 1.11.9 is installed.
+
+Evidence: [cycle receipt](implementation/reviews/2026-11-05-d15-s01-blocked-close.md). Conditional scientific limits remain unchanged.

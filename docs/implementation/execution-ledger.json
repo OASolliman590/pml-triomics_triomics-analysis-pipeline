@@ -35,46 +35,17 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/d15_s01_luna",
-      "role": "Luna implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "effective_settings_exposed": false,
-      "base_commit": "0ce7f2dd4272d5fd31e485d22b648bd8dc2fcf2e",
-      "branch": "codex/m8-d15-s01-luna",
-      "status": "running",
-      "attempt": 1,
-      "repairs": 0,
-      "allowed_next_transition": "Read candidate; inspect diff; Sol applies CLI wiring serially; local two-axis review and independent focused/native proof.",
-      "cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "D15_S01_Luna_initial_running",
-    "last_reconciled": "2026-11-04",
-    "active_handoffs": [
-      {
-        "agent": "/root/d15_s01_luna",
-        "role": "Luna implementer",
-        "requested_model": "gpt-6-luna",
-        "requested_effort": "max",
-        "effective_settings_exposed": false,
-        "base_commit": "0ce7f2dd4272d5fd31e485d22b648bd8dc2fcf2e",
-        "branch": "codex/m8-d15-s01-luna",
-        "status": "running",
-        "attempt": 1,
-        "repairs": 0,
-        "allowed_next_transition": "Read candidate; inspect diff; Sol applies CLI wiring serially; local two-axis review and independent focused/native proof.",
-        "cursor": null
-      }
-    ],
+    "status": "D15_S01_blocked_outside_allowlist",
+    "last_reconciled": "2026-11-05",
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Initial fresh Luna on exact audited allowlist. Sol owns shared CLI after worker return. No acceptance before independent proof.",
+    "disposition": "Candidate unintegrated; first independent C replay fails at B route disposition ownership. Local findings preserved. New audited owning scope required; standing authorization retained.",
     "current_gate": {
-      "status": "implementation_running",
-      "candidate": "0ce7f2dd4272d5fd31e485d22b648bd8dc2fcf2e"
+      "status": "blocked",
+      "candidate": "5e4b81accdc3f63ad1d33b96176ee934c561f5db",
+      "receipt_ref": "docs/implementation/reviews/2026-11-05-d15-s01-blocked-close.md"
     }
   },
   "orchestration_events": [
@@ -6909,6 +6880,29 @@
       "original_multivisit_refusal_preserved": true,
       "parent_stage_C_exit": 0,
       "product_acceptance": false
+    },
+    {
+      "event": "d15_s01_blocked_close",
+      "date": "2026-11-05",
+      "candidate": "5e4b81accdc3f63ad1d33b96176ee934c561f5db",
+      "worker_commit": "f5c46e55be67cf828d342ea593b66400d9c21cbf",
+      "initial_attempts": 1,
+      "targeted_repairs_used": 0,
+      "testthat_counts": {
+        "pass": 53,
+        "fail": 0,
+        "error": 1,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 7
+      },
+      "B_status": "partial",
+      "C_publish_exit": 2,
+      "C_provenance_written": false,
+      "integrated": false,
+      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s01-blocked-close.md",
+      "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-s01-blocked/receipt.json",
+      "next": "Define a new bounded B-T07 clinical-route disposition scope, audit it before edits, and preserve candidate 5e4b81a. Address the four reproduced S01 validation/reporting defects and required failure tests in explicit allowlists; carry forward S01 initial attempt and repair counts. Do not restart Luna from scratch, bypass partial B acceptance, fabricate a longitudinal result, reopen D13 repair 3, or resume D15 before independent A/C/B/C/D proof. Keep G8/G9 closed."
     }
   ],
   "packets": {
@@ -8413,7 +8407,8 @@
       "commit": null,
       "acceptance_refs": [],
       "blockers": [
-        "Generic clinical Stage B endpoint consumer is not registered; C08 scheduling returns before C06/D publication. D15 renderer allowlist cannot supply these shared producers."
+        "Generic clinical Stage B endpoint consumer is not registered; C08 scheduling returns before C06/D publication. D15 renderer allowlist cannot supply these shared producers.",
+        "S01 candidate remains unintegrated: B-T07 treats an unrequested longitudinal lane as required; local authentication and saved-context defects also remain. See docs/implementation/reviews/2026-11-05-d15-s01-blocked-close.md"
       ],
       "repair_attempts": 0,
       "implementation_base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
@@ -8621,5 +8616,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D15_S01_Luna_running_goal_active"
+  "close_state": "D15_S01_receipt_recorded_goal_active"
 }
