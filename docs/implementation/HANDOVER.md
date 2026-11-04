@@ -1,10 +1,8 @@
-# Current checkpoint: D-T13 initial Luna implementation running
+# Current checkpoint: D-T13 targeted repair1
 
-Fresh `/root/m8_d13_luna` runs on `codex/m8-d13-luna`, base `92556411e4a7e129bc0d67f8e47fa4abdf27da0a`. Exact five-file scope; attempt1, repairs0of2. Read [dispatch](reviews/2026-11-04-d-t13-dispatch.md) and local d13/luna-brief.md. Quarto1.11.9 and internal APFS R tempdir verified. No parent gate active.
+Initial candidate94ede2d is preserved. Both fresh local reviews completed: Standards pass; Spec one P2 for lost supplied association overlap/construction lineage. Read [review](reviews/2026-11-04-d-t13-initial-review.md). Same Luna worker receives repair1of2 within the original five-file scope. No acceptance; G8/G9 closed.
 
-D08/D12/M7/G7 remain accepted; do not repeat their gates. D13 consumes saved D profiles through the existing provider; no new method/schema/shared renderer edit. Preserve axes, overlap, alternatives, contradictions, missingness and unavailable quantities. G8/G9 closed. No private data, push or D15/D09 work.
-
-Literal resume: **Join `/root/m8_d13_luna`; inspect commit/allowlist, fresh two-axis local review and bounded repair if needed, then independent focused/native A/B/C/D/report plus dossier readback. Stop at D13 receipt. Never redispatch or accept from shell exit alone.**
+Literal resume: **Join /root/m8_d13_luna repair1, inspect its commit, focused read-only local review, then parent focused source and fresh native A/B/C/D/report plus saved dossier readback. Stop at D13 receipt. Do not restart initial work or start D15.**
 
 ## Historical checkpoints below
 

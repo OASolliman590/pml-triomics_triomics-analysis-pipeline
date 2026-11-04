@@ -38,7 +38,7 @@
   "active_workers": [
     {
       "agent_id": "/root/m8_d13_luna",
-      "role": "Luna D-T13 initial implementation",
+      "role": "Luna D-T13 targeted repair1",
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "host_dispatch_accepted": true,
@@ -46,40 +46,39 @@
       "base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
       "branch": "codex/m8-d13-luna",
       "worktree": "/Users/megastore/.codex/worktrees/m8-d13-luna/PML MultiOmics Analysis Pipeline",
-      "status": "running",
+      "status": "repair1_running",
       "attempt": 1,
-      "repairs_used": 0,
-      "repairs_remaining": 2,
-      "allowed_next_transition": "Join commit; inspect five-file diff; fresh two-axis local review; bounded repair; independent focused/native/real-render readback."
+      "repairs_used": 1,
+      "repairs_remaining": 1,
+      "allowed_next_transition": "Join repair commit, focused review; parent focused source/native/render readback; acceptance receipt only after all pass."
     }
   ],
   "orchestration_control": {
-    "status": "D_T08_Luna_initial_running",
+    "status": "D_T13_repair1_running",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [
       {
-        "agent_id": "/root/m8_d08_luna",
-        "role": "Luna D-T08 initial implementation",
+        "agent_id": "/root/m8_d13_luna",
+        "role": "Luna D-T13 targeted repair1",
         "requested_model": "gpt-6-luna",
         "requested_effort": "max",
         "host_dispatch_accepted": true,
         "effective_settings_exposed": false,
-        "worktree": "/Users/megastore/.codex/worktrees/m8-d-t08-luna/PML MultiOmics Analysis Pipeline",
-        "branch": "codex/m8-d-t08-luna",
-        "base": "4a783be5d5ec005a0044a43cdc6dc8c4d6c35392",
-        "status": "initial_implementation_running",
+        "base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
+        "branch": "codex/m8-d13-luna",
+        "worktree": "/Users/megastore/.codex/worktrees/m8-d13-luna/PML MultiOmics Analysis Pipeline",
+        "status": "repair1_running",
         "attempt": 1,
-        "repairs_used": 0,
-        "repairs_remaining": 2,
-        "allowed_next_transition": "Sol inspect local commit/diff, mechanical shared registration, two-axis local review and independent focused/native Quarto verification; bounded repairs if reproduced."
+        "repairs_used": 1,
+        "repairs_remaining": 1,
+        "allowed_next_transition": "Join repair commit, focused review; parent focused source/native/render readback; acceptance receipt only after all pass."
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "User authorized installation; actual Quarto smoke verified. Continue frozen D-T08 only, one fresh Luna; no M7 reopening.",
+    "disposition": "Initial worker and two local reviews reconciled; same Luna targeted repair1 for required association lineage.",
     "current_gate": {
-      "status": "completed_with_report_and_runtime_location_findings",
-      "candidate": "8a5c7621372d8c3e03b0d64587929912407f653a",
-      "receipt": "docs/implementation/reviews/2026-11-04-d08-combined-before-repair2.md"
+      "status": "not_started",
+      "candidate": null
     }
   },
   "orchestration_events": [
@@ -6834,6 +6833,13 @@
       "gates": "D08/D12 accepted; G7 released",
       "attempt": 1,
       "repairs": 0
+    },
+    {
+      "event": "D13_initial_reviews_joined",
+      "standards": "pass",
+      "spec": "changes_required",
+      "candidate": "94ede2dda5e4f851c32fcf0a4a57746faa5da63f",
+      "next": "same Luna repair1of2; then focused review and parent gates"
     }
   ],
   "packets": {
@@ -8299,17 +8305,19 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "initial_implementation_running",
+      "status": "repair1_running",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": [],
-      "repair_attempts": 0,
+      "repair_attempts": 1,
       "implementation_base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
       "active_worker": "/root/m8_d13_luna",
       "accepted": false,
       "completion_credit": false,
-      "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t13-dispatch.md"
+      "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t13-dispatch.md",
+      "candidate_commit": "94ede2dda5e4f851c32fcf0a4a57746faa5da63f",
+      "initial_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-initial-review.md"
     },
     "D-T15": {
       "status": "not_started",
