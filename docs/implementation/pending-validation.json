@@ -2,24 +2,103 @@
   "schema_version": "1.0",
   "run_id": "triomics-20260920-sol-01",
   "items": [
-    {"id":"HOST-R-PACKAGES","status":"passed_m4","evidence":"At integrated commit d2a2231 the complete local suite passed 3,462 expectations with zero failures/warnings/skips, and the clean Git-archive package check ended Status: OK with no ERROR, WARNING or NOTE. Focused Astra rereview passed and Sol accepted G4."},
-    {"id":"HOST-QUARTO","status":"pending","evidence":"Fresh check on 2026-10-18: quarto --version exited 127 because no Quarto executable is available."},
-    {"id":"GITHUB-AUTH","status":"blocked_invalid_token","evidence":"Fresh check on 2026-10-18: gh auth status exited 1 because the configured token for OASolliman590 is invalid. No push or pull request was attempted."},
-    {"id":"REAL-DATA","status":"inventory_only_not_fitted","evidence":"A local read-only workbook inventory was recorded in docs/DATASET_HANDOVER_2026-10-17.md. The accepted pipeline has not fitted the three studies, participant linkage is unverified, and no real-data scientific validation is claimed."},
-    {"id":"NOTION","status":"synced_and_read_back_2026-10-17","evidence":"The pipeline development report and three-study handover were created and read back successfully. Local receipts: docs/implementation/notion-sync/2026-10-17-pipeline-development-github-report.md and 2026-10-17-three-study-dataset-handover.md."},
-    {"id":"SPEC-REVALIDATION","status":"blocked_missing_python_modules","evidence":"Rechecked on 2026-10-26: the spec validator could not start in system, isolated MOFA or bundled workspace Python because its jsonschema/PyYAML dependency set is unavailable; exit 1. No installation was attempted. The last accepted G0 validator result remains historical evidence, not a fresh pass. Frozen spec files are unchanged from 0afe2c5."},
-    {"id":"M7-010-SOURCE-GATE","status":"reviewed_integrated_source_verified_no_downstream_release","evidence":"At source snapshot 2a8e5d5 (product unchanged from reviewed integration 0afe2c5), the uninterrupted full source gate finished DONE, exit 0: FAIL 0, WARN 14, SKIP 0, ERROR 0, PASS 5893 across 352 test blocks. The fourteen C-05 warnings match the named M7-006 source baseline; no new warning. A-T01 passed 61 alone and in the full run; historical interrupted-run diagnostics did not recur and their cause is unproven. See reviews/2026-10-26-m7-010-resumed-source-gate.md. No new package gate or acceptance: the native B-T07 revision remains candidate/review_pending; M7/G7 and Stage D stay closed."},
-    {"id":"C-01-RESUME","status":"accepted_synthetic_software_evidence","evidence":"C-01 integrated as b5527ef plus repair 1cf1632 and Sol registration 40caa9f. Fresh focused verification passed 109 expectations, the exact stage-C CLI exited 0 with a valid envelope, and clean archive package check ended Status: OK. Real-study and biological validation remain pending."},
-    {"id":"C-02-REGISTRATION","status":"accepted_synthetic_software_evidence","evidence":"Accepted on 2026-10-19 at snapshot 1a8cbe4. C-02 suite 165 passed, synthetic stage C command exited 0 with 12/12 nested predictions, package check Status OK, and the M5 review found no Critical or Important defect. G5 is released for C-03, C-04, and C-05. This is not biological validation."},
-    {"id":"C-03-DIABLO","status":"accepted_synthetic_software_evidence","evidence":"Accepted on 2026-10-20 after focused rereview closed four Important findings. Focused tests and synthetic CLI passed; balanced error 0 is a fixture result, not biological performance. The shared fda190f package check was Status OK and its eight B-T07 Git-metadata warnings were named and dispositioned separately."},
-    {"id":"C-04-BLOCK-SPLS","status":"accepted_synthetic_software_evidence","evidence":"Accepted on 2026-10-20 after focused rereview closed three Important findings and the installed variance guard passed review. Focused tests and synthetic CLI passed; RMSE about 0.509 is a fixture result. The shared fda190f package warnings were unrelated B-T07 Git-metadata probes."},
-    {"id":"C-05-MOFA","status":"accepted_synthetic_software_evidence","evidence":"Accepted on 2026-10-20 at c34d9ff after both permitted repairs. Registered C-05 tests passed 141 expectations; the exact stage-C CLI exited 0 with save/reload and seed-sensitivity evidence; the decisive clean archive check ended Status: OK with 4,076 passes and 22 named/dispositioned warnings. The route is exploratory-only, prediction is unsupported, and no real-study, biological, or enrichment validation is claimed."},
-    {"id":"C-08-ENDPOINT-LINEAGE","status":"accepted_synthetic_software_evidence","evidence":"Accepted on 2026-10-20 at d69ef1e. Fresh C-08 tests passed 288 assertions; exact Stage-C CLI endpoint/read-back/envelopes and the B-owned scheduled request hash chain validated; clean archive package check ended Status: OK with FAIL 0, WARN 22, SKIP 0, PASS 4367. Warnings are the existing eight B-T07 provenance probes plus fourteen MOFA small-fixture diagnostics. No private study, biological endpoint validity, association or prediction claim is made."},
-    {"id":"C-06-CROSS-BACKEND-HANDOFF","status":"accepted_synthetic_software_evidence","evidence":"Packet and shared CLI/D-handoff series are integrated through 3753be0. Fresh integrated C-06 tests passed 290 expectations with zero failures/warnings/skips; exact synthetic CLI exited 0 and all five D payload/envelope pairs plus the manifest envelope matched recorded SHA-256. Sol accepted C-06 at M6 after the clean gate and focused Astra pass. The D handoff remains honestly partial because all four C-07 controls were explicitly not run; no real-study or biological validation is claimed."},
-    {"id":"C-09-CLINICAL-PREDICTION","status":"conditional_deferred_synthetic_fixture_only_no_completion_credit","evidence":"The packet and reviewed shared registration are integrated and verified on synthetic fixtures. The exact synthetic CLI exited 0 and payload/envelope/registry hashes validated. At M6, C-09 was explicitly deferred without packet completion credit because no real endpoint/model/deployment and uncertainty protocol was supplied. benefit_guaranteed=false remains authoritative; no independent-validation, biological-validity, clinical-performance, or benefit claim is made."},
-    {"id":"M6-PACKAGE-GATE","status":"accepted_g6_released_stage_d_not_started","evidence":"The clean archive gate at 76fe5e2 ended Status: OK with FAIL 0, WARN 22, SKIP 0, PASS 4787; warnings match the named eight B-T07 and fourteen C-05 inventory. DOC-M6 and durable receipts were reviewed. The single focused Astra rereview of immutable snapshot 2150b4d passed with M6-ASTRA-01 ADDRESSED and no new blocker. Sol accepted M6 and released G6 on 2026-10-22. Stage D was intentionally not started."},
-    {"id":"B-T04-CALIBRATION","status":"resolved_for_declared_synthetic_cells","evidence":"M4-002 aligned qualification with the published limma-moderated statistic without changing seeds, generator or thresholds. The ordinary one-cell diagnostic remains failed at 23/400 and upper bound 0.08048; all five production-aligned moderated cells passed. This is synthetic evidence, not real-study validation."},
-    {"id":"B-T07-PACKAGE-GATE","status":"historical_baseline_accepted_native_revision_pending","evidence":"Historical baseline: M4-014 is integrated. Source and installed B-T07 passed 124/124, full suite passed 3,462/3,462 without warnings/skips, clean archive package check was Status: OK, focused Astra rereview passed, and Sol accepted B-T07/G4 on 2026-10-16. This does not accept the later native-provenance revision, which remains candidate/review_pending and accepted=false after M7-010 source verification."}
+    {
+      "id": "HOST-R-PACKAGES",
+      "status": "passed_m4",
+      "evidence": "At integrated commit d2a2231 the complete local suite passed 3,462 expectations with zero failures/warnings/skips, and the clean Git-archive package check ended Status: OK with no ERROR, WARNING or NOTE. Focused Astra rereview passed and Sol accepted G4."
+    },
+    {
+      "id": "HOST-QUARTO",
+      "status": "blocked_runtime_confirmed_2026_11_04",
+      "evidence": "Fresh quarto --version exited127. PATH and nine standard executable paths had no Quarto. D-T08 stopped before implementation as explicitly required by the current goal.",
+      "history": [
+        {
+          "id": "HOST-QUARTO",
+          "status": "pending",
+          "evidence": "Fresh check on 2026-10-18: quarto --version exited 127 because no Quarto executable is available."
+        }
+      ],
+      "receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md"
+    },
+    {
+      "id": "GITHUB-AUTH",
+      "status": "blocked_invalid_token",
+      "evidence": "Fresh check on 2026-10-18: gh auth status exited 1 because the configured token for OASolliman590 is invalid. No push or pull request was attempted."
+    },
+    {
+      "id": "REAL-DATA",
+      "status": "inventory_only_not_fitted",
+      "evidence": "A local read-only workbook inventory was recorded in docs/DATASET_HANDOVER_2026-10-17.md. The accepted pipeline has not fitted the three studies, participant linkage is unverified, and no real-data scientific validation is claimed."
+    },
+    {
+      "id": "NOTION",
+      "status": "synced_and_read_back_2026-10-17",
+      "evidence": "The pipeline development report and three-study handover were created and read back successfully. Local receipts: docs/implementation/notion-sync/2026-10-17-pipeline-development-github-report.md and 2026-10-17-three-study-dataset-handover.md."
+    },
+    {
+      "id": "SPEC-REVALIDATION",
+      "status": "blocked_missing_python_modules",
+      "evidence": "Rechecked on 2026-10-26: the spec validator could not start in system, isolated MOFA or bundled workspace Python because its jsonschema/PyYAML dependency set is unavailable; exit 1. No installation was attempted. The last accepted G0 validator result remains historical evidence, not a fresh pass. Frozen spec files are unchanged from 0afe2c5."
+    },
+    {
+      "id": "M7-010-SOURCE-GATE",
+      "status": "reviewed_integrated_source_verified_no_downstream_release",
+      "evidence": "At source snapshot 2a8e5d5 (product unchanged from reviewed integration 0afe2c5), the uninterrupted full source gate finished DONE, exit 0: FAIL 0, WARN 14, SKIP 0, ERROR 0, PASS 5893 across 352 test blocks. The fourteen C-05 warnings match the named M7-006 source baseline; no new warning. A-T01 passed 61 alone and in the full run; historical interrupted-run diagnostics did not recur and their cause is unproven. See reviews/2026-10-26-m7-010-resumed-source-gate.md. No new package gate or acceptance: the native B-T07 revision remains candidate/review_pending; M7/G7 and Stage D stay closed."
+    },
+    {
+      "id": "C-01-RESUME",
+      "status": "accepted_synthetic_software_evidence",
+      "evidence": "C-01 integrated as b5527ef plus repair 1cf1632 and Sol registration 40caa9f. Fresh focused verification passed 109 expectations, the exact stage-C CLI exited 0 with a valid envelope, and clean archive package check ended Status: OK. Real-study and biological validation remain pending."
+    },
+    {
+      "id": "C-02-REGISTRATION",
+      "status": "accepted_synthetic_software_evidence",
+      "evidence": "Accepted on 2026-10-19 at snapshot 1a8cbe4. C-02 suite 165 passed, synthetic stage C command exited 0 with 12/12 nested predictions, package check Status OK, and the M5 review found no Critical or Important defect. G5 is released for C-03, C-04, and C-05. This is not biological validation."
+    },
+    {
+      "id": "C-03-DIABLO",
+      "status": "accepted_synthetic_software_evidence",
+      "evidence": "Accepted on 2026-10-20 after focused rereview closed four Important findings. Focused tests and synthetic CLI passed; balanced error 0 is a fixture result, not biological performance. The shared fda190f package check was Status OK and its eight B-T07 Git-metadata warnings were named and dispositioned separately."
+    },
+    {
+      "id": "C-04-BLOCK-SPLS",
+      "status": "accepted_synthetic_software_evidence",
+      "evidence": "Accepted on 2026-10-20 after focused rereview closed three Important findings and the installed variance guard passed review. Focused tests and synthetic CLI passed; RMSE about 0.509 is a fixture result. The shared fda190f package warnings were unrelated B-T07 Git-metadata probes."
+    },
+    {
+      "id": "C-05-MOFA",
+      "status": "accepted_synthetic_software_evidence",
+      "evidence": "Accepted on 2026-10-20 at c34d9ff after both permitted repairs. Registered C-05 tests passed 141 expectations; the exact stage-C CLI exited 0 with save/reload and seed-sensitivity evidence; the decisive clean archive check ended Status: OK with 4,076 passes and 22 named/dispositioned warnings. The route is exploratory-only, prediction is unsupported, and no real-study, biological, or enrichment validation is claimed."
+    },
+    {
+      "id": "C-08-ENDPOINT-LINEAGE",
+      "status": "accepted_synthetic_software_evidence",
+      "evidence": "Accepted on 2026-10-20 at d69ef1e. Fresh C-08 tests passed 288 assertions; exact Stage-C CLI endpoint/read-back/envelopes and the B-owned scheduled request hash chain validated; clean archive package check ended Status: OK with FAIL 0, WARN 22, SKIP 0, PASS 4367. Warnings are the existing eight B-T07 provenance probes plus fourteen MOFA small-fixture diagnostics. No private study, biological endpoint validity, association or prediction claim is made."
+    },
+    {
+      "id": "C-06-CROSS-BACKEND-HANDOFF",
+      "status": "accepted_synthetic_software_evidence",
+      "evidence": "Packet and shared CLI/D-handoff series are integrated through 3753be0. Fresh integrated C-06 tests passed 290 expectations with zero failures/warnings/skips; exact synthetic CLI exited 0 and all five D payload/envelope pairs plus the manifest envelope matched recorded SHA-256. Sol accepted C-06 at M6 after the clean gate and focused Astra pass. The D handoff remains honestly partial because all four C-07 controls were explicitly not run; no real-study or biological validation is claimed."
+    },
+    {
+      "id": "C-09-CLINICAL-PREDICTION",
+      "status": "conditional_deferred_synthetic_fixture_only_no_completion_credit",
+      "evidence": "The packet and reviewed shared registration are integrated and verified on synthetic fixtures. The exact synthetic CLI exited 0 and payload/envelope/registry hashes validated. At M6, C-09 was explicitly deferred without packet completion credit because no real endpoint/model/deployment and uncertainty protocol was supplied. benefit_guaranteed=false remains authoritative; no independent-validation, biological-validity, clinical-performance, or benefit claim is made."
+    },
+    {
+      "id": "M6-PACKAGE-GATE",
+      "status": "accepted_g6_released_stage_d_not_started",
+      "evidence": "The clean archive gate at 76fe5e2 ended Status: OK with FAIL 0, WARN 22, SKIP 0, PASS 4787; warnings match the named eight B-T07 and fourteen C-05 inventory. DOC-M6 and durable receipts were reviewed. The single focused Astra rereview of immutable snapshot 2150b4d passed with M6-ASTRA-01 ADDRESSED and no new blocker. Sol accepted M6 and released G6 on 2026-10-22. Stage D was intentionally not started."
+    },
+    {
+      "id": "B-T04-CALIBRATION",
+      "status": "resolved_for_declared_synthetic_cells",
+      "evidence": "M4-002 aligned qualification with the published limma-moderated statistic without changing seeds, generator or thresholds. The ordinary one-cell diagnostic remains failed at 23/400 and upper bound 0.08048; all five production-aligned moderated cells passed. This is synthetic evidence, not real-study validation."
+    },
+    {
+      "id": "B-T07-PACKAGE-GATE",
+      "status": "historical_baseline_accepted_native_revision_pending",
+      "evidence": "Historical baseline: M4-014 is integrated. Source and installed B-T07 passed 124/124, full suite passed 3,462/3,462 without warnings/skips, clean archive package check was Status: OK, focused Astra rereview passed, and Sol accepted B-T07/G4 on 2026-10-16. This does not accept the later native-provenance revision, which remains candidate/review_pending and accepted=false after M7-010 source verification."
+    }
   ]
 }
-

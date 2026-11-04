@@ -37,11 +37,11 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "M7_accepted_G7_released_run_closed",
+    "status": "D_T08_runtime_blocked_no_workers",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "All required M7 gates passed on P2; Sol accepted required D scope and reconciled B-T07/C-06. G7 released. M8/M9 unstarted; conditional exclusions retained. No active workers/processes."
+    "disposition": "M8/M9 goal authorized in packet order. D-T08 cannot begin without actual Quarto; user requires stop at absent runtime. G7 stays released, G8/G9 unreleased."
   },
   "orchestration_events": [
     {
@@ -6581,6 +6581,35 @@
       "new_user_owned_chats": 0,
       "archiving_disposition": "Native collaboration workers complete; no run-owned user chat to archive.",
       "next": "M8 offline report/dossier; unstarted in this run."
+    },
+    {
+      "event": "D_T08_runtime_preflight_blocked",
+      "date": "2026-11-04",
+      "base_commit": "45d08c1a1fe3ef2634533b45f5837c03ae434d80",
+      "goal_objective_sha256": "405b164d9380c7c9d2975c89e8ad479b2277ebdf5cc8ede27db3193e0cf0c648",
+      "quarto_exit_code": 127,
+      "review_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md",
+      "implementation_attempts": 0,
+      "repairs": 0,
+      "M7": "accepted",
+      "G7": "released",
+      "G8": "unreleased",
+      "G9": "unreleased",
+      "goal_completion": "not_achieved",
+      "next": "After runtime availability, begin D-T08 only; do not skip ahead."
+    },
+    {
+      "event": "D_T08_runtime_receipt_Terra_checked",
+      "date": "2026-11-04",
+      "agent_id": "/root/d08_runtime_receipt_terra",
+      "requested_model": "gpt-6.1-terra",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "status": "completed",
+      "correction": "Premature committed wording changed to recorded before commit",
+      "milestone_audit_consumed": false,
+      "review_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md",
+      "next": "Stop at runtime blocker receipt. Full G8/G9 goal incomplete; Quarto availability required."
     }
   ],
   "packets": {
@@ -7971,11 +8000,17 @@
       "disposition_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md"
     },
     "D-T08": {
-      "status": "not_started",
+      "status": "blocked_runtime_before_implementation",
       "attempts": 0,
       "commit": null,
       "acceptance_refs": [],
-      "blockers": []
+      "blockers": [
+        "Quarto executable unavailable; fresh quarto --version exits127. User objective requires stopping before implementation."
+      ],
+      "accepted": false,
+      "completion_credit": false,
+      "preflight_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md",
+      "implementation_attempts_consumed_by_preflight": 0
     },
     "D-T13": {
       "status": "not_started",
@@ -8104,9 +8139,13 @@
       "focused_final_rereviews_used": 1
     },
     "M8": {
-      "status": "not_started",
+      "status": "blocked_D_T08_runtime_before_implementation",
       "review_ref": null,
-      "commit": null
+      "commit": null,
+      "blocking_packets": [
+        "D-T08"
+      ],
+      "runtime_blocker_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md"
     },
     "M9": {
       "status": "not_started",
@@ -8166,5 +8205,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "M7_run_closed_project_incomplete"
+  "close_state": "M8_M9_goal_incomplete_D_T08_runtime_blocked"
 }

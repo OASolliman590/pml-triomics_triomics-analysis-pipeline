@@ -1,0 +1,4 @@
+ts	phase	decision	why	evidence	result
+2026-11-04T10:17:44.876386+00:00	start	Begin the authorized M8/M9 goal from accepted M7 records	Keep the full G8 and G9 objective without reopening M7	goal-objective.md; commit 45d08c1a1fe3ef2634533b45f5837c03ae434d80	open
+2026-11-04T10:17:44.876386+00:00	D-T08 preflight	Stop before implementation because Quarto is unavailable	The objective explicitly requires stopping when Quarto is absent; real HTML is required	runtime-preflight.json; quarto-version.log	blocked runtime; zero attempts
+2026-11-04T10:21:23.957228+00:00	receipt review	Correct premature committed wording before saving the blocker receipt	Terra found that the first handover claimed a commit before Git recorded one	docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md; /root/d08_runtime_receipt_terra	corrected; documentation check complete

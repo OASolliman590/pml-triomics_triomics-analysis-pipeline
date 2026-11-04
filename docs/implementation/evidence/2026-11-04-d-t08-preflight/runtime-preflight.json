@@ -1,0 +1,32 @@
+{
+  "checked_at_utc": "2026-11-04T10:17:44.876386+00:00",
+  "base_commit": "45d08c1a1fe3ef2634533b45f5837c03ae434d80",
+  "command": [
+    "/bin/zsh",
+    "-lc",
+    "quarto --version"
+  ],
+  "exit_code": 127,
+  "stdout": "",
+  "stderr": "zsh:1: command not found: quarto\n",
+  "PATH_resolution": null,
+  "candidate_locations_checked": 9,
+  "candidate_locations_found": 0,
+  "runtime_result": "quarto_unavailable_on_checked_host",
+  "evidence_filesystem": {
+    "FilesystemType": "apfs",
+    "Internal": true,
+    "MountPoint": "/System/Volumes/Data"
+  },
+  "objective_sha256": "405b164d9380c7c9d2975c89e8ad479b2277ebdf5cc8ede27db3193e0cf0c648",
+  "implementation_attempts_used": 0,
+  "repairs_used": 0,
+  "tests": "not_run",
+  "render": "not_run",
+  "M7": "accepted",
+  "G7": "released",
+  "M8": "unreleased",
+  "G8": "unreleased",
+  "M9": "unreleased",
+  "G9": "unreleased"
+}

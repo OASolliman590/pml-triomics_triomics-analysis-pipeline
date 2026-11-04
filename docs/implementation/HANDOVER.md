@@ -1,3 +1,13 @@
+# Current checkpoint: D-T08 runtime blocker before implementation
+
+The new goal is required Stage D completion through G8 and G9, one packet at a time: D-T08, D-T13, D-T15, M8 close, D-T09, M9 close. M7 remains accepted and G7 released on fabd6fa; do not reopen it. Current baseline is45d08c1. Read reviews/2026-11-04-d-t08-runtime-blocker.md.
+
+Fresh Quarto probe exited127, PATH resolution was empty and nine standard executable locations were absent. The user explicitly requires stopping when Quarto is absent. D-T08 is blocked before implementation: zero attempts and repairs, no Luna, tests or render. No product code changed or fake HTML produced. G8/G9 remain unreleased; the full goal is active and incomplete. No private workbooks or push. Runtime evidence is stored on internal APFS; the compact receipt is recorded here.
+
+Literal resume: "Check whether Quarto is now available and run quarto --version. If absent, preserve the blocker and do not dispatch coding. If available, resume the existing D-T08 packet with one fresh Luna-max, exact files_allowed, real failing behavioral tests and real offline Quarto rendering. Do not reopen M7 or skip ahead to D-T13/D-T15."
+
+## Historical checkpoint below
+
 # Current checkpoint — required M7 scope accepted; G7 released
 
 Sol accepted required D-T01/D-T02/D-T03/D-T04/D-T05/D-T10/D-T11/D-T12, current B-T07/C-06 prerequisites and M7 on immutable P2 `fabd6fa6bb7ae06f6eea1276517010829ea4cde1`. G7 is released. Read reviews/2026-11-04-m7-sol-acceptance.md and the accepted-packet-receipts.json it links. This is scoped synthetic software acceptance, not completion of all Stage D or biological validation.
