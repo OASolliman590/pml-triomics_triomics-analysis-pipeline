@@ -1,0 +1,79 @@
+{
+  "commit": "205e46575b9d3f3b462086e93a281ac7829f5646",
+  "source_revision": "205e46575b9d3f3b462086e93a281ac7829f5646",
+  "runtime": {
+    "r_version": "4.6.1",
+    "deqms_version": "1.30.0",
+    "lib_paths": ["/private/tmp/triomics-runtime-20261103/R", "/Users/megastore/Library/R/x86_64/4.6/library", "/Library/Frameworks/R.framework/Versions/4.6-x86_64/Resources/library"],
+    "environment": {
+      "R_LIBS_USER": "/tmp/triomics-runtime-20261103/R:/Users/megastore/Library/R/x86_64/4.6/library",
+      "TRIOMICS_MOFA_LIBRARY": "/tmp/triomics-runtime-20261103/R",
+      "TRIOMICS_MOFA_PYTHON": "/tmp/triomics-runtime-20261103/python/bin/python",
+      "RETICULATE_PYTHON": "/tmp/triomics-runtime-20261103/python/bin/python"
+    }
+  },
+  "qualified": {
+    "label": "qualified",
+    "cli_exit_code": 0,
+    "cli_command": "'/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/qualified/fixtures/tickets/B-T05.yaml' --stage B --output '/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/qualified/output'",
+    "cli_working_directory": "/private/tmp/triomics-m7-028-luna/inst/exec",
+    "config_path": "/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/qualified/fixtures/tickets/B-T05.yaml",
+    "output_root": "/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/qualified/output",
+    "block_payload_path": "/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/qualified/output/B/block-results.json",
+    "block_payload_sha256": "9f5642814233e1c3b35b099e6128b4115f7c8b1c211b57ab4fb0311271d0f702",
+    "block_envelope_path": "/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/qualified/output/B/block-results.envelope.json",
+    "block_envelope_sha256": "1c99092198fbb03c973153629b52f5a7a5c44003934b39f9b4777d8d5a0e5ebd",
+    "block_status": "complete",
+    "method_status": "complete",
+    "method": "DEqMS",
+    "requested_method": "DEqMS",
+    "fallback_applied": false,
+    "producer_method_ids": [
+      "DEqMS",
+      "deqms"
+    ],
+    "provenance_payload_path": "/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/qualified/output/B/handoffs/6fa2a607a7cdd8d93ea91700c8f6f24cf19c8368cb8ad7b944c608f37e0cd772/stage-handoff-provenance.json",
+    "provenance_payload_sha256": "bfda9edc7fd327e6100a85158fc7c6feb22a8ce08334634beae41662900014a8",
+    "provenance_envelope_path": "/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/qualified/output/B/handoffs/6fa2a607a7cdd8d93ea91700c8f6f24cf19c8368cb8ad7b944c608f37e0cd772/stage-handoff-provenance.envelope.json",
+    "provenance_envelope_sha256": "bcada8bb47f86af2eddb38894894455728ebcdde83af1edaea3c9cb8bb84b2c3",
+    "envelope_payload_sha256": "bfda9edc7fd327e6100a85158fc7c6feb22a8ce08334634beae41662900014a8",
+    "producer_repository_commit": "205e46575b9d3f3b462086e93a281ac7829f5646",
+    "envelope_producer_commit": "205e46575b9d3f3b462086e93a281ac7829f5646",
+    "cli_log_path": "/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/qualified/cli.log"
+  },
+  "fallback": {
+    "label": "fallback",
+    "cli_exit_code": 0,
+    "cli_command": "'/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/fallback/fixtures/tickets/B-T05.yaml' --stage B --output '/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/fallback/output'",
+    "cli_working_directory": "/private/tmp/triomics-m7-028-luna/inst/exec",
+    "config_path": "/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/fallback/fixtures/tickets/B-T05.yaml",
+    "output_root": "/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/fallback/output",
+    "block_payload_path": "/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/fallback/output/B/block-results.json",
+    "block_payload_sha256": "f92103a8fa56c3565062ab352b616591928d1c7d02b16a6af2cb44e27f9b0df3",
+    "block_envelope_path": "/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/fallback/output/B/block-results.envelope.json",
+    "block_envelope_sha256": "89b172e925ae0bca1624f458f30678fbbf4b73990461839c246755c4971006b1",
+    "block_status": "complete",
+    "method_status": "fallback_complete",
+    "method": "limma_explicit_fallback",
+    "requested_method": "DEqMS",
+    "fallback_applied": true,
+    "producer_method_ids": [
+      "deqms",
+      "limma_explicit_fallback"
+    ],
+    "provenance_payload_path": "/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/fallback/output/B/handoffs/f39026701be19f08b42767cda1b423c109f5d40f25a5099b703da6990730e78e/stage-handoff-provenance.json",
+    "provenance_payload_sha256": "c8d6697866977dc98ca36e8803bcc05681918c795d8f6d93224c93afc9a589f0",
+    "provenance_envelope_path": "/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/fallback/output/B/handoffs/f39026701be19f08b42767cda1b423c109f5d40f25a5099b703da6990730e78e/stage-handoff-provenance.envelope.json",
+    "provenance_envelope_sha256": "b429a91c10aeba18c325b6a0fab83bdcede1021c7f6fcd15c42fbd38c5585356",
+    "envelope_payload_sha256": "c8d6697866977dc98ca36e8803bcc05681918c795d8f6d93224c93afc9a589f0",
+    "producer_repository_commit": "205e46575b9d3f3b462086e93a281ac7829f5646",
+    "envelope_producer_commit": "205e46575b9d3f3b462086e93a281ac7829f5646",
+    "cli_log_path": "/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/fallback/cli.log"
+  },
+  "generated_count_path": "/private/tmp/triomics-stage-d-evidence/m7-028/native-repair1/qualified-counts.tsv",
+  "generated_count_sha256": "88ecb215073f3375c6d8a47eb92dae55fca0e1c8bc07085c78761b611b391104",
+  "fixture_sha256": {
+    "/private/tmp/triomics-m7-028-luna/inst/examples/data/paired/metadata.tsv": "70dd411a04f316b4970ad69398c7d7acfc75e7149e4a8f15cb365bb0d1a4ad3a",
+    "/private/tmp/triomics-m7-028-luna/inst/examples/data/paired/proteomics.tsv": "02e042d41b7a0e230f975bd20c05f86435dd4e01589122593860f382585efad6"
+  }
+}

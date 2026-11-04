@@ -19,6 +19,9 @@ unknown overlap leaves the affected evidence unassessable. Sol checked the nativ
 publication against its actual B/C predecessors and hashed inputs. The verified publication wording separates generated outputs from coordinator
 acceptance. All required candidate implementations are now integrated.
 
+The first complete source gate exposed two older test-fixture mismatches. Both
+are now corrected and independently reviewed; no statistical method changed.
+
 M7/G7 remain closed. Acceptance still requires every required packet on one frozen
 snapshot, full source and clean archive package checks, Terra documentation and a
 fresh Astra review. Conditional quantitative methods remain blocked without

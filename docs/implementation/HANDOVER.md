@@ -69,16 +69,25 @@ M7/G7 closed; C07 not_run; C09 unqualified; no private data, AIU, fasting or pus
 
 ## Current literal resume instruction
 
-Initial final source gate48ca0c4 failed:7280pass3fail1error15namedwarnings0skip.
-Read reviews/2026-11-04-m7-initial-full-source-gate.md. Failures are B05 temporary
-CLI YAML written inside source tree, and obsolete protein-metabolite synthetic-ID
-shortcut expectation. M7-028 scope77834fd passed fresh Astra; receiptf5c1567. Fresh
-/root/m7_028_luna is active in /tmp/triomics-m7-028-luna fromf5c1567, initial
-attempt, zero repairs. Onlytest-B-T05.R/test-protein-metabolite.R. Next clean
-Solcommit before focused/native GREEN,
-Sol review, focused tests and fresh implementation Astra before repeated final
-same-snapshot source/native/archive/Terra/milestone-Astra/Sol gates. Keep failed
-48ca0c4 archive/logs intact; package check did not run. No parent test process is active; the named Luna worker is active. M7/G7 closed; conditional3blocked, C07unrun/C09unqualified, no private/push.
+M7-028 verified on clean205e465 and integratedthrough206f574. One repair used:
+envelope revision assertion now uses existing producer.commit. Fresh scope and
+initial/focused implementation Astra passed. Focused766pass0conditions; two native
+B commands exit0; Sol34artifact assertions plus4rawvalidators passed. Only two
+legacy test files changed; production R/inst/man/NAMESPACE/statistical contracts
+are unchanged from48ca0c4. All workers/reviewers completed. Read4NovemberM7-028Sol
+receipt. Prior48ca0c4fullsource failed7280pass3fail1error15warn0skip; its archive and
+logs remain RED history, no package run occurred on it.
+
+Freeze a new clean integrated snapshot for repeated final qualification. External
+/tmp/triomics-stage-d-evidence/final/run-final-gates.py runs sequentially: one full
+source suite; native8requiredDpackets; independent semantic/hash readbacks; packet
+receipts; clean git archive; package check requiring exactStatus: OK and named
+warnings. Use a fresh evidence root final-m7-028; never overwrite failed final/.
+Driver only verifies, never accepts. Keep source clean while it runs. Track its
+session and phase in external orchestration.json/RESUME.md/gate-state.json; do not
+restart a running gate after compaction. Then Terra DOC-M7 and fresh milestone
+Astra on that same snapshot precede Sol acceptance. M7/G7closed; conditional3
+blocked0credit,C07unrun/C09unqualified. No private/push/AIU/fasting/M8/M9/report.
 
 ## Historical checkpoint — 29 October 2026, D-T11 stopped at the repair limit
 
