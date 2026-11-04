@@ -33,9 +33,13 @@ d12_evidence <- function() {
   list(
     artifact_type = "evidence_bundle", study_id = "synthetic-study", analysis_id = "synthetic-analysis",
     immutable_inputs = list(b_bundle_sha256 = d12_sha("a"), c_manifest_sha256 = d12_sha("b")),
-    feature_registry = list(list(feature_key = "feature-key-1", id_namespace = "synthetic",
-                                 original_id = "SYN_FEATURE_001", taxon_id = 9606,
-                                 source_id = "block-1")),
+    feature_registry = list(list(
+      feature_key = "feature-key-1", id_namespace = "synthetic", original_id = "SYN_FEATURE_001",
+      taxon_id = "9606", taxon_status = "declared", source_id = "block-1",
+      provenance = list(feature_registry_row = list(), routing_metadata = list(taxon = list(
+        status = "declared", value = "9606", provenance_ref = "synthetic://target-routing-metadata/feature-key-1"
+      )))
+    )),
     source_by_id = list(`block-1` = list(source_id = "block-1", sha256 = source_sha,
                                         selection_history = "all_unselected",
                                         selection_evidence = "Public synthetic fixture.")),
@@ -171,6 +175,9 @@ test_that("D-T12 preserves prior selection history and actual same-run B evidenc
   expect_identical(observation$source_sha256, d12_sha("c"))
   expect_identical(observation$effect, 1.25)
   expect_identical(observation$effect_unit, "synthetic_log_effect")
+  expect_identical(observation$feature_taxon_id, "9606")
+  expect_identical(observation$feature_taxon_provenance_ref,
+                   "synthetic://target-routing-metadata/feature-key-1")
   expect_identical(observation$dependency_group, "molecular_feature:feature-key-1")
 })
 

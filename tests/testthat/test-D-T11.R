@@ -725,6 +725,18 @@ test_that('missing assay description or limitations retain the supplied record a
     expect_identical(profile$evidence_axes$direct_binding$coverage$measured_records, 0L)
     expect_identical(profile$evidence_axes$direct_binding$coverage$unresolved_records, 1L)
   }
+
+  no_assay_metadata <- t11_external_assay_profile(
+    'SYNTHETIC_TARGET_A', assay = NULL, assay_limitations = NULL
+  )
+  incomplete <- no_assay_metadata$external_evidence[[1L]]
+  expect_identical(incomplete$assay_qualification, 'unresolved')
+  expect_identical(incomplete$assay_qualification_reason,
+                   'assay_description_and_limitations_missing')
+  expect_identical(incomplete$endpoint, 'Kd')
+  expect_identical(incomplete$value, 4.2)
+  expect_identical(incomplete$source_id, 'synthetic_assay_source')
+  expect_identical(no_assay_metadata$evidence_axes$direct_binding$status, 'unresolved')
 })
 
 test_that('one unresolved assay record prevents canonical comparison despite qualified records', {

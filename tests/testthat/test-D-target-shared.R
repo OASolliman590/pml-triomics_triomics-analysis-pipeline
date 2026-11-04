@@ -16,10 +16,18 @@ td_target_link <- function(feature_id = "FEATURE_A") {
        expected_direction = "positive")
 }
 
-td_target_evidence <- function(duplicate_feature = FALSE) {
+td_target_evidence <- function(duplicate_feature = FALSE, taxon_status = "declared",
+                               taxon_value = "9606", routing_metadata_present = TRUE) {
+  taxon <- list(status = taxon_status, value = taxon_value,
+                provenance_ref = if (identical(taxon_status, "declared")) {
+                  "synthetic://target-routing-metadata/feature_key_a"
+                } else NULL)
   feature <- list(feature_key = "feature_key_a", study_id = "study_a", block_id = "block_metabolome",
-                  original_id = "FEATURE_A", id_namespace = "synthetic_metabolite", taxon_id = 9606L,
-                  source_id = "source_a", structural_resolution = "feature")
+                  original_id = "FEATURE_A", id_namespace = "synthetic_metabolite",
+                  taxon_id = if (identical(taxon_status, "declared")) taxon_value else NULL,
+                  taxon_status = taxon_status, source_id = "source_a", structural_resolution = "feature",
+                  provenance = list(feature_registry_row = list(),
+                                    routing_metadata = if (routing_metadata_present) list(taxon = taxon) else NULL))
   features <- list(feature_key_a = feature)
   if (duplicate_feature) {
     second <- feature
@@ -105,32 +113,34 @@ testthat::test_that("B effects and C loadings require a declared matching featur
   testthat::expect_true(all(vapply(matched, function(observation) {
     identical(observation$taxon_applicability, "matched") &&
       identical(observation$request_taxon_id, 9606L) &&
-      identical(observation$feature_taxon_id, 9606L)
-  }, logical(1))))
-
-  string_taxon <- td_target_evidence()
-  string_taxon$feature_registry$feature_key_a$taxon_id <- "9606"
-  preserved <- triomics_target_resolve_observations(request, list(link), string_taxon)
-  testthat::expect_true(all(vapply(preserved, function(observation) {
-    identical(observation$taxon_applicability, "matched") &&
-      identical(observation$feature_taxon_id, "9606")
+      identical(observation$feature_taxon_id, "9606") &&
+      identical(observation$feature_taxon_provenance_ref,
+                "synthetic://target-routing-metadata/feature_key_a")
   }, logical(1))))
 
   cases <- list(
-    list(value = NULL, applicability = "unassessable", reason = "feature_taxon_unknown"),
-    list(value = "unknown", applicability = "unassessable", reason = "feature_taxon_unknown"),
-    list(value = "9606x", applicability = "unassessable", reason = "feature_taxon_malformed"),
-    list(value = 10090L, applicability = "inapplicable", reason = "feature_taxon_mismatch")
+    list(status = "unknown", value = NULL, routing = FALSE, expected_id = NULL,
+         applicability = "unassessable", reason = "feature_taxon_unknown"),
+    list(status = "unknown", value = "9606", routing = TRUE, expected_id = NULL,
+         applicability = "unassessable", reason = "feature_taxon_unknown"),
+    list(status = "declared", value = "unknown", routing = TRUE, expected_id = "unknown",
+         applicability = "unassessable", reason = "feature_taxon_unknown"),
+    list(status = "declared", value = "9606x", routing = TRUE, expected_id = "9606x",
+         applicability = "unassessable", reason = "feature_taxon_malformed"),
+    list(status = "declared", value = "10090", routing = TRUE, expected_id = "10090",
+         applicability = "inapplicable", reason = "feature_taxon_mismatch")
   )
   comparable <- triomics_target_profile(request, list(link), matched)
   for (case in cases) {
-    evidence <- td_target_evidence()
-    evidence$feature_registry$feature_key_a$taxon_id <- case$value
+    evidence <- td_target_evidence(taxon_status = case$status, taxon_value = case$value,
+                                   routing_metadata_present = case$routing)
     observations <- triomics_target_resolve_observations(request, list(link), evidence)
     testthat::expect_length(observations, 2L)
     testthat::expect_true(all(vapply(observations, function(observation) {
       identical(observation$taxon_applicability, case$applicability) &&
         identical(observation$taxon_reason_code, case$reason) &&
+        identical(observation$request_taxon_id, 9606L) &&
+        identical(observation$feature_taxon_id, case$expected_id) &&
         identical(observation$status, "uninformative") &&
         identical(observation$source_id, "source_a") &&
         identical(observation$source_sha256, paste(rep("a", 64L), collapse = "")) &&
@@ -155,8 +165,15 @@ testthat::test_that("B effects and C loadings require a declared matching featur
                                              null = "null", na = "null", digits = NA))
     decoded <- jsonlite::fromJSON(encoded, simplifyVector = FALSE)
     testthat::expect_true("feature_taxon_id" %in% names(decoded[[1L]]))
-    if (is.null(case$value)) testthat::expect_null(decoded[[1L]]$feature_taxon_id)
-    else testthat::expect_identical(decoded[[1L]]$feature_taxon_id, case$value)
+    if (is.null(case$expected_id)) testthat::expect_null(decoded[[1L]]$feature_taxon_id)
+    else testthat::expect_identical(decoded[[1L]]$feature_taxon_id, case$expected_id)
+    testthat::expect_true("feature_taxon_declaration" %in% names(decoded[[1L]]))
+    if (case$routing) {
+      testthat::expect_identical(decoded[[1L]]$feature_taxon_declaration$status, case$status)
+      testthat::expect_identical(decoded[[1L]]$feature_taxon_declaration$value, case$value)
+    } else {
+      testthat::expect_null(decoded[[1L]]$feature_taxon_declaration)
+    }
   }
 })
 
