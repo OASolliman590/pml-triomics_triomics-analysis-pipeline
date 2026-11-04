@@ -366,12 +366,18 @@ triomics_target_profile <- function(request, links, observations, external_evide
     }
     if (triomics_target_string(observation$feature_key) && is.null(taxon_applicability)) {
       observation$request_taxon_id <- request$taxon_id
-      observation$feature_taxon_id <- NULL
+      observation["feature_taxon_id"] <- list(NULL)
       observation$feature_taxon_status <- "unknown"
-      observation$feature_taxon_declaration <- NULL
-      observation$feature_taxon_provenance_ref <- NULL
+      observation["feature_taxon_declaration"] <- list(NULL)
+      observation["feature_taxon_provenance_ref"] <- list(NULL)
       observation$taxon_applicability <- "unassessable"
       observation$taxon_reason_code <- "feature_taxon_unknown"
+      taxon_applicability <- "unassessable"
+    }
+    if (!is.null(taxon_applicability) &&
+        taxon_applicability %in% c("unassessable", "inapplicable") &&
+        observation$status %in% c("support", "conflict")) {
+      observation$status <- "uninformative"
     }
     observation$path_sign <- link$sign
     observation$path_context <- link$context_id
