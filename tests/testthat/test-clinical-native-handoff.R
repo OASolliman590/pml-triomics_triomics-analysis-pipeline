@@ -272,7 +272,10 @@ testthat::test_that("saved requests and publication failures fail closed without
 
   observations_path <- file.path(fixture$fixture_root, "data", "c08", "observations.tsv")
   original_observations <- readBin(observations_path, what = "raw", n = file.info(observations_path)$size)
-  writeBin(c(original_observations, as.raw(0x0a)), observations_path)
+  observations <- utils::read.delim(observations_path, stringsAsFactors = FALSE)
+  observations$value[[1L]] <- as.numeric(observations$value[[1L]]) + 0.1
+  utils::write.table(observations, observations_path, sep = "\t", row.names = FALSE,
+                     quote = FALSE)
   source_error <- testthat::capture_error(
     triomics_cnh_prepare_stage_b(fixture$config_path, output_root)
   )
