@@ -1,3 +1,13 @@
+# Current checkpoint — immutable final M7 rereview ready
+
+Terra DOC-M7 commit07be95b is inspected and integrated; only the milestone document changed. All P2 gates remain complete at fabd6fa6bb7ae06f6eea1276517010829ea4cde1: source7554/0fail/0error/15warn/0skip; installed7527/0fail/15warn/0skip; exact Status: OK;54 native commands and independent readbacks passed. No test process or coding worker is active. Read milestones/M7.md and reviews/2026-11-04-m7-final-rereview-gates.md.
+
+Freeze this docs-only record snapshot and dispatch the one remaining focused final Astra-low rereview of P2 and these receipts. Keep the branch immutable while it runs; external orchestration.json records its agent ID. Do not rerun Luna or completed software gates. Sol alone may accept the current C06 prerequisite, required D packets and M7/release G7 after the focused audit passes. Conditional D06/D07/D14 remain blocked without completion credit; C07 not_run; C09 unqualified. M8/M9, private inputs, push, AIU and fasting remain outside this run.
+
+Literal resume: join the recorded focused final Astra reviewer (dispatch only if not already dispatched), record its verdict, then perform the authorized Sol acceptance transition only on pass. Preserve capped/failed history and the original dirty checkout.
+
+## Historical checkpoints below
+
 # Current checkpoint — P2 software gates passed; final review pending
 
 Immutable P2 `fabd6fa6bb7ae06f6eea1276517010829ea4cde1`: source7554/0fail/0error/15warn/0skip; installed7527/0fail/15warn/0skip; exact Status: OK. All54 native B/C/D commands and independent semantic/applicability readbacks passed. Driver80211 completed exit0; no test process active. Read reviews/2026-11-04-m7-final-rereview-gates.md and adjacent evidence. Do not rerun source/native/package gates or Luna.

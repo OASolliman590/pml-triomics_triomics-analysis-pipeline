@@ -35,39 +35,11 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_id": "/root/m7_doc_rereview_terra",
-      "role": "Terra DOC-M7 refresh",
-      "requested_model": "gpt-6.1-terra",
-      "requested_effort": "max",
-      "effective_settings_exposed": false,
-      "status": "documentation_running",
-      "worktree": "/Users/megastore/.codex/worktrees/m7-doc-rereview-terra/PML MultiOmics Analysis Pipeline",
-      "base": "c213ecc8e6d3bba4c03e122ddbd8fccf914601b1",
-      "allowlist": [
-        "docs/implementation/milestones/M7.md"
-      ]
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "Terra_DOC_M7_running",
+    "status": "immutable_records_ready_for_focused_final_Astra",
     "last_reconciled": "2026-11-04",
-    "active_handoffs": [
-      {
-        "agent_id": "/root/m7_doc_rereview_terra",
-        "role": "Terra DOC-M7 refresh",
-        "requested_model": "gpt-6.1-terra",
-        "requested_effort": "max",
-        "effective_settings_exposed": false,
-        "status": "documentation_running",
-        "worktree": "/Users/megastore/.codex/worktrees/m7-doc-rereview-terra/PML MultiOmics Analysis Pipeline",
-        "base": "c213ecc8e6d3bba4c03e122ddbd8fccf914601b1",
-        "allowlist": [
-          "docs/implementation/milestones/M7.md"
-        ]
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
     "disposition": "New bounded cycles authorized from b03cdef. Reconcile stale records, verify predecessors, then complete required Stage D through audited scopes. Historical caps preserved. M7/G7 closed."
   },
@@ -6549,6 +6521,18 @@
         ]
       },
       "product_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "M7": "unreleased",
+      "G7": "unreleased"
+    },
+    {
+      "event": "Terra_DOC_M7_completed_and_integrated",
+      "date": "2026-11-04",
+      "agent_id": "/root/m7_doc_rereview_terra",
+      "worker_commit": "07be95bc370b4e6ea6d5dd13b000304fdf2d279f",
+      "integration_commit": "e1c879686579cec1e1fc7e0e725c52fc85051e34",
+      "allowlist_review": "Only milestones/M7.md; packet counts, links, exact package Status and qualification limits checked. No product change or tests repeated.",
+      "product_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "next": "Single remaining focused read-only final Astra rereview; Sol acceptance only after pass.",
       "M7": "unreleased",
       "G7": "unreleased"
     }

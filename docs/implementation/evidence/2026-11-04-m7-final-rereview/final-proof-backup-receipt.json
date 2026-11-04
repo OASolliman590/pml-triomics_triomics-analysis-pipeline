@@ -1,0 +1,8 @@
+{
+  "product_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+  "backup": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/final-P2-fabd6fa-proof.tar.gz",
+  "sha256": "65ee1b3b49ce3cf4fb58e039cd94a060e98df098f951e1266b596a2ac668ef10",
+  "files_verified": 2000,
+  "bytes": 9844557,
+  "contents": "Completed source, native, applicability, clean source archive, package logs and receipts; public synthetic only."
+}
