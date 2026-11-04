@@ -37,17 +37,31 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D15_S02_scoped_verified_closed_goal_active",
+    "status": "D15_S01_repair1_assigned",
     "last_reconciled": "2026-11-05",
-    "active_handoffs": [],
+    "active_handoffs": [
+      {
+        "agent": "/root/d15_s01_luna",
+        "role": "Luna implementer",
+        "requested_model": "gpt-6-luna",
+        "requested_effort": "max",
+        "effective_settings_exposed": false,
+        "recovered_original_worker": true,
+        "base_commit": "a136db4ee2d840ad04cdda7534a40a43a0f30791",
+        "branch": "codex/m8-d15-s01-repair1",
+        "status": "repair1_assigned",
+        "attempt": 1,
+        "repairs": 1,
+        "allowed_next_transition": "Join original S01 Luna repair1; inspect immutable diff, focused local review and independent combined source/native/numeric/zero-refit/rollback proof, then fresh risky-diff Astra review. No S02 or D13 repair3.",
+        "cursor": null
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Resume M8-D15-S01 at repair1of2, preserving the original initial attempt. Reconcile its original worker and candidate a136db4; fix the four recorded S01 defects and failure tests within its audited allowlist, then verify the combined source/native/numeric/no-refit/rollback route and risky-diff Astra before D15. No S02 repair3, D13 repair3 or G8/G9 release.",
+    "disposition": "Join original S01 Luna repair1; inspect immutable diff, focused local review and independent combined source/native/numeric/zero-refit/rollback proof, then fresh risky-diff Astra review. No S02 or D13 repair3.",
     "current_gate": {
-      "status": "scoped_verification_passed_pending_combined_integration",
+      "status": "repair1_assigned",
       "candidate": "a136db4ee2d840ad04cdda7534a40a43a0f30791",
-      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s02-scoped-close.md",
-      "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-s02/receipt.json",
-      "M8_acceptance": false
+      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s01-repair1-dispatch.md"
     }
   },
   "orchestration_events": [
@@ -6994,6 +7008,28 @@
       "review_ref": "docs/implementation/reviews/2026-11-05-d15-s02-scoped-close.md",
       "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-s02/receipt.json",
       "next": "Resume M8-D15-S01 at repair1of2, preserving the original initial attempt. Reconcile its original worker and candidate a136db4; fix the four recorded S01 defects and failure tests within its audited allowlist, then verify the combined source/native/numeric/no-refit/rollback route and risky-diff Astra before D15. No S02 repair3, D13 repair3 or G8/G9 release."
+    },
+    {
+      "event": "D15_S01_original_worker_recovered_repair1_assigned",
+      "date": "2026-11-05",
+      "candidate": "a136db4ee2d840ad04cdda7534a40a43a0f30791",
+      "worker": {
+        "agent": "/root/d15_s01_luna",
+        "role": "Luna implementer",
+        "requested_model": "gpt-6-luna",
+        "requested_effort": "max",
+        "effective_settings_exposed": false,
+        "recovered_original_worker": true,
+        "base_commit": "a136db4ee2d840ad04cdda7534a40a43a0f30791",
+        "branch": "codex/m8-d15-s01-repair1",
+        "status": "repair1_assigned",
+        "attempt": 1,
+        "repairs": 1,
+        "allowed_next_transition": "Join original S01 Luna repair1; inspect immutable diff, focused local review and independent combined source/native/numeric/zero-refit/rollback proof, then fresh risky-diff Astra review. No S02 or D13 repair3.",
+        "cursor": null
+      },
+      "record_ref": "docs/implementation/reviews/2026-11-05-d15-s01-repair1-dispatch.md",
+      "S02_caps_unchanged": true
     }
   ],
   "packets": {
@@ -8713,5 +8749,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D15_S02_scoped_receipt_saved_full_goal_active"
+  "close_state": "D15_S01_repair1_running_goal_active"
 }

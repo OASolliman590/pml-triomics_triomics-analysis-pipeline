@@ -1,3 +1,11 @@
+# Current checkpoint: M8-D15-S01 repair1 assigned to original worker
+
+Read [repair dispatch](reviews/2026-11-05-d15-s01-repair1-dispatch.md). Original Luna recovered; original branch preserved at f5c46e5, clean continuation branch at a136db4. Same initial attempt, first repair of two, original five-file allowlist. S02 remains independently verified and held; no export_b.R edits. Parent fits are not running.
+
+Literal resume: **Join original S01 Luna repair1; inspect immutable diff, focused local review and independent combined source/native/numeric/zero-refit/rollback proof, then fresh risky-diff Astra review. No S02 or D13 repair3. Preserve M7/G7 acceptance and G8/G9 closure.**
+
+## Historical checkpoints below
+
 # Current checkpoint: M8-D15-S02 independently verified, held for S01
 
 Read [the scoped close receipt](reviews/2026-11-05-d15-s02-scoped-close.md). Candidate a136db4 passes independent full B-T07:505pass,0fail/error/warn/skip,33blocks. Fresh native A/C-scheduling/B exits0/0/0; refusal probes2/2 preserve bytes. B is complete, unrequested longitudinal files remain absent, and profile/envelope/hash readback passes. Both local reviews have no remaining finding. S02 initial+2repairs consumed; no repair3. Product remains isolated, not canonical-integrated.
