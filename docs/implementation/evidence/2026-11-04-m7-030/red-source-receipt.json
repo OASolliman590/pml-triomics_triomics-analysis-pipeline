@@ -1,0 +1,147 @@
+{
+  "commit": "05122bcbda6f1fe3676f8b449114057215052d3f",
+  "command": "Rscript --vanilla '/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/run-source.R' '/Users/megastore/.codex/worktrees/m7-030-target-metadata-caller/PML MultiOmics Analysis Pipeline' '/Users/megastore/.triomics-verification/m7-resume-20261104-01/m7-030-worker/red-05122bc' 'D-T01'",
+  "filter": "D-T01",
+  "started": "2026-11-04 08:06:45 UTC",
+  "finished": "2026-11-04 08:11:20 UTC",
+  "counts": {
+    "pass": 388,
+    "fail": 18,
+    "error": 0,
+    "warn": 1,
+    "skip": 0,
+    "blocks": 20
+  },
+  "exit_code": 1,
+  "by_file": {
+    "test-D-T01.R": {
+      "pass": 388,
+      "fail": 18,
+      "error": 0,
+      "warn": 1,
+      "skip": 0,
+      "blocks": 20
+    }
+  },
+  "conditions": [
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "file": "test-D-T01.R",
+      "type": "expectation_warning",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-390f29eb209c/tickets/d-t01-paired-sign-stale-390f57598de7.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-390fba9f744' 2>&1' had status 2"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `observation$feature_taxon_id` to be identical to \"9606\".\nDifferences:\n`actual` is NULL\n`expected` is a character vector ('9606')\n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `observation$feature_taxon_status` to be identical to \"declared\".\nDifferences:\n`actual`:   \"unknown\" \n`expected`: \"declared\"\n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `observation$feature_taxon_declaration` to be identical to `list(status = \"declared\", value = \"9606\", provenance_ref = provenance_ref)`.\nDifferences:\n`actual` is NULL\n`expected` is a list\n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `observation$feature_taxon_provenance_ref` to be identical to `provenance_ref`.\nDifferences:\n`actual` is NULL\n`expected` is a character vector ('synthetic://m7-030-worker/feature-taxon-9606')\n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `observation$taxon_applicability` to be identical to \"matched\".\nDifferences:\n`actual`:   \"unassessable\"\n`expected`: \"matched\"     \n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `observation$feature_taxon_id` to be identical to \"9606\".\nDifferences:\n`actual` is NULL\n`expected` is a character vector ('9606')\n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `observation$feature_taxon_status` to be identical to \"declared\".\nDifferences:\n`actual`:   \"unknown\" \n`expected`: \"declared\"\n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `observation$feature_taxon_declaration` to be identical to `list(status = \"declared\", value = \"9606\", provenance_ref = provenance_ref)`.\nDifferences:\n`actual` is NULL\n`expected` is a list\n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `observation$feature_taxon_provenance_ref` to be identical to `provenance_ref`.\nDifferences:\n`actual` is NULL\n`expected` is a character vector ('synthetic://m7-030-worker/feature-taxon-9606')\n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `observation$taxon_applicability` to be identical to \"matched\".\nDifferences:\n`actual`:   \"unassessable\"\n`expected`: \"matched\"     \n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `observation$feature_taxon_id` to be identical to \"9606\".\nDifferences:\n`actual` is NULL\n`expected` is a character vector ('9606')\n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `observation$feature_taxon_status` to be identical to \"declared\".\nDifferences:\n`actual`:   \"unknown\" \n`expected`: \"declared\"\n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `observation$feature_taxon_declaration` to be identical to `list(status = \"declared\", value = \"9606\", provenance_ref = provenance_ref)`.\nDifferences:\n`actual` is NULL\n`expected` is a list\n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `observation$feature_taxon_provenance_ref` to be identical to `provenance_ref`.\nDifferences:\n`actual` is NULL\n`expected` is a character vector ('synthetic://m7-030-worker/feature-taxon-9606')\n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `observation$taxon_applicability` to be identical to \"matched\".\nDifferences:\n`actual`:   \"unassessable\"\n`expected`: \"matched\"     \n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `identical(malformed$status, 0L)` to be FALSE.\nDifferences:\n`actual`:   TRUE \n`expected`: FALSE\n\n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `any(grepl(\"D_FEATURE_REGISTRY_INVALID\", malformed$output, fixed = TRUE))` to be TRUE.\nDifferences:\n`actual`:   FALSE\n`expected`: TRUE \n\n"
+    },
+    {
+      "test": "D-T11 target-only CLI carries declared feature metadata and fails closed",
+      "file": "test-D-T01.R",
+      "type": "expectation_failure",
+      "message": "Expected `triomics_sha256(pointer_path)` to be identical to `pointer_hash`.\nDifferences:\n`actual`:   \"a9d181508334053cc8d1b7189d156b706b5e49725f31a6960c1e0a7eb4bafeee\"\n`expected`: \"b41b7652ad474e9571412f51c64ed952fdadf1bb53053b0c532a5210c66d7a75\"\n"
+    }
+  ],
+  "runtime": {
+    "R": "R version 4.6.1 (2026-06-24)",
+    "MOFA_library": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/runtime/R",
+    "python": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/runtime/python312/bin/python3"
+  }
+}

@@ -4,7 +4,9 @@ M7-029 candidate 36547f5 is preserved, blocked/incomplete at its two-repair cap.
 
 Read change-records/M7-030-target-routing-metadata-caller.md. The new bounded shared-caller successor is authorized by the user's existing new-cycle/shared-D scope, requires a fresh Astra scope audit, then fresh Luna. No implementation before audit yes. Preserve 36547f5 and both old repairs. One focused final milestone Astra remains after combined immutable full gates and DOC-M7. M7/G7 unreleased.
 
-Literal resume: reconcile the verification-only Luna blocker receipt, audit immutable M7-030 scope, implement only the audited caller seam in a fresh worktree from 36547f5, prove combined candidate before integration, then uninterrupted full source/native/archive gates, Terra and focused final Astra. No private inputs or push.
+Scope Astra passed at 76b34f3 (receipt b29535e). Fresh Luna `/root/m7_030_luna` produced clean a7ca4af from test-only RED05122bc (388 pass / 18 fail / 1 expected warning / no error or skip; exit1). Initial caller implementation changes only the loader predicate and request assignment; no repair used. Sol focused gate session96017 and Luna native10 session85352 run on a7ca4af in separate APFS output roots. No source edits while either gate runs.
+
+Literal resume: join sessions96017 and85352 on a7ca4af, inspect persisted results and same-root hashes, integrate combined candidate only if verified, then freeze P2 and run uninterrupted full source/native/archive gates, Terra DOC-M7 and the one focused final Astra. Do not restart running proofs or old workers. No private inputs or push.
 
 ## Historical checkpoints below
 

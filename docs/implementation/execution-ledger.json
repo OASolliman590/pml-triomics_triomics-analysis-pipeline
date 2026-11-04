@@ -42,15 +42,18 @@
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "effective_settings_exposed": false,
-      "status": "initial_RED_preparation",
+      "status": "clean_candidate_native_verification_running",
       "worktree": "/Users/megastore/.codex/worktrees/m7-030-target-metadata-caller/PML MultiOmics Analysis Pipeline",
       "base": "36547f5c132d1a97d7640607688bd4afea2db8f3",
       "repairs_used": 0,
-      "repairs_remaining": 2
+      "repairs_remaining": 2,
+      "candidate_commit": "a7ca4af8dbb088f36293f980a562b0c554b254ef",
+      "native_session_id": 85352,
+      "Sol_focused_session_id": 96017
     }
   ],
   "orchestration_control": {
-    "status": "M7_030_Luna_initial",
+    "status": "M7_030_independent_verification_running",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [
       {
@@ -59,11 +62,14 @@
         "requested_model": "gpt-6-luna",
         "requested_effort": "max",
         "effective_settings_exposed": false,
-        "status": "initial_RED_preparation",
+        "status": "clean_candidate_native_verification_running",
         "worktree": "/Users/megastore/.codex/worktrees/m7-030-target-metadata-caller/PML MultiOmics Analysis Pipeline",
         "base": "36547f5c132d1a97d7640607688bd4afea2db8f3",
         "repairs_used": 0,
-        "repairs_remaining": 2
+        "repairs_remaining": 2,
+        "candidate_commit": "a7ca4af8dbb088f36293f980a562b0c554b254ef",
+        "native_session_id": 85352,
+        "Sol_focused_session_id": 96017
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -6457,6 +6463,29 @@
       },
       "M7": "unreleased",
       "G7": "unreleased"
+    },
+    {
+      "event": "M7_030_clean_RED_initial_candidate",
+      "date": "2026-11-04",
+      "RED_commit": "05122bcbda6f1fe3676f8b449114057215052d3f",
+      "RED_counts": {
+        "pass": 388,
+        "fail": 18,
+        "error": 0,
+        "warn": 1,
+        "skip": 0,
+        "blocks": 20
+      },
+      "RED_actual_exit": 1,
+      "RED_session": 77234,
+      "precondition_failures": "Earlier launcher quoting/devtools failures ran no tests; dirty-tree run rejected native revision. Preserved externally, no behavioral RED credit.",
+      "candidate_commit": "a7ca4af8dbb088f36293f980a562b0c554b254ef",
+      "Sol_diff_review": "Only R/cli.R request assignment/metadata-loader predicate and additive native D01 test; existing assertions unchanged.",
+      "repairs_used": 0,
+      "source_gate_session": 96017,
+      "native_gate_session": 85352,
+      "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-030",
+      "acceptance": false
     }
   ],
   "packets": {
