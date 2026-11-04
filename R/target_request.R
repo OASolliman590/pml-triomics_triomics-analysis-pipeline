@@ -106,15 +106,20 @@ triomics_target_external_evidence <- function(request, records) {
   required <- c("evidence_id", "axis", "endpoint", "units", "relation", "source_id",
                 "publication_group", "measured_by_pipeline", "value")
   optional_strings <- c("target_namespace", "target_id", "target_entity_type", "context_id",
-                        "construct", "compound_id", "compound_namespace", "assay", "assay_limitations")
+                        "construct", "compound_id", "compound_namespace")
+  assay_fields <- c("assay", "assay_limitations")
   valid <- vapply(records, function(record) {
     if (!is.list(record) || is.data.frame(record) || is.null(names(record)) ||
         anyDuplicated(names(record)) || !all(required %in% names(record))) return(FALSE)
     strings <- c("evidence_id", "axis", "endpoint", "units", "relation", "source_id", "publication_group")
+    assay_fields_valid <- all(vapply(assay_fields[assay_fields %in% names(record)], function(field) {
+      triomics_target_string(record[[field]])
+    }, logical(1)))
     all(vapply(record[strings], triomics_target_string, logical(1))) &&
       all(vapply(optional_strings[optional_strings %in% names(record)], function(field) {
         triomics_target_string(record[[field]])
       }, logical(1))) &&
+      assay_fields_valid &&
       record$axis %in% c("binding", "function", "engagement", "association") &&
       is.logical(record$measured_by_pipeline) && length(record$measured_by_pipeline) == 1L &&
       !is.na(record$measured_by_pipeline) &&
@@ -169,6 +174,21 @@ triomics_target_external_evidence <- function(request, records) {
     record$dependency_group <- paste0("publication:", record$publication_group)
     record$independent_replication <- FALSE
     record$availability <- if (is.null(record$value)) "unavailable" else "available"
+    assay_description_supplied <- triomics_target_string(record$assay)
+    assay_limitations_supplied <- triomics_target_string(record$assay_limitations)
+    record$assay_qualification <- if (assay_description_supplied && assay_limitations_supplied) {
+      "qualified"
+    } else {
+      "unresolved"
+    }
+    record$assay_qualification_reason <- NULL
+    if (!assay_description_supplied && !assay_limitations_supplied) {
+      record$assay_qualification_reason <- "assay_description_and_limitations_missing"
+    } else if (!assay_description_supplied) {
+      record$assay_qualification_reason <- "assay_description_missing"
+    } else if (!assay_limitations_supplied) {
+      record$assay_qualification_reason <- "assay_limitations_missing"
+    }
     record
   }
   attached <- lapply(records, attach_record)

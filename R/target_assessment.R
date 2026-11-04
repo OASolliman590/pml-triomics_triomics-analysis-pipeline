@@ -7,6 +7,86 @@ triomics_target_expected_status <- function(effect, expected_direction) {
   if (identical(observed, expected_direction)) "support" else "conflict"
 }
 
+triomics_target_taxon_token <- function(value) {
+  if (is.character(value) && length(value) == 1L && !is.na(value)) {
+    if (!identical(value, trimws(value)) || !grepl("^[1-9][0-9]*$", value)) return(NULL)
+    return(value)
+  }
+  if (is.numeric(value) && length(value) == 1L && !is.na(value) && is.finite(value) &&
+      value > 0 && value == floor(value) && value <= 9007199254740991) {
+    return(format(value, scientific = FALSE, trim = TRUE, digits = 22L))
+  }
+  NULL
+}
+
+triomics_target_safe_taxon_value <- function(value) {
+  if (is.null(value) || (is.atomic(value) && length(value) == 1L && is.na(value))) NULL else value
+}
+
+triomics_target_feature_taxon <- function(feature, request_taxon_id) {
+  routing_metadata <- if (is.list(feature$provenance)) feature$provenance$routing_metadata else NULL
+  declaration <- if (is.list(routing_metadata)) routing_metadata$taxon else NULL
+  declaration <- if (is.list(declaration)) declaration else NULL
+  declaration_status <- if (is.list(declaration)) declaration$status else NULL
+  adapted_status <- feature$taxon_status
+  declaration_copy <- declaration
+  if (is.list(declaration_copy) && "value" %in% names(declaration_copy)) {
+    declaration_copy["value"] <- list(triomics_target_safe_taxon_value(declaration_copy$value))
+  }
+  declaration_status_valid <- triomics_target_string(declaration_status) &&
+    declaration_status %in% c("declared", "unknown")
+  provenance_ref <- if (is.list(declaration) && triomics_target_string(declaration$provenance_ref)) {
+    declaration$provenance_ref
+  } else NULL
+  feature_taxon_id <- if (identical(declaration_status, "declared") && is.list(declaration)) {
+    triomics_target_safe_taxon_value(declaration$value)
+  } else NULL
+  result <- list(
+    applicability = "unassessable", reason_code = "feature_taxon_unknown",
+    status = if (declaration_status_valid) declaration_status else "unknown",
+    taxon_id = feature_taxon_id, declaration = declaration_copy,
+    provenance_ref = provenance_ref
+  )
+
+  if (is.null(declaration)) return(result)
+  if (!declaration_status_valid) {
+    result$reason_code <- "feature_taxon_malformed"
+    return(result)
+  }
+  if (identical(declaration_status, "unknown") || identical(adapted_status, "unknown")) return(result)
+  if (!is.null(adapted_status) && !identical(adapted_status, "declared")) {
+    result$reason_code <- "feature_taxon_malformed"
+    return(result)
+  }
+  if (!identical(declaration$value, feature$taxon_id)) {
+    result$reason_code <- "feature_taxon_malformed"
+    return(result)
+  }
+
+  feature_token <- triomics_target_taxon_token(declaration$value)
+  if (is.null(feature_token)) {
+    unknown_value <- is.null(declaration$value) ||
+      (is.atomic(declaration$value) && length(declaration$value) == 1L && is.na(declaration$value)) ||
+      (is.character(declaration$value) && length(declaration$value) == 1L &&
+       identical(tolower(trimws(declaration$value)), "unknown"))
+    result$reason_code <- if (unknown_value) "feature_taxon_unknown" else "feature_taxon_malformed"
+    return(result)
+  }
+  request_token <- triomics_target_taxon_token(request_taxon_id)
+  if (is.null(request_token)) {
+    result$reason_code <- "feature_taxon_malformed"
+    return(result)
+  }
+  if (!identical(feature_token, request_token)) {
+    result$applicability <- "inapplicable"
+    result$reason_code <- "feature_taxon_mismatch"
+    return(result)
+  }
+  result$applicability <- "matched"
+  result$reason_code <- NULL
+  result
+}
+
 triomics_target_resolve_observations <- function(request, links, evidence) {
   if (!is.list(request) || !triomics_target_string(request$request_id) ||
       !is.list(links) || is.data.frame(links) || !is.list(evidence) ||
@@ -26,17 +106,55 @@ triomics_target_resolve_observations <- function(request, links, evidence) {
       triomics_d_abort("D_TARGET_PATH_UNDOCUMENTED",
                        "A target observation path needs an exact measured feature identity.", "links")
     }
+    feature_candidate_record <- function(feature) {
+      feature_taxon <- triomics_target_feature_taxon(feature, request$taxon_id)
+      source_id <- if (triomics_target_string(feature$source_id)) as.character(feature$source_id) else ""
+      source <- evidence$source_by_id[[source_id]]
+      feature_key <- if (triomics_target_string(feature$feature_key)) as.character(feature$feature_key) else ""
+      list(
+        feature_key = feature_key, feature_namespace = as.character(feature$id_namespace),
+        feature_id = as.character(feature$original_id), source_id = source_id,
+        source_sha256 = if (is.list(source)) source$sha256 else NULL,
+        source_selection_history = if (is.list(source)) source$selection_history %||% NULL else NULL,
+        source_selection_evidence = if (is.list(source)) source$selection_evidence %||% NULL else NULL,
+        request_taxon_id = request$taxon_id,
+        feature_taxon_id = feature_taxon$taxon_id,
+        feature_taxon_status = feature_taxon$status,
+        feature_taxon_declaration = feature_taxon$declaration,
+        feature_taxon_provenance_ref = feature_taxon$provenance_ref,
+        taxon_applicability = feature_taxon$applicability,
+        taxon_reason_code = feature_taxon$reason_code,
+        dependency_group = paste0("molecular_feature:", feature_key)
+      )
+    }
     add_unmeasured <- function(status, reason, features = list()) {
+      candidates <- lapply(features, feature_candidate_record)
+      candidate <- if (length(candidates) == 1L) candidates[[1L]] else NULL
       observations[[length(observations) + 1L]] <<- list(
         observation_id = paste0("unmeasured:", link$link_id), link_id = link$link_id,
         endpoint = "molecular_measurement", value = NULL, effect = NULL, effect_unit = NULL,
         status = status, reason = reason, feature_identity_status = status,
-        feature_candidates = lapply(features, function(feature) list(
-          feature_key = as.character(feature$feature_key),
-          source_id = as.character(feature$source_id)
-        )),
-        dependency_group = paste0("link:", link$link_id), source_branch = "none",
-        analysis_id = evidence$analysis_id, study_id = evidence$study_id,
+        feature_key = if (is.null(candidate)) NULL else candidate$feature_key,
+        feature_namespace = if (is.null(candidate)) NULL else candidate$feature_namespace,
+        feature_id = if (is.null(candidate)) NULL else candidate$feature_id,
+        source_id = if (is.null(candidate)) NULL else candidate$source_id,
+        source_sha256 = if (is.null(candidate)) NULL else candidate$source_sha256,
+        source_selection_history = if (is.null(candidate)) NULL else candidate$source_selection_history,
+        source_selection_evidence = if (is.null(candidate)) NULL else candidate$source_selection_evidence,
+        request_taxon_id = request$taxon_id,
+        feature_taxon_id = if (is.null(candidate)) NULL else candidate$feature_taxon_id,
+        feature_taxon_status = if (is.null(candidate)) NULL else candidate$feature_taxon_status,
+        feature_taxon_declaration = if (is.null(candidate)) NULL else candidate$feature_taxon_declaration,
+        feature_taxon_provenance_ref = if (is.null(candidate)) NULL else candidate$feature_taxon_provenance_ref,
+        taxon_applicability = if (is.null(candidate)) {
+          if (length(candidates)) "unassessable" else NULL
+        } else candidate$taxon_applicability,
+        taxon_reason_code = if (is.null(candidate)) {
+          if (length(candidates)) "duplicate_molecular_identity" else NULL
+        } else candidate$taxon_reason_code,
+        feature_candidates = candidates,
+        dependency_group = if (is.null(candidate)) paste0("link:", link$link_id) else candidate$dependency_group,
+        source_branch = "none", analysis_id = evidence$analysis_id, study_id = evidence$study_id,
         path_context = link$context_id, path_sign = link$sign,
         interpretation = "descriptive_compatibility_only"
       )
@@ -66,6 +184,16 @@ triomics_target_resolve_observations <- function(request, links, evidence) {
       triomics_d_abort("D_TARGET_OBSERVATION_LINEAGE_INVALID",
                        "A target observation feature lacks its immutable source identity.", feature_key)
     }
+    feature_taxon <- triomics_target_feature_taxon(feature, request$taxon_id)
+    taxon_fields <- list(
+      request_taxon_id = request$taxon_id,
+      feature_taxon_id = feature_taxon$taxon_id,
+      feature_taxon_status = feature_taxon$status,
+      feature_taxon_declaration = feature_taxon$declaration,
+      feature_taxon_provenance_ref = feature_taxon$provenance_ref,
+      taxon_applicability = feature_taxon$applicability,
+      taxon_reason_code = feature_taxon$reason_code
+    )
     matched_rows <- Filter(function(item) {
       is.list(item$row) && identical(as.character(item$row$feature_key), feature_key)
     }, evidence$tested_results)
@@ -75,7 +203,7 @@ triomics_target_resolve_observations <- function(request, links, evidence) {
       effect_available <- identical(as.character(row$estimation_status), "estimated") &&
         is.numeric(row$effect) && length(row$effect) == 1L && !is.na(row$effect) && is.finite(row$effect)
       value <- if (effect_available) row$effect else NULL
-      observations[[length(observations) + 1L]] <- list(
+      observations[[length(observations) + 1L]] <- c(list(
         observation_id = paste0("B:", result_id), result_id = result_id,
         source_branch = "primary_statistics", analysis_id = evidence$analysis_id,
         study_id = evidence$study_id, block_id = as.character(item$block_id),
@@ -87,12 +215,13 @@ triomics_target_resolve_observations <- function(request, links, evidence) {
         source_selection_evidence = source$selection_evidence %||% NULL,
         endpoint = "statistical_effect", effect = value, value = value,
         effect_unit = as.character(row$effect_unit %||% ""),
-        status = if (!effect_available) "unmeasured" else
-          triomics_target_expected_status(value, link$expected_direction),
+        status = if (!effect_available) "unmeasured" else if (!identical(feature_taxon$applicability, "matched")) {
+          "uninformative"
+        } else triomics_target_expected_status(value, link$expected_direction),
         dependency_group = paste0("molecular_feature:", feature_key),
         link_id = link$link_id, path_context = link$context_id, path_sign = link$sign,
         interpretation = "descriptive_compatibility_only"
-      )
+      ), taxon_fields)
     }
     c_nominations <- Filter(function(nomination) {
       identical(as.character(nomination$source_branch), "integration_selection") &&
@@ -109,7 +238,7 @@ triomics_target_resolve_observations <- function(request, links, evidence) {
       for (component_id in names(loadings)) {
         loading <- loadings[[component_id]]
         if (!is.numeric(loading) || length(loading) != 1L || is.na(loading) || !is.finite(loading)) next
-        observations[[length(observations) + 1L]] <- list(
+        observations[[length(observations) + 1L]] <- c(list(
           observation_id = paste0("C:", as.character(nomination$nomination_id), ":", component_id),
           source_branch = "integration_selection", analysis_id = evidence$analysis_id,
           study_id = evidence$study_id, nomination_id = as.character(nomination$nomination_id),
@@ -126,7 +255,7 @@ triomics_target_resolve_observations <- function(request, links, evidence) {
           dependency_group = paste0("molecular_feature:", feature_key),
           link_id = link$link_id, path_context = link$context_id, path_sign = link$sign,
           interpretation = "descriptive_compatibility_only"
-        )
+        ), taxon_fields)
       }
     }
     if (!length(matched_rows) && !length(c_nominations)) {
@@ -155,12 +284,21 @@ triomics_target_external_axis <- function(records, axis) {
                 coverage = coverage, evidence = list()))
   }
   attached <- vapply(matched, function(record) identical(record$attachment, "request"), logical(1))
+  assay_qualified <- vapply(matched, function(record) {
+    identical(record$assay_qualification, "qualified")
+  }, logical(1))
   available <- vapply(matched, function(record) identical(record$availability, "available"), logical(1))
-  coverage$measured_records <- as.integer(sum(attached & available))
-  coverage$unmeasured_records <- as.integer(sum(attached & !available))
-  coverage$unresolved_records <- as.integer(sum(!attached))
-  status <- if (any(attached & available)) "measured" else if (any(attached)) "unmeasured" else "unresolved"
-  list(status = status, reason_code = if (identical(status, "unresolved")) "D_TARGET_IDENTITY_UNRESOLVED" else NULL,
+  applicable <- attached & assay_qualified
+  coverage$measured_records <- as.integer(sum(applicable & available))
+  coverage$unmeasured_records <- as.integer(sum(applicable & !available))
+  coverage$unresolved_records <- as.integer(sum(!applicable))
+  status <- if (any(applicable & available)) "measured" else if (any(!applicable)) "unresolved" else "unmeasured"
+  reason_code <- if (!identical(status, "unresolved")) NULL else if (any(!attached)) {
+    "D_TARGET_IDENTITY_UNRESOLVED"
+  } else {
+    "D_TARGET_ASSAY_QUALIFICATION_UNRESOLVED"
+  }
+  list(status = status, reason_code = reason_code,
        coverage = coverage, evidence = matched)
 }
 
@@ -200,6 +338,7 @@ triomics_target_profile <- function(request, links, observations, external_evide
   }, character(1))
   if (anyDuplicated(link_ids)) invalid("Link identifiers must be unique.", "links")
   status_values <- c("support", "conflict", "ambiguous", "uninformative", "unmeasured")
+  taxon_applicability_values <- c("matched", "unassessable", "inapplicable")
   rows <- lapply(observations, function(observation) {
     if (!is.list(observation) || !triomics_target_string(observation$link_id) ||
         !observation$link_id %in% link_ids) {
@@ -216,9 +355,31 @@ triomics_target_profile <- function(request, links, observations, external_evide
       triomics_d_abort("D_TARGET_CLAIM_COLLAPSED", "Observation endpoints cannot be converted to mechanistic claims.", "observations")
     }
     link <- links[[match(observation$link_id, link_ids)]]
+    if (!is.null(observation$taxon_applicability) &&
+        (!triomics_target_string(observation$taxon_applicability) ||
+         !observation$taxon_applicability %in% taxon_applicability_values)) {
+      invalid("Feature taxon applicability must be matched, unassessable, or inapplicable.", "observations")
+    }
+    if (triomics_target_string(observation$feature_key) && is.null(observation$taxon_applicability)) {
+      observation$request_taxon_id <- request$taxon_id
+      observation$feature_taxon_id <- NULL
+      observation$feature_taxon_status <- "unknown"
+      observation$feature_taxon_declaration <- NULL
+      observation$feature_taxon_provenance_ref <- NULL
+      observation$taxon_applicability <- "unassessable"
+      observation$taxon_reason_code <- "feature_taxon_unknown"
+    }
     observation$path_sign <- link$sign
     observation$path_context <- link$context_id
-    observation$coverage <- if (is.null(observation$value)) "unmeasured" else "measured"
+    observation$coverage <- if (identical(observation$taxon_applicability, "inapplicable")) {
+      "inapplicable"
+    } else if (identical(observation$taxon_applicability, "unassessable")) {
+      "unassessable"
+    } else if (is.null(observation$value)) {
+      "unmeasured"
+    } else {
+      "measured"
+    }
     observation
   })
   external_records <- list()
@@ -242,18 +403,31 @@ triomics_target_profile <- function(request, links, observations, external_evide
     if (triomics_target_string(observation$feature_key)) return(observation$feature_key)
     paste0("link:", observation$link_id)
   }, character(1))
-  measured_feature_count <- length(unique(by_feature[vapply(rows, function(observation) !is.null(observation$value), logical(1))]))
-  unmeasured_feature_count <- length(unique(by_feature[vapply(rows, function(observation) is.null(observation$value), logical(1))]))
+  applicable_measurements <- vapply(rows, function(observation) {
+    !is.null(observation$value) &&
+      (is.null(observation$taxon_applicability) || identical(observation$taxon_applicability, "matched"))
+  }, logical(1))
+  taxon_unassessable <- any(vapply(rows, function(observation) {
+    !is.null(observation$taxon_applicability) &&
+      observation$taxon_applicability %in% c("unassessable", "inapplicable")
+  }, logical(1)))
+  measured_feature_count <- length(unique(by_feature[applicable_measurements]))
+  unmeasured_feature_count <- length(unique(by_feature[!applicable_measurements]))
   dependency_groups <- if (length(rows)) unique(vapply(rows, `[[`, character(1), "dependency_group")) else character()
   compatibility_status <- if (identical(mechanism_status, "unassessable")) "unassessable" else
-    if (!length(links) || !length(rows) || measured_feature_count == 0L) "unmeasured" else "measured"
+    if (taxon_unassessable) "unassessable" else
+      if (!length(links) || !length(rows) || measured_feature_count == 0L) "unmeasured" else "measured"
   binding <- triomics_target_external_axis(external_records, "binding")
   function_axis <- triomics_target_external_axis(external_records, "function")
   engagement <- triomics_target_external_axis(external_records, "engagement")
   axes <- list(
     metabolic_multiomics_compatibility = list(
       status = compatibility_status,
-      reason_code = if (identical(compatibility_status, "unassessable")) "D_TARGET_MECHANISM_UNASSESSABLE" else NULL,
+      reason_code = if (!identical(compatibility_status, "unassessable")) NULL else if (identical(mechanism_status, "unassessable")) {
+        "D_TARGET_MECHANISM_UNASSESSABLE"
+      } else {
+        "D_TARGET_FEATURE_TAXON_UNASSESSABLE"
+      },
       coverage = list(expected_links = as.integer(length(links)),
                       measured_features = as.integer(measured_feature_count),
                       unmeasured_features = as.integer(unmeasured_feature_count)),
