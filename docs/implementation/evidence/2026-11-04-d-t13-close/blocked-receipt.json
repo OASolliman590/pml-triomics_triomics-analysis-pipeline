@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0",
+  "packet_id": "D-T13",
+  "status": "blocked_at_repair_cap",
+  "accepted": false,
+  "completion_credit": false,
+  "product_integrated": false,
+  "candidate_commit": "37663a12d285ee4cbc68146a40342caaed513c15",
+  "worker_records_commit": "ef48615b721ed9148f132d0548529802fcbeb9cd",
+  "implementation_attempts": 1,
+  "repairs_used": 2,
+  "repairs_remaining": 0,
+  "source_counts": {
+    "pass": 260,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 36
+  },
+  "source_by_file": {
+    "test-D-T08.R": {
+      "pass": 151,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 25
+    },
+    "test-D-T13.R": {
+      "pass": 109,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 11
+    }
+  },
+  "source_filter": "^(D-T08|D-T13)$",
+  "source_command": "Rscript --vanilla <local-evidence>/scripts/run-source.R <candidate-worktree> <local-evidence>/d13/evidence/repair2/source \"^(D-T08|D-T13)$\"",
+  "source_exit_code": 0,
+  "source_run_by": "Luna; Sol read structured receipt",
+  "named_warnings": [],
+  "final_review": {
+    "reviewer": "/root/d13_final_sol_review",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "effective_settings_exposed": false,
+    "standards": "pass",
+    "spec": "changes_required",
+    "P0": 0,
+    "P1": 0,
+    "P2": 1,
+    "finding": "Numeric scientific lineage accepted by actual producers is silently discarded by alphabetic-only prose filter at candidate R/report_targets.R:58."
+  },
+  "Sol_independent_probe": {
+    "snapshot": "37663a12d285ee4cbc68146a40342caaed513c15",
+    "source": {
+      "construction_lineage": "Clinical score constructed from 3 molecular features",
+      "source_selection_history": "Top 10 features selected in the same study"
+    },
+    "reported": {
+      "construction_lineage": "",
+      "source_selection_history": ""
+    },
+    "subject_overlap_status": "shared_subjects",
+    "independent_replication": false,
+    "preservation_pass": false,
+    "command": "Rscript --vanilla <local-evidence>/d13/sol-final-blocker/probe.R <immutable-archive> <local-evidence>/d13/sol-final-blocker/probe-result.json",
+    "exit_code": 1,
+    "meaning": "Expected nonzero reproduction of unresolved preservation defect; not acceptance"
+  },
+  "archive_sha256": "4b23932f60ecd3d63188866105ee1f43572cf6eeb7f4c52d9a3ee175e4fe4e60",
+  "evidence_hashes": {
+    "source-receipt.json": "dcd2e4985c0bfb96f3bc465b5e1c189348e93c1317bbff0262e28df465f9f448",
+    "testthat-results.rds": "4796e60ea1c34ce655d6893a825c59e1ec0da8edf58e00edadf290e90e2f1364",
+    "probe.R": "93c6b169e1a89b19cf1f9a19d526419dc088b166b92a0b69dc0ada27f00847fe",
+    "probe-result.json": "62f06fcdce84b5b92b9ed82f91cf55fb451c69be629e9a3ec9dfb726a52a8b12",
+    "probe-receipt.json": "e109fdb689beff81e8b5462f10360f1c20965c46d1cef9d604000f6535e47a53"
+  },
+  "native_gate_this_candidate": "not_run: final local review failed",
+  "final_candidate_provenance_hashes": null,
+  "package_status": "not_run",
+  "Astra_verdict": "not_run: M8 prerequisites incomplete",
+  "milestones": {
+    "M7": "accepted",
+    "G7": "released",
+    "M8": "incomplete",
+    "G8": "closed",
+    "M9": "not_started",
+    "G9": "closed"
+  },
+  "next_legal_independent_packet": "D-T15; frozen dependencies D-T08 and C-08 plus G7 satisfied; not started in this packet run",
+  "constraints_preserved": [
+    "D-T06/D-T07/D-T14 blocked zero credit",
+    "C-07 not_run",
+    "C-09 unqualified/synthetic_fixture_only/benefit_guaranteed=false",
+    "Frozen-kit independent audit pending",
+    "No private data, push or AIU execution"
+  ],
+  "historical_evidence": "94ede2d native positive output and earlier reviews preserved; not proof of final candidate. Repair1 RED capped10; repair2 RED uncapped2.",
+  "command_path_note": "Exact host-bound argv/logs remain local; public receipt substitutes placeholders."
+}

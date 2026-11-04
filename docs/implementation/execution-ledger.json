@@ -35,42 +35,16 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_id": "/root/m8_d13_luna",
-      "role": "Luna D-T13 final repair2",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "effective_settings_exposed": false,
-      "candidate": "c94cd1efe590ce5cf43aed23a95821f7d6ce3e33",
-      "status": "repair2_running",
-      "repairs_used": 2,
-      "repairs_remaining": 0,
-      "allowed_next_transition": "Join final repair, final local review and parent gate, or block; no repair3"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "D_T13_repair2_running",
+    "status": "D_T13_blocked_receipt_complete",
     "last_reconciled": "2026-11-04",
-    "active_handoffs": [
-      {
-        "agent_id": "/root/m8_d13_luna",
-        "role": "Luna D-T13 final repair2",
-        "requested_model": "gpt-6-luna",
-        "requested_effort": "max",
-        "effective_settings_exposed": false,
-        "candidate": "c94cd1efe590ce5cf43aed23a95821f7d6ce3e33",
-        "status": "repair2_running",
-        "repairs_used": 2,
-        "repairs_remaining": 0,
-        "allowed_next_transition": "Join final repair, final local review and parent gate, or block; no repair3"
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Initial worker and two local reviews reconciled; same Luna targeted repair1 for required association lineage.",
+    "disposition": "Both repairs consumed. Preserve failed candidate; no repair3. Independent D15 may proceed on accepted D08/C08/G7 in the next packet run.",
     "current_gate": {
-      "status": "not_started",
-      "candidate": null
+      "status": "not_started_final_local_review_failed",
+      "candidate": "37663a12d285ee4cbc68146a40342caaed513c15"
     }
   },
   "orchestration_events": [
@@ -6838,6 +6812,15 @@
       "candidate": "ed37578ea157bc8bdfdb0cad469861a0555adcc2",
       "verdict": "changes_required",
       "next": "same Luna finalrepair2, safe prose lineage; no repair3"
+    },
+    {
+      "event": "D13_final_local_review_failed_Sol_reproduced",
+      "candidate": "37663a12d285ee4cbc68146a40342caaed513c15",
+      "review_verdict": "changes_required",
+      "Sol_probe_exit_code": 1,
+      "status": "blocked_at_repair_cap",
+      "product_integrated": false,
+      "next": "Independent D15 next packet run; no D13 repair3"
     }
   ],
   "packets": {
@@ -8303,20 +8286,38 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "repair2_running",
+      "status": "blocked_at_repair_cap",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
-      "blockers": [],
+      "blockers": [
+        "Final P2: alphabetic-only prose filter silently drops numeric scientific construction/selection lineage. Both repairs consumed."
+      ],
       "repair_attempts": 2,
       "implementation_base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
-      "active_worker": "/root/m8_d13_luna",
+      "active_worker": null,
       "accepted": false,
       "completion_credit": false,
       "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t13-dispatch.md",
-      "candidate_commit": "c94cd1efe590ce5cf43aed23a95821f7d6ce3e33",
+      "candidate_commit": "ef48615b721ed9148f132d0548529802fcbeb9cd",
       "initial_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-initial-review.md",
-      "repair1_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-repair1-review.md"
+      "repair1_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-repair1-review.md",
+      "final_product_commit": "37663a12d285ee4cbc68146a40342caaed513c15",
+      "final_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-blocked-close.md",
+      "receipt_ref": "docs/implementation/evidence/2026-11-04-d-t13-close/blocked-receipt.json",
+      "source_counts": {
+        "pass": 260,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 36
+      },
+      "pending_gates": [
+        "Resolve blocked AC2 under lawful future authority",
+        "Parent independent final native/report readback",
+        "M8 milestone gates"
+      ]
     },
     "D-T15": {
       "status": "not_started",
@@ -8441,7 +8442,9 @@
       "status": "in_progress",
       "review_ref": null,
       "commit": null,
-      "blocking_packets": [],
+      "blocking_packets": [
+        "D-T13"
+      ],
       "runtime_blocker_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md",
       "remaining_packets": [
         "D-T13",
@@ -8512,5 +8515,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "active_M8_D_T13"
+  "close_state": "D_T13_blocked_receipt_complete_goal_active"
 }

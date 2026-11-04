@@ -1,8 +1,10 @@
-# Current checkpoint: D-T13 final repair2
+# Current checkpoint: D-T13 blocked at its repair cap
 
-Read [repair1 review](reviews/2026-11-04-d-t13-repair1-review.md). Fresh reviewer reproduced safe construction/selection prose lost by token-only projection. Same Luna performs final repair2of2; preserve94ede2d,ed37578,c94cd1e and all evidence. No third repair. D13 unaccepted; G8/G9 closed.
+Read [blocked receipt](reviews/2026-11-04-d-t13-blocked-close.md). Final product37663a1 and worker recordef48615 preserved, not integrated. Worker focused tests260pass/36blocks/0fail/error/warn/skip. Final fresh Sol review found oneP2: legitimate numeric scientific lineage silently disappears; Sol independently reproduced it. Both repairs consumed; no repair3. No final native/package/Astra gate was run. No active worker or process.
 
-Literal resume: **Join /root/m8_d13_luna repair2; final local review and parent focused/native/actual-Quarto saved-output proof. Integrate only on passes; stop at D13 receipt. No D15 or M7 reopening.**
+D08/M7/G7 remain accepted. G8/G9 closed; D13 still required and unresolved. D15 remains unstarted and independently legal (depends only on D08/C08 and G7). Conditional limits and frozen-kit audit remain unchanged. No private data, AIU execution, push or Notion sync.
+
+Literal resume: **Start the next bounded D-T15 clinical-objectives packet with one fresh Luna-max worker. Preserve D13 candidates and blocked receipt; do not reopen its exhausted repair cycle. Stop after the D15 receipt. M8/G8 cannot close while D13 is blocked.**
 
 ## Historical checkpoints below
 
