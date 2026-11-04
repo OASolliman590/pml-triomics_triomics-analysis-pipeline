@@ -239,7 +239,7 @@ b05_expect_native_provenance <- function(output, expected_revision) {
   testthat::expect_identical(envelope$payload_sha256, triomics_sha256(payload_path))
   testthat::expect_match(expected_revision, "^(?:[0-9a-f]{40}|[0-9a-f]{64})$")
   testthat::expect_identical(payload$producer$repository_commit, expected_revision)
-  testthat::expect_identical(envelope$producer_commit, expected_revision)
+  testthat::expect_identical(envelope$producer$commit, expected_revision)
   invisible(list(payload = payload, envelope = envelope))
 }
 
