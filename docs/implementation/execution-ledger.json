@@ -37,18 +37,20 @@
   },
   "active_workers": [
     {
-      "agent_id": "/root/d08_s02_luna",
-      "role": "Luna location-only test repair",
+      "agent_id": "/root/m8_d08_luna",
+      "role": "Luna final report repair2",
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "host_dispatch_accepted": true,
       "effective_settings_exposed": false,
-      "worktree": "/Users/megastore/.codex/worktrees/m8-d08-s02-luna/PML MultiOmics Analysis Pipeline",
-      "branch": "codex/m8-d08-s02-luna",
-      "base": "8a5c7621372d8c3e03b0d64587929912407f653a",
-      "status": "initial_implementation_running",
-      "repairs_used": 0,
-      "allowed_next_transition": "Inspect location-only diff, parent-child APFS proof and four focused suites; integrate isolated candidate; then consolidated final D08 repair2."
+      "worktree": "/Users/megastore/.codex/worktrees/m8-d-t08-luna/PML MultiOmics Analysis Pipeline",
+      "branch": "codex/m8-d-t08-luna",
+      "base": "e1413e3cdd829f44358596782d87439cd0c53089",
+      "status": "targeted_repair2_running",
+      "repairs_used": 2,
+      "repairs_remaining": 0,
+      "brief": "d08-repair2-brief.md",
+      "allowed_next_transition": "Join committed receipt; fresh focused read-only local review; independently run final combined source/native/real HTML readback. No repair3 or premature acceptance."
     }
   ],
   "orchestration_control": {
@@ -6753,6 +6755,22 @@
       "BCD_hash_readback": true,
       "report_accepted": false,
       "active_worker": "/root/d08_s02_luna"
+    },
+    {
+      "event": "S02_returned_final_D08_repair2_dispatched",
+      "date": "2026-11-04",
+      "base": "e1413e3cdd829f44358596782d87439cd0c53089",
+      "S02_counts": {
+        "pass": 995,
+        "fail": 0,
+        "error": 0,
+        "warn": 1,
+        "skip": 0,
+        "blocks": 51
+      },
+      "active_worker": "/root/m8_d08_luna",
+      "report_repairs_used": 2,
+      "report_repairs_remaining": 0
     }
   ],
   "packets": {
@@ -8143,7 +8161,7 @@
       "disposition_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md"
     },
     "D-T08": {
-      "status": "S02_test_location_worker_active_before_final_report_repair",
+      "status": "final_report_repair2_running",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
@@ -8163,9 +8181,9 @@
         "receipt": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md"
       },
       "runtime_receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-ready.md",
-      "repair_attempts": 1,
-      "implementation_base": "4a783be5d5ec005a0044a43cdc6dc8c4d6c35392",
-      "active_worker": null,
+      "repair_attempts": 2,
+      "implementation_base": "e1413e3cdd829f44358596782d87439cd0c53089",
+      "active_worker": "/root/m8_d08_luna",
       "candidate_commit": "7c551b05ac13903231cafed03ae398a9fff3f574",
       "initial_review_ref": "docs/implementation/reviews/2026-11-04-d-t08-initial-review.md",
       "predecessor_repair": {
@@ -8186,8 +8204,17 @@
         "scope_audit_pass": true,
         "snapshot": "ec8dc88fc3c1cfc9840e44477f728b46abf17035",
         "worker": "/root/d08_s02_luna",
-        "implementation_status": "running",
-        "accepted": false
+        "implementation_status": "verified_location_only_on_e1413e3",
+        "accepted": false,
+        "worker_commit": "e1413e3cdd829f44358596782d87439cd0c53089",
+        "counts": {
+          "pass": 995,
+          "fail": 0,
+          "error": 0,
+          "warn": 1,
+          "skip": 0,
+          "blocks": 51
+        }
       }
     },
     "D-T13": {

@@ -1,14 +1,14 @@
-# Current checkpoint: S02 location-only test worker active; final report repair pending
+# Current checkpoint: D-T08 final report repair2 running
 
-Only `/root/d08_s02_luna` is active, fresh managed m8-d08-s02-luna from8a5c762. Scope M8-D08-S02 passed fresh Astra audit at ec8dc88; read its change record and reviews/2026-11-04-d08-s02-scope-audit.md. Four existing test files only, temporary locations only, all assertions/fault injections unchanged. Parent/child temporary roots verified under internal APFS. Join the existing worker; do not redispatch.
+Only original `/root/m8_d08_luna` is active on final repair2of2. Its clean worktree was fast-forwarded to combined `e1413e3cdd829f44358596782d87439cd0c53089` before dispatch. Original seven-file report scope only; no shared/B/S02 edits. Three reproduced findings are consolidated in the local d08-repair2-brief.md: privacy redaction, nested-CV evaluation/single-fit distinction, and valid nonexistent output path rejection. No repair3.
 
-Read reviews/2026-11-04-d08-combined-before-repair2.md. Combined source1376/0fail/error/skip/1namedD01warning is behavioral evidence only because legacy tests hard-coded/private/tmp. Native positive diagnostic A0 B0 C0 D0 report2 preserves A and passes independent B/C/D hash readback. Missing-producer negative also exits2instead3. Report wrapper rejects a valid nonexistent child because of double-leading-slash spelling. No report HTML yet.
+S02 returned e1413e3:995pass,0fail/error/skip,1expected named D-T01 stale-sign warning; all warning fixture/output paths now use configured internal APFS. Parent/child tempdirs and backingvolume verified. Sol independently checked exactly42location-only substitutions across the four files, no assertion or value change. Scope audit remains scope-only. Final combined source and native gates remain mandatory.
 
-After S02 returns and its location-only diff/four focused suites are verified, combine serially on the isolated candidate and dispatch the original report Luna's final repair2 for all three remaining findings: path wrapper, quoted credentials/single-component paths, and nested-CV completed-evaluation versus unavailable-single-fit distinction. Keep the original seven-file report allowlist. No report repair3. Required final combined source/native/real Quarto and independent readback remain. Canonical checkout unchanged; all candidates and failures preserved.
+Preserve the earlier1376-pass behavioral-only run, positive A0/B0/C0/D0/report2 diagnostic and B/C/D hash readback, initial23b5689 and reportrepair1 7c551b0. Current reportworker must finish meaningful RED/GREEN plus real native and Quarto verification before returning. Join it; do not redispatch. Then Sol inspects the immutable diff, gets a focused read-only local review and runs independent final combined regressions, native negative/positive probes and HTML/numeric/lineage readback. All logs/output internal APFS, never/tmp or exFAT.
 
-No processes from14305 or28948 remain active. External orchestration.json names current worker and next transition. M7/G7 accepted, G8/G9 unreleased; no later packets/private data/push. All new outputs internal APFS, never/tmp or exFAT.
+M7/G7 accepted; G8/G9 unreleased. Canonical checkout remains unchanged. No later packets, private data or push. No parent gate process is active. External orchestration.json carries the exact next transition.
 
-Literal resume: join `/root/d08_s02_luna`; inspect its committed location-only diff and actual receipts; then take the consolidated final report repair transition. Do not rerun completed workers or claim the earlier path-noncompliant source run as qualification.
+Literal resume: join `/root/m8_d08_luna` finalrepair2 and its existing tests/native process if running. Do not start another repair, repeat completed workers or accept from an agent's shell exit alone. Finish at the D-T08 receipt; preserve the full G8/G9 goal.
 
 ## Historical checkpoints below
 
