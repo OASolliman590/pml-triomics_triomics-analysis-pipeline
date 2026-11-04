@@ -31,11 +31,30 @@
   "integration_request": "Sol: register and expose the allowlisted ORA helpers through the shared package metadata, then review the local Stage D wiring. The worker integrates typed protocol ResourceManifest bytes, verified primary B claim or C integration input lineage, complete measured feature backgrounds, SourceManifest qualification, qualified D02/D03 mapping, the frozen set family, unchanged hypergeometric/BH calculations and SHA256 bindings in the D generation. A native synthetic B-to-C-to-D run is included. The worker made no CLI, NAMESPACE or manual edits; this request remains unaccepted pending Sol's integration and milestone review.",
   "repair": "D-T04 implementation candidate",
   "current_revision_verification": {
-    "cycle": "M7-022",
-    "commit": "36abc874da479b4c6397d598056461db730d9c26",
-    "status": "verified_synthetic_native_dependency_evidence",
-    "review_ref": "docs/implementation/reviews/2026-11-03-m7-022-ora-sol-verification.md",
+    "cycle": "M7 final same-snapshot qualification",
+    "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+    "status": "verified_pending_Terra_Astra_Sol_acceptance",
+    "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
+    "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T04",
+    "test_counts": {
+      "pass": 38,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 6
+    },
     "milestone_acceptance": false
   },
-  "next_action": "Preserve historical receipts; reconcile this current revision on the final immutable M7 source snapshot before Sol acceptance. M7/G7 remain closed."
+  "next_action": "Terra DOC-M7 and fresh milestone Astra audit, then Sol decision on this exact tested product commit. M7/G7 remain closed.",
+  "pre_final_gate_record": {
+    "current_revision_verification": {
+      "cycle": "M7-022",
+      "commit": "36abc874da479b4c6397d598056461db730d9c26",
+      "status": "verified_synthetic_native_dependency_evidence",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-022-ora-sol-verification.md",
+      "milestone_acceptance": false
+    },
+    "next_action": "Preserve historical receipts; reconcile this current revision on the final immutable M7 source snapshot before Sol acceptance. M7/G7 remain closed."
+  }
 }

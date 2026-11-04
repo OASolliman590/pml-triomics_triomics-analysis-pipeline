@@ -1,0 +1,112 @@
+{
+  "product_commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+  "source_counts": {
+    "pass": 7353,
+    "fail": 0,
+    "error": 0,
+    "warn": 15,
+    "skip": 0,
+    "blocks": 493
+  },
+  "package_counts": {
+    "pass": 7326,
+    "fail": 0,
+    "warn": 15,
+    "skip": 0
+  },
+  "package_status": "Status: OK",
+  "archive_tar_sha256": "1c1b0473df6285fe2a073dff2d3195bc0de0dd6e9be287213d8c64b1d6daa202",
+  "archive_file_count": 945,
+  "source_started": "2026-11-04 01:37:50 UTC",
+  "source_finished": "2026-11-04 02:03:54 UTC",
+  "source_warning_names": {
+    "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes": 11,
+    "C-05 real MOFA2 fits and extracts a missing sample-view capability cell": 3,
+    "D-T01 refuses stale paired signs and preserves the old pointer": 1
+  },
+  "package_warning_names": {
+    "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes": 11,
+    "C-05 real MOFA2 fits and extracts a missing sample-view capability cell": 3,
+    "D-T01 refuses stale paired signs and preserves the old pointer": 1
+  },
+  "warning_dispositions": {
+    "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes": "Native MOFA small-fixture power, correlation and low-variance diagnostics; retained without suppression.",
+    "C-05 real MOFA2 fits and extracts a missing sample-view capability cell": "Native MOFA small-fixture diagnostics; retained without suppression.",
+    "D-T01 refuses stale paired signs and preserves the old pointer": "Expected native CLI exit 2 from intentional stale-sign rejection; prior generation preservation is asserted."
+  },
+  "native_commands": 24,
+  "acceptance": "pending Terra documentation, fresh Astra milestone audit and Sol decision",
+  "external_evidence_root": "/tmp/triomics-stage-d-evidence/final-m7-028",
+  "log_sha256": {
+    "source/full-source.log": "57bbecfd58584b9b12c5cc0f61caf236eeced1b1005f853725d26ba2ccdaebf7",
+    "source/testthat-results.rds": "99b442e1e080bd0f11fe1eae41892da3a5de9fd1916609f34f84e6d1ada8471d",
+    "package/testthat.Rout": "aef2ad97149e7dbe5cb9d2bfae76e80bf54b1af39d360cbfdb324a0cd1e0a520",
+    "package/00check.log": "b7e8542b74674992a3a6225edad3e4941303d1667e61e7721d6ed58055cc0f67",
+    "package/check.log": "ef5367a3e6693ae44ca4d1c31d9436b20804dcc68d38195c8b46a5e5708bb77c",
+    "package/build.log": "624a919737124b9471cd8caed3dcd1e4c0c7a7ac1866544c5d937e68022c6562"
+  },
+  "source_warning_messages": [
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....",
+      "count": 3
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.\n",
+      "count": 4
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "no non-missing arguments to max; returning -Inf",
+      "count": 4
+    },
+    {
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....",
+      "count": 1
+    },
+    {
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "message": "All 2 factors were found to explain little or no variance so remove_inactive_factors option has been disabled.",
+      "count": 2
+    },
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-22af4169ae05/tickets/d-t01-paired-sign-stale-22af5ed97ce3.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-22af11febd0' 2>&1' had status 2",
+      "count": 1
+    }
+  ],
+  "package_warning_messages": [
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....",
+      "count": 3
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.\n",
+      "count": 4
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "no non-missing arguments to max; returning -Inf",
+      "count": 4
+    },
+    {
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....",
+      "count": 1
+    },
+    {
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "message": "All 2 factors were found to explain little or no variance so remove_inactive_factors option has been disabled.",
+      "count": 2
+    },
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '/private/tmp/d-t01-paired-native-fixture-3a5d7e59b265/tickets/d-t01-paired-sign-stale-3a5d19918767.yaml' --stage 'D' --output '/private/tmp/d-t01-paired-native-output-3a5d32cf45b1' 2>&1' had status 2",
+      "count": 1
+    }
+  ]
+}

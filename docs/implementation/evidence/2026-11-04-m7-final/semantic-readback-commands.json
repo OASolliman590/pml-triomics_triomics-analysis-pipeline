@@ -1,0 +1,38 @@
+{
+  "commands": [
+    [
+      "python3",
+      "/tmp/triomics-stage-d-evidence/m7-027/sol-target-readback.py",
+      "/private/tmp/triomics-m7-021",
+      "/private/tmp/triomics-stage-d-evidence/final-m7-028/targets-native-subset.json",
+      "/private/tmp/triomics-stage-d-evidence/final-m7-028/target-readback.json"
+    ],
+    [
+      "python3",
+      "/tmp/triomics-stage-d-evidence/m7-025/sol-discovery-readback.py",
+      "/private/tmp/triomics-m7-021",
+      "/private/tmp/triomics-stage-d-evidence/final-m7-028/discovery-native-subset.json",
+      "/private/tmp/triomics-stage-d-evidence/final-m7-028/discovery-readback.json"
+    ],
+    [
+      "python3",
+      "/tmp/triomics-stage-d-evidence/m7-022/sol-ora-readback.py",
+      "/private/tmp/triomics-m7-021",
+      "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T04",
+      "/private/tmp/triomics-stage-d-evidence/final-m7-028/ora-readback.json"
+    ],
+    [
+      "python3",
+      "/tmp/triomics-stage-d-evidence/m7-026/sol-native-readback.py",
+      "/private/tmp/triomics-m7-021",
+      "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/native-receipt.json",
+      "/private/tmp/triomics-stage-d-evidence/final-m7-028/generation-readback.json"
+    ]
+  ],
+  "exit_codes": [
+    0,
+    0,
+    0,
+    0
+  ]
+}

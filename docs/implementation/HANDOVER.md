@@ -1,3 +1,17 @@
+# Current M7 checkpoint — 4 November 2026
+
+Product snapshot `126a30fc68fd593826a3ca82cd399fff35ee90ef` passed the uninterrupted full source gate, all eight fresh native B/C/D publications, independent semantic/hash readbacks and the clean archive package gate. Source: 7353 pass / 0 fail / 0 error / 15 named warnings / 0 skip. Package: Status: OK; 7326 pass / 0 fail / 15 named warnings / 0 skip.
+
+Read `reviews/2026-11-04-m7-final-gates.md` and `evidence/2026-11-04-m7-final/gate-summary.json`. Current C-06 and required D packets are verified, not yet accepted. M7/G7 remain closed. Next: fresh Terra-max DOC-M7, then fresh read-only Astra-low audit of P plus the records. Sol alone records acceptance if both pass. No further source tests, native runs or package gate are needed unless a new change or unresolved concern justifies them.
+
+All Luna and scope/implementation Astra workers are complete. The sequential verification driver has ended. Original SSD dirty files and earlier capped/failed candidates remain preserved. No private data, push, AIU/fasting, M8/M9 work, schema/statistical/B-T04 threshold or seed changes.
+
+Literal resume instruction: “Continue from the passed final M7 gates for 126a30f. Reconcile any active DOC-M7 or milestone Astra agent in the execution ledger, complete the authorized documentation/audit/Sol acceptance transition, and preserve all conditional exclusions. Do not restart Luna or repeat passed gates without a new reason.”
+
+## Historical checkpoints — superseded, retained as evidence
+
+Everything below is historical. Old ‘current’, pending, active, blocked and resume statements do not describe the checkpoint above.
+
 # Implementation handover
 
 ## Active 3 November 2026 — M7 completion from b03cdef

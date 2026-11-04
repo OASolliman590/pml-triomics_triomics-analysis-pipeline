@@ -4,7 +4,7 @@
   "implementation_base": "ef7da2086e7a0244e18a8ea1902423596d6a2b75",
   "accepted": false,
   "applied_to_shared_files": true,
-  "implementation_status": "Native same-root B-backed C provenance is integrated and independently verified on the cited synthetic candidate. Current-revision acceptance remains false pending final same-snapshot M7 gates; historical M6 acceptance is preserved separately.",
+  "implementation_status": "Current native same-root B-backed C provenance is verified on the final immutable M7 source/archive snapshot. Current-revision acceptance remains false pending fresh milestone Astra and Sol decision.",
   "synthetic_software_only": true,
   "local_files": [
     "R/cli.R",
@@ -422,20 +422,24 @@
   },
   "acceptance": {
     "AC1": {
-      "status": "synthetic_cli_handoff_verified_acceptance_pending",
-      "evidence": "The exact Stage-C C-06 CLI consumes a verified complete-empty B primary nomination artifact, exports the actual accepted IntegrationResult and typed native sidecar, and writes all D payloads/envelopes/manifest. Fresh-output read-back verifies source roles, selection ancestry, privacy, preparation state semantics and byte hashes, and native lineage. Nested C-02 separately exits 0 with 12/12 predictions while D accurately marks the single-fit export unavailable. Independent milestone review and coordinator acceptance remain pending."
+      "status": "verified_synthetic_software_pending_Sol_acceptance",
+      "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#C-06",
+      "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance."
     },
     "AC2": {
-      "status": "passed_synthetic_behavior_tests",
-      "evidence": "Matched comparisons bind sample IDs, full feature maps, matrix hashes, preparation context and representation. Adversarial identity mismatch and missing evidence fail closed; MOFA native percentage versus common proportion is numerically tested (40 versus 0.4), and unlike definitions have no ranking."
+      "status": "verified_synthetic_software_pending_Sol_acceptance",
+      "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#C-06",
+      "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance."
     },
     "AC3": {
-      "status": "passed_explicit_unrun_policy_tests",
-      "evidence": "All four controls and paired baseline records are required and identity-matched. This packet ran no C-07 evaluations: controls are explicit not_run records, and the direct C-06 run has split_plan_status=not_run with no split_plan_sha256 or generated future plan. A complete control without an actual matched EvaluationResult and executed split-plan hash is rejected; no performance result is fabricated."
+      "status": "verified_synthetic_software_pending_Sol_acceptance",
+      "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#C-06",
+      "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance."
     },
     "AC4": {
-      "status": "synthetic_cli_status_verified_acceptance_pending",
-      "evidence": "The exact CLI shows concat_pca complete and unrequested backends not_requested, preserves C-09 as not_started/conditional, and keeps the D aggregate partial because C-07 controls are not_run while the requested Stage-C run registry and CLI exit are complete under declared requiredness. A nested C-02 evaluation remains successful without a single-fit D export. No packet acceptance is claimed."
+      "status": "verified_synthetic_software_pending_Sol_acceptance",
+      "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#C-06",
+      "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance."
     }
   },
   "shared_changes_for_sol": [
@@ -456,10 +460,10 @@
   ],
   "namespace_change_requested": false,
   "known_gaps": [
-    "No C-07 evaluation was executed. All four controls are explicitly unrun; the D aggregate remains partial even when the declared required Stage-C evaluation and CLI run complete.",
-    "The fixture and all tests are public synthetic software evidence; no private-study or biological validation is claimed.",
-    "The conditional C-09 clinical-prediction route remains not_started; its optional status is not presented as completed.",
-    "Independent milestone review and Sol's packet acceptance remain pending."
+    "Four C-07 scientific checks remain not_run; no scientific performance is invented.",
+    "C-09 remains unqualified synthetic_fixture_only with benefit_guaranteed=false.",
+    "Public synthetic software evidence only; no private-study, biological or clinical validation.",
+    "Fresh milestone Astra and Sol current-revision acceptance remain pending."
   ],
   "m7_011_native_provenance_attempt": {
     "status": "blocked_before_implementation",
@@ -694,12 +698,56 @@
     }
   },
   "acceptance_ref": "discovery/spec-v2/packets/C-06.md",
-  "next_action": "Preserve historical receipts; reconcile this current revision on the final immutable M7 source snapshot before Sol acceptance. M7/G7 remain closed.",
+  "next_action": "Terra DOC-M7 and fresh milestone Astra audit, then Sol decision on this exact tested product commit. M7/G7 remain closed.",
   "current_revision_verification": {
-    "cycle": "M7-021",
-    "commit": "4e8c1c2ee24f8150ebc2b67e29a40c8595816fa9",
-    "status": "verified_synthetic_native_dependency_evidence",
-    "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-precursor-verification.md",
+    "cycle": "M7 final same-snapshot qualification",
+    "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+    "status": "verified_pending_Terra_Astra_Sol_acceptance",
+    "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
+    "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#C-06",
+    "test_counts": {
+      "pass": 442,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 22
+    },
     "milestone_acceptance": false
+  },
+  "pre_final_gate_record": {
+    "current_revision_verification": {
+      "cycle": "M7-021",
+      "commit": "4e8c1c2ee24f8150ebc2b67e29a40c8595816fa9",
+      "status": "verified_synthetic_native_dependency_evidence",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-021-precursor-verification.md",
+      "milestone_acceptance": false
+    },
+    "next_action": "Preserve historical receipts; reconcile this current revision on the final immutable M7 source snapshot before Sol acceptance. M7/G7 remain closed.",
+    "implementation_status": "Native same-root B-backed C provenance is integrated and independently verified on the cited synthetic candidate. Current-revision acceptance remains false pending final same-snapshot M7 gates; historical M6 acceptance is preserved separately.",
+    "acceptance": {
+      "AC1": {
+        "status": "synthetic_cli_handoff_verified_acceptance_pending",
+        "evidence": "The exact Stage-C C-06 CLI consumes a verified complete-empty B primary nomination artifact, exports the actual accepted IntegrationResult and typed native sidecar, and writes all D payloads/envelopes/manifest. Fresh-output read-back verifies source roles, selection ancestry, privacy, preparation state semantics and byte hashes, and native lineage. Nested C-02 separately exits 0 with 12/12 predictions while D accurately marks the single-fit export unavailable. Independent milestone review and coordinator acceptance remain pending."
+      },
+      "AC2": {
+        "status": "passed_synthetic_behavior_tests",
+        "evidence": "Matched comparisons bind sample IDs, full feature maps, matrix hashes, preparation context and representation. Adversarial identity mismatch and missing evidence fail closed; MOFA native percentage versus common proportion is numerically tested (40 versus 0.4), and unlike definitions have no ranking."
+      },
+      "AC3": {
+        "status": "passed_explicit_unrun_policy_tests",
+        "evidence": "All four controls and paired baseline records are required and identity-matched. This packet ran no C-07 evaluations: controls are explicit not_run records, and the direct C-06 run has split_plan_status=not_run with no split_plan_sha256 or generated future plan. A complete control without an actual matched EvaluationResult and executed split-plan hash is rejected; no performance result is fabricated."
+      },
+      "AC4": {
+        "status": "synthetic_cli_status_verified_acceptance_pending",
+        "evidence": "The exact CLI shows concat_pca complete and unrequested backends not_requested, preserves C-09 as not_started/conditional, and keeps the D aggregate partial because C-07 controls are not_run while the requested Stage-C run registry and CLI exit are complete under declared requiredness. A nested C-02 evaluation remains successful without a single-fit D export. No packet acceptance is claimed."
+      }
+    },
+    "known_gaps": [
+      "No C-07 evaluation was executed. All four controls are explicitly unrun; the D aggregate remains partial even when the declared required Stage-C evaluation and CLI run complete.",
+      "The fixture and all tests are public synthetic software evidence; no private-study or biological validation is claimed.",
+      "The conditional C-09 clinical-prediction route remains not_started; its optional status is not presented as completed.",
+      "Independent milestone review and Sol's packet acceptance remain pending."
+    ]
   }
 }

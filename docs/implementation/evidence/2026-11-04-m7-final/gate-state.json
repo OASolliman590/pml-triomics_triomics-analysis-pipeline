@@ -1,0 +1,91 @@
+{
+  "product_commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+  "acceptance": false,
+  "M7": "closed",
+  "G7": "closed",
+  "commands": [
+    {
+      "phase": "full_source",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "/tmp/triomics-stage-d-evidence/final/run-source.R",
+        "/private/tmp/triomics-m7-021",
+        "/private/tmp/triomics-stage-d-evidence/final-m7-028/source"
+      ],
+      "working_directory": "/private/tmp/triomics-m7-021",
+      "exit_code": 0,
+      "log": "/private/tmp/triomics-stage-d-evidence/final-m7-028/source/full-source.log"
+    },
+    {
+      "phase": "native_packets",
+      "command": [
+        "python3",
+        "/tmp/triomics-stage-d-evidence/native-packet-proof.py",
+        "/private/tmp/triomics-m7-021",
+        "/private/tmp/triomics-stage-d-evidence/final-m7-028/native",
+        "inst/examples/tickets/D-T01.yaml",
+        "inst/examples/tickets/D-T02.yaml",
+        "inst/examples/tickets/D-T03.yaml",
+        "inst/examples/tickets/D-T04.yaml",
+        "inst/examples/tickets/D-T05.yaml",
+        "inst/examples/tickets/D-T10.yaml",
+        "inst/examples/tickets/D-T11.yaml",
+        "inst/examples/tickets/D-T12.yaml"
+      ],
+      "working_directory": "/private/tmp/triomics-m7-021",
+      "exit_code": 0,
+      "log": "/private/tmp/triomics-stage-d-evidence/final-m7-028/native-packets.log"
+    },
+    {
+      "phase": "semantic_readbacks",
+      "command": [
+        "python3",
+        "/tmp/triomics-stage-d-evidence/final/run-semantic-readbacks.py",
+        "/private/tmp/triomics-m7-021",
+        "/private/tmp/triomics-stage-d-evidence/final-m7-028"
+      ],
+      "working_directory": "/private/tmp/triomics-m7-021",
+      "exit_code": 0,
+      "log": "/private/tmp/triomics-stage-d-evidence/final-m7-028/semantic-readbacks.log"
+    },
+    {
+      "phase": "packet_receipts",
+      "command": [
+        "python3",
+        "/tmp/triomics-stage-d-evidence/final/build-packet-receipts.py",
+        "/private/tmp/triomics-stage-d-evidence/final-m7-028"
+      ],
+      "working_directory": "/private/tmp/triomics-m7-021",
+      "exit_code": 0,
+      "log": "/private/tmp/triomics-stage-d-evidence/final-m7-028/packet-receipts.log"
+    },
+    {
+      "phase": "package_check",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "tools/check-package.R",
+        "--root",
+        "/private/tmp/triomics-stage-d-evidence/final-m7-028/archive",
+        "--output",
+        "/private/tmp/triomics-stage-d-evidence/final-m7-028/package"
+      ],
+      "working_directory": "/private/tmp/triomics-stage-d-evidence/final-m7-028/archive",
+      "exit_code": 0,
+      "log": "/private/tmp/triomics-stage-d-evidence/final-m7-028/package-driver.log"
+    }
+  ],
+  "phase": "gates_complete_pending_Sol_warning_review_Terra_Astra",
+  "updated": "2026-11-04T02:29:23.481955+00:00",
+  "source_counts": {
+    "pass": 7353,
+    "fail": 0,
+    "error": 0,
+    "warn": 15,
+    "skip": 0,
+    "blocks": 493
+  },
+  "package_status": "Status: OK",
+  "package_warning_records": 15
+}

@@ -1,0 +1,317 @@
+[
+  {
+    "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+    "ticket": "inst/examples/tickets/D-T10.yaml",
+    "root": "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T10",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T10.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T10"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T10.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T10"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T10.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T10"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "assertions": 53,
+    "checks": [
+      "D generation full SHA256",
+      "D manifest byte size",
+      "D member stays in generation",
+      "D member bytes evidence-routing.envelope.json",
+      "D member stays in generation",
+      "D member bytes evidence-routing.json",
+      "one native B frame",
+      "C binds all four same-root B predecessor bytes",
+      "D b bundle payload",
+      "D b bundle envelope",
+      "D b profile payload",
+      "D b profile envelope",
+      "D c profile payload",
+      "D c profile envelope",
+      "every declared target has a profile",
+      "consumed mechanism_file actual bytes",
+      "consumed external_evidence_file actual bytes",
+      "SYNTHETIC_TARGET_A declared paths retained",
+      "SYNTHETIC_TARGET_A four distinct canonical axes",
+      "SYNTHETIC_TARGET_A no selected winner",
+      "SYNTHETIC_TARGET_A selection remains exploratory",
+      "SYNTHETIC_TARGET_A profile mechanism_file binding",
+      "SYNTHETIC_TARGET_A profile external_evidence_file binding",
+      "SYNTHETIC_TARGET_A native observation source",
+      "SYNTHETIC_TARGET_A source measurement hash",
+      "SYNTHETIC_TARGET_A source selection history",
+      "SYNTHETIC_TARGET_A original measured feature identity",
+      "SYNTHETIC_TARGET_A measured namespace",
+      "SYNTHETIC_TARGET_A actual B result identity",
+      "SYNTHETIC_TARGET_A actual B effect and unit",
+      "SYNTHETIC_TARGET_A native observation source",
+      "SYNTHETIC_TARGET_A source measurement hash",
+      "SYNTHETIC_TARGET_A source selection history",
+      "SYNTHETIC_TARGET_A original measured feature identity",
+      "SYNTHETIC_TARGET_A measured namespace",
+      "SYNTHETIC_TARGET_A actual C loading kept distinct from effect",
+      "SYNTHETIC_TARGET_A actual C selection lineage",
+      "SYNTHETIC_TARGET_A native observation source",
+      "SYNTHETIC_TARGET_A source measurement hash",
+      "SYNTHETIC_TARGET_A source selection history",
+      "SYNTHETIC_TARGET_A original measured feature identity",
+      "SYNTHETIC_TARGET_A measured namespace",
+      "SYNTHETIC_TARGET_A actual C loading kept distinct from effect",
+      "SYNTHETIC_TARGET_A actual C selection lineage",
+      "SYNTHETIC_TARGET_A both real producer branches present",
+      "SYNTHETIC_TARGET_A B/C reuse does not add independent confirmation",
+      "SYNTHETIC_TARGET_A external assay original values retained",
+      "SYNTHETIC_TARGET_A exact target assay attachment",
+      "SYNTHETIC_TARGET_A absent fixture affinity remains unavailable/external",
+      "SYNTHETIC_TARGET_A external assay original values retained",
+      "SYNTHETIC_TARGET_A exact target assay attachment",
+      "SYNTHETIC_TARGET_A absent fixture affinity remains unavailable/external",
+      "SYNTHETIC_TARGET_A no binding measurement invented"
+    ],
+    "profiles": [
+      {
+        "target": "SYNTHETIC_TARGET_A",
+        "observation_count": 3,
+        "molecular_groups": 1,
+        "axis_status": {
+          "metabolic_multiomics_compatibility": "measured",
+          "functional_perturbation": "unmeasured",
+          "cellular_tissue_engagement": "unmeasured",
+          "direct_binding": "unmeasured"
+        }
+      }
+    ],
+    "generation_id": "8ff26a429cf19019283f224a96a23e02b34b0100b7929ba7e348846878608383",
+    "sha256": {
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/bundle.json": "3bb7ac20b417e3dbd0eee1e2034081be41450618cb47f174beffa69daee486b5",
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/bundle.envelope.json": "bc159abb4b713ab15926d2078bc6616c37aed4d97e2d51d6adb3d6eee5156053",
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/stage-handoff-provenance.json": "b121aa73a82b70467896101771aa4b969028a2c2dbb7fb01c9cf9fc125704388",
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/stage-handoff-provenance.envelope.json": "634072e69e864ecd7039ef9cd4ec3aa801e286dd7b756d1890974b5b9347f3de",
+      "D/stage-handoff-provenance.json": "33ee16094dbb15ee05041149b073aed09a873d96e1d69622735ba4d96b247d29",
+      "D/stage-handoff-provenance.envelope.json": "9f05f77e926d7cc19cf1a4d20f13bccec25ff866ad775b4cf7594577a9778469",
+      "D/generations/8ff26a429cf19019283f224a96a23e02b34b0100b7929ba7e348846878608383/generation-manifest.json": "8ff26a429cf19019283f224a96a23e02b34b0100b7929ba7e348846878608383",
+      "D/generations/8ff26a429cf19019283f224a96a23e02b34b0100b7929ba7e348846878608383/evidence-routing.json": "8de153d472771e8f578b5f6a4a32fbe11f0e2d40f42afe1cd5c042a0a02b6495"
+    },
+    "external_file_sha256": {
+      "mechanism": "93434242b0f8ab69023cc66e27f98f56797c5840026b23040a9f27bb750b79fa",
+      "assays": "a59bc918cdb17d96d1c7c4d958f6da51087da580e792c342e8c1b8d221f18804"
+    }
+  },
+  {
+    "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+    "ticket": "inst/examples/tickets/D-T11.yaml",
+    "root": "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T11",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T11.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T11"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T11.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T11"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T11.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T11"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "assertions": 91,
+    "checks": [
+      "D generation full SHA256",
+      "D manifest byte size",
+      "D member stays in generation",
+      "D member bytes evidence-routing.envelope.json",
+      "D member stays in generation",
+      "D member bytes evidence-routing.json",
+      "one native B frame",
+      "C binds all four same-root B predecessor bytes",
+      "D b bundle payload",
+      "D b bundle envelope",
+      "D b profile payload",
+      "D b profile envelope",
+      "D c profile payload",
+      "D c profile envelope",
+      "every declared target has a profile",
+      "consumed mechanism_file actual bytes",
+      "consumed external_evidence_file actual bytes",
+      "SYNTHETIC_TARGET_A declared paths retained",
+      "SYNTHETIC_TARGET_A four distinct canonical axes",
+      "SYNTHETIC_TARGET_A no selected winner",
+      "SYNTHETIC_TARGET_A selection remains exploratory",
+      "SYNTHETIC_TARGET_A profile mechanism_file binding",
+      "SYNTHETIC_TARGET_A profile external_evidence_file binding",
+      "SYNTHETIC_TARGET_A native observation source",
+      "SYNTHETIC_TARGET_A source measurement hash",
+      "SYNTHETIC_TARGET_A source selection history",
+      "SYNTHETIC_TARGET_A original measured feature identity",
+      "SYNTHETIC_TARGET_A measured namespace",
+      "SYNTHETIC_TARGET_A actual B result identity",
+      "SYNTHETIC_TARGET_A actual B effect and unit",
+      "SYNTHETIC_TARGET_A native observation source",
+      "SYNTHETIC_TARGET_A source measurement hash",
+      "SYNTHETIC_TARGET_A source selection history",
+      "SYNTHETIC_TARGET_A original measured feature identity",
+      "SYNTHETIC_TARGET_A measured namespace",
+      "SYNTHETIC_TARGET_A actual C loading kept distinct from effect",
+      "SYNTHETIC_TARGET_A actual C selection lineage",
+      "SYNTHETIC_TARGET_A native observation source",
+      "SYNTHETIC_TARGET_A source measurement hash",
+      "SYNTHETIC_TARGET_A source selection history",
+      "SYNTHETIC_TARGET_A original measured feature identity",
+      "SYNTHETIC_TARGET_A measured namespace",
+      "SYNTHETIC_TARGET_A actual C loading kept distinct from effect",
+      "SYNTHETIC_TARGET_A actual C selection lineage",
+      "SYNTHETIC_TARGET_A both real producer branches present",
+      "SYNTHETIC_TARGET_A B/C reuse does not add independent confirmation",
+      "SYNTHETIC_TARGET_A external assay original values retained",
+      "SYNTHETIC_TARGET_A exact target assay attachment",
+      "SYNTHETIC_TARGET_A absent fixture affinity remains unavailable/external",
+      "SYNTHETIC_TARGET_A external assay original values retained",
+      "SYNTHETIC_TARGET_A exact target assay attachment",
+      "SYNTHETIC_TARGET_A absent fixture affinity remains unavailable/external",
+      "SYNTHETIC_TARGET_A no binding measurement invented",
+      "SYNTHETIC_TARGET_B declared paths retained",
+      "SYNTHETIC_TARGET_B four distinct canonical axes",
+      "SYNTHETIC_TARGET_B no selected winner",
+      "SYNTHETIC_TARGET_B selection remains exploratory",
+      "SYNTHETIC_TARGET_B profile mechanism_file binding",
+      "SYNTHETIC_TARGET_B profile external_evidence_file binding",
+      "SYNTHETIC_TARGET_B native observation source",
+      "SYNTHETIC_TARGET_B source measurement hash",
+      "SYNTHETIC_TARGET_B source selection history",
+      "SYNTHETIC_TARGET_B original measured feature identity",
+      "SYNTHETIC_TARGET_B measured namespace",
+      "SYNTHETIC_TARGET_B actual B result identity",
+      "SYNTHETIC_TARGET_B actual B effect and unit",
+      "SYNTHETIC_TARGET_B native observation source",
+      "SYNTHETIC_TARGET_B source measurement hash",
+      "SYNTHETIC_TARGET_B source selection history",
+      "SYNTHETIC_TARGET_B original measured feature identity",
+      "SYNTHETIC_TARGET_B measured namespace",
+      "SYNTHETIC_TARGET_B actual C loading kept distinct from effect",
+      "SYNTHETIC_TARGET_B actual C selection lineage",
+      "SYNTHETIC_TARGET_B native observation source",
+      "SYNTHETIC_TARGET_B source measurement hash",
+      "SYNTHETIC_TARGET_B source selection history",
+      "SYNTHETIC_TARGET_B original measured feature identity",
+      "SYNTHETIC_TARGET_B measured namespace",
+      "SYNTHETIC_TARGET_B actual C loading kept distinct from effect",
+      "SYNTHETIC_TARGET_B actual C selection lineage",
+      "SYNTHETIC_TARGET_B both real producer branches present",
+      "SYNTHETIC_TARGET_B B/C reuse does not add independent confirmation",
+      "SYNTHETIC_TARGET_B external assay original values retained",
+      "SYNTHETIC_TARGET_B exact target assay attachment",
+      "SYNTHETIC_TARGET_B absent fixture affinity remains unavailable/external",
+      "SYNTHETIC_TARGET_B external assay original values retained",
+      "SYNTHETIC_TARGET_B exact target assay attachment",
+      "SYNTHETIC_TARGET_B absent fixture affinity remains unavailable/external",
+      "SYNTHETIC_TARGET_B no binding measurement invented",
+      "unresolved external identity coverage is noncomparable",
+      "alternatives remain unranked/no winner"
+    ],
+    "profiles": [
+      {
+        "target": "SYNTHETIC_TARGET_A",
+        "observation_count": 3,
+        "molecular_groups": 1,
+        "axis_status": {
+          "metabolic_multiomics_compatibility": "measured",
+          "functional_perturbation": "unmeasured",
+          "cellular_tissue_engagement": "unmeasured",
+          "direct_binding": "unmeasured"
+        }
+      },
+      {
+        "target": "SYNTHETIC_TARGET_B",
+        "observation_count": 3,
+        "molecular_groups": 1,
+        "axis_status": {
+          "metabolic_multiomics_compatibility": "measured",
+          "functional_perturbation": "unmeasured",
+          "cellular_tissue_engagement": "unmeasured",
+          "direct_binding": "unmeasured"
+        }
+      }
+    ],
+    "generation_id": "7be872a6090ef3d1028227b9479d4954625b0655f669ae04553b9e2dfc01a711",
+    "sha256": {
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/bundle.json": "e6c163a6243665bf962d09650800baba6d3709debabe8bb687b430e800297a78",
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/bundle.envelope.json": "c3ef0ca5f2b0df995de3a69a964f6e02585bc201d773c07947d5ae21b82b24fe",
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/stage-handoff-provenance.json": "1b6ea4898fefdff47502faaf6fd9f534f44d50d421394accb28f4fac66a7cc92",
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/stage-handoff-provenance.envelope.json": "f144a15fc64fb1aaf7980bef7c8f1cab7d1394a6dbe00d99b2b303fa538a3d31",
+      "D/stage-handoff-provenance.json": "98cf8181db18b7c99b95de5fbc9cff5c3eb16f9bf7d70eadcc801deadd1a6ee6",
+      "D/stage-handoff-provenance.envelope.json": "270b355fa8d48934e455f924073ca0d9c70b321a83ffaa25538fb497f05dc786",
+      "D/generations/7be872a6090ef3d1028227b9479d4954625b0655f669ae04553b9e2dfc01a711/generation-manifest.json": "7be872a6090ef3d1028227b9479d4954625b0655f669ae04553b9e2dfc01a711",
+      "D/generations/7be872a6090ef3d1028227b9479d4954625b0655f669ae04553b9e2dfc01a711/evidence-routing.json": "87949539415773bbbfd33ca6fa700a3eb56a53e4e99361b6ab34bb9f2f019f7f"
+    },
+    "external_file_sha256": {
+      "mechanism": "93434242b0f8ab69023cc66e27f98f56797c5840026b23040a9f27bb750b79fa",
+      "assays": "a59bc918cdb17d96d1c7c4d958f6da51087da580e792c342e8c1b8d221f18804"
+    }
+  }
+]

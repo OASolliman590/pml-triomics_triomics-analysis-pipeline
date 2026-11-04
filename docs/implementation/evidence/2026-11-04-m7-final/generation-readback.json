@@ -1,0 +1,538 @@
+[
+  {
+    "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T01.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T01"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T01.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T01"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T01.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T01"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "337017259802cc89a66b7ceb97939944ecdd4f1d1787a809f9f61fb72fdd108e",
+    "limitations": [
+      "This publication is not a C-06, M7, or G7 acceptance receipt.",
+      "C-07 controls remain not_run.",
+      "C-09 remains unqualified and conditional.",
+      "Disabled annotation routes do not make biological absence claims."
+    ],
+    "file_hash_checks": 10,
+    "sha256": {
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/bundle.json": "34819b4409522e48a8026aedb247d4177647a9dba9ad1be306ad601e1b043e3e",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/bundle.envelope.json": "1d400e746798ca24b5bfdbaf2128afe5feefbf467c921a250fb1bee2984710e5",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/stage-handoff-provenance.json": "d8fbd17c966e1193970121c6caaad5f188ef08ed2d8dbd0fb57dfc204b77a676",
+      "B/handoffs/169ffc8459849a97873cc5f0b901b095e1c518a8e9cd052c48adfa13547cfc3a/stage-handoff-provenance.envelope.json": "29816e55409be976363067247d3057e9604fd5dde881fac45fd99c24a3764dbb",
+      "D/stage-handoff-provenance.json": "7e242068b3e1051991f36031e80ed2fc1413f74e3879eb129e4e80c466f38572",
+      "D/stage-handoff-provenance.envelope.json": "ea85e6c89f58d28540b712f744cb1400dad4f36a24ff8cc5aa85af151bb3bee1",
+      "D/generations/337017259802cc89a66b7ceb97939944ecdd4f1d1787a809f9f61fb72fdd108e/generation-manifest.json": "337017259802cc89a66b7ceb97939944ecdd4f1d1787a809f9f61fb72fdd108e",
+      "registries/current-D.json": "cfc4d66522fd831546a9a2e623e109caa0065f395e561afa31b81d3dd5b6e1ce",
+      "D/generations/337017259802cc89a66b7ceb97939944ecdd4f1d1787a809f9f61fb72fdd108e/evidence-routing.envelope.json": "27f3bc7bd5822c8b19a60abf791c4407851fdb3883a78dde8dae6645179960fd",
+      "D/generations/337017259802cc89a66b7ceb97939944ecdd4f1d1787a809f9f61fb72fdd108e/evidence-routing.json": "69f788d65e75ed998dffe8f2d4939aa81d8192f0a17c604ef12740a9c6a57192"
+    }
+  },
+  {
+    "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T02.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T02"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T02.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T02"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T02.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T02"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "9ca520eac75f1399037e63e2e076ad27a3fc6b67f3139cd8b0f8b6f2b6aeacd8",
+    "limitations": [
+      "This publication is not a C-06, M7, or G7 acceptance receipt.",
+      "C-07 controls remain not_run.",
+      "C-09 remains unqualified and conditional.",
+      "Disabled annotation routes do not make biological absence claims."
+    ],
+    "file_hash_checks": 10,
+    "sha256": {
+      "B/handoffs/e5d40283cf9a4d5e59d2acea3c8c49ceefd33990ade87f86cbd44da01dfaa5c7/bundle.json": "516c88393258c8c17fb19fbbc7ff63a2d7b027be666eeb0b6dec643819f195eb",
+      "B/handoffs/e5d40283cf9a4d5e59d2acea3c8c49ceefd33990ade87f86cbd44da01dfaa5c7/bundle.envelope.json": "a17ac10e6e2d92b0d0512c74eb246b9405cfbff8b7c4b42b42e710d94c7feb74",
+      "B/handoffs/e5d40283cf9a4d5e59d2acea3c8c49ceefd33990ade87f86cbd44da01dfaa5c7/stage-handoff-provenance.json": "343dfdac241761d7380e5ce15ffc468ad90a554d031597e8098902adf07ca4c1",
+      "B/handoffs/e5d40283cf9a4d5e59d2acea3c8c49ceefd33990ade87f86cbd44da01dfaa5c7/stage-handoff-provenance.envelope.json": "130c2460c6b613be64f622dcbca6e085f19c47ea2b1d2d6f4e0fe5c3018e18b6",
+      "D/stage-handoff-provenance.json": "b6f3ab95b2af46a0d310f5e743856df7d2f7ad69233b88e26ff7864c8268f52f",
+      "D/stage-handoff-provenance.envelope.json": "8485d6e196c6d8ba0f45710172ac6e33ac8ab854d1fe0189a36dfb3440aff221",
+      "D/generations/9ca520eac75f1399037e63e2e076ad27a3fc6b67f3139cd8b0f8b6f2b6aeacd8/generation-manifest.json": "9ca520eac75f1399037e63e2e076ad27a3fc6b67f3139cd8b0f8b6f2b6aeacd8",
+      "registries/current-D.json": "2e09abbb58fa60e804e9046f31d26f8a82a6a9b1cf88d7dae697b426e825dc9b",
+      "D/generations/9ca520eac75f1399037e63e2e076ad27a3fc6b67f3139cd8b0f8b6f2b6aeacd8/evidence-routing.envelope.json": "a0028069fbec438253b82abcaab979c4c4d481e2786536f00a4fac7ba79221e6",
+      "D/generations/9ca520eac75f1399037e63e2e076ad27a3fc6b67f3139cd8b0f8b6f2b6aeacd8/evidence-routing.json": "77cfae1647ab23ee736dbc16a1b541a80dfab474e8bc1877b8ab7c2f37d65c73"
+    }
+  },
+  {
+    "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T03.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T03"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T03.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T03"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T03.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T03"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "764fabdcd2a190c3a166ec8a0280575411b4bba318c53234add73f859566eb2c",
+    "limitations": [
+      "This publication is not a C-06, M7, or G7 acceptance receipt.",
+      "C-07 controls remain not_run.",
+      "C-09 remains unqualified and conditional.",
+      "Disabled annotation routes do not make biological absence claims."
+    ],
+    "file_hash_checks": 10,
+    "sha256": {
+      "B/handoffs/d5216c305e81c8a1147360ad5558850b2396dd28396803df3c27b03aa61b9685/bundle.json": "c630b4e5c8122b303d91abb3b12e352e59a1e656a3f1e57bd5e7b36d20b50367",
+      "B/handoffs/d5216c305e81c8a1147360ad5558850b2396dd28396803df3c27b03aa61b9685/bundle.envelope.json": "a0d1771c27a612c78d2559728c124e05988aefa7e86c38d135b04976172280b4",
+      "B/handoffs/d5216c305e81c8a1147360ad5558850b2396dd28396803df3c27b03aa61b9685/stage-handoff-provenance.json": "afbbac198cd98a8dcb90ffe1fa16cb97b02694e338fd4d389f60cb2db5162202",
+      "B/handoffs/d5216c305e81c8a1147360ad5558850b2396dd28396803df3c27b03aa61b9685/stage-handoff-provenance.envelope.json": "cd35ed35202288a54f0ae24eed983547a73f373078aa514ad52d0e6ea236c945",
+      "D/stage-handoff-provenance.json": "423d7a456af5aba335764025046ddc7479259c7b1bb8b00aa9955468aecf6002",
+      "D/stage-handoff-provenance.envelope.json": "2549a0648d8fa80e524fbae7026acd1758fe150586689338aa3bfe23fe18cba8",
+      "D/generations/764fabdcd2a190c3a166ec8a0280575411b4bba318c53234add73f859566eb2c/generation-manifest.json": "764fabdcd2a190c3a166ec8a0280575411b4bba318c53234add73f859566eb2c",
+      "registries/current-D.json": "38b0fb139a0425406b5500dc9e76d8d63e2733a69be3e67c5f4e917c40a9b47a",
+      "D/generations/764fabdcd2a190c3a166ec8a0280575411b4bba318c53234add73f859566eb2c/evidence-routing.envelope.json": "41bbdefd6e642a7b0a9070f1cc090a51d7f84c8e8efad73c7f9a0fae50b281b9",
+      "D/generations/764fabdcd2a190c3a166ec8a0280575411b4bba318c53234add73f859566eb2c/evidence-routing.json": "3627c05ffb032e8bd44c5c0a3575fb093652a6dd98162545569a2dcd5ba4e8f0"
+    }
+  },
+  {
+    "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T04.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T04"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T04.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T04"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T04.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T04"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "8c64eea41147896c7dbc7f866c61d5cedda8953c19d75070974b785f1d906784",
+    "limitations": [
+      "This publication is not a C-06, M7, or G7 acceptance receipt.",
+      "C-07 controls remain not_run.",
+      "C-09 remains unqualified and conditional.",
+      "Disabled annotation routes do not make biological absence claims."
+    ],
+    "file_hash_checks": 10,
+    "sha256": {
+      "B/handoffs/984aa67506ab08f7605a308304d40b900942e996a8104080be1c5e2a3e33b7a0/bundle.json": "611ea562591678c50dbc610e97526f5d489908dc4139d6705678e661ee496bf4",
+      "B/handoffs/984aa67506ab08f7605a308304d40b900942e996a8104080be1c5e2a3e33b7a0/bundle.envelope.json": "c6acdf3ad583703af31dafd1a615a13378f52cf134e07c90040ee2c00ee004f6",
+      "B/handoffs/984aa67506ab08f7605a308304d40b900942e996a8104080be1c5e2a3e33b7a0/stage-handoff-provenance.json": "cd8d5df6ea2d5b5afcfcbbfc1d68d935dc5b1c34ae8e94f6119667421dacdf5e",
+      "B/handoffs/984aa67506ab08f7605a308304d40b900942e996a8104080be1c5e2a3e33b7a0/stage-handoff-provenance.envelope.json": "40f7dbb3bed813e9574298d77bbdb2381d45ba394123065888b91af6f33661eb",
+      "D/stage-handoff-provenance.json": "0fe1f7569fda0289544714783e9d614d13c7bd872276c788f93adfd8e2cd0691",
+      "D/stage-handoff-provenance.envelope.json": "738a613e787f7db6f002c83047b75131dbbaab2bafa328b93099a88303b542a5",
+      "D/generations/8c64eea41147896c7dbc7f866c61d5cedda8953c19d75070974b785f1d906784/generation-manifest.json": "8c64eea41147896c7dbc7f866c61d5cedda8953c19d75070974b785f1d906784",
+      "registries/current-D.json": "b32d1acff5920eeca771cc81756ae4d83dc9b0aad54b9c5819e1f9c4bac5e98f",
+      "D/generations/8c64eea41147896c7dbc7f866c61d5cedda8953c19d75070974b785f1d906784/evidence-routing.envelope.json": "8e6a13420f9c7151c918c00577ba4d772578647160967ee76d16bc10e226a6c1",
+      "D/generations/8c64eea41147896c7dbc7f866c61d5cedda8953c19d75070974b785f1d906784/evidence-routing.json": "e8030f32f6d15f406e3de5c4fb202e14aa5074ab8d36d1d002712456e539e787"
+    }
+  },
+  {
+    "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T05.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T05"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T05.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T05"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T05.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T05"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "7ebbd28f816013922c8dce5259f2c40a63f2ddb9f9ec3dd33c9b1d9ab779191c",
+    "limitations": [
+      "This publication is not a C-06, M7, or G7 acceptance receipt.",
+      "C-07 controls remain not_run.",
+      "C-09 remains unqualified and conditional.",
+      "Disabled annotation routes do not make biological absence claims."
+    ],
+    "file_hash_checks": 10,
+    "sha256": {
+      "B/handoffs/41a58a3b08b66ede0691d29da697dae844b89c111e94dd8cb0fa087846b58ab2/bundle.json": "e34571816ebf7ea6d938b9a46967e0531b9d94bb3fcdf1cfc32db648b4d247d4",
+      "B/handoffs/41a58a3b08b66ede0691d29da697dae844b89c111e94dd8cb0fa087846b58ab2/bundle.envelope.json": "111c993ba69133d9093fe495251955b5666710476420893b2b06bb2bc1fe0a25",
+      "B/handoffs/41a58a3b08b66ede0691d29da697dae844b89c111e94dd8cb0fa087846b58ab2/stage-handoff-provenance.json": "5fac45dc7e5150f756f6723aa0972be1411d5388ac173e94c85a20ab4297ee4b",
+      "B/handoffs/41a58a3b08b66ede0691d29da697dae844b89c111e94dd8cb0fa087846b58ab2/stage-handoff-provenance.envelope.json": "1cbc1e271c4f590e1c4682e15517a40c596b9be9eb0ccf114472552fd53103de",
+      "D/stage-handoff-provenance.json": "03c3f3bb3df3583fd5a17eab31d3d323a645e2b1194a407ffbde9f127f1bf863",
+      "D/stage-handoff-provenance.envelope.json": "039f2e36c998b5669509034e1ba3a778875cd70e5d020d9d2a959912eaa7f96c",
+      "D/generations/7ebbd28f816013922c8dce5259f2c40a63f2ddb9f9ec3dd33c9b1d9ab779191c/generation-manifest.json": "7ebbd28f816013922c8dce5259f2c40a63f2ddb9f9ec3dd33c9b1d9ab779191c",
+      "registries/current-D.json": "6e621626eca6f0e55720bc70d67f97cc050cc73a2dd64255d11a3046fc145ffe",
+      "D/generations/7ebbd28f816013922c8dce5259f2c40a63f2ddb9f9ec3dd33c9b1d9ab779191c/evidence-routing.envelope.json": "9fcf6826887ae07ef0c9debe60248e872bf14f2271ccef70ebef6e6249e0ad62",
+      "D/generations/7ebbd28f816013922c8dce5259f2c40a63f2ddb9f9ec3dd33c9b1d9ab779191c/evidence-routing.json": "c6a283d8e4bfd4846008fab08c64307fe436ff3f771cb0efcb0ef87fc0ec1212"
+    }
+  },
+  {
+    "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T10.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T10"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T10.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T10"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T10.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T10"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "8ff26a429cf19019283f224a96a23e02b34b0100b7929ba7e348846878608383",
+    "limitations": [
+      "This publication is not a C-06, M7, or G7 acceptance receipt.",
+      "C-07 controls remain not_run.",
+      "C-09 remains unqualified and conditional.",
+      "Disabled annotation routes do not make biological absence claims."
+    ],
+    "file_hash_checks": 10,
+    "sha256": {
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/bundle.json": "3bb7ac20b417e3dbd0eee1e2034081be41450618cb47f174beffa69daee486b5",
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/bundle.envelope.json": "bc159abb4b713ab15926d2078bc6616c37aed4d97e2d51d6adb3d6eee5156053",
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/stage-handoff-provenance.json": "b121aa73a82b70467896101771aa4b969028a2c2dbb7fb01c9cf9fc125704388",
+      "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/stage-handoff-provenance.envelope.json": "634072e69e864ecd7039ef9cd4ec3aa801e286dd7b756d1890974b5b9347f3de",
+      "D/stage-handoff-provenance.json": "33ee16094dbb15ee05041149b073aed09a873d96e1d69622735ba4d96b247d29",
+      "D/stage-handoff-provenance.envelope.json": "9f05f77e926d7cc19cf1a4d20f13bccec25ff866ad775b4cf7594577a9778469",
+      "D/generations/8ff26a429cf19019283f224a96a23e02b34b0100b7929ba7e348846878608383/generation-manifest.json": "8ff26a429cf19019283f224a96a23e02b34b0100b7929ba7e348846878608383",
+      "registries/current-D.json": "8e8fbd06fb1e4849a2a3331ce72ffaf0cd45c8f98d0e063962ff101433b0abe9",
+      "D/generations/8ff26a429cf19019283f224a96a23e02b34b0100b7929ba7e348846878608383/evidence-routing.envelope.json": "b74a231d5a41cbf9799d028c0d37fe5785364355e2d9136bd72d4d30d939bf1a",
+      "D/generations/8ff26a429cf19019283f224a96a23e02b34b0100b7929ba7e348846878608383/evidence-routing.json": "8de153d472771e8f578b5f6a4a32fbe11f0e2d40f42afe1cd5c042a0a02b6495"
+    }
+  },
+  {
+    "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T11.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T11"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T11.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T11"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T11.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T11"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "7be872a6090ef3d1028227b9479d4954625b0655f669ae04553b9e2dfc01a711",
+    "limitations": [
+      "This publication is not a C-06, M7, or G7 acceptance receipt.",
+      "C-07 controls remain not_run.",
+      "C-09 remains unqualified and conditional.",
+      "Disabled annotation routes do not make biological absence claims."
+    ],
+    "file_hash_checks": 10,
+    "sha256": {
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/bundle.json": "e6c163a6243665bf962d09650800baba6d3709debabe8bb687b430e800297a78",
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/bundle.envelope.json": "c3ef0ca5f2b0df995de3a69a964f6e02585bc201d773c07947d5ae21b82b24fe",
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/stage-handoff-provenance.json": "1b6ea4898fefdff47502faaf6fd9f534f44d50d421394accb28f4fac66a7cc92",
+      "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/stage-handoff-provenance.envelope.json": "f144a15fc64fb1aaf7980bef7c8f1cab7d1394a6dbe00d99b2b303fa538a3d31",
+      "D/stage-handoff-provenance.json": "98cf8181db18b7c99b95de5fbc9cff5c3eb16f9bf7d70eadcc801deadd1a6ee6",
+      "D/stage-handoff-provenance.envelope.json": "270b355fa8d48934e455f924073ca0d9c70b321a83ffaa25538fb497f05dc786",
+      "D/generations/7be872a6090ef3d1028227b9479d4954625b0655f669ae04553b9e2dfc01a711/generation-manifest.json": "7be872a6090ef3d1028227b9479d4954625b0655f669ae04553b9e2dfc01a711",
+      "registries/current-D.json": "681738c8e62a89c3dc7c07623381c1efafad82649838b5004b0d3e23ffe4d08f",
+      "D/generations/7be872a6090ef3d1028227b9479d4954625b0655f669ae04553b9e2dfc01a711/evidence-routing.envelope.json": "f567e1faf2c8e187a774a265b3932e30e4b40f1c2f05fbd70432d16d60bab77e",
+      "D/generations/7be872a6090ef3d1028227b9479d4954625b0655f669ae04553b9e2dfc01a711/evidence-routing.json": "87949539415773bbbfd33ca6fa700a3eb56a53e4e99361b6ab34bb9f2f019f7f"
+    }
+  },
+  {
+    "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+    "commands": [
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T12.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T12"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T12.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T12"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T12.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "/private/tmp/triomics-stage-d-evidence/final-m7-028/native/D-T12"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "generation_id": "fe15d90b277c0f928b7ece93cd34dfbc8db9c86c32c0fc933d7562df15ca2e95",
+    "limitations": [
+      "This publication is not a C-06, M7, or G7 acceptance receipt.",
+      "C-07 controls remain not_run.",
+      "C-09 remains unqualified and conditional.",
+      "Disabled annotation routes do not make biological absence claims."
+    ],
+    "file_hash_checks": 10,
+    "sha256": {
+      "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/bundle.json": "d96586c96360974da1eedd30d74b554a78282567f7e7f1744c33a626c69d9493",
+      "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/bundle.envelope.json": "01fc004a8027260fd509f5c387d8ed2ed00c7e5bc9d42734366c7cd501ed8f6a",
+      "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/stage-handoff-provenance.json": "89214daf6d26e805875e4de5de6ed15a7b5a66e56d5c7a60de820790b853f2d8",
+      "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/stage-handoff-provenance.envelope.json": "a51306bbc8fccdc581a9a9ca9558e5f40119a1ea7aadbd9c3006e68ec31d1e20",
+      "D/stage-handoff-provenance.json": "c11b8bd714f9ca41889d2de13b1682d530fcdfbbe2f46e9231e4c0458789a75c",
+      "D/stage-handoff-provenance.envelope.json": "51a6aea231b97cde56df3674a30f0515c9bad7fb512befcf6d26efb9824dda49",
+      "D/generations/fe15d90b277c0f928b7ece93cd34dfbc8db9c86c32c0fc933d7562df15ca2e95/generation-manifest.json": "fe15d90b277c0f928b7ece93cd34dfbc8db9c86c32c0fc933d7562df15ca2e95",
+      "registries/current-D.json": "e67c54e23bfc30d56706a7ae02ecc73a60b02557ffbdc3b124fc5cf217bab512",
+      "D/generations/fe15d90b277c0f928b7ece93cd34dfbc8db9c86c32c0fc933d7562df15ca2e95/evidence-routing.envelope.json": "a2ee341e2f13efc42bb52e77b607b9b4dc45a0d922ff80713144309cbcb8db77",
+      "D/generations/fe15d90b277c0f928b7ece93cd34dfbc8db9c86c32c0fc933d7562df15ca2e95/evidence-routing.json": "6bd846b194cc607c6f2b032b3a9e650f1650d6217dcaefb005a9d7e64ad46780"
+    }
+  }
+]

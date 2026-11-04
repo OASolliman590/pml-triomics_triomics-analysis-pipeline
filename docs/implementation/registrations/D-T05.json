@@ -34,11 +34,30 @@
     "status": "candidate; independent review and packet acceptance pending"
   },
   "current_revision_verification": {
-    "cycle": "M7-023",
-    "commit": "760098c56a00d39e5a9cce60f0033d47c680b85a",
-    "status": "verified_synthetic_native_dependency_evidence",
-    "review_ref": "docs/implementation/reviews/2026-11-03-m7-023-status-sol-verification.md",
+    "cycle": "M7 final same-snapshot qualification",
+    "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+    "status": "verified_pending_Terra_Astra_Sol_acceptance",
+    "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
+    "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#D-T05",
+    "test_counts": {
+      "pass": 71,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 7
+    },
     "milestone_acceptance": false
   },
-  "next_action": "Preserve historical receipts; reconcile this current revision on the final immutable M7 source snapshot before Sol acceptance. M7/G7 remain closed."
+  "next_action": "Terra DOC-M7 and fresh milestone Astra audit, then Sol decision on this exact tested product commit. M7/G7 remain closed.",
+  "pre_final_gate_record": {
+    "current_revision_verification": {
+      "cycle": "M7-023",
+      "commit": "760098c56a00d39e5a9cce60f0033d47c680b85a",
+      "status": "verified_synthetic_native_dependency_evidence",
+      "review_ref": "docs/implementation/reviews/2026-11-03-m7-023-status-sol-verification.md",
+      "milestone_acceptance": false
+    },
+    "next_action": "Preserve historical receipts; reconcile this current revision on the final immutable M7 source snapshot before Sol acceptance. M7/G7 remain closed."
+  }
 }

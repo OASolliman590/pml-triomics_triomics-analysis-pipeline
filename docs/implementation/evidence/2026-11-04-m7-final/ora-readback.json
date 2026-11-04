@@ -1,0 +1,45 @@
+{
+  "generation_id": "8c64eea41147896c7dbc7f866c61d5cedda8953c19d75070974b785f1d906784",
+  "claim_readback": [
+    {
+      "identity": {
+        "study_id": "triomics_d_t04_fixture",
+        "analysis_id": "d_t04_synthetic_exploratory",
+        "preparation_context_id": "c06_fixture",
+        "representation_id": "levels",
+        "block_id": "block_1",
+        "source_branch": "integration_selection",
+        "claim_id": "d_t04_concat_pca",
+        "integration_id": "d_t04_concat_pca",
+        "family_id": null,
+        "source_ids": [
+          "block_1"
+        ],
+        "nomination_ids": [
+          "17c8bd7f718fc781738c15040dae3baaa519985a5d90f778deea018038cc97b0"
+        ]
+      },
+      "first_set": {
+        "set_id": "synthetic_pathway_alpha",
+        "status": "estimable",
+        "N": 10,
+        "K": 3,
+        "n": 1,
+        "k": 1,
+        "members_outside_universe": 0,
+        "p": 0.3,
+        "q": 0.3,
+        "claim": "not_pathway_activation"
+      },
+      "universe_count": 10,
+      "original_features": 10,
+      "bindings": {
+        "protocol_sha256": "0706da52b6dca88934030d72ad36b2b465dda998d4df5c429b2854e73796a10e",
+        "mapping_sha256": "86f27bf7c6c70bfc9ab068c73ada87df16b3d0f484b42e62a54081dc67a35d9c",
+        "set_family_sha256": "cff3dbc0f0950e66f4d3c6c2b323c7f07aecdaa8e6b48238ecf22cb25bb8c42d",
+        "measured_universe_sha256": "6c2be27c1557fee2387852c7842ae1683a675070d70d2448f6ab44fc2bb15f2e"
+      }
+    }
+  ],
+  "interpretation": "no_biological_absence_inferred"
+}

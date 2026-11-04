@@ -1,26 +1,13 @@
 # Tri-omics progress
 
-**Active; tested on public synthetic fixtures only.** The goal is to connect
-molecular findings to pathways and target evidence without claiming more than
-the measurements establish.
+**Active; tested on public synthetic fixtures only.** The goal is to connect molecular findings to pathways and target evidence without claiming more than the measurements establish.
 
-Native publication, lipid and reaction mapping, enrichment against the measured
-background, and resource-failure handling have verified candidates. Target
-profiles preserve exact assay identity and separate evidence types. External
-measurements remain external; unequal or uncertain coverage cannot force a winner.
+All eight required Stage D implementations now work together on one frozen product commit. Lipid and reaction mappings preserve uncertainty. Enrichment uses the measured background and declared family of sets. Target profiles keep external assay measurements separate from the pipeline's own observations, retain contradictory evidence, and do not force a winner.
 
-Unranked discovery now accounts for every member of a versioned target universe,
-explains exclusions, rejects evaluation-derived reference data and marks unknown
-overlap unassessable. Sol checked actual B/C lineage and published file hashes.
+Unranked discovery accounts for every included and excluded member of a versioned universe. Sol verified saved B/C/D lineage and file hashes, including actual B effects and C loadings. The earlier legacy fixture failures are repaired; statistical methods are unchanged.
 
-The first complete source gate exposed two older test-fixture mismatches. Both
-are corrected and independently reviewed; statistical methods are unchanged.
-All required candidate implementations are integrated.
+The full source suite passed 7353 expectations with zero failures or skips. All 24 native commands passed, and the clean archive package check reports Status: OK. These establish software behavior, not biological or clinical validity.
 
-M7/G7 remain closed. The next milestone is acceptance on one frozen snapshot after
-full source, native read-back, clean-archive package checks, Terra documentation
-and fresh Astra review. Conditional quantitative methods remain blocked without
-completion credit. Biological validity and real-study performance are unestablished.
+M7/G7 remain closed pending Terra's evidence document and fresh Astra review. Conditional methods remain blocked without completion credit.
 
-Needs Omar: none. Sync: local only; no GitHub push, Notion sync or private study
-analysis. AIU, fasting checks and later report work remain outside this run.
+Needs Omar: none. Sync: local only; no push, Notion sync or private-study analysis. AIU, fasting checks and later reporting remain outside this run.
