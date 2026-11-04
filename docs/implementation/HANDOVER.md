@@ -1,3 +1,15 @@
+# Current checkpoint: D-T08 repair 1 active; native predecessor blocked
+
+Initial candidate23b5689 is preserved and unintegrated. Source75/0fail/0error/0warn/0skip, 14blocks. Sol independently reproduced A exit0 then B exit4 on the unchanged same-root registry; canonical evidence is local sol-ab-registry-red. The worker's registry-removal workaround is rejected and has no acceptance credit. Read reviews/2026-11-04-d-t08-initial-review.md.
+
+Same Luna `/root/m8_d08_luna` is running consolidated repair1 of2 in the existing isolated worktree, exact seven-file D-T08 scope. No native retries or shared-file edits. Join that worker; do not restart it. Two independent Sol reviews found clinical type/interval mismatch, privacy gaps, stale B/D linkage, lost enrichment context and contradictory provider statuses. Fresh scope proposal M8-D08-S01 addresses the separate B registry collision; it is not implemented or accepted.
+
+M7/G7 remain accepted/released. D-T08 remains incomplete and unaccepted; G8/G9 remain unreleased. No D-T13/D-T15/D-T09 implementation, private data or push. Preserve the full goal. Stop at the bounded packet receipt with an honest blocker if the predecessor seam cannot legally be resolved; do not certify a harness that deletes registries.
+
+Literal resume: reconcile the active D-T08 repair1 worker and external orchestration.json, collect its immutable receipt, then take only the authorized scoped next transition. Preserve23b5689 and the Sol RED evidence. No lost-worker redispatch and no milestone release from unit test counts.
+
+## Historical checkpoints below
+
 # Current checkpoint: D-T08 Luna initial implementation running
 
 Quarto1.11.9 is installed, checksum-verified and passed a real HTML smoke. Fresh worker `/root/m8_d08_luna` runs in managed m8-d-t08-luna on codex/m8-d-t08-luna from4a783be. Seven-file frozen D-T08 allowlist only; Sol owns shared CLI/stage/exports/manual registration. Initial attempt1, repairs0of2. No parent product edit while the worker implements.

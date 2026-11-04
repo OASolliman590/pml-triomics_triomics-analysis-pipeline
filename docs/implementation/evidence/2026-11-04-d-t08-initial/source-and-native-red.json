@@ -1,0 +1,57 @@
+{
+  "commit": "23b56893eee594b236bbc12440290f8e6405fecb",
+  "accepted": false,
+  "commands": [
+    {
+      "stage": "A",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "inst/examples/tickets/D-T08.yaml",
+        "--stage",
+        "A",
+        "--output",
+        "$PROOF_ROOT/sol-ab-registry-red/output"
+      ],
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "run_registry_sha256": "8f2b3c31e43b55a939b92be6447a96c4dcc8e14ae82f1770260591a633da2cdd"
+    },
+    {
+      "stage": "B",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "inst/exec/triomics",
+        "--config",
+        "inst/examples/tickets/D-T08.yaml",
+        "--stage",
+        "B",
+        "--output",
+        "$PROOF_ROOT/sol-ab-registry-red/output"
+      ],
+      "exit_code": 4,
+      "log_sha256": "3b9d6cd9579f1d8b17aef87d0ea74636d2e69656ce659d84477152f6d1c21126",
+      "run_registry_sha256": "8f2b3c31e43b55a939b92be6447a96c4dcc8e14ae82f1770260591a633da2cdd"
+    }
+  ],
+  "command_path_note": "APFS output path is redacted here; exact commands are retained in the local raw receipt.",
+  "B_error": "triomics A_ARTIFACT_FINALIZE: The output file could not be atomically finalized.",
+  "source_tests": {
+    "commit": "23b56893eee594b236bbc12440290f8e6405fecb",
+    "pass": 75,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 14,
+    "receipt_sha256": "c3fb00c74f582962f144b450778ebbb423612e1faf3720af54352c26a3801f25"
+  },
+  "invalid_worker_proof": {
+    "path_label": "d08-luna/native-output",
+    "acceptance_credit": false,
+    "reason": "Worker deleted original proof output/logs and manually removed run.json between stages. Sol rejected that workaround and independently reproduced the original failure in a preserved fresh root."
+  }
+}

@@ -3959,7 +3959,7 @@
       "snapshot_commit": "542a7b4",
       "implementation_commit": "bded42a",
       "integration_commit": "9cd36fe",
-      "review_scope": "B-T08 AC1\u2013AC4, 139-assertion suite, public synthetic CLI, registration, integration drift, fixed families, fail-closed handling and privacy",
+      "review_scope": "B-T08 AC1–AC4, 139-assertion suite, public synthetic CLI, registration, integration drift, fixed families, fail-closed handling and privacy",
       "allowed_next_transition": "PASS permits Sol to mark B-T08 accepted and immediately dispatch B-T07; findings preserve the dependency block and require an authorized bounded resolution",
       "disposition": "This review reconciles missing acceptance evidence only; it does not reset B-T08 implementation counters or authorize code changes."
     },
@@ -8070,11 +8070,14 @@
       "disposition_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md"
     },
     "D-T08": {
-      "status": "initial_implementation_running",
+      "status": "repair_1_running_with_predecessor_blocker",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
-      "blockers": [],
+      "blockers": [
+        "Native A-to-B run-registry collision; scope proposal M8-D08-S01.",
+        "Initial candidate review changes required; consolidated repair1 running."
+      ],
       "accepted": false,
       "completion_credit": false,
       "preflight_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md",
@@ -8087,9 +8090,11 @@
         "receipt": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md"
       },
       "runtime_receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-ready.md",
-      "repair_attempts": 0,
+      "repair_attempts": 1,
       "implementation_base": "4a783be5d5ec005a0044a43cdc6dc8c4d6c35392",
-      "active_worker": "/root/m8_d08_luna"
+      "active_worker": "/root/m8_d08_luna",
+      "candidate_commit": "23b56893eee594b236bbc12440290f8e6405fecb",
+      "initial_review_ref": "docs/implementation/reviews/2026-11-04-d-t08-initial-review.md"
     },
     "D-T13": {
       "status": "not_started",
