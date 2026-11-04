@@ -2217,7 +2217,11 @@ triomics_execute_stage_c <- function(config_path, output) {
   }
   has_clinical_objectives <- isTRUE(config$clinical$enabled) &&
     is.list(config$clinical$objectives) && length(config$clinical$objectives) > 0L
-  if (has_clinical_objectives) triomics_c08_cli_refuse_existing_d(output)
+  if (has_clinical_objectives) {
+    saved_publication <- triomics_cnh_publish_saved_c(config_path, output)
+    if (!is.null(saved_publication)) return(invisible(saved_publication))
+    triomics_c08_cli_refuse_existing_d(output)
+  }
   if (length(config$analyses) != 1L) {
     triomics_integration_abort(
       "C_ELIGIBILITY_INPUT_INVALID",
@@ -2555,6 +2559,18 @@ triomics_execute_stage_c <- function(config_path, output) {
   }, logical(1L)))
   run_status <- if (required_complete) "complete" else "partial"
   if (has_clinical_objectives) {
+    triomics_cnh_save_initial_c(
+      integration_runs = c06_integration_runs,
+      evaluation_controls = triomics_c06_cli_unrun_controls(
+        c06_integration_runs, resolved, analysis, integration_results
+      ),
+      c_input_identity = triomics_c06_cli_input_identity(
+        resolved, ingested, analysis, representation, block_ids, c06_source_inputs,
+        config, source_resolved
+      ),
+      config = config, output = output, source_inputs = c06_source_inputs,
+      run_status = run_status
+    )
     triomics_write_json_atomic(list(
       schema_version = "2.0",
       run_id = "c-01",
@@ -2810,11 +2826,17 @@ triomics_main <- function(args = commandArgs(trailingOnly = TRUE)) {
     } else if (identical(options$stage, "A")) {
       triomics_execute_stage_a(options$config, options$output)
     } else if (identical(options$stage, "B")) {
-      registered_b09 <- triomics_cli_prepare_registered_b09(options, args)
-      registered_b08 <- triomics_cli_prepare_registered_b08(options, args)
+      native_clinical <- triomics_cnh_prepare_stage_b(options$config, options$output)
+      registered_b09 <- is.null(native_clinical) &&
+        triomics_cli_prepare_registered_b09(options, args)
+      registered_b08 <- is.null(native_clinical) &&
+        triomics_cli_prepare_registered_b08(options, args)
       stage_b_result <- triomics_execute_stage_b(options$config, options$output)
       if (isTRUE(registered_b09)) triomics_b09_cli_after_stage_b(args)
       if (isTRUE(registered_b08)) triomics_b08_cli_after_stage_b(args)
+      if (!is.null(native_clinical)) {
+        triomics_cnh_publish_stage_b(native_clinical, options$config, options$output)
+      }
       triomics_b07_cli_after_stage_b(args, stage_b_result)
     } else if (identical(options$stage, "C")) {
       stage_c_result <- triomics_execute_stage_c(options$config, options$output)
