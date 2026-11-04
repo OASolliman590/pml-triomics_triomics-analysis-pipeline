@@ -69,15 +69,15 @@ M7/G7 closed; C07 not_run; C09 unqualified; no private data, AIU, fasting or pus
 
 ## Current literal resume instruction
 
-Freeze this clean integrated snapshot for final M7 qualification. All required
-D candidate implementations are integrated; workers/reviewers completed. Run one
-uninterrupted full source suite and native required-packet readbacks on that exact
-commit, then git-archive package check with exact Status: OK and named warnings.
-Terra writes DOC-M7 from immutable receipts; fresh Astra reviews that same product
-snapshot. Only then may Sol accept current C06, required D packets, M7 and G7.
-ConditionalD06/07/14blocked without credit; C07unrun/C09unqualified. No private
-study data, push, AIU, fasting, M8/M9 or report work. Keep source clean during gates;
-use external /tmp/triomics-stage-d-evidence/final for logs and orchestration state.
+Initial final source gate48ca0c4 failed:7280pass3fail1error15namedwarnings0skip.
+Read reviews/2026-11-04-m7-initial-full-source-gate.md. Failures are B05 temporary
+CLI YAML written inside source tree, and obsolete protein-metabolite synthetic-ID
+shortcut expectation. M7-028 test-only scope is frozen for fresh Astra audit;
+do not implement until audit_pass yes. Then one fresh Luna-max two-file worker,
+Sol review, focused tests and fresh implementation Astra before repeated final
+same-snapshot source/native/archive/Terra/milestone-Astra/Sol gates. Keep failed
+48ca0c4 archive/logs intact; package check did not run. No worker/test process is
+active. M7/G7 closed; conditional3blocked, C07unrun/C09unqualified, no private/push.
 
 ## Historical checkpoint — 29 October 2026, D-T11 stopped at the repair limit
 

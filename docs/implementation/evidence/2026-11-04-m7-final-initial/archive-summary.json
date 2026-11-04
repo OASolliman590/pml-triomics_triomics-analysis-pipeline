@@ -1,0 +1,8 @@
+{
+  "archive_commit": "48ca0c4ad50c6d24001d91d849d718eb6f8dbc6c",
+  "command": "git archive --format=tar --output=/tmp/triomics-stage-d-evidence/final/source.tar 48ca0c4ad50c6d24001d91d849d718eb6f8dbc6c",
+  "tar_sha256": "7e4c6706c30153ea422f0e3c7d1da5416fb1c9bf62e75d614df3a9b6c6e15a9a",
+  "source_stamp": "48ca0c4ad50c6d24001d91d849d718eb6f8dbc6c",
+  "file_count": 932,
+  "package_check": "not_run_after_source_failure"
+}

@@ -36,7 +36,7 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "final_same_snapshot_gates_pending",
+    "status": "m7_028_scope_audit_pending_after_full_source_failure",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -6004,6 +6004,21 @@
       "prior_D_alias_rejection_exit": 2,
       "unchanged_predecessor_files": 26,
       "disposition": "Worker complete; Sol independent readback passed. Freeze integrated product for final source/native/archive/Terra/fresh Astra gates. M7/G7 closed."
+    },
+    {
+      "event": "initial_final_source_gate_failed_m7_028_scoped",
+      "date": "2026-11-04",
+      "snapshot": "48ca0c4ad50c6d24001d91d849d718eb6f8dbc6c",
+      "counts": {
+        "pass": 7280,
+        "fail": 3,
+        "error": 1,
+        "warn": 15,
+        "skip": 0,
+        "blocks": 491
+      },
+      "ref": "docs/implementation/reviews/2026-11-04-m7-initial-full-source-gate.md",
+      "disposition": "Source gate failed on two legacy test fixtures. No package/final-native/Terra/milestone-Astra yet. New bounded test-only scope requires fresh Astra before Luna. M7/G7 closed."
     }
   ],
   "packets": {
