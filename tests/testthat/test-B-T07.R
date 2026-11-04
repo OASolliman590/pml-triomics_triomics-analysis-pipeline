@@ -269,9 +269,76 @@ t07_clinical_objective <- function(config_path, objective_id = "glucose_between"
   objective
 }
 
+t07_clinical_estimation_inputs <- function(fixture, objective) {
+  n <- 8L
+  sample_ids <- sprintf("SYN_%02d", seq_len(n))
+  subject_keys <- sprintf("sub_syn_%02d", seq_len(n))
+  glucose <- as.numeric(seq_len(n))
+  age <- c(30, 35, 33, 40, 38, 50, 45, 55)
+  score <- 1.5 * glucose + 0.2 * age + c(-0.4, 0.3, -0.2, 0.5, -0.1, 0.2, -0.3, 0.4)
+  config <- triomics_read_config(fixture$config_path)
+  variable <- function(variable_id, units) {
+    list(
+      variable_id = variable_id,
+      declared_type = "continuous",
+      analysis_type = "continuous",
+      type = "continuous",
+      units = units,
+      units_verification = "verified",
+      role = "measured",
+      allowed_model_roles = "predictor",
+      time_semantics = "visit",
+      privacy = "ordinary",
+      verification = "verified",
+      codebook = list(),
+      missing_map = list("." = "placeholder"),
+      censoring = "forbidden",
+      availability = "available",
+      modelable = TRUE
+    )
+  }
+  observations <- unlist(lapply(seq_len(n), function(index) {
+    list(
+      list(variable_id = "glucose", subject_key = subject_keys[[index]], visit_id = "V1",
+           value_kind = "numeric", numeric_value = glucose[[index]]),
+      list(variable_id = "age", subject_key = subject_keys[[index]], visit_id = "V1",
+           value_kind = "numeric", numeric_value = age[[index]])
+    )
+  }), recursive = FALSE)
+  endpoint <- list(
+    endpoint_id = objective$endpoint_ref,
+    endpoint_class = "score",
+    response_type = "continuous",
+    units = "score_unit",
+    samples = lapply(seq_len(n), function(index) {
+      list(sample_id = sample_ids[[index]], subject_key = subject_keys[[index]],
+           visit_id = "V1", value = score[[index]])
+    }),
+    training_outcome = NULL,
+    selection = list(ancestry = "prespecified", validity = "qualified", inspected_outcome = NULL),
+    matrix_hash = NULL,
+    source_hash = "synthetic-clinical-q-source"
+  )
+  list(
+    endpoint_bundle = list(
+      study_id = config$study_id,
+      analysis_id = objective$analysis_id,
+      endpoints = list(endpoint)
+    ),
+    clinical_view = list(
+      study_id = config$study_id,
+      dictionary = list(variable("glucose", "mmol/L"), variable("age", "year")),
+      observations = observations,
+      links = list()
+    )
+  )
+}
+
 t07_write_producer_shaped_clinical_artifact <- function(fixture, lane, objectives,
                                                         family_member_ids = NULL,
-                                                        mutate = NULL) {
+                                                        mutate = NULL,
+                                                        endpoint_bundle = NULL,
+                                                        clinical_view = NULL) {
   config <- triomics_read_config(fixture$config_path)
   analysis_id <- as.character(objectives[[1L]]$analysis_id)
   endpoint_ids <- vapply(objectives, function(objective) as.character(objective$endpoint_ref), character(1))
@@ -281,8 +348,12 @@ t07_write_producer_shaped_clinical_artifact <- function(fixture, lane, objective
     family = list(family_id = as.character(objectives[[1L]]$family_ref),
                   member_ids = members, claim_scope = "synthetic_clinical_associations")
   )
-  endpoint_bundle <- list(study_id = config$study_id, analysis_id = analysis_id, endpoints = list())
-  clinical_view <- list(study_id = config$study_id, dictionary = list(), observations = list(), links = list())
+  if (is.null(endpoint_bundle)) {
+    endpoint_bundle <- list(study_id = config$study_id, analysis_id = analysis_id, endpoints = list())
+  }
+  if (is.null(clinical_view)) {
+    clinical_view <- list(study_id = config$study_id, dictionary = list(), observations = list(), links = list())
+  }
   if (identical(lane, "clinical_associations")) {
     fit <- triomics_associate_endpoints(endpoint_bundle, clinical_view, spec)
     payload <- c(list(schema_version = "2.0"), triomics_clinical_association_export(fit))
@@ -609,6 +680,107 @@ testthat::test_that("B-T07 keeps correction vectors aligned with every clinical 
       fixture, "clinical_associations", list(objective), family_member_ids = members,
       mutate = function(payload) {
         payload$family[[case_name]] <- short_vector[[case_name]](payload$family)
+        payload
+      }
+    )
+    attempted <- t07_attempt_export(output = root, config_path = fixture$config_path)
+    t07_expect_clinical_accounting_blocked(
+      attempted, root, "clinical_longitudinal_associations", case_name
+    )
+  }
+})
+
+testthat::test_that("B-T07 accepts published q values with an unavailable family member", {
+  root <- t07_test_root("clinical-published-q-with-unavailable-member")
+  fixture <- t07_public_bundle_fixture(root, include_clinical = FALSE)
+  objective <- t07_clinical_objective(fixture$config_path)
+  members <- c(objective$endpoint_ref, "SYN-UNAVAILABLE-FAMILY-MEMBER")
+  inputs <- t07_clinical_estimation_inputs(fixture, objective)
+  path <- t07_write_producer_shaped_clinical_artifact(
+    fixture, "clinical_associations", list(objective), family_member_ids = members,
+    endpoint_bundle = inputs$endpoint_bundle, clinical_view = inputs$clinical_view
+  )
+  payload <- t07_read_json_safe(path)
+  result_q <- payload$results[[1L]][["q", exact = TRUE]]
+
+  testthat::expect_identical(payload$family$q_published, TRUE)
+  testthat::expect_identical(payload$family$n_declared, 2L)
+  testthat::expect_identical(payload$family$n_estimated, 1L)
+  testthat::expect_identical(payload$family$n_failed, 1L)
+  testthat::expect_identical(payload$results[[2L]]$estimation_status, "failed")
+  testthat::expect_true(is.numeric(result_q) && is.finite(result_q))
+  testthat::expect_null(payload$results[[2L]][["q", exact = TRUE]])
+
+  exported <- t07_expect_export_success(t07_attempt_export(
+    output = root, config_path = fixture$config_path
+  ), "published q with an unavailable family member")
+  bundle <- t07_read_json_safe(exported$bundle_path)
+  testthat::expect_identical(bundle$clinical_associations$status, "partial")
+  testthat::expect_identical(bundle$clinical_longitudinal_associations$status, "not_requested")
+  testthat::expect_identical(bundle$clinical_longitudinal_associations$reason,
+                             "objectives_accounted_for_by_present_artifacts")
+})
+
+testthat::test_that("B-T07 accepts a valid withheld q with an estimated descriptive row", {
+  root <- t07_test_root("clinical-withheld-q-estimated-row")
+  fixture <- t07_public_bundle_fixture(root, include_clinical = FALSE)
+  objective <- t07_clinical_objective(fixture$config_path)
+  inputs <- t07_clinical_estimation_inputs(fixture, objective)
+  inputs$endpoint_bundle$endpoints[[1L]]$selection <- list(
+    ancestry = "selected_after_clinical_outcome",
+    validity = "qualified",
+    inspected_outcome = "glucose"
+  )
+  path <- t07_write_producer_shaped_clinical_artifact(
+    fixture, "clinical_associations", list(objective),
+    endpoint_bundle = inputs$endpoint_bundle, clinical_view = inputs$clinical_view
+  )
+  payload <- t07_read_json_safe(path)
+
+  testthat::expect_identical(payload$family$q_published, FALSE)
+  testthat::expect_identical(payload$results[[1L]]$estimation_status, "estimated")
+  testthat::expect_identical(payload$results[[1L]]$inferential_status, "descriptive_only")
+  testthat::expect_null(payload$results[[1L]][["q", exact = TRUE]])
+  exported <- t07_expect_export_success(t07_attempt_export(
+    output = root, config_path = fixture$config_path
+  ), "withheld q with an estimated descriptive row")
+  bundle <- t07_read_json_safe(exported$bundle_path)
+  testthat::expect_identical(bundle$clinical_associations$status, "complete")
+  testthat::expect_identical(bundle$clinical_longitudinal_associations$status, "not_requested")
+})
+
+testthat::test_that("B-T07 blocks invalid q publication flags and row q values at the artifact boundary", {
+  invalid_flags <- list(
+    false_with_q = list(value = FALSE, keep_q = TRUE),
+    missing_with_q = list(missing = TRUE, keep_q = TRUE),
+    string_with_q = list(value = "false", keep_q = TRUE),
+    numeric_with_q = list(value = 0, keep_q = TRUE),
+    vector_with_q = list(value = c(FALSE, TRUE), keep_q = TRUE),
+    missing_without_q = list(missing = TRUE, keep_q = FALSE),
+    true_with_incoherent_q = list(value = TRUE, keep_q = TRUE, row_q = 0)
+  )
+  objective <- t07_clinical_objective(t07_ticket("B-T08.yaml"))
+  for (case_name in names(invalid_flags)) {
+    root <- t07_test_root(paste0("clinical-invalid-q-publication-", case_name))
+    fixture <- t07_public_bundle_fixture(
+      root, include_clinical = FALSE, clinical_objectives = list(objective)
+    )
+    inputs <- t07_clinical_estimation_inputs(fixture, objective)
+    case <- invalid_flags[[case_name]]
+    t07_write_producer_shaped_clinical_artifact(
+      fixture, "clinical_associations", list(objective),
+      endpoint_bundle = inputs$endpoint_bundle, clinical_view = inputs$clinical_view,
+      mutate = function(payload) {
+        testthat::expect_identical(payload$family$q_published, TRUE, info = case_name)
+        testthat::expect_true(is.numeric(payload$results[[1L]][["q", exact = TRUE]]),
+                              info = case_name)
+        if (isTRUE(case$missing)) {
+          payload$family[["q_published"]] <- NULL
+        } else {
+          payload$family[["q_published"]] <- case$value
+        }
+        if (!isTRUE(case$keep_q)) payload$results[[1L]][["q"]] <- NULL
+        if (!is.null(case$row_q)) payload$results[[1L]][["q"]] <- case$row_q
         payload
       }
     )

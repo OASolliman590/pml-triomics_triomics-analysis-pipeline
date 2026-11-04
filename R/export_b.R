@@ -595,6 +595,9 @@ triomics_b07_clinical_values_equal <- function(left, right) {
 
 triomics_b07_clinical_family_consistent <- function(payload, objective) {
   family <- if (is.list(payload$family)) payload$family else list()
+  q_published <- family[["q_published", exact = TRUE]]
+  q_published_valid <- is.logical(q_published) && length(q_published) == 1L &&
+    is.null(dim(q_published)) && !is.na(q_published)
   members <- as.character(unlist(family$member_ids, use.names = FALSE))
   results <- if (is.list(payload$results)) payload$results else list()
   endpoints <- vapply(results, function(result) triomics_b07_clinical_string(result$endpoint_id), character(1L))
@@ -620,23 +623,23 @@ triomics_b07_clinical_family_consistent <- function(payload, objective) {
   internal_p <- triomics_b07_clinical_correction_vector(family$internal_p, length(members))
   internal_q <- triomics_b07_clinical_correction_vector(family$internal_q, length(members))
   expected_internal_q <- stats::p.adjust(expected_internal_p, method = "BH")
-  correction_vectors_valid <- correction_rows_valid && !is.null(internal_p) &&
+  correction_vectors_valid <- q_published_valid && correction_rows_valid && !is.null(internal_p) &&
     !is.null(internal_q) && identical(triomics_b07_clinical_string(family$correction_method), "BH") &&
     isTRUE(all.equal(internal_p, unname(expected_internal_p), tolerance = 1e-12,
                      check.attributes = FALSE)) &&
     isTRUE(all.equal(internal_q, unname(expected_internal_q), tolerance = 1e-12,
                      check.attributes = FALSE))
-  if (isTRUE(family$q_published)) {
+  if (q_published_valid) {
     correction_vectors_valid <- correction_vectors_valid && all(vapply(seq_along(results), function(index) {
       result <- results[[index]]
-      if (identical(statuses[[index]], "estimated")) {
-        result_q <- result[["q", exact = TRUE]]
+      result_q <- result[["q", exact = TRUE]]
+      if (identical(statuses[[index]], "estimated") && isTRUE(q_published)) {
         is.numeric(result_q) && length(result_q) == 1L && is.null(dim(result_q)) &&
           is.finite(result_q) && result_q >= 0 && result_q <= 1 &&
           isTRUE(all.equal(as.numeric(result_q), unname(expected_internal_q[[index]]),
                           tolerance = 1e-12, check.attributes = FALSE))
       } else {
-        is.null(result$q)
+        is.null(result_q)
       }
     }, logical(1L)))
   }
