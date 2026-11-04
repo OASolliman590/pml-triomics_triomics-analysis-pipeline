@@ -108,6 +108,69 @@ testthat::test_that("native C publication JSON restores typed matrices and metad
   testthat::expect_identical(restored$analysis_unit_map$sample_ids, I(list("s1", "s2")))
 })
 
+testthat::test_that("saved native C context replays the exact fit without refitting", {
+  fixture <- cnh_test_between_person_config()
+  output_root <- tempfile("triomics-cnh-saved-c-replay-")
+  on.exit(unlink(c(fixture$fixture_root, output_root), recursive = TRUE, force = TRUE), add = TRUE)
+
+  initial <- triomics_execute_stage_c(fixture$config_path, output_root)
+  context_path <- file.path(output_root, "C", "native-publication-context.json")
+  context_envelope_path <- file.path(output_root, "C", "native-publication-context.envelope.json")
+  context <- jsonlite::read_json(context_path, simplifyVector = FALSE)
+  c_identity <- triomics_cnh_decode_r_value(context$c_input_identity)
+  testthat::expect_identical(initial$status, "endpoint_request_scheduled")
+  testthat::expect_true(triomics_validate_envelope(context_envelope_path))
+  testthat::expect_identical(
+    triomics_b07_prov_value_sha256(c_identity), context$c_input_identity_sha256
+  )
+  testthat::expect_identical(c_identity$study_id, "triomics_c08_fixture")
+  testthat::expect_identical(nrow(c_identity$normalized_metadata$sample_metadata), 12L)
+  testthat::expect_true(all(vapply(c_identity$blocks, function(block) {
+    is.matrix(block$matrix) && identical(typeof(block$matrix), "double") &&
+      identical(rownames(block$matrix), block$feature_ids) &&
+      identical(colnames(block$matrix), block$unit_ids)
+  }, logical(1L))))
+  input_paths <- vapply(context$input_files, function(reference) as.character(reference$path), character(1L))
+  testthat::expect_true(all(c(
+    "C/integration-results.json", "C/integration-results.envelope.json",
+    "C/native-states/integration-01.json", "C/native-states/integration-01.envelope.json",
+    "C/score-endpoints/integration-01.json", "C/score-endpoints/integration-01.envelope.json",
+    "B/clinical-score-association-requests/request-01.json",
+    "B/clinical-score-association-requests/request-01.envelope.json"
+  ) %in% input_paths))
+  testthat::expect_false(file.exists(file.path(output_root, "D", "handoff-manifest.json")))
+
+  triomics_execute_stage_b(fixture$config_path, output_root)
+  testthat::expect_true(file.exists(file.path(output_root, "B", "clinical-associations.json")))
+
+  fit_calls <- 0L
+  fit_spy <- function(...) {
+    fit_calls <<- fit_calls + 1L
+    stop("The saved C replay attempted an integration fit.", call. = FALSE)
+  }
+  prep_spy <- function(...) {
+    fit_calls <<- fit_calls + 1L
+    stop("The saved C replay attempted preprocessing.", call. = FALSE)
+  }
+  testthat::local_mocked_bindings(
+    triomics_integration_fit_once = fit_spy,
+    prepare_fit = prep_spy,
+    .package = "triomics"
+  )
+  replay <- triomics_execute_stage_c(fixture$config_path, output_root)
+
+  provenance_path <- file.path(output_root, "D", "stage-handoff-provenance.json")
+  provenance_envelope_path <- file.path(output_root, "D", "stage-handoff-provenance.envelope.json")
+  testthat::expect_identical(fit_calls, 0L)
+  testthat::expect_identical(replay$run_status, "complete")
+  testthat::expect_true(file.exists(file.path(output_root, "D", "handoff-manifest.json")))
+  testthat::expect_true(triomics_validate_envelope(provenance_envelope_path))
+  testthat::expect_true(triomics_validate_stage_handoff_provenance(
+    jsonlite::read_json(provenance_path, simplifyVector = FALSE),
+    "c06-stage-handoff-provenance", "c06-stage-handoff-provenance-envelope"
+  ))
+})
+
 testthat::test_that("native B preflight authenticates the scheduled C08 V1 request", {
   fixture <- cnh_test_between_person_config()
   output_root <- tempfile("triomics-cnh-preflight-")

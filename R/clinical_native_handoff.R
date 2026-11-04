@@ -96,6 +96,9 @@ triomics_cnh_encode_r_value <- function(value) {
 
 triomics_cnh_decode_atomic <- function(node) {
   storage <- as.character(node$storage %||% "")
+  if (!storage %in% c("character", "integer", "double", "logical")) {
+    triomics_cnh_r_value_abort("The saved C publication context has an unsupported atomic storage type.")
+  }
   values <- unlist(node$values, recursive = FALSE, use.names = FALSE)
   if (storage == "character") values <- as.character(values)
   if (storage == "integer") values <- as.integer(values)
@@ -116,14 +119,22 @@ triomics_cnh_decode_r_value <- function(node) {
   if (identical(type, "atomic")) {
     value <- triomics_cnh_decode_atomic(node)
     classes <- as.character(unlist(node$class, use.names = FALSE))
+    if (length(classes) && !identical(classes, "Date")) {
+      triomics_cnh_r_value_abort("The saved C publication context declares an unsupported atomic class.")
+    }
     if (length(classes)) class(value) <- classes
     return(value)
   }
   if (identical(type, "factor")) {
     codes <- as.integer(unlist(node$codes, use.names = FALSE))
     missing <- as.integer(unlist(node$missing, use.names = FALSE))
+    levels <- as.character(unlist(node$levels, use.names = FALSE))
+    if (anyNA(codes) || any(codes < 0L) || any(codes > length(levels)) ||
+        any(missing < 1L | missing > length(codes))) {
+      triomics_cnh_r_value_abort("The saved C factor codes or levels are invalid.")
+    }
     if (length(missing)) codes[missing] <- NA_integer_
-    value <- structure(codes, levels = as.character(unlist(node$levels, use.names = FALSE)),
+    value <- structure(codes, levels = levels,
                        class = if (isTRUE(node$ordered)) c("ordered", "factor") else "factor")
     if (isTRUE(node$has_names)) names(value) <- as.character(unlist(node$names, use.names = FALSE))
     return(value)
@@ -132,6 +143,9 @@ triomics_cnh_decode_r_value <- function(node) {
     values <- lapply(node$values, triomics_cnh_decode_r_value)
     if (isTRUE(node$has_names)) names(values) <- as.character(unlist(node$names, use.names = FALSE))
     classes <- as.character(unlist(node$class, use.names = FALSE))
+    if (length(classes) && !identical(classes, "AsIs")) {
+      triomics_cnh_r_value_abort("The saved C publication context declares an unsupported list class.")
+    }
     if (length(classes)) class(values) <- classes
     return(values)
   }
@@ -146,7 +160,10 @@ triomics_cnh_decode_r_value <- function(node) {
   if (identical(type, "matrix")) {
     value <- triomics_cnh_decode_atomic(node$values)
     dimensions <- as.integer(unlist(node$dimensions, use.names = FALSE))
-    if (length(dimensions) != 2L || prod(dimensions) != length(value)) {
+    storage <- as.character(node$storage %||% "")
+    if (!storage %in% c("integer", "double") || typeof(value) != storage ||
+        length(dimensions) != 2L || anyNA(dimensions) || any(dimensions < 0L) ||
+        prod(dimensions) != length(value)) {
       triomics_cnh_r_value_abort("The saved C matrix dimensions do not match its typed values.")
     }
     dim(value) <- dimensions
@@ -735,5 +752,593 @@ triomics_cnh_publish_stage_b <- function(context, config_path, output) {
     payload_path = output_path,
     envelope_path = output_envelope_path,
     fit = fit
+  )
+}
+
+triomics_cnh_native_c_route <- function(config) {
+  if (!is.list(config) || !isTRUE(config$clinical$enabled) ||
+      !is.list(config$clinical$objectives) || !length(config$clinical$objectives) ||
+      config$study_id %in% c("triomics_b_t08_fixture", "triomics_b_t09_fixture")) {
+    return(NULL)
+  }
+  modes <- vapply(config$clinical$objectives, function(objective) {
+    as.character(objective$mode %||% "")
+  }, character(1L))
+  if (!any(modes == "between_person")) return(NULL)
+  if (any(modes != "between_person")) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_ROUTE_UNSUPPORTED",
+      "The saved native C publication route accepts between-person objectives only.",
+      "clinical.objectives.mode", stage = "C"
+    )
+  }
+  if (length(config$analyses) != 1L) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_ROUTE_UNSUPPORTED", "The saved native C route requires one analysis.",
+      "analyses", stage = "C"
+    )
+  }
+  analysis <- config$analyses[[1L]]
+  integrations <- analysis$integration
+  supported <- c("concat_pca", "mixomics_diablo", "mixomics_block_spls", "mofa2")
+  if (!is.list(integrations) || length(integrations) != 1L ||
+      !as.character(integrations[[1L]]$method %||% "") %in% supported) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_ROUTE_UNSUPPORTED",
+      "The saved native C route requires one registered C-08 integration request.",
+      "analyses.integration", stage = "C"
+    )
+  }
+  if (any(vapply(config$clinical$objectives, function(objective) {
+    !triomics_nonempty_string(as.character(objective$time_window_ref %||% ""))
+  }, logical(1L)))) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_ROUTE_UNSUPPORTED",
+      "Every between-person objective requires an explicit visit window.",
+      "clinical.objectives.time_window_ref", stage = "C"
+    )
+  }
+  list(analysis = analysis, integration = integrations[[1L]])
+}
+
+triomics_cnh_context_paths <- function(root) {
+  list(
+    payload = file.path(root, "C", "native-publication-context.json"),
+    envelope = file.path(root, "C", "native-publication-context.envelope.json")
+  )
+}
+
+triomics_cnh_c_file_references <- function(root) {
+  required <- c(
+    "C/integration-results.json", "C/integration-results.envelope.json",
+    "C/native-states/integration-01.json", "C/native-states/integration-01.envelope.json",
+    "C/score-endpoints/integration-01.json", "C/score-endpoints/integration-01.envelope.json",
+    "B/clinical-score-association-requests/request-01.json",
+    "B/clinical-score-association-requests/request-01.envelope.json"
+  )
+  paths <- vapply(required, function(relative) {
+    path <- tryCatch(triomics_b07_child_path(root, relative), error = function(error) NULL)
+    if (is.null(path) || !file.exists(path) || dir.exists(path) || triomics_is_symlink(path)) {
+      triomics_cnh_abort(
+        "C_PUBLICATION_CONTEXT_INVALID",
+        paste0("The initial native C output is missing or unsafe: ", relative), relative, stage = "C"
+      )
+    }
+    path
+  }, character(1L), USE.NAMES = FALSE)
+  preparation_root <- tryCatch(
+    triomics_b07_child_path(root, "C/preparation-states"), error = function(error) NULL
+  )
+  preparation_files <- character()
+  if (is.null(preparation_root)) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID", "The C preparation-state path is unsafe.",
+      "C/preparation-states", stage = "C"
+    )
+  }
+  if (file.exists(preparation_root)) {
+    if (!dir.exists(preparation_root) || triomics_is_symlink(preparation_root)) {
+      triomics_cnh_abort(
+        "C_PUBLICATION_CONTEXT_INVALID", "The C preparation-state directory is unsafe.",
+        "C/preparation-states", stage = "C"
+      )
+    }
+    candidates <- list.files(preparation_root, recursive = TRUE, full.names = TRUE,
+                             all.files = TRUE, no.. = TRUE)
+    for (candidate in candidates) {
+      relative <- substring(normalizePath(candidate, winslash = "/", mustWork = TRUE),
+                            nchar(root) + 2L)
+      safe <- tryCatch(triomics_b07_child_path(root, relative), error = function(error) NULL)
+      if (is.null(safe) || triomics_is_symlink(candidate)) {
+        triomics_cnh_abort(
+          "C_PUBLICATION_CONTEXT_INVALID", "A C preparation-state member is unsafe.",
+          relative, stage = "C"
+        )
+      }
+      info <- file.info(candidate)
+      if (isTRUE(info$isdir)) next
+      if (grepl("[.]tmp$", basename(candidate))) {
+        triomics_cnh_abort(
+          "C_PUBLICATION_CONTEXT_INVALID", "A partial preparation-state write is present.",
+          relative, stage = "C"
+        )
+      }
+      preparation_files <- c(preparation_files, safe)
+    }
+  }
+  paths <- unique(c(unname(paths), preparation_files))
+  paths <- paths[order(vapply(paths, function(path) {
+    substring(path, nchar(root) + 2L)
+  }, character(1L)), method = "radix")]
+  lapply(paths, function(path) {
+    list(
+      path = substring(path, nchar(root) + 2L),
+      sha256 = triomics_sha256(path)
+    )
+  })
+}
+
+triomics_cnh_context_envelope_inputs <- function(source_inputs, file_references) {
+  file_inputs <- lapply(file_references, function(reference) {
+    list(artifact_id = paste0("c-stage-file:", reference$path), sha256 = reference$sha256)
+  })
+  inputs <- c(source_inputs, file_inputs)
+  ids <- vapply(inputs, function(input) as.character(input$artifact_id), character(1L))
+  if (anyDuplicated(ids)) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID", "C publication context input artifact ids are duplicated.",
+      "inputs", stage = "C"
+    )
+  }
+  inputs
+}
+
+triomics_cnh_validate_saved_c_outputs <- function(root, config, c_input_identity,
+                                                   source_inputs, integration_runs,
+                                                   initial_handoff) {
+  config_sha256 <- as.character(attr(config, "config_sha256"))
+  identity <- c_input_identity[c(
+    "study_id", "analysis_id", "preparation_context_id", "representation_id"
+  )]
+  if (any(!vapply(identity, triomics_nonempty_string, logical(1L))) ||
+      !triomics_sha256_text(config_sha256) ||
+      !triomics_cnh_same_json(c_input_identity$source_inputs, source_inputs)) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID", "The C input identity or source manifests are incomplete.",
+      "c_input_identity", stage = "C"
+    )
+  }
+  c_payload_path <- file.path(root, "C", "integration-results.json")
+  c_envelope_path <- file.path(root, "C", "integration-results.envelope.json")
+  c_payload <- triomics_cnh_read_json(c_payload_path, "C integration results")
+  c_envelope <- triomics_cnh_validate_envelope(c_envelope_path, c(
+    list(artifact_type = "integration_results", artifact_id = "stage-c-integration-results",
+         study_id = identity$study_id, config_sha256 = config_sha256,
+         analysis_id = identity$analysis_id,
+         preparation_context_id = identity$preparation_context_id,
+         representation_id = identity$representation_id,
+         status = "complete", payload_sha256 = triomics_sha256(c_payload_path)),
+    list(inputs = c(source_inputs, lapply(integration_runs, `[[`, "native_artifact_ref")))
+  ), "C integration results")
+  integration <- if (is.list(c_payload$integrations) && length(c_payload$integrations) == 1L) {
+    c_payload$integrations[[1L]]
+  } else NULL
+  run <- if (is.list(integration_runs) && length(integration_runs) == 1L) {
+    integration_runs[[1L]]
+  } else NULL
+  if (!triomics_cnh_same_json(c_payload[names(identity)], identity) ||
+      !identical(c_payload$status, "complete") || !is.list(integration) ||
+      !identical(integration$status, "complete") || !is.list(run) ||
+      !identical(run$status, "complete") || !inherits(run$result, "IntegrationResult") ||
+      !identical(as.character(integration$integration_id), as.character(run$integration_id)) ||
+      !identical(as.character(integration$method), as.character(run$method)) ||
+      !triomics_cnh_same_json(initial_handoff$integration_evidence[[1L]]$native_artifact_ref,
+                              run$native_artifact_ref)) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID",
+      "The C result, in-memory fit, native sidecar reference, and saved handoff differ.",
+      "C/integration-results.json", stage = "C"
+    )
+  }
+  native_path <- file.path(root, "C", "native-states", "integration-01.json")
+  native_envelope_path <- file.path(root, "C", "native-states", "integration-01.envelope.json")
+  native <- triomics_cnh_read_json(native_path, "C native state")
+  matrix_inputs <- lapply(names(c_input_identity$blocks), function(block_id) {
+    list(
+      artifact_id = paste(run$integration_id, block_id, sep = "::"),
+      sha256 = as.character(c_input_identity$blocks[[block_id]]$matrix_sha256)
+    )
+  })
+  preparation_inputs <- lapply(names(native$preparation_state_refs), function(block_id) {
+    reference <- native$preparation_state_refs[[block_id]]
+    if (!is.list(reference) || !triomics_nonempty_string(as.character(reference$path %||% "")) ||
+        !triomics_sha256_text(as.character(reference$payload_sha256 %||% ""))) {
+      triomics_cnh_abort("C_PUBLICATION_CONTEXT_INVALID", "A C preparation-state reference is incomplete.",
+                         "preparation_state_refs", stage = "C")
+    }
+    state_path <- triomics_cnh_path(root, as.character(reference$path),
+                                    as.character(reference$payload_sha256),
+                                    paste0("C preparation state ", block_id))
+    list(artifact_id = paste("preparation-state", block_id, sep = "::"),
+         sha256 = triomics_sha256(state_path))
+  })
+  triomics_cnh_validate_envelope(native_envelope_path, c(
+    list(artifact_type = "integration_native_state",
+         artifact_id = as.character(run$native_artifact_ref$artifact_id),
+         study_id = identity$study_id, config_sha256 = config_sha256,
+         analysis_id = identity$analysis_id,
+         preparation_context_id = identity$preparation_context_id,
+         representation_id = identity$representation_id,
+         status = "complete", payload_sha256 = triomics_sha256(native_path)),
+    list(inputs = c(source_inputs, matrix_inputs, preparation_inputs))
+  ), "C native state")
+  if (!identical(as.character(native$artifact_id), as.character(run$native_artifact_ref$artifact_id)) ||
+      !identical(triomics_sha256(native_path), as.character(run$native_artifact_ref$sha256))) {
+    triomics_cnh_abort("C_PUBLICATION_CONTEXT_INVALID", "The C native state reference differs from its file.",
+                       "C/native-states/integration-01.json", stage = "C")
+  }
+  endpoint <- integration$score_endpoint_bundle
+  request <- integration$clinical_score_request
+  if (!is.list(endpoint) || !is.list(request) ||
+      !identical(endpoint$payload_file, file.path("C", "score-endpoints", "integration-01.json")) ||
+      !identical(endpoint$envelope_file, file.path("C", "score-endpoints", "integration-01.envelope.json")) ||
+      !identical(request$payload_file, file.path("B", "clinical-score-association-requests", "request-01.json")) ||
+      !identical(request$envelope_file, file.path("B", "clinical-score-association-requests", "request-01.envelope.json")) ||
+      !identical(request$status, "scheduled") || !identical(request$owner_stage, "B") ||
+      !identical(request$model_execution, "not_started")) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID", "The C score endpoint or B request reference is unsupported.",
+      "clinical_score_request", stage = "C"
+    )
+  }
+  endpoint_path <- file.path(root, endpoint$payload_file)
+  endpoint_envelope_path <- file.path(root, endpoint$envelope_file)
+  request_path <- file.path(root, request$payload_file)
+  request_envelope_path <- file.path(root, request$envelope_file)
+  for (path in c(endpoint_path, endpoint_envelope_path, request_path, request_envelope_path)) {
+    triomics_cnh_path(root, substring(path, nchar(root) + 2L), triomics_sha256(path), basename(path))
+  }
+  if (!isTRUE(triomics_validate_envelope(endpoint_envelope_path)) ||
+      !isTRUE(triomics_validate_envelope(request_envelope_path)) ||
+      !identical(triomics_sha256(endpoint_path), as.character(endpoint$payload_sha256)) ||
+      !identical(triomics_sha256(endpoint_envelope_path), as.character(endpoint$envelope_sha256)) ||
+      !identical(triomics_sha256(request_path), as.character(request$payload_sha256)) ||
+      !identical(triomics_sha256(request_envelope_path), as.character(request$envelope_sha256))) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID", "The endpoint or request artifact bytes failed validation.",
+      "clinical_score_request", stage = "C"
+    )
+  }
+  invisible(c_envelope)
+}
+
+triomics_cnh_save_initial_c <- function(integration_runs, evaluation_controls,
+                                        c_input_identity, config, output,
+                                        source_inputs, run_status) {
+  route <- triomics_cnh_native_c_route(config)
+  if (is.null(route)) return(NULL)
+  root <- tryCatch(triomics_b07_output_root(output, create = FALSE), error = function(error) NULL)
+  if (is.null(root)) {
+    triomics_cnh_abort("C_PUBLICATION_CONTEXT_INVALID", "The C output root must already exist.",
+                       "output", stage = "C")
+  }
+  if (!identical(run_status, "complete") || !is.list(integration_runs) ||
+      length(integration_runs) != 1L || !is.list(evaluation_controls)) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID", "The initial C context requires one complete integration and its evaluation controls.",
+      "integration_runs", stage = "C"
+    )
+  }
+  context_paths <- triomics_cnh_context_paths(root)
+  registry_path <- file.path(root, "registries", "run-C.json")
+  if (any(file.exists(unlist(context_paths, use.names = FALSE))) ||
+      any(vapply(unlist(context_paths, use.names = FALSE), triomics_is_symlink, logical(1L))) ||
+      file.exists(registry_path) || triomics_is_symlink(registry_path)) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_CONFLICT",
+      "Initial C publication context must be saved once, before the C completion registry.",
+      "C/native-publication-context.json", stage = "C"
+    )
+  }
+  triomics_cnh_reject_prior_b(root)
+  d_root <- file.path(root, "D")
+  if (file.exists(d_root) || triomics_is_symlink(d_root)) {
+    triomics_cnh_abort("C_PUBLICATION_CONTEXT_CONFLICT", "A D publication already exists for this C run.",
+                       "D", stage = "C")
+  }
+  if (!triomics_cnh_same_json(c_input_identity$source_inputs, source_inputs) ||
+      !identical(as.character(c_input_identity$study_id), as.character(config$study_id)) ||
+      !identical(as.character(c_input_identity$analysis_id), as.character(route$analysis$analysis_id))) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID", "The C input identity differs from the configured analysis or sources.",
+      "c_input_identity", stage = "C"
+    )
+  }
+  handoff <- triomics_c06_build_handoff(
+    primary_nominations = NULL,
+    integration_runs = integration_runs,
+    evaluation_evidence = list(controls = evaluation_controls),
+    clinical_prediction = list(
+      status = "not_started", completion_policy = "conditional", packet_id = "C-09",
+      model_execution = "not_started",
+      reason = "Conditional matched clinical prediction has not been executed."
+    )
+  )
+  handoff$study_id <- as.character(c_input_identity$study_id)
+  handoff$analysis_id <- as.character(c_input_identity$analysis_id)
+  if (identical(handoff$status, "complete") &&
+      !identical(handoff$evaluation_evidence$status, "complete")) {
+    handoff$status <- "partial"
+  }
+  if (!triomics_cnh_same_json(handoff$integration_evidence[[1L]]$context, list(
+    study_id = c_input_identity$study_id, analysis_id = c_input_identity$analysis_id,
+    preparation_context_id = c_input_identity$preparation_context_id,
+    representation_id = c_input_identity$representation_id
+  ))) {
+    triomics_cnh_abort("C_PUBLICATION_CONTEXT_INVALID", "The C integration handoff identity is inconsistent.",
+                       "handoff", stage = "C")
+  }
+  file_references <- triomics_cnh_c_file_references(root)
+  triomics_cnh_validate_saved_c_outputs(
+    root, config, c_input_identity, source_inputs, integration_runs, handoff
+  )
+  payload <- list(
+    schema_version = "1.0",
+    artifact_type = "stage_c_native_publication_context",
+    study_id = as.character(c_input_identity$study_id),
+    analysis_id = as.character(c_input_identity$analysis_id),
+    preparation_context_id = as.character(c_input_identity$preparation_context_id),
+    representation_id = as.character(c_input_identity$representation_id),
+    config_sha256 = as.character(attr(config, "config_sha256")),
+    run_status = run_status,
+    c_input_identity_sha256 = triomics_b07_prov_value_sha256(c_input_identity),
+    source_inputs = source_inputs,
+    input_files = file_references,
+    c_input_identity = triomics_cnh_encode_r_value(c_input_identity),
+    initial_handoff = triomics_cnh_encode_r_value(handoff)
+  )
+  envelope_inputs <- triomics_cnh_context_envelope_inputs(source_inputs, file_references)
+  payload_path <- context_paths$payload
+  envelope_path <- context_paths$envelope
+  written <- character()
+  finalized <- FALSE
+  on.exit({
+    if (!finalized && length(written)) unlink(written, force = TRUE)
+  }, add = TRUE)
+  triomics_write_json_atomic(payload, payload_path)
+  written <- c(written, payload_path)
+  envelope <- triomics_artifact_envelope(
+    artifact_type = "stage_c_native_publication_context",
+    artifact_id = "c06-native-publication-context",
+    study_id = payload$study_id,
+    run_id = "c-01",
+    status = "complete",
+    config_sha256 = payload$config_sha256,
+    payload = payload_path,
+    producer_commit = triomics_b07_git_ref(getwd()),
+    inputs = envelope_inputs,
+    reason_codes = character(),
+    privacy_class = if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive"
+  )
+  envelope$analysis_id <- payload$analysis_id
+  envelope$preparation_context_id <- payload$preparation_context_id
+  envelope$representation_id <- payload$representation_id
+  triomics_write_envelope(envelope, envelope_path)
+  written <- c(written, envelope_path)
+  readback <- triomics_cnh_read_json(payload_path, "C publication context")
+  triomics_cnh_validate_envelope(envelope_path, c(
+    list(artifact_type = "stage_c_native_publication_context",
+         artifact_id = "c06-native-publication-context", study_id = payload$study_id,
+         config_sha256 = payload$config_sha256, status = "complete",
+         payload_sha256 = triomics_sha256(payload_path), inputs = envelope_inputs,
+         analysis_id = payload$analysis_id,
+         preparation_context_id = payload$preparation_context_id,
+         representation_id = payload$representation_id)
+  ), "C publication context")
+  if (!triomics_cnh_same_json(readback, payload) ||
+      !identical(triomics_sha256(payload_path), as.character(envelope$payload_sha256))) {
+    triomics_cnh_abort("C_PUBLICATION_CONTEXT_INVALID", "The initial C context failed exact JSON read-back.",
+                       "C/native-publication-context.json", stage = "C")
+  }
+  finalized <- TRUE
+  invisible(list(
+    status = "saved", payload_path = payload_path, envelope_path = envelope_path,
+    payload_sha256 = triomics_sha256(payload_path), envelope_sha256 = triomics_sha256(envelope_path)
+  ))
+}
+
+triomics_cnh_has_saved_c_state <- function(root) {
+  files <- c(
+    "registries/run-C.json", "registries/run-B.json",
+    "C/integration-results.json", "C/integration-results.envelope.json",
+    "C/native-publication-context.json", "C/native-publication-context.envelope.json",
+    "B/block-results.json", "B/block-results.envelope.json",
+    "B/clinical-associations.json", "B/clinical-associations.envelope.json",
+    "B/clinical-longitudinal-associations.json",
+    "B/clinical-longitudinal-associations.envelope.json"
+  )
+  for (relative in files) {
+    path <- tryCatch(triomics_b07_child_path(root, relative), error = function(error) NULL)
+    if (is.null(path) || file.exists(path) || triomics_is_symlink(path)) return(TRUE)
+  }
+  for (relative in c("C/native-states", "C/score-endpoints", "C/preparation-states",
+                     "B/clinical-score-association-requests", "B/handoffs", "D")) {
+    path <- tryCatch(triomics_b07_child_path(root, relative), error = function(error) NULL)
+    if (is.null(path) || triomics_is_symlink(path)) return(TRUE)
+    if (dir.exists(path) && length(list.files(path, recursive = TRUE, all.files = TRUE,
+                                              no.. = TRUE))) return(TRUE)
+  }
+  FALSE
+}
+
+triomics_cnh_read_saved_c_context <- function(config, root) {
+  context_paths <- triomics_cnh_context_paths(root)
+  existing <- file.exists(unlist(context_paths, use.names = FALSE)) |
+    vapply(unlist(context_paths, use.names = FALSE), triomics_is_symlink, logical(1L))
+  if (!all(existing)) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID", "The saved C publication context payload and envelope must exist together.",
+      "C/native-publication-context.json", stage = "C"
+    )
+  }
+  context_path <- triomics_cnh_path(
+    root, file.path("C", "native-publication-context.json"),
+    triomics_sha256(context_paths$payload), "C publication context"
+  )
+  envelope_path <- triomics_cnh_path(
+    root, file.path("C", "native-publication-context.envelope.json"),
+    triomics_sha256(context_paths$envelope), "C publication context envelope"
+  )
+  payload <- triomics_cnh_read_json(context_path, "C publication context")
+  config_sha256 <- as.character(attr(config, "config_sha256"))
+  file_references <- triomics_cnh_c_file_references(root)
+  if (!triomics_cnh_same_json(payload$input_files, file_references) ||
+      !identical(payload$schema_version, "1.0") ||
+      !identical(payload$artifact_type, "stage_c_native_publication_context") ||
+      !identical(payload$run_status, "complete") ||
+      !identical(as.character(payload$config_sha256), config_sha256) ||
+      !identical(as.character(payload$study_id), as.character(config$study_id)) ||
+      !triomics_sha256_text(config_sha256)) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID",
+      "The saved C context no longer matches the current configuration or exact input-file bytes.",
+      "C/native-publication-context.json", stage = "C"
+    )
+  }
+  source_inputs <- payload$source_inputs
+  if (!is.list(source_inputs) || !length(source_inputs) || any(!vapply(source_inputs, function(input) {
+    is.list(input) && triomics_nonempty_string(as.character(input$artifact_id %||% "")) &&
+      triomics_sha256_text(as.character(input$sha256 %||% ""))
+  }, logical(1L)))) {
+    triomics_cnh_abort("C_PUBLICATION_CONTEXT_INVALID", "Saved C source manifest hashes are incomplete.",
+                       "source_inputs", stage = "C")
+  }
+  expected_inputs <- triomics_cnh_context_envelope_inputs(source_inputs, file_references)
+  privacy_class <- if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive"
+  envelope <- triomics_cnh_validate_envelope(envelope_path, c(
+    list(artifact_type = "stage_c_native_publication_context",
+         artifact_id = "c06-native-publication-context",
+         study_id = as.character(payload$study_id), config_sha256 = config_sha256,
+         status = "complete", payload_sha256 = triomics_sha256(context_path),
+         inputs = expected_inputs, privacy_class = privacy_class,
+         analysis_id = as.character(payload$analysis_id),
+         preparation_context_id = as.character(payload$preparation_context_id),
+         representation_id = as.character(payload$representation_id))
+  ), "C publication context")
+  identity <- triomics_cnh_decode_r_value(payload$c_input_identity)
+  handoff <- triomics_cnh_decode_r_value(payload$initial_handoff)
+  identity_fields <- list(
+    study_id = payload$study_id, analysis_id = payload$analysis_id,
+    preparation_context_id = payload$preparation_context_id,
+    representation_id = payload$representation_id
+  )
+  if (!is.list(identity) || !is.list(handoff) ||
+      !identical(as.character(triomics_b07_prov_value_sha256(identity)),
+                 as.character(payload$c_input_identity_sha256)) ||
+      !triomics_cnh_same_json(identity[c("study_id", "analysis_id", "preparation_context_id",
+                                         "representation_id")], identity_fields) ||
+      !identical(handoff$artifact_type, "stage_c_d_handoff") ||
+      !identical(as.character(handoff$study_id), as.character(payload$study_id)) ||
+      !identical(as.character(handoff$analysis_id), as.character(payload$analysis_id)) ||
+      !is.list(handoff$nomination_branches$primary_statistics) ||
+      !identical(handoff$nomination_branches$primary_statistics$status, "not_requested") ||
+      length(handoff$nomination_branches$primary_statistics$nominations) != 0L) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID", "The typed C identity or saved pre-B handoff failed validation.",
+      "C/native-publication-context.json", stage = "C"
+    )
+  }
+  registry_path <- triomics_cnh_path(
+    root, file.path("registries", "run-C.json"),
+    triomics_sha256(file.path(root, "registries", "run-C.json")), "C completion registry"
+  )
+  registry <- triomics_cnh_read_json(registry_path, "C completion registry")
+  if (!identical(registry$stage, "C") || !identical(registry$run_id, "c-01") ||
+      !identical(registry$status, payload$run_status) ||
+      !identical(registry$study_id, payload$study_id)) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID",
+      "The C completion registry is missing or disagrees with the saved initial publication.",
+      "registries/run-C.json", stage = "C"
+    )
+  }
+  list(
+    payload = payload, envelope = envelope, identity = identity,
+    handoff = handoff, registry = registry, file_references = file_references
+  )
+}
+
+triomics_cnh_publish_saved_c <- function(config_path, output) {
+  if (!triomics_nonempty_string(config_path) || !triomics_nonempty_string(output)) {
+    triomics_cnh_abort("C_PUBLICATION_CONTEXT_INVALID", "Config and output paths are required.",
+                       "output", stage = "C")
+  }
+  config <- triomics_read_config(config_path)
+  root <- tryCatch(triomics_b07_output_root(output, create = FALSE), error = function(error) NULL)
+  if (is.null(root)) return(NULL)
+  context_paths <- triomics_cnh_context_paths(root)
+  context_present <- any(file.exists(unlist(context_paths, use.names = FALSE))) ||
+    any(vapply(unlist(context_paths, use.names = FALSE), triomics_is_symlink, logical(1L)))
+  route <- triomics_cnh_native_c_route(config)
+  if (is.null(route)) {
+    if (context_present) {
+      triomics_cnh_abort(
+        "C_PUBLICATION_CONTEXT_INVALID", "The saved native C context no longer matches an applicable route.",
+        "clinical.objectives", stage = "C"
+      )
+    }
+    return(NULL)
+  }
+  if (!context_present) {
+    if (!triomics_cnh_has_saved_c_state(root)) return(NULL)
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_MISSING",
+      "This output contains prior C/B publication state but no initial native C context; it cannot be refit or resumed.",
+      "C/native-publication-context.json", stage = "C"
+    )
+  }
+  saved <- triomics_cnh_read_saved_c_context(config, root)
+  identity <- saved$identity
+  if (!identical(as.character(identity$analysis_id), as.character(route$analysis$analysis_id)) ||
+      !identical(as.character(identity$preparation_context_id),
+                 as.character(route$analysis$preparation_context_id)) ||
+      !identical(as.character(identity$representation_id),
+                 as.character(route$analysis$design$representation))) {
+    triomics_cnh_abort("C_PUBLICATION_CONTEXT_INVALID", "The saved C identity differs from the configured analysis.",
+                       "c_input_identity", stage = "C")
+  }
+  fresh_b_context <- triomics_cnh_load_stage_b_context(config_path, output, allow_b_started = TRUE)
+  if (!inherits(fresh_b_context, "ClinicalNativeHandoffContext") ||
+      !identical(fresh_b_context$config_sha256, saved$payload$config_sha256) ||
+      !identical(fresh_b_context$study_id, saved$payload$study_id) ||
+      !identical(fresh_b_context$analysis_id, saved$payload$analysis_id) ||
+      !triomics_cnh_same_json(fresh_b_context$source_inputs, saved$payload$source_inputs)) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID", "The current B request does not match the saved typed C context.",
+      "C/native-publication-context.json", stage = "C"
+    )
+  }
+  primary_nominations <- triomics_c06_cli_primary_nominations(output, config, route$analysis)
+  handoff <- triomics_c06_attach_primary_nominations(saved$handoff, primary_nominations)
+  if (identical(handoff$status, "complete") &&
+      !identical(handoff$evaluation_evidence$status, "complete")) {
+    handoff$status <- "partial"
+  }
+  predecessor_paths <- triomics_c06_cli_native_b_predecessors(output)
+  publication <- triomics_c06_write_handoff(
+    handoff, output,
+    config_sha256 = as.character(saved$payload$config_sha256),
+    producer_commit = triomics_b07_git_ref(getwd()),
+    privacy_class = if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive",
+    b_predecessor_paths = predecessor_paths,
+    c_input_identity = identity
+  )
+  list(
+    status = handoff$status,
+    run_status = as.character(saved$registry$status),
+    payload_path = file.path(root, "C", "integration-results.json"),
+    results = saved$handoff$integration_evidence,
+    required_complete = identical(saved$registry$status, "complete"),
+    publication = publication
   )
 }

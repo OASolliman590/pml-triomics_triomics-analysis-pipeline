@@ -1046,6 +1046,10 @@ testthat::test_that("Stage C preserves the verified native B primary nomination 
   predecessor_payload_ids <- vapply(Filter(function(entity) {
     identical(entity$scientific_role, "predecessor_payload")
   }, c_profile$identity$entities), `[[`, character(1L), "entity_id")
+  predecessor_envelope_ids <- vapply(Filter(function(entity) {
+    identical(entity$scientific_role, "predecessor_envelope")
+  }, c_profile$identity$entities), `[[`, character(1L), "entity_id")
+  predecessor_ids <- c(predecessor_payload_ids, predecessor_envelope_ids)
   integration_result <- Filter(function(entity) {
     identical(entity$scientific_role, "integration_result")
   }, c_profile$identity$entities)[[1L]]
@@ -1055,18 +1059,25 @@ testthat::test_that("Stage C preserves the verified native B primary nomination 
   c_export_activity <- Filter(function(activity) {
     identical(activity$stage, "C") && identical(activity$activity_type, "handoff_export")
   }, c_profile$identity$activities)[[1L]]
-  testthat::expect_length(predecessor_payload_ids, 4L)
+  c_preparation_activities <- Filter(function(activity) {
+    identical(activity$stage, "C") && identical(activity$activity_type, "analysis") &&
+      identical(activity$method_id, "prepare_fit")
+  }, c_profile$identity$activities)
+  testthat::expect_length(predecessor_payload_ids, 2L)
+  testthat::expect_length(predecessor_envelope_ids, 2L)
   testthat::expect_length(c_fit_activities, 1L)
-  testthat::expect_length(intersect(predecessor_payload_ids,
+  testthat::expect_length(intersect(predecessor_ids,
                                     unlist(c_fit_activities[[1L]]$used_entity_ids,
                                            use.names = FALSE)), 0L)
-  testthat::expect_length(intersect(predecessor_payload_ids,
+  testthat::expect_length(intersect(predecessor_ids,
                                     unlist(integration_result$derived_from_entity_ids,
                                            use.names = FALSE)), 0L)
-  testthat::expect_setequal(intersect(predecessor_payload_ids,
+  testthat::expect_length(intersect(predecessor_ids, unlist(lapply(
+    c_preparation_activities, `[[`, "used_entity_ids"), use.names = FALSE)), 0L)
+  testthat::expect_setequal(intersect(predecessor_ids,
                                      unlist(c_export_activity$used_entity_ids,
                                             use.names = FALSE)),
-                            predecessor_payload_ids)
+                            predecessor_ids)
 })
 
 testthat::test_that("nested C-02 Stage-C evaluation retains verified units for its unrun D controls", {

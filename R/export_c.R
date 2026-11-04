@@ -1399,7 +1399,7 @@ triomics_c06_build_provenance_profile <- function(handoff, d_root, config_sha256
                               preparation_context_id = preparation_id,
                               representation_id = representation_id),
       activity_id = fit_activity,
-      derived_from = sort(unique(c(upstream_matrix_ids, predecessor_payload_ids)), method = "radix")
+      derived_from = sort(unique(upstream_matrix_ids), method = "radix")
     )
     result_entity_index <- length(entities)
     state_id <- triomics_b07_prov_entity_id("integration_state", list(
@@ -1510,7 +1510,7 @@ triomics_c06_build_provenance_profile <- function(handoff, d_root, config_sha256
               ),
               activity_id = c_preparation_activity_id,
               derived_from = c(matrix_entity[[1L]]$entity_id,
-                               b_prep_entity[[1L]]$entity_id, predecessor_payload_ids)
+                               b_prep_entity[[1L]]$entity_id)
             )
             c_preparation_entity_ids <- c(c_preparation_entity_ids, prep_entity_id)
           }
@@ -1522,7 +1522,7 @@ triomics_c06_build_provenance_profile <- function(handoff, d_root, config_sha256
         }
         result_entity <- entities[[result_entity_index]]
         result_entity$derived_from_entity_ids <- as.list(sort(unique(c(
-          upstream_matrix_ids, predecessor_payload_ids, c_preparation_entity_ids
+          upstream_matrix_ids, c_preparation_entity_ids
         )), method = "radix"))
         entities[[result_entity_index]] <- result_entity
       }
@@ -1534,7 +1534,7 @@ triomics_c06_build_provenance_profile <- function(handoff, d_root, config_sha256
                                         preparation_context_id = preparation_id,
                                         representation_id = representation_id, route_id = route_id),
         activity_id = fit_activity,
-        derived_from = c(result_id, c_preparation_entity_ids, predecessor_payload_ids)
+        derived_from = c(result_id, c_preparation_entity_ids)
       )
       native_generated <- native_entity_id
       route_declarations[[length(route_declarations) + 1L]] <- list(
@@ -1569,8 +1569,7 @@ triomics_c06_build_provenance_profile <- function(handoff, d_root, config_sha256
                        c_preparation_entity_ids)
     )
     fit_generated <- c(result_id, state_id, method_state_id, native_generated)
-    fit_used <- sort(unique(c(used_upstream, predecessor_payload_ids,
-                              c_preparation_entity_ids)), method = "radix")
+    fit_used <- sort(unique(c(used_upstream, c_preparation_entity_ids)), method = "radix")
     c_fit_activities[[length(c_fit_activities) + 1L]] <- list(
       activity_id = fit_activity, stage = "C", activity_type = "integration",
       method_id = method_id, used_entity_ids = as.list(fit_used),
@@ -1625,7 +1624,7 @@ triomics_c06_build_provenance_profile <- function(handoff, d_root, config_sha256
     stage = "C",
     activity_type = "analysis",
     method_id = "prepare_fit",
-    used_entity_ids = as.list(sort(unique(c(used_upstream, predecessor_payload_ids)), method = "radix")),
+    used_entity_ids = as.list(sort(unique(used_upstream), method = "radix")),
     generated_entity_ids = as.list(sort(unique(c_preparation_entity_ids), method = "radix"))
   )) else list()
   activities <- c(c_preparation_activity, c_fit_activities, list(export_activity))
