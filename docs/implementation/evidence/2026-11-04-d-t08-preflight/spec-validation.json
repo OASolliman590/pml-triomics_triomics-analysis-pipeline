@@ -1,0 +1,31 @@
+{
+  "command": "spec-tools/bin/python tools/spec/validate_spec.py",
+  "exit_code": 1,
+  "output": "SPEC VALIDATION FAILED: Frozen content changed: AGENTS.md\n",
+  "isolated_dependency_versions": [
+    "attrs==26.1.0",
+    "jsonschema==4.26.0",
+    "jsonschema-specifications==2025.9.1",
+    "PyYAML==6.0.3",
+    "referencing==0.37.0",
+    "rpds-py==2026.9.1",
+    "typing_extensions==4.16.0"
+  ],
+  "frozen_content_inventory_mismatches": [
+    {
+      "path": "AGENTS.md",
+      "expected": "ee206cd77888e430dc37ad6e7461bfd62210adffd2633562d5264cee1bc4d4a5",
+      "actual": "e0de9739ef8e3062f977ed221e9cbd9a5fb5c2693df04dbdf0441889c4f71e1a",
+      "same_bytes_as_accepted_M7_P2": true
+    },
+    {
+      "path": "CLAUDE.md",
+      "expected": "d4b356fae3df49af3e0ff6b602b19c6fe1136c5d1e4d9de7ef50beb8c92e60ec",
+      "actual": "c7f5cf5bfc72084066d255c1e5d9034b677a1eadc65cdea5485028a00a098df8",
+      "same_bytes_as_accepted_M7_P2": true
+    }
+  ],
+  "spec_tree": "031f300f31bbeb9503a835b267fbfa32d59811c4",
+  "independent_audit_status": "pending",
+  "disposition": "No fresh specification pass claimed. Both orchestration-document mismatches predate this run and equal accepted M7 bytes. Frozen files/hash remain untouched. User goal explicitly retains pending frozen-kit audit separately; D-T08 continues under accepted G7 and frozen packet scope."
+}

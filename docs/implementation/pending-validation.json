@@ -43,8 +43,16 @@
     },
     {
       "id": "SPEC-REVALIDATION",
-      "status": "blocked_missing_python_modules",
-      "evidence": "Rechecked on 2026-10-26: the spec validator could not start in system, isolated MOFA or bundled workspace Python because its jsonschema/PyYAML dependency set is unavailable; exit 1. No installation was attempted. The last accepted G0 validator result remains historical evidence, not a fresh pass. Frozen spec files are unchanged from 0afe2c5."
+      "status": "failed_preexisting_orchestration_document_hashes",
+      "evidence": "Isolated jsonschema/PyYAML runtime restored. Validator exits1 on frozen AGENTS.md mismatch. Independent byte inventory also finds CLAUDE.md; both equal accepted M7 P2 bytes. Frozen spec tree unchanged; no hash loosened and no fresh validator pass claimed. Separate frozen-kit audit remains pending.",
+      "history": [
+        {
+          "id": "SPEC-REVALIDATION",
+          "status": "blocked_missing_python_modules",
+          "evidence": "Rechecked on 2026-10-26: the spec validator could not start in system, isolated MOFA or bundled workspace Python because its jsonschema/PyYAML dependency set is unavailable; exit 1. No installation was attempted. The last accepted G0 validator result remains historical evidence, not a fresh pass. Frozen spec files are unchanged from 0afe2c5."
+        }
+      ],
+      "receipt_ref": "docs/implementation/evidence/2026-11-04-d-t08-preflight/spec-validation.json"
     },
     {
       "id": "M7-010-SOURCE-GATE",
