@@ -1,3 +1,13 @@
+# Current checkpoint: D15 predecessor scope audit passed
+
+Fresh /root/d15_s01_scope_astra passed immutable929746c with no blockers. Read [scope audit and authority receipt](reviews/2026-11-04-d15-s01-scope-audit.md). No product code changed; no tests/native/package/report gate ran. One scope audit, no rereview. All run-owned agents/processes finished. Sol reconciled standing authority for the exact separate predecessor scope; the D15 renderer allowlist remains unchanged.
+
+Next is a fresh Luna-max implementation of M8-D15-S01 with Sol-owned serial CLI wiring. It must authenticate the actual saved C08 request, use the existing B08 service and publish the saved C fit without refitting or false later-B ancestry. Independent native and regression evidence is required before D15 resumes. D13 stays blocked at its repair cap. D08/C08/M7/G7 remain accepted; G8/G9 closed. No private data, push, AIU execution or Notion sync.
+
+Literal resume: **Dispatch one fresh Luna-max worker/worktree for the audited M8-D15-S01 scope. Do not restart old workers or implement D15 yet. Sol owns shared CLI changes. Prove the bounded A/C/B/C/D route and stop at its predecessor receipt; preserve all caps and scientific exclusions.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D15 predecessor scope audit running
 
 M8-D15-S01 defines the missing native between-person clinical request consumer and later publication of the saved C fit. Read change-records/M8-D15-S01-native-clinical-handoff.md. Product code is unchanged. Fresh read-only /root/d15_s01_scope_astra is reviewing immutable929746c, archive SHA-256 ca62c63ed5b0e7ef2e2622bbd012098e8b397f2067c483b128429ff8e348310f. No Luna is active; no code while audit is open. C fit ancestry must not include later B results. D15 remains blocked until independently verified native predecessor evidence exists.
