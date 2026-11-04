@@ -1,3 +1,11 @@
+# Current checkpoint: M8-D15-S02 repair1 assigned
+
+Read [initial review](reviews/2026-11-05-d15-s02-initial-review.md). Same /root/d15_s02_luna repairs three independently reproduced accounting defects from5519fc1: fractional counts, predictor_visit contradiction, shortened correction vectors. Two-file allowlist unchanged. Initial source409pass/noerrors and nativeA/C/B0/0/0 do not override these findings; final worker profile validation was unverified. Parent confirmed no old process remains. Repair1of2, no cap reset.
+
+Literal resume: **Join the same S02 worker repair1; do not redispatch or open S01 work. Review the new immutable diff, perform focused local rereview and independent fullB-T07/native/profile readback, then stop at S02 receipt. S01repairs0of2 remain for its original defects; no G8/G9 release or D13 repair3.**
+
+## Historical checkpoints below
+
 # Current checkpoint: M8-D15-S02 Luna initial running
 
 Scope61b2706 passed fresh Astra-low; [audit](reviews/2026-11-05-d15-s02-scope-audit.md). Fresh /root/d15_s02_luna owns only R/export_b.R and tests/testthat/test-B-T07.R from preserved5e4b81a. Initial attempt, repairs0of2. It must account for actual declared objective/family evidence, not infer a service from mode. No parent fitting job active.

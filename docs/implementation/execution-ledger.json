@@ -44,15 +44,16 @@
       "effective_settings_exposed": false,
       "base_commit": "5e4b81accdc3f63ad1d33b96176ee934c561f5db",
       "branch": "codex/m8-d15-s02-luna",
-      "status": "running",
+      "status": "repair1_assigned",
       "attempt": 1,
-      "repairs": 0,
-      "allowed_next_transition": "Join candidate; two-file diff review; fresh local Standards/Spec review and independent B-T07/native B readback; stop at S02 receipt.",
-      "cursor": null
+      "repairs": 1,
+      "allowed_next_transition": "Join repair1; focused local rereview and independent fullB-T07/native/profile proof.",
+      "cursor": null,
+      "candidate": "5519fc12f84daca952731bb5fbb1257189804de6"
     }
   ],
   "orchestration_control": {
-    "status": "D15_S02_Luna_initial_running",
+    "status": "D15_S02_repair1_assigned",
     "last_reconciled": "2026-11-05",
     "active_handoffs": [
       {
@@ -63,19 +64,20 @@
         "effective_settings_exposed": false,
         "base_commit": "5e4b81accdc3f63ad1d33b96176ee934c561f5db",
         "branch": "codex/m8-d15-s02-luna",
-        "status": "running",
+        "status": "repair1_assigned",
         "attempt": 1,
-        "repairs": 0,
-        "allowed_next_transition": "Join candidate; two-file diff review; fresh local Standards/Spec review and independent B-T07/native B readback; stop at S02 receipt.",
-        "cursor": null
+        "repairs": 1,
+        "allowed_next_transition": "Join repair1; focused local rereview and independent fullB-T07/native/profile proof.",
+        "cursor": null,
+        "candidate": "5519fc12f84daca952731bb5fbb1257189804de6"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
     "disposition": "Scope audit passed; exact two-file owner correction, separate S01 repairs preserved.",
     "current_gate": {
-      "status": "implementation_running",
-      "candidate": "5e4b81accdc3f63ad1d33b96176ee934c561f5db",
-      "scope": "61b2706"
+      "status": "changes_required",
+      "candidate": "5519fc12f84daca952731bb5fbb1257189804de6",
+      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s02-initial-review.md"
     }
   },
   "orchestration_events": [
@@ -6953,6 +6955,30 @@
       ],
       "initial_attempt": 1,
       "repairs": 0
+    },
+    {
+      "event": "d15_s02_initial_review_and_repair1",
+      "date": "2026-11-05",
+      "candidate": "5519fc12f84daca952731bb5fbb1257189804de6",
+      "source_counts": {
+        "pass": 409,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 27
+      },
+      "native_exits": [
+        0,
+        0,
+        0
+      ],
+      "profile_validation": "unverified",
+      "local_review": "changes_required",
+      "parent_reproduced_defects": 3,
+      "worker": "/root/d15_s02_luna",
+      "repair": 1,
+      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s02-initial-review.md"
     }
   ],
   "packets": {
