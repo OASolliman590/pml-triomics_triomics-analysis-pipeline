@@ -1,12 +1,14 @@
-# Current checkpoint: D-T08 repair 1 reviewed; S01 predecessor implementation active
+# Current checkpoint: Sol combined verification running
 
-Report candidate `7c551b0` is clean with124 passing focused assertions and zero failures/errors/warnings/skips. Same report Luna has returned and is idle. Fresh read-only local review found quoted-credential/single-component-path leakage and legitimate nested-CV status incompatibility. Read reviews/2026-11-04-d-t08-repair1-review.md. Final report repair2 is not yet dispatched: consolidate native proof failures first.
+No coding worker is active. Report repair1 is immutable7c551b0 (124 pass, zero fail/error/warn/skip), with two remaining local-review findings: quoted credentials/single-component paths and truthful nested-CV evaluation versus unavailable single-fit evidence. Final report repair2 remains undispatched until native findings are consolidated.
 
-Fresh `/root/d08_s01_luna` is active from Sol helper `0e30743` in managed m8-d08-s01-luna. Its exclusive files are two B registry call sites and test-stage-run-registry.R; shared helper stays Sol-owned. Join its existing turn, inspect the result, apply any bounded justified helper correction serially, then verify required regressions and untouched native A/B/C/D/report. Sol report registration is isolated at `da79e86` in m8-d08-s01-sol. No product candidate is integrated into canonical spec branch.
+S01 worker returned7d78050: exactly the two B registry call sites plus dedicated test-stage-run-registry.R; 140 pass, zero fail/error/warn/skip,14blocks. Sol inspected the call-site diff and failure-boundary tests, then combined it with the frozen shared helper and mechanical report registration on isolated8a5c762. Canonical spec branch remains unchanged. No S01 repair has been used.
 
-Preserve native A0/B4 RED, initial report23b5689 and repair7c551b0. Never reuse the deleted-registry workaround. M7/G7 stay accepted; G8/G9 unreleased. No later report packets, private data or push. All logs/output internal APFS. External orchestration.json names current workers and exact next transitions.
+Sol's uncapped focused regression plus untouched native A/B/C/D/report driver is ACTIVE in exec session14305. Internal APFS state is sol-combined-before-repair2/gate-state.json under the existing proof root. Read external orchestration.json, join the session/state, and do not restart the gate. Current focused filter is stage-run-registry, A-T09, M4-005-B-T05-integration, C-06-shared, D-T01 and D-T08. Driver proceeds to native commands only after focused success.
 
-Literal resume: join the current S01 worker, do not redispatch it; finish this separate predecessor repair, then use the combined native evidence and the two recorded report findings for the one remaining D-T08 repair. Keep conditional and unrun scientific dispositions unchanged.
+After the gate returns, inspect exact counts/named warnings and byte readback. Consolidate any actual report failure with the two recorded local findings for the one remaining report repair. Preserve all candidates, A0/B4 RED and the invalid-registry-deletion disposition. M7/G7 remain accepted; G8/G9 unreleased. No later packets, private data or push. All output internal APFS.
+
+Literal resume: join14305 or inspect its completed gate-state receipt; never rerun Luna or the gate merely because context was compacted. Finish the pending bounded transition from the actual result.
 
 ## Historical checkpoints below
 

@@ -35,31 +35,7 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent_id": "/root/d08_s01_luna",
-      "role": "Luna bounded predecessor publication repair",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "host_dispatch_accepted": true,
-      "effective_settings_exposed": false,
-      "worktree": "managed m8-d08-s01-luna",
-      "branch": "codex/m8-d08-s01-luna",
-      "base": "0e307435c9b3705d3ac2ec2cb00141344b1c04bd",
-      "status": "initial_implementation_running",
-      "attempt": 1,
-      "repairs_used": 0,
-      "repairs_remaining": 2,
-      "allowed_next_transition": "Sol inspect scoped commit/tests; shared helper corrections only Sol; audited regression and untouched native proof."
-    },
-    {
-      "agent_id": "/root/d08_repair1_sol_review",
-      "role": "read-only focused local reviewer",
-      "status": "reproduction_receipt_followup",
-      "candidate": "7c551b05ac13903231cafed03ae398a9fff3f574",
-      "allowed_next_transition": "Record exact narrow reproductions; no further investigation."
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
     "status": "D_T08_Luna_initial_running",
     "last_reconciled": "2026-11-04",
@@ -82,7 +58,13 @@
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "User authorized installation; actual Quarto smoke verified. Continue frozen D-T08 only, one fresh Luna; no M7 reopening."
+    "disposition": "User authorized installation; actual Quarto smoke verified. Continue frozen D-T08 only, one fresh Luna; no M7 reopening.",
+    "current_gate": {
+      "session_id": 14305,
+      "candidate": "8a5c7621372d8c3e03b0d64587929912407f653a",
+      "status": "focused_then_native_running",
+      "state_ref": "local sol-combined-before-repair2/gate-state.json"
+    }
   },
   "orchestration_events": [
     {
@@ -6718,6 +6700,22 @@
         "allowed_next_transition": "Sol inspect scoped commit/tests; shared helper corrections only Sol; audited regression and untouched native proof."
       },
       "canonical_product_integrated": false
+    },
+    {
+      "event": "S01_returned_and_combined_gate_started",
+      "date": "2026-11-04",
+      "worker_commit": "7d7805092f69d228135cd9979872e8a6f1cf8334",
+      "worker_counts": {
+        "pass": 140,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 14
+      },
+      "combined_candidate": "8a5c7621372d8c3e03b0d64587929912407f653a",
+      "session_id": 14305,
+      "canonical_product_integrated": false
     }
   ],
   "packets": {
@@ -8108,7 +8106,7 @@
       "disposition_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md"
     },
     "D-T08": {
-      "status": "repair1_reviewed_changes_required_predecessor_active",
+      "status": "Sol_combined_verification_running_before_final_report_repair",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
@@ -8138,10 +8136,12 @@
         "scope_audit_pass": true,
         "audited_snapshot": "593c89c82cc55c49503fe5391eae7fd0a4ef7abe",
         "authority_receipt": "docs/implementation/reviews/2026-11-04-d08-s01-scope-rereview.md",
-        "implementation_status": "fresh_Luna_active_after_Sol_helper_freeze",
+        "implementation_status": "returned_Sol_verification_running",
         "milestone_acceptance": false,
         "helper_commit": "0e307435c9b3705d3ac2ec2cb00141344b1c04bd",
-        "worker": "/root/d08_s01_luna"
+        "worker": "/root/d08_s01_luna",
+        "worker_commit": "7d7805092f69d228135cd9979872e8a6f1cf8334",
+        "repairs_used": 0
       },
       "repair1_review_ref": "docs/implementation/reviews/2026-11-04-d-t08-repair1-review.md"
     },
