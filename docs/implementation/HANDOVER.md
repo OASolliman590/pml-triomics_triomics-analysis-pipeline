@@ -1,3 +1,15 @@
+# Current checkpoint — required M7 scope accepted; G7 released
+
+Sol accepted required D-T01/D-T02/D-T03/D-T04/D-T05/D-T10/D-T11/D-T12, current B-T07/C-06 prerequisites and M7 on immutable P2 `fabd6fa6bb7ae06f6eea1276517010829ea4cde1`. G7 is released. Read reviews/2026-11-04-m7-sol-acceptance.md and the accepted-packet-receipts.json it links. This is scoped synthetic software acceptance, not completion of all Stage D or biological validation.
+
+Final Astra `/root/m7_final_focused_astra` returned audit_pass yes on P2 and immutable Q2 `4b8b6c8b46a7c2642ed435f350f20359a0ee7037`; both initial P1 findings resolved, no blockers. Terra DOC-M7 is complete. Source7554/0fail/0error/15warn/0skip; installed7527/0fail/15warn/0skip; exact Status: OK;54 native B/C/D commands and independent semantic/applicability readbacks passed. No worker or test process remains active. Review cap consumed. No source/native/package gate or Luna rerun needed.
+
+Conditional D06/D07/D14 remain blocked without completion credit; C07 four scientific checks not_run; C09 unqualified/synthetic_fixture_only/benefit_guaranteed=false. Frozen-kit independent_audit_status pending is separate. M8/M9 remain unstarted. Original dirty .Rbuildignore/.gitignore/renv/activate.R and all untracked/AppleDouble/docs/figures are preserved through the final preflight/fast-forward readback; consult the final integration receipt. No private study data, GitHub push, AIU, fasting or later report work.
+
+Literal resume: “Read the M7 Sol acceptance and final integration receipts. M7 is accepted on fabd6fa and G7 released. Preserve conditional scientific exclusions and historical capped cycles. The next milestone is M8 safe offline report/dossier (D-T08/D-T13/D-T15), followed later by M9 D-T09; do not restart M7 workers or gates.”
+
+## Historical checkpoints below — prior pending states superseded
+
 # Current checkpoint — immutable final M7 rereview ready
 
 Terra DOC-M7 commit07be95b is inspected and integrated; only the milestone document changed. All P2 gates remain complete at fabd6fa6bb7ae06f6eea1276517010829ea4cde1: source7554/0fail/0error/15warn/0skip; installed7527/0fail/15warn/0skip; exact Status: OK;54 native commands and independent readbacks passed. No test process or coding worker is active. Read milestones/M7.md and reviews/2026-11-04-m7-final-rereview-gates.md.

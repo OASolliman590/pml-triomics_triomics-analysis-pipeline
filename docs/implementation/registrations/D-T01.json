@@ -1,9 +1,9 @@
 {
   "packet_id": "D-T01",
   "request_type": "registration_request",
-  "status": "verified_pending_Sol_acceptance",
+  "status": "accepted_synthetic_software_evidence",
   "implementation_base": "57be42a9078d533885c01f3015ac54464f9a2d9f",
-  "accepted": false,
+  "accepted": true,
   "synthetic_software_only": true,
   "local_files": [
     "R/evidence_bundle.R",
@@ -86,7 +86,7 @@
   "current_revision_verification": {
     "cycle": "M7 repaired final same-snapshot qualification",
     "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
-    "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+    "status": "accepted_synthetic_software_evidence",
     "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
     "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#D-T01",
     "test_counts": {
@@ -97,9 +97,12 @@
       "skip": 0,
       "blocks": 20
     },
-    "milestone_acceptance": false
+    "milestone_acceptance": true,
+    "acceptance_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md",
+    "final_audit_ref": "docs/implementation/reviews/2026-11-04-m7-final-focused-astra.md",
+    "accepted_packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/accepted-packet-receipts.json#D-T01"
   },
-  "next_action": "Refresh DOC-M7; one focused final Astra rereview of P2; Sol alone accepts after every gate passes. M7/G7 unreleased.",
+  "next_action": "Required M7 scope accepted on P2; preserve synthetic and conditional limits. M8/M9 remain unstarted in this run.",
   "pre_final_gate_record": {
     "current_revision_verification": {
       "cycle": "M7-021",
@@ -129,5 +132,31 @@
       "milestone_acceptance": false,
       "final_audit_ref": "docs/implementation/reviews/2026-11-04-m7-final-astra.md"
     }
-  ]
+  ],
+  "pre_Sol_acceptance_record_2026_11_04": {
+    "status": "verified_pending_Sol_acceptance",
+    "accepted": false,
+    "next_action": "Refresh DOC-M7; one focused final Astra rereview of P2; Sol alone accepts after every gate passes. M7/G7 unreleased.",
+    "current_revision_verification": {
+      "cycle": "M7 repaired final same-snapshot qualification",
+      "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+      "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#D-T01",
+      "test_counts": {
+        "pass": 406,
+        "fail": 0,
+        "error": 0,
+        "warn": 1,
+        "skip": 0,
+        "blocks": 20
+      },
+      "milestone_acceptance": false
+    }
+  },
+  "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+  "acceptance_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md",
+  "final_audit_ref": "docs/implementation/reviews/2026-11-04-m7-final-focused-astra.md",
+  "accepted_packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/accepted-packet-receipts.json#D-T01",
+  "historical_fields_notice": "Original worker requests, attempt blocks and prior verification records below remain historical. Current acceptance is the top-level Sol decision tied to P2 and the named acceptance receipt; capped cycles are not relabelled complete."
 }

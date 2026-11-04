@@ -2,9 +2,9 @@
   "packet_id": "C-06",
   "request_type": "registration_request",
   "implementation_base": "ef7da2086e7a0244e18a8ea1902423596d6a2b75",
-  "accepted": false,
+  "accepted": true,
   "applied_to_shared_files": true,
-  "implementation_status": "Current same-root B-backed C provenance verified on P2; current-revision acceptance remains false pending final review and Sol decision.",
+  "implementation_status": "Current same-root B-backed C provenance accepted by Sol on P2 after full source, native readback, clean archive and focused final Astra pass.",
   "synthetic_software_only": true,
   "local_files": [
     "R/cli.R",
@@ -422,24 +422,32 @@
   },
   "acceptance": {
     "AC1": {
-      "status": "verified_synthetic_software_pending_Sol_acceptance",
-      "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#C-06",
-      "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance."
+      "status": "accepted_synthetic_software_evidence",
+      "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/accepted-packet-receipts.json#C-06",
+      "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance.",
+      "acceptance_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md",
+      "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1"
     },
     "AC2": {
-      "status": "verified_synthetic_software_pending_Sol_acceptance",
-      "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#C-06",
-      "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance."
+      "status": "accepted_synthetic_software_evidence",
+      "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/accepted-packet-receipts.json#C-06",
+      "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance.",
+      "acceptance_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md",
+      "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1"
     },
     "AC3": {
-      "status": "verified_synthetic_software_pending_Sol_acceptance",
-      "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#C-06",
-      "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance."
+      "status": "accepted_synthetic_software_evidence",
+      "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/accepted-packet-receipts.json#C-06",
+      "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance.",
+      "acceptance_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md",
+      "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1"
     },
     "AC4": {
-      "status": "verified_synthetic_software_pending_Sol_acceptance",
-      "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#C-06",
-      "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance."
+      "status": "accepted_synthetic_software_evidence",
+      "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/accepted-packet-receipts.json#C-06",
+      "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance.",
+      "acceptance_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md",
+      "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1"
     }
   },
   "shared_changes_for_sol": [
@@ -462,8 +470,7 @@
   "known_gaps": [
     "Four C-07 scientific checks remain not_run; no scientific performance is invented.",
     "C-09 remains unqualified synthetic_fixture_only with benefit_guaranteed=false.",
-    "Public synthetic software evidence only; no private-study, biological or clinical validation.",
-    "Fresh milestone Astra and Sol current-revision acceptance remain pending."
+    "Public synthetic software evidence only; no private-study, biological or clinical validation."
   ],
   "m7_011_native_provenance_attempt": {
     "status": "blocked_before_implementation",
@@ -697,12 +704,12 @@
       "receipt": "docs/implementation/reviews/2026-10-26-m7-014-sol-integration-receipt.md"
     }
   },
-  "acceptance_ref": "discovery/spec-v2/packets/C-06.md",
-  "next_action": "Refresh DOC-M7; one focused final Astra rereview of P2; Sol alone accepts after every gate passes. M7/G7 unreleased.",
+  "acceptance_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md",
+  "next_action": "Required M7 scope accepted on P2; preserve synthetic and conditional limits. M8/M9 remain unstarted in this run.",
   "current_revision_verification": {
     "cycle": "M7 repaired final same-snapshot qualification",
     "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
-    "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+    "status": "accepted_synthetic_software_evidence",
     "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
     "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#C-06",
     "test_counts": {
@@ -713,7 +720,10 @@
       "skip": 0,
       "blocks": 22
     },
-    "milestone_acceptance": false
+    "milestone_acceptance": true,
+    "acceptance_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md",
+    "final_audit_ref": "docs/implementation/reviews/2026-11-04-m7-final-focused-astra.md",
+    "accepted_packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/accepted-packet-receipts.json#C-06"
   },
   "pre_final_gate_record": {
     "current_revision_verification": {
@@ -768,5 +778,60 @@
       "milestone_acceptance": false,
       "final_audit_ref": "docs/implementation/reviews/2026-11-04-m7-final-astra.md"
     }
-  ]
+  ],
+  "pre_Sol_acceptance_record_2026_11_04": {
+    "accepted": false,
+    "acceptance_ref": "discovery/spec-v2/packets/C-06.md",
+    "implementation_status": "Current same-root B-backed C provenance verified on P2; current-revision acceptance remains false pending final review and Sol decision.",
+    "known_gaps": [
+      "Four C-07 scientific checks remain not_run; no scientific performance is invented.",
+      "C-09 remains unqualified synthetic_fixture_only with benefit_guaranteed=false.",
+      "Public synthetic software evidence only; no private-study, biological or clinical validation.",
+      "Fresh milestone Astra and Sol current-revision acceptance remain pending."
+    ],
+    "acceptance": {
+      "AC1": {
+        "status": "verified_synthetic_software_pending_Sol_acceptance",
+        "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#C-06",
+        "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance."
+      },
+      "AC2": {
+        "status": "verified_synthetic_software_pending_Sol_acceptance",
+        "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#C-06",
+        "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance."
+      },
+      "AC3": {
+        "status": "verified_synthetic_software_pending_Sol_acceptance",
+        "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#C-06",
+        "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance."
+      },
+      "AC4": {
+        "status": "verified_synthetic_software_pending_Sol_acceptance",
+        "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-final/packet-receipts.json#C-06",
+        "qualification": "C-07 scientific controls remain not_run; this verifies truthful handoff/accounting, not biological or clinical performance."
+      }
+    },
+    "next_action": "Refresh DOC-M7; one focused final Astra rereview of P2; Sol alone accepts after every gate passes. M7/G7 unreleased.",
+    "current_revision_verification": {
+      "cycle": "M7 repaired final same-snapshot qualification",
+      "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+      "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#C-06",
+      "test_counts": {
+        "pass": 442,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 22
+      },
+      "milestone_acceptance": false
+    }
+  },
+  "status": "accepted_synthetic_software_evidence",
+  "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+  "final_audit_ref": "docs/implementation/reviews/2026-11-04-m7-final-focused-astra.md",
+  "accepted_packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/accepted-packet-receipts.json#C-06",
+  "historical_fields_notice": "Original worker requests, attempt blocks and prior verification records below remain historical. Current acceptance is the top-level Sol decision tied to P2 and the named acceptance receipt; capped cycles are not relabelled complete."
 }

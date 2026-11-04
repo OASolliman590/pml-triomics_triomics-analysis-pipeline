@@ -1,7 +1,7 @@
 {
   "packet_id": "B-T07",
-  "status": "candidate/review_pending",
-  "accepted": false,
+  "status": "accepted_synthetic_software_evidence",
+  "accepted": true,
   "package": {
     "name": "triomics",
     "version": "0.1.0",
@@ -103,18 +103,7 @@
       "all"
     ]
   },
-  "acceptance_blockers": [
-    {
-      "criterion": "B-T07-AC3",
-      "status": "candidate_review_pending_m7_009",
-      "evidence": "M7-009 retains the AC3 expectation and repairs classification: the physically present declared-partial caller_matrix_unverified pair resumes as incomplete with reuse refused. Its implementation is a candidate pending independent review and acceptance."
-    },
-    {
-      "criterion": "B-T07-CLI",
-      "status": "candidate_review_pending",
-      "evidence": "The exact B-T07 CLI exits 0, emits the native StageHandoffProvenance payload and envelope, passes the public provenance/envelope validators, and retains ordered matrix identity and method-state bindings."
-    }
-  ],
+  "acceptance_blockers": [],
   "implementation_evidence": {
     "red": {
       "stage": "pre-implementation public-seam RED at base 0d96c578a2144c58cf298905aa87c10f78bf3eea",
@@ -649,7 +638,7 @@
   "current_revision_verification": {
     "cycle": "M7 repaired final same-snapshot qualification",
     "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
-    "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+    "status": "accepted_synthetic_software_evidence",
     "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
     "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#B-T07",
     "test_counts": {
@@ -660,7 +649,48 @@
       "skip": 0,
       "blocks": 19
     },
-    "milestone_acceptance": false
+    "milestone_acceptance": true,
+    "acceptance_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md",
+    "final_audit_ref": "docs/implementation/reviews/2026-11-04-m7-final-focused-astra.md",
+    "accepted_packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/accepted-packet-receipts.json#B-T07"
   },
-  "next_action": "Refresh DOC-M7; one focused final Astra rereview of P2; Sol alone accepts after every gate passes. M7/G7 unreleased."
+  "next_action": "Required M7 scope accepted on P2; preserve synthetic and conditional limits. M8/M9 remain unstarted in this run.",
+  "pre_Sol_acceptance_record_2026_11_04": {
+    "status": "candidate/review_pending",
+    "accepted": false,
+    "acceptance_blockers": [
+      {
+        "criterion": "B-T07-AC3",
+        "status": "candidate_review_pending_m7_009",
+        "evidence": "M7-009 retains the AC3 expectation and repairs classification: the physically present declared-partial caller_matrix_unverified pair resumes as incomplete with reuse refused. Its implementation is a candidate pending independent review and acceptance."
+      },
+      {
+        "criterion": "B-T07-CLI",
+        "status": "candidate_review_pending",
+        "evidence": "The exact B-T07 CLI exits 0, emits the native StageHandoffProvenance payload and envelope, passes the public provenance/envelope validators, and retains ordered matrix identity and method-state bindings."
+      }
+    ],
+    "next_action": "Refresh DOC-M7; one focused final Astra rereview of P2; Sol alone accepts after every gate passes. M7/G7 unreleased.",
+    "current_revision_verification": {
+      "cycle": "M7 repaired final same-snapshot qualification",
+      "commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "status": "verified_pending_DOC_M7_focused_Astra_Sol_acceptance",
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-rereview-gates.md",
+      "packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/packet-receipts.json#B-T07",
+      "test_counts": {
+        "pass": 320,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 19
+      },
+      "milestone_acceptance": false
+    }
+  },
+  "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+  "acceptance_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md",
+  "final_audit_ref": "docs/implementation/reviews/2026-11-04-m7-final-focused-astra.md",
+  "accepted_packet_receipt_ref": "docs/implementation/evidence/2026-11-04-m7-final-rereview/accepted-packet-receipts.json#B-T07",
+  "historical_fields_notice": "Original worker requests, attempt blocks and prior verification records below remain historical. Current acceptance is the top-level Sol decision tied to P2 and the named acceptance receipt; capped cycles are not relabelled complete."
 }
