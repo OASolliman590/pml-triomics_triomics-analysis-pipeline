@@ -45,8 +45,9 @@
       "base": "f5c156758b7e53a5bc0f03372248ac51767f33b4",
       "attempt": 1,
       "repair_attempts": 0,
-      "phase": "initial_two_test_implementation",
-      "next_transition": "Sol_commit_clean_candidate_then_focused_native_proof_and_fresh_implementation_Astra"
+      "phase": "focused_native_verification",
+      "next_transition": "Sol_native_readback_then_integrate_on_pass",
+      "candidate": "ed5e0002f35c984c8817a2ce16db9ac666cb53b8"
     }
   ],
   "orchestration_control": {
@@ -6056,6 +6057,14 @@
       "repair_attempts": 0,
       "phase": "initial_two_test_implementation",
       "next_transition": "Sol_commit_clean_candidate_then_focused_native_proof_and_fresh_implementation_Astra"
+    },
+    {
+      "event": "m7_028_initial_candidate_and_implementation_astra_pass",
+      "date": "2026-11-04",
+      "candidate": "ed5e0002f35c984c8817a2ce16db9ac666cb53b8",
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-028-implementation-astra.md",
+      "repairs_used": 0,
+      "disposition": "Code audit passed, focused/native execution pending. MacOS qualification only; no P0/P1. M7/G7 closed."
     }
   ],
   "packets": {
