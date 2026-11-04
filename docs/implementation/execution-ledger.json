@@ -42,13 +42,13 @@
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "effective_settings_exposed": false,
-      "status": "repair_1_running",
+      "status": "repair_2_running",
       "worktree": "/tmp/triomics-m7-029-luna",
       "base": "bcc8e3f",
-      "repairs_used": 1,
-      "repairs_remaining": 1,
+      "repairs_used": 2,
+      "repairs_remaining": 0,
       "next_transition": "Sol diff review and independent focused/native verification; then new immutable full source/archive gates and focused milestone Astra.",
-      "candidate_commit": "a460a8af4e7a2f9ea6c91fd755a89a6a2e248192"
+      "candidate_commit": "42d61a88d8206172d24c661607d776dc121354e7"
     }
   ],
   "orchestration_control": {
@@ -6311,6 +6311,60 @@
       "repair_1_scope": "Exact assay metadata extraction, preserve strict validation and assertions; rerun focused/D01/native proof.",
       "repairs_used": 1,
       "repairs_remaining": 1
+    },
+    {
+      "event": "M7_029_repair_1_verification_setup_correction",
+      "date": "2026-11-04",
+      "commit": "42d61a88d8206172d24c661607d776dc121354e7",
+      "setup_exit_code": 1,
+      "tests_run": 0,
+      "reason": "Worker invocation omitted /R from existing user library path; testthat could not load.",
+      "transition": "Correct command only and resume verification on unchanged clean candidate. Not product failure; repair 2 not consumed."
+    },
+    {
+      "event": "M7_029_Sol_independent_focused_pass",
+      "date": "2026-11-04",
+      "commit": "42d61a88d8206172d24c661607d776dc121354e7",
+      "counts": {
+        "pass": 537,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0
+      },
+      "process_exit_code": 0,
+      "receipt": "/tmp/triomics-stage-d-evidence/m7-029/sol-repair1-focused.json",
+      "allowlist_review": "Exactly2 allowed production files and4 allowed test files; no diff whitespace errors; native readback pending."
+    },
+    {
+      "event": "M7_029_Sol_positive_native_readback",
+      "date": "2026-11-04",
+      "commit": "42d61a88d8206172d24c661607d776dc121354e7",
+      "native_commands_exit_codes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "readback_ref": "/tmp/triomics-stage-d-evidence/m7-029/sol-positive-42d61a8-qualified",
+      "verifier_update": "Legacy aggregate unmeasured check revised in copied verifier to exact record-derived unavailable/unresolved coverage/status/reason; original failure and verifier retained, no product repair.",
+      "remaining": "Luna controlled missing-assay and declared/mismatch/unknown species native proofs, then Sol readback and integration."
+    },
+    {
+      "event": "M7_029_Sol_legacy_observation_defect_repair_2_authorized",
+      "date": "2026-11-04",
+      "commit": "42d61a88d8206172d24c661607d776dc121354e7",
+      "probe": "/tmp/triomics-stage-d-evidence/m7-029/sol-legacy-observation-probe.R",
+      "probe_exit_code": 0,
+      "finding": "Profile normalization of an existing molecular observation lacking taxon qualification marks it unassessable but leaves B status support and removes named null feature_taxon_id. Original value1.75 remains.",
+      "scope": "Retain named null unknown taxon fields and prevent support/conflict when observation applicability is unknown/inapplicable; preserve numeric/source/dependency evidence. Behavioral tests, focused+D01+native requalification on new commit.",
+      "repairs_used": 2,
+      "repairs_remaining": 0
     }
   ],
   "packets": {
