@@ -6899,6 +6899,16 @@
       "repairs": 0,
       "scope_ref": "docs/implementation/change-records/M8-D15-S01-native-clinical-handoff.md",
       "scope_audit_pass": true
+    },
+    {
+      "event": "d15_s01_single_visit_fixture_eligibility",
+      "date": "2026-11-04",
+      "record": "docs/implementation/reviews/2026-11-04-d15-s01-fixture-eligibility.md",
+      "scope_change": false,
+      "method_change": false,
+      "original_multivisit_refusal_preserved": true,
+      "parent_stage_C_exit": 0,
+      "product_acceptance": false
     }
   ],
   "packets": {
