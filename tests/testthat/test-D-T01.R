@@ -880,6 +880,63 @@ d_t01_cli_run <- function(config_path, stage, output_root) {
   list(status = as.integer(status), output = output)
 }
 
+d_t01_cli_run_files <- function(config_path, stage, output_root) {
+  cli <- triomics_test_resource("exec", "triomics")
+  previous_wd <- setwd(dirname(cli))
+  on.exit(setwd(previous_wd), add = TRUE)
+  stdout_path <- tempfile("d-t01-cli-stdout-", tmpdir = "/private/tmp")
+  stderr_path <- tempfile("d-t01-cli-stderr-", tmpdir = "/private/tmp")
+  on.exit(unlink(c(stdout_path, stderr_path), force = TRUE), add = TRUE)
+  status <- system2(
+    file.path(R.home("bin"), "Rscript"),
+    c("--vanilla", shQuote(basename(cli)), "--config", shQuote(config_path),
+      "--stage", shQuote(stage), "--output", shQuote(output_root)),
+    stdout = stdout_path, stderr = stderr_path
+  )
+  output <- c(readLines(stdout_path, warn = FALSE), readLines(stderr_path, warn = FALSE))
+  list(status = as.integer(status), output = output)
+}
+
+d_t01_target_only_cli_fixture <- function() {
+  source_config <- triomics_test_resource("examples", "tickets", "D-T11.yaml")
+  source_data <- normalizePath(file.path(dirname(source_config), "..", "data"),
+                               winslash = "/", mustWork = TRUE)
+  fixture_root <- tempfile("d-t01-target-only-native-fixture-", tmpdir = "/private/tmp")
+  config_dir <- file.path(fixture_root, "tickets")
+  data_dir <- file.path(fixture_root, "data")
+  dir.create(config_dir, recursive = TRUE, showWarnings = FALSE)
+  config_path <- file.path(config_dir, basename(source_config))
+  if (!file.copy(source_config, config_path)) {
+    stop("Could not copy the public D-T11 synthetic config.", call. = FALSE)
+  }
+  for (relative in c("c04/metadata.tsv", "independent/proteomics.tsv",
+                     "independent/metabolomics.tsv", "d-target/external-assays.json",
+                     "d-target/mechanisms.json")) {
+    destination <- file.path(data_dir, relative)
+    dir.create(dirname(destination), recursive = TRUE, showWarnings = FALSE)
+    if (!file.copy(file.path(source_data, relative), destination)) {
+      stop("Could not copy public D-T11 fixture input: ", relative, call. = FALSE)
+    }
+  }
+  config_text <- paste(readLines(config_path, warn = FALSE), collapse = "\n")
+  block_marker <- "  - block_id: block_2\n"
+  parts <- strsplit(config_text, block_marker, fixed = TRUE)[[1L]]
+  if (length(parts) != 2L) stop("The public D-T11 config has no unique block_2.", call. = FALSE)
+  suffix <- sub("    feature_metadata: null",
+                "    feature_metadata: ../data/d-target/feature-taxon-control.tsv",
+                parts[[2L]], fixed = TRUE)
+  if (identical(suffix, parts[[2L]])) {
+    stop("Could not attach controlled feature metadata to block_2.", call. = FALSE)
+  }
+  writeLines(paste0(parts[[1L]], block_marker, suffix), config_path, useBytes = TRUE)
+  list(
+    root = fixture_root,
+    config = config_path,
+    metadata = file.path(data_dir, "d-target", "feature-taxon-control.tsv"),
+    metabolomics = file.path(data_dir, "independent", "metabolomics.tsv")
+  )
+}
+
 d_t01_paired_cli_fixture <- function() {
   source_config <- triomics_test_resource("examples", "tickets", "D-T01.yaml")
   fixture_root <- tempfile("d-t01-paired-native-fixture-", tmpdir = "/private/tmp")
@@ -965,6 +1022,125 @@ testthat::test_that("D-T01 refuses stale paired signs and preserves the old poin
   testthat::expect_true(any(grepl("D_LINEAGE_MISMATCH", stale_run$output, fixed = TRUE)),
                         info = paste(stale_run$output, collapse = "\n"))
   testthat::expect_identical(triomics_sha256(pointer_path), pointer_hash)
+})
+
+testthat::test_that("D-T11 target-only CLI carries declared feature metadata and fails closed", {
+  fixture <- d_t01_target_only_cli_fixture()
+  output_root <- tempfile("d-t01-target-only-native-output-", tmpdir = "/private/tmp")
+  on.exit(unlink(c(fixture$root, output_root), recursive = TRUE, force = TRUE), add = TRUE)
+
+  feature_ids <- utils::read.delim(fixture$metabolomics, check.names = FALSE,
+                                   stringsAsFactors = FALSE)$feature_id
+  provenance_ref <- "synthetic://m7-030-worker/feature-taxon-9606"
+  write_feature_metadata <- function(valid = TRUE) {
+    if (valid) {
+      metadata <- data.frame(
+        feature_id = feature_ids[[1L]], taxon_id = "9606", resolution = "synthetic_feature",
+        capabilities = "target_assessment", provenance_ref = provenance_ref,
+        stringsAsFactors = FALSE
+      )
+    } else {
+      metadata <- data.frame(
+        feature_id = feature_ids[[1L]], resolution = "synthetic_feature",
+        capabilities = "target_assessment", provenance_ref = provenance_ref,
+        stringsAsFactors = FALSE
+      )
+    }
+    utils::write.table(metadata, fixture$metadata, sep = "\t", row.names = FALSE,
+                       quote = FALSE, na = "")
+  }
+  stage_hashes <- function(root) {
+    paths <- unlist(lapply(c("B", "C"), function(stage) {
+      list.files(file.path(root, stage), recursive = TRUE, full.names = TRUE,
+                 all.files = TRUE)
+    }), use.names = FALSE)
+    paths <- paths[file.exists(paths) & !file.info(paths)$isdir]
+    stats::setNames(vapply(paths, triomics_sha256, character(1)),
+                    substring(paths, nchar(root) + 2L))
+  }
+
+  write_feature_metadata()
+  b <- d_t01_cli_run(fixture$config, "B", output_root)
+  testthat::expect_identical(b$status, 0L, info = paste(b$output, collapse = "\n"))
+  if (b$status != 0L) return(invisible(NULL))
+  c <- d_t01_cli_run(fixture$config, "C", output_root)
+  testthat::expect_identical(c$status, 0L, info = paste(c$output, collapse = "\n"))
+  if (c$status != 0L) return(invisible(NULL))
+  bc_hashes_before_d <- stage_hashes(output_root)
+
+  d <- d_t01_cli_run(fixture$config, "D", output_root)
+  testthat::expect_identical(d$status, 0L, info = paste(d$output, collapse = "\n"))
+  if (d$status != 0L) return(invisible(NULL))
+  pointer_path <- file.path(output_root, "registries", "current-D.json")
+  testthat::expect_true(file.exists(pointer_path))
+  if (!file.exists(pointer_path)) return(invisible(NULL))
+  pointer_hash <- triomics_sha256(pointer_path)
+  pointer <- jsonlite::read_json(pointer_path, simplifyVector = FALSE)
+  manifest_path <- file.path(output_root, pointer$generation_manifest$path)
+  manifest <- jsonlite::read_json(manifest_path, simplifyVector = FALSE)
+  routing_members <- Filter(function(member) identical(member$path, "evidence-routing.json"),
+                            manifest$members)
+  testthat::expect_length(routing_members, 1L)
+  if (length(routing_members) != 1L) return(invisible(NULL))
+  routing_path <- file.path(dirname(manifest_path), routing_members[[1L]]$path)
+  testthat::expect_identical(triomics_sha256(routing_path), routing_members[[1L]]$digest)
+  testthat::expect_identical(as.numeric(file.info(routing_path)$size),
+                             as.numeric(routing_members[[1L]]$size_bytes))
+  routing <- jsonlite::read_json(routing_path, simplifyVector = FALSE)
+  testthat::expect_true(all(vapply(routing$routes, function(route) {
+    identical(route$status, "not_requested")
+  }, logical(1))))
+
+  profile_for <- function(target_id) {
+    matches <- Filter(function(profile) identical(profile$request$id, target_id),
+                      routing$target_investigation$profiles)
+    if (length(matches) != 1L) return(NULL)
+    matches[[1L]]
+  }
+  matched_profile <- profile_for("SYNTHETIC_TARGET_A")
+  unknown_profile <- profile_for("SYNTHETIC_TARGET_B")
+  testthat::expect_false(is.null(matched_profile))
+  testthat::expect_false(is.null(unknown_profile))
+  if (is.null(matched_profile) || is.null(unknown_profile)) return(invisible(NULL))
+  matched_observations <- Filter(function(observation) {
+    identical(observation$feature_id, feature_ids[[1L]])
+  }, matched_profile$observations)
+  testthat::expect_true(length(matched_observations) > 0L)
+  for (observation in matched_observations) {
+    testthat::expect_identical(observation$feature_taxon_id, "9606")
+    testthat::expect_identical(observation$feature_taxon_status, "declared")
+    testthat::expect_identical(observation$feature_taxon_declaration, list(
+      status = "declared", value = "9606", provenance_ref = provenance_ref
+    ))
+    testthat::expect_identical(observation$feature_taxon_provenance_ref, provenance_ref)
+    testthat::expect_identical(observation$taxon_applicability, "matched")
+  }
+  unknown_observations <- Filter(function(observation) {
+    identical(observation$feature_id, feature_ids[[2L]])
+  }, unknown_profile$observations)
+  testthat::expect_true(length(unknown_observations) > 0L)
+  for (observation in unknown_observations) {
+    testthat::expect_true("feature_taxon_id" %in% names(observation))
+    testthat::expect_null(observation$feature_taxon_id)
+    testthat::expect_identical(observation$feature_taxon_status, "unknown")
+    testthat::expect_true("feature_taxon_declaration" %in% names(observation))
+    testthat::expect_null(observation$feature_taxon_declaration)
+    testthat::expect_true("feature_taxon_provenance_ref" %in% names(observation))
+    testthat::expect_null(observation$feature_taxon_provenance_ref)
+    testthat::expect_identical(observation$taxon_applicability, "unassessable")
+    testthat::expect_identical(observation$taxon_reason_code, "feature_taxon_unknown")
+    testthat::expect_false(observation$status %in% c("support", "conflict"))
+  }
+  testthat::expect_identical(stage_hashes(output_root), bc_hashes_before_d)
+
+  write_feature_metadata(valid = FALSE)
+  malformed <- d_t01_cli_run_files(fixture$config, "D", output_root)
+  testthat::expect_false(identical(malformed$status, 0L),
+                         info = paste(malformed$output, collapse = "\n"))
+  testthat::expect_true(any(grepl("D_FEATURE_REGISTRY_INVALID", malformed$output, fixed = TRUE)),
+                        info = paste(malformed$output, collapse = "\n"))
+  testthat::expect_identical(triomics_sha256(pointer_path), pointer_hash)
+  testthat::expect_identical(stage_hashes(output_root), bc_hashes_before_d)
 })
 
 testthat::test_that("D-T01 publishes a complete generation from actual native B and C CLI handoffs", {
