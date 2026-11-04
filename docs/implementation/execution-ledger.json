@@ -37,7 +37,7 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "DOC_M7_reviewed_pending_integration_and_Astra",
+    "status": "M7_029_scope_pending_audit",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -6167,6 +6167,20 @@
       ],
       "Sol_review": "Counts, every relative link and three quoted receipt SHA256 values verified. No product edit, fit or test. Source/installed delta27 attributed to existing layout branches.",
       "next_transition": "Serial document integration then fresh read-only Astra-low milestone audit; M7/G7 closed."
+    },
+    {
+      "event": "m7_final_initial_Astra_changes_required",
+      "date": "2026-11-04",
+      "agent_id": "/root/m7_final_astra",
+      "product_commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef",
+      "records_commit": "f33b1fd764589f4645691847b9ee610b42d718cf",
+      "audit_pass": false,
+      "findings": [
+        "M7-FINAL-ASTRA-01",
+        "M7-FINAL-ASTRA-02"
+      ],
+      "focused_rereviews_remaining": 1,
+      "next_transition": "Fresh scope audit of M7-029, then fresh Luna-max after approval; no acceptance."
     }
   ],
   "packets": {
@@ -7180,8 +7194,8 @@
       "gate_release": "G6"
     },
     "M7": {
-      "status": "verified_pending_Terra_Astra_Sol_acceptance",
-      "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-gates.md",
+      "status": "audit_changes_required",
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-final-astra.md",
       "commit": "126a30fc68fd593826a3ca82cd399fff35ee90ef"
     },
     "M8": {

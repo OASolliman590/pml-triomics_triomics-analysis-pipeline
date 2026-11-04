@@ -1,6 +1,6 @@
 # M7 final same-snapshot software gates — Sol verification
 
-Tested product commit: `126a30fc68fd593826a3ca82cd399fff35ee90ef`. Gates passed; Terra DOC-M7, fresh milestone Astra audit and Sol acceptance remain pending. M7/G7 are closed.
+Tested product commit: `126a30fc68fd593826a3ca82cd399fff35ee90ef`. Gates passed; Terra DOC-M7, fresh milestone Astra audit and Sol acceptance remain pending. M7/G7 gates remain unreleased.
 
 One uninterrupted full source run: **7353 pass, 0 fail, 0 error, 15 warnings, 0 skips**, 493 test blocks; exit 0. Started 2026-11-04 01:37:50 UTC; finished 2026-11-04 02:03:54 UTC.
 
