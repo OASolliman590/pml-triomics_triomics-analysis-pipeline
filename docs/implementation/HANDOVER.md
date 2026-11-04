@@ -1,3 +1,13 @@
+# Current checkpoint — M7-030 caller scope
+
+M7-029 candidate 36547f5 is preserved, blocked/incomplete at its two-repair cap. Recovered focused gate: 886 pass, one expected D01 warning, no fail/error/skip. Native D10/D11/D12 positive chains and canonical readbacks passed on APFS. Matching-taxon control B/C/D exited 0 but remained unknown: R/cli.R loads metadata only when annotation.requests is nonempty. Do not weaken the declaration assertion or enable unrelated annotation to pass.
+
+Read change-records/M7-030-target-routing-metadata-caller.md. The new bounded shared-caller successor is authorized by the user's existing new-cycle/shared-D scope, requires a fresh Astra scope audit, then fresh Luna. No implementation before audit yes. Preserve 36547f5 and both old repairs. One focused final milestone Astra remains after combined immutable full gates and DOC-M7. M7/G7 unreleased.
+
+Literal resume: reconcile the verification-only Luna blocker receipt, audit immutable M7-030 scope, implement only the audited caller seam in a fresh worktree from 36547f5, prove combined candidate before integration, then uninterrupted full source/native/archive gates, Terra and focused final Astra. No private inputs or push.
+
+## Historical checkpoints below
+
 # Recovery checkpoint — 4 November 2026
 
 Temporary worktrees, raw logs and runtime under /tmp are absent after interruption. Git preserves coordinator86dd1fd and final Luna repair36547f5. Current coordinator is the attached m7-029-resume-sol worktree, branch codex/m7-stage-d-resume-20261104; immutable candidate is attached m7-029-resume-candidate. Both M7-029 repairs are consumed. No product repair is reopened.

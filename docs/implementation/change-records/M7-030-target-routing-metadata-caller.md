@@ -1,0 +1,27 @@
+# M7-030 — supply declared feature metadata to target-only publication
+
+Status: frozen proposal for fresh read-only Astra-low scope audit. Implementation waits for audit_pass yes. This is a separate bounded shared-caller cycle under the user authorization to finish Stage D with new bounded cycles. It is not M7-029 repair 3.
+
+## Reproduced boundary
+
+Preserve candidate `36547f5c132d1a97d7640607688bd4afea2db8f3` and its six-file M7-029 diff. Both M7-029 repairs are consumed. Its recovered focused gate passed 886 assertions with one named expected D01 stale-sign warning and no failures/errors/skips. The internal APFS native D10/D11/D12 commands and their canonical readbacks pass. However, a controlled D11 copy with block_2 feature_metadata declaring taxon 9606 executes B/C/D with exit 0 and still persists null feature_taxon_id, null declaration and unassessable applicability. No claimed matching-species proof is credited.
+
+`R/cli.R` calls `triomics_d_routing_metadata()` only when annotation.requests is nonempty (local_annotation). The shipped target-only D11 request has annotation.requests: [] and target_investigation.enabled: true. The existing loader can read the declared table without requesting an annotation service, but the caller does not supply it. The M7-029 resolver truthfully treats the absent adapted declaration as unknown; its assertion must not be weakened. Do not enable an unrelated annotation route to hide this caller defect.
+
+## Required behavior and scope
+
+The existing Stage D caller must supply existing declared feature routing metadata when either local annotation is requested or target investigation is enabled. Reuse `triomics_d_routing_metadata()` and the existing same-root evidence readback. A target-only run still performs no annotation resource route and starts no B or C producer. A genuinely absent species declaration remains unknown/null; declared canonical matching 9606 is matched, 10090 is inapplicable, and explicit unknown is unassessable. Retain the actual declared metadata origin, all measured values, B/C identities/dependency groups and atomic publication checks. Existing metadata validation errors must still fail closed. Do not invent B/C taxon ancestry or a new source-origin contract.
+
+Luna-max may prepare only the shared-caller change in `R/cli.R` and additive native regression assertions in `tests/testthat/test-D-target-shared.R` and/or `tests/testthat/test-D-T01.R`. The CLI edit is limited to deciding when to invoke the existing metadata loader and making the existing investigation request available to that decision. No other CLI execution, route accounting, lock, schema, provenance, publication or statistics logic changes. Sol retains shared-file ownership, review, integration and acceptance; this explicitly bounded delegated patch is covered by the user's shared-D-executor authorization. No worker children.
+
+No other product, fixture, ticket, manual, NAMESPACE, schema, frozen spec/hash/packets, B/C producer or statistical edit. Keep B-T04 bound 0.08 and seeds 1001:1400 unchanged. Public fixture copies and scripts outside the repository are permitted for native verification; original numerical inputs remain byte-identical. Do not read private data, push, or start M8/M9, AIU or fasting work.
+
+## Evidence and limits
+
+Fresh Luna worktree starts from preserved 36547f5. First demonstrate the target-only matching-taxon native regression fails while original B/C values are retained. Implement the caller seam; initial attempt plus at most two targeted repairs, each recorded before use. Worker may make local allowlisted commits to obtain a clean executing revision; Sol alone integrates. Stop on any required file outside this scope and retain evidence.
+
+Then rerun focused D01/D10/D11/D12/shared-target/shared-discovery tests, with actual exits and every warning named. Run the ten external native B/C/D cases already defined by M7-029 verification (three unchanged packets; matching, mismatch, explicit unknown, missing taxon; missing assay, missing limitations, both absent). Require canonical generation member hash/size readback, same-root B/C predecessor digests, exact measured effects/loadings and metadata declarations, truthful nulls, no inapplicable support/conflict or incomplete-assay comparison. No assertion weakening or acceptance by shell exit alone.
+
+Sol joins and reviews the six-file M7-029 candidate plus this caller fix, independently reads back results, and integrates only a verified combined product. Then freeze one clean P2 and run an uninterrupted full source suite, all eight required native D packet chains plus applicability controls, and a clean git-archive package check requiring exactly Status: OK and named warnings. Refresh Terra DOC-M7. The single remaining focused final milestone Astra rereview still governs acceptance; this scope audit does not consume or reset that review. No M7/G7 release before every gate and Sol's same-product acceptance receipt.
+
+M7-029 remains blocked/incomplete at its cap until successor proof is recorded; do not relabel its earlier failed attempts as passing. Conditional D06/D07/D14 remain blocked without credit; C07 checks not_run; C09 unqualified/synthetic_fixture_only/benefit_guaranteed=false; independent frozen-kit audit pending remains separate. Current C06 and required D registrations remain unaccepted until final Sol acceptance.

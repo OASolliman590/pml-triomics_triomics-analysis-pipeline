@@ -39,7 +39,7 @@
     {
       "agent_id": "/root/m7_029_verification_resume",
       "role": "Luna verification-only recovery",
-      "status": "APFS_native_verification_running",
+      "status": "stopped_reporting_caller_blocker",
       "worktree": "/Users/megastore/.codex/worktrees/m7-029-resume-candidate/PML MultiOmics Analysis Pipeline",
       "candidate_commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
       "repairs_used": 2,
@@ -52,13 +52,13 @@
     }
   ],
   "orchestration_control": {
-    "status": "M7_029_recovered_verification_running",
+    "status": "M7_030_scope_audit_pending",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [
       {
         "agent_id": "/root/m7_029_verification_resume",
         "role": "Luna verification-only recovery",
-        "status": "APFS_native_verification_running",
+        "status": "stopped_reporting_caller_blocker",
         "worktree": "/Users/megastore/.codex/worktrees/m7-029-resume-candidate/PML MultiOmics Analysis Pipeline",
         "candidate_commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
         "repairs_used": 2,
@@ -67,8 +67,7 @@
         "requested_effort": "max",
         "effective_settings_exposed": false,
         "evidence_root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01",
-        "session_id": 98269,
-        "next_transition": "Join native proof, Sol readback, integrate verified commits, freeze P2 and run full source/archive gates; Terra DOC-M7 and focused final Astra before acceptance."
+        "session_id": 98269
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -6407,6 +6406,28 @@
       "evidence_ref": "docs/implementation/evidence/2026-11-04-m7-029-recovery",
       "native_proof_root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/native-candidate",
       "repairs_remaining": 0
+    },
+    {
+      "event": "M7_029_native_target_only_caller_blocker_M7_030_scope",
+      "date": "2026-11-04",
+      "candidate_commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+      "actual_runner_exit": 1,
+      "native_positives": [
+        "D-T10",
+        "D-T11",
+        "D-T12"
+      ],
+      "control_B_C_D_exit_codes": [
+        0,
+        0,
+        0
+      ],
+      "failure": "control-match-9606 persisted feature_taxon_declaration null because CLI skips routing metadata when annotation requests empty",
+      "M7_029_status": "blocked_incomplete_cap_consumed",
+      "M7_030_status": "scope_frozen_pending_Astra",
+      "scope_ref": "docs/implementation/change-records/M7-030-target-routing-metadata-caller.md",
+      "M7": "unreleased",
+      "G7": "unreleased"
     }
   ],
   "packets": {
