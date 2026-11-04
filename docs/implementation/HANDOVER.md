@@ -1,3 +1,15 @@
+# Current checkpoint: D-T08 repair 1 reviewed; S01 predecessor implementation active
+
+Report candidate `7c551b0` is clean with124 passing focused assertions and zero failures/errors/warnings/skips. Same report Luna has returned and is idle. Fresh read-only local review found quoted-credential/single-component-path leakage and legitimate nested-CV status incompatibility. Read reviews/2026-11-04-d-t08-repair1-review.md. Final report repair2 is not yet dispatched: consolidate native proof failures first.
+
+Fresh `/root/d08_s01_luna` is active from Sol helper `0e30743` in managed m8-d08-s01-luna. Its exclusive files are two B registry call sites and test-stage-run-registry.R; shared helper stays Sol-owned. Join its existing turn, inspect the result, apply any bounded justified helper correction serially, then verify required regressions and untouched native A/B/C/D/report. Sol report registration is isolated at `da79e86` in m8-d08-s01-sol. No product candidate is integrated into canonical spec branch.
+
+Preserve native A0/B4 RED, initial report23b5689 and repair7c551b0. Never reuse the deleted-registry workaround. M7/G7 stay accepted; G8/G9 unreleased. No later report packets, private data or push. All logs/output internal APFS. External orchestration.json names current workers and exact next transitions.
+
+Literal resume: join the current S01 worker, do not redispatch it; finish this separate predecessor repair, then use the combined native evidence and the two recorded report findings for the one remaining D-T08 repair. Keep conditional and unrun scientific dispositions unchanged.
+
+## Historical checkpoints below
+
 # Current checkpoint: D-T08 repair 1 active; predecessor scope approved
 
 Same Luna `/root/m8_d08_luna` is implementing consolidated report repair1 of2 from immutable23b5689 in the existing isolated worktree. Exact seven-file D-T08 scope; no native retry or registry removal. Join the existing worker, do not restart it. Initial candidate source75/0fail/0error/0warn/0skip,14blocks is historical, not a repair pass.

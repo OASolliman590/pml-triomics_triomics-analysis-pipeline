@@ -37,20 +37,27 @@
   },
   "active_workers": [
     {
-      "agent_id": "/root/m8_d08_luna",
-      "role": "Luna D-T08 initial implementation",
+      "agent_id": "/root/d08_s01_luna",
+      "role": "Luna bounded predecessor publication repair",
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "host_dispatch_accepted": true,
       "effective_settings_exposed": false,
-      "worktree": "/Users/megastore/.codex/worktrees/m8-d-t08-luna/PML MultiOmics Analysis Pipeline",
-      "branch": "codex/m8-d-t08-luna",
-      "base": "4a783be5d5ec005a0044a43cdc6dc8c4d6c35392",
+      "worktree": "managed m8-d08-s01-luna",
+      "branch": "codex/m8-d08-s01-luna",
+      "base": "0e307435c9b3705d3ac2ec2cb00141344b1c04bd",
       "status": "initial_implementation_running",
       "attempt": 1,
       "repairs_used": 0,
       "repairs_remaining": 2,
-      "allowed_next_transition": "Sol inspect local commit/diff, mechanical shared registration, two-axis local review and independent focused/native Quarto verification; bounded repairs if reproduced."
+      "allowed_next_transition": "Sol inspect scoped commit/tests; shared helper corrections only Sol; audited regression and untouched native proof."
+    },
+    {
+      "agent_id": "/root/d08_repair1_sol_review",
+      "role": "read-only focused local reviewer",
+      "status": "reproduction_receipt_followup",
+      "candidate": "7c551b05ac13903231cafed03ae398a9fff3f574",
+      "allowed_next_transition": "Record exact narrow reproductions; no further investigation."
     }
   ],
   "orchestration_control": {
@@ -3959,7 +3966,7 @@
       "snapshot_commit": "542a7b4",
       "implementation_commit": "bded42a",
       "integration_commit": "9cd36fe",
-      "review_scope": "B-T08 AC1–AC4, 139-assertion suite, public synthetic CLI, registration, integration drift, fixed families, fail-closed handling and privacy",
+      "review_scope": "B-T08 AC1\u2013AC4, 139-assertion suite, public synthetic CLI, registration, integration drift, fixed families, fail-closed handling and privacy",
       "allowed_next_transition": "PASS permits Sol to mark B-T08 accepted and immediately dispatch B-T07; findings preserve the dependency block and require an authorized bounded resolution",
       "disposition": "This review reconciles missing acceptance evidence only; it does not reset B-T08 implementation counters or authorize code changes."
     },
@@ -6680,6 +6687,37 @@
       "G7": "released",
       "G8": "unreleased",
       "G9": "unreleased"
+    },
+    {
+      "event": "D_T08_repair1_returned_and_S01_serial_transition",
+      "date": "2026-11-04",
+      "report_candidate": "7c551b05ac13903231cafed03ae398a9fff3f574",
+      "counts": {
+        "pass": 124,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 21
+      },
+      "local_review": "changes_required",
+      "worker": {
+        "agent_id": "/root/d08_s01_luna",
+        "role": "Luna bounded predecessor publication repair",
+        "requested_model": "gpt-6-luna",
+        "requested_effort": "max",
+        "host_dispatch_accepted": true,
+        "effective_settings_exposed": false,
+        "worktree": "managed m8-d08-s01-luna",
+        "branch": "codex/m8-d08-s01-luna",
+        "base": "0e307435c9b3705d3ac2ec2cb00141344b1c04bd",
+        "status": "initial_implementation_running",
+        "attempt": 1,
+        "repairs_used": 0,
+        "repairs_remaining": 2,
+        "allowed_next_transition": "Sol inspect scoped commit/tests; shared helper corrections only Sol; audited regression and untouched native proof."
+      },
+      "canonical_product_integrated": false
     }
   ],
   "packets": {
@@ -8070,13 +8108,13 @@
       "disposition_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md"
     },
     "D-T08": {
-      "status": "repair_1_running_with_predecessor_blocker",
+      "status": "repair1_reviewed_changes_required_predecessor_active",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": [
-        "Native A-to-B run-registry collision; scope proposal M8-D08-S01.",
-        "Initial candidate review changes required; consolidated repair1 running."
+        "S01 predecessor call-site implementation and native proof pending.",
+        "Two report findings require final bounded repair2; not dispatched until native findings consolidated."
       ],
       "accepted": false,
       "completion_credit": false,
@@ -8092,17 +8130,20 @@
       "runtime_receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-ready.md",
       "repair_attempts": 1,
       "implementation_base": "4a783be5d5ec005a0044a43cdc6dc8c4d6c35392",
-      "active_worker": "/root/m8_d08_luna",
-      "candidate_commit": "23b56893eee594b236bbc12440290f8e6405fecb",
+      "active_worker": null,
+      "candidate_commit": "7c551b05ac13903231cafed03ae398a9fff3f574",
       "initial_review_ref": "docs/implementation/reviews/2026-11-04-d-t08-initial-review.md",
       "predecessor_repair": {
         "id": "M8-D08-S01",
         "scope_audit_pass": true,
         "audited_snapshot": "593c89c82cc55c49503fe5391eae7fd0a4ef7abe",
         "authority_receipt": "docs/implementation/reviews/2026-11-04-d08-s01-scope-rereview.md",
-        "implementation_status": "not_started_waiting_report_worker",
-        "milestone_acceptance": false
-      }
+        "implementation_status": "fresh_Luna_active_after_Sol_helper_freeze",
+        "milestone_acceptance": false,
+        "helper_commit": "0e307435c9b3705d3ac2ec2cb00141344b1c04bd",
+        "worker": "/root/d08_s01_luna"
+      },
+      "repair1_review_ref": "docs/implementation/reviews/2026-11-04-d-t08-repair1-review.md"
     },
     "D-T13": {
       "status": "not_started",
