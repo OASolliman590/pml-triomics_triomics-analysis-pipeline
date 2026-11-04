@@ -1,0 +1,39 @@
+{
+  "packet_id": "D-T13",
+  "request_type": "registration_request",
+  "request_status": "worker_candidate_unreviewed",
+  "namespace_edits": false,
+  "local_files": [
+    "R/report_targets.R",
+    "inst/report/sections/targets.qmd",
+    "tests/testthat/test-D-T13.R",
+    "inst/examples/tickets/D-T13.yaml",
+    "docs/implementation/registrations/D-T13.json"
+  ],
+  "owned_functions": [
+    "triomics_report_targets_section"
+  ],
+  "public_namespace_request": {
+    "exports": [],
+    "manual_pages": []
+  },
+  "fixed_section_composition": {
+    "target_provider": "triomics_report_targets_section(loaded, config)",
+    "provider_return_shape": {
+      "status": [
+        "complete",
+        "partial",
+        "unavailable",
+        "not_requested"
+      ],
+      "reason_code": "One scalar string; use a stable code or an empty string.",
+      "tables": "A named list of data.frames projected from validated D target producer output."
+    },
+    "fixed_qmd_resource": "inst/report/sections/targets.qmd includes targets-content.html.",
+    "scope": "Descriptive rendering only. The report does not fit models, estimate targets, infer affinity, or complete D-T14."
+  },
+  "accepted": false,
+  "accepted_commit": null,
+  "acceptance_ref": null,
+  "milestone_acceptance": false
+}
