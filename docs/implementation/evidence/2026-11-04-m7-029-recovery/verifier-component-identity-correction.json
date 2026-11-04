@@ -1,0 +1,6 @@
+{
+  "reason": "Cross-case loading identity must include component ID; all per-observation source loading checks retained. Previously PC2 overwrote PC1 in comparison signature, not in product. No native rerun yet.",
+  "previous_sha256": "33119b1371f4925f21568d7537548c0e7dce461af101be8199933680daca04ab",
+  "updated_sha256": "22b8b73b3c2afb80ed8509c4a4f000b95d2e86cbe5919936d2bed059facb95b1",
+  "product_edit": false
+}

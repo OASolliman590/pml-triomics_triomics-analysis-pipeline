@@ -1,0 +1,348 @@
+{
+  "caller_evidence": {
+    "effect": "The controlled D-T11 ticket has requests: [] so the feature_metadata path is not adapted into the FeatureRegistry.",
+    "file": "R/cli.R",
+    "lines": {
+      "2729": "local_annotation <- triomics_d_sequence(requests) && length(requests) > 0L",
+      "2733": "routing_metadata <- if (local_annotation) {",
+      "2734": "  triomics_d_routing_metadata(config, config_path, ingested$feature_registry)",
+      "2735": "} else {",
+      "2736": "  NULL",
+      "2742": "routing_metadata = routing_metadata,"
+    }
+  },
+  "control_match_9606": {
+    "all_B_C_D_commands_exit_0": true,
+    "annotation_requests_empty": true,
+    "canonical_evidence_routing_path": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/native-candidate/cases/control-match-9606/native-output/D/generations/dd243f0f5e71b91b1442b898db51a3655df5cf1bb0540779fc905ddd6da28b64/evidence-routing.json",
+    "canonical_evidence_routing_sha256": "1a81930740d9d41344f086e846426b6778e05fe2621a6df9b5a153b165d8fb4d",
+    "canonical_member_digest": "1a81930740d9d41344f086e846426b6778e05fe2621a6df9b5a153b165d8fb4d",
+    "canonical_member_size_bytes": 390649,
+    "classification": "Controlled feature taxon did not reach the adapted FeatureRegistry routing_metadata path because annotation.requests is empty. This is a control-fixture blocker, not a product assertion.",
+    "commands": [
+      {
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "pid": 11899,
+        "stage": "B"
+      },
+      {
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "pid": 11933,
+        "stage": "C"
+      },
+      {
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "pid": 11990,
+        "stage": "D"
+      }
+    ],
+    "feature_metadata_first_row": "SYN_3_001\t9606\tsynthetic_feature\ttarget_assessment\tsynthetic://m7-029-resume-control/feature-taxon-9606",
+    "feature_metadata_path": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/native-candidate/cases/control-match-9606/data/d-target/feature-taxon-control.tsv",
+    "feature_metadata_sha256": "4962673357b5db703a2e6e017d392bb92c8d9afb6ddf846593a60644d4fa77b5",
+    "generation_id": "dd243f0f5e71b91b1442b898db51a3655df5cf1bb0540779fc905ddd6da28b64",
+    "generation_manifest_path": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/native-candidate/cases/control-match-9606/native-output/D/generations/dd243f0f5e71b91b1442b898db51a3655df5cf1bb0540779fc905ddd6da28b64/generation-manifest.json",
+    "generation_manifest_sha256": "dd243f0f5e71b91b1442b898db51a3655df5cf1bb0540779fc905ddd6da28b64",
+    "persisted_feature_taxon": {
+      "alternatives_comparability": "noncomparable",
+      "direct_binding_axis_coverage": {
+        "expected_records": 2,
+        "independent_publication_groups": 2,
+        "measured_records": 1,
+        "unmeasured_records": 0,
+        "unresolved_records": 1
+      },
+      "direct_binding_axis_status": "measured",
+      "feature_id": "SYN_3_001",
+      "feature_taxon_declaration": null,
+      "feature_taxon_id": null,
+      "feature_taxon_provenance_ref": null,
+      "feature_taxon_status": "unknown",
+      "molecular_axis_status": "unassessable",
+      "observation_coverage": "unassessable",
+      "selected_target": null,
+      "taxon_applicability": "unassessable",
+      "taxon_reason_code": "feature_taxon_unknown"
+    },
+    "qualification_credit": false,
+    "ticket": "D-T11",
+    "verifier_failure": "control-match-9606: SYNTHETIC_TARGET_A: persisted taxon declaration comes from adapted routing metadata"
+  },
+  "created_utc": "2026-11-04T07:55:41.405176+00:00",
+  "expected_commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+  "independent_gates": {
+    "M7_G7_publication_qualification_credit": false,
+    "focused_and_D01": {
+      "blocks": 89,
+      "combined_pass": 886,
+      "error": 0,
+      "exit_code": 0,
+      "fail": 0,
+      "receipt_paths": [
+        "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/focused-candidate/source-receipt.json",
+        "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/focused-candidate/execution.json"
+      ],
+      "skip": 0,
+      "warn": 1,
+      "warning": "D-T01 stale paired-sign refusal; expected status 2"
+    }
+  },
+  "limitations": [
+    "Only the three shipped D10/D11/D12 native positives completed and passed persisted readback.",
+    "The control-match fixture passed B/C/D but failed its intended taxon declaration assertion; it is not evidence of matching-species behavior.",
+    "The remaining controlled taxon/assay fixtures did not run.",
+    "No M7/G7 acceptance, release, or publication qualification is claimed.",
+    "No source/product files changed, no commits or pushes were made, and no repairs were attempted."
+  ],
+  "native_positive_cases": [
+    {
+      "case": "native-D10",
+      "commands": [
+        {
+          "exit_code": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pid": 11430,
+          "stage": "B"
+        },
+        {
+          "exit_code": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pid": 11490,
+          "stage": "C"
+        },
+        {
+          "exit_code": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pid": 11550,
+          "stage": "D"
+        }
+      ],
+      "generation_id": "3037cb5b10efe65efbdb774cc4c6de5d51fa30bf40e17dde9a8224b878d91f83",
+      "generation_sha256": {
+        "D/generations/3037cb5b10efe65efbdb774cc4c6de5d51fa30bf40e17dde9a8224b878d91f83/evidence-routing.envelope.json": "b0bdf45e28305f3f5158bc6e80ea234866ebaf756b2195aaeaf94c39b0589273",
+        "D/generations/3037cb5b10efe65efbdb774cc4c6de5d51fa30bf40e17dde9a8224b878d91f83/evidence-routing.json": "6c97196dbfcbadc31ee01d4a8d57a7fbc59ee06012eb6a943797038631be1170",
+        "D/generations/3037cb5b10efe65efbdb774cc4c6de5d51fa30bf40e17dde9a8224b878d91f83/generation-manifest.json": "3037cb5b10efe65efbdb774cc4c6de5d51fa30bf40e17dde9a8224b878d91f83",
+        "registries/current-D.json": "07cb0fae3e01ec5900e3f3f7929ab9f1f7a5b189af6e3169665bb2a7d8585c0f"
+      },
+      "measurement_matrix_sha256": {
+        "inst/examples/data/c04/metadata.tsv": "a1cbf0b086ab0126a4a875bbee06e0955cc9d5805fed603da58b523e978894ae",
+        "inst/examples/data/independent/metabolomics.tsv": "2015689535ded9f0ef9909038932714f58d624b92bba912e5021d67d7d567e06",
+        "inst/examples/data/independent/proteomics.tsv": "e2744731cf39baaa9767cb66f8e419cde8cc1090e5105a39afbb1a691944a843"
+      },
+      "predecessor_sha256": {
+        "B": {
+          "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/bundle.envelope.json": "9bd868d1db0806b88611e3fcf4608a74e3f578fd42c25eaa944049baffd85c16",
+          "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/bundle.json": "66e93f9a5d4357c046fbb615398c73480c08bf6331ff78443a0ec1033715144b",
+          "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/stage-handoff-provenance.envelope.json": "dfd2bd1b6d2fe556a8deadf7015f537e520b7b0765a54734247feb336657c3b7",
+          "B/handoffs/58df3baf188be940d8ee2aa424b09fb0cc8db0f2e4bcca47c6284e3c62f10502/stage-handoff-provenance.json": "37285f019949aa9b6e8581e46ede45daa02d667915ce404eef7c0eaca5bd6785"
+        },
+        "C": {
+          "D/stage-handoff-provenance.envelope.json": "2e36cd8e9eb7a9d2ba2b3af6c7acf283502c49f6ed90d4b670abc8bc5281dddf",
+          "D/stage-handoff-provenance.json": "6d46f052a00633b2242bfc5bd9cb5e4bb785c087c4b31e85a421ba5f54d602ee"
+        }
+      },
+      "profiles": [
+        {
+          "direct_binding_coverage": {
+            "expected_records": 2,
+            "independent_publication_groups": 2,
+            "measured_records": 0,
+            "unmeasured_records": 1,
+            "unresolved_records": 1
+          },
+          "direct_binding_status": "unresolved",
+          "molecular_status": "unassessable",
+          "target_id": "SYNTHETIC_TARGET_A"
+        }
+      ],
+      "readback_assertions_passed": 125,
+      "ticket": "D-T10"
+    },
+    {
+      "case": "native-D11",
+      "commands": [
+        {
+          "exit_code": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pid": 11587,
+          "stage": "B"
+        },
+        {
+          "exit_code": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pid": 11641,
+          "stage": "C"
+        },
+        {
+          "exit_code": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pid": 11750,
+          "stage": "D"
+        }
+      ],
+      "generation_id": "b2e6718869d73b6f370a6a406252527580320ee5e5066fdf115911a5b727da2e",
+      "generation_sha256": {
+        "D/generations/b2e6718869d73b6f370a6a406252527580320ee5e5066fdf115911a5b727da2e/evidence-routing.envelope.json": "13d6840efee2161e750be91535b80dcb15896232c1328483c4aa26680aaf28b4",
+        "D/generations/b2e6718869d73b6f370a6a406252527580320ee5e5066fdf115911a5b727da2e/evidence-routing.json": "ad66d384cc3fdc0ae06d46a548b6b69cc8b1d04af042a601270a7158e69f4f5a",
+        "D/generations/b2e6718869d73b6f370a6a406252527580320ee5e5066fdf115911a5b727da2e/generation-manifest.json": "b2e6718869d73b6f370a6a406252527580320ee5e5066fdf115911a5b727da2e",
+        "registries/current-D.json": "69ba74cc8e9f08d0f5f2559fca6d6244e6b312e6d392194adc12dcd1bb582e7b"
+      },
+      "measurement_matrix_sha256": {
+        "inst/examples/data/c04/metadata.tsv": "a1cbf0b086ab0126a4a875bbee06e0955cc9d5805fed603da58b523e978894ae",
+        "inst/examples/data/independent/metabolomics.tsv": "2015689535ded9f0ef9909038932714f58d624b92bba912e5021d67d7d567e06",
+        "inst/examples/data/independent/proteomics.tsv": "e2744731cf39baaa9767cb66f8e419cde8cc1090e5105a39afbb1a691944a843"
+      },
+      "predecessor_sha256": {
+        "B": {
+          "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/bundle.envelope.json": "2751e845e0530f6588cacd88fdedeefcb9244850400003642c344ffaba1dc2d5",
+          "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/bundle.json": "2d166f10c17e16af5b93db65178650e836a478367b04fd170c6ca26d62ea6a36",
+          "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/stage-handoff-provenance.envelope.json": "5d12465f15a09360957d048dff236e478b6e5ed2882e13a11d6f5c4ddc690318",
+          "B/handoffs/b05048ae4bdd1e4db1309dba5f2bb74e03093e76e7a32c8e4fcab2b4d02e654a/stage-handoff-provenance.json": "6bad747ff191b5a14f7822e7c41531fbe8a52a46419f19f618dc693ade16b850"
+        },
+        "C": {
+          "D/stage-handoff-provenance.envelope.json": "af24e534f9cb63b88a3028c31a1ccea59530977a796fff4ca295232478c75ac4",
+          "D/stage-handoff-provenance.json": "79d97639c92ce86ff25bd7b26a9975b4f3e902b970b527da9d336770c38dffa2"
+        }
+      },
+      "profiles": [
+        {
+          "direct_binding_coverage": {
+            "expected_records": 2,
+            "independent_publication_groups": 2,
+            "measured_records": 0,
+            "unmeasured_records": 1,
+            "unresolved_records": 1
+          },
+          "direct_binding_status": "unresolved",
+          "molecular_status": "unassessable",
+          "target_id": "SYNTHETIC_TARGET_A"
+        },
+        {
+          "direct_binding_coverage": {
+            "expected_records": 2,
+            "independent_publication_groups": 2,
+            "measured_records": 0,
+            "unmeasured_records": 1,
+            "unresolved_records": 1
+          },
+          "direct_binding_status": "unresolved",
+          "molecular_status": "unassessable",
+          "target_id": "SYNTHETIC_TARGET_B"
+        }
+      ],
+      "readback_assertions_passed": 216,
+      "ticket": "D-T11"
+    },
+    {
+      "case": "native-D12",
+      "commands": [
+        {
+          "exit_code": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pid": 11791,
+          "stage": "B"
+        },
+        {
+          "exit_code": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pid": 11825,
+          "stage": "C"
+        },
+        {
+          "exit_code": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pid": 11869,
+          "stage": "D"
+        }
+      ],
+      "generation_id": "a6ef50340d383df7977534bcb99531989aa16e6df89bf0fd145e4b3c70c976a2",
+      "generation_sha256": {
+        "D/generations/a6ef50340d383df7977534bcb99531989aa16e6df89bf0fd145e4b3c70c976a2/evidence-routing.envelope.json": "02854dd51ef0b651b63ffd47898a2c4a4f8fbb0ba550d2ab99ecbaf9b73a907d",
+        "D/generations/a6ef50340d383df7977534bcb99531989aa16e6df89bf0fd145e4b3c70c976a2/evidence-routing.json": "e369a918972d6b1cf7936467d66889b28d9c15f40f6c18cca83dd0b2807384f4",
+        "D/generations/a6ef50340d383df7977534bcb99531989aa16e6df89bf0fd145e4b3c70c976a2/generation-manifest.json": "a6ef50340d383df7977534bcb99531989aa16e6df89bf0fd145e4b3c70c976a2",
+        "registries/current-D.json": "f0582d20b505c91c4d4e1e6995846e939818ed23825e2965c985477da6773dbf"
+      },
+      "measurement_matrix_sha256": {
+        "inst/examples/data/c04/metadata.tsv": "a1cbf0b086ab0126a4a875bbee06e0955cc9d5805fed603da58b523e978894ae",
+        "inst/examples/data/independent/metabolomics.tsv": "2015689535ded9f0ef9909038932714f58d624b92bba912e5021d67d7d567e06",
+        "inst/examples/data/independent/proteomics.tsv": "e2744731cf39baaa9767cb66f8e419cde8cc1090e5105a39afbb1a691944a843"
+      },
+      "predecessor_sha256": {
+        "B": {
+          "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/bundle.envelope.json": "f150ce86d536a47642144f408cd5c61896a0d4d06a63737ec58d45ca3bc0a506",
+          "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/bundle.json": "75bfbf5a67d19a97812e956f56c81893cdceaa37726b2cec549c3524f4cdd57a",
+          "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/stage-handoff-provenance.envelope.json": "3d22aec7235974c9b64babf698045677895014440a7eb2681117ab905308b92f",
+          "B/handoffs/9934e7dd84d6bfefe818c8b5625bfa790f7978ebfd3eafbade996d5e1292c50b/stage-handoff-provenance.json": "2185163edfedd96bd84ac17a7f052cf9de5ef9bf8b3f0b3dfd78744029b2c43f"
+        },
+        "C": {
+          "D/stage-handoff-provenance.envelope.json": "be79b00efd950e232bacca653aa4874eaeab1c80a814e7a0454a8c1c1e796bd6",
+          "D/stage-handoff-provenance.json": "5af45eb58ed3fa6cd1af2a0b93efe9acce6463ab04c3e6f223b11f8077061a8c"
+        }
+      },
+      "profiles": [
+        {
+          "direct_binding_coverage": {
+            "expected_records": 2,
+            "independent_publication_groups": 2,
+            "measured_records": 0,
+            "unmeasured_records": 1,
+            "unresolved_records": 1
+          },
+          "direct_binding_status": "unresolved",
+          "molecular_status": "unassessable",
+          "target_id": "SYNTHETIC_TARGET_A"
+        },
+        {
+          "direct_binding_coverage": {
+            "expected_records": 2,
+            "independent_publication_groups": 2,
+            "measured_records": 0,
+            "unmeasured_records": 1,
+            "unresolved_records": 1
+          },
+          "direct_binding_status": "unresolved",
+          "molecular_status": "unassessable",
+          "target_id": "SYNTHETIC_TARGET_B"
+        }
+      ],
+      "readback_assertions_passed": 216,
+      "ticket": "D-T12"
+    }
+  ],
+  "native_positive_summary": {
+    "all_B_C_D_commands_exit_0": true,
+    "cases_with_readback_pass": 3,
+    "readback_assertions_passed": 557,
+    "tickets": [
+      "D-T10",
+      "D-T11",
+      "D-T12"
+    ]
+  },
+  "prior_ssd_diagnostics": {
+    "run1": {
+      "B_exit": 1,
+      "classification": "Rscript entry-script bootstrap path with spaces",
+      "path": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run1"
+    },
+    "run2": {
+      "B_exit": 0,
+      "C_exit": 0,
+      "D_exit": 2,
+      "classification": "D generation integrity check detected AppleDouble sidecars; no publication credit; no SSD rerun",
+      "path": "/Volumes/PortableSSD/PML MultiOmics Analysis Pipeline/artifacts/local-verification/m7-stage-d-resume-20261104/native-run-36547f5-run2"
+    }
+  },
+  "runner_script": {
+    "exit_code": 1,
+    "outer_exec_session_id": 98269,
+    "path": "/Users/megastore/.triomics-verification/m7-resume-20261104-01/scripts/verify_m7_029_resume.py",
+    "sha256": "22b8b73b3c2afb80ed8509c4a4f000b95d2e86cbe5919936d2bed059facb95b1"
+  },
+  "schema": "triomics.m7-029-resume-control-blocker",
+  "schema_version": "1.0",
+  "source_commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+  "source_worktree_clean": true
+}

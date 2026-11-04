@@ -37,37 +37,33 @@
   },
   "active_workers": [
     {
-      "agent_id": "/root/m7_029_verification_resume",
-      "role": "Luna verification-only recovery",
-      "status": "stopped_reporting_caller_blocker",
-      "worktree": "/Users/megastore/.codex/worktrees/m7-029-resume-candidate/PML MultiOmics Analysis Pipeline",
-      "candidate_commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
-      "repairs_used": 2,
-      "repairs_remaining": 0,
+      "agent_id": "/root/m7_030_luna",
+      "role": "Luna M7-030 shared caller",
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "effective_settings_exposed": false,
-      "evidence_root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01",
-      "session_id": 98269
+      "status": "initial_RED_preparation",
+      "worktree": "/Users/megastore/.codex/worktrees/m7-030-target-metadata-caller/PML MultiOmics Analysis Pipeline",
+      "base": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+      "repairs_used": 0,
+      "repairs_remaining": 2
     }
   ],
   "orchestration_control": {
-    "status": "M7_030_audited_Luna_dispatch_ready",
+    "status": "M7_030_Luna_initial",
     "last_reconciled": "2026-11-04",
     "active_handoffs": [
       {
-        "agent_id": "/root/m7_029_verification_resume",
-        "role": "Luna verification-only recovery",
-        "status": "stopped_reporting_caller_blocker",
-        "worktree": "/Users/megastore/.codex/worktrees/m7-029-resume-candidate/PML MultiOmics Analysis Pipeline",
-        "candidate_commit": "36547f5c132d1a97d7640607688bd4afea2db8f3",
-        "repairs_used": 2,
-        "repairs_remaining": 0,
+        "agent_id": "/root/m7_030_luna",
+        "role": "Luna M7-030 shared caller",
         "requested_model": "gpt-6-luna",
         "requested_effort": "max",
         "effective_settings_exposed": false,
-        "evidence_root": "/Users/megastore/.triomics-verification/m7-resume-20261104-01",
-        "session_id": 98269
+        "status": "initial_RED_preparation",
+        "worktree": "/Users/megastore/.codex/worktrees/m7-030-target-metadata-caller/PML MultiOmics Analysis Pipeline",
+        "base": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+        "repairs_used": 0,
+        "repairs_remaining": 2
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -6440,6 +6436,27 @@
       "review_ref": "docs/implementation/reviews/2026-11-04-m7-030-scope-astra.md",
       "implementation_allowed": true,
       "milestone_acceptance": false
+    },
+    {
+      "event": "M7_029_verification_closed_M7_030_dispatched",
+      "date": "2026-11-04",
+      "M7_029": "blocked_incomplete_cap_consumed",
+      "review_ref": "docs/implementation/reviews/2026-11-04-m7-029-recovery-close.md",
+      "old_worker": "completed",
+      "new_worker": {
+        "agent_id": "/root/m7_030_luna",
+        "role": "Luna M7-030 shared caller",
+        "requested_model": "gpt-6-luna",
+        "requested_effort": "max",
+        "effective_settings_exposed": false,
+        "status": "initial_RED_preparation",
+        "worktree": "/Users/megastore/.codex/worktrees/m7-030-target-metadata-caller/PML MultiOmics Analysis Pipeline",
+        "base": "36547f5c132d1a97d7640607688bd4afea2db8f3",
+        "repairs_used": 0,
+        "repairs_remaining": 2
+      },
+      "M7": "unreleased",
+      "G7": "unreleased"
     }
   ],
   "packets": {
