@@ -1,6 +1,6 @@
 # M8-D08-S01 — Stage B run-registry collision (scope proposal, revision 1)
 
-Status: proposed; initial Astra scope audit requested changes. This is the one documentation repair before a focused rereview. No implementation, packet acceptance or milestone release. The frozen scientific contracts and all41 packet identities remain unchanged.
+Status: scope audit passed on revision1 at593c89c; Sol reconciled standing bounded-cycle authority in reviews/2026-11-04-d08-s01-scope-rereview.md. Implementation is authorized only on the exact exclusive scope and after the current D-T08 worker returns. No implementation, packet acceptance or milestone release has occurred. The frozen scientific contracts and all41 packet identities remain unchanged.
 
 ## Evidence and scope authority
 

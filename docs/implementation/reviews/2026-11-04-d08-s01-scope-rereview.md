@@ -1,0 +1,9 @@
+# M8-D08-S01 focused scope rereview and authority reconciliation
+
+Fresh read-only Astra-low role `/root/d08_s01_scope_rereview` reviewed immutable593c89c82cc55c49503fe5391eae7fd0a4ef7abe, archive SHA-2562415235136fd8acee04527db427f14b87f6341a441eeddbeea86be6f0f5d90c9. Verdict: audit_pass yes, focused scope only. All four initial findings and the named validation gap were resolved; no remaining blocker within the proposed scope. Effective model/effort was not independently exposed. No implementation or test execution was audited.
+
+Sol reconciles the user's standing authorization for new bounded cycles where needed with the current goal's fixed D-T08 worker boundary. The D-T08 worker still may edit only its seven files. This predecessor compatibility repair receives a separate exclusive four-file scope from the audited record; it changes administrative registry publication, not methods, provenance schema, numerical expectations or scientific scope. Sol owns the shared helper in R/stage_registry.R. A fresh bounded Luna worker may change only the two named B registry call sites and the dedicated shared regression test file after Sol freezes that helper. No silent extra-file edits are permitted.
+
+Proceed serially only after the active D-T08 repair1 worker has returned and been reconciled. Preserve candidate23b5689 and the Sol native RED. Do not integrate unverified report or predecessor code into the canonical checkout. The combined candidate must pass the audited regressions and the real untouched A/B/C/D/report proof before D-T08 acceptance. The earlier manual-registry-removal run remains invalid.
+
+This authorizes an implementation step under the user's existing bounded-cycle instruction; it does not accept D-T08, M8 or G8. M7/G7 retain their historical accepted baseline. G8/G9 remain unreleased, and the future immutable M8 milestone Astra audit is still unconsumed. Conditional and private-data/push restrictions remain unchanged.
