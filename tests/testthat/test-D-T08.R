@@ -767,3 +767,117 @@ testthat::test_that("fixed optional-section provider status is execution status,
   testthat::expect_true(grepl("complete|partial|D_REPORT_CLINICAL_EXPORT_PARTIAL|not_assessed", json))
   testthat::expect_false(grepl("not implemented", paste(html, json)))
 })
+
+testthat::test_that("quoted credentials and one-component absolute paths are withheld from every text export", {
+  unsafe <- c(
+    "/patient.tsv",
+    'password="SYNTH_SECRET_42"',
+    "api_key='SYNTH_KEY_42'",
+    'api_key: "SYNTH_JSON_KEY_42"'
+  )
+  cleaned <- triomics_report_clean_text(unsafe)
+  html <- triomics_report_html_escape(unsafe)
+  tsv <- triomics_report_tsv_text(unsafe)
+  json <- triomics_canonical_json(triomics_report_sanitize_value(list(values = unsafe)))
+  units <- triomics_report_clean_text(c("µmol/L", "mg/dL per kg"))
+
+  testthat::expect_true(all(triomics_report_contains_private_text(unsafe)))
+  testthat::expect_false(any(grepl("/patient[.]tsv|SYNTH_(SECRET|KEY|JSON_KEY)_42",
+                                   c(cleaned, html, tsv, json))))
+  testthat::expect_identical(units, c("µmol/L", "mg/dL per kg"))
+
+  reference <- list(
+    path = "A/assays.json", artifact_type = "assays", artifact_id = "stage-a-assays",
+    payload_sha256 = paste(rep("a", 64), collapse = ""),
+    envelope_path = "A/assays.envelope.json",
+    envelope_sha256 = paste(rep("b", 64), collapse = ""),
+    producer = list(package = "triomics", version = "0.1.0",
+                    commit = 'password="SYNTH_SECRET_42"'),
+    status = "complete"
+  )
+  bundle <- list(artifacts = list(a = reference, b = NULL, c = NULL, d = NULL, clinical = NULL))
+  error <- tryCatch(triomics_report_manifest_sources(bundle), triomics_error = identity)
+
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "D_REPORT_SOURCE_INVALID")
+})
+
+testthat::test_that("nested evaluation completion remains distinct from unavailable single-fit evidence", {
+  sha <- paste(rep("a", 64), collapse = "")
+  integration_id <- "nested-cv-fixture"
+  c_payload <- list(
+    preparation_context_id = "prep-nested",
+    representation_id = "levels",
+    integrations = list(list(
+      integration_id = integration_id, method = "concat_pca", required = TRUE,
+      status = "complete",
+      evaluation = list(mode = "continuous", method = "concat_pca", n_eligible = 8L,
+                        n_predicted = 8L, failed_prediction_count = 0L,
+                        n_ineligible = 0L, total_denominator = 8L)
+    ))
+  )
+  d_payload <- list(
+    immutable_inputs = list(c_artifacts = list(integration_evidence = list(
+      artifact_type = "integration_evidence_bundle", artifact_id = "c06-integration-evidence",
+      payload_file = "integration-evidence.json", payload_sha256 = sha,
+      envelope_file = "integration-evidence.envelope.json", envelope_sha256 = sha
+    ))),
+    inherited_evidence = list(integration_evidence = list(
+      preparation_context_id = "prep-nested", representation_id = "levels",
+      integrations = list(list(
+        schema_version = "2.0", artifact_type = "integration_evidence",
+        integration_id = integration_id, backend = "concat_pca", status = "unavailable",
+        reason_code = "C06_INTEGRATION_RESULT_UNAVAILABLE"
+      ))
+    ))
+  )
+  c_envelope <- list(inputs = list(list(artifact_id = "evaluation-source", sha256 = sha)))
+
+  testthat::expect_no_error(triomics_report_verify_d_source_lineage(
+    NULL, c_payload, c_envelope, d_payload
+  ))
+  testthat::expect_no_error(triomics_report_verify_c_projection(
+    c_payload, c_envelope, d_payload
+  ))
+  rows <- triomics_report_integration_rows(
+    c_payload, list(integration_requirements = list(nested = TRUE)), d_payload, sha
+  )
+  variance <- triomics_report_integration_variance_rows(c_payload)
+
+  testthat::expect_identical(rows$execution_status, "complete")
+  testthat::expect_identical(rows$evaluation_status, "complete")
+  testthat::expect_identical(rows$evaluation_source_path, "C/integration-results.json")
+  testthat::expect_identical(rows$evaluation_source_sha256, sha)
+  testthat::expect_identical(rows$single_fit_status, "unavailable")
+  testthat::expect_identical(rows$single_fit_reason_code, "C06_INTEGRATION_RESULT_UNAVAILABLE")
+  testthat::expect_identical(rows$status, "unavailable")
+  testthat::expect_identical(rows$eligibility_status, "not_reported")
+  testthat::expect_false("n_predicted" %in% names(rows))
+  testthat::expect_equal(nrow(variance), 0L)
+
+  tampered_fit <- c_payload
+  tampered_fit$integrations[[1L]]$result <- list(variance = list(values = list(list(0.5))))
+  error <- tryCatch(triomics_report_verify_d_source_lineage(
+    NULL, tampered_fit, c_envelope, d_payload
+  ), triomics_error = identity)
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "D_REPORT_SOURCE_INVALID")
+})
+
+testthat::test_that("report safe-child lookup accepts a new local child without weakening escape checks", {
+  root <- tempfile("d-t08-safe-child-")
+  dir.create(root)
+  on.exit(unlink(root, recursive = TRUE), add = TRUE)
+  normalized_root <- normalizePath(root, winslash = "/", mustWork = TRUE)
+
+  path <- triomics_report_safe_child(root, "report", "report.output", must_exist = FALSE)
+  traversal <- tryCatch(
+    triomics_report_safe_child(root, "../outside", "report.output", must_exist = FALSE),
+    triomics_error = identity
+  )
+
+  testthat::expect_identical(path, file.path(normalized_root, "report"))
+  testthat::expect_false(file.exists(path))
+  testthat::expect_s3_class(traversal, "triomics_error")
+  testthat::expect_identical(traversal$code, "D_REPORT_PATH_UNSAFE")
+})

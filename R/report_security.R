@@ -18,6 +18,12 @@ triomics_report_safe_child <- function(root, relative, key, must_exist = TRUE) {
   root <- normalizePath(root, winslash = "/", mustWork = TRUE)
   path <- triomics_d_secure_path(file.path(root, relative), "D_REPORT_PATH_UNSAFE",
                                  "A report path crosses a symbolic link or escapes its root.", key)
+  # The shared secure-path helper can spell a nonexistent Unix child as //Users/...
+  # because it joins the first component to /. Canonicalize that spelling only
+  # when the verified root itself has the ordinary single-root form.
+  if (startsWith(root, "/") && !startsWith(root, "//") && startsWith(path, "//")) {
+    path <- sub("^/+", "/", path)
+  }
   prefix <- if (endsWith(root, "/")) root else paste0(root, "/")
   if (!(identical(path, root) || startsWith(path, prefix)) ||
       (must_exist && (!file.exists(path) || dir.exists(path)))) {
@@ -36,13 +42,13 @@ triomics_report_clean_text <- function(value) {
     "(?i)(?<![[:alnum:]_])[A-Z]:[\\\\/][^,;<>\\\"'[:cntrl:]]+",
     "(?<![[:alnum:]_])\\\\\\\\[^/\\\\[:space:]]+[\\\\/][^,;<>\\\"'[:cntrl:]]+",
     "(?<![:/])//[^/[:space:]]+/[^,;<>\\\"'[:cntrl:]]+",
-    "(?<![/:[:alnum:]_.-])/(?:[^/[:space:],;<>\\\"']+/)+[^,;<>\\\"'[:cntrl:]]+"
+    "(?<![/:[:alnum:]_.-])/(?:[^/[:space:],;<>\\\"']+/)*[^/[:space:],;<>\\\"'[:cntrl:]]+"
   )
   for (pattern in path_patterns) {
     value <- gsub(pattern, "[redacted local path]", value, perl = TRUE)
   }
   credential_patterns <- c(
-    "(?i)\\b(?:password|passwd|secret|token|api[_-]?key|authorization|credential)\\s*[:=]\\s*(?:bearer\\s+)?[^,;[:space:]<>\\\"']+",
+    "(?i)\\b(?:password|passwd|secret|token|api[_-]?key|authorization|credential)[\\\"']?\\s*[:=]\\s*(?:(?:bearer\\s+)?\\\"[^\\\"[:cntrl:]]*\\\"|(?:bearer\\s+)?'[^'[:cntrl:]]*'|(?:bearer\\s+)?[^,;[:space:]<>\\\"']+)",
     "(?i)\\bbearer\\s+[A-Za-z0-9._~+/-]+=*"
   )
   for (pattern in credential_patterns) {
@@ -59,10 +65,10 @@ triomics_report_contains_private_text <- function(value) {
     "(?i)(?<![[:alnum:]_])[A-Z]:[\\\\/][^,;<>\\\"'[:cntrl:]]+",
     "(?<![[:alnum:]_])\\\\\\\\[^/\\\\[:space:]]+[\\\\/][^,;<>\\\"'[:cntrl:]]+",
     "(?<![:/])//[^/[:space:]]+/[^,;<>\\\"'[:cntrl:]]+",
-    "(?<![/:[:alnum:]_.-])/(?:[^/[:space:],;<>\\\"']+/)+[^,;<>\\\"'[:cntrl:]]+"
+    "(?<![/:[:alnum:]_.-])/(?:[^/[:space:],;<>\\\"']+/)*[^/[:space:],;<>\\\"'[:cntrl:]]+"
   )
   credential_patterns <- c(
-    "(?i)\\b(?:password|passwd|secret|token|api[_-]?key|authorization|credential)\\s*[:=]\\s*(?:bearer\\s+)?[^,;[:space:]<>\\\"']+",
+    "(?i)\\b(?:password|passwd|secret|token|api[_-]?key|authorization|credential)[\\\"']?\\s*[:=]\\s*(?:(?:bearer\\s+)?\\\"[^\\\"[:cntrl:]]*\\\"|(?:bearer\\s+)?'[^'[:cntrl:]]*'|(?:bearer\\s+)?[^,;[:space:]<>\\\"']+)",
     "(?i)\\bbearer\\s+[A-Za-z0-9._~+/-]+=*"
   )
   vapply(value, function(item) {

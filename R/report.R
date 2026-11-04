@@ -346,6 +346,41 @@ triomics_report_bundle_from_root <- function(output_root, config_path) {
   bundle
 }
 
+triomics_report_evaluation_status <- function(evaluation) {
+  if (!is.list(evaluation)) return("not_reported")
+  count_names <- c("n_eligible", "n_predicted", "failed_prediction_count",
+                   "n_ineligible", "total_denominator")
+  values <- lapply(count_names, function(name) evaluation[[name]])
+  names(values) <- count_names
+  if (any(!vapply(values, function(value) {
+    is.numeric(value) && length(value) == 1L && !is.na(value) && is.finite(value) && value >= 0
+  }, logical(1)))) return("not_reported")
+  counts <- vapply(values, as.numeric, numeric(1))
+  if (counts[["n_predicted"]] > counts[["n_eligible"]] ||
+      counts[["n_eligible"]] > counts[["total_denominator"]] ||
+      counts[["n_ineligible"]] > counts[["total_denominator"]] ||
+      counts[["n_eligible"]] + counts[["n_ineligible"]] != counts[["total_denominator"]] ||
+      counts[["failed_prediction_count"]] > counts[["n_eligible"]] - counts[["n_predicted"]]) {
+    return("not_reported")
+  }
+  if (counts[["n_predicted"]] > 0 &&
+      counts[["n_predicted"]] == counts[["total_denominator"]] &&
+      counts[["n_eligible"]] == counts[["total_denominator"]] &&
+      counts[["failed_prediction_count"]] == 0 && counts[["n_ineligible"]] == 0) {
+    return("complete")
+  }
+  if (counts[["n_predicted"]] > 0) "partial" else "failed"
+}
+
+triomics_report_c_evaluation_only <- function(c_item, evidence) {
+  is.list(c_item) && is.list(evidence) &&
+    identical(as.character(c_item$status), "complete") &&
+    is.null(c_item$result) && is.null(evidence$native_artifact_ref) &&
+    identical(as.character(evidence$status), "unavailable") &&
+    identical(as.character(evidence$reason_code), "C06_INTEGRATION_RESULT_UNAVAILABLE") &&
+    triomics_report_evaluation_status(c_item$evaluation) %in% c("complete", "partial", "failed")
+}
+
 triomics_report_verify_d_source_lineage <- function(b_reference, c_payload, c_envelope, d_payload) {
   immutable <- d_payload$immutable_inputs
   b_source <- immutable$b_artifacts$block_results
@@ -408,6 +443,7 @@ triomics_report_verify_d_source_lineage <- function(b_reference, c_payload, c_en
     reference <- evidence$native_artifact_ref
     c_item <- c_integrations[[match(id, c_ids)]]
     if (identical(as.character(c_item$status), "complete")) {
+      if (triomics_report_c_evaluation_only(c_item, evidence)) next
       if (!is.list(reference) || !triomics_d_nonempty_string(reference$artifact_id) ||
           !triomics_sha256_text(as.character(reference$sha256)) ||
           !any(vapply(input_pairs, function(input) {
@@ -509,7 +545,10 @@ triomics_report_verify_c_projection <- function(c_payload, c_envelope, d_payload
   for (integration in c_integrations) {
     id <- triomics_report_identifier(integration, "integration_id")
     evidence <- d_integrations[[match(id, d_ids)]]
-    if (!identical(as.character(integration$status), as.character(evidence$status)) ||
+    evaluation_only <- triomics_report_c_evaluation_only(integration, evidence)
+    status_matches <- identical(as.character(integration$status), as.character(evidence$status)) ||
+      evaluation_only
+    if (!status_matches ||
         !identical(as.character(integration$method), as.character(evidence$backend))) {
       triomics_report_abort("D_REPORT_SOURCE_INVALID",
                             "A C integration status or method differs from the D hash-bound evidence.",
@@ -518,7 +557,7 @@ triomics_report_verify_c_projection <- function(c_payload, c_envelope, d_payload
     result <- integration$result %||% list()
     common <- evidence$common %||% list()
     parameters <- common$parameters %||% list()
-    if (identical(as.character(integration$status), "complete")) {
+    if (identical(as.character(integration$status), "complete") && !evaluation_only) {
       d_context <- evidence$context %||% list()
       if (!identical(triomics_report_identifier_value(d_context$preparation_context_id,
                                                       paste0("D.", id, ".preparation_context_id")),
@@ -1072,12 +1111,16 @@ triomics_report_clinical_rows <- function(payload) {
   result[, columns, drop = FALSE]
 }
 
-triomics_report_integration_rows <- function(payload, config, d = list()) {
+triomics_report_integration_rows <- function(payload, config, d = list(), c_payload_sha256 = "") {
   integrations <- payload$integrations %||% list()
   if (!is.list(integrations)) {
     triomics_report_abort("D_REPORT_SOURCE_INVALID", "C integration results are not a typed record array.",
                           "C.integrations")
   }
+  d_integrations <- d$inherited_evidence$integration_evidence$integrations %||% list()
+  d_ids <- if (is.list(d_integrations)) vapply(seq_along(d_integrations), function(index) {
+    triomics_report_identifier(d_integrations[[index]], "integration_id")
+  }, character(1)) else character()
   records <- lapply(integrations, function(integration) {
     result <- integration$result %||% list()
     variance <- result$variance %||% list()
@@ -1087,6 +1130,13 @@ triomics_report_integration_rows <- function(payload, config, d = list()) {
     selected <- result$selected %||% list()
     selected_count <- sum(vapply(selected, function(items) if (is.list(items)) length(items) else 0L, integer(1)))
     integration_id <- triomics_report_identifier(integration, "integration_id")
+    evidence_index <- match(integration_id, d_ids)
+    evidence <- if (is.na(evidence_index)) NULL else d_integrations[[evidence_index]]
+    execution_status <- triomics_report_identifier(integration, "status", "unavailable")
+    single_fit_status <- triomics_report_identifier(
+      evidence, "status",
+      if (!is.null(integration$result)) execution_status else "unavailable"
+    )
     comparisons <- d$inherited_evidence$integration_comparisons %||% d$integration_comparisons %||% list()
     comparison_status <- as.character(comparisons$status %||% comparisons$comparisons$status %||% "unavailable")
     pairs <- comparisons$pairs %||% comparisons$comparisons$pairs %||% list()
@@ -1095,9 +1145,17 @@ triomics_report_integration_rows <- function(payload, config, d = list()) {
     list(
       integration_id = integration_id,
       method = triomics_report_identifier(integration, "method", "not_reported"),
-      status = triomics_report_identifier(integration, "status", "unavailable"),
+      status = single_fit_status,
+      execution_status = execution_status,
+      evaluation_status = triomics_report_evaluation_status(integration$evaluation),
+      evaluation_source_path = "C/integration-results.json",
+      evaluation_source_sha256 = if (triomics_sha256_text(as.character(c_payload_sha256))) {
+        as.character(c_payload_sha256)
+      } else "not_reported",
+      single_fit_status = single_fit_status,
+      single_fit_reason_code = triomics_report_identifier(evidence, "reason_code", "not_reported"),
       required = triomics_report_requirement(config$integration_requirements, integration_id),
-      eligibility_status = if (rank_available && identical(as.character(integration$status), "complete")) {
+      eligibility_status = if (rank_available && identical(single_fit_status, "complete")) {
         "source_reported_eligible"
       } else "not_reported",
       training_unit_count = triomics_report_number(rank, "training_unit_count"),
@@ -1124,7 +1182,9 @@ triomics_report_integration_rows <- function(payload, config, d = list()) {
   })
   if (!length(records)) {
     return(triomics_report_empty_frame(
-      c("integration_id", "method", "status", "required", "eligibility_status",
+      c("integration_id", "method", "status", "execution_status", "evaluation_status",
+        "evaluation_source_path", "evaluation_source_sha256", "single_fit_status",
+        "single_fit_reason_code", "required", "eligibility_status",
         "training_unit_count", "maximum_centered_rank", "numerical_rank", "requested_components",
         "rank_disposition", "preparation_context_id", "representation_id", "selection_rule",
         "selected_feature_count", "retained_components", "stability_status",
@@ -1807,7 +1867,9 @@ triomics_report_project <- function(loaded, config, quarto_version) {
   clinical <- if (is.null(loaded$payloads$clinical)) {
     triomics_report_clinical_rows(list(results = list()))
   } else triomics_report_clinical_rows(loaded$payloads$clinical)
-  integrations <- triomics_report_integration_rows(loaded$payloads$c, config, loaded$d)
+  integrations <- triomics_report_integration_rows(
+    loaded$payloads$c, config, loaded$d, loaded$artifacts$c$payload_sha256
+  )
   integration_variance <- triomics_report_integration_variance_rows(loaded$payloads$c)
   integration_eligibility <- triomics_report_integration_eligibility_rows(loaded$payloads$c)
   routes <- triomics_report_route_rows(loaded$d, config)
@@ -1991,6 +2053,7 @@ triomics_report_render_content <- function(data, plot_html) {
     "<section><h2>Source-reported effect plot</h2><p>Panels separate effect units. Error bars show source-reported standard errors when available and are not confidence intervals. The results table carries family, context, sample counts, and byte-hash lineage.</p>",
     plot_html, "</section>",
     "<section><h2>Integration eligibility, variance, selection, and stability</h2>",
+    "<p>Evaluation status is derived from the saved C result export and its listed payload SHA. Evaluation execution and single-fit integration evidence are reported separately; an evaluation can complete while single-fit results and variance remain unavailable.</p>",
     triomics_report_html_table(data$integrations, integration_columns),
     triomics_report_html_table(data$integration_eligibility),
     triomics_report_html_table(data$integration_variance),
