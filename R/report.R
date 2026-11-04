@@ -353,10 +353,12 @@ triomics_report_evaluation_status <- function(evaluation) {
   values <- lapply(count_names, function(name) evaluation[[name]])
   names(values) <- count_names
   if (any(!vapply(values, function(value) {
-    is.numeric(value) && length(value) == 1L && !is.na(value) && is.finite(value) && value >= 0
+    is.numeric(value) && length(value) == 1L && !is.na(value) && is.finite(value) &&
+      value >= 0 && value == floor(value)
   }, logical(1)))) return("not_reported")
   counts <- vapply(values, as.numeric, numeric(1))
   if (counts[["n_predicted"]] > counts[["n_eligible"]] ||
+      counts[["n_eligible"]] != counts[["n_predicted"]] + counts[["failed_prediction_count"]] ||
       counts[["n_eligible"]] > counts[["total_denominator"]] ||
       counts[["n_ineligible"]] > counts[["total_denominator"]] ||
       counts[["n_eligible"]] + counts[["n_ineligible"]] != counts[["total_denominator"]] ||

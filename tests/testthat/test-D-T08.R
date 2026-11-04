@@ -28,11 +28,52 @@ testthat::test_that("the report resolves the source-checkout Quarto template", {
   testthat::expect_true(is.function(template_path))
   if (!is.function(template_path)) return(invisible(NULL))
 
+  source_root <- normalizePath(testthat::test_path("..", ".."),
+                               winslash = "/", mustWork = TRUE)
+  old_options <- options(triomics.source_root = source_root)
+  on.exit(options(old_options), add = TRUE)
+
   resolved <- normalizePath(template_path(), winslash = "/", mustWork = TRUE)
   expected <- normalizePath(triomics_test_resource("report", "triomics.qmd"),
                             winslash = "/", mustWork = TRUE)
+  styles <- normalizePath(triomics_report_styles_path(), winslash = "/", mustWork = TRUE)
 
   testthat::expect_identical(resolved, expected)
+  testthat::expect_identical(styles, normalizePath(triomics_test_resource("report", "styles.css"),
+                                                   winslash = "/", mustWork = TRUE))
+})
+
+testthat::test_that("the report template lookup supports installed package resource layout", {
+  package_root <- tempfile("d-t08-installed-package-")
+  report_dir <- file.path(package_root, "report")
+  sections_dir <- file.path(report_dir, "sections")
+  dir.create(sections_dir, recursive = TRUE)
+  on.exit(unlink(package_root, recursive = TRUE), add = TRUE)
+  file.copy(triomics_test_resource("report", "triomics.qmd"), report_dir)
+  file.copy(triomics_test_resource("report", "styles.css"), report_dir)
+  target_section <- file.path(sections_dir, "targets.qmd")
+  writeLines("{{< include targets-content.html >}}", target_section, useBytes = TRUE)
+  installed_lookup <- triomics_report_installed_resource_path
+
+  installed_template <- installed_lookup("triomics.qmd", package_root)
+  installed_styles <- installed_lookup("styles.css", package_root)
+  installed_targets <- installed_lookup(file.path("sections", "targets.qmd"), package_root)
+  template_lookup <- triomics_report_template_path
+  template_environment <- new.env(parent = environment(template_lookup))
+  assign("triomics_report_source_resource_path", function(relative_path) "",
+         envir = template_environment)
+  assign("triomics_report_installed_resource_path", function(relative_path) {
+    installed_lookup(relative_path, package_root)
+  }, envir = template_environment)
+  environment(template_lookup) <- template_environment
+
+  testthat::expect_identical(installed_template, normalizePath(
+    file.path(report_dir, "triomics.qmd"), winslash = "/", mustWork = TRUE))
+  testthat::expect_identical(installed_styles, normalizePath(
+    file.path(report_dir, "styles.css"), winslash = "/", mustWork = TRUE))
+  testthat::expect_identical(installed_targets, normalizePath(
+    target_section, winslash = "/", mustWork = TRUE))
+  testthat::expect_identical(template_lookup(), installed_template)
 })
 
 testthat::test_that("a valid artifact envelope must bind the exact fixed payload bytes", {
@@ -854,6 +895,16 @@ testthat::test_that("nested evaluation completion remains distinct from unavaila
   testthat::expect_identical(rows$eligibility_status, "not_reported")
   testthat::expect_false("n_predicted" %in% names(rows))
   testthat::expect_equal(nrow(variance), 0L)
+
+  malformed <- c_payload
+  malformed$integrations[[1L]]$evaluation$n_predicted <- 7L
+  testthat::expect_identical(triomics_report_evaluation_status(
+    malformed$integrations[[1L]]$evaluation
+  ), "not_reported")
+  malformed$integrations[[1L]]$evaluation$n_predicted <- 7.5
+  testthat::expect_identical(triomics_report_evaluation_status(
+    malformed$integrations[[1L]]$evaluation
+  ), "not_reported")
 
   tampered_fit <- c_payload
   tampered_fit$integrations[[1L]]$result <- list(variance = list(values = list(list(0.5))))

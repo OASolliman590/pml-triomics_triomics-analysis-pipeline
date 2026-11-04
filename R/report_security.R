@@ -94,42 +94,60 @@ triomics_report_tsv_text <- function(value) {
   value
 }
 
-triomics_report_template_path <- function() {
+triomics_report_source_resource_path <- function(relative_path) {
+  option_root <- getOption("triomics.source_root", "")
+  if (is.character(option_root) && length(option_root) == 1L && !is.na(option_root) &&
+      nzchar(option_root)) {
+    source_root <- tryCatch(normalizePath(option_root, winslash = "/", mustWork = TRUE),
+                            error = function(error) "")
+    if (nzchar(source_root) && file.exists(file.path(source_root, "DESCRIPTION")) &&
+        dir.exists(file.path(source_root, "R"))) {
+      candidate <- file.path(source_root, "inst", "report", relative_path)
+      if (file.exists(candidate) && !dir.exists(candidate) && !triomics_is_symlink(candidate)) {
+        return(normalizePath(candidate, winslash = "/", mustWork = TRUE))
+      }
+    }
+  }
   namespace_root <- tryCatch(
     normalizePath(getNamespaceInfo(asNamespace("triomics"), "path"),
                   winslash = "/", mustWork = TRUE),
     error = function(error) ""
   )
-  source_path <- if (nzchar(namespace_root)) {
-    file.path(namespace_root, "inst", "report", "triomics.qmd")
+  namespace_source <- if (nzchar(namespace_root)) {
+    file.path(namespace_root, "inst", "report", relative_path)
   } else ""
-  if (nzchar(source_path) && file.exists(source_path) && !dir.exists(source_path)) {
-    return(normalizePath(source_path, winslash = "/", mustWork = TRUE))
+  if (nzchar(namespace_source) && file.exists(namespace_source) && !dir.exists(namespace_source) &&
+      !triomics_is_symlink(namespace_source)) {
+    return(normalizePath(namespace_source, winslash = "/", mustWork = TRUE))
   }
-  installed_path <- system.file("report", "triomics.qmd", package = "triomics")
-  if (nzchar(installed_path) && file.exists(installed_path) && !dir.exists(installed_path)) {
-    return(normalizePath(installed_path, winslash = "/", mustWork = TRUE))
+  ""
+}
+
+triomics_report_installed_resource_path <- function(relative_path,
+                                                    package_root = system.file(package = "triomics")) {
+  if (!is.character(package_root) || length(package_root) != 1L || is.na(package_root) ||
+      !nzchar(package_root) || !dir.exists(package_root)) return("")
+  candidate <- file.path(package_root, "report", relative_path)
+  if (file.exists(candidate) && !dir.exists(candidate) && !triomics_is_symlink(candidate)) {
+    return(normalizePath(candidate, winslash = "/", mustWork = TRUE))
   }
+  ""
+}
+
+triomics_report_template_path <- function() {
+  source_path <- triomics_report_source_resource_path(file.path("triomics.qmd"))
+  if (nzchar(source_path)) return(source_path)
+  installed_path <- triomics_report_installed_resource_path("triomics.qmd")
+  if (nzchar(installed_path)) return(installed_path)
   triomics_report_abort("D_REPORT_TEMPLATE_MISSING", "The packaged Quarto report template is unavailable.",
                         "report.template")
 }
 
 triomics_report_styles_path <- function() {
-  namespace_root <- tryCatch(
-    normalizePath(getNamespaceInfo(asNamespace("triomics"), "path"),
-                  winslash = "/", mustWork = TRUE),
-    error = function(error) ""
-  )
-  source_path <- if (nzchar(namespace_root)) {
-    file.path(namespace_root, "inst", "report", "styles.css")
-  } else ""
-  if (nzchar(source_path) && file.exists(source_path) && !dir.exists(source_path)) {
-    return(normalizePath(source_path, winslash = "/", mustWork = TRUE))
-  }
-  installed_path <- system.file("report", "styles.css", package = "triomics")
-  if (nzchar(installed_path) && file.exists(installed_path) && !dir.exists(installed_path)) {
-    return(normalizePath(installed_path, winslash = "/", mustWork = TRUE))
-  }
+  source_path <- triomics_report_source_resource_path(file.path("styles.css"))
+  if (nzchar(source_path)) return(source_path)
+  installed_path <- triomics_report_installed_resource_path("styles.css")
+  if (nzchar(installed_path)) return(installed_path)
   triomics_report_abort("D_REPORT_TEMPLATE_MISSING", "The packaged report stylesheet is unavailable.",
                         "report.styles")
 }
@@ -141,21 +159,10 @@ triomics_report_section_template_path <- function(section) {
                           "report.section")
   }
   filename <- paste0(section, ".qmd")
-  namespace_root <- tryCatch(
-    normalizePath(getNamespaceInfo(asNamespace("triomics"), "path"),
-                  winslash = "/", mustWork = TRUE),
-    error = function(error) ""
-  )
-  source_path <- if (nzchar(namespace_root)) {
-    file.path(namespace_root, "inst", "report", "sections", filename)
-  } else ""
-  if (nzchar(source_path) && file.exists(source_path) && !dir.exists(source_path)) {
-    return(normalizePath(source_path, winslash = "/", mustWork = TRUE))
-  }
-  installed_path <- system.file("report", "sections", filename, package = "triomics")
-  if (nzchar(installed_path) && file.exists(installed_path) && !dir.exists(installed_path)) {
-    return(normalizePath(installed_path, winslash = "/", mustWork = TRUE))
-  }
+  source_path <- triomics_report_source_resource_path(file.path("sections", filename))
+  if (nzchar(source_path)) return(source_path)
+  installed_path <- triomics_report_installed_resource_path(file.path("sections", filename))
+  if (nzchar(installed_path)) return(installed_path)
   ""
 }
 
