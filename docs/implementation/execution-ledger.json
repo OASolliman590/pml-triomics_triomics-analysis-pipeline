@@ -37,11 +37,11 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D13_extra1_closed_blocked",
+    "status": "D13_extra2_dispatch_prepared",
     "last_reconciled": "2026-11-05T19:20:57.893892+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "All run-owned workers/processes terminal; no child sidebar chats or polling. D13 not integrated; extra allowance exhausted.",
+    "disposition": "fresh Luna one-extra two-file privacy repair, local reviews, independent verification, fresh Astra; G8/G9 closed",
     "current_gate": {
       "status": "D13_packet_blocked_privacy",
       "candidate": "7f50b14c95a9f563f646b842004318552033089d",
@@ -8686,14 +8686,14 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "blocked_after_explicit_extra_repair",
+      "status": "extra2_dispatch_prepared",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": [
         "D13-EXTRA1-PRIVACY-01 P1: numeric prose whitelist permits direct identifier strings; parent reproduced, both local reviews and fresh Astra fail. Original initial1+repairs2 and explicit extra1 consumed."
       ],
-      "repair_attempts": 3,
+      "repair_attempts": 4,
       "implementation_base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
       "active_worker": null,
       "accepted": false,
@@ -8726,16 +8726,14 @@
         "receipt_ref": "docs/implementation/evidence/2026-11-04-d-t13-close/blocked-receipt.json"
       },
       "authorized_additional_repair": {
+        "episode": 2,
         "allowed": 1,
         "used": 1,
-        "reason": "numeric construction/selection lineage lost by prose filter",
-        "dispatch_ref": "docs/implementation/reviews/2026-11-05-d13-numeric-exception-dispatch.md",
-        "accepted": false,
-        "worker_commit": "7f50b14c95a9f563f646b842004318552033089d",
-        "status": "consumed_blocked",
-        "review_ref": "docs/implementation/reviews/2026-11-05-d13-extra-repair-blocked-close.md"
+        "reason": "D13-EXTRA1-PRIVACY-01 identifier leakage while preserving numeric lineage",
+        "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-privacy-exception-dispatch.md",
+        "accepted": false
       },
-      "next_transition": "D13 extra1 is blocked at candidate 7f50b14. Preserve its original initial attempt, two repairs and consumed extra repair. Do not redispatch Luna or integrate this candidate. A separately authorized bounded follow-up must close D13-EXTRA1-PRIVACY-01 while preserving numeric scientific lineage, then pass independent review, source/installed/native report verification and fresh Astra. Do not reopen accepted D15 or release G8/G9.",
+      "next_transition": "fresh Luna one-extra two-file privacy repair, local reviews, independent verification, fresh Astra; G8/G9 closed",
       "extra_candidate": "7f50b14c95a9f563f646b842004318552033089d",
       "source_counts_producer": "worker, not parent acceptance",
       "final_local_review": {
@@ -8744,7 +8742,19 @@
         "Sol": "privacy_probe_failed",
         "Astra": "audit_pass_no"
       },
-      "final_snapshot_commit": "7f50b14c95a9f563f646b842004318552033089d"
+      "final_snapshot_commit": "7f50b14c95a9f563f646b842004318552033089d",
+      "additional_repair_history": [
+        {
+          "allowed": 1,
+          "used": 1,
+          "reason": "numeric construction/selection lineage lost by prose filter",
+          "dispatch_ref": "docs/implementation/reviews/2026-11-05-d13-numeric-exception-dispatch.md",
+          "accepted": false,
+          "worker_commit": "7f50b14c95a9f563f646b842004318552033089d",
+          "status": "consumed_blocked",
+          "review_ref": "docs/implementation/reviews/2026-11-05-d13-extra-repair-blocked-close.md"
+        }
+      ]
     },
     "D-T15": {
       "status": "accepted_synthetic_software_evidence",
@@ -9061,7 +9071,7 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D13_extra1_closed_blocked_G8_G9_closed",
+  "close_state": "D13_extra2_authorized_active_G8_G9_closed",
   "D13_extra_repair1_orchestration": {
     "worker": {
       "agent": "/root/d13_numeric_extra1_luna",

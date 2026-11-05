@@ -1,3 +1,11 @@
+# Current checkpoint: D13 privacy repair extra2 authorized
+
+Read [the dispatch](reviews/2026-11-06-d13-privacy-exception-dispatch.md). Omar authorized one more two-file D13 repair. Original initial1+repairs2 and extra1 stay preserved; this is extra2, total repair4. Candidate7f50b14 remains untouched. Five scientific-lineage controls passed and eleven identifier forms failed the pre-edit actual-producer/HTML probe. Fresh isolated Luna will address the evidenced grammar. G8/G9 stay closed.
+
+Literal resume: **Join the recorded extra2 Luna worker; do not redispatch or reset attempts. Inspect its immutable result, independently verify privacy and numeric lineage, run qualified focused/installed/native report gates, obtain fresh read-only Astra, and stop at the D13 receipt. No M8 or D09.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D13 extra repair closed blocked
 
 Read [the blocked close receipt](reviews/2026-11-05-d13-extra-repair-blocked-close.md) and [fresh Astra failure](reviews/2026-11-05-d13-extra-repair-astra.md). Candidate `7f50b14c95a9f563f646b842004318552033089d` fixes numeric scientific lineage but leaks colon-space identifier text in Sol's actual-producer probe. Both local reviews changes_required P1; Astra audit_pass no. Worker source395 pass, zero fail/error/warn/skip,59 blocks. This is not acceptance. No parent source/installed/native/package gate ran after privacy failure; no D13 integration. Original initial1+repairs2 and explicit extra1 all consumed. D08/D15 and M7/G7 remain accepted. G8/G9 closed. All owned workers/processes terminal; no sidebar children or polling. Protected dirt preserved.
