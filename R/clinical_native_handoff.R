@@ -567,9 +567,17 @@ triomics_cnh_public_dictionary_coverage <- function(clinical) {
   safe_dispositions <- c("placeholder", "not_applicable", "unavailable", "below_detection",
                          "censored", "missing", "not_collected")
   variable_projection <- lapply(visible, function(variable) {
-    dispositions <- as.character(unlist(variable$missing_map, use.names = FALSE))
-    dispositions <- sort(unique(dispositions[dispositions %in% safe_dispositions]), method = "radix")
-    unsupported_count <- as.integer(length(setdiff(unique(dispositions), safe_dispositions)))
+    missing_map <- variable$missing_map
+    declared_dispositions <- as.character(unlist(lapply(missing_map, function(value) {
+      if (is.null(value)) NA_character_ else value
+    }), recursive = TRUE, use.names = FALSE))
+    unsupported_dispositions <- unique(declared_dispositions[
+      is.na(declared_dispositions) | !declared_dispositions %in% safe_dispositions
+    ])
+    dispositions <- sort(unique(declared_dispositions[
+      !is.na(declared_dispositions) & declared_dispositions %in% safe_dispositions
+    ]), method = "radix")
+    unsupported_count <- as.integer(length(unsupported_dispositions))
     missingness_rules <- if (length(variable$missing_map)) {
       list(
         mapped_dispositions = as.list(dispositions),
