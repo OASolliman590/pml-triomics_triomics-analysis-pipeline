@@ -1,3 +1,11 @@
+# Current checkpoint: one explicit extra D13 repair authorized
+
+Read [the dispatch](reviews/2026-11-05-d13-numeric-exception-dispatch.md). D13 original initial1+repairs2 remains exhausted. Omar authorized exactly one additional repair for numeric construction/selection lineage with privacy preserved. Fresh isolated Luna receives only R/report_targets.R and its D13 tests. Original37663a1 and accepted D15 at3a7f996/f92b8a2 are preserved. No further repair or G8/G9 release.
+
+Literal resume: **Join the recorded D13 exception worker; do not redispatch. Review its frozen result and independently verify producer-backed reproduction, source/installed/native report gates, then fresh read-only Astra if those pass. Stop at the bounded receipt.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D15 accepted, G8/G9 closed
 
 Read [Sol acceptance](reviews/2026-11-05-d15-sol-acceptance.md) and [fresh Astra](reviews/2026-11-05-d15-extra-repair-astra.md). Exact integrated product3a7f996 passed independent source283 and installed283, both zero failure/error/warning/skip,48blocks, native A/C/B/C/D/report and saved-value/hash/offline/privacy checks. The original absence reproduction now refuses. Parser-only HTML whitespace correction is disclosed; no product repair or native rerun for it. Original initial1+repairs2 and explicit extra1 all consumed. No full M8 package Status claimed. All workers/processes terminal, no child chats/polling. Protected dirt preserved.

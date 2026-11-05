@@ -37,11 +37,11 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D15_accepted_bounded_run_closed",
+    "status": "D13_extra1_dispatch_prepared",
     "last_reconciled": "2026-11-05T18:11:04.938354+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Stop at this D15 receipt. D13 still needs a separately authorized bounded follow-up for its numeric-lineage blocker. M8 documentation, full clean-archive package Status: OK and fresh milestone Astra remain required before G8; D09/M9 remain gated.",
+    "disposition": "fresh Luna one-extra two-file repair, local reviews, independent proofs, fresh Astra; no further repair or G8/G9 release",
     "current_gate": {
       "status": "D15_packet_accepted",
       "candidate": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
@@ -8671,14 +8671,14 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "blocked_at_repair_cap",
+      "status": "authorized_extra_repair1_dispatch_prepared",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": [
         "Final P2: alphabetic-only prose filter silently drops numeric scientific construction/selection lineage. Both repairs consumed."
       ],
-      "repair_attempts": 2,
+      "repair_attempts": 3,
       "implementation_base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
       "active_worker": null,
       "accepted": false,
@@ -8702,7 +8702,21 @@
         "Resolve blocked AC2 under lawful future authority",
         "Parent independent final native/report readback",
         "M8 milestone gates"
-      ]
+      ],
+      "original_bounded_run": {
+        "attempts": 1,
+        "repairs": 2,
+        "candidate": "37663a12d285ee4cbc68146a40342caaed513c15",
+        "receipt_ref": "docs/implementation/evidence/2026-11-04-d-t13-close/blocked-receipt.json"
+      },
+      "authorized_additional_repair": {
+        "allowed": 1,
+        "used": 1,
+        "reason": "numeric construction/selection lineage lost by prose filter",
+        "dispatch_ref": "docs/implementation/reviews/2026-11-05-d13-numeric-exception-dispatch.md",
+        "accepted": false
+      },
+      "next_transition": "fresh Luna one-extra two-file repair, local reviews, independent proofs, fresh Astra; no further repair or G8/G9 release"
     },
     "D-T15": {
       "status": "accepted_synthetic_software_evidence",
@@ -9019,5 +9033,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D15_accepted_G8_G9_closed_D13_blocked"
+  "close_state": "D13_authorized_extra_repair1_active_G8_G9_closed"
 }
