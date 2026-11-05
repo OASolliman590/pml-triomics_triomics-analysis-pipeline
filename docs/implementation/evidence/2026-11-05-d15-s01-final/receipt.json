@@ -1,0 +1,732 @@
+{
+  "status": "scoped_predecessors_verified_integrated",
+  "product_commit": "ee434483bf852724c1dbb38d0fa8b710ea7c59cc",
+  "archive_sha256": "2243282ddd02cff0d73f88115153232137a684c8de2cef459d9e67816b5f39ad",
+  "source": {
+    "command": "Rscript --vanilla '<local-proof-root>/scripts/run-source-unbounded-report.R' '<immutable-source-root>' '<local-proof-root>/d15-s01/sol-reconnected-ee43448/source' 'B-T07|B-T08|C-06|C-08-shared|D-T01|clinical-native-handoff'",
+    "exit_code": 0,
+    "counts": {
+      "pass": 1909,
+      "fail": 0,
+      "error": 0,
+      "warn": 1,
+      "skip": 0,
+      "blocks": 113
+    },
+    "by_file": {
+      "test-B-T07.R": {
+        "pass": 505,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 33
+      },
+      "test-B-T08.R": {
+        "pass": 328,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 13
+      },
+      "test-C-06-shared.R": {
+        "pass": 362,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 12
+      },
+      "test-C-06.R": {
+        "pass": 87,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 10
+      },
+      "test-C-08-shared.R": {
+        "pass": 96,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 14
+      },
+      "test-clinical-native-handoff.R": {
+        "pass": 125,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 11
+      },
+      "test-D-T01.R": {
+        "pass": 406,
+        "fail": 0,
+        "error": 0,
+        "warn": 1,
+        "skip": 0,
+        "blocks": 20
+      }
+    },
+    "conditions": [
+      {
+        "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+        "file": "test-D-T01.R",
+        "type": "expectation_warning",
+        "message": "running command ''<R-home>/bin/Rscript' --vanilla 'triomics' --config '<local-proof-root>/d15-s01/runtime-tmp/Rtmp0NUIeW/d-t01-paired-native-fixture-dfea58fd523e/tickets/d-t01-paired-sign-stale-dfeae603eab.yaml' --stage 'D' --output '<local-proof-root>/d15-s01/runtime-tmp/Rtmp0NUIeW/d-t01-paired-native-output-dfea5f229216' 2>&1' had status 2"
+      }
+    ]
+  },
+  "native": {
+    "phase": "native_chain_and_hash_readback_passed",
+    "commands": [
+      {
+        "label": "fresh_original_C08",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "<immutable-source-root>/inst/examples/tickets/C-08.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/fresh-c08"
+        ],
+        "exit_code": 0,
+        "log": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/fresh_original_C08.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "A",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/fixture/clinical-between.yaml",
+          "--stage",
+          "A",
+          "--output",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/output"
+        ],
+        "exit_code": 0,
+        "log": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/A.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "C_schedule",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/fixture/clinical-between.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/output"
+        ],
+        "exit_code": 0,
+        "log": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/C_schedule.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "C_missing_B",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/fixture/clinical-between.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/output"
+        ],
+        "exit_code": 2,
+        "log": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/C_missing_B.log",
+        "log_sha256": "01792c9333c2bd6f939f26bd647454437ecb15151e7ca5597a2af81bc9f18eca"
+      },
+      {
+        "label": "B",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/fixture/clinical-between.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/output"
+        ],
+        "exit_code": 0,
+        "log": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/B.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "B_existing_refusal",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/fixture/clinical-between.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/output"
+        ],
+        "exit_code": 2,
+        "log": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/B_existing_refusal.log",
+        "log_sha256": "05b5455dff21b56f4a8970e52b16c892e3ff7a36ec3548651e492d56ecb9b312"
+      },
+      {
+        "label": "C_publish",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/fixture/clinical-between.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/output"
+        ],
+        "exit_code": 0,
+        "log": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/C_publish.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "D",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/fixture/clinical-between.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/output"
+        ],
+        "exit_code": 0,
+        "log": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/D.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "disabled_A",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "<immutable-source-root>/inst/examples/tickets/D-T08.yaml",
+          "--stage",
+          "A",
+          "--output",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/clinical-disabled"
+        ],
+        "exit_code": 0,
+        "log": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/disabled_A.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "disabled_B",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "<immutable-source-root>/inst/examples/tickets/D-T08.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/clinical-disabled"
+        ],
+        "exit_code": 0,
+        "log": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/disabled_B.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "disabled_C",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "<immutable-source-root>/inst/examples/tickets/D-T08.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/clinical-disabled"
+        ],
+        "exit_code": 0,
+        "log": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/disabled_C.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "disabled_D",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "<immutable-source-root>/inst/examples/tickets/D-T08.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/clinical-disabled"
+        ],
+        "exit_code": 0,
+        "log": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/disabled_D.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "config_sha256": "6f42fb1a5d68bdc8f1a75a3530b7157cf02a41b6b36cb4e2d99100f100ac8c28",
+    "B_files": {
+      "B/handoffs/5ca753668d1a175f3eff186f309dead7fd0f5387b05f195ed1f93b0157965893/bundle.json": "20c8b643c9f39f8da706376d39568829ad9d73fce2f5e21f2774c627a97b733e",
+      "B/handoffs/5ca753668d1a175f3eff186f309dead7fd0f5387b05f195ed1f93b0157965893/bundle.envelope.json": "b2059c78212da9f0635ddd7f65d760d726e99a5f92c79350c84191f0a88d7f45",
+      "B/handoffs/5ca753668d1a175f3eff186f309dead7fd0f5387b05f195ed1f93b0157965893/stage-handoff-provenance.json": "247ce312848ab496bdc5c30105282ff6abc0118aa7c4680fb3ba4f0cd3895ae8",
+      "B/handoffs/5ca753668d1a175f3eff186f309dead7fd0f5387b05f195ed1f93b0157965893/stage-handoff-provenance.envelope.json": "4fb76a97ae0eb79cd11f92c6b47fe5aa71b32303a183b993f78567302e86669b"
+    },
+    "C_files": {
+      "D/stage-handoff-provenance.json": "eeb8f7d56120d44d46845d61142f777cd45c3a75860dc1af6d274083ce565a74",
+      "D/stage-handoff-provenance.envelope.json": "799f750ea8102ecebe740f6ee129f6661e945625143b1017aaf3c1e20534499d"
+    },
+    "D_generation": "fb4c90175f017a74cfca4686a5fc644e154a26ba4ec7e02388efbd6d83dc467d",
+    "clinical_disabled_generation": "91f5ad3e64101fb0f62af066f3b3bba24d8d3c2e421007db90e92ec0a35eff0c",
+    "C_original_bytes_unchanged": true,
+    "request_original_bytes_unchanged": true,
+    "no_false_later_B_fit_ancestry": true,
+    "C07_four_controls_not_run": true,
+    "C09_no_qualification_or_benefit_claim": true
+  },
+  "numeric": {
+    "actual_command": {
+      "label": "numeric_profile",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "<local-proof-root>/d15-s01/numeric-profile-readback.R",
+        "<immutable-source-root>",
+        "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/fixture/clinical-between.yaml",
+        "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/output",
+        "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental/numeric-profile.json"
+      ],
+      "exit_code": 0,
+      "log_sha256": "bdf926885312082854ffb536cb563405ef7a9558eb26af6aab462b0e5bfdb292"
+    },
+    "comparisons": [
+      {
+        "field": "status",
+        "match": true
+      },
+      {
+        "field": "method",
+        "match": true
+      },
+      {
+        "field": "fallback_applied",
+        "match": true
+      },
+      {
+        "field": "requested_fallback",
+        "match": true
+      },
+      {
+        "field": "study_id",
+        "match": true
+      },
+      {
+        "field": "analysis_id",
+        "match": true
+      },
+      {
+        "field": "objectives",
+        "match": true
+      },
+      {
+        "field": "family",
+        "match": true
+      },
+      {
+        "field": "results",
+        "match": true
+      }
+    ],
+    "profile_validation": true,
+    "n_subjects": 12,
+    "scope": "Transport oracle only: unchanged accepted B08 service fitted on authenticated actual C08 endpoint; not independent biological validation.",
+    "display_receipt_limit": "numeric-profile.json omits script from display command; actual executed command is retained above. Unused n_rows display projection is null, not an inferred denominator."
+  },
+  "observed_first_C": {
+    "exit_code": 0,
+    "expected_integration_fits": 1,
+    "calls": {
+      "prepare_fit": 1,
+      "triomics_integration_fit_once": 1,
+      "triomics_associate_endpoints": 0,
+      "triomics_integration_pca_fit": 1,
+      "triomics_integration_pca_backend_fit": 1,
+      "triomics_diablo_fit": 0,
+      "triomics_block_spls_fit": 0,
+      "triomics_supervised_fit": 0,
+      "triomics_mofa_fit": 0
+    },
+    "scope": "Supplemental observation of actual Stage C dispatcher, not a replacement for separate native CLI proof; tracers count entry and execute original functions unchanged."
+  },
+  "saved_C": {
+    "exit_code": 0,
+    "expected_integration_fits": 0,
+    "calls": {
+      "prepare_fit": 0,
+      "triomics_integration_fit_once": 0,
+      "triomics_associate_endpoints": 0,
+      "triomics_integration_pca_fit": 0,
+      "triomics_integration_pca_backend_fit": 0,
+      "triomics_diablo_fit": 0,
+      "triomics_block_spls_fit": 0,
+      "triomics_supervised_fit": 0,
+      "triomics_mofa_fit": 0
+    },
+    "scope": "Supplemental observation of actual Stage C dispatcher, not a replacement for separate native CLI proof; tracers count entry and execute original functions unchanged."
+  },
+  "rollback": {
+    "scope": "Isolated rollback fixture using genuine native pre-C state plus already-published D generation; not the positive native-chain evidence",
+    "injection_reached": true,
+    "error": "PROBE_C_PROFILE_ENVELOPE_AFTER_WRITE",
+    "original_inventory_unchanged": true,
+    "fit_calls": {
+      "prepare_fit": 0,
+      "triomics_integration_fit_once": 0,
+      "triomics_associate_endpoints": 0
+    },
+    "added_files": [],
+    "removed_files": [],
+    "changed_files": [],
+    "partial_provenance_absent": true
+  },
+  "adversarial_cases": {
+    "metadata": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-pkgload/metadata.json",
+      "sha256": "1dbaeb30a70ac488a35a5922577403c24d8703288ab711fc534e96fa1b0fe462",
+      "case": "metadata",
+      "baseline_preflight": true,
+      "decoder_rejected": null,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    },
+    "clinical_link": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-pkgload/clinical_link.json",
+      "sha256": "cfb73e0dd21d25f89a8001eb48f25f260dcb2e3f4237e9a51723d3f91d28f21e",
+      "case": "clinical_link",
+      "baseline_preflight": true,
+      "decoder_rejected": null,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    },
+    "clinical_observation": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-pkgload/clinical_observation.json",
+      "sha256": "96ca7b2d0944fbeb6e6cf465e7ffd364d571bcf1cc67f397601576a35a90204c",
+      "case": "clinical_observation",
+      "baseline_preflight": true,
+      "decoder_rejected": null,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    },
+    "registry_symlink": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-remaining/registry_symlink.json",
+      "sha256": "b718be54085a9a3d2d0b8b04b79b81013a704a58bb4e6c39a5042d6656e6045b",
+      "case": "registry_symlink",
+      "baseline_preflight": true,
+      "decoder_rejected": null,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    },
+    "endpoint_rehashed": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-remaining/endpoint_rehashed.json",
+      "sha256": "6a3f39e833904fb7361ba3d8760e5f811fdf7685e1c9da210920bea6dad2e83e",
+      "case": "endpoint_rehashed",
+      "baseline_preflight": true,
+      "decoder_rejected": null,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    },
+    "endpoint_key_order": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-remaining/endpoint_key_order.json",
+      "sha256": "50fdbd263cd30c3ba084c774c65b27e8a10b62413121ddea266b0ee2bdad2d3b",
+      "case": "endpoint_key_order",
+      "baseline_preflight": true,
+      "decoder_rejected": null,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    },
+    "request_objective_rehashed": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-remaining/request_objective_rehashed.json",
+      "sha256": "2377932fd106478e3809e848ed728d92c3979b7f5a6108e72f5189384450b053",
+      "case": "request_objective_rehashed",
+      "baseline_preflight": true,
+      "decoder_rejected": null,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    },
+    "request_key_order": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-remaining/request_key_order.json",
+      "sha256": "02f8390568de58dbfba15666f237cea034fe0d4258ba71d712a317af24ab0e97",
+      "case": "request_key_order",
+      "baseline_preflight": true,
+      "decoder_rejected": null,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    },
+    "missing_endpoint_envelope": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-remaining/missing_endpoint_envelope.json",
+      "sha256": "c944b216fb177473897f9ec57f0704fc941918f07876d9fb2ab365d7bff926f1",
+      "case": "missing_endpoint_envelope",
+      "baseline_preflight": true,
+      "decoder_rejected": null,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    },
+    "saved_handoff_rehashed": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-remaining/saved_handoff_rehashed.json",
+      "sha256": "1be222d3123f37548cd774d2f494e15fa757884b1a2303eca19469947bd52920",
+      "case": "saved_handoff_rehashed",
+      "baseline_preflight": true,
+      "decoder_rejected": true,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    },
+    "saved_identity_rehashed": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-remaining/saved_identity_rehashed.json",
+      "sha256": "0b2015e7873113248f9db8cb234e99703e1b317be90c62f311bf00415f28446e",
+      "case": "saved_identity_rehashed",
+      "baseline_preflight": true,
+      "decoder_rejected": true,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    },
+    "saved_controls_rehashed": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-remaining/saved_controls_rehashed.json",
+      "sha256": "dd88fedab45df874ee1e9cc2dd8c112cd4cdfdd1da547530fc302caa712e1b3d",
+      "case": "saved_controls_rehashed",
+      "baseline_preflight": true,
+      "decoder_rejected": true,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    },
+    "saved_scores_rehashed": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-remaining/saved_scores_rehashed.json",
+      "sha256": "e9c8f34509bdb965e7e674327b7ccf0572443ecb3e8edeae987ac1cf0d7328b4",
+      "case": "saved_scores_rehashed",
+      "baseline_preflight": true,
+      "decoder_rejected": true,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    },
+    "saved_nominations_rehashed": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-remaining/saved_nominations_rehashed.json",
+      "sha256": "eb02335ad556165f0b634db7de2953116bba5d49317f42d73b81855ed3cb5692",
+      "case": "saved_nominations_rehashed",
+      "baseline_preflight": true,
+      "decoder_rejected": true,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    },
+    "saved_comparison_rehashed": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-remaining/saved_comparison_rehashed.json",
+      "sha256": "72714896eb7d3a3ab3960432fafd425336cde3f8cf03cbaf87a6ed42f37b12f7",
+      "case": "saved_comparison_rehashed",
+      "baseline_preflight": true,
+      "decoder_rejected": true,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    },
+    "measurement": {
+      "receipt": "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-remaining/measurement.json",
+      "sha256": "7f3c0ce4f713b72e4133a732774f7dec156cf294dd8697d5349b4efb1e0f00b0",
+      "case": "measurement",
+      "baseline_preflight": true,
+      "decoder_rejected": null,
+      "exit_code": 2,
+      "fit_calls": {
+        "triomics_execute_stage_b": 0,
+        "prepare_fit": 0,
+        "triomics_integration_fit_once": 0,
+        "triomics_associate_endpoints": 0
+      },
+      "artifact_inventory_unchanged": true,
+      "partial_C_provenance_absent": true
+    }
+  },
+  "receipt_hashes": {
+    "<local-proof-root>/d15-s01/sol-reconnected-ee43448/source/source-receipt.json": "a5eedb65086dea6131cd084d0ce3481ee74fc2f44e6a2ac240b4ec9614ffbc06",
+    "<local-proof-root>/d15-s01/sol-reconnected-ee43448/combined_source.log": "3df9670829a65eacea67ab08205054dffc86b3b34c040d1c54a3677238fff20b",
+    "<local-proof-root>/d15-s01/sol-reconnected-ee43448/native/native-receipt.json": "366d1e9775060afa0f60ce794ec0606dc1127804003b89ba722bb0fb176c9869",
+    "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental/numeric-profile.json": "21376cb642c2d6dc77ecdfb1dfff2a02db75752d97b4bc4f3a2b693eb5043f01",
+    "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental/supplemental-receipt.json": "4ee2fec37d56aa0f5b18802a02944029820d6cbb051d2423fc3716a88a1a08d2",
+    "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-pkgload/supplemental-receipt.json": "3a058ac9f977408faeefff93ae06e8af34ff155819cf323f0fe25c8de50baa70",
+    "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-pkgload/saved-C-calls.json": "8ed2b01c539f9faa43f1794f83539b45eb995bf4e19f05f92bb752f9d3321fcd",
+    "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-pkgload/first-C-calls.json": "ebb13a6edf9cf3af236a09f2bdc9c04bbfe39b2dfa410ab29322ee2ad2319deb",
+    "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-pkgload/rollback-after-write.json": "4696d4cda23478d32461ac488bc9bebaa9c87abf7d21e2a3439f94a97c508337",
+    "<local-proof-root>/d15-s01/sol-reconnected-ee43448/supplemental-remaining/remaining-receipt.json": "81a9261b3873b54a070c85f1758e5960cd02e281fec882f098efc9982dce68b3",
+    "<local-proof-root>/d15-s01/harness-pkgload-correction/receipt.json": "1904f4b94cf3b4274914913f676e862562d661c8689afb402f6280a338cb09ca",
+    "<local-proof-root>/d15-s01/harness-pkgload-correction/measurement-selection-receipt.json": "cb2e3d732640af41afbf866181cd9c31fdc1920c17277a38aede7ef6f2203058"
+  },
+  "Astra": {
+    "audit_pass": true,
+    "candidate": "ee434483bf852724c1dbb38d0fa8b710ea7c59cc",
+    "agent": "/root/d15_s01_final_astra",
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "low",
+    "effective_settings_exposed": false,
+    "read_only": true,
+    "blocking_findings": [],
+    "initial_review_count": 1,
+    "focused_rereviews": 0,
+    "capacity_event": "First dispatch reported model at capacity; same agent retried on same requested model/effort and completed one substantive audit. No substituted model.",
+    "milestone_acceptance": false,
+    "G8": "closed",
+    "G9": "closed",
+    "verdict_sha256": "ceeda5420a1bf4bd9c2ba494c10e256726d3c443f35507fe25b60270bd63feae",
+    "completed": "2026-11-05T08:12:49.793518+00:00"
+  },
+  "verification_history": "Initial disconnected source run failed. Resumed source and actual native CLI passed. Supplemental global-environment harness was correctly refused; normal pkgload namespace correction passed. Measurement probe initially selected metadata and failed before mutation or pipeline call; corrected role selection used copied public inputs configured before separate native A/C. Failed receipts retained; no product edit, no Luna rerun, no source/native rerun.",
+  "integration": {
+    "status": "fast_forward_integrated_product",
+    "commit": "ee434483bf852724c1dbb38d0fa8b710ea7c59cc",
+    "all_original_dirty_and_untracked_entries_preserved": true,
+    "protected_hashes_unchanged": true,
+    "new_untracked_AppleDouble_sidecars": [
+      "?? R/._clinical_native_handoff.R",
+      "?? tests/testthat/._test-clinical-native-handoff.R"
+    ],
+    "sidecar_disposition": "Left untracked; never staged or removed. Exact status equality check initially stopped because the filesystem created two sidecars for new source/test files; readback confirmed no original file disappeared or changed.",
+    "Astra_pass": true,
+    "G8": "closed",
+    "G9": "closed"
+  },
+  "S01_attempts": 1,
+  "S01_repairs": 2,
+  "S02_attempts": 1,
+  "S02_repairs": 2,
+  "D15_renderer_started": false,
+  "D15_accepted": false,
+  "M8_accepted": false,
+  "G8": "closed",
+  "G9": "closed",
+  "package_gate": "not_run_in_this_cycle",
+  "scientific_scope": "Public synthetic PCA transport, twelve independent subjects; no real-data/clinical/biological validation or new backend qualification. C07 four checks not_run; C09 unqualified/synthetic_fixture_only/benefit_guaranteed=false; D06/D07/D14 zero credit; frozen-kit independent audit pending.",
+  "audit_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-astra.md"
+}

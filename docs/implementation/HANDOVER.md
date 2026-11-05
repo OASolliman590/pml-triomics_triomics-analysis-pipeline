@@ -1,3 +1,13 @@
+# Current checkpoint: S01/S02 producer handoff verified, audited and integrated
+
+Read [the scoped Sol receipt](reviews/2026-11-05-d15-s01-final-scoped-close.md) and [fresh Astra pass](reviews/2026-11-05-d15-s01-final-astra.md). Product `ee434483bf852724c1dbb38d0fa8b710ea7c59cc` is integrated; only coordinator records follow. Independent source:1909pass,0fail/error/skip,1named expected D-T01 stale-sign warning,113blocks. Native A/C/B/C/D and clinical-disabled chain pass, exact B/C/D hashes read back. Numeric/family comparison, zero-fit saved replay, after-write rollback and16adversarial refusals pass. The disconnected run and two external probe defects remain preserved and disclosed; no product change or Luna/local-review rerun. One fresh substantive Astra review passed with no findings; requested Astra-low, effective settings unexposed.
+
+S01/S02 each retain initial+2repairs; no repair3. D15 renderer remains unstarted/unaccepted, now with verified producers. D13 stays blocked at its exhausted cap. M7/G7/D08 remain accepted; G8/G9 closed. No M8 package gate or milestone acceptance is claimed. All workers/processes terminal; no child sidebar chats or persistent polling. Protected dirty files and original untracked entries remain preserved; AppleDouble stays untracked. No private data, server, push or Notion action.
+
+Literal resume: **Resume the D-T15 renderer under its existing packet scope using verified predecessor ee43448. Preserve its recorded preflight attempt and repair history, all earlier candidates and D13's exhausted cap. Obtain required local review and saved-output/native report evidence, then stop at that bounded receipt. Do not reopen S01/S02 repair3 or release G8/G9.**
+
+## Historical checkpoints below
+
 # Current checkpoint: M8-D15-S01 final test-only repair2 assigned
 
 Read [repair1 gate and repair2 dispatch](reviews/2026-11-05-d15-s01-repair1-gate-repair2-dispatch.md). Clean isolated7876735:580pass/3fail/0error/warn/skip. C-06/C-08 pass; exactly three request-tamper tests expect the obsolete refusal code. Sol retains the stricter early lineage refusal and assigns same Luna finalrepair2of2 for those three expected strings only. No product edits, no repair3. Local Spec review has no actionable static finding; Standards requires this reconciliation. Independent combined source/native/numeric/zero-refit/rollback/tampering gates and fresh Astra remain pending. No integration or acceptance.

@@ -35,53 +35,26 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/d15_s01_luna",
-      "role": "Luna implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "effective_settings_exposed": false,
-      "base_commit": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
-      "branch": "codex/m8-d15-s01-repair1",
-      "status": "final_repair2_assigned",
-      "attempt": 1,
-      "repairs": 2,
-      "files_allowed": [
-        "tests/testthat/test-clinical-native-handoff.R"
-      ],
-      "allowed_next_transition": "Join final test-only repair2; verify product blobs unchanged, local review closure, then independent integrated source/native gates and fresh Astra. No repair3.",
-      "cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "D15_S01_final_repair2_assigned",
+    "status": "D15_S01_S02_verified_integrated_closed",
     "last_reconciled": "2026-11-05",
-    "active_handoffs": [
-      {
-        "agent": "/root/d15_s01_luna",
-        "role": "Luna implementer",
-        "requested_model": "gpt-6-luna",
-        "requested_effort": "max",
-        "effective_settings_exposed": false,
-        "base_commit": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
-        "branch": "codex/m8-d15-s01-repair1",
-        "status": "final_repair2_assigned",
-        "attempt": 1,
-        "repairs": 2,
-        "files_allowed": [
-          "tests/testthat/test-clinical-native-handoff.R"
-        ],
-        "allowed_next_transition": "Join final test-only repair2; verify product blobs unchanged, local review closure, then independent integrated source/native gates and fresh Astra. No repair3.",
-        "cursor": null
-      }
-    ],
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Join final test-only repair2; verify product blobs unchanged, local review closure, then independent integrated source/native gates and fresh Astra. No repair3.",
+    "disposition": "Scoped predecessor accepted; D15 renderer remains unstarted. Stop at receipt; G8/G9 closed.",
     "current_gate": {
-      "status": "final_repair2_assigned",
-      "candidate": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
-      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s01-repair1-gate-repair2-dispatch.md"
+      "status": "scoped_predecessor_accepted",
+      "candidate": "ee434483bf852724c1dbb38d0fa8b710ea7c59cc",
+      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-scoped-close.md",
+      "Astra_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-astra.md",
+      "source_counts": {
+        "pass": 1909,
+        "fail": 0,
+        "error": 0,
+        "warn": 1,
+        "skip": 0,
+        "blocks": 113
+      }
     }
   },
   "orchestration_events": [
@@ -7084,6 +7057,29 @@
       "record_ref": "docs/implementation/reviews/2026-11-05-d15-s01-repair1-gate-repair2-dispatch.md",
       "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-s01-repair1/receipt.json",
       "accepted": false
+    },
+    {
+      "event": "D15_S01_S02_independent_verification_Astra_pass_and_scoped_integration",
+      "date": "2026-11-05",
+      "candidate": "ee434483bf852724c1dbb38d0fa8b710ea7c59cc",
+      "source_counts": {
+        "pass": 1909,
+        "fail": 0,
+        "error": 0,
+        "warn": 1,
+        "skip": 0,
+        "blocks": 113
+      },
+      "Astra_pass": true,
+      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-scoped-close.md",
+      "audit_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-astra.md",
+      "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-s01-final/receipt.json",
+      "Luna_rerun": false,
+      "product_repairs_added": 0,
+      "harness_corrections_disclosed": true,
+      "milestone_acceptance": false,
+      "G8": "closed",
+      "G9": "closed"
     }
   ],
   "packets": {
@@ -8583,13 +8579,11 @@
       ]
     },
     "D-T15": {
-      "status": "blocked_before_product_implementation",
+      "status": "ready_after_predecessor_verification",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
-      "blockers": [
-        "S01 repair1 product remains isolated; three exact refusal-code assertions require final test-only repair2, followed by independent combined source/native/Astra gates. S02 remains verified and held."
-      ],
+      "blockers": [],
       "repair_attempts": 0,
       "implementation_base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
       "active_worker": null,
@@ -8606,19 +8600,32 @@
         "B_frame_produced": false
       },
       "predecessor_S02": {
-        "status": "verified_pending_combined_integration",
-        "candidate": "a136db4ee2d840ad04cdda7534a40a43a0f30791",
-        "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-s02/receipt.json",
+        "status": "verified_integrated",
+        "candidate": "ee434483bf852724c1dbb38d0fa8b710ea7c59cc",
+        "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-s01-final/receipt.json",
         "repairs_used": 2,
-        "accepted": false
+        "accepted": true,
+        "scope_only": true,
+        "record_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-scoped-close.md",
+        "Astra_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-astra.md",
+        "worker_candidate": "a136db4ee2d840ad04cdda7534a40a43a0f30791",
+        "prior_receipt_ref": "docs/implementation/evidence/2026-11-05-d15-s02/receipt.json"
       },
       "predecessor_S01": {
-        "status": "final_repair2_assigned",
-        "candidate": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
+        "status": "verified_integrated",
+        "candidate": "ee434483bf852724c1dbb38d0fa8b710ea7c59cc",
         "repairs_used": 2,
-        "accepted": false,
-        "record_ref": "docs/implementation/reviews/2026-11-05-d15-s01-repair1-gate-repair2-dispatch.md"
-      }
+        "accepted": true,
+        "record_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-scoped-close.md",
+        "scope_only": true,
+        "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-s01-final/receipt.json",
+        "Astra_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-astra.md",
+        "worker_candidate": "1464668666e63b5226b092dc11567fd1ba6196eb",
+        "product_repair1_candidate": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
+        "prior_dispatch_ref": "docs/implementation/reviews/2026-11-05-d15-s01-repair1-gate-repair2-dispatch.md"
+      },
+      "next_transition": "Resume existing D15 renderer packet scope with preserved preflight attempt/repair history; no renderer implementation in this cycle.",
+      "predecessor_receipt_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-scoped-close.md"
     },
     "D-T09": {
       "status": "not_started",
@@ -8810,5 +8817,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D15_S01_repair1_running_goal_active"
+  "close_state": "D15_S01_S02_scoped_cycle_closed_G8_G9_closed"
 }
