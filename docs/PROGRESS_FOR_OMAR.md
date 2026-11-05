@@ -1,13 +1,11 @@
 # Pipeline progress — 5 November 2026
 
-The goal remains a trustworthy clinical report and synthetic walkthrough, followed by the G8 and G9 acceptance gates. M7/G7 and the offline D08 report remain accepted.
+The goal is a clinical report that explains each analysis and its limits, followed by the remaining G8 and G9 acceptance gates. M7/G7 and the general D08 report remain accepted.
 
-The clinical handoff now works through the real commands: C creates molecular scores, B analyses their clinical associations, C publishes the saved results, and D receives matching evidence. Repeating C performs no new fitting. The association estimates and hypothesis family match the existing analysis service.
+The producer handoff is now verified and integrated. C creates molecular scores, B analyses their clinical associations, C publishes the saved results without refitting, and D receives matching evidence. Independent verification passed 1,909 assertions and sixteen tampering checks; fresh Astra review passed.
 
-Independent verification passed 1,909 assertions, with no failures, errors or skips and one expected refusal warning. Sixteen altered-input cases were rejected. An injected publication failure preserved the previous D output. Fresh Astra review passed with no findings, and the verified predecessor changes are integrated.
+D15 is now resuming its unfinished initial implementation. Luna owns only the five clinical-report files. The report must show the clinical dictionary, coverage, objectives, models, adjustments, effects, uncertainty, units and missingness. It must distinguish exploratory associations, valid held-out comparisons and unavailable analyses while excluding identifying information.
 
-This establishes software behavior on public synthetic data only. It does not establish biological validity, clinical usefulness or performance on your three independent studies. No private study data were read.
+This remains software development using public synthetic fixtures. No private study data have been analysed, and clinical or biological validity has not been established.
 
-Next is the D15 clinical report, which has not started implementation. D13 remains blocked at its repair limit; G8/G9 remain closed. No new decision is needed from Omar. Sync: local records only; no Notion update, server run or GitHub push.
-
-Evidence: [scoped receipt](implementation/reviews/2026-11-05-d15-s01-final-scoped-close.md).
+Next is the D15 review and independent native report verification. One initial attempt is retained, with zero of two repairs used. D13 remains blocked at its limit; G8/G9 remain closed. Needs Omar: no new decision. Sync: local records only; no Notion update, server run or GitHub push.

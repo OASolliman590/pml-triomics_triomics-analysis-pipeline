@@ -35,26 +35,63 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/d15_resume_luna",
+      "role": "Luna implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "base_commit": "5abc369a6d12ca8b1ae9c00959548a593cdb4f1a",
+      "worktree": "/Users/megastore/.codex/worktrees/m8-d15-resume/PML MultiOmics Analysis Pipeline",
+      "branch": "codex/m8-d15-resume",
+      "status": "initial_attempt_resumed",
+      "attempt": 1,
+      "repairs": 0,
+      "files_allowed": [
+        "R/report_clinical.R",
+        "inst/report/sections/clinical.qmd",
+        "tests/testthat/test-D-T15.R",
+        "inst/examples/tickets/D-T15.yaml",
+        "docs/implementation/registrations/D-T15.json"
+      ],
+      "allowed_next_transition": "Join this worker, inspect immutable five-file diff, two-axis local review, at most two targeted repairs, independent D15/D08/native/real-Quarto saved-output verification; stop at packet receipt. No G8/G9 release.",
+      "cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "D15_S01_S02_verified_integrated_closed",
+    "status": "D15_initial_attempt_resumed",
     "last_reconciled": "2026-11-05",
-    "active_handoffs": [],
-    "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Scoped predecessor accepted; D15 renderer remains unstarted. Stop at receipt; G8/G9 closed.",
-    "current_gate": {
-      "status": "scoped_predecessor_accepted",
-      "candidate": "ee434483bf852724c1dbb38d0fa8b710ea7c59cc",
-      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-scoped-close.md",
-      "Astra_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-astra.md",
-      "source_counts": {
-        "pass": 1909,
-        "fail": 0,
-        "error": 0,
-        "warn": 1,
-        "skip": 0,
-        "blocks": 113
+    "active_handoffs": [
+      {
+        "agent": "/root/d15_resume_luna",
+        "role": "Luna implementer",
+        "requested_model": "gpt-6-luna",
+        "requested_effort": "max",
+        "effective_settings_exposed": false,
+        "base_commit": "5abc369a6d12ca8b1ae9c00959548a593cdb4f1a",
+        "worktree": "/Users/megastore/.codex/worktrees/m8-d15-resume/PML MultiOmics Analysis Pipeline",
+        "branch": "codex/m8-d15-resume",
+        "status": "initial_attempt_resumed",
+        "attempt": 1,
+        "repairs": 0,
+        "files_allowed": [
+          "R/report_clinical.R",
+          "inst/report/sections/clinical.qmd",
+          "tests/testthat/test-D-T15.R",
+          "inst/examples/tickets/D-T15.yaml",
+          "docs/implementation/registrations/D-T15.json"
+        ],
+        "allowed_next_transition": "Join this worker, inspect immutable five-file diff, two-axis local review, at most two targeted repairs, independent D15/D08/native/real-Quarto saved-output verification; stop at packet receipt. No G8/G9 release.",
+        "cursor": null
       }
+    ],
+    "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
+    "disposition": "Join this worker, inspect immutable five-file diff, two-axis local review, at most two targeted repairs, independent D15/D08/native/real-Quarto saved-output verification; stop at packet receipt. No G8/G9 release.",
+    "current_gate": {
+      "status": "initial_attempt_resumed",
+      "candidate": "5abc369a6d12ca8b1ae9c00959548a593cdb4f1a",
+      "review_ref": "docs/implementation/reviews/2026-11-05-d-t15-resume-dispatch.md"
     }
   },
   "orchestration_events": [
@@ -7080,6 +7117,37 @@
       "milestone_acceptance": false,
       "G8": "closed",
       "G9": "closed"
+    },
+    {
+      "event": "D15_initial_attempt_resumed_after_verified_predecessor",
+      "date": "2026-11-05",
+      "base": "5abc369a6d12ca8b1ae9c00959548a593cdb4f1a",
+      "worker": {
+        "agent": "/root/d15_resume_luna",
+        "role": "Luna implementer",
+        "requested_model": "gpt-6-luna",
+        "requested_effort": "max",
+        "effective_settings_exposed": false,
+        "base_commit": "5abc369a6d12ca8b1ae9c00959548a593cdb4f1a",
+        "worktree": "/Users/megastore/.codex/worktrees/m8-d15-resume/PML MultiOmics Analysis Pipeline",
+        "branch": "codex/m8-d15-resume",
+        "status": "initial_attempt_resumed",
+        "attempt": 1,
+        "repairs": 0,
+        "files_allowed": [
+          "R/report_clinical.R",
+          "inst/report/sections/clinical.qmd",
+          "tests/testthat/test-D-T15.R",
+          "inst/examples/tickets/D-T15.yaml",
+          "docs/implementation/registrations/D-T15.json"
+        ],
+        "allowed_next_transition": "Join this worker, inspect immutable five-file diff, two-axis local review, at most two targeted repairs, independent D15/D08/native/real-Quarto saved-output verification; stop at packet receipt. No G8/G9 release.",
+        "cursor": null
+      },
+      "record_ref": "docs/implementation/reviews/2026-11-05-d-t15-resume-dispatch.md",
+      "initial_attempts": 1,
+      "repairs_used": 0,
+      "cap_reset": false
     }
   ],
   "packets": {
@@ -8579,14 +8647,14 @@
       ]
     },
     "D-T15": {
-      "status": "ready_after_predecessor_verification",
+      "status": "initial_implementation_resumed_after_predecessor",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": [],
       "repair_attempts": 0,
       "implementation_base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
-      "active_worker": null,
+      "active_worker": "/root/d15_resume_luna",
       "accepted": false,
       "completion_credit": false,
       "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t15-dispatch.md",
@@ -8624,8 +8692,10 @@
         "product_repair1_candidate": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
         "prior_dispatch_ref": "docs/implementation/reviews/2026-11-05-d15-s01-repair1-gate-repair2-dispatch.md"
       },
-      "next_transition": "Resume existing D15 renderer packet scope with preserved preflight attempt/repair history; no renderer implementation in this cycle.",
-      "predecessor_receipt_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-scoped-close.md"
+      "next_transition": "Join this worker, inspect immutable five-file diff, two-axis local review, at most two targeted repairs, independent D15/D08/native/real-Quarto saved-output verification; stop at packet receipt. No G8/G9 release.",
+      "predecessor_receipt_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-scoped-close.md",
+      "implementation_resume_base": "5abc369a6d12ca8b1ae9c00959548a593cdb4f1a",
+      "resume_dispatch_ref": "docs/implementation/reviews/2026-11-05-d-t15-resume-dispatch.md"
     },
     "D-T09": {
       "status": "not_started",
@@ -8817,5 +8887,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D15_S01_S02_scoped_cycle_closed_G8_G9_closed"
+  "close_state": "D15_initial_attempt_active_G8_G9_closed"
 }

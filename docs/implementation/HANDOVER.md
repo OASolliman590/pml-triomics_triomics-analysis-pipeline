@@ -1,3 +1,13 @@
+# Current checkpoint: D15 initial implementation resumed
+
+Read [the dispatch](reviews/2026-11-05-d-t15-resume-dispatch.md). User authorized continuation from5abc369. Fresh isolated /root/d15_resume_luna continues the unfinished initial D15 attempt on codex/m8-d15-resume. Initial attempts1, repairs0of2; the previous producer-blocked preflight remains history. Five-file frozen renderer allowlist, no shared changes. S01/S02 are verified/integrated and must not be rerun or repaired. Runtime and full bounded brief are in local d15/resume-5abc369 evidence.
+
+No parent fit is active. Join worker, inspect diff, conduct separate local Spec/Standards reviews, enforce repair caps, then independently verify source and genuine saved-output/native/Quarto behavior. Do not finish while this owned worker is active. D13 remains blocked at cap; G8/G9 closed; no private data or push.
+
+Literal resume: **Join /root/d15_resume_luna and its actual process; do not redispatch. Preserve initial1/repairs0of2 and all previous packet caps. Reconcile its result into the authorized review/verification transition and stop at the D15 receipt.**
+
+## Historical checkpoints below
+
 # Current checkpoint: S01/S02 producer handoff verified, audited and integrated
 
 Read [the scoped Sol receipt](reviews/2026-11-05-d15-s01-final-scoped-close.md) and [fresh Astra pass](reviews/2026-11-05-d15-s01-final-astra.md). Product `ee434483bf852724c1dbb38d0fa8b710ea7c59cc` is integrated; only coordinator records follow. Independent source:1909pass,0fail/error/skip,1named expected D-T01 stale-sign warning,113blocks. Native A/C/B/C/D and clinical-disabled chain pass, exact B/C/D hashes read back. Numeric/family comparison, zero-fit saved replay, after-write rollback and16adversarial refusals pass. The disconnected run and two external probe defects remain preserved and disclosed; no product change or Luna/local-review rerun. One fresh substantive Astra review passed with no findings; requested Astra-low, effective settings unexposed.
