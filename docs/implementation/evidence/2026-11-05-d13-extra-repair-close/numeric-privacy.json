@@ -1,0 +1,14 @@
+{
+  "snapshot": "7f50b14c95a9f563f646b842004318552033089d",
+  "source": {
+    "construction_lineage": "Patient: 13 clinical score",
+    "source_selection_history": "Subject: 7 features selected"
+  },
+  "reported": {
+    "construction_lineage": "Patient: 13 clinical score",
+    "source_selection_history": "Subject: 7 features selected"
+  },
+  "subject_overlap_status": "shared_subjects",
+  "independent_replication": false,
+  "privacy_pass": false
+}

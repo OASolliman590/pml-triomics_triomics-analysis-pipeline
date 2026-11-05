@@ -1,0 +1,13 @@
+# D13 extra repair closed blocked
+
+Sol withholds integration and acceptance of `7f50b14c95a9f563f646b842004318552033089d`. The numeric-lineage omission is repaired, but the changed prose filter discloses synthetic direct identifiers. Fresh Spec and Standards reviewers each returned changes_required with the same P1 privacy finding. Sol independently reproduced it. [Fresh Astra](2026-11-05-d13-extra-repair-astra.md) returned audit_pass: no on the immutable candidate.
+
+The original initial attempt plus two repairs remain recorded. Omar's one additional bounded repair is consumed, total repairs three. There is no authority for another repair in this run. The candidate and its clean worktree remain preserved. Accepted D08/D15 and M7/G7 remain unchanged; no D13 product was integrated.
+
+Worker source union D08/D13/D15 passed 395 assertions across 59 blocks, with zero failures, errors, warnings or skips. Per-file passes were 148/115/132. D08's three absent-provider checks are conditional on provider absence; no test was removed. The behavioral RED had 113 passes and two failures in the association-lineage test. Parent numeric readback exited 0 and retained both source strings, shared_subjects and independent_replication=false. Parent privacy readback exited 1 because `Patient: 13 clinical score` and `Subject: 7 features selected` survived unchanged. All examples are synthetic.
+
+Archive SHA-256 `7f20daa995a8f5af845fb8ef9e6051ac693cf1e83947ea17df4e95ddc898038a`; 1130 files. Native pipeline, installed-package and full-package gates were not started after the independent privacy failure. No native B/C/D/report hashes or package Status line exist for this candidate. Earlier artifacts receive no credit for it.
+
+The [machine receipt](../evidence/2026-11-05-d13-extra-repair-close/receipt.json) pins commits, commands, counts and probe hashes. G8/G9 stay closed. D06/D07/D14 remain blocked without credit; C07 not_run, C09 unqualified and frozen-kit audit pending. No private inputs, push, server run or Notion update. All run-owned workers/processes are terminal; no owned sidebar chats or polling remain. Protected dirt is preserved.
+
+Literal resume: **D13 extra1 is blocked at candidate 7f50b14. Preserve its original initial attempt, two repairs and consumed extra repair. Do not redispatch Luna or integrate this candidate. A separately authorized bounded follow-up must close D13-EXTRA1-PRIVACY-01 while preserving numeric scientific lineage, then pass independent review, source/installed/native report verification and fresh Astra. Do not reopen accepted D15 or release G8/G9.**

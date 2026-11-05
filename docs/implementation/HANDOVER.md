@@ -1,3 +1,11 @@
+# Current checkpoint: D13 extra repair closed blocked
+
+Read [the blocked close receipt](reviews/2026-11-05-d13-extra-repair-blocked-close.md) and [fresh Astra failure](reviews/2026-11-05-d13-extra-repair-astra.md). Candidate `7f50b14c95a9f563f646b842004318552033089d` fixes numeric scientific lineage but leaks colon-space identifier text in Sol's actual-producer probe. Both local reviews changes_required P1; Astra audit_pass no. Worker source395 pass, zero fail/error/warn/skip,59 blocks. This is not acceptance. No parent source/installed/native/package gate ran after privacy failure; no D13 integration. Original initial1+repairs2 and explicit extra1 all consumed. D08/D15 and M7/G7 remain accepted. G8/G9 closed. All owned workers/processes terminal; no sidebar children or polling. Protected dirt preserved.
+
+Literal resume: **D13 extra1 is blocked at candidate 7f50b14. Preserve its original initial attempt, two repairs and consumed extra repair. Do not redispatch Luna or integrate this candidate. A separately authorized bounded follow-up must close D13-EXTRA1-PRIVACY-01 while preserving numeric scientific lineage, then pass independent review, source/installed/native report verification and fresh Astra. Do not reopen accepted D15 or release G8/G9.**
+
+## Historical checkpoints below
+
 # Current checkpoint: one explicit extra D13 repair authorized
 
 Read [the dispatch](reviews/2026-11-05-d13-numeric-exception-dispatch.md). D13 original initial1+repairs2 remains exhausted. Omar authorized exactly one additional repair for numeric construction/selection lineage with privacy preserved. Fresh isolated Luna receives only R/report_targets.R and its D13 tests. Original37663a1 and accepted D15 at3a7f996/f92b8a2 are preserved. No further repair or G8/G9 release.

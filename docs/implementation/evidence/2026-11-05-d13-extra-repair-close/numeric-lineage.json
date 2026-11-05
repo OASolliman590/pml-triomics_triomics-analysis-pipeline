@@ -1,0 +1,14 @@
+{
+  "snapshot": "7f50b14c95a9f563f646b842004318552033089d",
+  "source": {
+    "construction_lineage": "Clinical score constructed from 3 molecular features",
+    "source_selection_history": "Top 10 features selected in the same study"
+  },
+  "reported": {
+    "construction_lineage": "Clinical score constructed from 3 molecular features",
+    "source_selection_history": "Top 10 features selected in the same study"
+  },
+  "subject_overlap_status": "shared_subjects",
+  "independent_replication": false,
+  "preservation_pass": true
+}

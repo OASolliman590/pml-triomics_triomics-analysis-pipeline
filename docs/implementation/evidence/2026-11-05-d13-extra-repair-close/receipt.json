@@ -1,0 +1,171 @@
+{
+  "packet_id": "D-T13",
+  "status": "blocked_after_explicit_extra_repair",
+  "accepted": false,
+  "completion_credit": false,
+  "recorded_at": "2026-11-05T19:20:17.768880+00:00",
+  "canonical_dispatch_commit": "eef4884b1f5ff040cc84f37c65c102cf1ce1cef6",
+  "preserved_candidate": "37663a12d285ee4cbc68146a40342caaed513c15",
+  "worker_base": "bf0a00f2b958a26cffc5e8b49a6226b509b5a5c7",
+  "worker_red_commit": "a5f5128da8951e19ee43ab314aad68e12eb8f658",
+  "candidate_commit": "7f50b14c95a9f563f646b842004318552033089d",
+  "integration_commit": null,
+  "repair_files": [
+    "R/report_targets.R",
+    "tests/testthat/test-D-T13.R"
+  ],
+  "original_attempts": 1,
+  "original_repairs": 2,
+  "explicit_additional_repairs_authorized": 1,
+  "explicit_additional_repairs_used": 1,
+  "total_repairs": 3,
+  "further_repairs_authorized": false,
+  "worker_source_command": "Rscript --vanilla run-source-unbounded-report.R <clean-candidate-worktree> <internal-APFS-evidence> D-T13|D-T08|D-T15",
+  "worker_source_exit_code": 0,
+  "worker_source_counts": {
+    "pass": 395,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 59
+  },
+  "worker_source_by_file": {
+    "test-D-T08.R": {
+      "pass": 148,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 25
+    },
+    "test-D-T13.R": {
+      "pass": 115,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 11
+    },
+    "test-D-T15.R": {
+      "pass": 132,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 23
+    }
+  },
+  "named_testthat_warnings": [],
+  "named_skips": [],
+  "D08_count_note": "Three absent-target-provider expectations no longer run when the D13 provider exists; test-D-T08.R lines298-305. No tests were removed or skipped.",
+  "red_counts": {
+    "pass": 113,
+    "fail": 2,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 11
+  },
+  "red_test_name": "association-only producer profiles retain safe study and construction lineage",
+  "parent_numeric_probe": {
+    "command": "Rscript --vanilla numeric-lineage-probe.R <snapshot> <numeric-lineage.json> 7f50b14c95a9f563f646b842004318552033089d",
+    "exit_code": 0,
+    "result": "Both original scientific phrases preserved; shared_subjects and independent_replication=false preserved"
+  },
+  "parent_privacy_probe": {
+    "command": "Rscript --vanilla numeric-privacy-probe.R <snapshot> <numeric-privacy.json> 7f50b14c95a9f563f646b842004318552033089d",
+    "exit_code": 1,
+    "result": "Patient: 13 clinical score and Subject: 7 features selected are emitted unchanged; privacy gate fails",
+    "synthetic_only": true
+  },
+  "local_reviews": {
+    "Spec": {
+      "verdict": "changes_required",
+      "severity": "P1",
+      "finding": "New numeric prose allowance emits direct identifiers through actual producer-to-section seam. Patient ID A13, Patient number 13, Patient: 13 and MRN 123456 were confirmed by reviewer.",
+      "agent": "/root/d13_extra1_spec_review",
+      "integrity": "all 1130 source hashes and artifact digests match",
+      "evidence": "executable reviewer probes; parent independently confirmed colon-space examples"
+    },
+    "Standards": {
+      "verdict": "changes_required",
+      "severity": "P1",
+      "finding": "New digit allowance emits Patient: 13 clinical score and Subject: 7 features selected through producer/profile/section/HTML. Previous helper withheld both.",
+      "agent": "/root/d13_extra1_standards_review",
+      "rule": "dispatch continuing to withhold private identifiers; AGENTS hard rule9",
+      "integrity": "all 1130 source hashes and artifact digests match"
+    }
+  },
+  "Astra": {
+    "audit_pass": false,
+    "verdict": "changes_required",
+    "agent": "/root/d13_extra1_astra_audit",
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "low",
+    "effective_settings_exposed": false,
+    "candidate": "7f50b14c95a9f563f646b842004318552033089d",
+    "findings": [
+      {
+        "id": "D13-EXTRA1-PRIVACY-01",
+        "severity": "P1",
+        "file": "R/report_targets.R",
+        "line": 63,
+        "finding": "Adding digits allows direct identifier prose missed by the preceding identifier guard; Patient: 13 clinical score and Subject: 7 features selected reach report tables unchanged."
+      }
+    ],
+    "numeric_preservation": "passed in parent producer-backed probe",
+    "overlap_nonreplication": "shared_subjects and independent_replication false preserved in exercised probe",
+    "integrity": "1130 source hashes, snapshot digests and referenced evidence hashes verified; zero mismatches",
+    "review_limit": "read-only static and pinned-evidence audit; Astra did not rerun probes or native fits",
+    "scope": "D13 packet failure audit, not M8 milestone review",
+    "acceptance": false,
+    "G8": "closed",
+    "G9": "closed"
+  },
+  "snapshot_archive_sha256": "7f20daa995a8f5af845fb8ef9e6051ac693cf1e83947ea17df4e95ddc898038a",
+  "snapshot_files_manifest_sha256": "b4f71f35e795601e20a407b2fd44ba5b4ffe363137d1c8387436884487ada9da",
+  "snapshot_file_count": 1130,
+  "repair_diff_sha256": "9d78311de4cae7df966700f37bec83417e2f64a95b909ec38a7edde3805f0f7f",
+  "product_diff_sha256": "8ab4e174ad68005ae48aba3867d8fe99393ab4790808edd5d5cf240819682e09",
+  "evidence_hashes": {
+    "worker_source_receipt": "5bb5485f578cdb0fc87fc28b140020cb013604cf7f3192eac65ac41e6bf38132",
+    "worker_original_RED_log": "e167dd57630410fc3549e795976e46663a44d90bd192c0ae7b6221b386fc804f",
+    "worker_refined_RED_log": "e167dd57630410fc3549e795976e46663a44d90bd192c0ae7b6221b386fc804f",
+    "numeric-lineage.json": "253c7db350da4c896af74a007dc6b8069e492d5fba0770db92c702451a48200f",
+    "._numeric-lineage.json": "0515f39b42b7ea010e9d5c131ee107485656112439a4d5162597d045ad1399aa",
+    "numeric-privacy.json": "6b191ee84755d8a7d251d227c67cc48759b476a3df7fe03f26cbd1ffd7dab1b9",
+    "._numeric-privacy.json": "0515f39b42b7ea010e9d5c131ee107485656112439a4d5162597d045ad1399aa",
+    "numeric-privacy-probe.R": "107219bb7df3a7066852b6f913a9694a21200a1e58f8c451ea2ced3b6de389db",
+    "._numeric-privacy-probe.R": "0515f39b42b7ea010e9d5c131ee107485656112439a4d5162597d045ad1399aa",
+    "numeric-lineage-probe.R": "7650226f4004713481b587cba32824973a9e8d301daf92a5447c207531e01bdc",
+    "._numeric-lineage-probe.R": "0515f39b42b7ea010e9d5c131ee107485656112439a4d5162597d045ad1399aa"
+  },
+  "parent_source_union": "not_run_after_independent_privacy_failure",
+  "installed_package_tests": "not_run_on_candidate",
+  "native_pipeline_and_report": "not_run_on_candidate",
+  "native_B_C_D_provenance_hashes": null,
+  "package_Status": "not_run",
+  "milestone_acceptance": false,
+  "M7_G7": "accepted/released unchanged",
+  "D08_D15": "accepted unchanged",
+  "G8": "closed",
+  "G9": "closed",
+  "C07": "not_run",
+  "C09": "unqualified; synthetic_fixture_only; benefit_guaranteed=false",
+  "conditional_D_without_completion_credit": [
+    "D-T06",
+    "D-T07",
+    "D-T14"
+  ],
+  "frozen_kit_independent_audit": "pending",
+  "private_data_read": false,
+  "server_run": false,
+  "push": false,
+  "Notion_sync": "not performed",
+  "all_run_owned_workers_terminal": true,
+  "active_processes": [],
+  "run_owned_sidebar_chats": [],
+  "persistent_polling": false,
+  "next": "D13 extra1 is blocked at candidate 7f50b14. Preserve its original initial attempt, two repairs and consumed extra repair. Do not redispatch Luna or integrate this candidate. A separately authorized bounded follow-up must close D13-EXTRA1-PRIVACY-01 while preserving numeric scientific lineage, then pass independent review, source/installed/native report verification and fresh Astra. Do not reopen accepted D15 or release G8/G9."
+}

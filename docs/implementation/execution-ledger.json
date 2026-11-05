@@ -37,15 +37,16 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D13_extra1_dispatch_prepared",
-    "last_reconciled": "2026-11-05T18:11:04.938354+00:00",
+    "status": "D13_extra1_closed_blocked",
+    "last_reconciled": "2026-11-05T19:20:57.893892+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "fresh Luna one-extra two-file repair, local reviews, independent proofs, fresh Astra; no further repair or G8/G9 release",
+    "disposition": "All run-owned workers/processes terminal; no child sidebar chats or polling. D13 not integrated; extra allowance exhausted.",
     "current_gate": {
-      "status": "D15_packet_accepted",
-      "candidate": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
-      "review_ref": "docs/implementation/reviews/2026-11-05-d15-sol-acceptance.md",
+      "status": "D13_packet_blocked_privacy",
+      "candidate": "7f50b14c95a9f563f646b842004318552033089d",
+      "review_ref": "docs/implementation/reviews/2026-11-05-d13-extra-repair-blocked-close.md",
+      "Astra": "audit_pass_no",
       "G8": "closed",
       "G9": "closed"
     }
@@ -7206,6 +7207,20 @@
       "explicit_extra_repairs": 1,
       "G8": "closed",
       "G9": "closed"
+    },
+    {
+      "at": "2026-11-05T19:20:57.894539+00:00",
+      "event": "D13_explicit_extra_repair_closed_blocked",
+      "candidate": "7f50b14c95a9f563f646b842004318552033089d",
+      "worker": "/root/d13_numeric_extra1_luna",
+      "local_reviewers": [
+        "/root/d13_extra1_spec_review",
+        "/root/d13_extra1_standards_review"
+      ],
+      "Astra": "/root/d13_extra1_astra_audit",
+      "Astra_verdict": "audit_pass_no",
+      "receipt_ref": "docs/implementation/evidence/2026-11-05-d13-extra-repair-close/receipt.json",
+      "all_terminal": true
     }
   ],
   "packets": {
@@ -8671,12 +8686,12 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "authorized_extra_repair1_dispatch_prepared",
+      "status": "blocked_after_explicit_extra_repair",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": [
-        "Final P2: alphabetic-only prose filter silently drops numeric scientific construction/selection lineage. Both repairs consumed."
+        "D13-EXTRA1-PRIVACY-01 P1: numeric prose whitelist permits direct identifier strings; parent reproduced, both local reviews and fresh Astra fail. Original initial1+repairs2 and explicit extra1 consumed."
       ],
       "repair_attempts": 3,
       "implementation_base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
@@ -8684,23 +8699,24 @@
       "accepted": false,
       "completion_credit": false,
       "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t13-dispatch.md",
-      "candidate_commit": "ef48615b721ed9148f132d0548529802fcbeb9cd",
+      "candidate_commit": "7f50b14c95a9f563f646b842004318552033089d",
       "initial_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-initial-review.md",
       "repair1_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-repair1-review.md",
-      "final_product_commit": "37663a12d285ee4cbc68146a40342caaed513c15",
-      "final_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-blocked-close.md",
-      "receipt_ref": "docs/implementation/evidence/2026-11-04-d-t13-close/blocked-receipt.json",
+      "final_product_commit": "7f50b14c95a9f563f646b842004318552033089d",
+      "final_review_ref": "docs/implementation/reviews/2026-11-05-d13-extra-repair-blocked-close.md",
+      "receipt_ref": "docs/implementation/evidence/2026-11-05-d13-extra-repair-close/receipt.json",
       "source_counts": {
-        "pass": 260,
+        "pass": 395,
         "fail": 0,
         "error": 0,
         "warn": 0,
         "skip": 0,
-        "blocks": 36
+        "blocks": 59
       },
       "pending_gates": [
-        "Resolve blocked AC2 under lawful future authority",
-        "Parent independent final native/report readback",
+        "Separately authorized bounded privacy follow-up",
+        "Parent source/installed/native report verification after privacy passes",
+        "Fresh applicable packet audit",
         "M8 milestone gates"
       ],
       "original_bounded_run": {
@@ -8714,9 +8730,21 @@
         "used": 1,
         "reason": "numeric construction/selection lineage lost by prose filter",
         "dispatch_ref": "docs/implementation/reviews/2026-11-05-d13-numeric-exception-dispatch.md",
-        "accepted": false
+        "accepted": false,
+        "worker_commit": "7f50b14c95a9f563f646b842004318552033089d",
+        "status": "consumed_blocked",
+        "review_ref": "docs/implementation/reviews/2026-11-05-d13-extra-repair-blocked-close.md"
       },
-      "next_transition": "fresh Luna one-extra two-file repair, local reviews, independent proofs, fresh Astra; no further repair or G8/G9 release"
+      "next_transition": "D13 extra1 is blocked at candidate 7f50b14. Preserve its original initial attempt, two repairs and consumed extra repair. Do not redispatch Luna or integrate this candidate. A separately authorized bounded follow-up must close D13-EXTRA1-PRIVACY-01 while preserving numeric scientific lineage, then pass independent review, source/installed/native report verification and fresh Astra. Do not reopen accepted D15 or release G8/G9.",
+      "extra_candidate": "7f50b14c95a9f563f646b842004318552033089d",
+      "source_counts_producer": "worker, not parent acceptance",
+      "final_local_review": {
+        "Spec": "changes_required P1",
+        "Standards": "changes_required P1",
+        "Sol": "privacy_probe_failed",
+        "Astra": "audit_pass_no"
+      },
+      "final_snapshot_commit": "7f50b14c95a9f563f646b842004318552033089d"
     },
     "D-T15": {
       "status": "accepted_synthetic_software_evidence",
@@ -8958,7 +8986,7 @@
       "focused_final_rereviews_used": 1
     },
     "M8": {
-      "status": "in_progress",
+      "status": "blocked",
       "review_ref": null,
       "commit": null,
       "blocking_packets": [
@@ -9033,5 +9061,52 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D13_authorized_extra_repair1_active_G8_G9_closed"
+  "close_state": "D13_extra1_closed_blocked_G8_G9_closed",
+  "D13_extra_repair1_orchestration": {
+    "worker": {
+      "agent": "/root/d13_numeric_extra1_luna",
+      "role": "one bounded numeric-lineage repair",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "base_commit": "bf0a00f2b958a26cffc5e8b49a6226b509b5a5c7",
+      "status": "completed",
+      "allowed_next_transition": "inspect scoped diff, freeze, fresh local reviews; no second extra repair",
+      "cursor": null
+    },
+    "state_ref": "d13/numeric-lineage-exception1/state.json",
+    "G8": "closed",
+    "G9": "closed",
+    "Astra": {
+      "agent": "/root/d13_extra1_astra_audit",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "effective_settings_exposed": false,
+      "candidate": "7f50b14c95a9f563f646b842004318552033089d",
+      "status": "completed",
+      "allowed_next_transition": "record audit; close blocked if confirmed; no additional repair, integration, M8 or gate release",
+      "cursor": null,
+      "audit_pass": false
+    },
+    "local_reviews": {
+      "Spec": {
+        "verdict": "changes_required",
+        "severity": "P1",
+        "finding": "New numeric prose allowance emits direct identifiers through actual producer-to-section seam. Patient ID A13, Patient number 13, Patient: 13 and MRN 123456 were confirmed by reviewer.",
+        "agent": "/root/d13_extra1_spec_review",
+        "integrity": "all 1130 source hashes and artifact digests match",
+        "evidence": "executable reviewer probes; parent independently confirmed colon-space examples"
+      },
+      "Standards": {
+        "verdict": "changes_required",
+        "severity": "P1",
+        "finding": "New digit allowance emits Patient: 13 clinical score and Subject: 7 features selected through producer/profile/section/HTML. Previous helper withheld both.",
+        "agent": "/root/d13_extra1_standards_review",
+        "rule": "dispatch continuing to withhold private identifiers; AGENTS hard rule9",
+        "integrity": "all 1130 source hashes and artifact digests match"
+      }
+    },
+    "status": "closed_blocked",
+    "next_transition": "D13 extra1 is blocked at candidate 7f50b14. Preserve its original initial attempt, two repairs and consumed extra repair. Do not redispatch Luna or integrate this candidate. A separately authorized bounded follow-up must close D13-EXTRA1-PRIVACY-01 while preserving numeric scientific lineage, then pass independent review, source/installed/native report verification and fresh Astra. Do not reopen accepted D15 or release G8/G9."
+  }
 }
