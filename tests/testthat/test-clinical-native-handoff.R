@@ -350,6 +350,240 @@ testthat::test_that("B refuses an external registries symlink before fits and pr
 })
 
 
+testthat::test_that("saved C publication rejects rehashed identity and clinical evidence substitutions", {
+  fixture <- cnh_test_between_person_config()
+  output_root <- tempfile("triomics-cnh-saved-context-authentication-")
+  case_roots <- character()
+  on.exit(unlink(c(fixture$fixture_root, output_root, case_roots),
+                 recursive = TRUE, force = TRUE), add = TRUE)
+
+  initial <- triomics_execute_stage_c(fixture$config_path, output_root)
+  testthat::expect_identical(initial$status, "endpoint_request_scheduled")
+  b_exit <- triomics_main(c(
+    "--config", fixture$config_path, "--stage", "B", "--output", output_root
+  ))
+  testthat::expect_identical(b_exit, 0L)
+
+  base_context_path <- file.path(output_root, "C", "native-publication-context.json")
+  base_envelope_path <- file.path(output_root, "C", "native-publication-context.envelope.json")
+  base_payload <- jsonlite::read_json(base_context_path, simplifyVector = FALSE)
+  initial_handoff <- triomics_cnh_decode_r_value(base_payload$initial_handoff)
+  testthat::expect_identical(initial_handoff$clinical_prediction$status, "not_started")
+  testthat::expect_identical(initial_handoff$clinical_prediction$completion_policy, "conditional")
+  testthat::expect_identical(initial_handoff$clinical_prediction$packet_id, "C-09")
+  testthat::expect_setequal(
+    vapply(initial_handoff$evaluation_evidence$controls,
+           function(control) as.character(control$control), character(1L)),
+    c("null", "weak_signal", "strong_signal", "adversarial")
+  )
+  testthat::expect_true(all(vapply(initial_handoff$evaluation_evidence$controls, function(control) {
+    identical(control$candidate$status, "not_run") && identical(control$baseline$status, "not_run")
+  }, logical(1L))))
+
+  clone_root <- function(destination) {
+    dir.create(destination, recursive = TRUE)
+    entries <- list.files(output_root, recursive = TRUE, full.names = TRUE,
+                          all.files = TRUE, no.. = TRUE)
+    relative <- substring(entries, nchar(output_root) + 2L)
+    directory <- file.info(entries)$isdir
+    for (path in file.path(destination, relative[directory])) {
+      dir.create(path, recursive = TRUE, showWarnings = FALSE)
+    }
+    source_files <- entries[!directory]
+    if (length(source_files)) {
+      copied <- file.copy(source_files, file.path(destination, relative[!directory]),
+                          overwrite = FALSE)
+      stopifnot(all(copied))
+    }
+  }
+
+  mutate_matrix <- function(payload) {
+    identity <- triomics_cnh_decode_r_value(payload$c_input_identity)
+    identity$blocks[[1L]]$matrix[[1L, 1L]] <- identity$blocks[[1L]]$matrix[[1L, 1L]] + 0.125
+    payload$c_input_identity <- triomics_cnh_encode_r_value(identity)
+    payload$c_input_identity_sha256 <- triomics_b07_prov_value_sha256(identity)
+    payload
+  }
+  mutate_c09 <- function(payload) {
+    handoff <- triomics_cnh_decode_r_value(payload$initial_handoff)
+    handoff$clinical_prediction$status <- "complete"
+    handoff$clinical_prediction$benefit_guaranteed <- TRUE
+    payload$initial_handoff <- triomics_cnh_encode_r_value(handoff)
+    payload
+  }
+  mutate_evaluation_status <- function(payload) {
+    handoff <- triomics_cnh_decode_r_value(payload$initial_handoff)
+    handoff$evaluation_evidence$status <- "complete"
+    payload$initial_handoff <- triomics_cnh_encode_r_value(handoff)
+    payload
+  }
+  mutate_control <- function(payload) {
+    handoff <- triomics_cnh_decode_r_value(payload$initial_handoff)
+    handoff$evaluation_evidence$controls[[1L]]$candidate$status <- "complete"
+    handoff$evaluation_evidence$controls[[1L]]$candidate$artifact_ref <- "c07-candidate"
+    handoff$evaluation_evidence$controls[[1L]]$candidate$artifact_sha256 <- paste(rep("a", 64L), collapse = "")
+    handoff$evaluation_evidence$source_artifacts <- list(list(
+      artifact_id = "c07-candidate", sha256 = paste(rep("a", 64L), collapse = "")
+    ))
+    payload$initial_handoff <- triomics_cnh_encode_r_value(handoff)
+    payload
+  }
+  mutations <- list(
+    identity_matrix = mutate_matrix,
+    c09_completion_claim = mutate_c09,
+    evaluation_completion_claim = mutate_evaluation_status,
+    c07_control_completion_claim = mutate_control
+  )
+  for (case_name in names(mutations)) {
+    case_root <- tempfile(paste0("triomics-cnh-context-case-", case_name, "-"))
+    case_roots <- c(case_roots, case_root)
+    clone_root(case_root)
+    context_path <- file.path(case_root, "C", "native-publication-context.json")
+    envelope_path <- file.path(case_root, "C", "native-publication-context.envelope.json")
+    request_paths <- file.path(case_root, "B", "clinical-score-association-requests",
+                               c("request-01.json", "request-01.envelope.json"))
+    request_hashes <- stats::setNames(vapply(request_paths, triomics_sha256, character(1L)),
+                                      basename(request_paths))
+    payload <- jsonlite::read_json(context_path, simplifyVector = FALSE)
+    payload <- mutations[[case_name]](payload)
+    jsonlite::write_json(payload, context_path, auto_unbox = TRUE, null = "null",
+                         pretty = TRUE, digits = NA)
+    envelope <- jsonlite::read_json(envelope_path, simplifyVector = FALSE)
+    envelope$payload_sha256 <- triomics_sha256(context_path)
+    jsonlite::write_json(envelope, envelope_path, auto_unbox = TRUE, null = "null",
+                         pretty = TRUE, digits = NA)
+    c_paths_before <- sort(list.files(file.path(case_root, "C"), recursive = TRUE,
+                                      full.names = TRUE, all.files = TRUE), method = "radix")
+    c_hashes_before <- stats::setNames(vapply(c_paths_before, triomics_sha256, character(1L)),
+                                       substring(c_paths_before, nchar(case_root) + 2L))
+
+    error <- testthat::capture_error(
+      triomics_cnh_publish_saved_c(fixture$config_path, case_root)
+    )
+    testthat::expect_identical(error$code, "C_PUBLICATION_CONTEXT_INVALID", info = case_name)
+    testthat::expect_false(file.exists(file.path(case_root, "D", "stage-handoff-provenance.json")),
+                           info = case_name)
+    testthat::expect_identical(
+      stats::setNames(vapply(request_paths, triomics_sha256, character(1L)), basename(request_paths)),
+      request_hashes, info = case_name
+    )
+    c_paths_after <- sort(list.files(file.path(case_root, "C"), recursive = TRUE,
+                                     full.names = TRUE, all.files = TRUE), method = "radix")
+    testthat::expect_identical(
+      stats::setNames(vapply(c_paths_after, triomics_sha256, character(1L)),
+                      substring(c_paths_after, nchar(case_root) + 2L)),
+      c_hashes_before, info = case_name
+    )
+  }
+})
+
+testthat::test_that("failed C handoff cleans an after-write envelope and preserves previous D state", {
+  d_config <- triomics_test_resource("examples", "tickets", "D-T08.yaml")
+  previous_d_root <- tempfile("triomics-cnh-previous-d-generation-")
+  on.exit(unlink(previous_d_root, recursive = TRUE, force = TRUE), add = TRUE)
+  for (stage in c("B", "C", "D")) {
+    exit <- triomics_main(c(
+      "--config", d_config, "--stage", stage, "--output", previous_d_root
+    ))
+    testthat::expect_identical(exit, 0L, info = paste("public D-T08", stage))
+    if (!identical(exit, 0L)) return(invisible(NULL))
+  }
+  previous_pointer <- file.path(previous_d_root, "registries", "current-D.json")
+  testthat::expect_true(file.exists(previous_pointer))
+  pointer <- jsonlite::read_json(previous_pointer, simplifyVector = FALSE)
+  previous_generation <- dirname(file.path(previous_d_root, pointer$generation_manifest$path))
+  testthat::expect_true(dir.exists(previous_generation))
+  previous_manifest <- file.path(previous_generation, "generation-manifest.json")
+  testthat::expect_true(file.exists(previous_manifest))
+  testthat::expect_identical(triomics_sha256(previous_manifest), as.character(pointer$generation_id))
+  testthat::expect_true(is.list(triomics_d_validate_generation(
+    previous_d_root, as.character(pointer$generation_id)
+  )))
+
+  fixture <- cnh_test_between_person_config()
+  output_root <- tempfile("triomics-cnh-after-write-rollback-")
+  on.exit(unlink(c(fixture$fixture_root, output_root), recursive = TRUE, force = TRUE), add = TRUE)
+  initial <- triomics_execute_stage_c(fixture$config_path, output_root)
+  testthat::expect_identical(initial$status, "endpoint_request_scheduled")
+  b_exit <- triomics_main(c(
+    "--config", fixture$config_path, "--stage", "B", "--output", output_root
+  ))
+  testthat::expect_identical(b_exit, 0L)
+
+  copied_generation_parent <- file.path(output_root, "D", "generations")
+  dir.create(copied_generation_parent, recursive = TRUE, showWarnings = FALSE)
+  testthat::expect_true(file.copy(previous_generation, copied_generation_parent, recursive = TRUE))
+  copied_pointer <- file.path(output_root, "registries", "current-D.json")
+  testthat::expect_true(file.copy(previous_pointer, copied_pointer))
+  previous_pointer_hash <- triomics_sha256(copied_pointer)
+  copied_generation <- file.path(output_root, pointer$generation_manifest$path)
+  generation_dir <- dirname(copied_generation)
+  generation_files <- sort(list.files(generation_dir, recursive = TRUE, full.names = TRUE,
+                                      all.files = TRUE), method = "radix")
+  generation_files <- generation_files[!file.info(generation_files)$isdir]
+  generation_hashes <- stats::setNames(vapply(generation_files, triomics_sha256, character(1L)),
+                                       substring(generation_files, nchar(generation_dir) + 2L))
+  c_paths <- sort(list.files(file.path(output_root, "C"), recursive = TRUE,
+                             full.names = TRUE, all.files = TRUE), method = "radix")
+  c_hashes <- stats::setNames(vapply(c_paths, triomics_sha256, character(1L)),
+                              substring(c_paths, nchar(output_root) + 2L))
+  request_paths <- file.path(output_root, "B", "clinical-score-association-requests",
+                             c("request-01.json", "request-01.envelope.json"))
+  request_hashes <- stats::setNames(vapply(request_paths, triomics_sha256, character(1L)),
+                                    basename(request_paths))
+
+  reached <- FALSE
+  original_write_envelope <- triomics_write_envelope
+  after_profile_envelope <- function(envelope, path) {
+    result <- original_write_envelope(envelope, path)
+    if (identical(basename(path), "stage-handoff-provenance.envelope.json")) {
+      reached <<- TRUE
+      stop("Injected after the C provenance envelope write.", call. = FALSE)
+    }
+    result
+  }
+  testthat::local_mocked_bindings(
+    triomics_write_envelope = after_profile_envelope,
+    .package = "triomics"
+  )
+  error <- testthat::capture_error(
+    triomics_cnh_publish_saved_c(fixture$config_path, output_root)
+  )
+
+  testthat::expect_true(reached)
+  testthat::expect_match(conditionMessage(error), "Injected after the C provenance envelope write")
+  testthat::expect_identical(triomics_sha256(copied_pointer), previous_pointer_hash)
+  files_after <- sort(list.files(generation_dir, recursive = TRUE, full.names = TRUE,
+                                 all.files = TRUE), method = "radix")
+  files_after <- files_after[!file.info(files_after)$isdir]
+  testthat::expect_identical(
+    stats::setNames(vapply(files_after, triomics_sha256, character(1L)),
+                    substring(files_after, nchar(generation_dir) + 2L)),
+    generation_hashes
+  )
+  testthat::expect_identical(
+    stats::setNames(vapply(request_paths, triomics_sha256, character(1L)), basename(request_paths)),
+    request_hashes
+  )
+  c_paths_after <- sort(list.files(file.path(output_root, "C"), recursive = TRUE,
+                                   full.names = TRUE, all.files = TRUE), method = "radix")
+  testthat::expect_identical(
+    stats::setNames(vapply(c_paths_after, triomics_sha256, character(1L)),
+                    substring(c_paths_after, nchar(output_root) + 2L)),
+    c_hashes
+  )
+  c06_outputs <- file.path(output_root, "D", c(
+    "candidate-nominations.json", "candidate-nominations.envelope.json",
+    "integration-evidence.json", "integration-evidence.envelope.json",
+    "integration-comparisons.json", "integration-comparisons.envelope.json",
+    "evaluation-evidence.json", "evaluation-evidence.envelope.json",
+    "stage-status.json", "stage-status.envelope.json",
+    "handoff-manifest.json", "handoff-manifest.envelope.json",
+    "stage-handoff-provenance.json", "stage-handoff-provenance.envelope.json"
+  ))
+  testthat::expect_false(any(file.exists(c06_outputs) | dir.exists(c06_outputs)))
+})
+
 testthat::test_that("the original multivisit C08 score remains ineligible for a single-visit request", {
   config_path <- cnh_test_multivisit_between_person_config()
   output_root <- tempfile("triomics-cnh-multivisit-refusal-")
