@@ -1832,8 +1832,8 @@ triomics_c06_write_handoff <- function(handoff, output_root, config_sha256,
   inputs <- triomics_c06_lineage_inputs(c(lineage_inputs, matrix_inputs), "handoff.inputs")
   payload_records <- lapply(payloads, function(item) {
     path <- file.path(d_root, item$name)
-    triomics_write_json_atomic(item$value, path)
     mark_written(path)
+    triomics_write_json_atomic(item$value, path)
     list(item = item, path = path, payload_sha256 = triomics_sha256(path))
   })
   evaluation_record <- payload_records[[which(vapply(payload_records, function(record) {
@@ -1869,8 +1869,8 @@ triomics_c06_write_handoff <- function(handoff, output_root, config_sha256,
     envelope$analysis_id <- handoff$analysis_id
     envelope$preparation_context_id <- handoff$preparation_context_id
     envelope$representation_id <- handoff$representation_id
-    triomics_write_envelope(envelope, envelope_path)
     mark_written(envelope_path)
+    triomics_write_envelope(envelope, envelope_path)
     list(
       artifact_type = item$type,
       payload_file = item$name,
@@ -1890,8 +1890,8 @@ triomics_c06_write_handoff <- function(handoff, output_root, config_sha256,
     artifacts = artifacts
   )
   manifest_path <- file.path(d_root, "handoff-manifest.json")
-  triomics_write_json_atomic(manifest, manifest_path)
   mark_written(manifest_path)
+  triomics_write_json_atomic(manifest, manifest_path)
   manifest_inputs <- c(inputs, lapply(artifacts, function(artifact) {
     list(
       artifact_id = paste0("c06-", sub("\\.json$", "", artifact$payload_file)),
@@ -1916,8 +1916,8 @@ triomics_c06_write_handoff <- function(handoff, output_root, config_sha256,
   manifest_envelope$preparation_context_id <- handoff$preparation_context_id
   manifest_envelope$representation_id <- handoff$representation_id
   manifest_envelope_path <- file.path(d_root, "handoff-manifest.envelope.json")
-  triomics_write_envelope(manifest_envelope, manifest_envelope_path)
   mark_written(manifest_envelope_path)
+  triomics_write_envelope(manifest_envelope, manifest_envelope_path)
   profile <- triomics_c06_build_provenance_profile(
     handoff, d_root, config_sha256, producer_commit, b_predecessors
   )
@@ -1934,8 +1934,8 @@ triomics_c06_write_handoff <- function(handoff, output_root, config_sha256,
       paste0("The native C provenance profile failed the existing public validator: ", reason)
     )
   }
-  triomics_write_json_atomic(profile, profile_path)
   mark_written(profile_path)
+  triomics_write_json_atomic(profile, profile_path)
   profile_envelope <- triomics_artifact_envelope(
     artifact_type = "stage_handoff_provenance",
     artifact_id = "c06-stage-handoff-provenance",
@@ -1953,8 +1953,8 @@ triomics_c06_write_handoff <- function(handoff, output_root, config_sha256,
   profile_envelope$analysis_id <- as.character(handoff$analysis_id)
   profile_envelope$preparation_context_id <- as.character(handoff$preparation_context_id)
   profile_envelope$representation_id <- as.character(handoff$representation_id)
-  triomics_write_envelope(profile_envelope, profile_envelope_path)
   mark_written(profile_envelope_path)
+  triomics_write_envelope(profile_envelope, profile_envelope_path)
   readback <- tryCatch(jsonlite::read_json(profile_path, simplifyVector = FALSE),
                        error = function(error) NULL)
   if (!isTRUE(triomics_validate_envelope(profile_envelope_path)) ||

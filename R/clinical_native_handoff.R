@@ -236,6 +236,54 @@ triomics_cnh_source_inputs <- function(ingested) {
   })
 }
 
+triomics_cnh_declared_source_files <- function(config) {
+  config_path <- attr(config, "config_path")
+  if (!triomics_nonempty_string(as.character(config_path %||% "")) ||
+      !file.exists(as.character(config_path))) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID", "Declared source binding needs the validated configuration path.",
+      "config_path", stage = "C"
+    )
+  }
+  root <- dirname(normalizePath(config_path, winslash = "/", mustWork = TRUE))
+  declarations <- list("metadata.file" = config$metadata$file)
+  if (isTRUE(config$clinical$enabled)) {
+    declarations <- c(declarations, list(
+      "clinical.dictionary_file" = config$clinical$dictionary_file,
+      "clinical.observations_file" = config$clinical$observations_file,
+      "clinical.links_file" = config$clinical$links_file
+    ))
+  }
+  lapply(names(declarations), function(key) {
+    declared_path <- declarations[[key]]
+    resolved_path <- tryCatch(
+      triomics_resolve_declared_input(declared_path, key, root),
+      error = function(error) NULL
+    )
+    if (!triomics_nonempty_string(as.character(declared_path %||% "")) ||
+        is.null(resolved_path) || !file.exists(resolved_path) || dir.exists(resolved_path) ||
+        triomics_is_symlink(resolved_path)) {
+      triomics_cnh_abort(
+        "C_PUBLICATION_CONTEXT_INVALID", paste0("The declared source file is missing or unsafe: ", key),
+        key, stage = "C"
+      )
+    }
+    digest <- tryCatch(triomics_sha256(resolved_path), error = function(error) NULL)
+    if (!triomics_sha256_text(digest)) {
+      triomics_cnh_abort(
+        "C_PUBLICATION_CONTEXT_INVALID", paste0("The declared source file cannot be hashed: ", key),
+        key, stage = "C"
+      )
+    }
+    list(
+      key = key,
+      declared_path = as.character(declared_path),
+      resolved_path = resolved_path,
+      sha256 = digest
+    )
+  })
+}
+
 triomics_cnh_reject_prior_b <- function(root) {
   paths <- c(
     file.path(root, "registries", "run-B.json"),
@@ -320,6 +368,37 @@ triomics_cnh_load_stage_b_context <- function(config_path, output, allow_b_start
     triomics_cnh_abort("B_SCORE_REQUEST_MISSING", "The native B request needs an existing same-root C output.", "output")
   }
   if (!isTRUE(allow_b_started)) triomics_cnh_reject_prior_b(root)
+  run_relative <- file.path("registries", "run-C.json")
+  run_candidate <- tryCatch(
+    triomics_b07_child_path(root, run_relative), error = function(error) NULL
+  )
+  if (is.null(run_candidate) || !file.exists(run_candidate) || dir.exists(run_candidate) ||
+      triomics_is_symlink(run_candidate)) {
+    triomics_cnh_abort(
+      "B_SCORE_LINEAGE_INVALID", "The C completion registry path is missing or escapes the output root.",
+      run_relative, stage = "B"
+    )
+  }
+  run_path <- triomics_cnh_path(root, run_relative, triomics_sha256(run_candidate), "C run record")
+  run_record <- triomics_cnh_read_json(run_path, "C run record")
+  if (!identical(run_record$stage, "C") || !identical(run_record$status, "complete")) {
+    triomics_cnh_abort(
+      "B_SCORE_LINEAGE_INVALID", "The saved C run record is incomplete or mismatched.",
+      run_relative, stage = "B"
+    )
+  }
+  saved_context <- tryCatch(
+    triomics_cnh_read_saved_c_context(config, root),
+    error = function(error) error
+  )
+  if (inherits(saved_context, "error")) {
+    triomics_cnh_abort(
+      "B_SCORE_LINEAGE_INVALID",
+      paste0("The saved C context failed source and producer identity validation: ",
+             conditionMessage(saved_context)),
+      "C/native-publication-context.json", stage = "B"
+    )
+  }
   config_sha256 <- as.character(attr(config, "config_sha256"))
   source_identity <- list(
     study_id = as.character(config$study_id),
@@ -332,9 +411,19 @@ triomics_cnh_load_stage_b_context <- function(config_path, output, allow_b_start
     triomics_cnh_abort("B_SCORE_LINEAGE_INVALID", "The native request lacks a complete C identity.", "identity")
   }
 
+  c_payload_relative <- file.path("C", "integration-results.json")
+  c_payload_candidate <- tryCatch(
+    triomics_b07_child_path(root, c_payload_relative), error = function(error) NULL
+  )
+  if (is.null(c_payload_candidate) || !file.exists(c_payload_candidate) ||
+      dir.exists(c_payload_candidate) || triomics_is_symlink(c_payload_candidate)) {
+    triomics_cnh_abort(
+      "B_SCORE_LINEAGE_INVALID", "The saved C integration payload path is missing or unsafe.",
+      c_payload_relative, stage = "B"
+    )
+  }
   c_payload_path <- triomics_cnh_path(
-    root, file.path("C", "integration-results.json"),
-    expected_sha256 = triomics_sha256(file.path(root, "C", "integration-results.json")),
+    root, c_payload_relative, expected_sha256 = triomics_sha256(c_payload_candidate),
     key = "C integration results"
   )
   c_envelope_path <- file.path(root, "C", "integration-results.envelope.json")
@@ -353,16 +442,24 @@ triomics_cnh_load_stage_b_context <- function(config_path, output, allow_b_start
       !identical(c_payload$integrations[[1L]]$status, "complete")) {
     triomics_cnh_abort("B_SCORE_LINEAGE_INVALID", "The saved C integration result is incomplete or mismatched.", "C/integration-results.json")
   }
-  run_path <- file.path(root, "registries", "run-C.json")
-  run_record <- triomics_cnh_read_json(run_path, "C run record")
-  if (!identical(run_record$stage, "C") || !identical(run_record$study_id, source_identity$study_id) ||
-      !identical(run_record$status, "complete")) {
+  if (!identical(run_record$study_id, source_identity$study_id)) {
     triomics_cnh_abort("B_SCORE_LINEAGE_INVALID", "The saved C run record is incomplete or mismatched.", "registries/run-C.json")
   }
 
   ingested <- triomics_ingest_configured_study(config, config_path)
   if (!identical(as.character(ingested$study_id), source_identity$study_id)) {
     triomics_cnh_abort("B_SCORE_LINEAGE_INVALID", "The current molecular sources name a different study.", "study_id")
+  }
+  normalized_metadata <- list(
+    sample_metadata = ingested$sample_metadata,
+    sample_registry = ingested$sample_registry,
+    declared_factor_levels = ingested$declared_factor_levels
+  )
+  if (!triomics_cnh_same_json(saved_context$identity$normalized_metadata, normalized_metadata)) {
+    triomics_cnh_abort(
+      "B_SCORE_LINEAGE_INVALID", "The saved C normalized metadata differs from current declared source bytes.",
+      "metadata.file", stage = "B"
+    )
   }
   clinical <- triomics_ingest_clinical(config, config_path, ingested$sample_registry)
   if (!is.list(clinical$public) || !identical(as.character(clinical$study_id), source_identity$study_id)) {
@@ -886,11 +983,15 @@ triomics_cnh_c_file_references <- function(root) {
   })
 }
 
-triomics_cnh_context_envelope_inputs <- function(source_inputs, file_references) {
+triomics_cnh_context_envelope_inputs <- function(source_inputs, file_references,
+                                                  declared_source_files = list()) {
+  declared_inputs <- lapply(declared_source_files, function(source) {
+    list(artifact_id = paste0("declared-source-file:", source$key), sha256 = source$sha256)
+  })
   file_inputs <- lapply(file_references, function(reference) {
     list(artifact_id = paste0("c-stage-file:", reference$path), sha256 = reference$sha256)
   })
-  inputs <- c(source_inputs, file_inputs)
+  inputs <- c(source_inputs, declared_inputs, file_inputs)
   ids <- vapply(inputs, function(input) as.character(input$artifact_id), character(1L))
   if (anyDuplicated(ids)) {
     triomics_cnh_abort(
@@ -899,6 +1000,579 @@ triomics_cnh_context_envelope_inputs <- function(source_inputs, file_references)
     )
   }
   inputs
+}
+
+triomics_cnh_validate_saved_identity_matrices <- function(root, c_input_identity) {
+  invalid <- function(message) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID", message,
+      "c_input_identity.blocks", stage = "C"
+    )
+  }
+  relative <- file.path("C", "integration-results.json")
+  path <- tryCatch(triomics_b07_child_path(root, relative), error = function(error) NULL)
+  if (is.null(path) || !file.exists(path) || dir.exists(path) || triomics_is_symlink(path)) {
+    invalid("The C integration payload needed to authenticate typed matrices is missing or unsafe.")
+  }
+  payload <- tryCatch(triomics_cnh_read_json(path, "C integration results"), error = function(error) NULL)
+  if (!is.list(payload$integrations) || length(payload$integrations) != 1L) {
+    invalid("The C integration payload does not contain one completed native identity.")
+  }
+  integration <- payload$integrations[[1L]]
+  provenance <- integration$result$params$provenance
+  expected_hashes <- provenance$matrix_sha256
+  blocks <- c_input_identity$blocks
+  if (!is.list(blocks) || !length(blocks) || is.null(names(blocks)) ||
+      !is.list(expected_hashes) || is.null(names(expected_hashes)) ||
+      !setequal(names(blocks), names(expected_hashes))) {
+    invalid("The typed C matrix identities do not match the independent integration result.")
+  }
+  for (block_id in names(blocks)) {
+    block <- blocks[[block_id]]
+    matrix <- block$matrix
+    feature_ids <- as.character(unlist(block$feature_ids, use.names = FALSE))
+    unit_ids <- as.character(unlist(block$unit_ids, use.names = FALSE))
+    matrix_sha256 <- if (is.matrix(matrix)) {
+      digest::digest(matrix, algo = "sha256", serialize = TRUE)
+    } else ""
+    if (!is.matrix(matrix) || is.null(rownames(matrix)) || is.null(colnames(matrix)) ||
+        !identical(rownames(matrix), feature_ids) || !identical(colnames(matrix), unit_ids) ||
+        !identical(as.character(matrix_sha256), as.character(block$matrix_sha256)) ||
+        !identical(as.character(matrix_sha256), as.character(expected_hashes[[block_id]])) ||
+        !identical(dim(matrix), c(length(feature_ids), length(unit_ids)))) {
+      invalid(paste0("The saved typed matrix differs from the exact C producer matrix for ", block_id, "."))
+    }
+  }
+  invisible(list(payload = payload, integration = integration, provenance = provenance))
+}
+
+triomics_cnh_c01_matrix <- function(payload, row_key, column_key) {
+  rows <- as.character(unlist(payload$rows[[row_key]], use.names = FALSE))
+  columns <- as.character(unlist(payload$columns[[column_key]], use.names = FALSE))
+  values <- lapply(payload$values, function(row) {
+    as.numeric(unlist(row, recursive = FALSE, use.names = FALSE))
+  })
+  if (!length(rows) || !length(columns) || length(values) != length(rows) ||
+      any(vapply(values, length, integer(1L)) != length(columns))) return(NULL)
+  matrix_value <- do.call(rbind, values)
+  dimnames(matrix_value) <- list(rows, columns)
+  matrix_value
+}
+
+triomics_cnh_expected_selected_values <- function(loadings, selected) {
+  stats::setNames(lapply(names(selected), function(block_id) {
+    features <- selected[[block_id]]
+    stats::setNames(lapply(features, function(feature_key) {
+      loading <- loadings[[block_id]][feature_key, , drop = TRUE]
+      list(
+        feature_key = feature_key,
+        component_loadings = as.list(stats::setNames(as.numeric(loading), names(loading)))
+      )
+    }), features)
+  }), names(selected))
+}
+
+triomics_cnh_c01_common_parameters <- function(params, score_matrix, backend,
+                                                required_views, block_ids) {
+  parameters <- params[setdiff(names(params), "provenance")]
+  state <- parameters$state
+  required_views <- as.character(unlist(required_views, use.names = FALSE))
+  block_ids <- as.character(unlist(block_ids, use.names = FALSE))
+  for (field in c("rotation", "design", "native_design")) {
+    value <- if (identical(field, "rotation") && is.list(state)) state$rotation else parameters[[field]]
+    if (!is.list(value) || !length(value) || !all(vapply(value, is.list, logical(1L)))) next
+    rows <- lapply(value, function(row) unlist(row, recursive = FALSE, use.names = FALSE))
+    numeric_rows <- vapply(rows, function(row) is.numeric(row) && all(is.finite(row)), logical(1L))
+    if (!any(numeric_rows)) next
+    column_ids <- switch(field,
+      rotation = colnames(score_matrix),
+      design = if (identical(backend, "mixomics_block_spls")) c(block_ids, "Y") else required_views,
+      native_design = c(block_ids, "Y")
+    )
+    row_ids <- switch(field,
+      rotation = {
+        feature_map <- if (is.list(state)) state$feature_map else NULL
+        if (is.list(feature_map) && length(feature_map) && all(vapply(feature_map, function(item) {
+          is.list(item) && triomics_nonempty_string(as.character(item$column_id %||% ""))
+        }, logical(1L)))) {
+          vapply(feature_map, function(item) as.character(item$column_id), character(1L))
+        } else character()
+      },
+      design = column_ids,
+      native_design = column_ids
+    )
+    if (!all(numeric_rows) || length(row_ids) != length(rows) || length(column_ids) < 1L ||
+        any(vapply(rows, length, integer(1L)) != length(column_ids))) {
+      triomics_cnh_abort(
+        "C_PUBLICATION_CONTEXT_INVALID",
+        paste0("The C producer omitted dimensions needed to authenticate result.params.", field),
+        paste0("C/integration-results.json.result.params.", field), stage = "C"
+      )
+    }
+    matrix_value <- do.call(rbind, lapply(rows, as.numeric))
+    dimnames(matrix_value) <- list(row_ids, column_ids)
+    if (identical(field, "rotation")) {
+      parameters$state$rotation <- triomics_c06_matrix_payload(
+        matrix_value, "result.params.state.rotation"
+      )
+    } else {
+      parameters[[field]] <- triomics_c06_matrix_payload(matrix_value, paste0("result.params.", field))
+    }
+  }
+  triomics_c06_json_value(parameters)
+}
+
+triomics_cnh_validate_saved_handoff_producer <- function(root, identity, source_inputs,
+                                                          handoff, config_sha256) {
+  invalid <- function(message, key = "C/integration-results.json") {
+    triomics_cnh_abort("C_PUBLICATION_CONTEXT_INVALID", message, key, stage = "C")
+  }
+  producer <- triomics_cnh_validate_saved_identity_matrices(root, identity)
+  result_item <- producer$integration
+  result_payload <- result_item$result
+  provenance <- result_payload$params$provenance
+  integration_id <- as.character(result_item$integration_id %||% result_item$method %||% "")
+  if (!identical(result_item$status, "complete") ||
+      !triomics_nonempty_string(integration_id) ||
+      !identical(as.character(result_payload$backend), as.character(result_item$method)) ||
+      !triomics_cnh_same_json(provenance[c("study_id", "analysis_id", "preparation_context_id",
+                                           "representation_id")],
+                              identity[c("study_id", "analysis_id", "preparation_context_id",
+                                         "representation_id")])) {
+    invalid("The completed integration result does not reproduce the saved C handoff identity.")
+  }
+
+  score_matrix <- triomics_cnh_c01_matrix(result_payload$scores, "unit_ids", "component_ids")
+  loadings <- stats::setNames(lapply(result_payload$loadings, function(item) {
+    triomics_cnh_c01_matrix(item, "feature_keys", "component_ids")
+  }), vapply(result_payload$loadings, function(item) as.character(item$block_id), character(1L)))
+  variance_matrix <- triomics_cnh_c01_matrix(result_payload$variance, "block_ids", "component_ids")
+  selected <- stats::setNames(lapply(result_payload$selected, function(value) {
+    as.character(unlist(value, recursive = FALSE, use.names = FALSE))
+  }), names(result_payload$selected))
+  if (is.null(score_matrix) || is.null(variance_matrix) || !length(loadings) ||
+      any(vapply(loadings, is.null, logical(1L))) || is.null(names(selected)) ||
+      !identical(names(loadings), names(selected))) {
+    invalid("The C integration result cannot reproduce its keyed score, loading, variance, and selection facts.")
+  }
+  result <- structure(list(
+    scores = score_matrix,
+    loadings = loadings,
+    variance = variance_matrix,
+    selected = selected,
+    backend = as.character(result_payload$backend),
+    params = result_payload$params
+  ), class = "IntegrationResult")
+  for (field in c("metric", "assay_space", "denominator", "semantics")) {
+    attr(result$variance, field) <- result_payload$variance[[field]]
+  }
+  result <- tryCatch(triomics_validate_integration_result(result), error = function(error) NULL)
+  if (is.null(result)) invalid("The C result matrices do not satisfy the IntegrationResult contract.")
+
+  block_ids <- names(result$selected)
+  unit_ids <- as.character(unlist(provenance$unit_map %||% result$params$training_unit_ids,
+                                  use.names = FALSE))
+  feature_map <- provenance$feature_map
+  matrix_hashes <- provenance$matrix_sha256
+  required_views <- as.character(unlist(provenance$required_views %||% block_ids,
+                                        use.names = FALSE))
+  if (!length(unit_ids) || is.null(names(feature_map)) ||
+      !identical(names(feature_map), block_ids) || is.null(names(matrix_hashes)) ||
+      !identical(names(matrix_hashes), block_ids) ||
+      !setequal(unit_ids, rownames(score_matrix)) || length(unit_ids) != nrow(score_matrix) ||
+      !setequal(required_views, block_ids) || length(required_views) != length(block_ids)) {
+    invalid("The C result provenance cannot reproduce its training units, views, or block identities.")
+  }
+  if (!is.data.frame(identity$analysis_unit_map) ||
+      !identical(as.character(triomics_b07_prov_value_sha256(identity$analysis_unit_map)),
+                 as.character(identity$analysis_unit_map_sha256))) {
+    invalid("The typed C analysis-unit map failed its producer self-identity check.",
+            "c_input_identity.analysis_unit_map_sha256")
+  }
+  eligible_identity_units <- as.character(unlist(
+    identity$analysis_unit_map$unit_id[identity$analysis_unit_map$eligible %in% TRUE],
+    use.names = FALSE
+  ))
+  if (!length(eligible_identity_units) || any(!unit_ids %in% eligible_identity_units)) {
+    invalid("C result training units are not covered by the typed C analysis-unit identity.",
+            "c_input_identity.analysis_unit_map")
+  }
+  for (block_id in block_ids) {
+    source_features <- as.character(unlist(identity$blocks[[block_id]]$feature_ids,
+                                           use.names = FALSE))
+    fitted_features <- as.character(unlist(feature_map[[block_id]], use.names = FALSE))
+    if (!identical(fitted_features, source_features)) {
+      invalid(paste0("C feature map differs from the typed source block: ", block_id),
+              paste0("c_input_identity.blocks.", block_id, ".feature_ids"))
+    }
+  }
+
+  identity_expected <- list(
+    study_id = provenance$study_id,
+    analysis_id = provenance$analysis_id,
+    preparation_context_id = provenance$preparation_context_id,
+    representation_id = provenance$representation_id,
+    unit_ids = sort(unit_ids, method = "radix"),
+    feature_map = stats::setNames(lapply(block_ids, function(block_id) {
+      sort(as.character(unlist(feature_map[[block_id]], use.names = FALSE)), method = "radix")
+    }), block_ids),
+    matrix_sha256 = matrix_hashes[block_ids]
+  )
+  identity_sha256 <- triomics_hash_text(triomics_canonical_json(identity_expected))
+  context_expected <- identity_expected[c("study_id", "analysis_id", "preparation_context_id",
+                                          "representation_id")]
+
+  native_relative <- file.path("C", "native-states", "integration-01.json")
+  native_candidate <- tryCatch(triomics_b07_child_path(root, native_relative), error = function(error) NULL)
+  if (is.null(native_candidate) || !file.exists(native_candidate) || dir.exists(native_candidate) ||
+      triomics_is_symlink(native_candidate)) {
+    invalid("The bound C native-state producer payload is missing or unsafe.", native_relative)
+  }
+  native_path <- triomics_cnh_path(root, native_relative, triomics_sha256(native_candidate),
+                                   "C native state")
+  native_envelope_relative <- file.path("C", "native-states", "integration-01.envelope.json")
+  native_envelope_candidate <- tryCatch(
+    triomics_b07_child_path(root, native_envelope_relative), error = function(error) NULL
+  )
+  if (is.null(native_envelope_candidate) || !file.exists(native_envelope_candidate) ||
+      dir.exists(native_envelope_candidate) || triomics_is_symlink(native_envelope_candidate)) {
+    invalid("The bound C native-state envelope is missing or unsafe.", native_envelope_relative)
+  }
+  native_envelope_path <- triomics_cnh_path(
+    root, native_envelope_relative, triomics_sha256(native_envelope_candidate), "C native state envelope"
+  )
+  native <- triomics_cnh_read_json(native_path, "C native state")
+  native_payload <- native$native
+  native_ref <- list(
+    artifact_id = as.character(native$artifact_id),
+    sha256 = triomics_sha256(native_path)
+  )
+  result_relative <- file.path("C", "integration-results.json")
+  result_path <- tryCatch(triomics_b07_child_path(root, result_relative), error = function(error) NULL)
+  result_envelope_relative <- file.path("C", "integration-results.envelope.json")
+  result_envelope_candidate <- tryCatch(
+    triomics_b07_child_path(root, result_envelope_relative), error = function(error) NULL
+  )
+  if (is.null(result_path) || !file.exists(result_path) || dir.exists(result_path) ||
+      triomics_is_symlink(result_path) || is.null(result_envelope_candidate) ||
+      !file.exists(result_envelope_candidate) || dir.exists(result_envelope_candidate) ||
+      triomics_is_symlink(result_envelope_candidate)) {
+    invalid("The C integration result producer payload or envelope is missing or unsafe.")
+  }
+  result_envelope_path <- triomics_cnh_path(
+    root, result_envelope_relative, triomics_sha256(result_envelope_candidate),
+    "C integration results envelope"
+  )
+  triomics_cnh_validate_envelope(result_envelope_path, c(
+    list(artifact_type = "integration_results", artifact_id = "stage-c-integration-results",
+         study_id = as.character(identity$study_id), config_sha256 = config_sha256,
+         analysis_id = as.character(identity$analysis_id),
+         preparation_context_id = as.character(identity$preparation_context_id),
+         representation_id = as.character(identity$representation_id), status = "complete",
+         payload_sha256 = triomics_sha256(result_path),
+         inputs = c(source_inputs, list(native_ref)))
+  ), "C integration results")
+  native_inputs <- lapply(block_ids, function(block_id) {
+    list(artifact_id = paste(integration_id, block_id, sep = "::"),
+         sha256 = as.character(matrix_hashes[[block_id]]))
+  })
+  names(native_inputs) <- NULL
+  preparation_hashes <- native$preparation_state_hashes %||% list()
+  preparation_refs <- native$preparation_state_refs %||% list()
+  if (!is.list(preparation_hashes) || !is.list(preparation_refs) ||
+      !identical(sort(names(preparation_hashes)), sort(names(preparation_refs))) ||
+      !triomics_cnh_same_json(preparation_hashes, provenance$preparation_state_hashes %||% list())) {
+    invalid("The C native-state preparation hashes do not match C result producer lineage.",
+            "C/native-states/integration-01.json")
+  }
+  preparation_inputs <- lapply(names(preparation_refs), function(block_id) {
+    reference <- preparation_refs[[block_id]]
+    path <- if (is.list(reference)) tryCatch(
+      triomics_b07_child_path(root, as.character(reference$path %||% "")), error = function(error) NULL
+    ) else NULL
+    if (is.null(path) || !file.exists(path) || dir.exists(path) || triomics_is_symlink(path) ||
+        !identical(triomics_sha256(path), as.character(reference$payload_sha256)) ||
+        !identical(as.character(reference$state_hash), as.character(preparation_hashes[[block_id]]))) {
+      invalid(paste0("The immutable C preparation state failed its producer binding: ", block_id),
+              "C/native-states/integration-01.json")
+    }
+    list(artifact_id = paste("preparation-state", block_id, sep = "::"),
+         sha256 = as.character(reference$payload_sha256))
+  })
+  expected_native_inputs <- c(source_inputs, native_inputs, preparation_inputs)
+  triomics_cnh_validate_envelope(native_envelope_path, c(
+    list(artifact_type = "integration_native_state", artifact_id = native_ref$artifact_id,
+         study_id = as.character(identity$study_id), config_sha256 = config_sha256,
+         analysis_id = as.character(identity$analysis_id),
+         preparation_context_id = as.character(identity$preparation_context_id),
+         representation_id = as.character(identity$representation_id), status = "complete",
+         payload_sha256 = triomics_sha256(native_path), inputs = expected_native_inputs)
+  ), "C native state")
+  native_identity <- list(
+    study_id = native$study_id, analysis_id = native$analysis_id,
+    preparation_context_id = native$preparation_context_id,
+    representation_id = native$representation_id
+  )
+  if (!identical(as.character(native$integration_id), integration_id) ||
+      !identical(as.character(native$backend), as.character(result$backend)) ||
+      !triomics_cnh_same_json(native_identity, context_expected) ||
+      !triomics_sha256_text(native_ref$sha256) || !is.list(native_payload)) {
+    invalid("The C native-state producer does not match the fitted result identity.",
+            "C/native-states/integration-01.json")
+  }
+
+  common_expected <- list(
+    backend = result$backend,
+    scores = triomics_c06_matrix_payload(result$scores, "saved_common_scores"),
+    loadings = triomics_c06_matrix_list_payload(result$loadings, "saved_common_loadings"),
+    variance = triomics_c06_matrix_payload(result$variance, "saved_common_variance"),
+    selected = triomics_c06_json_value(result$selected),
+    parameters = triomics_cnh_c01_common_parameters(
+      result$params, result$scores, result$backend, required_views, block_ids
+    )
+  )
+  eligibility <- result$params$eligibility
+  if (!is.list(eligibility)) eligibility <- list()
+  if (identical(result$backend, "mixomics_diablo")) {
+    eligibility$available_rank <- result$params$available_training_rank
+  }
+  if (identical(result$backend, "mixomics_block_spls")) {
+    feature_flow <- result$params$feature_flow
+    if (!is.list(feature_flow) || is.null(names(feature_flow)) ||
+        !identical(names(feature_flow), block_ids)) {
+      invalid("The block.spls producer omitted the feature-flow map needed to authenticate eligibility details.",
+              "C/integration-results.json.result.params.feature_flow")
+    }
+    input_keys <- stats::setNames(lapply(block_ids, function(block_id) {
+      as.character(unlist(feature_flow[[block_id]]$input, use.names = FALSE))
+    }), block_ids)
+    retained <- stats::setNames(lapply(block_ids, function(block_id) {
+      as.character(unlist(feature_flow[[block_id]]$retained, use.names = FALSE))
+    }), block_ids)
+    excluded <- stats::setNames(lapply(block_ids, function(block_id) {
+      as.character(unlist(feature_flow[[block_id]]$excluded_zero_variance, use.names = FALSE))
+    }), block_ids)
+    available_rank <- stats::setNames(vapply(block_ids, function(block_id) {
+      matrix_value <- identity$blocks[[block_id]]$matrix
+      source_features <- as.character(unlist(identity$blocks[[block_id]]$feature_ids,
+                                              use.names = FALSE))
+      if (!is.matrix(matrix_value) || !identical(rownames(matrix_value), source_features) ||
+          !setequal(colnames(matrix_value), unit_ids)) {
+        invalid(paste0("The block.spls source matrix cannot reproduce eligibility rank for ", block_id),
+                paste0("c_input_identity.blocks.", block_id))
+      }
+      if (!identical(input_keys[[block_id]], source_features)) {
+        invalid(paste0("The block.spls feature-flow input map differs from source identity for ", block_id),
+                paste0("C/integration-results.json.result.params.feature_flow.", block_id))
+      }
+      feature_sd <- apply(matrix_value[, unit_ids, drop = FALSE], 1L, stats::sd)
+      expected_retained <- source_features[is.finite(feature_sd) & feature_sd > .Machine$double.eps]
+      expected_excluded <- source_features[!(is.finite(feature_sd) & feature_sd > .Machine$double.eps)]
+      if (!identical(retained[[block_id]], expected_retained) ||
+          !identical(excluded[[block_id]], expected_excluded)) {
+        invalid(paste0("The block.spls feature-flow retention differs from source matrices for ", block_id),
+                paste0("C/integration-results.json.result.params.feature_flow.", block_id))
+      }
+      values <- t(matrix_value[retained[[block_id]], unit_ids, drop = FALSE])
+      qr(scale(values, center = TRUE, scale = FALSE), tol = 1e-10)$rank
+    }, integer(1L)), block_ids)
+    eligibility$input_keys <- input_keys
+    eligibility$retained <- retained
+    eligibility$excluded <- excluded
+    eligibility$available_rank <- available_rank
+  }
+  eligibility_expected <- list(
+    status = eligibility$status %||% "validated",
+    block_ids = as.list(block_ids),
+    required_views = as.list(required_views),
+    training_unit_ids = as.list(unit_ids),
+    feature_map = triomics_c06_json_value(feature_map),
+    matrix_sha256 = triomics_c06_json_value(matrix_hashes[block_ids]),
+    source_roles = triomics_c06_json_value(provenance$source_roles),
+    source_selection = triomics_c06_json_value(provenance$source_selection),
+    outcome_eligibility = triomics_c06_json_value(provenance$outcome_eligibility),
+    preparation_state_hashes = triomics_c06_json_value(preparation_hashes)
+  )
+  eligibility$block_ids <- as.list(block_ids)
+  eligibility$unit_ids <- as.list(unit_ids)
+  eligibility$training_unit_ids <- as.list(unit_ids)
+  eligibility$required_views <- as.list(required_views)
+  eligibility$preparation_state_hashes <- preparation_hashes
+  eligibility_expected$details <- triomics_c06_eligibility_details(
+    eligibility, unit_ids, required_views, feature_map, provenance
+  )
+  selection_rule <- triomics_c06_selection_definition(result)
+  selected_values <- triomics_cnh_expected_selected_values(result$loadings, selected)
+  selection_expected <- list(
+    rule = selection_rule,
+    selected = triomics_c06_json_value(selected),
+    selected_values = triomics_c06_json_value(selected_values)
+  )
+  variance_definition <- triomics_c06_variance_definition(result)
+  native_variance_definition <- triomics_c06_native_variance_definition(result)
+  variance_expected <- list(
+    definition = variance_definition,
+    native_definition = native_variance_definition,
+    common_definition = variance_definition,
+    native_values = native_payload$variance_values,
+    common_values = common_expected$variance,
+    comparison_policy = "compare_only_identical_metric_units_denominator_and_semantics"
+  )
+  evidence_expected <- list(
+    schema_version = "2.0", artifact_type = "integration_evidence",
+    integration_id = integration_id, status = "complete", backend = result$backend,
+    native_artifact_ref = native_ref, context = context_expected,
+    identity_sha256 = identity_sha256, identity = triomics_c06_json_value(identity_expected),
+    eligibility = eligibility_expected, native = native_payload, common = common_expected,
+    selection = selection_expected, variance = variance_expected
+  )
+  evidence_saved <- handoff$integration_evidence[[1L]]
+  if (length(handoff$integration_evidence) != 1L || !is.list(evidence_saved)) {
+    invalid("The initial handoff must preserve exactly one producer-backed integration record.",
+            "initial_handoff.integration_evidence")
+  }
+  for (field in names(identity_expected)) {
+    if (!triomics_cnh_same_json(identity_expected[[field]], evidence_saved$identity[[field]])) {
+      invalid(paste0("Saved integration identity field '", field,
+                     "' does not reproduce from C result provenance."),
+              paste0("initial_handoff.integration_evidence.identity.", field))
+    }
+  }
+  for (field in names(evidence_expected)) {
+    if (!triomics_cnh_same_json(evidence_expected[[field]], evidence_saved[[field]])) {
+      if (identical(field, "eligibility") && is.list(evidence_saved[[field]])) {
+        for (eligibility_field in names(evidence_expected[[field]])) {
+          if (!triomics_cnh_same_json(evidence_expected[[field]][[eligibility_field]],
+                                      evidence_saved[[field]][[eligibility_field]])) {
+            if (identical(eligibility_field, "details") &&
+                is.list(evidence_expected[[field]]$details) &&
+                is.list(evidence_saved[[field]]$details)) {
+              detail_fields <- union(names(evidence_expected[[field]]$details),
+                                     names(evidence_saved[[field]]$details))
+              detail_mismatch <- detail_fields[!vapply(detail_fields, function(detail_field) {
+                triomics_cnh_same_json(evidence_expected[[field]]$details[[detail_field]],
+                                       evidence_saved[[field]]$details[[detail_field]])
+              }, logical(1L))]
+              if (length(detail_mismatch)) {
+                invalid(paste0("Saved eligibility detail '", detail_mismatch[[1L]],
+                               "' differs from producer facts."),
+                        paste0("initial_handoff.integration_evidence.eligibility.details.",
+                               detail_mismatch[[1L]]))
+              }
+            }
+            invalid(paste0("Saved eligibility field '", eligibility_field,
+                           "' differs from producer facts."),
+                    paste0("initial_handoff.integration_evidence.eligibility.", eligibility_field))
+          }
+        }
+      }
+      if (identical(field, "common") && is.list(evidence_saved[[field]])) {
+        for (common_field in names(evidence_expected[[field]])) {
+          if (!triomics_cnh_same_json(evidence_expected[[field]][[common_field]],
+                                      evidence_saved[[field]][[common_field]])) {
+            invalid(paste0("Saved common result field '", common_field,
+                           "' differs from C integration results."),
+                    paste0("initial_handoff.integration_evidence.common.", common_field))
+          }
+        }
+      }
+      invalid(paste0("Saved integration evidence field '", field,
+                     "' differs from its independently bound C producer."),
+              paste0("initial_handoff.integration_evidence.", field))
+    }
+  }
+
+  controls_result <- result
+  controls_result$params$provenance$unit_map <- unit_ids
+  controls_result$params$provenance$feature_map <- stats::setNames(lapply(block_ids, function(block_id) {
+    as.character(unlist(feature_map[[block_id]], use.names = FALSE))
+  }), block_ids)
+  run_for_controls <- list(status = "complete", method = result$backend, result = controls_result,
+                           eligibility = eligibility)
+  unrun_controls <- triomics_c06_cli_unrun_controls(
+    list(run_for_controls), list(), list(), list(result_item)
+  )
+  evaluation_expected <- triomics_c06_evaluation_evidence(list(controls = unrun_controls))
+  primary_expected <- triomics_c06_primary_branch(NULL, identity$study_id, identity$analysis_id)
+  integration_nominations <- triomics_c06_integration_nominations(list(evidence_expected))
+  integration_branch <- list(
+    status = if (length(integration_nominations)) "complete" else "unavailable",
+    source_artifact_ids = as.list(integration_id),
+    nominations = integration_nominations
+  )
+  all_nominations <- c(primary_expected$nominations, integration_nominations)
+  lineage_run <- list(status = "complete", native_artifact_ref = native_ref)
+  handoff_expected <- list(
+    schema_version = "2.0", artifact_type = "stage_c_d_handoff",
+    status = if (identical(triomics_c06_stage_status(list(run_for_controls), list(evidence_expected)),
+                           "complete") && !identical(evaluation_expected$status, "complete")) {
+      "partial"
+    } else triomics_c06_stage_status(list(run_for_controls), list(evidence_expected)),
+    study_id = as.character(identity$study_id), analysis_id = as.character(identity$analysis_id),
+    preparation_context_id = as.character(identity$preparation_context_id),
+    representation_id = as.character(identity$representation_id),
+    nomination_status = if (length(all_nominations)) "complete" else "unavailable",
+    nomination_branches = list(primary_statistics = primary_expected,
+                               integration_selection = integration_branch),
+    nominations = all_nominations,
+    integration_evidence = list(evidence_expected),
+    lineage_inputs = triomics_c06_handoff_lineage(primary_expected, list(lineage_run),
+                                                 evaluation_expected),
+    comparisons = list(status = "not_comparable",
+                       reason = "fewer_than_two_completed_integrations", pairs = list()),
+    evaluation_evidence = evaluation_expected,
+    backend_statuses = triomics_c06_backend_statuses(list(), list(run_for_controls)),
+    clinical_prediction = list(
+      status = "not_started", completion_policy = "conditional", packet_id = "C-09",
+      model_execution = "not_started",
+      reason = "Conditional matched clinical prediction has not been executed."
+    )
+  )
+  if (!triomics_cnh_same_json(handoff_expected, handoff)) {
+    invalid("Saved nominations, comparison status, lineage, C-07 evidence, or backend dispositions differ from C producer facts.",
+            "initial_handoff")
+  }
+  invisible(TRUE)
+}
+
+triomics_cnh_validate_initial_handoff_contract <- function(handoff) {
+  expected_clinical_prediction <- list(
+    status = "not_started", completion_policy = "conditional", packet_id = "C-09",
+    model_execution = "not_started",
+    reason = "Conditional matched clinical prediction has not been executed."
+  )
+  evaluation <- handoff$evaluation_evidence
+  control_names <- triomics_c06_control_names()
+  controls <- evaluation$controls
+  valid_controls <- is.list(controls) && length(controls) == length(control_names) &&
+    all(vapply(seq_along(control_names), function(index) {
+      control <- controls[[index]]
+      if (!is.list(control) || !identical(control$control, control_names[[index]]) ||
+          !identical(control$status, "not_run") || !identical(control$matched, TRUE)) {
+        return(FALSE)
+      }
+      all(vapply(c("candidate", "baseline"), function(side) {
+        observation <- control[[side]]
+        is.list(observation) && identical(observation$status, "not_run") &&
+          triomics_nonempty_string(as.character(observation$reason %||% "")) &&
+          is.null(observation$artifact_ref) && is.null(observation$artifact_sha256) &&
+          is.null(observation$metrics) && is.null(observation$evaluation_result) &&
+          is.list(observation$match_context)
+      }, logical(1L)))
+    }, logical(1L)))
+  if (!is.list(handoff$clinical_prediction) ||
+      !triomics_cnh_same_json(handoff$clinical_prediction, expected_clinical_prediction) ||
+      !is.list(evaluation) || !identical(evaluation$schema_version, "2.0") ||
+      !identical(evaluation$artifact_type, "integration_evaluation_evidence") ||
+      !identical(evaluation$status, "partial") || !is.list(evaluation$source_artifacts) ||
+      length(evaluation$source_artifacts) != 0L || !isTRUE(valid_controls)) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID",
+      "The saved initial context changes the conditional C-09 or unrun C-07 evidence contract.",
+      "initial_handoff", stage = "C"
+    )
+  }
+  invisible(TRUE)
 }
 
 triomics_cnh_validate_saved_c_outputs <- function(root, config, c_input_identity,
@@ -931,6 +1605,9 @@ triomics_cnh_validate_saved_c_outputs <- function(root, config, c_input_identity
   integration <- if (is.list(c_payload$integrations) && length(c_payload$integrations) == 1L) {
     c_payload$integrations[[1L]]
   } else NULL
+  triomics_cnh_validate_saved_handoff_producer(
+    root, c_input_identity, source_inputs, initial_handoff, config_sha256
+  )
   run <- if (is.list(integration_runs) && length(integration_runs) == 1L) {
     integration_runs[[1L]]
   } else NULL
@@ -1087,6 +1764,7 @@ triomics_cnh_save_initial_c <- function(integration_runs, evaluation_controls,
                        "handoff", stage = "C")
   }
   file_references <- triomics_cnh_c_file_references(root)
+  declared_source_files <- triomics_cnh_declared_source_files(config)
   triomics_cnh_validate_saved_c_outputs(
     root, config, c_input_identity, source_inputs, integration_runs, handoff
   )
@@ -1101,11 +1779,14 @@ triomics_cnh_save_initial_c <- function(integration_runs, evaluation_controls,
     run_status = run_status,
     c_input_identity_sha256 = triomics_b07_prov_value_sha256(c_input_identity),
     source_inputs = source_inputs,
+    declared_source_files = declared_source_files,
     input_files = file_references,
     c_input_identity = triomics_cnh_encode_r_value(c_input_identity),
     initial_handoff = triomics_cnh_encode_r_value(handoff)
   )
-  envelope_inputs <- triomics_cnh_context_envelope_inputs(source_inputs, file_references)
+  envelope_inputs <- triomics_cnh_context_envelope_inputs(
+    source_inputs, file_references, declared_source_files
+  )
   payload_path <- context_paths$payload
   envelope_path <- context_paths$envelope
   written <- character()
@@ -1200,7 +1881,9 @@ triomics_cnh_read_saved_c_context <- function(config, root) {
   payload <- triomics_cnh_read_json(context_path, "C publication context")
   config_sha256 <- as.character(attr(config, "config_sha256"))
   file_references <- triomics_cnh_c_file_references(root)
+  declared_source_files <- triomics_cnh_declared_source_files(config)
   if (!triomics_cnh_same_json(payload$input_files, file_references) ||
+      !triomics_cnh_same_json(payload$declared_source_files, declared_source_files) ||
       !identical(payload$schema_version, "1.0") ||
       !identical(payload$artifact_type, "stage_c_native_publication_context") ||
       !identical(payload$run_status, "complete") ||
@@ -1221,7 +1904,9 @@ triomics_cnh_read_saved_c_context <- function(config, root) {
     triomics_cnh_abort("C_PUBLICATION_CONTEXT_INVALID", "Saved C source manifest hashes are incomplete.",
                        "source_inputs", stage = "C")
   }
-  expected_inputs <- triomics_cnh_context_envelope_inputs(source_inputs, file_references)
+  expected_inputs <- triomics_cnh_context_envelope_inputs(
+    source_inputs, file_references, declared_source_files
+  )
   privacy_class <- if (identical(config$data_class, "synthetic")) "synthetic" else "sensitive"
   envelope <- triomics_cnh_validate_envelope(envelope_path, c(
     list(artifact_type = "stage_c_native_publication_context",
@@ -1256,9 +1941,23 @@ triomics_cnh_read_saved_c_context <- function(config, root) {
       "C/native-publication-context.json", stage = "C"
     )
   }
+  triomics_cnh_validate_initial_handoff_contract(handoff)
+  triomics_cnh_validate_saved_handoff_producer(
+    root, identity, source_inputs, handoff, config_sha256
+  )
+  registry_relative <- file.path("registries", "run-C.json")
+  registry_candidate <- tryCatch(
+    triomics_b07_child_path(root, registry_relative), error = function(error) NULL
+  )
+  if (is.null(registry_candidate) || !file.exists(registry_candidate) ||
+      dir.exists(registry_candidate) || triomics_is_symlink(registry_candidate)) {
+    triomics_cnh_abort(
+      "C_PUBLICATION_CONTEXT_INVALID", "The C completion registry is missing or unsafe.",
+      registry_relative, stage = "C"
+    )
+  }
   registry_path <- triomics_cnh_path(
-    root, file.path("registries", "run-C.json"),
-    triomics_sha256(file.path(root, "registries", "run-C.json")), "C completion registry"
+    root, registry_relative, triomics_sha256(registry_candidate), "C completion registry"
   )
   registry <- triomics_cnh_read_json(registry_path, "C completion registry")
   if (!identical(registry$stage, "C") || !identical(registry$run_id, "c-01") ||
