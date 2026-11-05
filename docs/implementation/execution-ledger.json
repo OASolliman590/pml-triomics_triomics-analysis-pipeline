@@ -35,9 +35,27 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/d15_s01_luna",
+      "role": "Luna implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "base_commit": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
+      "branch": "codex/m8-d15-s01-repair1",
+      "status": "final_repair2_assigned",
+      "attempt": 1,
+      "repairs": 2,
+      "files_allowed": [
+        "tests/testthat/test-clinical-native-handoff.R"
+      ],
+      "allowed_next_transition": "Join final test-only repair2; verify product blobs unchanged, local review closure, then independent integrated source/native gates and fresh Astra. No repair3.",
+      "cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "D15_S01_repair1_assigned",
+    "status": "D15_S01_final_repair2_assigned",
     "last_reconciled": "2026-11-05",
     "active_handoffs": [
       {
@@ -46,22 +64,24 @@
         "requested_model": "gpt-6-luna",
         "requested_effort": "max",
         "effective_settings_exposed": false,
-        "recovered_original_worker": true,
-        "base_commit": "a136db4ee2d840ad04cdda7534a40a43a0f30791",
+        "base_commit": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
         "branch": "codex/m8-d15-s01-repair1",
-        "status": "repair1_assigned",
+        "status": "final_repair2_assigned",
         "attempt": 1,
-        "repairs": 1,
-        "allowed_next_transition": "Join original S01 Luna repair1; inspect immutable diff, focused local review and independent combined source/native/numeric/zero-refit/rollback proof, then fresh risky-diff Astra review. No S02 or D13 repair3.",
+        "repairs": 2,
+        "files_allowed": [
+          "tests/testthat/test-clinical-native-handoff.R"
+        ],
+        "allowed_next_transition": "Join final test-only repair2; verify product blobs unchanged, local review closure, then independent integrated source/native gates and fresh Astra. No repair3.",
         "cursor": null
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Join original S01 Luna repair1; inspect immutable diff, focused local review and independent combined source/native/numeric/zero-refit/rollback proof, then fresh risky-diff Astra review. No S02 or D13 repair3.",
+    "disposition": "Join final test-only repair2; verify product blobs unchanged, local review closure, then independent integrated source/native gates and fresh Astra. No repair3.",
     "current_gate": {
-      "status": "repair1_assigned",
-      "candidate": "a136db4ee2d840ad04cdda7534a40a43a0f30791",
-      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s01-repair1-dispatch.md"
+      "status": "final_repair2_assigned",
+      "candidate": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
+      "review_ref": "docs/implementation/reviews/2026-11-05-d15-s01-repair1-gate-repair2-dispatch.md"
     }
   },
   "orchestration_events": [
@@ -7030,6 +7050,40 @@
       },
       "record_ref": "docs/implementation/reviews/2026-11-05-d15-s01-repair1-dispatch.md",
       "S02_caps_unchanged": true
+    },
+    {
+      "event": "D15_S01_repair1_gate_reviewed_final_repair2_assigned",
+      "date": "2026-11-05",
+      "candidate": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
+      "source_counts": {
+        "pass": 580,
+        "fail": 3,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 37
+      },
+      "exit_code": 1,
+      "worker": {
+        "agent": "/root/d15_s01_luna",
+        "role": "Luna implementer",
+        "requested_model": "gpt-6-luna",
+        "requested_effort": "max",
+        "effective_settings_exposed": false,
+        "base_commit": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
+        "branch": "codex/m8-d15-s01-repair1",
+        "status": "final_repair2_assigned",
+        "attempt": 1,
+        "repairs": 2,
+        "files_allowed": [
+          "tests/testthat/test-clinical-native-handoff.R"
+        ],
+        "allowed_next_transition": "Join final test-only repair2; verify product blobs unchanged, local review closure, then independent integrated source/native gates and fresh Astra. No repair3.",
+        "cursor": null
+      },
+      "record_ref": "docs/implementation/reviews/2026-11-05-d15-s01-repair1-gate-repair2-dispatch.md",
+      "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-s01-repair1/receipt.json",
+      "accepted": false
     }
   ],
   "packets": {
@@ -8534,7 +8588,7 @@
       "commit": null,
       "acceptance_refs": [],
       "blockers": [
-        "S02 B accounting correction independently verified in isolated a136db4; combined S01 source authentication, saved-context, registry-path and unsupported-disposition repairs/failure tests remain before renderer implementation."
+        "S01 repair1 product remains isolated; three exact refusal-code assertions require final test-only repair2, followed by independent combined source/native/Astra gates. S02 remains verified and held."
       ],
       "repair_attempts": 0,
       "implementation_base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
@@ -8557,6 +8611,13 @@
         "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-s02/receipt.json",
         "repairs_used": 2,
         "accepted": false
+      },
+      "predecessor_S01": {
+        "status": "final_repair2_assigned",
+        "candidate": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
+        "repairs_used": 2,
+        "accepted": false,
+        "record_ref": "docs/implementation/reviews/2026-11-05-d15-s01-repair1-gate-repair2-dispatch.md"
       }
     },
     "D-T09": {

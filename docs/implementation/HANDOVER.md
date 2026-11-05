@@ -1,3 +1,11 @@
+# Current checkpoint: M8-D15-S01 final test-only repair2 assigned
+
+Read [repair1 gate and repair2 dispatch](reviews/2026-11-05-d15-s01-repair1-gate-repair2-dispatch.md). Clean isolated7876735:580pass/3fail/0error/warn/skip. C-06/C-08 pass; exactly three request-tamper tests expect the obsolete refusal code. Sol retains the stricter early lineage refusal and assigns same Luna finalrepair2of2 for those three expected strings only. No product edits, no repair3. Local Spec review has no actionable static finding; Standards requires this reconciliation. Independent combined source/native/numeric/zero-refit/rollback/tampering gates and fresh Astra remain pending. No integration or acceptance.
+
+Literal resume: **Join original Luna final test-only repair2, verify unchanged product blobs and actual clinical-native-handoff counts, close local review, combine with canonical records in isolated Sol checkout, and run the independent gate before fresh Astra. Do not repeat initial implementation, start D15 renderer, reopen D13/S02 repair3, or release G8/G9.**
+
+## Historical checkpoints below
+
 # Current checkpoint: M8-D15-S01 repair1 assigned to original worker
 
 Read [repair dispatch](reviews/2026-11-05-d15-s01-repair1-dispatch.md). Original Luna recovered; original branch preserved at f5c46e5, clean continuation branch at a136db4. Same initial attempt, first repair of two, original five-file allowlist. S02 remains independently verified and held; no export_b.R edits. Parent fits are not running.

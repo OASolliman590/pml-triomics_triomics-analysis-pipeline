@@ -1,0 +1,11 @@
+# M8-D15-S01 repair1 gate and final repair2 dispatch
+
+Candidate `7876735ca2206897d45f3bdb93ce5b3ead5c9124` remains clean and isolated. Its uncapped focused gate exited1:580pass,3fail,0error/warn/skip,37blocks. C-06-shared362pass and C-08-shared96pass have no failures; clinical-native-handoff122pass/3fail. The named failing test is `saved requests and publication failures fail closed without partial C provenance`. Its reordered, rehashed and symlinked request assertions expected B_SCORE_REQUEST_INVALID; actual refusal is B_SCORE_LINEAGE_INVALID. No warning needs disposition. See the adjacent evidence receipt for hashes and exact conditions.
+
+Fresh read-only local Sol6.1/high reviews inspected the frozen archive. Spec found no actionable static defect. Standards found these three stale code expectations; two duplication observations are heuristics, not required rewrites. Effective model settings are not exposed. Neither review is acceptance. All reviewer turns and the worker gate have ended.
+
+Sol adjudication: these cases alter bytes or paths already bound by the C producer, so the earlier lineage rejection is correct. Preserve that strict refusal, including all artifact-preservation assertions. Do not move validation later or broaden an assertion to accept arbitrary errors. Updating the exact expected code is an error-classification reconciliation, not a changed scientific method or weaker rejection.
+
+Assign the same original Luna its final repair2of2. Only tests/testthat/test-clinical-native-handoff.R may change, and only the three recorded expected-code strings. Product blobs must equal7876735. Run the complete uncapped clinical-native-handoff filter on a clean commit; do not repeat unchanged C-06/C-08 worker suites. Sol still owes the independent full required source union and native A/C/B/C/D, numeric, zero-refit, rollback and sixteen tampering proofs on the final integration candidate, followed by fresh risky-diff Astra. One initial attempt plus two repairs; no repair3.
+
+S02 remains independently verified and held. D15 renderer waits; D13 remains blocked at its exhausted cap. M7/G7 remain accepted; G8/G9 remain closed. C07 stays not_run, C09 unqualified, conditional D06/D07/D14 zero credit, frozen-kit audit pending. No private data, push, server execution, package-gate claim, report render or Notion sync.
