@@ -1,0 +1,29 @@
+{
+  "candidate": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+  "evidence_kind": "typed synthetic report-boundary probe; not native producer reachability or acceptance",
+  "control_bound_member": "verified",
+  "absent_member": {
+    "integrity_status": "absent",
+    "availability_status": "unavailable",
+    "member": {
+      "artifact_id": "clinical_associations",
+      "status": "unavailable",
+      "path": null,
+      "sha256": null,
+      "envelope_path": null,
+      "envelope_sha256": null,
+      "reason_codes": [
+        "requested_artifact_missing"
+      ]
+    }
+  },
+  "loaded_clinical_present": true,
+  "pinned_bundle_sha256": "1747c467fc3e910faefaeb90b27d165e4debae16fc710875885203bb9e047cdb",
+  "pinned_bundle_bytes_unchanged": true,
+  "error_returned": true,
+  "warnings": [],
+  "error": "Loaded clinical evidence is absent from D's immutable B bundle.",
+  "error_code": "D_REPORT_SOURCE_INVALID",
+  "error_key": "D.immutable_inputs.b_bundle.clinical_associations",
+  "defect_reproduced": false
+}

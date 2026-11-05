@@ -1,3 +1,11 @@
+# Current checkpoint: D15 accepted, G8/G9 closed
+
+Read [Sol acceptance](reviews/2026-11-05-d15-sol-acceptance.md) and [fresh Astra](reviews/2026-11-05-d15-extra-repair-astra.md). Exact integrated product3a7f996 passed independent source283 and installed283, both zero failure/error/warning/skip,48blocks, native A/C/B/C/D/report and saved-value/hash/offline/privacy checks. The original absence reproduction now refuses. Parser-only HTML whitespace correction is disclosed; no product repair or native rerun for it. Original initial1+repairs2 and explicit extra1 all consumed. No full M8 package Status claimed. All workers/processes terminal, no child chats/polling. Protected dirt preserved.
+
+Literal resume: **D15 accepted at3a7f996; do not rerun its workers. D13 remains blocked at its exhausted cap and needs a separately authorized bounded follow-up for numeric scientific-lineage preservation. Only after D13 acceptance complete M8 documentation/package/Astra/Sol gates, then D09/M9. Keep G8/G9 closed.**
+
+## Historical checkpoints below
+
 # Current checkpoint: one explicit extra D15 repair authorized
 
 Read [the exception dispatch](reviews/2026-11-05-d15-absence-exception-dispatch.md). Original initial1+repairs2of2 remains exhausted. Omar authorized ONE additional bounded repair for D15-REVIEW-ABSENCE-01 only. Fresh Luna worktree m8-d15-absence-extra1 starts518ae4a with two-file allowlist. Preserve original candidates. No further repair allowance, D13 changes or G8/G9 release.

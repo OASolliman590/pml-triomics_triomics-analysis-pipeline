@@ -1,7 +1,7 @@
 {
   "packet_id": "D-T15",
   "request_type": "registration_request",
-  "accepted": false,
+  "accepted": true,
   "namespace_edits": false,
   "local_files": [
     "R/report_clinical.R",
@@ -22,8 +22,13 @@
   },
   "fixture_contract": "D-T15.yaml is a portable public-synthetic template. The test-local dt15_materialize_native_fixture helper copies repository assay fixtures and generates a twelve-independent-subject, one-visit clinical fixture plus a config under a caller-supplied external root. Freeze and reuse that generated config through A/C/B/C/D/report.",
   "acceptance": {
-    "status": "pending_Sol_review_and_native_saved-output_evidence",
+    "status": "sol_accepted_synthetic_software_evidence",
     "scientific_claims": "Synthetic software evidence only; no biological or clinical validity is established.",
     "G8_G9": "remain closed"
-  }
+  },
+  "request_status": "applied_and_sol_accepted_synthetic_software",
+  "accepted_commit": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+  "acceptance_ref": "docs/implementation/reviews/2026-11-05-d15-sol-acceptance.md",
+  "acceptance_evidence_ref": "docs/implementation/evidence/2026-11-05-d15-extra-repair-accepted/receipt.json",
+  "milestone_acceptance": false
 }

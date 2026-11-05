@@ -1,0 +1,141 @@
+{
+  "candidate": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+  "worker_candidate": "f644d8559fbb59bc6d64495a4a2f676a37e1adf3",
+  "five_product_files_byte_equivalent": true,
+  "product_diff_sha256": "622b964a53006c144f9455b288fe245ff168c21f945aedeb544c23521ae870de",
+  "archive_sha256": "ec5822c144051273e17fe5e6645c537946c02e05855d7224509a5b5f2934b8ae",
+  "local_review": {
+    "Spec": "pass",
+    "Standards": "pass"
+  },
+  "source_counts": {
+    "pass": 283,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 48
+  },
+  "installed_counts": {
+    "pass": 283,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 48
+  },
+  "warnings_and_skips": [],
+  "boundary_proof": {
+    "error_code": "D_REPORT_SOURCE_INVALID",
+    "error_key": "D.immutable_inputs.b_bundle.clinical_associations",
+    "pinned_bytes_unchanged": true,
+    "defect_reproduced": false
+  },
+  "native_command_exits": [
+    [
+      "missing_producers",
+      3
+    ],
+    [
+      "A",
+      0
+    ],
+    [
+      "C_schedule",
+      0
+    ],
+    [
+      "B",
+      0
+    ],
+    [
+      "C_publish",
+      0
+    ],
+    [
+      "D",
+      0
+    ],
+    [
+      "report",
+      0
+    ],
+    [
+      "missing_runtime",
+      3
+    ],
+    [
+      "rehashed_clinical",
+      2
+    ],
+    [
+      "clinical_key_order",
+      2
+    ],
+    [
+      "existing_report_is_not_overwritten",
+      2
+    ],
+    [
+      "aggregate_policy_refusal",
+      3
+    ]
+  ],
+  "B_files": {
+    "B/handoffs/a5ce92c860e9e15653ef98f86c5d06e8bebc806d9913cf541c0996f5a4d51127/bundle.json": "c1742b9c7ccc3e59601e882765a41610720aa77772d12ebd12148db25a2d4974",
+    "B/handoffs/a5ce92c860e9e15653ef98f86c5d06e8bebc806d9913cf541c0996f5a4d51127/bundle.envelope.json": "f2bda117777b3e7ffcfa6f9d92197d449a0100111fe1587a6a0aba7fb621af41",
+    "B/handoffs/a5ce92c860e9e15653ef98f86c5d06e8bebc806d9913cf541c0996f5a4d51127/stage-handoff-provenance.json": "541be26d9320b93cd1150636fcd61a91e1b86099d560775834ec490b1731183c",
+    "B/handoffs/a5ce92c860e9e15653ef98f86c5d06e8bebc806d9913cf541c0996f5a4d51127/stage-handoff-provenance.envelope.json": "477ddae1610314fc1153540247a111655d23b8f0be4592b4f4d553fe86625de0"
+  },
+  "C_files": {
+    "D/stage-handoff-provenance.json": "07b270125bf5db52896c8faf63eafa44b460f418a2aac70d08dda97a5f7a8255",
+    "D/stage-handoff-provenance.envelope.json": "0a9e5300fc2c15321c119f60de9efadbdd04b2039e9c8b615d58769d7d9079ff"
+  },
+  "D_generation": "c1816cb293a9369cc0f4da5d2aedf854837d6a55eeb7643b11d632f2f9746879",
+  "report_files": {
+    "clinical_results.tsv": "17531a2dc45af0cdc7eaee94fc779e7f6f3c119a973003a11a4e3805487a9e5b",
+    "enrichment.tsv": "a32b239f240ca74ea5da5f13346c038e573ad40a4aa205029a2b8def8f3ed337",
+    "integration_eligibility.tsv": "6257bf20ed716c1781ff7d02e8c5a7e296b03dc39e43a96e2ed96144b2ae67c8",
+    "integration_variance.tsv": "031b2cee987aad7c123fbc4d5b3ca79b631915ea5a1b775a01dbb0f0f00c5050",
+    "report.html": "bda8e771303eedb21552608fc482b6670f777a84f794fd6afc77e9d0d0c04d5d",
+    "report_data.envelope.json": "0c24e998779f325a5d3129bdccca84ddf96ed559f76eb4dfa07554fbd263c1be",
+    "report_data.json": "5589bb38fb1c0e6ebdebbd155cc1589e38b20bafe0e11a6e0b33d83f6bffa61d",
+    "report_manifest.envelope.json": "953371177bb5b151dd526f97cd45c934ca850b706d836bc9394fea1e3f9064d4",
+    "report_manifest.json": "e4541434a2be618139049dae47f25362905b0de9c035cf1bd9c036f8bdda0a60",
+    "results.tsv": "7018dbb562f39435df2428f93e32771b14d1e16ad6fdc9a0fe65e4aee7f774de",
+    "section_statuses.tsv": "6ef919a4f6848223befed64ee29fa3fd024907ba8fae430f9eac658cde64be38"
+  },
+  "base_numeric_unit_checks": 36,
+  "identifiers_scanned": 36,
+  "leaks": [],
+  "extended_semantic_checks": 52,
+  "HTML_numeric_fields": [
+    "effect",
+    "interval_lower",
+    "interval_upper",
+    "n_subjects",
+    "n_rows_used"
+  ],
+  "HTML_tables": 22,
+  "offline_html": true,
+  "offline_issues": [],
+  "native_output_unchanged_after_readback": true,
+  "package_status": "not_run: installed focused test is not a full package check",
+  "harness_correction": {
+    "issue": "Independent HTML parser compared headers with surrounding pretty-print newlines to bare field names",
+    "evidence": "Saved report contains the clinical association table; header and cell text include leading/trailing newline whitespace. JSON/TSV producer readback already passed.",
+    "product_changed": false,
+    "native_rerun": false,
+    "old_script_sha256": "5e2e1b275d95e3bb313aab9348f1cc5653e1172ad18485a76d15c2582538d360",
+    "corrected_script_sha256": "709ebbf358b5f98fc87599374695f3e02b9e2ad1eb52cfb4145bf7d70a63d7b6",
+    "failed_log": "sol-gates/semantic-extended-readback.log",
+    "failed_log_sha256": "250d5e7f7e5b239639cfeed425e5b9f85e34934ff567e1e1d7adf3856cd6df69",
+    "change": "Strip only surrounding HTML text-cell whitespace before header selection and value comparison; all numerical/status/identity assertions unchanged."
+  },
+  "final_gate_receipt_sha256": "7e3c11c1df11ec4dadd9d3e3a194cb9f6d507eba2e65ee9c70a533a437cb975e",
+  "Astra": {
+    "audit_pass": true,
+    "findings": [],
+    "review_ref": "docs/implementation/reviews/2026-11-05-d15-extra-repair-astra.md"
+  }
+}

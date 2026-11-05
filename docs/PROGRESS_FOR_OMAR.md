@@ -1,11 +1,11 @@
 # Pipeline progress — 5 November 2026
 
-The goal is a clinical report that explains each analysis, its uncertainty and its limits. M7/G7 and the general D08 report remain accepted. G8/G9 remain closed.
+The goal is a report explaining each analysis, uncertainty and limits. D15, the clinical reporting section, is now accepted for synthetic software behavior. M7/G7 and D08 remain accepted; G8/G9 stay closed.
 
-D15 has an implementation covering clinical objectives, measured-variable coverage, effects, intervals, units and evidence limits. An initial candidate produced an HTML report from twelve synthetic participants. No private study was analysed; this does not establish clinical or biological validity.
+The section shows clinical dictionary coverage, objectives, models, effects, intervals, units, missingness and source links. It distinguishes exploratory associations from qualified inference, model evaluation and unavailable analyses. It does not claim target binding or clinical validity.
 
-Luna completed the initial attempt and both allowed repairs. The final worker suite passed 274 assertions, with zero failures, errors, warnings or skips. Reviews corrected misleading clinical labels and strengthened links to saved analysis files.
+Your additional bounded repair fixed the evidence mismatch. Clinical values absent from Stage D's pinned evidence are now rejected. Genuine absence remains visible, and valid partial analyses retain their results. The original attempt history and the consumed extra allowance are preserved.
 
-D15 is still blocked. Both final reviewers found that a result absent from the pinned evidence could nevertheless appear in the report. I reproduced that defect independently. Passing tests missed this case, so the candidate remains preserved and unaccepted; final native verification and Astra acceptance review did not run.
+Independent source and installed-package tests each passed 283 assertions with no failures, errors, warnings or skips. The pipeline rendered offline HTML; saved values, hashes and privacy checks passed. Fresh Astra review passed. These checks used public synthetic fixtures, not your studies.
 
-The next step requires an authorized bounded follow-up for this specific evidence mismatch, preserving the exhausted attempt history. D13 also remains blocked. Needs Omar: that follow-up authorization if continuing implementation. Sync: local records only; no Notion update, server run or GitHub push.
+D13 remains blocked by its numeric-lineage display defect. It needs a separate bounded follow-up before M8 can close. The full package and milestone reviews remain ahead. Needs Omar: authorization for that D13 follow-up. Sync: local only; no Notion update, server run or GitHub push.

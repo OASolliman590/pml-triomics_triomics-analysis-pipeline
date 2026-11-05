@@ -1,0 +1,179 @@
+{
+  "packet_id": "D-T15",
+  "status": "sol_accepted_synthetic_software_evidence",
+  "accepted": true,
+  "completion_credit": true,
+  "recorded_at": "2026-11-05T18:11:04.938354+00:00",
+  "tested_and_Astra_reviewed_commit": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+  "integration_commit": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+  "worker_red_commit": "3263ded3e776ad9c323cd9c728929db66c7e8c70",
+  "worker_fix_commit": "f644d8559fbb59bc6d64495a4a2f676a37e1adf3",
+  "original_attempts": 1,
+  "original_repairs": 2,
+  "explicit_additional_repairs_authorized": 1,
+  "explicit_additional_repairs_used": 1,
+  "total_repairs": 3,
+  "further_repairs_authorized": 0,
+  "original_bounded_close_commit": "206d1327f55075623a98327eeff81a85209a90c8",
+  "extra_authorization_record_commit": "9077ea44b2c2df147154339786a75bc8c9e5ae7e",
+  "source_counts": {
+    "pass": 283,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 48
+  },
+  "installed_counts": {
+    "pass": 283,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 48
+  },
+  "named_testthat_warnings": [],
+  "named_skips": [],
+  "source_command": "Rscript --vanilla <local-proof-root>/scripts/run-source-unbounded-report.R <candidate-worktree> <evidence>/source D-T15|D-T08",
+  "source_exit_code": 0,
+  "installed_command": "Rscript --vanilla <evidence>/run-installed-focused.R <evidence>/installed-focused D-T15|D-T08 3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+  "installed_exit_code": 0,
+  "native_exits": [
+    [
+      "missing_producers",
+      3
+    ],
+    [
+      "A",
+      0
+    ],
+    [
+      "C_schedule",
+      0
+    ],
+    [
+      "B",
+      0
+    ],
+    [
+      "C_publish",
+      0
+    ],
+    [
+      "D",
+      0
+    ],
+    [
+      "report",
+      0
+    ],
+    [
+      "missing_runtime",
+      3
+    ],
+    [
+      "rehashed_clinical",
+      2
+    ],
+    [
+      "clinical_key_order",
+      2
+    ],
+    [
+      "existing_report_is_not_overwritten",
+      2
+    ],
+    [
+      "aggregate_policy_refusal",
+      3
+    ]
+  ],
+  "native_input": "exact delivered D-T15 ticket and portable generated twelve-subject one-visit public synthetic fixture, config frozen before native A",
+  "config_sha256": "d4733b6ee12a610a55fd5591608721444705eb9c3a53ed423ce0375560911a7e",
+  "source_to_base_numeric_unit_checks": 36,
+  "source_to_extended_semantic_checks": 52,
+  "HTML_numeric_checks": [
+    "effect",
+    "interval_lower",
+    "interval_upper",
+    "n_subjects",
+    "n_rows_used"
+  ],
+  "direct_synthetic_identifiers_scanned": 36,
+  "leaks": [],
+  "offline_HTML_counts": {
+    "tables": 22,
+    "images": 0,
+    "scripts": 0,
+    "styles": 2,
+    "headings": 27
+  },
+  "B_files": {
+    "B/handoffs/a5ce92c860e9e15653ef98f86c5d06e8bebc806d9913cf541c0996f5a4d51127/bundle.json": "c1742b9c7ccc3e59601e882765a41610720aa77772d12ebd12148db25a2d4974",
+    "B/handoffs/a5ce92c860e9e15653ef98f86c5d06e8bebc806d9913cf541c0996f5a4d51127/bundle.envelope.json": "f2bda117777b3e7ffcfa6f9d92197d449a0100111fe1587a6a0aba7fb621af41",
+    "B/handoffs/a5ce92c860e9e15653ef98f86c5d06e8bebc806d9913cf541c0996f5a4d51127/stage-handoff-provenance.json": "541be26d9320b93cd1150636fcd61a91e1b86099d560775834ec490b1731183c",
+    "B/handoffs/a5ce92c860e9e15653ef98f86c5d06e8bebc806d9913cf541c0996f5a4d51127/stage-handoff-provenance.envelope.json": "477ddae1610314fc1153540247a111655d23b8f0be4592b4f4d553fe86625de0"
+  },
+  "C_files": {
+    "D/stage-handoff-provenance.json": "07b270125bf5db52896c8faf63eafa44b460f418a2aac70d08dda97a5f7a8255",
+    "D/stage-handoff-provenance.envelope.json": "0a9e5300fc2c15321c119f60de9efadbdd04b2039e9c8b615d58769d7d9079ff"
+  },
+  "D_generation": "c1816cb293a9369cc0f4da5d2aedf854837d6a55eeb7643b11d632f2f9746879",
+  "report_HTML_sha256": "bda8e771303eedb21552608fc482b6670f777a84f794fd6afc77e9d0d0c04d5d",
+  "report_JSON_sha256": "5589bb38fb1c0e6ebdebbd155cc1589e38b20bafe0e11a6e0b33d83f6bffa61d",
+  "archive_sha256": "ec5822c144051273e17fe5e6645c537946c02e05855d7224509a5b5f2934b8ae",
+  "archive_file_count": 1115,
+  "archive_source_unchanged_after_install": true,
+  "tested_product_hashes": {
+    "R/report_clinical.R": "8379da51c2589ef94b9bed885f121d87bbd22b16788c2c49a291817ffd1130b3",
+    "tests/testthat/test-D-T15.R": "468b68e67869b2cdc280fc3074916200f5697be40a870ba2b765f7811f17defa",
+    "inst/examples/tickets/D-T15.yaml": "d4733b6ee12a610a55fd5591608721444705eb9c3a53ed423ce0375560911a7e",
+    "inst/report/sections/clinical.qmd": "5da983f72afabd2f40f31fc0886c6f7903d4135cc279085f6946aa3ad8529d11",
+    "docs/implementation/registrations/D-T15.json": "970e0c59a7488d9603858c5b84598d3400280ff133a5e2bfb70b0921a24468a0"
+  },
+  "local_review": {
+    "Spec": "pass",
+    "Standards": "pass"
+  },
+  "Astra": {
+    "audit_pass": true,
+    "findings": [],
+    "review_ref": "docs/implementation/reviews/2026-11-05-d15-extra-repair-astra.md",
+    "agent": "/root/d15_extra1_astra_audit",
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "low",
+    "effective_settings_exposed": false,
+    "initial_reviews": 1,
+    "focused_rereviews": 0,
+    "scope": "D15 packet only, not M8 milestone"
+  },
+  "verification_limitations": [
+    "Initial test_file harness lacked namespace and capped errors; retained invalid-test-file-context.log contributes no acceptance count.",
+    "Initial parent HTML parser failed to match pretty-printed headers; failed receipt/log retained. Parser-only surrounding-whitespace correction passed against unchanged native output. No product fix or native rerun.",
+    "Source and installed tests are focused D15/D08 gates, not the full repository suite or clean M8 package gate.",
+    "Public synthetic software evidence only; no private study analysis, clinical validity or biological confirmation."
+  ],
+  "package_Status": "not_run: no full M8 package gate in this packet run",
+  "milestone_acceptance": false,
+  "M7_G7": "previously accepted/released, unchanged",
+  "G8": "closed",
+  "G9": "closed",
+  "D13": "blocked_at_repair_cap",
+  "C07": "four controls not_run",
+  "C09": "unqualified; synthetic_fixture_only; benefit_guaranteed=false",
+  "conditional_D_without_completion_credit": [
+    "D-T06",
+    "D-T07",
+    "D-T14"
+  ],
+  "frozen_kit_independent_audit": "pending",
+  "private_data_read": false,
+  "server_run": false,
+  "push": false,
+  "Notion_sync": false,
+  "all_run_owned_workers_terminal": true,
+  "active_processes": [],
+  "run_owned_sidebar_chats": [],
+  "persistent_polling": false,
+  "next": "Stop at this D15 receipt. D13 still needs a separately authorized bounded follow-up for its numeric-lineage blocker. M8 documentation, full clean-archive package Status: OK and fresh milestone Astra remain required before G8; D09/M9 remain gated."
+}

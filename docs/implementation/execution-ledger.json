@@ -37,15 +37,17 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D15_authorized_extra_repair1_dispatch_prepared",
-    "last_reconciled": "2026-11-05T12:56:19.037869+00:00",
+    "status": "D15_accepted_bounded_run_closed",
+    "last_reconciled": "2026-11-05T18:11:04.938354+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "dispatch fresh Luna; one repair then two-axis local review and independent proofs; no second exception attempt",
+    "disposition": "Stop at this D15 receipt. D13 still needs a separately authorized bounded follow-up for its numeric-lineage blocker. M8 documentation, full clean-archive package Status: OK and fresh milestone Astra remain required before G8; D09/M9 remain gated.",
     "current_gate": {
-      "status": "closed_blocked",
-      "candidate": "518ae4ae6b2b3aec282e1c1f45fa46c0509954b0",
-      "review_ref": "docs/implementation/reviews/2026-11-05-d-t15-bounded-close.md"
+      "status": "D15_packet_accepted",
+      "candidate": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+      "review_ref": "docs/implementation/reviews/2026-11-05-d15-sol-acceptance.md",
+      "G8": "closed",
+      "G9": "closed"
     }
   },
   "orchestration_events": [
@@ -7144,6 +7146,66 @@
       "next": "D15 is blocked at initial attempt 1 plus repairs 2 of 2. Preserve worker e891344 and Sol candidate 518ae4a; do not integrate them or reopen repair 3. A separately authorized bounded follow-up must address D15-REVIEW-ABSENCE-01, retain the original caps and evidence, then pass local review, independent source/installed/native report proofs and the applicable fresh Astra gate before acceptance. Do not redo S01/S02 or reopen D13 at its exhausted cap. Keep G8/G9 closed.",
       "receipt_ref": "docs/implementation/evidence/2026-11-05-d-t15-bounded-close/receipt.json",
       "active_workers": []
+    },
+    {
+      "event": "explicit_additional_D15_repair_authorized_and_dispatched",
+      "worker": {
+        "agent": "/root/d15_absence_extra1_luna",
+        "role": "bounded extra D15 repair",
+        "requested_model": "gpt-6-luna",
+        "requested_effort": "max",
+        "effective_settings_exposed": false,
+        "base_commit": "518ae4ae6b2b3aec282e1c1f45fa46c0509954b0",
+        "status": "running",
+        "allowed_next_transition": "inspect returned two-file diff, freeze and two-axis Sol review; no second extra repair",
+        "cursor": null
+      },
+      "historical_attempts": 1,
+      "historical_repairs": 2,
+      "additional_repairs": 1,
+      "dispatch_commit": "9077ea44b2c2df147154339786a75bc8c9e5ae7e"
+    },
+    {
+      "event": "D15_extra_repair_both_local_reviews_passed",
+      "candidate": "f644d8559fbb59bc6d64495a4a2f676a37e1adf3",
+      "sol_candidate": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+      "Spec": "pass",
+      "Standards": "pass",
+      "parent_gates": "pending",
+      "accepted": false
+    },
+    {
+      "event": "D15_extra1_parent_gates_passed",
+      "candidate": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+      "source_counts": {
+        "pass": 283,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 48
+      },
+      "installed_counts": {
+        "pass": 283,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 48
+      },
+      "harness_correction": "HTML parser whitespace; original failed log preserved; no product/native rerun",
+      "Astra": "pending"
+    },
+    {
+      "event": "D15_fresh_Astra_pass_and_Sol_packet_acceptance",
+      "candidate": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+      "Astra_ref": "docs/implementation/reviews/2026-11-05-d15-extra-repair-astra.md",
+      "acceptance_ref": "docs/implementation/reviews/2026-11-05-d15-sol-acceptance.md",
+      "original_attempts": 1,
+      "original_repairs": 2,
+      "explicit_extra_repairs": 1,
+      "G8": "closed",
+      "G9": "closed"
     }
   ],
   "packets": {
@@ -8643,33 +8705,35 @@
       ]
     },
     "D-T15": {
-      "status": "authorized_extra_repair1_dispatch_prepared",
+      "status": "accepted_synthetic_software_evidence",
       "attempts": 1,
-      "commit": null,
-      "acceptance_refs": [],
-      "blockers": [
-        {
-          "id": "D15-REVIEW-ABSENCE-01",
-          "priority": "P1",
-          "status": "confirmed_by_Sol_boundary_probe",
-          "summary": "Pinned absence permits a loaded clinical result outside D immutable B evidence",
-          "receipt_ref": "docs/implementation/evidence/2026-11-05-d-t15-bounded-close/absence-probe.json"
-        }
+      "commit": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-11-05-d15-sol-acceptance.md"
       ],
+      "blockers": [],
       "repair_attempts": 3,
       "implementation_base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
       "active_worker": null,
-      "accepted": false,
-      "completion_credit": false,
+      "accepted": true,
+      "completion_credit": true,
       "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t15-dispatch.md",
       "product_implementation_started": true,
-      "receipt_ref": "docs/implementation/evidence/2026-11-05-d-t15-bounded-close/receipt.json",
-      "review_ref": "docs/implementation/reviews/2026-11-05-d-t15-bounded-close.md",
-      "testthat_status": "worker_final_source_passed_but_final_review_blocked",
+      "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-extra-repair-accepted/receipt.json",
+      "review_ref": "docs/implementation/reviews/2026-11-05-d15-extra-repair-astra.md",
+      "testthat_status": "independent_source_and_installed_focused_passed",
       "native_parent_probe": {
-        "status": "not_run_on_final_candidate_after_review_block",
-        "initial_worker_native_all_exits_zero": true,
-        "historical_preflight": "pre_resume_preflight_history.native_parent_probe"
+        "status": "passed",
+        "commit": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+        "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-extra-repair-accepted/receipt.json",
+        "native_positive_exits": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
       },
       "predecessor_S02": {
         "status": "verified_integrated",
@@ -8696,7 +8760,7 @@
         "product_repair1_candidate": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
         "prior_dispatch_ref": "docs/implementation/reviews/2026-11-05-d15-s01-repair1-gate-repair2-dispatch.md"
       },
-      "next_transition": "dispatch fresh Luna; one repair then two-axis local review and independent proofs; no second exception attempt",
+      "next_transition": "Stop at this D15 receipt. D13 still needs a separately authorized bounded follow-up for its numeric-lineage blocker. M8 documentation, full clean-archive package Status: OK and fresh milestone Astra remain required before G8; D09/M9 remain gated.",
       "predecessor_receipt_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-scoped-close.md",
       "implementation_resume_base": "5abc369a6d12ca8b1ae9c00959548a593cdb4f1a",
       "resume_dispatch_ref": "docs/implementation/reviews/2026-11-05-d-t15-resume-dispatch.md",
@@ -8717,25 +8781,28 @@
         "repair1_worker": "f6e3ee7b0f38f017fff022e9679097594b9fa27b",
         "repair1_sol": "eee908dd578395ca3016518f1c193d770fe75b39",
         "repair2_worker": "e891344e5d7e492030749d88e9645d7f0822c59a",
-        "repair2_sol": "518ae4ae6b2b3aec282e1c1f45fa46c0509954b0"
+        "repair2_sol": "518ae4ae6b2b3aec282e1c1f45fa46c0509954b0",
+        "extra_authorized_red": "3263ded3e776ad9c323cd9c728929db66c7e8c70",
+        "extra_authorized_worker": "f644d8559fbb59bc6d64495a4a2f676a37e1adf3",
+        "extra_authorized_sol": "3a7f996a8fd722b02bddecea48c88a3228c56dd1"
       },
       "latest_source_evidence": {
-        "commit": "e891344e5d7e492030749d88e9645d7f0822c59a",
-        "pass": 274,
+        "commit": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+        "pass": 283,
         "fail": 0,
         "error": 0,
         "warn": 0,
         "skip": 0,
-        "blocks": 47,
-        "final_candidate_parent_gate": false
+        "blocks": 48,
+        "final_candidate_parent_gate": true
       },
-      "final_snapshot_commit": "518ae4ae6b2b3aec282e1c1f45fa46c0509954b0",
-      "final_worker_commit": "e891344e5d7e492030749d88e9645d7f0822c59a",
+      "final_snapshot_commit": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+      "final_worker_commit": "f644d8559fbb59bc6d64495a4a2f676a37e1adf3",
       "final_local_review": {
-        "Spec": "changes_required",
-        "Standards": "changes_required",
-        "Sol": "P1_reproduced",
-        "Astra": "not_run"
+        "Spec": "pass",
+        "Standards": "pass",
+        "Sol": "independent_gates_passed",
+        "Astra": "audit_pass_yes"
       },
       "attempt_limit_exhausted": true,
       "original_bounded_run": {
@@ -8749,7 +8816,19 @@
         "used": 1,
         "reason": "D15-REVIEW-ABSENCE-01",
         "dispatch_ref": "docs/implementation/reviews/2026-11-05-d15-absence-exception-dispatch.md",
-        "accepted": false
+        "accepted": true,
+        "worker_commit": "f644d8559fbb59bc6d64495a4a2f676a37e1adf3",
+        "sol_commit": "3a7f996a8fd722b02bddecea48c88a3228c56dd1"
+      },
+      "extra_repair_candidate": "f644d8559fbb59bc6d64495a4a2f676a37e1adf3",
+      "extra_repair_sol_candidate": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+      "extra_repair_installed_counts": {
+        "pass": 283,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 48
       }
     },
     "D-T09": {
@@ -8869,13 +8948,11 @@
       "review_ref": null,
       "commit": null,
       "blocking_packets": [
-        "D-T13",
-        "D-T15"
+        "D-T13"
       ],
       "runtime_blocker_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md",
       "remaining_packets": [
-        "D-T13",
-        "D-T15"
+        "D-T13"
       ],
       "remaining_gates": [
         "Terra M8 documentation",
@@ -8942,5 +9019,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D15_authorized_extra_repair1_active_G8_G9_closed"
+  "close_state": "D15_accepted_G8_G9_closed_D13_blocked"
 }

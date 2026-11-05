@@ -1,0 +1,314 @@
+[
+  {
+    "label": "original_absence_boundary",
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "<local-proof-root>/d15/absence-exception1/parent-absence-proof.R",
+      "<candidate-worktree>",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/absence-boundary"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log_sha256": "5aeb974807baaa41e2fceb68e471bc99afa74749398ae186c1be51ffdab50bd8"
+  },
+  {
+    "label": "source",
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "<local-proof-root>/scripts/run-source-unbounded-report.R",
+      "<candidate-worktree>",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/source",
+      "D-T15|D-T08"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log_sha256": "b738c028ed79c862c03331551d41b00f8944aca947cf142d921b2314248467a6"
+  },
+  {
+    "label": "native_report",
+    "command": [
+      "python3",
+      "<local-proof-root>/d15/absence-exception1/native-report-proof.py",
+      "<candidate-worktree>",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native",
+      "<local-proof-root>/d15/absence-exception1/runtime-env.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log_sha256": "e2da96fe3c5b25c009b5640d868319469db2af74820df6daa8a7e3f57406e068"
+  },
+  {
+    "label": "semantic-base-readback",
+    "command": [
+      "python3",
+      "<local-proof-root>/d15/absence-exception1/semantic-base-readback.py",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/output"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log_sha256": "587eee7b67e81e5e2876389d753137ed41fc5facbf0e6bcf9fc58685e4324d80"
+  },
+  {
+    "label": "semantic-extended-readback",
+    "command": [
+      "python3",
+      "<local-proof-root>/d15/absence-exception1/semantic-extended-readback.py",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/output"
+    ],
+    "exit_code": 1,
+    "expected_exit": 0,
+    "log_sha256": "250d5e7f7e5b239639cfeed425e5b9f85e34934ff567e1e1d7adf3856cd6df69"
+  },
+  {
+    "label": "semantic_extended_corrected",
+    "command": [
+      "python3",
+      "<local-proof-root>/d15/absence-exception1/semantic-extended-readback-corrected.py",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/output"
+    ],
+    "exit_code": 0,
+    "log_sha256": "51514549531d8d93fd7a497f02b1c719e6fb498ae597fff5880c6ff28de9128e"
+  },
+  {
+    "label": "offline_html",
+    "command": [
+      "python3",
+      "<local-proof-root>/scripts/inspect-offline-html.py",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/output/report/report.html"
+    ],
+    "exit_code": 0,
+    "log_sha256": "c2ef4177746a50b4c29ccc251a2b517d4a0618cf513c9a482269152f90ff2cf6"
+  },
+  {
+    "label": "install",
+    "command": [
+      "R",
+      "CMD",
+      "INSTALL",
+      "--install-tests",
+      "--library=<local-proof-root>/d15/absence-exception1/sol-gates/harness-continuation1/installed-library",
+      "<local-proof-root>/d15/absence-exception1/sol-snapshot/snapshot"
+    ],
+    "exit_code": 0,
+    "log_sha256": "650ecffc7fc1e1e470a7ac75874bb2034a4b90fc07d44806256b35ec5a3886fa"
+  },
+  {
+    "label": "installed_focused",
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "<local-proof-root>/d15/absence-exception1/run-installed-focused.R",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/harness-continuation1/installed-focused",
+      "D-T15|D-T08",
+      "3a7f996a8fd722b02bddecea48c88a3228c56dd1"
+    ],
+    "exit_code": 0,
+    "log_sha256": "b738c028ed79c862c03331551d41b00f8944aca947cf142d921b2314248467a6"
+  },
+  {
+    "label": "missing_producers",
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "inst/exec/triomics",
+      "--config",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/fixture/tickets/D-T15.yaml",
+      "--stage",
+      "report",
+      "--output",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/missing-producers"
+    ],
+    "exit_code": 3,
+    "expected_exit": 3,
+    "log_sha256": "f3ed76ab15db4dd86efb1d86fce150b49be61eaf8e42c0d941f5e4424d7a0c7e"
+  },
+  {
+    "label": "A",
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "inst/exec/triomics",
+      "--config",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/fixture/tickets/D-T15.yaml",
+      "--stage",
+      "A",
+      "--output",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/output"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "C_schedule",
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "inst/exec/triomics",
+      "--config",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/fixture/tickets/D-T15.yaml",
+      "--stage",
+      "C",
+      "--output",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/output"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "B",
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "inst/exec/triomics",
+      "--config",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/fixture/tickets/D-T15.yaml",
+      "--stage",
+      "B",
+      "--output",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/output"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "C_publish",
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "inst/exec/triomics",
+      "--config",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/fixture/tickets/D-T15.yaml",
+      "--stage",
+      "C",
+      "--output",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/output"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "D",
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "inst/exec/triomics",
+      "--config",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/fixture/tickets/D-T15.yaml",
+      "--stage",
+      "D",
+      "--output",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/output"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "report",
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "inst/exec/triomics",
+      "--config",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/fixture/tickets/D-T15.yaml",
+      "--stage",
+      "report",
+      "--output",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/output"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "missing_runtime",
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "inst/exec/triomics",
+      "--config",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/fixture/tickets/D-T15.yaml",
+      "--stage",
+      "report",
+      "--output",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/negative-missing_runtime"
+    ],
+    "exit_code": 3,
+    "expected_exit": 3,
+    "log_sha256": "e1cda6319d3f89ef353392b5f343c9ae17f763a703a4e10116a3042488663990"
+  },
+  {
+    "label": "rehashed_clinical",
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "inst/exec/triomics",
+      "--config",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/fixture/tickets/D-T15.yaml",
+      "--stage",
+      "report",
+      "--output",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/negative-rehashed_clinical"
+    ],
+    "exit_code": 2,
+    "expected_exit": 2,
+    "log_sha256": "0df7fb92cf7cff1af16aaa9ec8de383defa905e66c926d53e79934b9926ed98f"
+  },
+  {
+    "label": "clinical_key_order",
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "inst/exec/triomics",
+      "--config",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/fixture/tickets/D-T15.yaml",
+      "--stage",
+      "report",
+      "--output",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/negative-clinical_key_order"
+    ],
+    "exit_code": 2,
+    "expected_exit": 2,
+    "log_sha256": "0df7fb92cf7cff1af16aaa9ec8de383defa905e66c926d53e79934b9926ed98f"
+  },
+  {
+    "label": "existing_report_is_not_overwritten",
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "inst/exec/triomics",
+      "--config",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/fixture/tickets/D-T15.yaml",
+      "--stage",
+      "report",
+      "--output",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/negative-rehashed-clinical-with-prior-report"
+    ],
+    "exit_code": 2,
+    "expected_exit": 2,
+    "log_sha256": "0b60e18189b4fbcdc3422d9542433911c0db33828ab3faffb52fe3c5639fcaf0"
+  },
+  {
+    "label": "aggregate_policy_refusal",
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "inst/exec/triomics",
+      "--config",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/aggregate-refused.yaml",
+      "--stage",
+      "report",
+      "--output",
+      "<local-proof-root>/d15/absence-exception1/sol-gates/native/aggregate-refusal"
+    ],
+    "exit_code": 3,
+    "expected_exit": 3,
+    "log_sha256": "63e15140c0afab700d1eccb9eb953cd0939b27b82ae9dab577ae2ab76fa8bfb9"
+  }
+]
