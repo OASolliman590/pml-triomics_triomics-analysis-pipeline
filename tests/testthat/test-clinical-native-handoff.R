@@ -625,7 +625,7 @@ testthat::test_that("saved requests and publication failures fail closed without
   reordered_error <- testthat::capture_error(
     triomics_cnh_prepare_stage_b(fixture$config_path, output_root)
   )
-  testthat::expect_identical(reordered_error$code, "B_SCORE_REQUEST_INVALID")
+  testthat::expect_identical(reordered_error$code, "B_SCORE_LINEAGE_INVALID")
   restore_request()
 
   request <- jsonlite::read_json(request_path, simplifyVector = FALSE)
@@ -639,7 +639,7 @@ testthat::test_that("saved requests and publication failures fail closed without
   rehashed_error <- testthat::capture_error(
     triomics_cnh_prepare_stage_b(fixture$config_path, output_root)
   )
-  testthat::expect_identical(rehashed_error$code, "B_SCORE_REQUEST_INVALID")
+  testthat::expect_identical(rehashed_error$code, "B_SCORE_LINEAGE_INVALID")
   restore_request()
 
   observations_path <- file.path(fixture$fixture_root, "data", "c08", "observations.tsv")
@@ -662,7 +662,7 @@ testthat::test_that("saved requests and publication failures fail closed without
   symlink_error <- testthat::capture_error(
     triomics_cnh_prepare_stage_b(fixture$config_path, output_root)
   )
-  testthat::expect_identical(symlink_error$code, "B_SCORE_REQUEST_INVALID")
+  testthat::expect_identical(symlink_error$code, "B_SCORE_LINEAGE_INVALID")
   unlink(request_path)
   writeBin(original_request, request_path)
   unlink(external_request)
