@@ -429,6 +429,58 @@ testthat::test_that("association-only producer profiles retain safe study and co
     "All eligible features; no outcome selection"
   )
 
+  numeric_association <- association
+  numeric_association$construction_lineage <-
+    "Clinical score constructed from 3 molecular features"
+  numeric_association$source_selection_history <-
+    "Top 10 features selected in the same study"
+  numeric_profile <- triomics_target_profile(
+    request, list(), list(),
+    external_evidence = triomics_target_external_evidence(request, list(numeric_association))
+  )
+  numeric_section <- triomics_report_optional_sections(
+    list(d = list(target_investigation = d13_recorded_target(list(numeric_profile)))),
+    list(target_enabled = TRUE, clinical_enabled = FALSE)
+  )$targets
+  testthat::expect_identical(
+    numeric_profile$external_associations[[1L]]$construction_lineage,
+    numeric_association$construction_lineage
+  )
+  testthat::expect_identical(
+    numeric_profile$external_associations[[1L]]$source_selection_history,
+    numeric_association$source_selection_history
+  )
+  testthat::expect_identical(
+    numeric_section$tables$external_evidence$construction_lineage,
+    numeric_association$construction_lineage
+  )
+  testthat::expect_identical(
+    numeric_section$tables$external_evidence$source_selection_history,
+    numeric_association$source_selection_history
+  )
+
+  numeric_identifier_association <- numeric_association
+  numeric_identifier_association$construction_lineage <- "Patient ID 13 clinical score"
+  numeric_identifier_association$source_selection_history <- "Subject 7 features selected"
+  numeric_identifier_profile <- triomics_target_profile(
+    request, list(), list(),
+    external_evidence = triomics_target_external_evidence(
+      request, list(numeric_identifier_association)
+    )
+  )
+  numeric_identifier_section <- triomics_report_optional_sections(
+    list(d = list(target_investigation = d13_recorded_target(list(numeric_identifier_profile)))),
+    list(target_enabled = TRUE, clinical_enabled = FALSE)
+  )$targets
+  testthat::expect_identical(
+    numeric_identifier_section$tables$external_evidence$construction_lineage,
+    ""
+  )
+  testthat::expect_identical(
+    numeric_identifier_section$tables$external_evidence$source_selection_history,
+    ""
+  )
+
   unsafe_association <- association
   unsafe_association$construction_lineage <-
     "Clinical score constructed from /private/association/source.tsv"
