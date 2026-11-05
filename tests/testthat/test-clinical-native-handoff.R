@@ -216,6 +216,70 @@ testthat::test_that("native B preflight authenticates the scheduled C08 V1 reque
   testthat::expect_false(file.exists(file.path(output_root, "B", "clinical-associations.json")))
 })
 
+testthat::test_that("B refuses metadata changed after C without fitting or changing prior artifacts", {
+  fixture <- cnh_test_between_person_config()
+  output_root <- tempfile("triomics-cnh-metadata-guard-")
+  metadata_path <- file.path(fixture$fixture_root, "data", "c08", "metadata.tsv")
+  original_metadata <- readBin(metadata_path, what = "raw", n = file.info(metadata_path)$size)
+  on.exit({
+    writeBin(original_metadata, metadata_path)
+    unlink(c(fixture$fixture_root, output_root), recursive = TRUE, force = TRUE)
+  }, add = TRUE)
+
+  initial <- triomics_execute_stage_c(fixture$config_path, output_root)
+  testthat::expect_identical(initial$status, "endpoint_request_scheduled")
+  request_paths <- file.path(output_root, "B", "clinical-score-association-requests",
+                             c("request-01.json", "request-01.envelope.json"))
+  request_hashes <- stats::setNames(vapply(request_paths, triomics_sha256, character(1L)),
+                                    basename(request_paths))
+  c_paths <- sort(list.files(file.path(output_root, "C"), recursive = TRUE,
+                             full.names = TRUE, all.files = TRUE), method = "radix")
+  c_hashes <- stats::setNames(vapply(c_paths, triomics_sha256, character(1L)),
+                              substring(c_paths, nchar(output_root) + 2L))
+
+  metadata <- utils::read.delim(metadata_path, check.names = FALSE, stringsAsFactors = FALSE)
+  control <- which(metadata$group == "control")[[1L]]
+  treatment <- which(metadata$group == "treatment")[[1L]]
+  metadata$group[c(control, treatment)] <- metadata$group[c(treatment, control)]
+  utils::write.table(metadata, metadata_path, sep = "\t", row.names = FALSE, quote = FALSE)
+
+  fit_calls <- 0L
+  fit_spy <- function(...) {
+    fit_calls <<- fit_calls + 1L
+    stop("A Stage B fit ran after the declared metadata changed.", call. = FALSE)
+  }
+  testthat::local_mocked_bindings(
+    triomics_fit_block_models = fit_spy,
+    triomics_associate_endpoints = fit_spy,
+    .package = "triomics"
+  )
+  b_exit <- triomics_main(c(
+    "--config", fixture$config_path, "--stage", "B", "--output", output_root
+  ))
+
+  testthat::expect_identical(b_exit, 2L)
+  testthat::expect_identical(fit_calls, 0L)
+  testthat::expect_identical(
+    stats::setNames(vapply(request_paths, triomics_sha256, character(1L)), basename(request_paths)),
+    request_hashes
+  )
+  c_paths_after <- sort(list.files(file.path(output_root, "C"), recursive = TRUE,
+                                   full.names = TRUE, all.files = TRUE), method = "radix")
+  testthat::expect_identical(
+    stats::setNames(vapply(c_paths_after, triomics_sha256, character(1L)),
+                    substring(c_paths_after, nchar(output_root) + 2L)),
+    c_hashes
+  )
+  testthat::expect_false(file.exists(file.path(output_root, "B", "block-results.json")))
+  testthat::expect_false(file.exists(file.path(output_root, "B", "clinical-associations.json")))
+
+  writeBin(original_metadata, metadata_path)
+  testthat::expect_s3_class(
+    triomics_cnh_prepare_stage_b(fixture$config_path, output_root),
+    "ClinicalNativeHandoffContext"
+  )
+})
+
 
 testthat::test_that("the original multivisit C08 score remains ineligible for a single-visit request", {
   config_path <- cnh_test_multivisit_between_person_config()
