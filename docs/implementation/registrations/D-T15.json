@@ -1,0 +1,29 @@
+{
+  "packet_id": "D-T15",
+  "request_type": "registration_request",
+  "accepted": false,
+  "namespace_edits": false,
+  "local_files": [
+    "R/report_clinical.R",
+    "inst/report/sections/clinical.qmd",
+    "tests/testthat/test-D-T15.R",
+    "inst/examples/tickets/D-T15.yaml",
+    "docs/implementation/registrations/D-T15.json"
+  ],
+  "owned_functions": [
+    "triomics_report_clinical_section"
+  ],
+  "integration_request": "No public namespace or CLI change is requested. The renderer already calls triomics_report_clinical_section(loaded, config) and provides the fixed clinical-content.html include. Review this candidate against the existing report boundary; Sol owns acceptance and any later integration.",
+  "projection_limits": {
+    "sources": "Use only clinical and integration payloads already bound by the verified ReportBundle.",
+    "C02": "Project an existing serialized EvaluationResult with its recorded qualification, metrics, metric definitions, baseline, counts, source identity and dependence limits. Label the evidence as an integration-level model/outcome comparison; do not claim independent validation of a B association or a clinical-endpoint link without bound identity evidence.",
+    "C09": "Report only the bound C/D stage disposition. No C09 comparison artifact or qualification is created by this packet.",
+    "native_PCA": "A native PCA result without a bound C02 evaluation remains descriptive and has no held-out success claim."
+  },
+  "fixture_contract": "D-T15.yaml is a portable public-synthetic template. The test-local dt15_materialize_native_fixture helper copies repository assay fixtures and generates a twelve-independent-subject, one-visit clinical fixture plus a config under a caller-supplied external root. Freeze and reuse that generated config through A/C/B/C/D/report.",
+  "acceptance": {
+    "status": "pending_Sol_review_and_native_saved-output_evidence",
+    "scientific_claims": "Synthetic software evidence only; no biological or clinical validity is established.",
+    "G8_G9": "remain closed"
+  }
+}

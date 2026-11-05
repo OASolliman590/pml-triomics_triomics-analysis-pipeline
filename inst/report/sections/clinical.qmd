@@ -1,0 +1,1 @@
+{{< include clinical-content.html >}}
