@@ -233,8 +233,10 @@ triomics_report_clinical_saved_endpoints <- function(loaded, config) {
     if (!identical(artifact$reference$payload_sha256, as.character(reference$payload_sha256)) ||
         !identical(artifact$reference$envelope_sha256, as.character(reference$envelope_sha256)) ||
         !identical(artifact$reference$envelope_path, as.character(reference$envelope_file))) {
-      triomics_report_abort("The saved C score endpoint bytes differ from the verified integration result.",
-                            paste0("C.integrations[", integration_index, "].score_endpoint_bundle"))
+      triomics_report_clinical_abort(
+        "The saved C score endpoint bytes differ from the verified integration result.",
+        paste0("C.integrations[", integration_index, "].score_endpoint_bundle")
+      )
     }
     bundle <- artifact$payload
     if (!identical(as.character(bundle$artifact_type), "integration_score_endpoint_bundle") ||
@@ -299,6 +301,9 @@ triomics_report_clinical_saved_endpoints <- function(loaded, config) {
         selection_validity = triomics_report_identifier(selection, "validity", "not_reported"),
         endpoint_source_hash = as.character(endpoint$source_hash),
         endpoint_sha256 = as.character(endpoint$endpoint_sha256),
+        endpoint_bundle_artifact_id = artifact$reference$artifact_id,
+        endpoint_bundle_payload_file = artifact$reference$path,
+        endpoint_bundle_envelope_file = artifact$reference$envelope_path,
         endpoint_bundle_payload_sha256 = artifact$reference$payload_sha256,
         endpoint_bundle_envelope_sha256 = artifact$reference$envelope_sha256,
         unit_map_hash = as.character(bundle$unit_map_hash),
@@ -309,6 +314,170 @@ triomics_report_clinical_saved_endpoints <- function(loaded, config) {
     }
   }
   endpoints
+}
+
+triomics_report_clinical_b_bundle_member <- function(loaded, config) {
+  unverified <- function() list(status = "unverified", member = NULL)
+  if (!is.list(loaded) || !is.list(loaded$d) || !is.list(config)) return(unverified())
+  immutable <- loaded$d$immutable_inputs
+  family <- if (is.list(immutable) && is.list(immutable$b_artifacts)) {
+    immutable$b_artifacts$family_ledger
+  } else NULL
+  manifest_bundle <- loaded$d_generation$manifest$provenance$b$bundle
+  d_bundle_fields <- c("b_bundle_artifact_id", "b_bundle_sha256", "b_bundle_envelope_sha256")
+  family_fields <- c("artifact_type", "artifact_id", "path", "envelope_path", "sha256", "envelope_sha256")
+  manifest_fields <- c("artifact_id", "payload_sha256", "envelope_sha256")
+  if (!is.list(immutable) || !all(d_bundle_fields %in% names(immutable)) ||
+      !is.list(family) || !all(family_fields %in% names(family)) ||
+      !is.list(manifest_bundle) || !all(manifest_fields %in% names(manifest_bundle))) {
+    return(unverified())
+  }
+  d_bundle_id <- as.character(immutable$b_bundle_artifact_id)
+  d_bundle_sha <- as.character(immutable$b_bundle_sha256)
+  d_bundle_envelope_sha <- as.character(immutable$b_bundle_envelope_sha256)
+  if (length(d_bundle_id) != 1L || is.na(d_bundle_id) || !nzchar(d_bundle_id) ||
+      !triomics_sha256_text(d_bundle_sha) || !triomics_sha256_text(d_bundle_envelope_sha) ||
+      !identical(d_bundle_id, as.character(manifest_bundle$artifact_id)) ||
+      !identical(d_bundle_sha, as.character(manifest_bundle$payload_sha256)) ||
+      !identical(d_bundle_envelope_sha, as.character(manifest_bundle$envelope_sha256))) {
+    triomics_report_clinical_abort(
+      "D's immutable B bundle identities disagree with its generation manifest.",
+      "D.immutable_inputs.b_bundle"
+    )
+  }
+  family_path <- as.character(family$path)
+  if (length(family_path) != 1L || is.na(family_path) || !nzchar(family_path)) {
+    return(unverified())
+  }
+  path_parts <- strsplit(gsub("\\\\", "/", family_path), "/", fixed = TRUE)[[1L]]
+  if (length(path_parts) != 4L || !identical(path_parts[[1L]], "B") ||
+      !identical(path_parts[[2L]], "handoffs") ||
+      !grepl("^[a-f0-9]{64}$", path_parts[[3L]]) ||
+      !identical(path_parts[[4L]], "family-ledger.json") ||
+      !identical(as.character(family$envelope_path),
+                 sub("[.]json$", ".envelope.json", family_path))) {
+    return(unverified())
+  }
+  family_artifact <- tryCatch(
+    triomics_report_artifact(
+      loaded$root, family_path, as.character(family$artifact_type),
+      as.character(family$artifact_id), config$study_id, config$config_sha256,
+      config$analysis_id, parse_payload = TRUE
+    ),
+    triomics_error = function(error) {
+      triomics_report_clinical_abort(
+        "D's pinned B family ledger cannot be read from its verified handoff directory.",
+        "D.immutable_inputs.b_artifacts.family_ledger"
+      )
+    }
+  )
+  if (!identical(family_artifact$reference$payload_sha256, as.character(family$sha256)) ||
+      !identical(family_artifact$reference$envelope_sha256, as.character(family$envelope_sha256)) ||
+      !identical(family_artifact$reference$envelope_path,
+                 file.path(dirname(family_path), "family-ledger.envelope.json"))) {
+    triomics_report_clinical_abort(
+      "D's pinned B family ledger differs from its saved artifact bytes.",
+      "D.immutable_inputs.b_artifacts.family_ledger"
+    )
+  }
+  bundle_path <- file.path(dirname(family_path), "bundle.json")
+  bundle_artifact <- tryCatch(
+    triomics_report_artifact(
+      loaded$root, bundle_path, "stage_b_public_bundle", d_bundle_id,
+      config$study_id, config$config_sha256, config$analysis_id, parse_payload = TRUE
+    ),
+    triomics_error = function(error) {
+      triomics_report_clinical_abort(
+        "D's pinned B public bundle cannot be read from its verified handoff directory.",
+        "D.immutable_inputs.b_bundle"
+      )
+    }
+  )
+  if (!identical(bundle_artifact$reference$payload_sha256, d_bundle_sha) ||
+      !identical(bundle_artifact$reference$envelope_sha256, d_bundle_envelope_sha)) {
+    triomics_report_clinical_abort(
+      "The saved B public bundle differs from D's immutable B bundle reference.",
+      "D.immutable_inputs.b_bundle"
+    )
+  }
+  members <- triomics_report_clinical_records(bundle_artifact$payload$members,
+                                               "B.public_bundle.members")
+  matches <- which(vapply(members, function(member) {
+    identical(as.character(member$artifact_id %||% ""), "clinical_associations")
+  }, logical(1L)))
+  if (!length(matches)) return(list(status = "unavailable", member = NULL))
+  if (length(matches) != 1L) {
+    triomics_report_clinical_abort(
+      "The pinned B public bundle repeats its clinical association member.",
+      "B.public_bundle.members.clinical_associations"
+    )
+  }
+  member <- members[[matches[[1L]]]]
+  member_fields <- c("artifact_id", "status", "path", "sha256", "envelope_path", "envelope_sha256")
+  if (!all(member_fields %in% names(member)) ||
+      !identical(as.character(member$path), file.path("B", "clinical-associations.json")) ||
+      !identical(as.character(member$envelope_path), file.path("B", "clinical-associations.envelope.json")) ||
+      !triomics_sha256_text(as.character(member$sha256)) ||
+      !triomics_sha256_text(as.character(member$envelope_sha256))) {
+    triomics_report_clinical_abort(
+      "The pinned B clinical association member reference is malformed.",
+      "B.public_bundle.members.clinical_associations"
+    )
+  }
+  if (!identical(as.character(member$status), "complete")) {
+    return(list(status = "unavailable", member = member))
+  }
+  clinical_reference <- loaded$artifacts$clinical
+  if (is.null(clinical_reference)) return(unverified())
+  if (!is.list(clinical_reference) ||
+      !identical(as.character(clinical_reference$path), as.character(member$path)) ||
+      !identical(as.character(clinical_reference$envelope_path), as.character(member$envelope_path)) ||
+      !identical(as.character(clinical_reference$artifact_type), "clinical_association_results") ||
+      !identical(as.character(clinical_reference$artifact_id), "b-t08-clinical-associations") ||
+      !identical(as.character(clinical_reference$payload_sha256), as.character(member$sha256)) ||
+      !identical(as.character(clinical_reference$envelope_sha256), as.character(member$envelope_sha256))) {
+    triomics_report_clinical_abort(
+      "The loaded B clinical payload or envelope differs from D's pinned B bundle member.",
+      "D.immutable_inputs.b_bundle.clinical_associations"
+    )
+  }
+  list(status = "verified", member = member)
+}
+
+triomics_report_clinical_endpoint_transport <- function(payload, endpoints) {
+  unverified <- function() list(status = "unverified", endpoint_ids = character())
+  native_transport <- if (is.list(payload)) payload$native_transport else NULL
+  reference <- if (is.list(native_transport)) native_transport$endpoint_bundle else NULL
+  required <- c("artifact_id", "payload_file", "payload_sha256", "envelope_file", "envelope_sha256")
+  if (!is.list(reference) || is.null(names(reference)) || !all(required %in% names(reference))) {
+    return(unverified())
+  }
+  text_fields <- c("artifact_id", "payload_file", "envelope_file")
+  if (any(!vapply(text_fields, function(field) {
+    value <- reference[[field]]
+    is.character(value) && length(value) == 1L && !is.na(value) && nzchar(value)
+  }, logical(1L))) ||
+      !triomics_sha256_text(as.character(reference$payload_sha256)) ||
+      !triomics_sha256_text(as.character(reference$envelope_sha256))) {
+    triomics_report_clinical_abort(
+      "The B native transport endpoint bundle identity is malformed.",
+      "clinical.native_transport.endpoint_bundle"
+    )
+  }
+  matches <- names(endpoints)[vapply(endpoints, function(endpoint) {
+    identical(as.character(reference$artifact_id), endpoint$endpoint_bundle_artifact_id) &&
+      identical(as.character(reference$payload_file), endpoint$endpoint_bundle_payload_file) &&
+      identical(as.character(reference$payload_sha256), endpoint$endpoint_bundle_payload_sha256) &&
+      identical(as.character(reference$envelope_file), endpoint$endpoint_bundle_envelope_file) &&
+      identical(as.character(reference$envelope_sha256), endpoint$endpoint_bundle_envelope_sha256)
+  }, logical(1L))]
+  if (!length(matches)) {
+    triomics_report_clinical_abort(
+      "The B native transport endpoint bundle does not match a verified C endpoint bundle.",
+      "clinical.native_transport.endpoint_bundle"
+    )
+  }
+  list(status = "verified", endpoint_ids = matches)
 }
 
 triomics_report_clinical_validate_adjustments <- function(records, field, dictionary_ids, key) {
@@ -467,7 +636,8 @@ triomics_report_clinical_family_rows <- function(payload) {
   result[, columns, drop = FALSE]
 }
 
-triomics_report_clinical_association_rows <- function(payload, endpoints, dictionary_ids) {
+triomics_report_clinical_association_rows <- function(payload, endpoints, dictionary_ids,
+                                                       b_bundle, endpoint_transport) {
   results <- triomics_report_clinical_records(payload$results, "clinical.results")
   triomics_report_clinical_validate_adjustments(
     results, "adjustment", dictionary_ids, "clinical.results.adjustment"
@@ -475,8 +645,9 @@ triomics_report_clinical_association_rows <- function(payload, endpoints, dictio
   rows <- triomics_report_clinical_rows(payload)
   columns <- c(names(rows), "response_role", "predictor_role", "estimand", "effect_scale",
                "predictor_units", "response_units", "inferential_status", "hypothesis_status",
-               "selection_ancestry", "endpoint_lineage_status", "evidence_class",
-               "n_samples", "n_excluded_clinical", "n_excluded_endpoint", "result_reason")
+               "selection_ancestry", "selection_validity", "independent_validation_released",
+               "endpoint_lineage_status", "evidence_class", "n_samples",
+               "n_excluded_clinical", "n_excluded_endpoint", "result_reason")
   records <- lapply(seq_along(results), function(index) {
     result <- results[[index]]
     predictor <- triomics_report_identifier(result, "predictor_ref", "not_reported")
@@ -488,30 +659,76 @@ triomics_report_clinical_association_rows <- function(payload, endpoints, dictio
     }
     endpoint_id <- triomics_report_identifier(result, "endpoint_id", "not_reported")
     endpoint <- endpoints[[endpoint_id]]
-    if (is.null(endpoint)) {
-      endpoint_lineage_status <- "not_in_saved_C_endpoint_bundle"
-      evidence_class <- "association_endpoint_lineage_unavailable"
-      endpoint_lineage_status_partial <- TRUE
-    } else {
-      endpoint_lineage_status <- "saved_C_endpoint_verified"
-      endpoint_lineage_status_partial <- FALSE
-      result_selection <- result$selection
-      ancestry <- triomics_report_identifier(result_selection, "ancestry",
-                                               triomics_report_identifier(endpoint, "selection_ancestry", "not_reported"))
-      training_outcome <- isTRUE(endpoint$training_y_used_by_fit) ||
-        isTRUE(endpoint$training_outcome_present) ||
-        ancestry %in% c("trained_on_outcome", "selected_after_clinical_outcome") ||
-        triomics_report_identifier(endpoint, "selection_ancestry") %in%
-          c("trained_on_outcome", "selected_after_clinical_outcome")
-      evidence_class <- if (training_outcome) "training_outcome_descriptive" else
-        "descriptive_score_association"
-    }
-    if (is.null(result$selection)) {
+    selection <- result$selection
+    if (is.null(selection)) {
       selection_ancestry <- "not_reported"
-    } else if (!is.list(result$selection) || is.null(names(result$selection))) {
+      selection_validity <- "not_reported"
+      inspected_outcome <- FALSE
+    } else if (!is.list(selection) || is.null(names(selection))) {
       triomics_report_clinical_abort("Clinical result selection lineage is malformed.",
                                      paste0("clinical.results[", index, "].selection"))
-    } else selection_ancestry <- triomics_report_identifier(result$selection, "ancestry", "not_reported")
+    } else {
+      selection_ancestry <- triomics_report_identifier(selection, "ancestry", "not_reported")
+      selection_validity <- triomics_report_identifier(selection, "validity", "not_reported")
+      inspected_outcome <- !is.null(selection$inspected_outcome)
+    }
+    released_value <- result$independent_validation_released
+    if (!is.null(released_value) &&
+        (!is.logical(released_value) || length(released_value) != 1L || is.na(released_value))) {
+      triomics_report_clinical_abort(
+        "A clinical independent-validation release flag is not a scalar boolean.",
+        paste0("clinical.results[", index, "].independent_validation_released")
+      )
+    }
+    independent_validation_released <- if (is.null(released_value)) NA else released_value
+    q_value <- triomics_report_number(result, "q")
+    endpoint_lineage_status <- "not_in_saved_C_endpoint_bundle"
+    evidence_class <- "association_endpoint_lineage_unavailable"
+    if (!is.null(endpoint)) {
+      if (!identical(b_bundle$status, "verified")) {
+        endpoint_lineage_status <- "B_clinical_payload_unverified"
+      } else if (!identical(endpoint_transport$status, "verified")) {
+        endpoint_lineage_status <- "B_endpoint_bundle_unverified"
+      } else if (!endpoint_id %in% endpoint_transport$endpoint_ids) {
+        triomics_report_clinical_abort(
+          "A B clinical result names an endpoint outside its verified C endpoint bundle.",
+          paste0("clinical.results[", index, "].endpoint_id")
+        )
+      } else endpoint_lineage_status <- "saved_C_endpoint_verified"
+
+      endpoint_ancestry <- endpoint$selection_ancestry
+      if (selection_ancestry == "not_reported") selection_ancestry <- endpoint_ancestry
+      training_outcome <- isTRUE(endpoint$training_y_used_by_fit) ||
+        isTRUE(endpoint$training_outcome_present) ||
+        selection_ancestry == "trained_on_outcome" || endpoint_ancestry == "trained_on_outcome"
+      outcome_selected <- inspected_outcome ||
+        selection_ancestry == "selected_after_clinical_outcome" ||
+        endpoint_ancestry == "selected_after_clinical_outcome"
+      endpoint_verified <- identical(endpoint_lineage_status, "saved_C_endpoint_verified")
+      independent_qualified <- endpoint_verified &&
+        identical(triomics_report_identifier(result, "estimation_status", "not_reported"), "estimated") &&
+        identical(triomics_report_identifier(result, "inferential_status", "not_reported"),
+                  "independent_validation") &&
+        identical(triomics_report_identifier(result, "hypothesis_status", "not_reported"),
+                  "independent_validation") &&
+        isTRUE(independent_validation_released) &&
+        is.finite(q_value) && q_value >= 0 && q_value <= 1 &&
+        identical(selection_ancestry, "prespecified") &&
+        identical(selection_validity, "qualified") && !inspected_outcome &&
+        identical(endpoint$selection_ancestry, "prespecified") &&
+        identical(endpoint$selection_validity, "qualified") &&
+        !isTRUE(endpoint$training_y_used_by_fit) &&
+        !isTRUE(endpoint$training_outcome_present)
+      evidence_class <- if (!endpoint_verified) {
+        "association_endpoint_lineage_unavailable"
+      } else if (training_outcome) {
+        "training_outcome_descriptive"
+      } else if (outcome_selected) {
+        "outcome_selected_descriptive"
+      } else if (independent_qualified) {
+        "producer_qualified_independent_B_association"
+      } else "descriptive_score_association"
+    }
     base <- rows[index, , drop = FALSE]
     data.frame(
       base,
@@ -524,6 +741,8 @@ triomics_report_clinical_association_rows <- function(payload, endpoints, dictio
       inferential_status = triomics_report_identifier(result, "inferential_status", "not_reported"),
       hypothesis_status = triomics_report_identifier(result, "hypothesis_status", "not_reported"),
       selection_ancestry = selection_ancestry,
+      selection_validity = selection_validity,
+      independent_validation_released = independent_validation_released,
       endpoint_lineage_status = endpoint_lineage_status,
       evidence_class = evidence_class,
       n_samples = if (is.null(result$n_samples)) NA_integer_ else {
@@ -545,7 +764,8 @@ triomics_report_clinical_association_rows <- function(payload, endpoints, dictio
       interval_lower = numeric(), interval_upper = numeric(), statistic = numeric(),
       ordinary_df = numeric(), effective_test_df = numeric(), p = numeric(), q = numeric(),
       n_subjects = numeric(), n_rows_used = numeric(), adjustment_count = integer(),
-      n_samples = integer(), n_excluded_clinical = integer(), n_excluded_endpoint = integer()
+      n_samples = integer(), n_excluded_clinical = integer(), n_excluded_endpoint = integer(),
+      independent_validation_released = logical()
     )
     return(triomics_report_clinical_empty_frame(columns, types))
   }
@@ -564,7 +784,8 @@ triomics_report_clinical_endpoint_lineage_rows <- function(endpoints, clinical_r
                "training_unit_count", "training_subject_count", "training_outcome_used_by_fit",
                "training_outcome_status", "selection_ancestry", "selection_validity",
                "dependency_group_present", "unit_map_hash", "endpoint_source_hash",
-               "endpoint_sha256", "endpoint_bundle_payload_sha256",
+               "endpoint_bundle_artifact_id", "endpoint_bundle_payload_file",
+               "endpoint_bundle_envelope_file", "endpoint_sha256", "endpoint_bundle_payload_sha256",
                "endpoint_bundle_envelope_sha256")
   records <- lapply(endpoint_ids, function(endpoint_id) {
     endpoint <- endpoints[[endpoint_id]]
@@ -589,6 +810,9 @@ triomics_report_clinical_endpoint_lineage_rows <- function(endpoints, clinical_r
       dependency_group_present = endpoint$dependency_group_present,
       unit_map_hash = endpoint$unit_map_hash,
       endpoint_source_hash = endpoint$endpoint_source_hash,
+      endpoint_bundle_artifact_id = endpoint$endpoint_bundle_artifact_id,
+      endpoint_bundle_payload_file = endpoint$endpoint_bundle_payload_file,
+      endpoint_bundle_envelope_file = endpoint$endpoint_bundle_envelope_file,
       endpoint_sha256 = endpoint$endpoint_sha256,
       endpoint_bundle_payload_sha256 = endpoint$endpoint_bundle_payload_sha256,
       endpoint_bundle_envelope_sha256 = endpoint$endpoint_bundle_envelope_sha256,
@@ -609,7 +833,8 @@ triomics_report_clinical_endpoint_lineage_rows <- function(endpoints, clinical_r
 triomics_report_clinical_held_out_record <- function(values = list()) {
   record <- list(
     comparison_type = "not_reported", evidence_class = "unavailable", status = "unavailable",
-    integration_id = "not_reported", clinical_variable_id = "not_reported",
+    integration_id = "not_reported", source_outcome_label = "not_reported",
+    clinical_variable_id = "not_reported",
     endpoint_link_status = "unverified", link_scope = "not_applicable",
     metric = "", metric_definition = "", metric_status = "not_reported",
     model_value = NA_real_, baseline_value = NA_real_, unit = "not_reported",
@@ -667,7 +892,7 @@ triomics_report_clinical_c02_metric_value <- function(metrics, metric, key) {
   as.numeric(value)
 }
 
-triomics_report_clinical_c02_rows <- function(loaded, config, dictionary_rows, objective_rows) {
+triomics_report_clinical_c02_rows <- function(loaded, config) {
   integrations <- loaded$payloads$c$integrations %||% list()
   integrations <- triomics_report_clinical_records(integrations, "C.integrations")
   if (!length(integrations)) {
@@ -708,18 +933,9 @@ triomics_report_clinical_c02_rows <- function(loaded, config, dictionary_rows, o
     }
     outcome <- if (is.list(spec) && is.character(spec$outcome) && length(spec$outcome) == 1L &&
                    !is.na(spec$outcome)) spec$outcome else ""
-    dictionary_index <- match(outcome, dictionary_rows$variable_id)
-    dictionary_match <- !is.na(dictionary_index)
-    variable_type <- if (dictionary_match) as.character(dictionary_rows$declared_type[[dictionary_index]]) else ""
-    type_matches <- (identical(mode, "continuous") && identical(variable_type, "continuous")) ||
-      (identical(mode, "categorical") && variable_type %in% c("categorical", "factor", "ordered"))
-    reported_variable <- nzchar(outcome) && outcome %in% objective_rows$predictor_ref
-    link_status <- if (dictionary_match && type_matches && reported_variable) {
-      "clinical_variable_bound"
-    } else "unverified"
-    clinical_variable_id <- if (dictionary_match && type_matches) {
-      as.character(dictionary_rows$variable_id[[dictionary_index]])
-    } else "not_reported"
+    source_outcome_label <- if (nzchar(outcome)) outcome else "not_reported"
+    link_status <- "unverified"
+    clinical_variable_id <- "not_reported"
     n_predicted <- triomics_report_number(evaluation, "n_predicted")
     required_fields <- c(
       "mode", "method", "native_version", "split_plan_hash", "outer_folds",
@@ -748,16 +964,16 @@ triomics_report_clinical_c02_rows <- function(loaded, config, dictionary_rows, o
       baseline_value <- triomics_report_clinical_c02_metric_value(
         baseline_metrics, metric, paste0("C.integrations[", index, "].evaluation.metrics.baseline.", metric)
       )
-      unit <- if (metric %in% c("rmse", "mae") && dictionary_match && type_matches) {
-        as.character(dictionary_rows$unit[[dictionary_index]])
-      } else if (metric %in% c("balanced_error", "accuracy")) "proportion" else "unitless"
+      unit <- if (metric %in% c("rmse", "mae")) "not_reported" else
+        if (metric %in% c("balanced_error", "accuracy")) "proportion" else "unitless"
       triomics_report_clinical_held_out_record(list(
         comparison_type = "C-02 nested evaluation",
         evidence_class = if (lineage_valid && (is.finite(model_value) || is.finite(baseline_value))) {
           "held_out_model_evaluation"
         } else "unqualified_evaluation",
         status = if (status %in% c("complete", "partial", "failed")) status else "unavailable",
-        integration_id = integration_id, clinical_variable_id = clinical_variable_id,
+        integration_id = integration_id, source_outcome_label = source_outcome_label,
+        clinical_variable_id = clinical_variable_id,
         endpoint_link_status = link_status, link_scope = "integration_level_only",
         metric = metric, metric_definition = unname(definitions[[metric]]),
         metric_status = if (is.finite(model_value) && is.finite(baseline_value)) "reported" else "unavailable",
@@ -802,7 +1018,7 @@ triomics_report_clinical_c02_rows <- function(loaded, config, dictionary_rows, o
   records
 }
 
-triomics_report_clinical_held_out_status <- function(loaded, config, dictionary_rows, objective_rows) {
+triomics_report_clinical_held_out_status <- function(loaded, config) {
   c09 <- loaded$d$inherited_evidence$stage_status$clinical_prediction
   if (is.null(c09)) {
     c09_row <- triomics_report_clinical_held_out_record(list(
@@ -842,7 +1058,7 @@ triomics_report_clinical_held_out_status <- function(loaded, config, dictionary_
         "C09_STAGE_STATUS_REPORTED"
     ))
   }
-  c02_rows <- triomics_report_clinical_c02_rows(loaded, config, dictionary_rows, objective_rows)
+  c02_rows <- triomics_report_clinical_c02_rows(loaded, config)
   do.call(rbind, c(list(c09_row), c02_rows))
 }
 
@@ -852,9 +1068,11 @@ triomics_report_clinical_limit_rows <- function(loaded) {
     is.list(control) && identical(as.character(control$status), "not_run")
   }, logical(1L)))) "four_controls_not_run" else "status_not_established"
   data.frame(
-    evidence_class = c("interpretation", "lineage", "C-07", "D-06/D-07/D-14", "qualification"),
+    evidence_class = c("interpretation", "B-association", "lineage", "C-07",
+                       "D-06/D-07/D-14", "qualification"),
     statement = c(
-      "Individual molecular score associations are not contrast enrichment, patient-level pathway scores, target binding, or independent confirmation.",
+      "Individual molecular score associations are not contrast enrichment, patient-level pathway scores, or target binding.",
+      "A producer-qualified B association is a released B association category; it does not establish external replication, held-out clinical prediction, biological confirmation, or guaranteed benefit.",
       "Shared score construction and subject linkage are retained by saved source hashes; unit identifiers and observation records are withheld.",
       paste0("C-07 control status: ", control_status, "."),
       "D-06 and D-07 retain their conditional evidence limits; D-14 remains conditional-unapproved and receives no completion credit from this section.",
@@ -906,13 +1124,15 @@ triomics_report_clinical_section <- function(loaded, config) {
   exclusion_rows <- triomics_report_clinical_exclusion_rows(dictionary)
   endpoints <- triomics_report_clinical_saved_endpoints(loaded, config)
   objective_rows <- triomics_report_clinical_objective_rows(payload, safe_variable_ids)
-  association_rows <- triomics_report_clinical_association_rows(payload, endpoints, safe_variable_ids)
+  b_bundle <- triomics_report_clinical_b_bundle_member(loaded, config)
+  endpoint_transport <- triomics_report_clinical_endpoint_transport(payload, endpoints)
+  association_rows <- triomics_report_clinical_association_rows(
+    payload, endpoints, safe_variable_ids, b_bundle, endpoint_transport
+  )
   family_rows <- triomics_report_clinical_family_rows(payload)
   result_records <- triomics_report_clinical_records(payload$results, "clinical.results")
   endpoint_lineage <- triomics_report_clinical_endpoint_lineage_rows(endpoints, result_records)
-  held_out <- triomics_report_clinical_held_out_status(
-    loaded, config, dictionary_rows, objective_rows
-  )
+  held_out <- triomics_report_clinical_held_out_status(loaded, config)
   limits <- triomics_report_clinical_limit_rows(loaded)
   lineage_missing <- nrow(association_rows) > 0L &&
     any(association_rows$endpoint_lineage_status != "saved_C_endpoint_verified")

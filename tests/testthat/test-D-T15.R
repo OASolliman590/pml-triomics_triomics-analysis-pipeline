@@ -58,10 +58,8 @@ dt15_materialize_native_fixture <- function(root) {
     stop("The D-T15 fixture root could not be created.", call. = FALSE)
   }
   root <- normalizePath(root, winslash = "/", mustWork = TRUE)
-  package_root <- normalizePath(testthat::test_path("..", ".."),
-                                winslash = "/", mustWork = TRUE)
-  source_root <- file.path(package_root, "inst", "examples", "data")
-  c08_root <- file.path(source_root, "c08")
+  c08_root <- triomics_test_resource("examples", "data", "c08")
+  independent_source_root <- triomics_test_resource("examples", "data", "independent")
   data_root <- file.path(root, "data")
   clinical_root <- file.path(data_root, "d15-single-visit")
   assay_root <- file.path(data_root, "independent")
@@ -102,11 +100,11 @@ dt15_materialize_native_fixture <- function(root) {
   file.copy(file.path(c08_root, "dictionary.tsv"),
             file.path(clinical_root, "dictionary.tsv"), overwrite = FALSE)
   assay_sources <- c("proteomics.tsv", "metabolomics.tsv")
-  copied <- file.copy(file.path(source_root, "independent", assay_sources),
+  copied <- file.copy(file.path(independent_source_root, assay_sources),
                       file.path(assay_root, assay_sources), overwrite = FALSE)
   if (!all(copied)) stop("The public assay fixtures could not be copied.", call. = FALSE)
   config_path <- file.path(ticket_root, "D-T15.yaml")
-  ticket_template <- file.path(package_root, "inst", "examples", "tickets", "D-T15.yaml")
+  ticket_template <- triomics_test_resource("examples", "tickets", "D-T15.yaml")
   if (!file.copy(ticket_template, config_path,
                  overwrite = FALSE)) {
     stop("The D-T15 template could not be copied into the fixture root.", call. = FALSE)
@@ -302,10 +300,25 @@ dt15_native_projection_fixture <- function(endpoint_id = "score_demo_pc1") {
       excluded = list()
     )
   )
+  clinical$native_transport <- list(
+    request = list(
+      artifact_id = "c08-clinical-score-request-1",
+      payload_file = file.path("B", "clinical-score-association-requests", "request-01.json"),
+      payload_sha256 = dt15_sha("7"),
+      envelope_file = file.path("B", "clinical-score-association-requests", "request-01.envelope.json"),
+      envelope_sha256 = dt15_sha("8"),
+      request_sha256 = dt15_sha("9")
+    ),
+    endpoint_bundle = endpoint_ref,
+    clinical_source_sha256 = list(
+      dictionary = dt15_sha("a"), observations = dt15_sha("b"), links = dt15_sha("c")
+    )
+  )
   loaded <- list(
     root = root,
     config = list(study_id = study_id, analysis_id = analysis_id,
                   config_sha256 = config_sha256),
+    artifacts = list(c = list(payload_sha256 = dt15_sha("5"))),
     payloads = list(
       clinical = clinical,
       c = list(integrations = list(list(
@@ -327,8 +340,199 @@ dt15_native_projection_fixture <- function(endpoint_id = "score_demo_pc1") {
                  audience = "synthetic_demo", privacy_class = "synthetic",
                  study_id = study_id, analysis_id = analysis_id,
                  config_sha256 = config_sha256)
-  list(root = root, loaded = loaded, config = config,
-       endpoint_payload_path = payload_path, endpoint_ref = endpoint_ref)
+  fixture <- list(root = root, loaded = loaded, config = config,
+                  endpoint_payload_path = payload_path, endpoint_ref = endpoint_ref)
+  dt15_bind_clinical_payload(fixture)
+}
+
+dt15_rebind_endpoint_bundle <- function(fixture, mutate_endpoint) {
+  bundle <- jsonlite::read_json(fixture$endpoint_payload_path, simplifyVector = FALSE)
+  endpoint <- mutate_endpoint(bundle$endpoints$PC1)
+  endpoint$endpoint_sha256 <- NULL
+  endpoint$endpoint_sha256 <- triomics_c08_endpoint_hash(endpoint)
+  bundle$endpoints$PC1 <- endpoint
+  bundle$payload_sha256 <- NULL
+  bundle$payload_sha256 <- triomics_c08_bundle_hash(bundle)
+  envelope_path <- file.path(dirname(fixture$endpoint_payload_path), "integration-01.envelope.json")
+  unlink(c(fixture$endpoint_payload_path, envelope_path))
+  triomics_write_json_atomic(bundle, fixture$endpoint_payload_path)
+  envelope <- triomics_artifact_envelope(
+    artifact_type = "integration_score_endpoint_bundle",
+    artifact_id = "c08-score-endpoint-bundle-1",
+    study_id = fixture$loaded$config$study_id,
+    run_id = "c08-synthetic-fixture",
+    status = "complete",
+    config_sha256 = fixture$config$config_sha256,
+    payload = fixture$endpoint_payload_path,
+    producer_commit = "synthetic-test-fixture",
+    inputs = list(list(artifact_id = "C::integration-pca", sha256 = dt15_sha("3"))),
+    privacy_class = "synthetic"
+  )
+  triomics_write_envelope(envelope, envelope_path)
+  reference <- fixture$endpoint_ref
+  reference$payload_sha256 <- triomics_sha256(fixture$endpoint_payload_path)
+  reference$envelope_sha256 <- triomics_sha256(envelope_path)
+  fixture$endpoint_ref <- reference
+  fixture$loaded$payloads$c$integrations[[1L]]$score_endpoint_bundle <- reference
+  fixture$loaded$payloads$clinical$native_transport$endpoint_bundle <- reference
+  fixture
+}
+
+dt15_bind_clinical_payload <- function(fixture) {
+  relative_path <- file.path("B", "clinical-associations.json")
+  payload_path <- file.path(fixture$root, relative_path)
+  envelope_path <- file.path(fixture$root, "B", "clinical-associations.envelope.json")
+  dir.create(dirname(payload_path), recursive = TRUE, showWarnings = FALSE)
+  unlink(c(payload_path, envelope_path))
+  triomics_write_json_atomic(fixture$loaded$payloads$clinical, payload_path)
+  transport <- fixture$loaded$payloads$clinical$native_transport
+  inputs <- list()
+  if (is.list(transport) && is.list(transport$endpoint_bundle)) {
+    inputs[[length(inputs) + 1L]] <- list(
+      artifact_id = transport$endpoint_bundle$artifact_id,
+      sha256 = transport$endpoint_bundle$payload_sha256
+    )
+  }
+  if (is.list(transport) && is.list(transport$request)) {
+    inputs[[length(inputs) + 1L]] <- list(
+      artifact_id = transport$request$artifact_id,
+      sha256 = transport$request$payload_sha256
+    )
+  }
+  envelope <- triomics_artifact_envelope(
+    artifact_type = "clinical_association_results",
+    artifact_id = "b-t08-clinical-associations",
+    study_id = fixture$loaded$config$study_id,
+    run_id = "b-t08-synthetic-fixture",
+    status = "complete",
+    config_sha256 = fixture$config$config_sha256,
+    payload = payload_path,
+    producer_commit = "synthetic-test-fixture",
+    inputs = inputs,
+    privacy_class = "synthetic"
+  )
+  triomics_write_envelope(envelope, envelope_path)
+  artifact <- triomics_report_artifact(
+    fixture$root, relative_path, "clinical_association_results",
+    "b-t08-clinical-associations", fixture$loaded$config$study_id,
+    fixture$config$config_sha256, fixture$loaded$config$analysis_id,
+    parse_payload = TRUE
+  )
+  fixture$loaded$payloads$clinical <- artifact$payload
+  fixture$loaded$artifacts$clinical <- artifact$reference
+  dt15_bind_b_bundle(fixture)
+}
+
+dt15_bind_b_bundle <- function(fixture) {
+  handoff_dir <- file.path(fixture$root, "B", "handoffs", dt15_sha("d"))
+  dir.create(handoff_dir, recursive = TRUE, showWarnings = FALSE)
+  family_path <- file.path(handoff_dir, "family-ledger.json")
+  family_envelope_path <- file.path(handoff_dir, "family-ledger.envelope.json")
+  unlink(c(family_path, family_envelope_path))
+  family <- list(
+    schema_version = "2.0", status = "complete",
+    study_id = fixture$loaded$config$study_id,
+    analysis_id = fixture$loaded$config$analysis_id
+  )
+  triomics_write_json_atomic(family, family_path)
+  triomics_write_envelope(triomics_artifact_envelope(
+    artifact_type = "family_ledger", artifact_id = "b-t07-family-ledger",
+    study_id = fixture$loaded$config$study_id, run_id = "b-t07-synthetic-fixture",
+    status = "complete", config_sha256 = fixture$config$config_sha256,
+    payload = family_path, producer_commit = "synthetic-test-fixture",
+    inputs = list(), privacy_class = "synthetic"
+  ), family_envelope_path)
+  family_artifact <- triomics_report_artifact(
+    fixture$root, file.path("B", "handoffs", dt15_sha("d"), "family-ledger.json"),
+    "family_ledger", "b-t07-family-ledger", fixture$loaded$config$study_id,
+    fixture$config$config_sha256, fixture$loaded$config$analysis_id,
+    parse_payload = TRUE
+  )
+
+  clinical <- fixture$loaded$artifacts$clinical
+  member <- list(
+    artifact_id = "clinical_associations", status = "complete",
+    path = clinical$path, sha256 = clinical$payload_sha256,
+    envelope_path = clinical$envelope_path, envelope_sha256 = clinical$envelope_sha256,
+    reason_codes = list()
+  )
+  bundle_path <- file.path(handoff_dir, "bundle.json")
+  bundle_envelope_path <- file.path(handoff_dir, "bundle.envelope.json")
+  unlink(c(bundle_path, bundle_envelope_path))
+  bundle <- list(
+    schema_version = "2.0", artifact_type = "stage_b_public_bundle",
+    artifact_id = "b07-dt15-synthetic-fixture",
+    study_id = fixture$loaded$config$study_id,
+    analysis_id = fixture$loaded$config$analysis_id,
+    status = "complete", members = list(member)
+  )
+  triomics_write_json_atomic(bundle, bundle_path)
+  triomics_write_envelope(triomics_artifact_envelope(
+    artifact_type = "stage_b_public_bundle", artifact_id = bundle$artifact_id,
+    study_id = fixture$loaded$config$study_id, run_id = "b07-synthetic-fixture",
+    status = "complete", config_sha256 = fixture$config$config_sha256,
+    payload = bundle_path, producer_commit = "synthetic-test-fixture",
+    inputs = list(list(artifact_id = "b-t07-family-ledger",
+                       sha256 = family_artifact$reference$payload_sha256)),
+    privacy_class = "synthetic"
+  ), bundle_envelope_path)
+  bundle_artifact <- triomics_report_artifact(
+    fixture$root, file.path("B", "handoffs", dt15_sha("d"), "bundle.json"),
+    "stage_b_public_bundle", bundle$artifact_id, fixture$loaded$config$study_id,
+    fixture$config$config_sha256, fixture$loaded$config$analysis_id,
+    parse_payload = TRUE
+  )
+  family_reference <- list(
+    artifact_type = "family_ledger", artifact_id = family_artifact$reference$artifact_id,
+    sha256 = family_artifact$reference$payload_sha256,
+    envelope_sha256 = family_artifact$reference$envelope_sha256,
+    path = family_artifact$reference$path,
+    envelope_path = family_artifact$reference$envelope_path
+  )
+  fixture$loaded$d$immutable_inputs <- list(
+    b_bundle_artifact_id = bundle_artifact$reference$artifact_id,
+    b_bundle_sha256 = bundle_artifact$reference$payload_sha256,
+    b_bundle_envelope_sha256 = bundle_artifact$reference$envelope_sha256,
+    b_artifacts = list(family_ledger = family_reference)
+  )
+  fixture$loaded$d_generation <- list(manifest = list(provenance = list(b = list(
+    bundle = list(
+      artifact_id = bundle_artifact$reference$artifact_id,
+      payload_sha256 = bundle_artifact$reference$payload_sha256,
+      envelope_sha256 = bundle_artifact$reference$envelope_sha256
+    )
+  ))))
+  fixture
+}
+
+dt15_rehash_clinical_payload <- function(fixture, mutate_payload) {
+  clinical_reference <- fixture$loaded$artifacts$clinical
+  payload_path <- file.path(fixture$root, clinical_reference$path)
+  envelope_path <- file.path(fixture$root, clinical_reference$envelope_path)
+  payload <- jsonlite::read_json(payload_path, simplifyVector = FALSE)
+  payload <- mutate_payload(payload)
+  unlink(c(payload_path, envelope_path))
+  triomics_write_json_atomic(payload, payload_path)
+  triomics_write_envelope(triomics_artifact_envelope(
+    artifact_type = clinical_reference$artifact_type,
+    artifact_id = clinical_reference$artifact_id,
+    study_id = fixture$loaded$config$study_id,
+    run_id = "b-t08-synthetic-fixture", status = "complete",
+    config_sha256 = fixture$config$config_sha256,
+    payload = payload_path, producer_commit = "synthetic-test-fixture",
+    inputs = list(list(artifact_id = fixture$endpoint_ref$artifact_id,
+                       sha256 = fixture$endpoint_ref$payload_sha256)),
+    privacy_class = "synthetic"
+  ), envelope_path)
+  artifact <- triomics_report_artifact(
+    fixture$root, clinical_reference$path, clinical_reference$artifact_type,
+    clinical_reference$artifact_id, fixture$loaded$config$study_id,
+    fixture$config$config_sha256, fixture$loaded$config$analysis_id,
+    parse_payload = TRUE
+  )
+  fixture$loaded$payloads$clinical <- artifact$payload
+  fixture$loaded$artifacts$clinical <- artifact$reference
+  fixture
 }
 
 testthat::test_that("clinical objectives and associations preserve model, effects and saved C lineage", {
@@ -371,20 +575,73 @@ testthat::test_that("clinical objectives and associations preserve model, effect
   testthat::expect_true(grepl(dt15_sha("b"), exported, fixed = TRUE))
 })
 
-testthat::test_that("a held_score name and a B release flag do not imply held-out comparison", {
+testthat::test_that("a held_score name and a B release flag do not imply qualified evidence", {
   fixture <- dt15_native_projection_fixture(endpoint_id = "held_score")
   on.exit(unlink(fixture$root, recursive = TRUE), add = TRUE)
   fixture$loaded$payloads$clinical$results[[1L]]$independent_validation_released <- TRUE
+  fixture$loaded$payloads$clinical$results[[1L]]$inferential_status <- "independent_validation"
+  fixture$loaded$payloads$clinical$results[[1L]]$hypothesis_status <- "independent_validation"
+  fixture$loaded$payloads$clinical$results[[1L]]$q <- 0.01
+  fixture$loaded$payloads$clinical$results[[1L]]$selection$validity <- "unqualified"
   fixture$loaded$payloads$clinical$objectives[[1L]]$hypothesis_status <- "independent_validation"
+
+  fixture <- dt15_bind_clinical_payload(fixture)
 
   section <- triomics_report_clinical_section(fixture$loaded, fixture$config)
 
   testthat::expect_identical(section$tables$associations$evidence_class[[1L]],
                              "descriptive_score_association")
+  testthat::expect_true(section$tables$associations$independent_validation_released[[1L]])
+  testthat::expect_identical(section$tables$associations$selection_validity[[1L]], "unqualified")
   testthat::expect_false(any(section$tables$held_out_comparisons$evidence_class ==
                                "held_out_performance_comparison"))
   testthat::expect_identical(section$tables$held_out_comparisons$status[[1L]], "not_started")
 })
+testthat::test_that("a verified B association is labelled as producer-qualified without overclaim", {
+  fixture <- dt15_native_projection_fixture()
+  on.exit(unlink(fixture$root, recursive = TRUE), add = TRUE)
+  result <- fixture$loaded$payloads$clinical$results[[1L]]
+  result$inferential_status <- "independent_validation"
+  result$hypothesis_status <- "independent_validation"
+  result$independent_validation_released <- TRUE
+  result$q <- 0.01
+  result$selection <- list(ancestry = "prespecified", validity = "qualified",
+                           inspected_outcome = NULL, adapter_selection = list(method = "none"))
+  fixture$loaded$payloads$clinical$results[[1L]] <- result
+  fixture$loaded$payloads$clinical$objectives[[1L]]$hypothesis_status <- "independent_validation"
+  fixture <- dt15_bind_clinical_payload(fixture)
+
+  section <- triomics_report_clinical_section(fixture$loaded, fixture$config)
+  association <- section$tables$associations
+  limits <- paste(section$tables$interpretation_limits$statement, collapse = " ")
+
+  testthat::expect_identical(association$evidence_class[[1L]],
+                             "producer_qualified_independent_B_association")
+  testthat::expect_identical(association$endpoint_lineage_status[[1L]], "saved_C_endpoint_verified")
+  testthat::expect_true(association$independent_validation_released[[1L]])
+  testthat::expect_match(limits, "producer-qualified B association")
+  testthat::expect_match(limits, "external replication")
+  testthat::expect_false(grepl("not.*independent confirmation", limits, ignore.case = TRUE))
+  testthat::expect_false(any(section$tables$held_out_comparisons$evidence_class ==
+                               "held_out_model_evaluation"))
+})
+
+testthat::test_that("an absent native transport leaves C endpoint lineage unverified", {
+  fixture <- dt15_native_projection_fixture()
+  on.exit(unlink(fixture$root, recursive = TRUE), add = TRUE)
+  fixture$loaded$payloads$clinical$native_transport <- NULL
+  fixture <- dt15_bind_clinical_payload(fixture)
+
+  section <- triomics_report_clinical_section(fixture$loaded, fixture$config)
+  association <- section$tables$associations
+
+  testthat::expect_identical(association$endpoint_lineage_status[[1L]],
+                             "B_endpoint_bundle_unverified")
+  testthat::expect_identical(association$evidence_class[[1L]],
+                             "association_endpoint_lineage_unavailable")
+  testthat::expect_false(association$independent_validation_released[[1L]])
+})
+
 testthat::test_that("dictionary variables with unavailable missingness rules are retained explicitly", {
   fixture <- dt15_native_projection_fixture()
   on.exit(unlink(fixture$root, recursive = TRUE), add = TRUE)
@@ -465,7 +722,7 @@ testthat::test_that("a complete C-09 stage status remains status-only synthetic 
   testthat::expect_false(row$benefit_guaranteed[[1L]])
 })
 
-testthat::test_that("bound C-02 nested evaluation is displayed separately from B association and C-09", {
+testthat::test_that("C-02 outcome-name collision does not prove clinical identity or metric units", {
   fixture <- dt15_native_projection_fixture()
   on.exit(unlink(fixture$root, recursive = TRUE), add = TRUE)
   evaluation <- list(
@@ -528,8 +785,10 @@ testthat::test_that("bound C-02 nested evaluation is displayed separately from B
   testthat::expect_identical(nrow(c02), 1L)
   testthat::expect_identical(c02$status[[1L]], "complete")
   testthat::expect_identical(c02$evidence_class[[1L]], "held_out_model_evaluation")
-  testthat::expect_identical(c02$clinical_variable_id[[1L]], "age_years")
-  testthat::expect_identical(c02$endpoint_link_status[[1L]], "clinical_variable_bound")
+  testthat::expect_identical(c02$source_outcome_label[[1L]], "age_years")
+  testthat::expect_identical(c02$clinical_variable_id[[1L]], "not_reported")
+  testthat::expect_identical(c02$endpoint_link_status[[1L]], "unverified")
+  testthat::expect_identical(c02$unit[[1L]], "not_reported")
   testthat::expect_identical(c02$link_scope[[1L]], "integration_level_only")
   testthat::expect_equal(c02$model_value[[1L]], 1.25)
   testthat::expect_equal(c02$baseline_value[[1L]], 2)
@@ -543,6 +802,47 @@ testthat::test_that("bound C-02 nested evaluation is displayed separately from B
   testthat::expect_identical(c09$status[[1L]], "not_started")
   exported <- paste(unlist(lapply(held_out, as.character), use.names = FALSE), collapse = " ")
   testthat::expect_false(grepl("HELDOUT_SECRET|UNIT_SECRET|3.2", exported))
+})
+
+testthat::test_that("training-outcome and outcome-selected associations remain descriptive", {
+  training <- dt15_native_projection_fixture()
+  on.exit(unlink(training$root, recursive = TRUE), add = TRUE)
+  result <- training$loaded$payloads$clinical$results[[1L]]
+  result$inferential_status <- "independent_validation"
+  result$hypothesis_status <- "independent_validation"
+  result$independent_validation_released <- TRUE
+  result$selection <- list(ancestry = "prespecified", validity = "qualified",
+                           inspected_outcome = NULL, adapter_selection = list(method = "none"))
+  training$loaded$payloads$clinical$results[[1L]] <- result
+  training$loaded$payloads$clinical$objectives[[1L]]$hypothesis_status <- "independent_validation"
+  training <- dt15_rebind_endpoint_bundle(training, function(endpoint) {
+    endpoint$training_y$used_by_fit <- TRUE
+    endpoint$training_y$variable_id <- "age_years"
+    endpoint$training_outcome <- list(variable_id = "age_years", used_by_fit = TRUE)
+    endpoint$selection$ancestry <- "trained_on_outcome"
+    endpoint
+  })
+  training <- dt15_bind_clinical_payload(training)
+  training_section <- triomics_report_clinical_section(training$loaded, training$config)
+
+  selected <- dt15_native_projection_fixture()
+  on.exit(unlink(selected$root, recursive = TRUE), add = TRUE)
+  selected$loaded$payloads$clinical$results[[1L]]$inferential_status <- "independent_validation"
+  selected$loaded$payloads$clinical$results[[1L]]$hypothesis_status <- "independent_validation"
+  selected$loaded$payloads$clinical$results[[1L]]$independent_validation_released <- TRUE
+  selected$loaded$payloads$clinical$objectives[[1L]]$hypothesis_status <- "independent_validation"
+  selected <- dt15_rebind_endpoint_bundle(selected, function(endpoint) {
+    endpoint$selection$ancestry <- "selected_after_clinical_outcome"
+    endpoint$selection$inspected_outcome <- "age_years"
+    endpoint
+  })
+  selected <- dt15_bind_clinical_payload(selected)
+  selected_section <- triomics_report_clinical_section(selected$loaded, selected$config)
+
+  testthat::expect_identical(training_section$tables$associations$evidence_class[[1L]],
+                             "training_outcome_descriptive")
+  testthat::expect_identical(selected_section$tables$associations$evidence_class[[1L]],
+                             "outcome_selected_descriptive")
 })
 
 testthat::test_that("clinical disabled remains not requested and aggregate release remains gated", {
@@ -594,6 +894,75 @@ testthat::test_that("a correctly enveloped C endpoint with a mismatched integrat
     triomics_report_clinical_section(fixture$loaded, fixture$config),
     "saved C score endpoint bundle identity"
   )
+})
+
+testthat::test_that("an authenticated B result cannot bind by endpoint ID to different C bytes", {
+  fixture <- dt15_native_projection_fixture(endpoint_id = "score_demo_pc1")
+  on.exit(unlink(fixture$root, recursive = TRUE), add = TRUE)
+  fixture$loaded$payloads$clinical$results[[1L]]$endpoint_id <- "score_demo_pc1"
+  fixture$loaded$payloads$clinical$native_transport$endpoint_bundle$payload_sha256 <- dt15_sha("0")
+  fixture <- dt15_bind_clinical_payload(fixture)
+
+  error <- tryCatch(
+    triomics_report_clinical_section(fixture$loaded, fixture$config),
+    triomics_error = identity
+  )
+
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "D_REPORT_SOURCE_INVALID")
+  testthat::expect_identical(error$config_key, "clinical.native_transport.endpoint_bundle")
+})
+
+testthat::test_that("endpoint bundle digest mismatches return structured report errors", {
+  fixture <- dt15_native_projection_fixture()
+  on.exit(unlink(fixture$root, recursive = TRUE), add = TRUE)
+  fixture$loaded$payloads$c$integrations[[1L]]$score_endpoint_bundle$payload_sha256 <- dt15_sha("0")
+
+  error <- tryCatch(
+    triomics_report_clinical_section(fixture$loaded, fixture$config),
+    triomics_error = identity
+  )
+
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "D_REPORT_SOURCE_INVALID")
+  testthat::expect_identical(error$config_key, "C.integrations[1].score_endpoint_bundle")
+})
+
+testthat::test_that("a changed B clinical effect with a rehashed envelope is refused against D", {
+  fixture <- dt15_native_projection_fixture()
+  on.exit(unlink(fixture$root, recursive = TRUE), add = TRUE)
+  fixture <- dt15_rehash_clinical_payload(fixture, function(payload) {
+    payload$results[[1L]]$effect <- 987.65
+    payload
+  })
+
+  error <- tryCatch(
+    triomics_report_clinical_section(fixture$loaded, fixture$config),
+    triomics_error = identity
+  )
+
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "D_REPORT_SOURCE_INVALID")
+  testthat::expect_identical(error$config_key,
+                             "D.immutable_inputs.b_bundle.clinical_associations")
+})
+
+testthat::test_that("a reordered and rehashed B clinical payload is refused against D", {
+  fixture <- dt15_native_projection_fixture()
+  on.exit(unlink(fixture$root, recursive = TRUE), add = TRUE)
+  fixture <- dt15_rehash_clinical_payload(fixture, function(payload) {
+    payload[rev(names(payload))]
+  })
+
+  error <- tryCatch(
+    triomics_report_clinical_section(fixture$loaded, fixture$config),
+    triomics_error = identity
+  )
+
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "D_REPORT_SOURCE_INVALID")
+  testthat::expect_identical(error$config_key,
+                             "D.immutable_inputs.b_bundle.clinical_associations")
 })
 
 testthat::test_that("adjustment references absent from the safe dictionary are refused", {
