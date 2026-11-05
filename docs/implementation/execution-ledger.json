@@ -37,15 +37,15 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D13_extra2_dispatch_prepared",
-    "last_reconciled": "2026-11-05T19:20:57.893892+00:00",
+    "status": "D13_extra2_closed_blocked",
+    "last_reconciled": "2026-11-05T23:31:28.056091+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "fresh Luna one-extra two-file privacy repair, local reviews, independent verification, fresh Astra; G8/G9 closed",
+    "disposition": "All owned agents/processes terminal; failed D13 not integrated; no further allowance",
     "current_gate": {
-      "status": "D13_packet_blocked_privacy",
-      "candidate": "7f50b14c95a9f563f646b842004318552033089d",
-      "review_ref": "docs/implementation/reviews/2026-11-05-d13-extra-repair-blocked-close.md",
+      "status": "D13_extra2_blocked",
+      "candidate": "c805f0418fe637d412290466c28b8c661db4a51d",
+      "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra2-blocked-close.md",
       "Astra": "audit_pass_no",
       "G8": "closed",
       "G9": "closed"
@@ -7221,6 +7221,13 @@
       "Astra_verdict": "audit_pass_no",
       "receipt_ref": "docs/implementation/evidence/2026-11-05-d13-extra-repair-close/receipt.json",
       "all_terminal": true
+    },
+    {
+      "at": "2026-11-05T23:31:28.056108+00:00",
+      "event": "D13_extra2_closed_blocked",
+      "candidate": "c805f0418fe637d412290466c28b8c661db4a51d",
+      "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra2-close/receipt.json",
+      "all_terminal": true
     }
   ],
   "packets": {
@@ -8686,12 +8693,14 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "extra2_dispatch_prepared",
+      "status": "blocked_after_second_explicit_extra_repair",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": [
-        "D13-EXTRA1-PRIVACY-01 P1: numeric prose whitelist permits direct identifier strings; parent reproduced, both local reviews and fresh Astra fail. Original initial1+repairs2 and explicit extra1 consumed."
+        "D13-EXTRA2-PRIVACY-01 P1: prefixed identifiers evade prior guard",
+        "D13-EXTRA2-PRIVACY-02 P1: punctuation-separated identifiers leak",
+        "D13-EXTRA2-LINEAGE-01 P2: valid hyphenated numeric scientific descriptions disappear"
       ],
       "repair_attempts": 4,
       "implementation_base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
@@ -8699,24 +8708,23 @@
       "accepted": false,
       "completion_credit": false,
       "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t13-dispatch.md",
-      "candidate_commit": "7f50b14c95a9f563f646b842004318552033089d",
+      "candidate_commit": "c805f0418fe637d412290466c28b8c661db4a51d",
       "initial_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-initial-review.md",
       "repair1_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-repair1-review.md",
-      "final_product_commit": "7f50b14c95a9f563f646b842004318552033089d",
-      "final_review_ref": "docs/implementation/reviews/2026-11-05-d13-extra-repair-blocked-close.md",
-      "receipt_ref": "docs/implementation/evidence/2026-11-05-d13-extra-repair-close/receipt.json",
+      "final_product_commit": "c805f0418fe637d412290466c28b8c661db4a51d",
+      "final_review_ref": "docs/implementation/reviews/2026-11-06-d13-extra2-blocked-close.md",
+      "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra2-close/receipt.json",
       "source_counts": {
-        "pass": 395,
+        "pass": 612,
         "fail": 0,
         "error": 0,
         "warn": 0,
         "skip": 0,
-        "blocks": 59
+        "blocks": 60
       },
       "pending_gates": [
-        "Separately authorized bounded privacy follow-up",
-        "Parent source/installed/native report verification after privacy passes",
-        "Fresh applicable packet audit",
+        "Separately authorized bounded follow-up for three verified findings",
+        "Independent verification and fresh applicable packet audit after repair",
         "M8 milestone gates"
       ],
       "original_bounded_run": {
@@ -8731,18 +8739,22 @@
         "used": 1,
         "reason": "D13-EXTRA1-PRIVACY-01 identifier leakage while preserving numeric lineage",
         "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-privacy-exception-dispatch.md",
-        "accepted": false
+        "accepted": false,
+        "status": "consumed_blocked",
+        "worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
+        "Sol_commit": "c805f0418fe637d412290466c28b8c661db4a51d",
+        "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra2-blocked-close.md"
       },
-      "next_transition": "fresh Luna one-extra two-file privacy repair, local reviews, independent verification, fresh Astra; G8/G9 closed",
-      "extra_candidate": "7f50b14c95a9f563f646b842004318552033089d",
-      "source_counts_producer": "worker, not parent acceptance",
+      "next_transition": "D13 extra2 is blocked at Sol candidate c805f04 and worker92dbba1. Preserve original initial1+repairs2 and consumed extra1/extra2. Do not integrate this candidate or redispatch a worker without separately authorized bounded repair scope. Resolve D13-EXTRA2-PRIVACY-01/02 and D13-EXTRA2-LINEAGE-01 while preserving scientific lineage and existing guards, then obtain independent verification and fresh Astra. Keep accepted D08/D15 and M7/G7 unchanged; G8/G9 stay closed.",
+      "extra_candidate": "c805f0418fe637d412290466c28b8c661db4a51d",
+      "source_counts_producer": "independent Sol source on c805f04; not acceptance",
       "final_local_review": {
-        "Spec": "changes_required P1",
-        "Standards": "changes_required P1",
-        "Sol": "privacy_probe_failed",
+        "Spec": "changes_required P1/P1/P2",
+        "Standards": "changes_required P1/P2",
+        "Sol": "counterexample_readback_failed; native fixture and focused suites passed",
         "Astra": "audit_pass_no"
       },
-      "final_snapshot_commit": "7f50b14c95a9f563f646b842004318552033089d",
+      "final_snapshot_commit": "c805f0418fe637d412290466c28b8c661db4a51d",
       "additional_repair_history": [
         {
           "allowed": 1,
@@ -8754,7 +8766,19 @@
           "status": "consumed_blocked",
           "review_ref": "docs/implementation/reviews/2026-11-05-d13-extra-repair-blocked-close.md"
         }
-      ]
+      ],
+      "extra2_worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
+      "extra2_Sol_candidate": "c805f0418fe637d412290466c28b8c661db4a51d",
+      "final_worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
+      "previous_extra1_candidate": "7f50b14c95a9f563f646b842004318552033089d",
+      "installed_counts": {
+        "pass": 612,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 60
+      }
     },
     "D-T15": {
       "status": "accepted_synthetic_software_evidence",
@@ -9071,7 +9095,7 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D13_extra2_authorized_active_G8_G9_closed",
+  "close_state": "D13_extra2_closed_blocked_G8_G9_closed",
   "D13_extra_repair1_orchestration": {
     "worker": {
       "agent": "/root/d13_numeric_extra1_luna",
@@ -9118,5 +9142,85 @@
     },
     "status": "closed_blocked",
     "next_transition": "D13 extra1 is blocked at candidate 7f50b14. Preserve its original initial attempt, two repairs and consumed extra repair. Do not redispatch Luna or integrate this candidate. A separately authorized bounded follow-up must close D13-EXTRA1-PRIVACY-01 while preserving numeric scientific lineage, then pass independent review, source/installed/native report verification and fresh Astra. Do not reopen accepted D15 or release G8/G9."
+  },
+  "D13_extra_repair2_orchestration": {
+    "worker": {
+      "agent": "/root/d13_privacy_extra2_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "base_commit": "42be214beedacb0fe85d49962979c871ae3e64fc",
+      "status": "completed",
+      "allowed_next_transition": "inspect final two-file diff, freeze, independent local reviews and gates, fresh Astra; no further extra repair",
+      "cursor": null
+    },
+    "state_ref": "d13/privacy-lineage-exception2/state.json",
+    "reviewers": [
+      {
+        "agent": "/root/d13_extra2_spec_review",
+        "status": "completed",
+        "verdict": "changes_required"
+      },
+      {
+        "agent": "/root/d13_extra2_standards_review",
+        "status": "completed",
+        "verdict": "changes_required"
+      }
+    ],
+    "gate": {
+      "session_id": 98349,
+      "status": "completed",
+      "exit_code": 0,
+      "scope": "prepared fixture gate, not packet acceptance"
+    },
+    "status": "closed_blocked",
+    "Astra": {
+      "audit_pass": false,
+      "agent": "/root/d13_extra2_astra_audit",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "effective_settings_exposed": false,
+      "candidate": "c805f0418fe637d412290466c28b8c661db4a51d",
+      "findings": [
+        {
+          "id": "D13-EXTRA2-PRIVACY-01",
+          "severity": "P1",
+          "line": 52,
+          "finding": "New word/underscore boundary allows prefixed person identifiers formerly rejected."
+        },
+        {
+          "id": "D13-EXTRA2-PRIVACY-02",
+          "severity": "P1",
+          "line": 49,
+          "finding": "Comma and semicolon identifier separators remain permitted by prose but absent from identifier grammar."
+        },
+        {
+          "id": "D13-EXTRA2-LINEAGE-01",
+          "severity": "P2",
+          "line": 74,
+          "finding": "Sample-wise and Sample-level numeric scientific descriptions are discarded."
+        }
+      ],
+      "integrity": "1138 source hashes, five snapshot hashes and four referenced counterexample/source evidence hashes verified",
+      "review_limit": "read-only code/evidence review; no independent rerun or certification of native/installed readback",
+      "source_counts_acknowledged": {
+        "pass": 612,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 60
+      },
+      "counterexamples_acknowledged": {
+        "passed": 24,
+        "failed": 7,
+        "cases": 31
+      },
+      "acceptance": false,
+      "scope": "D13 packet audit, not M8",
+      "G8": "closed",
+      "G9": "closed",
+      "status": "completed"
+    }
   }
 }

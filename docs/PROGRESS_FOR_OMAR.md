@@ -1,11 +1,11 @@
-# Pipeline progress — 5 November 2026
+# Pipeline progress — 6 November 2026
 
-The goal is a report explaining analyses, uncertainty and limits. D08 and the clinical reporting section D15 remain accepted for synthetic software behavior. M7/G7 remain accepted. G8/G9 stay closed.
+The goal is an auditable report that preserves results, uncertainty, source history and privacy. D08, D15 and the M7/G7 baseline remain accepted for synthetic software behavior. G8/G9 stay closed.
 
-Your additional D13 repair fixed the missing numeric descriptions. The report now preserves how many molecular features constructed a score and how many features were selected. However, independent checks found that the same change also allows identifier text such as the synthetic example “Patient: 13” into report tables.
+Your additional D13 repair now handles the previously demonstrated identifier formats and preserves the original numeric descriptions. Independent source and installed-package tests each passed 612 assertions with no failures, errors, warnings or skips. The native synthetic pipeline also rendered a real offline report; saved values, source hashes and predecessor preservation passed readback.
 
-Luna's combined source suite passed 395 assertions with no failures, errors, warnings or skips. That suite missed the identifier forms. Sol reproduced the privacy failure; both independent local reviewers and fresh Astra rejected the candidate. It was not integrated or accepted.
+However, broader independent review found seven counterexamples. Four identifier strings still reach report tables and HTML. Three legitimate descriptions, including sample-wise normalization with a measurement count, disappear. Sol reproduced all seven; both local reviewers and fresh Astra rejected the candidate. Successful fixture rendering does not override those failures.
 
-The original attempts and additional repair are preserved and exhausted. No native rendering, installed-package or full-package gate was credited to this candidate. The next required work is a separately authorized privacy repair before D13 acceptance and M8 closure. D09/M9 remain gated.
+The candidate remains unintegrated. The original attempts and both explicitly authorized additional repairs are preserved and consumed. Any further repair needs a new bounded authorization. M8 documentation, full package and milestone acceptance remain ahead, followed by D09/M9.
 
-These checks use synthetic fixtures, not your studies, and establish no biological or clinical validity. Needs Omar: any further repair exceeds the consumed allowance. Sync: local only; no Notion update, server run or GitHub push.
+These are synthetic software checks, not biological or clinical validation. No private studies were read. Sync: local only; no Notion update, server run or GitHub push.

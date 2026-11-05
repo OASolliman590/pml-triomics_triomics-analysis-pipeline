@@ -1,0 +1,347 @@
+{
+  "packet_id": "D-T13",
+  "status": "blocked_after_second_explicit_extra_repair",
+  "accepted": false,
+  "completion_credit": false,
+  "recorded_at": "2026-11-05T23:31:28.032339+00:00",
+  "canonical_dispatch_commit": "8ef9f5c45fc5dc60d8a1004443a5a19f9939e0a1",
+  "prior_receipt_commit": "f309e1b01d1b8c552b684f5eea0c41cb6b770b0c",
+  "preserved_extra1_candidate": "7f50b14c95a9f563f646b842004318552033089d",
+  "worker_base": "42be214beedacb0fe85d49962979c871ae3e64fc",
+  "worker_red_commits": [
+    "23b878de50b7c1323b172c53799f5f1790a184a4",
+    "12d9c6498bda1b4811c2a5a4c3198be6ba12aa7a"
+  ],
+  "worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
+  "Sol_candidate_commit": "c805f0418fe637d412290466c28b8c661db4a51d",
+  "integration_commit": null,
+  "repair_files": [
+    "R/report_targets.R",
+    "tests/testthat/test-D-T13.R"
+  ],
+  "original_attempts": 1,
+  "original_repairs": 2,
+  "previous_extra_repairs_used": 1,
+  "current_extra_episode": 2,
+  "current_extra_allowed": 1,
+  "current_extra_used": 1,
+  "total_repairs": 4,
+  "further_repairs_authorized": false,
+  "worker_source_counts": {
+    "pass": 612,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 60
+  },
+  "independent_source_counts": {
+    "pass": 612,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 60
+  },
+  "independent_source_by_file": {
+    "test-D-T08.R": {
+      "pass": 148,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 25
+    },
+    "test-D-T13.R": {
+      "pass": 332,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 12
+    },
+    "test-D-T15.R": {
+      "pass": 132,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 23
+    }
+  },
+  "independent_installed_counts": {
+    "pass": 612,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 60
+  },
+  "source_exit": 0,
+  "installed_exit": 0,
+  "source_command": "Rscript --vanilla run-source-unbounded-report.R <clean-Sol-worktree> <fresh-evidence> D-T13|D-T08|D-T15",
+  "installed_command": "R CMD INSTALL --install-tests --library=<fresh-library> <clean-git-archive>; Rscript --vanilla run-installed-focused.R <fresh-evidence> D-T13|D-T08|D-T15 c805f0418fe637d412290466c28b8c661db4a51d",
+  "named_testthat_warnings": [],
+  "named_skips": [],
+  "runtime": {
+    "R": "4.6.1",
+    "testthat": "3.3.2",
+    "Quarto": "1.11.9"
+  },
+  "RED": {
+    "pass": 249,
+    "fail": 62,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 12,
+    "name": "association prose suppresses labeled identifiers and retains numeric lineage"
+  },
+  "followup_guard_RED": {
+    "pass": 323,
+    "fail": 9,
+    "source": "worker log; before restoring existing attached-value guard"
+  },
+  "initial_capped_RED": "preserved incomplete; replaced for full counts by verified uncapped runner",
+  "prepared_boundary_matrix": {
+    "passed": 24,
+    "failed": 0
+  },
+  "original_mixed_numeric_probe": "passed; both original phrases retained with shared_subjects and independent_replication=false",
+  "additional_independent_counterexamples": {
+    "passed": 24,
+    "failed": 7,
+    "cases": 31,
+    "exit_code": 1,
+    "scope": "actual producer/profile/report tables/HTML; synthetic only",
+    "receipt": "counterexamples.json"
+  },
+  "local_reviews": {
+    "Spec": {
+      "agent": "/root/d13_extra2_spec_review",
+      "verdict": "changes_required",
+      "findings": [
+        {
+          "id": "D13-EXTRA2-PRIVACY-01",
+          "severity": "P1",
+          "line": 52,
+          "finding": "New word/underscore boundary allows prefixed person identifiers formerly rejected."
+        },
+        {
+          "id": "D13-EXTRA2-PRIVACY-02",
+          "severity": "P1",
+          "line": 49,
+          "finding": "Comma and semicolon identifier separators remain permitted by prose but absent from identifier grammar."
+        },
+        {
+          "id": "D13-EXTRA2-LINEAGE-01",
+          "severity": "P2",
+          "line": 74,
+          "finding": "Sample-wise and Sample-level numeric scientific descriptions are discarded."
+        }
+      ],
+      "integrity": "all1138files and artifact hashes verified",
+      "probes": "actual producer/profile/section/HTML; no fits or edits"
+    },
+    "Standards": {
+      "agent": "/root/d13_extra2_standards_review",
+      "verdict": "changes_required",
+      "findings": [
+        "D13-EXTRA2-PRIVACY-01 P1",
+        "D13-EXTRA2-LINEAGE-01 P2"
+      ],
+      "integrity": "all1138files and artifact hashes verified",
+      "probes": "actual producer/profile/section/HTML; no fits or edits"
+    }
+  },
+  "Astra": {
+    "audit_pass": false,
+    "agent": "/root/d13_extra2_astra_audit",
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "low",
+    "effective_settings_exposed": false,
+    "candidate": "c805f0418fe637d412290466c28b8c661db4a51d",
+    "findings": [
+      {
+        "id": "D13-EXTRA2-PRIVACY-01",
+        "severity": "P1",
+        "line": 52,
+        "finding": "New word/underscore boundary allows prefixed person identifiers formerly rejected."
+      },
+      {
+        "id": "D13-EXTRA2-PRIVACY-02",
+        "severity": "P1",
+        "line": 49,
+        "finding": "Comma and semicolon identifier separators remain permitted by prose but absent from identifier grammar."
+      },
+      {
+        "id": "D13-EXTRA2-LINEAGE-01",
+        "severity": "P2",
+        "line": 74,
+        "finding": "Sample-wise and Sample-level numeric scientific descriptions are discarded."
+      }
+    ],
+    "integrity": "1138 source hashes, five snapshot hashes and four referenced counterexample/source evidence hashes verified",
+    "review_limit": "read-only code/evidence review; no independent rerun or certification of native/installed readback",
+    "source_counts_acknowledged": {
+      "pass": 612,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 60
+    },
+    "counterexamples_acknowledged": {
+      "passed": 24,
+      "failed": 7,
+      "cases": 31
+    },
+    "acceptance": false,
+    "scope": "D13 packet audit, not M8",
+    "G8": "closed",
+    "G9": "closed"
+  },
+  "native_fixture": "inst/examples/tickets/D-T13.yaml; public synthetic inputs only",
+  "native_commands": [
+    {
+      "stage": "A",
+      "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T13.yaml --stage A --output <fresh-internal-APFS-root>",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "B",
+      "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T13.yaml --stage B --output <fresh-internal-APFS-root>",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "C",
+      "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T13.yaml --stage C --output <fresh-internal-APFS-root>",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "D",
+      "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T13.yaml --stage D --output <fresh-internal-APFS-root>",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "report",
+      "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T13.yaml --stage report --output <fresh-internal-APFS-root>",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "negative_probes": [
+    {
+      "name": "missing_producers",
+      "exit_code": 3,
+      "expected_error_code": "D_REPORT_REQUIRED_MISSING",
+      "log_sha256": "f3ed76ab15db4dd86efb1d86fce150b49be61eaf8e42c0d941f5e4424d7a0c7e"
+    },
+    {
+      "name": "missing_runtime",
+      "exit_code": 3,
+      "expected_error_code": "D_REPORT_RUNTIME_MISSING",
+      "log_sha256": "e1cda6319d3f89ef353392b5f343c9ae17f763a703a4e10116a3042488663990"
+    },
+    {
+      "name": "rehashed_B_result",
+      "exit_code": 2,
+      "expected_error_code": "D_REPORT_SOURCE_INVALID",
+      "log_sha256": "1b9cbdf940e0874e6e550030b8a7662adf55d05dfddbefc8f8ec1ab5f8617fa8"
+    }
+  ],
+  "native_source_lineage_verified": true,
+  "predecessor_bytes_unchanged_by_report": true,
+  "base_saved_value_checks": 1729,
+  "target_saved_value_checks": 456,
+  "native_B_C_files": {
+    "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/bundle.envelope.json": {
+      "sha256": "6f093f793df5b1bcc20e4b526159f34b297ea85563514f5886073700acc8971f",
+      "bytes": 1054
+    },
+    "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/bundle.json": {
+      "sha256": "06c2849ce7783f4a171a82a79c26221f46ca97679f7c9e93f746c480b08584d6",
+      "bytes": 4505
+    },
+    "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/stage-handoff-provenance.envelope.json": {
+      "sha256": "3898ee9ac21be3548e51e1517e923da641ab825007e6b03641847f0bd722b608",
+      "bytes": 826
+    },
+    "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/stage-handoff-provenance.json": {
+      "sha256": "45ee9aa16c070243e6f828baf00504ff3fc8d687af305ddcc5b5a08a50ebbcf8",
+      "bytes": 31151
+    },
+    "D/stage-handoff-provenance.envelope.json": {
+      "sha256": "d7d2e5ee9eabf0682fea368ffe05c3a855ad4b2686d9ee882f209d8a94474025",
+      "bytes": 943
+    },
+    "D/stage-handoff-provenance.json": {
+      "sha256": "791c053ad76de2c9a0563b768fc5f457b2868b70223e2888fa75d268930e879f",
+      "bytes": 38620
+    }
+  },
+  "native_D_and_report_hashes": {
+    "current-D.json": "15e1ab28a4db3d3a6078e23b636bde11718209f2342e9e9f210662c3f9d0c6d6",
+    "generation-manifest.json": "17300d3ee0fb37394ed9d2c726d30c317caecc7a0a8b4c80badc82cc951ab428",
+    "evidence-routing.json": "885ab3de8d06769b991b183578f3c32dbdcb0098a9f4cb5d02c6ecefef6a943e",
+    "report.html": "d4fbba7db4cf781e65063054f0867d15b75ce61ff8d506bd69255551e116524c",
+    "report_data.json": "4b2708a7b34f7908172b6226209dee3ecbccf2a76db69e7e004d6775212d2185",
+    "report_manifest.json": "27f4ab2a64fc5a0bf515674c3e68c009a2c7badc48f6c1ab8b7e6f329a8dbbef"
+  },
+  "offline_HTML": {
+    "counts": {
+      "tables": 23,
+      "images": 0,
+      "scripts": 0,
+      "styles": 2,
+      "headings": 29
+    },
+    "issues": [],
+    "passed_structural_inspection": true
+  },
+  "native_fixture_limits": "Native fixture gate passed; separate proved privacy and lineage failures prevent acceptance. Render completeness is not packet completion. No biological validation.",
+  "archive_sha256": "40e2f3e55a2f0f510aef288367adf447f0900d518bae2f2ee13bd4d126088d0a",
+  "archive_files_manifest_sha256": "e25689ca60a481452431feda6a7de18346e2a7cf7b5271d8458597ae007915f0",
+  "archive_file_count": 1138,
+  "archive_bytes_unchanged_after_install": true,
+  "repair_diff_sha256": "6cfaf1fe5dc0551ccba1043f2805c555ec2fab6eefae164a501de4776db9304d",
+  "product_diff_sha256": "6b89101391f03de6ee0a21fc1e27dd7b2d23b3fbc656e5d6f6313369bda95f67",
+  "evidence_hashes": {
+    "sol-gates/gate-receipt.json": "524334e01e400d05ceb2d4f759e0f08b624c1c8480a61489bccec954db08b6df",
+    "sol-gates/source/source-receipt.json": "14d81401395014f9c7699f14f6a27520d938fed31583d2e8a853da6cf92ab068",
+    "sol-gates/installed-focused/installed-source-receipt.json": "6dd388517b7375c1bf2881d22bb69dd023bd345335effcaec26dda38a95759f5",
+    "sol-gates/native/native-receipt.json": "75a26f7c433af0ad373cbe429f12cffb420e8f2e472fc973da4dd28a63d22400",
+    "sol-gates/base-readback.json": "aab8729b9abcf4ce2ea1984d1a634e046616f83850dd2af7c33cc95d3e5247b4",
+    "sol-gates/target-readback.json": "e764a199664cc156845aef5f1547d79ea7f5102fde4708b846c00c8c4c2675af",
+    "parent-review-findings/findings.json": "a65da4f97a119d1b7be1c9e0205b8645346024ad00dde445e56d75ed1a6ed7be",
+    "scripts/lineage-privacy-review-findings.R": "a803ee9ad1a06ccf5aa92f20bd6a80d3e124f5524a06e4ca8436f615434c2158",
+    "luna/red-unbounded/source-receipt.json": "923f12052be19ceb2a24088215a828d7c2018daddc69fa54942e8663c1459783"
+  },
+  "package_Status": "not_run; archive installation and focused installed tests are not a full package check",
+  "milestone_acceptance": false,
+  "M7_G7": "accepted/released unchanged",
+  "D08_D15": "accepted unchanged",
+  "G8": "closed",
+  "G9": "closed",
+  "C07": "not_run",
+  "C09": "unqualified; synthetic_fixture_only; benefit_guaranteed=false",
+  "conditional_D_without_completion_credit": [
+    "D-T06",
+    "D-T07",
+    "D-T14"
+  ],
+  "frozen_kit_independent_audit": "pending",
+  "private_data_read": false,
+  "push": false,
+  "server_run": false,
+  "Notion_sync": "not performed",
+  "all_run_owned_workers_terminal": true,
+  "active_processes": [],
+  "run_owned_sidebar_chats": [],
+  "persistent_polling": false,
+  "next": "D13 extra2 is blocked at Sol candidate c805f04 and worker92dbba1. Preserve original initial1+repairs2 and consumed extra1/extra2. Do not integrate this candidate or redispatch a worker without separately authorized bounded repair scope. Resolve D13-EXTRA2-PRIVACY-01/02 and D13-EXTRA2-LINEAGE-01 while preserving scientific lineage and existing guards, then obtain independent verification and fresh Astra. Keep accepted D08/D15 and M7/G7 unchanged; G8/G9 stay closed."
+}

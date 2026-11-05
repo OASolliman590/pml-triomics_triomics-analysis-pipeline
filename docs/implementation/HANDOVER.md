@@ -1,3 +1,11 @@
+# Current checkpoint: D13 extra2 closed blocked
+
+Read [Sol's receipt](reviews/2026-11-06-d13-extra2-blocked-close.md) and [fresh Astra failure](reviews/2026-11-06-d13-extra2-astra.md). Sol candidate `c805f0418fe637d412290466c28b8c661db4a51d`, worker `92dbba17c6e6d3e05b0af527f910d41c18bcf843`, remain unintegrated. Independent source612 and installed612 passed, zero fail/error/warn/skip; native A/B/C/D/report and saved-output checks passed. Separate actual-producer readback found seven failures: four identifiers leak and three legitimate numeric scientific descriptions disappear. Both local axes and Astra reject the candidate. No full package Status claim. Original initial1+repairs2 and extra1/extra2 consumed; no further allowance. D08/D15 and M7/G7 unchanged. G8/G9 closed. Owned workers/processes terminal; no polling or sidebar children. Protected dirt preserved.
+
+Literal resume: **D13 extra2 is blocked at Sol candidate c805f04 and worker92dbba1. Preserve original initial1+repairs2 and consumed extra1/extra2. Do not integrate this candidate or redispatch a worker without separately authorized bounded repair scope. Resolve D13-EXTRA2-PRIVACY-01/02 and D13-EXTRA2-LINEAGE-01 while preserving scientific lineage and existing guards, then obtain independent verification and fresh Astra. Keep accepted D08/D15 and M7/G7 unchanged; G8/G9 stay closed.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D13 privacy repair extra2 authorized
 
 Read [the dispatch](reviews/2026-11-06-d13-privacy-exception-dispatch.md). Omar authorized one more two-file D13 repair. Original initial1+repairs2 and extra1 stay preserved; this is extra2, total repair4. Candidate7f50b14 remains untouched. Five scientific-lineage controls passed and eleven identifier forms failed the pre-edit actual-producer/HTML probe. Fresh isolated Luna will address the evidenced grammar. G8/G9 stay closed.
