@@ -37,11 +37,11 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D15_closed_blocked_at_repair_cap",
+    "status": "D15_authorized_extra_repair1_dispatch_prepared",
     "last_reconciled": "2026-11-05T12:56:19.037869+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "D15 is blocked at initial attempt 1 plus repairs 2 of 2. Preserve worker e891344 and Sol candidate 518ae4a; do not integrate them or reopen repair 3. A separately authorized bounded follow-up must address D15-REVIEW-ABSENCE-01, retain the original caps and evidence, then pass local review, independent source/installed/native report proofs and the applicable fresh Astra gate before acceptance. Do not redo S01/S02 or reopen D13 at its exhausted cap. Keep G8/G9 closed.",
+    "disposition": "dispatch fresh Luna; one repair then two-axis local review and independent proofs; no second exception attempt",
     "current_gate": {
       "status": "closed_blocked",
       "candidate": "518ae4ae6b2b3aec282e1c1f45fa46c0509954b0",
@@ -8643,7 +8643,7 @@
       ]
     },
     "D-T15": {
-      "status": "blocked_at_repair_cap",
+      "status": "authorized_extra_repair1_dispatch_prepared",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
@@ -8656,7 +8656,7 @@
           "receipt_ref": "docs/implementation/evidence/2026-11-05-d-t15-bounded-close/absence-probe.json"
         }
       ],
-      "repair_attempts": 2,
+      "repair_attempts": 3,
       "implementation_base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
       "active_worker": null,
       "accepted": false,
@@ -8696,7 +8696,7 @@
         "product_repair1_candidate": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
         "prior_dispatch_ref": "docs/implementation/reviews/2026-11-05-d15-s01-repair1-gate-repair2-dispatch.md"
       },
-      "next_transition": "D15 is blocked at initial attempt 1 plus repairs 2 of 2. Preserve worker e891344 and Sol candidate 518ae4a; do not integrate them or reopen repair 3. A separately authorized bounded follow-up must address D15-REVIEW-ABSENCE-01, retain the original caps and evidence, then pass local review, independent source/installed/native report proofs and the applicable fresh Astra gate before acceptance. Do not redo S01/S02 or reopen D13 at its exhausted cap. Keep G8/G9 closed.",
+      "next_transition": "dispatch fresh Luna; one repair then two-axis local review and independent proofs; no second exception attempt",
       "predecessor_receipt_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-scoped-close.md",
       "implementation_resume_base": "5abc369a6d12ca8b1ae9c00959548a593cdb4f1a",
       "resume_dispatch_ref": "docs/implementation/reviews/2026-11-05-d-t15-resume-dispatch.md",
@@ -8737,7 +8737,20 @@
         "Sol": "P1_reproduced",
         "Astra": "not_run"
       },
-      "attempt_limit_exhausted": true
+      "attempt_limit_exhausted": true,
+      "original_bounded_run": {
+        "attempts": 1,
+        "repairs": 2,
+        "closed_at": "206d132",
+        "receipt_ref": "docs/implementation/evidence/2026-11-05-d-t15-bounded-close/receipt.json"
+      },
+      "authorized_additional_repair": {
+        "allowed": 1,
+        "used": 1,
+        "reason": "D15-REVIEW-ABSENCE-01",
+        "dispatch_ref": "docs/implementation/reviews/2026-11-05-d15-absence-exception-dispatch.md",
+        "accepted": false
+      }
     },
     "D-T09": {
       "status": "not_started",
@@ -8929,5 +8942,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D15_blocked_at_repair_cap_G8_G9_closed"
+  "close_state": "D15_authorized_extra_repair1_active_G8_G9_closed"
 }

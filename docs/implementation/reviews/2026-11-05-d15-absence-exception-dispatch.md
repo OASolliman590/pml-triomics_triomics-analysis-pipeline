@@ -1,0 +1,9 @@
+# D15 explicit repair-cap exception, 5 November 2026
+
+Omar approved the concrete question: one additional bounded D15 repair beyond the exhausted cap, limited to rejecting clinical results absent from D's pinned evidence. The original initial attempt plus two repairs remains closed in206d132. This is explicit additional allowance1of1, total repair3; it does not reset history or authorize another repair.
+
+Fresh Luna-max starts from preserved Sol518ae4a in an isolated worktree. Only R/report_clinical.R and tests/testthat/test-D-T15.R may change. The existing clinical provider boundary must reject separately loaded values when the pinned B bundle records absence or omits the clinical member. Genuine absence stays unavailable; intact complete and partial evidence retains its prior behavior. Structured errors, full byte binding, privacy and scientific categories remain intact. No shared/provenance schema or statistical change is authorized.
+
+Coordinator already reproduced the reported defect on518ae4a. Luna must write behavioral RED tests at the provider seam, implement the bounded repair, save uncapped RED/GREEN evidence and run D15/D08 source tests. Sol reviews the immutable diff along separate Spec and Standards axes, then independently verifies the repaired boundary, clean source tests, installed layout and the exact delivered-ticket native B/C/D/report path with saved-value/hash/privacy/offline readback. Fresh read-only Astra reviews the qualified packet snapshot before any packet acceptance. No additional implementation repair is available if a real blocker remains.
+
+G8/G9 stay closed. D13 retains its exhausted cap and remains outside this authorization. No M8 milestone close, D09 start, private data, server execution, push or Notion sync. Stop at the bounded D15 receipt.

@@ -1,3 +1,11 @@
+# Current checkpoint: one explicit extra D15 repair authorized
+
+Read [the exception dispatch](reviews/2026-11-05-d15-absence-exception-dispatch.md). Original initial1+repairs2of2 remains exhausted. Omar authorized ONE additional bounded repair for D15-REVIEW-ABSENCE-01 only. Fresh Luna worktree m8-d15-absence-extra1 starts518ae4a with two-file allowlist. Preserve original candidates. No further repair allowance, D13 changes or G8/G9 release.
+
+Literal resume: **Join the recorded exception worker, do not redispatch. Reconcile its immutable result into local review and independent boundary/source/installed/native proof, then read-only Astra if those pass. Stop at this bounded receipt.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D15 closed blocked at repair cap
 
 Read [the bounded close receipt](reviews/2026-11-05-d-t15-bounded-close.md). Final worker `e891344`, isolated Sol snapshot `518ae4a`, source 274 pass / 0 fail/error/warn/skip / 47 blocks. Both final local reviews retain D15-REVIEW-ABSENCE-01; Sol reproduced pinned absence permitting an unbound effect. No final parent source/installed/native gate, package gate or D15 Astra audit ran. No D15 product integration or acceptance. Initial 1 plus repairs 2 of 2 consumed. G8/G9 remain closed. All owned agents/processes are terminal, no child sidebar chats or polling remain. Protected dirt and both clean candidate worktrees are preserved.
