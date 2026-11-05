@@ -384,16 +384,14 @@ testthat::test_that("saved C publication rejects rehashed identity and clinical 
     dir.create(destination, recursive = TRUE)
     entries <- list.files(output_root, recursive = TRUE, full.names = TRUE,
                           all.files = TRUE, no.. = TRUE)
-    relative <- substring(entries, nchar(output_root) + 2L)
-    directory <- file.info(entries)$isdir
-    for (path in file.path(destination, relative[directory])) {
-      dir.create(path, recursive = TRUE, showWarnings = FALSE)
-    }
-    source_files <- entries[!directory]
-    if (length(source_files)) {
-      copied <- file.copy(source_files, file.path(destination, relative[!directory]),
-                          overwrite = FALSE)
-      stopifnot(all(copied))
+    for (source in entries) {
+      target <- file.path(destination, substring(source, nchar(output_root) + 2L))
+      if (dir.exists(source)) {
+        dir.create(target, recursive = TRUE, showWarnings = FALSE)
+      } else {
+        dir.create(dirname(target), recursive = TRUE, showWarnings = FALSE)
+        stopifnot(file.copy(source, target, overwrite = FALSE))
+      }
     }
   }
 
