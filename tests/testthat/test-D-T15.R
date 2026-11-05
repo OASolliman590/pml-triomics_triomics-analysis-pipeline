@@ -423,7 +423,7 @@ dt15_bind_clinical_payload <- function(fixture) {
   dt15_bind_b_bundle(fixture)
 }
 
-dt15_bind_b_bundle <- function(fixture) {
+dt15_bind_b_bundle <- function(fixture, omit_clinical_member = FALSE) {
   handoff_dir <- file.path(fixture$root, "B", "handoffs", dt15_sha("d"))
   dir.create(handoff_dir, recursive = TRUE, showWarnings = FALSE)
   family_path <- file.path(handoff_dir, "family-ledger.json")
@@ -473,7 +473,8 @@ dt15_bind_b_bundle <- function(fixture) {
     artifact_id = "b07-dt15-synthetic-fixture",
     study_id = fixture$loaded$config$study_id,
     analysis_id = fixture$loaded$config$analysis_id,
-    status = bundle_status, members = list(member)
+    status = bundle_status,
+    members = if (isTRUE(omit_clinical_member)) list() else list(member)
   )
   triomics_write_json_atomic(bundle, bundle_path)
   triomics_write_envelope(triomics_artifact_envelope(
@@ -1051,6 +1052,53 @@ testthat::test_that("an absent B clinical artifact remains distinct from changed
   testthat::expect_identical(member$integrity_status, "absent")
   testthat::expect_identical(member$availability_status, "unavailable")
   testthat::expect_identical(member$member$status, "unavailable")
+
+  section <- triomics_report_clinical_section(fixture$loaded, fixture$config)
+
+  testthat::expect_identical(section$status, "unavailable")
+  testthat::expect_identical(section$reason_code, "D_REPORT_CLINICAL_EXPORT_MISSING")
+  testthat::expect_length(section$tables, 0L)
+})
+
+testthat::test_that("D refuses loaded clinical evidence absent from its pinned B bundle", {
+  cases <- list(
+    list(
+      name = "omitted member with payload and artifact reference",
+      omit_member = TRUE,
+      drop_artifact_reference = FALSE
+    ),
+    list(
+      name = "unavailable member with null references and payload only",
+      omit_member = FALSE,
+      drop_artifact_reference = TRUE
+    )
+  )
+
+  for (case in cases) {
+    result <- local({
+      fixture <- dt15_native_projection_fixture()
+      on.exit(unlink(fixture$root, recursive = TRUE), add = TRUE)
+      if (case$drop_artifact_reference) fixture$loaded$artifacts$clinical <- NULL
+      fixture <- dt15_bind_b_bundle(fixture, omit_clinical_member = case$omit_member)
+
+      list(
+        loaded_payload = !is.null(fixture$loaded$payloads$clinical),
+        error = tryCatch(
+          triomics_report_clinical_section(fixture$loaded, fixture$config),
+          triomics_error = identity
+        )
+      )
+    })
+
+    testthat::expect_true(result$loaded_payload, info = case$name)
+    testthat::expect_identical(result$error$code, "D_REPORT_SOURCE_INVALID",
+                               info = case$name)
+    testthat::expect_identical(
+      result$error$config_key,
+      "D.immutable_inputs.b_bundle.clinical_associations",
+      info = case$name
+    )
+  }
 })
 
 testthat::test_that("a changed effect in a partial B clinical payload is refused against D", {
