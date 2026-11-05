@@ -329,6 +329,29 @@ testthat::test_that("native B publishes unchanged association results and bound 
   output_root <- tempfile("triomics-cnh-publication-")
   on.exit(unlink(c(fixture$fixture_root, output_root), recursive = TRUE, force = TRUE), add = TRUE)
 
+  dictionary_path <- file.path(fixture$fixture_root, "data", "c08", "dictionary.tsv")
+  dictionary <- utils::read.delim(dictionary_path, check.names = FALSE,
+                                  stringsAsFactors = FALSE, colClasses = "character")
+  dictionary$missing_map[dictionary$variable_id == "glucose"] <- ".=placeholder;CUSTOM=custom_reason"
+  null_neighbor <- dictionary[1L, , drop = FALSE]
+  null_neighbor[,] <- ""
+  null_neighbor$variable_id <- "empty_missingness_neighbor"
+  null_neighbor$label <- "Synthetic empty missingness neighbor"
+  null_neighbor$type <- "continuous"
+  null_neighbor$units <- "unitless"
+  null_neighbor$units_verification <- "verified"
+  null_neighbor$role <- "administrative"
+  null_neighbor$allowed_model_roles <- "excluded"
+  null_neighbor$time_semantics <- "visit"
+  null_neighbor$privacy <- "ordinary"
+  null_neighbor$verification <- "verified"
+  null_neighbor$evidence <- "Synthetic test-only dictionary entry."
+  null_neighbor$censoring <- "forbidden"
+  null_neighbor$time_format <- "none"
+  dictionary <- rbind(dictionary, null_neighbor)
+  utils::write.table(dictionary, dictionary_path, sep = "\t", row.names = FALSE,
+                     quote = FALSE)
+
   triomics_execute_stage_c(fixture$config_path, output_root)
   native <- triomics_cnh_prepare_stage_b(fixture$config_path, output_root)
   triomics_execute_stage_b(fixture$config_path, output_root)
@@ -348,7 +371,7 @@ testthat::test_that("native B publishes unchanged association results and bound 
   testthat::expect_true(triomics_validate_envelope(envelope_path))
   testthat::expect_true(triomics_cnh_same_json(payload$results, expected$results))
   testthat::expect_true(triomics_cnh_same_json(payload$family, expected$family))
-  testthat::expect_length(payload$clinical_dictionary_coverage$variables, 1L)
+  testthat::expect_length(payload$clinical_dictionary_coverage$variables, 2L)
   variable <- payload$clinical_dictionary_coverage$variables[[1L]]
   testthat::expect_setequal(names(variable), c(
     "variable_id", "declared_type", "unit", "units_verification", "role",
@@ -357,6 +380,13 @@ testthat::test_that("native B publishes unchanged association results and bound 
   coverage <- payload$clinical_dictionary_coverage$coverage[[1L]]
   testthat::expect_identical(as.integer(coverage$n_subjects), 12L)
   testthat::expect_identical(as.integer(coverage$n_observed), 12L)
+  testthat::expect_identical(variable$missingness_rules$mapped_dispositions, list("placeholder"))
+  testthat::expect_identical(as.integer(variable$missingness_rules$unsupported_disposition_count), 1L)
+  testthat::expect_identical(
+    payload$clinical_dictionary_coverage$variables[[2L]]$variable_id,
+    "empty_missingness_neighbor"
+  )
+  testthat::expect_null(payload$clinical_dictionary_coverage$variables[[2L]]$missingness_rules)
   testthat::expect_false(any(c("label", "evidence", "codebook", "numeric_value", "sample_id", "subject_id") %in%
                                names(variable)))
   raw_payload <- paste(readLines(payload_path, warn = FALSE), collapse = "\n")
