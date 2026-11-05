@@ -1,3 +1,17 @@
+# Current checkpoint: D15 closed blocked at repair cap
+
+Read [the bounded close receipt](reviews/2026-11-05-d-t15-bounded-close.md). Final worker `e891344`, isolated Sol snapshot `518ae4a`, source 274 pass / 0 fail/error/warn/skip / 47 blocks. Both final local reviews retain D15-REVIEW-ABSENCE-01; Sol reproduced pinned absence permitting an unbound effect. No final parent source/installed/native gate, package gate or D15 Astra audit ran. No D15 product integration or acceptance. Initial 1 plus repairs 2 of 2 consumed. G8/G9 remain closed. All owned agents/processes are terminal, no child sidebar chats or polling remain. Protected dirt and both clean candidate worktrees are preserved.
+
+Literal resume: **D15 is blocked at initial attempt 1 plus repairs 2 of 2. Preserve worker e891344 and Sol candidate 518ae4a; do not integrate them or reopen repair 3. A separately authorized bounded follow-up must address D15-REVIEW-ABSENCE-01, retain the original caps and evidence, then pass local review, independent source/installed/native report proofs and the applicable fresh Astra gate before acceptance. Do not redo S01/S02 or reopen D13 at its exhausted cap. Keep G8/G9 closed.**
+
+## Historical checkpoints below
+
+# Active D15 continuation — 5 November 2026
+
+D15 is in its final allowed implementation repair2 with /root/d15_resume_luna, from f6e3ee7. Clean Sol candidateeee908d is retained for review evidence; canonical product HEAD has not advanced beyond the resumed predecessor. Initial and repair1 source gates passed, but both focused reviewers found a partial-artifact integrity bypass. See [current implementation review](reviews/2026-11-05-d-t15-implementation-review.md) and the ledger. No repair3. G8/G9 remain closed. Join the current worker, then finish immutable focused review and independent final gates; do not redispatch/restart completed work or reuse initial227/repair1255 passes as final acceptance.
+
+---
+
 # Current checkpoint: D15 initial implementation resumed
 
 Read [the dispatch](reviews/2026-11-05-d-t15-resume-dispatch.md). User authorized continuation from5abc369. Fresh isolated /root/d15_resume_luna continues the unfinished initial D15 attempt on codex/m8-d15-resume. Initial attempts1, repairs0of2; the previous producer-blocked preflight remains history. Five-file frozen renderer allowlist, no shared changes. S01/S02 are verified/integrated and must not be rerun or repaired. Runtime and full bounded brief are in local d15/resume-5abc369 evidence.

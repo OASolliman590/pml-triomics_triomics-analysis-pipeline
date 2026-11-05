@@ -35,63 +35,17 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/d15_resume_luna",
-      "role": "Luna implementer",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "effective_settings_exposed": false,
-      "base_commit": "5abc369a6d12ca8b1ae9c00959548a593cdb4f1a",
-      "worktree": "/Users/megastore/.codex/worktrees/m8-d15-resume/PML MultiOmics Analysis Pipeline",
-      "branch": "codex/m8-d15-resume",
-      "status": "initial_attempt_resumed",
-      "attempt": 1,
-      "repairs": 0,
-      "files_allowed": [
-        "R/report_clinical.R",
-        "inst/report/sections/clinical.qmd",
-        "tests/testthat/test-D-T15.R",
-        "inst/examples/tickets/D-T15.yaml",
-        "docs/implementation/registrations/D-T15.json"
-      ],
-      "allowed_next_transition": "Join this worker, inspect immutable five-file diff, two-axis local review, at most two targeted repairs, independent D15/D08/native/real-Quarto saved-output verification; stop at packet receipt. No G8/G9 release.",
-      "cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "D15_initial_attempt_resumed",
-    "last_reconciled": "2026-11-05",
-    "active_handoffs": [
-      {
-        "agent": "/root/d15_resume_luna",
-        "role": "Luna implementer",
-        "requested_model": "gpt-6-luna",
-        "requested_effort": "max",
-        "effective_settings_exposed": false,
-        "base_commit": "5abc369a6d12ca8b1ae9c00959548a593cdb4f1a",
-        "worktree": "/Users/megastore/.codex/worktrees/m8-d15-resume/PML MultiOmics Analysis Pipeline",
-        "branch": "codex/m8-d15-resume",
-        "status": "initial_attempt_resumed",
-        "attempt": 1,
-        "repairs": 0,
-        "files_allowed": [
-          "R/report_clinical.R",
-          "inst/report/sections/clinical.qmd",
-          "tests/testthat/test-D-T15.R",
-          "inst/examples/tickets/D-T15.yaml",
-          "docs/implementation/registrations/D-T15.json"
-        ],
-        "allowed_next_transition": "Join this worker, inspect immutable five-file diff, two-axis local review, at most two targeted repairs, independent D15/D08/native/real-Quarto saved-output verification; stop at packet receipt. No G8/G9 release.",
-        "cursor": null
-      }
-    ],
+    "status": "D15_closed_blocked_at_repair_cap",
+    "last_reconciled": "2026-11-05T12:56:19.037869+00:00",
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Join this worker, inspect immutable five-file diff, two-axis local review, at most two targeted repairs, independent D15/D08/native/real-Quarto saved-output verification; stop at packet receipt. No G8/G9 release.",
+    "disposition": "D15 is blocked at initial attempt 1 plus repairs 2 of 2. Preserve worker e891344 and Sol candidate 518ae4a; do not integrate them or reopen repair 3. A separately authorized bounded follow-up must address D15-REVIEW-ABSENCE-01, retain the original caps and evidence, then pass local review, independent source/installed/native report proofs and the applicable fresh Astra gate before acceptance. Do not redo S01/S02 or reopen D13 at its exhausted cap. Keep G8/G9 closed.",
     "current_gate": {
-      "status": "initial_attempt_resumed",
-      "candidate": "5abc369a6d12ca8b1ae9c00959548a593cdb4f1a",
-      "review_ref": "docs/implementation/reviews/2026-11-05-d-t15-resume-dispatch.md"
+      "status": "closed_blocked",
+      "candidate": "518ae4ae6b2b3aec282e1c1f45fa46c0509954b0",
+      "review_ref": "docs/implementation/reviews/2026-11-05-d-t15-bounded-close.md"
     }
   },
   "orchestration_events": [
@@ -7148,6 +7102,48 @@
       "initial_attempts": 1,
       "repairs_used": 0,
       "cap_reset": false
+    },
+    {
+      "event": "D15_two_axis_review_completed_reconciled",
+      "round": "initial",
+      "candidate": "645d1077aff4da88564f0f1ac9fa172d25c3ede5",
+      "agents": [
+        "/root/d15_spec_review",
+        "/root/d15_standards_review"
+      ],
+      "verdict": "changes_required",
+      "unique_findings": 4,
+      "review_ref": "docs/implementation/reviews/2026-11-05-d-t15-implementation-review.md",
+      "recorded_date": "2026-11-05"
+    },
+    {
+      "event": "D15_two_axis_review_completed_reconciled",
+      "round": "repair1",
+      "candidate": "eee908dd578395ca3016518f1c193d770fe75b39",
+      "agents": [
+        "/root/d15_spec_review",
+        "/root/d15_standards_review"
+      ],
+      "verdict": "changes_required",
+      "unique_findings": 1,
+      "review_ref": "docs/implementation/reviews/2026-11-05-d-t15-implementation-review.md",
+      "recorded_date": "2026-11-05"
+    },
+    {
+      "date": "2026-11-05T12:56:19.037869+00:00",
+      "event": "D15_final_reviews_reconciled_and_bounded_close",
+      "candidate": "518ae4ae6b2b3aec282e1c1f45fa46c0509954b0",
+      "worker": "e891344e5d7e492030749d88e9645d7f0822c59a",
+      "reviewers": [
+        "/root/d15_spec_review",
+        "/root/d15_standards_review"
+      ],
+      "verdict": "changes_required_P1_confirmed",
+      "attempts": 1,
+      "repairs": 2,
+      "next": "D15 is blocked at initial attempt 1 plus repairs 2 of 2. Preserve worker e891344 and Sol candidate 518ae4a; do not integrate them or reopen repair 3. A separately authorized bounded follow-up must address D15-REVIEW-ABSENCE-01, retain the original caps and evidence, then pass local review, independent source/installed/native report proofs and the applicable fresh Astra gate before acceptance. Do not redo S01/S02 or reopen D13 at its exhausted cap. Keep G8/G9 closed.",
+      "receipt_ref": "docs/implementation/evidence/2026-11-05-d-t15-bounded-close/receipt.json",
+      "active_workers": []
     }
   ],
   "packets": {
@@ -8647,25 +8643,33 @@
       ]
     },
     "D-T15": {
-      "status": "initial_implementation_resumed_after_predecessor",
+      "status": "blocked_at_repair_cap",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
-      "blockers": [],
-      "repair_attempts": 0,
+      "blockers": [
+        {
+          "id": "D15-REVIEW-ABSENCE-01",
+          "priority": "P1",
+          "status": "confirmed_by_Sol_boundary_probe",
+          "summary": "Pinned absence permits a loaded clinical result outside D immutable B evidence",
+          "receipt_ref": "docs/implementation/evidence/2026-11-05-d-t15-bounded-close/absence-probe.json"
+        }
+      ],
+      "repair_attempts": 2,
       "implementation_base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
-      "active_worker": "/root/d15_resume_luna",
+      "active_worker": null,
       "accepted": false,
       "completion_credit": false,
       "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t15-dispatch.md",
-      "product_implementation_started": false,
-      "receipt_ref": "docs/implementation/evidence/2026-11-04-d-t15-preflight/blocked-receipt.json",
-      "review_ref": "docs/implementation/reviews/2026-11-04-d-t15-preflight-blocker.md",
-      "testthat_status": "not_run",
+      "product_implementation_started": true,
+      "receipt_ref": "docs/implementation/evidence/2026-11-05-d-t15-bounded-close/receipt.json",
+      "review_ref": "docs/implementation/reviews/2026-11-05-d-t15-bounded-close.md",
+      "testthat_status": "worker_final_source_passed_but_final_review_blocked",
       "native_parent_probe": {
-        "exit_code": 2,
-        "error_code": "B_DESIGN_UNSUPPORTED",
-        "B_frame_produced": false
+        "status": "not_run_on_final_candidate_after_review_block",
+        "initial_worker_native_all_exits_zero": true,
+        "historical_preflight": "pre_resume_preflight_history.native_parent_probe"
       },
       "predecessor_S02": {
         "status": "verified_integrated",
@@ -8692,10 +8696,48 @@
         "product_repair1_candidate": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
         "prior_dispatch_ref": "docs/implementation/reviews/2026-11-05-d15-s01-repair1-gate-repair2-dispatch.md"
       },
-      "next_transition": "Join this worker, inspect immutable five-file diff, two-axis local review, at most two targeted repairs, independent D15/D08/native/real-Quarto saved-output verification; stop at packet receipt. No G8/G9 release.",
+      "next_transition": "D15 is blocked at initial attempt 1 plus repairs 2 of 2. Preserve worker e891344 and Sol candidate 518ae4a; do not integrate them or reopen repair 3. A separately authorized bounded follow-up must address D15-REVIEW-ABSENCE-01, retain the original caps and evidence, then pass local review, independent source/installed/native report proofs and the applicable fresh Astra gate before acceptance. Do not redo S01/S02 or reopen D13 at its exhausted cap. Keep G8/G9 closed.",
       "predecessor_receipt_ref": "docs/implementation/reviews/2026-11-05-d15-s01-final-scoped-close.md",
       "implementation_resume_base": "5abc369a6d12ca8b1ae9c00959548a593cdb4f1a",
-      "resume_dispatch_ref": "docs/implementation/reviews/2026-11-05-d-t15-resume-dispatch.md"
+      "resume_dispatch_ref": "docs/implementation/reviews/2026-11-05-d-t15-resume-dispatch.md",
+      "pre_resume_preflight_history": {
+        "implementation_base": "f747440650e7e632fe63e1fd98c5b28ffa4b6b07",
+        "receipt_ref": "docs/implementation/evidence/2026-11-04-d-t15-preflight/blocked-receipt.json",
+        "review_ref": "docs/implementation/reviews/2026-11-04-d-t15-preflight-blocker.md",
+        "native_parent_probe": {
+          "exit_code": 2,
+          "error_code": "B_DESIGN_UNSUPPORTED",
+          "B_frame_produced": false
+        },
+        "testthat_status": "not_run"
+      },
+      "implementation_candidates": {
+        "initial_worker": "72a1224cfb399b68b55d23b16343f8294f1bd9be",
+        "initial_sol": "645d1077aff4da88564f0f1ac9fa172d25c3ede5",
+        "repair1_worker": "f6e3ee7b0f38f017fff022e9679097594b9fa27b",
+        "repair1_sol": "eee908dd578395ca3016518f1c193d770fe75b39",
+        "repair2_worker": "e891344e5d7e492030749d88e9645d7f0822c59a",
+        "repair2_sol": "518ae4ae6b2b3aec282e1c1f45fa46c0509954b0"
+      },
+      "latest_source_evidence": {
+        "commit": "e891344e5d7e492030749d88e9645d7f0822c59a",
+        "pass": 274,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 47,
+        "final_candidate_parent_gate": false
+      },
+      "final_snapshot_commit": "518ae4ae6b2b3aec282e1c1f45fa46c0509954b0",
+      "final_worker_commit": "e891344e5d7e492030749d88e9645d7f0822c59a",
+      "final_local_review": {
+        "Spec": "changes_required",
+        "Standards": "changes_required",
+        "Sol": "P1_reproduced",
+        "Astra": "not_run"
+      },
+      "attempt_limit_exhausted": true
     },
     "D-T09": {
       "status": "not_started",
@@ -8887,5 +8929,5 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D15_initial_attempt_active_G8_G9_closed"
+  "close_state": "D15_blocked_at_repair_cap_G8_G9_closed"
 }

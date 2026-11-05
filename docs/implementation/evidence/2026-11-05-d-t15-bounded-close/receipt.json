@@ -1,0 +1,123 @@
+{
+  "packet": "D-T15",
+  "status": "blocked_at_repair_cap",
+  "accepted": false,
+  "completion_credit": false,
+  "recorded_at": "2026-11-05T12:56:19.037869+00:00",
+  "resume_base": "5abc369a6d12ca8b1ae9c00959548a593cdb4f1a",
+  "canonical_dispatch_commit": "2288997ee3a986077d4cc995a5d034a9e11fd428",
+  "canonical_product_predecessor": "ee434483bf852724c1dbb38d0fa8b710ea7c59cc",
+  "worker_commit": "e891344e5d7e492030749d88e9645d7f0822c59a",
+  "sol_snapshot_commit": "518ae4ae6b2b3aec282e1c1f45fa46c0509954b0",
+  "canonical_product_integrated": false,
+  "attempts": 1,
+  "repairs_used": 2,
+  "repairs_limit": 2,
+  "worker_source": {
+    "commit": "e891344e5d7e492030749d88e9645d7f0822c59a",
+    "filter": "D-T15|D-T08",
+    "started": "2026-11-05 12:41:30 UTC",
+    "finished": "2026-11-05 12:41:43 UTC",
+    "counts": {
+      "pass": 274,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 47
+    },
+    "exit_code": 0,
+    "by_file": {
+      "test-D-T08.R": {
+        "pass": 151,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 25
+      },
+      "test-D-T15.R": {
+        "pass": 123,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 22
+      }
+    },
+    "conditions": [],
+    "command": "Rscript --vanilla <local-proof-root>/scripts/run-source-unbounded-report.R <worker-worktree> <local-evidence-dir> D-T15|D-T08",
+    "evidence_scope": "worker source suite on final worker commit; no final independent parent gate"
+  },
+  "testthat_warning_names": [],
+  "local_reviews": {
+    "Spec": "changes_required",
+    "Standards": "changes_required",
+    "common_P1": "D15-REVIEW-ABSENCE-01"
+  },
+  "Sol_adjudication": {
+    "verdict": "confirmed",
+    "kind": "typed synthetic boundary reproduction, not native B/C/D reachability",
+    "pinned_B_bundle_sha256": "1747c467fc3e910faefaeb90b27d165e4debae16fc710875885203bb9e047cdb",
+    "pinned_bytes_unchanged": true,
+    "displayed_effect": 0.4,
+    "section_status": "partial",
+    "lineage_status": "B_clinical_payload_unverified",
+    "error_returned": false,
+    "warning_names": [],
+    "probe_exit_code": 0,
+    "exit_meaning": "expected negative behavior reproduced; not a passing product gate"
+  },
+  "freeze": {
+    "snapshot_archive_sha256": "620e2f4e411d2459088b6c87bca734c3a59ffddaf8f25b2ccf3cb13773892f33",
+    "candidate_diff_sha256": "65d289c16834d92bfb3f6348b2e987ad0bbe105a8c02e443dcbf40074bc80dc6",
+    "repair_diff_sha256": "ca455728471c52204549779a4fe7ea62c7cd1ef87c5d2a4542b9063686359d28",
+    "file_count": 1104,
+    "all_file_hashes_reverified": true
+  },
+  "final_parent_gates": {
+    "source": "not_run_after_final_local_review_block",
+    "installed_layout": "not_run_after_final_local_review_block",
+    "native_report": "not_run_after_final_local_review_block",
+    "package": "not_run",
+    "Astra": "not_run; local P1 unresolved"
+  },
+  "initial_native_evidence": {
+    "worker_commit": "72a1224cfb399b68b55d23b16343f8294f1bd9be",
+    "commands": [
+      "A",
+      "C_schedule",
+      "B",
+      "C_saved_publication",
+      "D",
+      "report"
+    ],
+    "exit_codes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "scope": "initial candidate public 12-subject fixture only; not final repair evidence"
+  },
+  "G8": "closed",
+  "G9": "closed",
+  "private_data_read": false,
+  "server_run": false,
+  "push": false,
+  "Notion_sync": false,
+  "close_reconciliation": {
+    "owned_agents_terminal": [
+      "/root/d15_resume_luna",
+      "/root/d15_spec_review",
+      "/root/d15_standards_review"
+    ],
+    "owned_active_processes": [],
+    "run_owned_sidebar_chats": [],
+    "archive_required": false,
+    "persistent_polling": false
+  },
+  "resume_instruction": "D15 is blocked at initial attempt 1 plus repairs 2 of 2. Preserve worker e891344 and Sol candidate 518ae4a; do not integrate them or reopen repair 3. A separately authorized bounded follow-up must address D15-REVIEW-ABSENCE-01, retain the original caps and evidence, then pass local review, independent source/installed/native report proofs and the applicable fresh Astra gate before acceptance. Do not redo S01/S02 or reopen D13 at its exhausted cap. Keep G8/G9 closed."
+}

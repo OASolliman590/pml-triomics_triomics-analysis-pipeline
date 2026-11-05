@@ -1,0 +1,36 @@
+{
+  "commit": "e891344e5d7e492030749d88e9645d7f0822c59a",
+  "filter": "D-T15|D-T08",
+  "started": "2026-11-05 12:41:30 UTC",
+  "finished": "2026-11-05 12:41:43 UTC",
+  "counts": {
+    "pass": 274,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 47
+  },
+  "exit_code": 0,
+  "by_file": {
+    "test-D-T08.R": {
+      "pass": 151,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 25
+    },
+    "test-D-T15.R": {
+      "pass": 123,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 22
+    }
+  },
+  "conditions": [],
+  "command": "Rscript --vanilla <local-proof-root>/scripts/run-source-unbounded-report.R <worker-worktree> <local-evidence-dir> D-T15|D-T08",
+  "evidence_scope": "worker source suite on final worker commit; no final independent parent gate"
+}
