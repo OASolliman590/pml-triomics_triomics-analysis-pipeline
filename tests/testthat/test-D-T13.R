@@ -573,7 +573,10 @@ testthat::test_that("association prose suppresses labeled identifiers and retain
     "SampleID:A13 used in construction",
     "medical-record-number 123456 clinical score",
     "MRN A13 used for selection",
-    "Medical record No. AB-123 used in selection"
+    "Medical record No. AB-123 used in selection",
+    "PatientAlpha clinical score",
+    "SubjectAlpha used in selection",
+    "ParticipantAlpha used in construction"
   )
   cases <- c(safe, identifiers)
 
