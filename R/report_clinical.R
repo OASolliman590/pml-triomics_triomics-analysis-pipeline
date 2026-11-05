@@ -317,7 +317,9 @@ triomics_report_clinical_saved_endpoints <- function(loaded, config) {
 }
 
 triomics_report_clinical_b_bundle_member <- function(loaded, config) {
-  unverified <- function() list(status = "unverified", member = NULL)
+  unverified <- function() list(
+    integrity_status = "unverified", availability_status = "unverified", member = NULL
+  )
   if (!is.list(loaded) || !is.list(loaded$d) || !is.list(config)) return(unverified())
   immutable <- loaded$d$immutable_inputs
   family <- if (is.list(immutable) && is.list(immutable$b_artifacts)) {
@@ -405,7 +407,9 @@ triomics_report_clinical_b_bundle_member <- function(loaded, config) {
   matches <- which(vapply(members, function(member) {
     identical(as.character(member$artifact_id %||% ""), "clinical_associations")
   }, logical(1L)))
-  if (!length(matches)) return(list(status = "unavailable", member = NULL))
+  if (!length(matches)) {
+    return(list(integrity_status = "absent", availability_status = "unavailable", member = NULL))
+  }
   if (length(matches) != 1L) {
     triomics_report_clinical_abort(
       "The pinned B public bundle repeats its clinical association member.",
@@ -414,7 +418,34 @@ triomics_report_clinical_b_bundle_member <- function(loaded, config) {
   }
   member <- members[[matches[[1L]]]]
   member_fields <- c("artifact_id", "status", "path", "sha256", "envelope_path", "envelope_sha256")
-  if (!all(member_fields %in% names(member)) ||
+  if (!all(member_fields %in% names(member))) {
+    triomics_report_clinical_abort(
+      "The pinned B clinical association member reference is malformed.",
+      "B.public_bundle.members.clinical_associations"
+    )
+  }
+  member_status <- member$status
+  if (!is.character(member_status) || length(member_status) != 1L ||
+      is.na(member_status) || !member_status %in% triomics_envelope_statuses()) {
+    triomics_report_clinical_abort(
+      "The pinned B clinical association member status is malformed.",
+      "B.public_bundle.members.clinical_associations.status"
+    )
+  }
+  reference_fields <- c("path", "sha256", "envelope_path", "envelope_sha256")
+  absent_reference <- vapply(reference_fields, function(field) is.null(member[[field]]), logical(1L))
+  if (all(absent_reference)) {
+    if (member_status %in% c("complete", "partial")) {
+      triomics_report_clinical_abort(
+        "A complete or partial B clinical association member is missing its saved artifact references.",
+        "B.public_bundle.members.clinical_associations"
+      )
+    }
+    return(list(
+      integrity_status = "absent", availability_status = as.character(member_status), member = member
+    ))
+  }
+  if (any(absent_reference) ||
       !identical(as.character(member$path), file.path("B", "clinical-associations.json")) ||
       !identical(as.character(member$envelope_path), file.path("B", "clinical-associations.envelope.json")) ||
       !triomics_sha256_text(as.character(member$sha256)) ||
@@ -424,16 +455,13 @@ triomics_report_clinical_b_bundle_member <- function(loaded, config) {
       "B.public_bundle.members.clinical_associations"
     )
   }
-  if (!identical(as.character(member$status), "complete")) {
-    return(list(status = "unavailable", member = member))
-  }
   clinical_reference <- loaded$artifacts$clinical
-  if (is.null(clinical_reference)) return(unverified())
   if (!is.list(clinical_reference) ||
       !identical(as.character(clinical_reference$path), as.character(member$path)) ||
       !identical(as.character(clinical_reference$envelope_path), as.character(member$envelope_path)) ||
       !identical(as.character(clinical_reference$artifact_type), "clinical_association_results") ||
       !identical(as.character(clinical_reference$artifact_id), "b-t08-clinical-associations") ||
+      !identical(as.character(clinical_reference$status), as.character(member_status)) ||
       !identical(as.character(clinical_reference$payload_sha256), as.character(member$sha256)) ||
       !identical(as.character(clinical_reference$envelope_sha256), as.character(member$envelope_sha256))) {
     triomics_report_clinical_abort(
@@ -441,7 +469,7 @@ triomics_report_clinical_b_bundle_member <- function(loaded, config) {
       "D.immutable_inputs.b_bundle.clinical_associations"
     )
   }
-  list(status = "verified", member = member)
+  list(integrity_status = "verified", availability_status = as.character(member_status), member = member)
 }
 
 triomics_report_clinical_endpoint_transport <- function(payload, endpoints) {
@@ -685,7 +713,7 @@ triomics_report_clinical_association_rows <- function(payload, endpoints, dictio
     endpoint_lineage_status <- "not_in_saved_C_endpoint_bundle"
     evidence_class <- "association_endpoint_lineage_unavailable"
     if (!is.null(endpoint)) {
-      if (!identical(b_bundle$status, "verified")) {
+      if (!identical(b_bundle$integrity_status, "verified")) {
         endpoint_lineage_status <- "B_clinical_payload_unverified"
       } else if (!identical(endpoint_transport$status, "verified")) {
         endpoint_lineage_status <- "B_endpoint_bundle_unverified"

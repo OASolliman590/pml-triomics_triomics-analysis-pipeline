@@ -404,7 +404,7 @@ dt15_bind_clinical_payload <- function(fixture) {
     artifact_id = "b-t08-clinical-associations",
     study_id = fixture$loaded$config$study_id,
     run_id = "b-t08-synthetic-fixture",
-    status = "complete",
+    status = as.character(fixture$loaded$payloads$clinical$status),
     config_sha256 = fixture$config$config_sha256,
     payload = payload_path,
     producer_commit = "synthetic-test-fixture",
@@ -450,12 +450,21 @@ dt15_bind_b_bundle <- function(fixture) {
   )
 
   clinical <- fixture$loaded$artifacts$clinical
-  member <- list(
-    artifact_id = "clinical_associations", status = "complete",
-    path = clinical$path, sha256 = clinical$payload_sha256,
-    envelope_path = clinical$envelope_path, envelope_sha256 = clinical$envelope_sha256,
-    reason_codes = list()
-  )
+  member <- if (is.null(clinical)) {
+    list(
+      artifact_id = "clinical_associations", status = "unavailable",
+      path = NULL, sha256 = NULL, envelope_path = NULL, envelope_sha256 = NULL,
+      reason_codes = list("requested_artifact_missing")
+    )
+  } else {
+    list(
+      artifact_id = "clinical_associations", status = as.character(clinical$status),
+      path = clinical$path, sha256 = clinical$payload_sha256,
+      envelope_path = clinical$envelope_path, envelope_sha256 = clinical$envelope_sha256,
+      reason_codes = list()
+    )
+  }
+  bundle_status <- if (is.null(clinical)) "partial" else "complete"
   bundle_path <- file.path(handoff_dir, "bundle.json")
   bundle_envelope_path <- file.path(handoff_dir, "bundle.envelope.json")
   unlink(c(bundle_path, bundle_envelope_path))
@@ -464,13 +473,13 @@ dt15_bind_b_bundle <- function(fixture) {
     artifact_id = "b07-dt15-synthetic-fixture",
     study_id = fixture$loaded$config$study_id,
     analysis_id = fixture$loaded$config$analysis_id,
-    status = "complete", members = list(member)
+    status = bundle_status, members = list(member)
   )
   triomics_write_json_atomic(bundle, bundle_path)
   triomics_write_envelope(triomics_artifact_envelope(
     artifact_type = "stage_b_public_bundle", artifact_id = bundle$artifact_id,
     study_id = fixture$loaded$config$study_id, run_id = "b07-synthetic-fixture",
-    status = "complete", config_sha256 = fixture$config$config_sha256,
+    status = bundle_status, config_sha256 = fixture$config$config_sha256,
     payload = bundle_path, producer_commit = "synthetic-test-fixture",
     inputs = list(list(artifact_id = "b-t07-family-ledger",
                        sha256 = family_artifact$reference$payload_sha256)),
@@ -517,7 +526,7 @@ dt15_rehash_clinical_payload <- function(fixture, mutate_payload) {
     artifact_type = clinical_reference$artifact_type,
     artifact_id = clinical_reference$artifact_id,
     study_id = fixture$loaded$config$study_id,
-    run_id = "b-t08-synthetic-fixture", status = "complete",
+    run_id = "b-t08-synthetic-fixture", status = as.character(payload$status),
     config_sha256 = fixture$config$config_sha256,
     payload = payload_path, producer_commit = "synthetic-test-fixture",
     inputs = list(list(artifact_id = fixture$endpoint_ref$artifact_id,
@@ -533,6 +542,48 @@ dt15_rehash_clinical_payload <- function(fixture, mutate_payload) {
   fixture$loaded$payloads$clinical <- artifact$payload
   fixture$loaded$artifacts$clinical <- artifact$reference
   fixture
+}
+
+dt15_partial_clinical_payload <- function(payload) {
+  estimate <- payload$results[[1L]]
+  unavailable_objective <- payload$objectives[[1L]]
+  unavailable_objective$objective_id <- "objective-age-absent-endpoint"
+  unavailable_objective$response_ref <- "score_demo_absent"
+  unavailable_objective$endpoint_ref <- "score_demo_absent"
+  unavailable_objective$protocol_ref <- "protocol-age-absent-endpoint"
+  unavailable_objective$status <- "unavailable"
+  unavailable_objective$reason <- "endpoint_absent"
+  unavailable_objective$fitted <- FALSE
+  unavailable_result <- triomics_b08_blank_result(
+    unavailable_objective, "score_demo_absent", "unavailable", "endpoint_absent", "continuous"
+  )
+  member_ids <- c(estimate$endpoint_id, unavailable_result$endpoint_id)
+  internal_p <- c(as.numeric(estimate$p), 1)
+  internal_q <- stats::p.adjust(internal_p, method = "BH")
+  estimate$q <- internal_q[[1L]]
+  family <- payload$family
+  family$member_ids <- member_ids
+  family$member_hash <- triomics_b_hash(member_ids)
+  family$n_declared <- 2L
+  family$n_estimated <- 1L
+  family$n_failed <- 1L
+  family$correction_method <- "BH"
+  family$q_published <- TRUE
+  family$internal_p <- internal_p
+  family$internal_q <- internal_q
+  payload$status <- "partial"
+  payload$objectives <- c(payload$objectives, list(unavailable_objective))
+  payload$results <- list(estimate, unavailable_result)
+  payload$family <- family
+  payload
+}
+
+dt15_partial_clinical_fixture <- function() {
+  fixture <- dt15_native_projection_fixture()
+  fixture$loaded$payloads$clinical <- dt15_partial_clinical_payload(
+    fixture$loaded$payloads$clinical
+  )
+  dt15_bind_clinical_payload(fixture)
 }
 
 testthat::test_that("clinical objectives and associations preserve model, effects and saved C lineage", {
@@ -949,6 +1000,80 @@ testthat::test_that("a changed B clinical effect with a rehashed envelope is ref
 
 testthat::test_that("a reordered and rehashed B clinical payload is refused against D", {
   fixture <- dt15_native_projection_fixture()
+  on.exit(unlink(fixture$root, recursive = TRUE), add = TRUE)
+  fixture <- dt15_rehash_clinical_payload(fixture, function(payload) {
+    payload[rev(names(payload))]
+  })
+
+  error <- tryCatch(
+    triomics_report_clinical_section(fixture$loaded, fixture$config),
+    triomics_error = identity
+  )
+
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "D_REPORT_SOURCE_INVALID")
+  testthat::expect_identical(error$config_key,
+                             "D.immutable_inputs.b_bundle.clinical_associations")
+})
+
+testthat::test_that("an intact partial B clinical artifact preserves saved results and availability", {
+  fixture <- dt15_partial_clinical_fixture()
+  on.exit(unlink(fixture$root, recursive = TRUE), add = TRUE)
+
+  section <- triomics_report_clinical_section(fixture$loaded, fixture$config)
+
+  testthat::expect_identical(fixture$loaded$payloads$clinical$status, "partial")
+  testthat::expect_identical(fixture$loaded$artifacts$clinical$status, "partial")
+  testthat::expect_identical(section$status, "partial")
+  testthat::expect_identical(section$tables$associations$effect[[1L]], 0.4)
+  testthat::expect_identical(section$tables$associations$endpoint_lineage_status[[1L]],
+                             "saved_C_endpoint_verified")
+  testthat::expect_identical(section$tables$associations$endpoint_lineage_status[[2L]],
+                             "not_in_saved_C_endpoint_bundle")
+  testthat::expect_identical(section$tables$objectives$result_status[[2L]], "unavailable")
+  testthat::expect_identical(section$tables$families$n_declared[[1L]], 2L)
+  testthat::expect_identical(section$tables$families$n_estimated[[1L]], 1L)
+  testthat::expect_identical(section$tables$families$n_failed[[1L]], 1L)
+})
+
+testthat::test_that("an absent B clinical artifact remains distinct from changed bytes", {
+  fixture <- dt15_native_projection_fixture()
+  on.exit(unlink(fixture$root, recursive = TRUE), add = TRUE)
+  unlink(file.path(fixture$root, c(
+    "B/clinical-associations.json", "B/clinical-associations.envelope.json"
+  )))
+  fixture$loaded$payloads$clinical <- NULL
+  fixture$loaded$artifacts$clinical <- NULL
+  fixture <- dt15_bind_b_bundle(fixture)
+
+  member <- triomics_report_clinical_b_bundle_member(fixture$loaded, fixture$config)
+
+  testthat::expect_identical(member$integrity_status, "absent")
+  testthat::expect_identical(member$availability_status, "unavailable")
+  testthat::expect_identical(member$member$status, "unavailable")
+})
+
+testthat::test_that("a changed effect in a partial B clinical payload is refused against D", {
+  fixture <- dt15_partial_clinical_fixture()
+  on.exit(unlink(fixture$root, recursive = TRUE), add = TRUE)
+  fixture <- dt15_rehash_clinical_payload(fixture, function(payload) {
+    payload$results[[1L]]$effect <- 987.65
+    payload
+  })
+
+  error <- tryCatch(
+    triomics_report_clinical_section(fixture$loaded, fixture$config),
+    triomics_error = identity
+  )
+
+  testthat::expect_s3_class(error, "triomics_error")
+  testthat::expect_identical(error$code, "D_REPORT_SOURCE_INVALID")
+  testthat::expect_identical(error$config_key,
+                             "D.immutable_inputs.b_bundle.clinical_associations")
+})
+
+testthat::test_that("reordered partial B clinical payload bytes are refused against D", {
+  fixture <- dt15_partial_clinical_fixture()
   on.exit(unlink(fixture$root, recursive = TRUE), add = TRUE)
   fixture <- dt15_rehash_clinical_payload(fixture, function(payload) {
     payload[rev(names(payload))]
