@@ -1123,6 +1123,20 @@ triomics_report_clinical_section <- function(loaded, config) {
     )
   }
   payload <- if (is.list(loaded)) loaded$payloads$clinical else NULL
+  loaded_clinical_reference <- if (is.list(loaded) && is.list(loaded$artifacts)) {
+    loaded$artifacts$clinical
+  } else NULL
+  if (is.null(payload) && is.null(loaded_clinical_reference)) {
+    return(list(status = "unavailable", reason_code = "D_REPORT_CLINICAL_EXPORT_MISSING",
+                tables = list()))
+  }
+  b_bundle <- triomics_report_clinical_b_bundle_member(loaded, config)
+  if (identical(b_bundle$integrity_status, "absent")) {
+    triomics_report_clinical_abort(
+      "Loaded clinical evidence is absent from D's immutable B bundle.",
+      "D.immutable_inputs.b_bundle.clinical_associations"
+    )
+  }
   if (is.null(payload)) {
     return(list(status = "unavailable", reason_code = "D_REPORT_CLINICAL_EXPORT_MISSING",
                 tables = list()))
@@ -1152,7 +1166,6 @@ triomics_report_clinical_section <- function(loaded, config) {
   exclusion_rows <- triomics_report_clinical_exclusion_rows(dictionary)
   endpoints <- triomics_report_clinical_saved_endpoints(loaded, config)
   objective_rows <- triomics_report_clinical_objective_rows(payload, safe_variable_ids)
-  b_bundle <- triomics_report_clinical_b_bundle_member(loaded, config)
   endpoint_transport <- triomics_report_clinical_endpoint_transport(payload, endpoints)
   association_rows <- triomics_report_clinical_association_rows(
     payload, endpoints, safe_variable_ids, b_bundle, endpoint_transport
