@@ -1,0 +1,172 @@
+{
+  "cycle": "M8-D15-S02",
+  "status": "verified_scoped_candidate_pending_combined_integration",
+  "candidate_commit": "a136db4ee2d840ad04cdda7534a40a43a0f30791",
+  "scope_base_commit": "5e4b81accdc3f63ad1d33b96176ee934c561f5db",
+  "scope_audit": {
+    "snapshot": "61b27065fd00ca7c2837452994feda408224aef9",
+    "audit_pass": true,
+    "role": "Astra low",
+    "scope_only": true
+  },
+  "files_changed": [
+    "R/export_b.R",
+    "tests/testthat/test-B-T07.R"
+  ],
+  "initial_attempts": 1,
+  "repairs_used": 2,
+  "repairs_remaining": 0,
+  "worker_counts": {
+    "pass": 505,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 33
+  },
+  "Sol_counts": {
+    "pass": 505,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 33
+  },
+  "final_testthat_warnings": [],
+  "local_review": {
+    "candidate": "a136db4ee2d840ad04cdda7534a40a43a0f30791",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "effective_settings_exposed": false,
+    "review_kind": "local_final_repair_completion_not_milestone",
+    "standards": {
+      "agent": "/root/s02_standards_review",
+      "verdict": "no_remaining_findings_by_inspection",
+      "concrete_findings": [],
+      "heuristics": []
+    },
+    "spec": {
+      "agent": "/root/s02_spec_review",
+      "verdict": "no_remaining_findings_by_inspection",
+      "findings": []
+    },
+    "closed": [
+      "explicit nonmissing scalar logical publication flag",
+      "exact row q access",
+      "coherent published estimated q",
+      "absent withheld/failed/unavailable q",
+      "artifact negative and actual-service positive coverage"
+    ],
+    "tests_or_fits_run_by_reviewers": false,
+    "acceptance": false,
+    "parent_gates_at_review": "pending"
+  },
+  "native_commands": [
+    {
+      "label": "fresh_original_C08",
+      "stage": "C",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "A",
+      "stage": "A",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "C_schedule",
+      "stage": "C",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "C_missing_B",
+      "stage": "C",
+      "exit_code": 2,
+      "log_sha256": "01792c9333c2bd6f939f26bd647454437ecb15151e7ca5597a2af81bc9f18eca"
+    },
+    {
+      "label": "B",
+      "stage": "B",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "B_existing_refusal",
+      "stage": "B",
+      "exit_code": 2,
+      "log_sha256": "05b5455dff21b56f4a8970e52b16c892e3ff7a36ec3548651e492d56ecb9b312"
+    }
+  ],
+  "command_templates": {
+    "source": "Rscript --vanilla <proof>/scripts/run-source.R <clean-candidate> <fresh-source-evidence> B-T07",
+    "native": "Rscript --vanilla inst/exec/triomics --config <fixture-config> --stage <A-or-B-or-C> --output <fresh-root>",
+    "profile_readback": "Rscript --vanilla <proof>/d15-s02/readback-b.R <clean-candidate> <fresh-root> <readback-receipt>"
+  },
+  "command_paths": "Aliases protect local machine paths; exact command arrays are retained in hashed local receipts. This public receipt contains no study inputs.",
+  "B_artifact_sha256": {
+    "B/handoffs/e1899b78a2bd0efcc7743f159e84f11ea189f4fbbc2969224181c5dce744037e/bundle.json": "a42ab0736a61349c4e7d3ceffeba3bd5f13618d07aaaef32a90ca948a9f02aef",
+    "B/handoffs/e1899b78a2bd0efcc7743f159e84f11ea189f4fbbc2969224181c5dce744037e/bundle.envelope.json": "b2f73a42d65ec253614fe1c6741b833af99c1f702e989c299b6743402a6fdd9e",
+    "B/handoffs/e1899b78a2bd0efcc7743f159e84f11ea189f4fbbc2969224181c5dce744037e/stage-handoff-provenance.json": "ec295bd3f8c1a11c884706c2eb9e4e5cc2c377f60b493a10b41e7ff6b12c12bc",
+    "B/handoffs/e1899b78a2bd0efcc7743f159e84f11ea189f4fbbc2969224181c5dce744037e/stage-handoff-provenance.envelope.json": "88783d68a626bac9b85083cab7a7bec73e34af5236275917e35ce6d055c6dadb"
+  },
+  "clinical_artifact_sha256": {
+    "clinical-associations.json": "84c8cabd97d957218ad270121255eb2dcf5f1e0c7bb8b28d8fc168972a182b3e",
+    "clinical-associations.envelope.json": "4302e312da35fe4ccdc52eddc861dc4a87bdb0a52a80ace10b195ca31d5f11c5"
+  },
+  "clinical_dispositions": {
+    "clinical_associations": {
+      "status": "complete",
+      "reason": null
+    },
+    "clinical_longitudinal_associations": {
+      "status": "not_requested",
+      "reason": "objectives_accounted_for_by_present_artifacts"
+    }
+  },
+  "clinical_family": {
+    "family_id": "synthetic_c08_score_family",
+    "member_ids": "score_fe78a4f3b590e50bd2f2",
+    "n_declared": 1,
+    "n_estimated": 1,
+    "n_failed": 0
+  },
+  "clinical_profile_digest": "933911e1000068fb15362abc47b11e2713e67176c310bb4ba7fe3110b1ed527c",
+  "profile_validation_passed": true,
+  "clinical_profile_matches_actual_artifacts": true,
+  "earlier_C_bytes_unchanged": true,
+  "earlier_request_bytes_unchanged": true,
+  "longitudinal_files_absent": true,
+  "expected_refusals_preserve_all_bytes": true,
+  "local_receipt_sha256": {
+    "gate-receipt.json": "5cfc4b840e9591c004542705148d8f8402fe160552e0a715e4441a352d20765e",
+    "source/source-receipt.json": "ac0d2f5d14f06de9294b04915a6091cba5c002a73f72be5263a283ba739011d4",
+    "native/native-receipt.json": "034de99c689f7f7f0218a93c0bd656a179a0cf24400cbe671bdc96497b7540c1",
+    "B-profile-readback.json": "1341ad94205f8ea28ec03f44f7b5ead5463abca5a4d18bfceef91d71bfc8fca1",
+    "q-rejection-probe.json": "092b9759705c2c0f70a1969ea5a4e00a8b101ff11d3ce8d75c1c32f6b2636618"
+  },
+  "runtime": "R version 4.6.1 (2026-06-24)",
+  "quarto": "1.11.9 installed; no render in this cycle",
+  "canonical_product_integrated": false,
+  "milestone_acceptance": false,
+  "package_Status": "not_run",
+  "M8_Astra_milestone": "not_run",
+  "M7": "accepted",
+  "G7": "released",
+  "G8": "closed",
+  "G9": "closed",
+  "S01": "incomplete; repairs0of2; four defects and failure tests still pending",
+  "D13": "blocked_at_repair_cap",
+  "D15": "not_accepted",
+  "D06_D07_D14": "blocked_zero_credit",
+  "C07": "not_run",
+  "C09": "unqualified/synthetic_fixture_only/benefit_guaranteed=false",
+  "frozen_kit_independent_audit": "pending",
+  "private_data_read": false,
+  "push": false,
+  "server_execution": false,
+  "notion_sync": false,
+  "run_owned_agents_terminal": true,
+  "run_owned_processes_terminal": true
+}

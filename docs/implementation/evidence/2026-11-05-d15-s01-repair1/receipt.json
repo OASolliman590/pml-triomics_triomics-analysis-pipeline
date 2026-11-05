@@ -1,0 +1,80 @@
+{
+  "scope": "M8-D15-S01 repair1 focused gate and final repair2 dispatch",
+  "candidate": "7876735ca2206897d45f3bdb93ce5b3ead5c9124",
+  "command": "Rscript --vanilla <proof>/scripts/run-source.R <clean-worker-checkout> <proof-output> clinical-native-handoff|C-06-shared|C-08-shared",
+  "command_note": "Location aliases only in this public receipt; exact command retained in local source-receipt.json.",
+  "exit_code": 1,
+  "counts": {
+    "pass": 580,
+    "fail": 3,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 37
+  },
+  "by_file": {
+    "test-C-06-shared.R": {
+      "pass": 362,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 12
+    },
+    "test-C-08-shared.R": {
+      "pass": 96,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 14
+    },
+    "test-clinical-native-handoff.R": {
+      "pass": 122,
+      "fail": 3,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 11
+    }
+  },
+  "conditions": [
+    {
+      "test": "saved requests and publication failures fail closed without partial C provenance",
+      "file": "test-clinical-native-handoff.R",
+      "type": "expectation_failure",
+      "message": "Expected `reordered_error$code` to be identical to \"B_SCORE_REQUEST_INVALID\".\nDifferences:\n`actual`:   \"B_SCORE_LINEAGE_INVALID\"\n`expected`: \"B_SCORE_REQUEST_INVALID\"\n"
+    },
+    {
+      "test": "saved requests and publication failures fail closed without partial C provenance",
+      "file": "test-clinical-native-handoff.R",
+      "type": "expectation_failure",
+      "message": "Expected `rehashed_error$code` to be identical to \"B_SCORE_REQUEST_INVALID\".\nDifferences:\n`actual`:   \"B_SCORE_LINEAGE_INVALID\"\n`expected`: \"B_SCORE_REQUEST_INVALID\"\n"
+    },
+    {
+      "test": "saved requests and publication failures fail closed without partial C provenance",
+      "file": "test-clinical-native-handoff.R",
+      "type": "expectation_failure",
+      "message": "Expected `symlink_error$code` to be identical to \"B_SCORE_REQUEST_INVALID\".\nDifferences:\n`actual`:   \"B_SCORE_LINEAGE_INVALID\"\n`expected`: \"B_SCORE_REQUEST_INVALID\"\n"
+    }
+  ],
+  "source_receipt_sha256": "e7a060da9905e515a202e07397d33c45e7c1130cfa82945d58225f4564da1e6f",
+  "source_log_sha256": "5b3969e4752e30f0cbef1370dc5c85d4db104d011b07b84431a5cf0e0234c214",
+  "review_archive_sha256": "8b7d2902310d4924eef3d6f7dc7af9db1b071afb0cdbe512931a64033352371b",
+  "local_reviews": {
+    "spec": "no_actionable_static_finding",
+    "standards": "one_P2_test_consistency_finding_three_assertions",
+    "effective_model_settings_exposed": false
+  },
+  "Sol_disposition": "changed bytes and symlinked request paths violate the prior C producer binding; retain the exact early B_SCORE_LINEAGE_INVALID refusal and all preservation assertions",
+  "attempts": 1,
+  "repairs_used": 2,
+  "next_allowlist": [
+    "tests/testthat/test-clinical-native-handoff.R"
+  ],
+  "next_change": "Only the three recorded exact error-code expectations. No product code or numerical expectation change.",
+  "accepted": false,
+  "canonical_product_integrated": false,
+  "G8": "closed",
+  "G9": "closed"
+}

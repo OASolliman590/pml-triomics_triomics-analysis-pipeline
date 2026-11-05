@@ -1,3 +1,63 @@
+# Current checkpoint: M8-D15-S01 final test-only repair2 assigned
+
+Read [repair1 gate and repair2 dispatch](reviews/2026-11-05-d15-s01-repair1-gate-repair2-dispatch.md). Clean isolated7876735:580pass/3fail/0error/warn/skip. C-06/C-08 pass; exactly three request-tamper tests expect the obsolete refusal code. Sol retains the stricter early lineage refusal and assigns same Luna finalrepair2of2 for those three expected strings only. No product edits, no repair3. Local Spec review has no actionable static finding; Standards requires this reconciliation. Independent combined source/native/numeric/zero-refit/rollback/tampering gates and fresh Astra remain pending. No integration or acceptance.
+
+Literal resume: **Join original Luna final test-only repair2, verify unchanged product blobs and actual clinical-native-handoff counts, close local review, combine with canonical records in isolated Sol checkout, and run the independent gate before fresh Astra. Do not repeat initial implementation, start D15 renderer, reopen D13/S02 repair3, or release G8/G9.**
+
+## Historical checkpoints below
+
+# Current checkpoint: M8-D15-S01 repair1 assigned to original worker
+
+Read [repair dispatch](reviews/2026-11-05-d15-s01-repair1-dispatch.md). Original Luna recovered; original branch preserved at f5c46e5, clean continuation branch at a136db4. Same initial attempt, first repair of two, original five-file allowlist. S02 remains independently verified and held; no export_b.R edits. Parent fits are not running.
+
+Literal resume: **Join original S01 Luna repair1; inspect immutable diff, focused local review and independent combined source/native/numeric/zero-refit/rollback proof, then fresh risky-diff Astra review. No S02 or D13 repair3. Preserve M7/G7 acceptance and G8/G9 closure.**
+
+## Historical checkpoints below
+
+# Current checkpoint: M8-D15-S02 independently verified, held for S01
+
+Read [the scoped close receipt](reviews/2026-11-05-d15-s02-scoped-close.md). Candidate a136db4 passes independent full B-T07:505pass,0fail/error/warn/skip,33blocks. Fresh native A/C-scheduling/B exits0/0/0; refusal probes2/2 preserve bytes. B is complete, unrequested longitudinal files remain absent, and profile/envelope/hash readback passes. Both local reviews have no remaining finding. S02 initial+2repairs consumed; no repair3. Product remains isolated, not canonical-integrated.
+
+All run-owned workers/processes terminal; no child chats to archive. M7/G7/D08 accepted; S01/D15 incomplete, D13 blocked at cap, G8/G9 closed. No package/M8 Astra/render/private-data/server/push/Notion action.
+
+Literal resume: **Resume M8-D15-S01 at repair1of2, preserving the original initial attempt. Reconcile its original worker and candidate a136db4; fix the four recorded S01 defects and failure tests within its audited allowlist, then verify the combined source/native/numeric/no-refit/rollback route and risky-diff Astra before D15. No S02 repair3, D13 repair3 or G8/G9 release.**
+
+## Historical checkpoints below
+
+# Current checkpoint: M8-D15-S02 final repair2 assigned
+
+Read [repair1 review](reviews/2026-11-05-d15-s02-repair1-review.md). Repair1 at4a09b92 passes445 source assertions but still accepts contradictory withheld-q evidence, independently reproduced by Sol. Same Luna, same two-file allowlist, finalrepair2of2. No native run on repair1 and no product integration. S01 repairs0of2 remain separate.
+
+Literal resume: **Join same Luna final repair2; inspect immutable diff and independently run full B-T07/native/profile readback; stop at S02 receipt. No repair3 or S01 edits. Preserve S01 and D13 caps; G8/G9 stay closed.**
+
+## Historical checkpoints below
+
+# Current checkpoint: M8-D15-S02 repair1 assigned
+
+Read [initial review](reviews/2026-11-05-d15-s02-initial-review.md). Same /root/d15_s02_luna repairs three independently reproduced accounting defects from5519fc1: fractional counts, predictor_visit contradiction, shortened correction vectors. Two-file allowlist unchanged. Initial source409pass/noerrors and nativeA/C/B0/0/0 do not override these findings; final worker profile validation was unverified. Parent confirmed no old process remains. Repair1of2, no cap reset.
+
+Literal resume: **Join the same S02 worker repair1; do not redispatch or open S01 work. Review the new immutable diff, perform focused local rereview and independent fullB-T07/native/profile readback, then stop at S02 receipt. S01repairs0of2 remain for its original defects; no G8/G9 release or D13 repair3.**
+
+## Historical checkpoints below
+
+# Current checkpoint: M8-D15-S02 Luna initial running
+
+Scope61b2706 passed fresh Astra-low; [audit](reviews/2026-11-05-d15-s02-scope-audit.md). Fresh /root/d15_s02_luna owns only R/export_b.R and tests/testthat/test-B-T07.R from preserved5e4b81a. Initial attempt, repairs0of2. It must account for actual declared objective/family evidence, not infer a service from mode. No parent fitting job active.
+
+Literal resume: **Join /root/d15_s02_luna; do not redispatch. Inspect its two-file candidate, complete local review and independent B-T07/native B readback, then stop at S02 receipt. Preserve S01repairs0of2 and its four defects/failure tests for the original worker. No combined integration, D15 start, G8/G9 release or D13 repair3.**
+
+## Historical checkpoints below
+
+# Current checkpoint: M8-D15-S01 blocked at B route disposition boundary
+
+Read [the blocked receipt](reviews/2026-11-05-d15-s01-blocked-close.md) and [local review](reviews/2026-11-05-d15-s01-local-review.md). Luna initial candidate f5c46e5 plus Sol CLI wiring are preserved at isolated 5e4b81a, not integrated. Scope Astra passed; implementation review requires changes. Independent helper suite: 53 pass, one error, no warnings/skips. Native A/C/B succeeds; later C exits2 because B incorrectly requires the unrequested longitudinal artifact and publishes a partial bundle. No C provenance or D generation. Owning R/export_b.R is outside S01 scope. Initial attempt used; repairs0of2; no repair dispatched across that boundary.
+
+All run-owned agents/processes completed and reconciled. Quarto1.11.9 is local. No install/server needed for this blocker. M7/G7/D08 accepted; D13 cap preserved; D15/G8/G9 unresolved. No private data, push or Notion sync.
+
+Literal resume: **Define a new bounded B-T07 clinical-route disposition scope, audit it before edits, and preserve candidate 5e4b81a. Address the four reproduced S01 validation/reporting defects and required failure tests in explicit allowlists; carry forward S01 initial attempt and repair counts. Do not restart Luna from scratch, bypass partial B acceptance, fabricate a longitudinal result, reopen D13 repair 3, or resume D15 before independent A/C/B/C/D proof. Keep G8/G9 closed.**
+
+## Historical checkpoints below
+
 # Current checkpoint: M8-D15-S01 initial Luna running
 
 Fresh /root/d15_s01_luna implements the exact five-file audited predecessor scope on codex/m8-d15-s01-luna from0ce7f2d. One initial attempt; repairs0of2. Scope audit passed929746c; no repeated audit. Sol owns R/cli.R serially after helper return. External brief/runtime/state are under d15-s01 in the internal APFS proof directory. No parent fit or gate is active.

@@ -1,0 +1,150 @@
+{
+  "cycle": "M8-D15-S01",
+  "date": "2026-11-05",
+  "status": "blocked_incomplete_outside_allowlist",
+  "accepted": false,
+  "canonical_product_integrated": false,
+  "base": "7e7207faa121dd34686d413af98c6b7700b8e4e3",
+  "worker_commit": "f5c46e55be67cf828d342ea593b66400d9c21cbf",
+  "candidate": "5e4b81accdc3f63ad1d33b96176ee934c561f5db",
+  "candidate_branch": "codex/m8-report-sol",
+  "worker_branch": "codex/m8-d15-s01-luna",
+  "initial_attempts": 1,
+  "targeted_repairs_used": 0,
+  "targeted_repairs_cap": 2,
+  "scope_astra": "audit_pass yes at 929746c, scope only",
+  "implementation_astra": "not_run",
+  "local_reviews": {
+    "standards": {
+      "concrete_findings": 1,
+      "judgment_heuristics": 1
+    },
+    "spec": {
+      "findings": 4
+    },
+    "verdict": "changes_required",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "effective_settings_exposed": false
+  },
+  "archive_sha256": "570340583c084e8d11cea3ca2b5c2b8cb00ab24efc5d395263d01e5b57c8aa56",
+  "source_gate": {
+    "filter": "clinical-native-handoff",
+    "counts": {
+      "pass": 53,
+      "fail": 0,
+      "error": 1,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 7
+    },
+    "exit_code": 1,
+    "conditions": [
+      {
+        "test": "saved native C context replays the exact fit without refitting",
+        "file": "test-clinical-native-handoff.R",
+        "type": "expectation_error",
+        "message": "<triomics_error/error/condition>\nError: The native B handoff or its provenance failed existing byte, identity, or lineage validation."
+      }
+    ],
+    "warning_names": []
+  },
+  "native_commands": [
+    {
+      "label": "fresh_original_C08",
+      "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/C-08.yaml --stage C --output <fresh-root>",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "A",
+      "command": "Rscript --vanilla inst/exec/triomics --config <unchanged-qualified-single-visit-config> --stage A --output <fresh-root>",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "C_schedule",
+      "command": "Rscript --vanilla inst/exec/triomics --config <unchanged-qualified-single-visit-config> --stage C --output <fresh-root>",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "C_missing_B",
+      "command": "Rscript --vanilla inst/exec/triomics --config <unchanged-qualified-single-visit-config> --stage C --output <fresh-root>",
+      "exit_code": 2,
+      "log_sha256": "01792c9333c2bd6f939f26bd647454437ecb15151e7ca5597a2af81bc9f18eca"
+    },
+    {
+      "label": "B",
+      "command": "Rscript --vanilla inst/exec/triomics --config <unchanged-qualified-single-visit-config> --stage B --output <fresh-root>",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "B_existing_refusal",
+      "command": "Rscript --vanilla inst/exec/triomics --config <unchanged-qualified-single-visit-config> --stage B --output <fresh-root>",
+      "exit_code": 2,
+      "log_sha256": "05b5455dff21b56f4a8970e52b16c892e3ff7a36ec3548651e492d56ecb9b312"
+    },
+    {
+      "label": "C_publish",
+      "command": "Rscript --vanilla inst/exec/triomics --config <unchanged-qualified-single-visit-config> --stage C --output <fresh-root>",
+      "exit_code": 2,
+      "log_sha256": "1b8ca606729f123ff2cde75007e3d9585b87006fca92cf42686a667843919c9b"
+    }
+  ],
+  "native_failure": "C_EXPORT_PREDECESSOR_INVALID: B bundle partial because longitudinal result marked requested_artifact_missing despite between_person-only objectives",
+  "B_files": {
+    "B/handoffs/9d663a03e4cc2d1349d3ae1ef1b0861e832415c7349785f1e9d23c40ff71fb01/bundle.json": "3efd83b82ab012c2ea2b2ba93b22cdf91beb7e8b5d5138a840df042a064f83db",
+    "B/handoffs/9d663a03e4cc2d1349d3ae1ef1b0861e832415c7349785f1e9d23c40ff71fb01/bundle.envelope.json": "44d42b0a93ec79fea815dfa1e2beb05348e57cd8dc69cee31d4174e3ab3d2905",
+    "B/handoffs/9d663a03e4cc2d1349d3ae1ef1b0861e832415c7349785f1e9d23c40ff71fb01/stage-handoff-provenance.json": "dc0b1eeae23ee92b4506b49a9e57a7ae07ff7f394fa0d65d9030c6963ae72d31",
+    "B/handoffs/9d663a03e4cc2d1349d3ae1ef1b0861e832415c7349785f1e9d23c40ff71fb01/stage-handoff-provenance.envelope.json": "12e8628e986899056d12b01a77db2fa817cacda240fab553ae83a0702967ce1c"
+  },
+  "C_provenance_files_written": false,
+  "D_generation_written": false,
+  "D_command": "not_run",
+  "package_check": "not_run",
+  "required_focused_union": "not_run after helper/native blocker",
+  "numeric_oracle": "not_run",
+  "instrumented_replay": "not_run; replay blocked before complete publication",
+  "reproductions": {
+    "scope": "Read-only preflight/decoder negative probes of copies of native C output; no fit or acceptance proof",
+    "baseline_preflight": true,
+    "original_metadata_sha256": "32a1fd9767398e96ff260de6099350ccc742a2ab22c6cb9f19521c2e5bcb5b7e",
+    "changed_metadata_sha256": "308e6671f5471c52e5159b7dd7005a58fc20971f88be11ee56b14c5d52c068ca",
+    "changed_metadata_preflight_accepted": true,
+    "external_registry_symlink_preflight_accepted": true,
+    "original_c09_status": "not_started",
+    "changed_handoff_decoder_accepted": true,
+    "decoded_c09": {
+      "status": "complete",
+      "completion_policy": "conditional",
+      "packet_id": "C-09",
+      "model_execution": "not_started",
+      "reason": "Conditional matched clinical prediction has not been executed.",
+      "benefit_guaranteed": true
+    }
+  },
+  "blocker_owner": "R/export_b.R:2376-2396 and 2594-2602; outside audited S01 allowlist",
+  "next": "Define a new bounded B-T07 clinical-route disposition scope, audit it before edits, and preserve candidate 5e4b81a. Address the four reproduced S01 validation/reporting defects and required failure tests in explicit allowlists; carry forward S01 initial attempt and repair counts. Do not restart Luna from scratch, bypass partial B acceptance, fabricate a longitudinal result, reopen D13 repair 3, or resume D15 before independent A/C/B/C/D proof. Keep G8/G9 closed.",
+  "run_owned_agents": "all completed",
+  "runtime": {
+    "R": "4.6.1",
+    "Quarto": "1.11.9",
+    "limma": "3.68.5"
+  },
+  "limits": {
+    "M7_G7": "accepted; unchanged",
+    "G8_G9": "closed",
+    "D13": "blocked at exhausted repair cap",
+    "D15": "blocked before renderer implementation",
+    "C07": "not_run",
+    "C09": "unqualified/synthetic_fixture_only/benefit_guaranteed=false",
+    "D06_D07_D14": "blocked; zero credit",
+    "frozen_kit_audit": "pending"
+  },
+  "private_data_read": false,
+  "AIU_execution": false,
+  "GitHub_push": false,
+  "Notion_sync": false
+}

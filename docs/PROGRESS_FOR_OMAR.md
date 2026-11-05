@@ -1,13 +1,15 @@
-# Pipeline progress — 4 November 2026
+# Pipeline progress — 5 November 2026
 
-The goal is to finish the report and synthetic walkthrough milestones, G8 and G9. The accepted M7/G7 baseline and offline D08 report remain in place; neither has been reopened.
+The goal remains the clinical report and synthetic walkthrough milestones, G8 and G9. M7/G7 and the offline D08 report remain accepted.
 
-The clinical report is blocked before implementation. C can create molecular scores and schedule a clinical association, but the normal B command cannot yet consume that saved request. A separate fixture calculation cannot replace the actual score or establish its ancestry.
+The B publication correction passed independent checks. A synthetic run produced the requested between-person clinical association and left the unrequested longitudinal analysis absent. Saved molecular scores and clinical requests remained unchanged; provenance matched the files.
 
-Today, Astra reviewed and passed the bounded repair scope. It connects one supported between-person request to the existing association method, then publishes the already saved C fit. Publication must preserve the original score bytes and must not claim that later B results helped create those scores. No implementation, new test pass or scientific validation is claimed from this review.
+Review caught inconsistent declarations about published adjusted p-values. The repair rejects those contradictions while preserving valid published and withheld results, including unavailable family members. Independent B-T07 verification passed 505 assertions with no failures, warnings, errors or skips.
 
-Next is one fresh Luna implementation, followed by independent source and native artifact checks. The target dossier D13 remains blocked at its repair cap. Both report packets must be resolved before M8 acceptance; G8/G9 remain closed.
+This is synthetic software evidence, not biological or clinical validation. The candidate remains isolated; the clinical report is unfinished.
 
-Needs Omar: no new decision for the audited scope. Sync: local records only; no Notion update, GitHub push, private study analysis or AIU execution.
+Next is S01: authenticate metadata and saved context, reject unsafe registry paths, and report unsupported missingness accurately. Combined pipeline and rollback checks must pass before D15 resumes. D13 remains blocked at its repair cap; G8/G9 stay closed.
 
-Evidence: [scope receipt](implementation/reviews/2026-11-04-d15-s01-scope-audit.md). Conditional D06/D07/D14 retain zero credit; C07 remains not_run; C09 remains unqualified; the separate frozen-kit audit is pending.
+Needs Omar: no new decision. Sync: local records only; no Notion sync, push, private-data analysis or server run. Quarto1.11.9 is installed.
+
+Evidence: [scoped receipt](implementation/reviews/2026-11-05-d15-s02-scoped-close.md). Conditional scientific limits remain unchanged.

@@ -1,0 +1,7 @@
+# M8-D15-S01 repair1 continuation
+
+The original /root/d15_s01_luna was recovered through the host followup API and acknowledged one initial attempt and zero repairs used. Its worktree was clean at f5c46e5. A fast-forward to a136db4 was refused because prior serial integration used cherry-picks; no mutation occurred. Sol verified that all five S01-owned blobs are identical, preserved the original branch, and selected codex/m8-d15-s01-repair1 at a136db4 in the same isolated worktree. This is S01 repair1of2, not a new attempt. Verified S02 and D13 repair caps remain unchanged.
+
+The audited S01 five-file scope remains in force. Assign the four reproduced defects: changed metadata before fitting, rehashed saved-handoff substitution, external registry-directory symlink, and lost unsupported missingness accounting. Add the missing reached-injection rollback proof preserving original C/request bytes and a previous D generation. No method, numerical, schema or scientific qualification change is allowed. No scope audit is repeated.
+
+The same Luna uses behavioral RED/GREEN slices, the pinned internal APFS runtime, allowlist-only commits and a focused C/shared/helper gate. Sol then reviews and independently proves the broad source/native/numeric/zero-refit/rollback route, with fresh risky-diff Astra review before releasing a consumer. M7/G7 remain accepted; D15/G8/G9 stay unaccepted. No private data, server execution, push or Notion sync.
