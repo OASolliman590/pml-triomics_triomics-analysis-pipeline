@@ -524,6 +524,102 @@ testthat::test_that("association-only producer profiles retain safe study and co
   ))
 })
 
+testthat::test_that("association prose suppresses labeled identifiers and retains numeric lineage", {
+  request <- triomics_target_request(
+    list(namespace = "synthetic_protein", id = "TARGET_ASSOCIATION_PRIVACY", taxon_id = 9606,
+         entity_type = "protein"),
+    "assess",
+    list(list(selection_id = "association-selection-privacy", hypothesis_status = "exploratory",
+              selected_with_observations = FALSE)),
+    context = list(context_id = "association-context-privacy")
+  )
+  association <- list(
+    evidence_id = "association-evidence-privacy", axis = "association",
+    endpoint = "association_beta", units = "unitless", relation = "=",
+    source_id = "association-source", publication_group = "association-publication",
+    measured_by_pipeline = FALSE, value = NULL,
+    study_id = "synthetic_association_study", analysis_id = "synthetic_association_analysis",
+    subject_overlap_status = "shared_subjects",
+    construction_lineage = NULL,
+    source_selection_history = NULL
+  )
+  safe <- c(
+    "Clinical score constructed from 3 molecular features",
+    "Top 10 features selected in the same study",
+    "Score constructed from 3 features across 32 subjects",
+    "PCA v2.1 with 10 features",
+    "Sample count 32; 10 features selected",
+    "Subject count 32; 10 features selected"
+  )
+  identifiers <- c(
+    "Patient: 13 clinical score",
+    "Subject: 7 features selected",
+    "Patient ID A13 clinical score",
+    "Patient number 13 clinical score",
+    "MRN 123456 clinical score",
+    "participant number A13 used for selection",
+    "patient id: A13 used for selection",
+    "Subject - A13 used for selection",
+    "Subject identifier A13 used for selection",
+    "MRN: A13 used for selection",
+    "Sample ID A13 used in construction",
+    "Patient ID (A13) clinical score",
+    "Subject 'S7' used in selection",
+    "MRN (AB-123) used in construction",
+    "participant No.: A13 used in selection",
+    "pAtIeNt ID: A13 clinical score",
+    "SUBJECT_IDENTIFIER = A-13 used for selection",
+    "Participant No. S-7 used for selection",
+    "SampleID:A13 used in construction",
+    "medical-record-number 123456 clinical score",
+    "MRN A13 used for selection",
+    "Medical record No. AB-123 used in selection"
+  )
+  cases <- c(safe, identifiers)
+
+  for (value in cases) {
+    expected <- if (value %in% safe) value else ""
+    case <- association
+    case$construction_lineage <- value
+    case$source_selection_history <- value
+    profile <- triomics_target_profile(
+      request, list(), list(),
+      external_evidence = triomics_target_external_evidence(request, list(case))
+    )
+    testthat::expect_identical(
+      profile$external_associations[[1L]]$construction_lineage, value,
+      info = paste("producer construction lineage:", value)
+    )
+    testthat::expect_identical(
+      profile$external_associations[[1L]]$source_selection_history, value,
+      info = paste("producer selection history:", value)
+    )
+
+    section <- triomics_report_optional_sections(
+      list(d = list(target_investigation = d13_recorded_target(list(profile)))),
+      list(target_enabled = TRUE, clinical_enabled = FALSE)
+    )$targets
+    rows <- section$tables$external_evidence
+    testthat::expect_identical(
+      rows$construction_lineage, expected,
+      info = paste("report construction lineage:", value)
+    )
+    testthat::expect_identical(
+      rows$source_selection_history, expected,
+      info = paste("report selection history:", value)
+    )
+    testthat::expect_identical(rows$subject_overlap_status, "shared_subjects")
+    testthat::expect_identical(rows$independent_replication, FALSE)
+
+    html <- triomics_report_optional_section_html(section)
+    visible <- grepl(value, html, fixed = TRUE)
+    testthat::expect_identical(
+      visible, value %in% safe,
+      info = paste("optional section HTML visibility:", value)
+    )
+  }
+})
+
 testthat::test_that("mismatched null assays retain source applicability and safe serialized evidence", {
   profile <- d13_target_profile()
   assay <- profile$external_evidence[[1L]]
