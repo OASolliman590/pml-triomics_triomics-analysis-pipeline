@@ -49,13 +49,16 @@ triomics_report_target_safe_association_prose <- function(value) {
   if (!nzchar(value) || nchar(value, type = "bytes") > 512L ||
       grepl("[[:cntrl:]<>`]", value, perl = TRUE) ||
       triomics_report_contains_private_text(value) ||
-      grepl("(?i:subject|patient|participant)[_.:-][A-Za-z0-9]+|(?i:subject|patient|participant)(?=[A-Z0-9])",
-            value, perl = TRUE)) {
+      grepl(paste0(
+        "(?i:subject|patient|participant)[_.:-][A-Za-z0-9]+|",
+        "(?i:subject|patient|participant)(?=[A-Z0-9])|",
+        "(?i:(?:subject|patient|participant)[[:space:]]+(?:id[[:space:]_.:-]*)?[0-9]+)"
+      ), value, perl = TRUE)) {
     return("")
   }
   token <- triomics_report_target_safe_association_token(value)
   if (nzchar(token)) return(token)
-  if (!grepl("^[[:alpha:]][[:alpha:][:space:],.;:'’():-]*$", value, perl = TRUE)) return("")
+  if (!grepl("^[[:alpha:]][[:alpha:][:digit:][:space:],.;:'’():-]*$", value, perl = TRUE)) return("")
   triomics_report_clean_text(value)
 }
 
