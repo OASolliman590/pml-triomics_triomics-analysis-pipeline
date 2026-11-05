@@ -280,6 +280,75 @@ testthat::test_that("B refuses metadata changed after C without fitting or chang
   )
 })
 
+testthat::test_that("B refuses an external registries symlink before fits and preserves same-root state", {
+  fixture <- cnh_test_between_person_config()
+  output_root <- tempfile("triomics-cnh-registry-symlink-")
+  registry_path <- file.path(output_root, "registries")
+  external_registry <- tempfile("triomics-cnh-external-registries-",
+                                tmpdir = dirname(output_root))
+  on.exit({
+    if (triomics_is_symlink(registry_path)) unlink(registry_path)
+    if (dir.exists(external_registry) && !dir.exists(registry_path)) {
+      file.rename(external_registry, registry_path)
+    }
+    unlink(c(fixture$fixture_root, output_root, external_registry), recursive = TRUE, force = TRUE)
+  }, add = TRUE)
+
+  initial <- triomics_execute_stage_c(fixture$config_path, output_root)
+  testthat::expect_identical(initial$status, "endpoint_request_scheduled")
+  run_c_path <- file.path(registry_path, "run-C.json")
+  run_c_hash <- triomics_sha256(run_c_path)
+  request_paths <- file.path(output_root, "B", "clinical-score-association-requests",
+                             c("request-01.json", "request-01.envelope.json"))
+  request_hashes <- stats::setNames(vapply(request_paths, triomics_sha256, character(1L)),
+                                    basename(request_paths))
+  c_paths <- sort(list.files(file.path(output_root, "C"), recursive = TRUE,
+                             full.names = TRUE, all.files = TRUE), method = "radix")
+  c_hashes <- stats::setNames(vapply(c_paths, triomics_sha256, character(1L)),
+                              substring(c_paths, nchar(output_root) + 2L))
+
+  testthat::expect_true(file.rename(registry_path, external_registry))
+  testthat::expect_true(file.symlink(external_registry, registry_path))
+  fit_calls <- 0L
+  fit_spy <- function(...) {
+    fit_calls <<- fit_calls + 1L
+    stop("A Stage B fit ran after registry ancestry escaped the output root.", call. = FALSE)
+  }
+  testthat::local_mocked_bindings(
+    triomics_fit_block_models = fit_spy,
+    triomics_associate_endpoints = fit_spy,
+    .package = "triomics"
+  )
+  b_exit <- triomics_main(c(
+    "--config", fixture$config_path, "--stage", "B", "--output", output_root
+  ))
+
+  testthat::expect_identical(b_exit, 2L)
+  testthat::expect_identical(fit_calls, 0L)
+  testthat::expect_identical(triomics_sha256(file.path(external_registry, "run-C.json")), run_c_hash)
+  testthat::expect_identical(
+    stats::setNames(vapply(request_paths, triomics_sha256, character(1L)), basename(request_paths)),
+    request_hashes
+  )
+  c_paths_after <- sort(list.files(file.path(output_root, "C"), recursive = TRUE,
+                                   full.names = TRUE, all.files = TRUE), method = "radix")
+  testthat::expect_identical(
+    stats::setNames(vapply(c_paths_after, triomics_sha256, character(1L)),
+                    substring(c_paths_after, nchar(output_root) + 2L)),
+    c_hashes
+  )
+  testthat::expect_false(file.exists(file.path(output_root, "B", "block-results.json")))
+  testthat::expect_false(file.exists(file.path(output_root, "B", "clinical-associations.json")))
+
+  unlink(registry_path)
+  testthat::expect_true(file.rename(external_registry, registry_path))
+  testthat::expect_s3_class(
+    triomics_cnh_prepare_stage_b(fixture$config_path, output_root),
+    "ClinicalNativeHandoffContext"
+  )
+  testthat::expect_identical(triomics_sha256(run_c_path), run_c_hash)
+})
+
 
 testthat::test_that("the original multivisit C08 score remains ineligible for a single-visit request", {
   config_path <- cnh_test_multivisit_between_person_config()
