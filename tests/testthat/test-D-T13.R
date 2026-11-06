@@ -611,6 +611,58 @@ testthat::test_that("association prose suppresses labeled identifiers and retain
     "Patient ID A13; Sample-Level score constructed from 3 features",
     "Sample: Median normalization of 32 measurements; cohortPatientAlpha"
   )
+  lineage_descriptions <- c(
+    "Sample: Robust normalization of 32 measurements",
+    "Sample: Log normalization of 32 measurements",
+    "Sample: Total intensity normalization of 32 measurements",
+    "Sample: Median scaling of 32 measurements",
+    "Sample: Pareto scaling of 32 measurements",
+    "Sample: Unit variance scaling of 32 measurements",
+    "Sample: Batch correction of 32 measurements",
+    "Sample: Probabilistic quotient normalization of 32 measurements",
+    "Sample: Log transformation of 32 measurements",
+    "Sample: Robust feature filtering of 32 measurements",
+    "Sample: Score constructed from 3 features",
+    "Sample: Top 10 features selected in the same study"
+  )
+  title_case <- function(value) {
+    tokens <- strsplit(value, " ", fixed = TRUE)[[1L]]
+    paste(vapply(tokens, function(token) {
+      if (!nzchar(token)) return(token)
+      paste0(toupper(substr(token, 1L, 1L)), substring(token, 2L))
+    }, character(1)), collapse = " ")
+  }
+  lineage_variants <- unique(unlist(lapply(lineage_descriptions, function(value) {
+    c(value, tolower(value), toupper(value), title_case(value))
+  }), use.names = FALSE))
+  safe <- unique(c(
+    safe, lineage_variants,
+    "SUBJECTS count 32; features selected"
+  ))
+  attached_plural_identifiers <- c(
+    "SubjectS-7 used in selection",
+    "PatientS-A13 used in construction",
+    "cohortPatientS-A13 clinical score",
+    "cohortSubjectS-7 used in selection",
+    "SampleS-7 used in construction",
+    "ParticipantS-A13 used in selection",
+    "SubjectS.7 used in selection",
+    "PatientS:A13 used in construction",
+    "SubjectS_7 used in selection",
+    "PatientS.13 used in construction",
+    "cohortSubjectS:A7 used in selection",
+    "cohortPatientS_13 clinical score",
+    "SampleS.7 used in construction",
+    "SampleS:A13 used in construction",
+    "ParticipantS.7 used in selection",
+    "cohortParticipantS-13 used in selection"
+  )
+  identifiers <- c(
+    identifiers, attached_plural_identifiers,
+    "Sample: ALPHA used in construction of 32 measurements",
+    paste0("SubjectS-7; ", lineage_descriptions),
+    paste0(lineage_descriptions, "; cohortPatientS-A13")
+  )
   cases <- c(safe, identifiers)
 
   for (value in cases) {
