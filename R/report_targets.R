@@ -95,7 +95,7 @@ triomics_report_target_safe_association_prose <- function(value) {
   # remains visible to the identifier patterns below.
   subject_count_clause <- paste0(
     "(?i:subjects:[[:space:]]+[[:digit:]]+)",
-    "(?![[:alnum:]_.-])"
+    "(?!", identifier_token_character, ")"
   )
   plural_subject_label <- paste0(
     "(?i:(?:\\b|_)subjects)(?=(?:",
