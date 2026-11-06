@@ -91,8 +91,10 @@ triomics_report_target_safe_association_prose <- function(value) {
     sample_scientific_description,
     "(?![[:alnum:]_.-])"
   )
-  subject_count_description <- paste0(
-    "(?i:subjects:[[:space:]]+[[:digit:]]+;[[:space:]]+features[[:space:]]+selected)",
+  # Protect only the plural count clause; any following lineage or identifier text
+  # remains visible to the identifier patterns below.
+  subject_count_clause <- paste0(
+    "(?i:subjects:[[:space:]]+[[:digit:]]+)",
     "(?![[:alnum:]_.-])"
   )
   plural_subject_label <- paste0(
@@ -106,7 +108,7 @@ triomics_report_target_safe_association_prose <- function(value) {
     "|id|identifier|number|no\\.?|[[:digit:]]|(?-i:[A-Z])))"
   )
   person_label <- paste0(
-    "(?!(?:", subject_count_description, "))",
+    "(?!(?:", subject_count_clause, "))",
     "(?:", plural_subject_label, "|",
     "(?i:(?:\\b|_)(?:subject|patient|participant|mrn)", plural_label_suffix,
     "(?=(?:",
