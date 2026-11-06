@@ -1,3 +1,11 @@
+# Current checkpoint: D13 extra3 authorized
+
+Read [the dispatch](reviews/2026-11-06-d13-seven-counterexamples-dispatch.md). Omar authorized one more two-file repair from preserved c805f04 to fix all seven extra2 counterexamples. Original initial1+repairs2 and extra1/extra2 remain consumed. This is extra3, total repair5. Fresh Luna owns the isolated edit; Sol owns verification and acceptance. G8/G9 closed.
+
+Literal resume: **Join the recorded extra3 worker, do not redispatch. Inspect its exact result, independently verify all seven counterexamples and retained behavior, run focused/installed/native gates and fresh Astra. Stop at the D13 receipt; no M8 close or D09.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D13 extra2 closed blocked
 
 Read [Sol's receipt](reviews/2026-11-06-d13-extra2-blocked-close.md) and [fresh Astra failure](reviews/2026-11-06-d13-extra2-astra.md). Sol candidate `c805f0418fe637d412290466c28b8c661db4a51d`, worker `92dbba17c6e6d3e05b0af527f910d41c18bcf843`, remain unintegrated. Independent source612 and installed612 passed, zero fail/error/warn/skip; native A/B/C/D/report and saved-output checks passed. Separate actual-producer readback found seven failures: four identifiers leak and three legitimate numeric scientific descriptions disappear. Both local axes and Astra reject the candidate. No full package Status claim. Original initial1+repairs2 and extra1/extra2 consumed; no further allowance. D08/D15 and M7/G7 unchanged. G8/G9 closed. Owned workers/processes terminal; no polling or sidebar children. Protected dirt preserved.

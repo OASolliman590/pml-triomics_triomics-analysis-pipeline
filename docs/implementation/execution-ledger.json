@@ -37,11 +37,11 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D13_extra2_closed_blocked",
+    "status": "D13_extra3_dispatch_prepared",
     "last_reconciled": "2026-11-05T23:31:28.056091+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "All owned agents/processes terminal; failed D13 not integrated; no further allowance",
+    "disposition": "fresh Luna from c805f04, independent local/gate verification, fresh Astra, one receipt; G8/G9closed",
     "current_gate": {
       "status": "D13_extra2_blocked",
       "candidate": "c805f0418fe637d412290466c28b8c661db4a51d",
@@ -8693,7 +8693,7 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "blocked_after_second_explicit_extra_repair",
+      "status": "extra3_dispatch_prepared",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
@@ -8702,7 +8702,7 @@
         "D13-EXTRA2-PRIVACY-02 P1: punctuation-separated identifiers leak",
         "D13-EXTRA2-LINEAGE-01 P2: valid hyphenated numeric scientific descriptions disappear"
       ],
-      "repair_attempts": 4,
+      "repair_attempts": 5,
       "implementation_base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
       "active_worker": null,
       "accepted": false,
@@ -8734,18 +8734,14 @@
         "receipt_ref": "docs/implementation/evidence/2026-11-04-d-t13-close/blocked-receipt.json"
       },
       "authorized_additional_repair": {
-        "episode": 2,
+        "episode": 3,
         "allowed": 1,
         "used": 1,
-        "reason": "D13-EXTRA1-PRIVACY-01 identifier leakage while preserving numeric lineage",
-        "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-privacy-exception-dispatch.md",
-        "accepted": false,
-        "status": "consumed_blocked",
-        "worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
-        "Sol_commit": "c805f0418fe637d412290466c28b8c661db4a51d",
-        "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra2-blocked-close.md"
+        "reason": "all seven extra2 counterexamples",
+        "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-seven-counterexamples-dispatch.md",
+        "accepted": false
       },
-      "next_transition": "D13 extra2 is blocked at Sol candidate c805f04 and worker92dbba1. Preserve original initial1+repairs2 and consumed extra1/extra2. Do not integrate this candidate or redispatch a worker without separately authorized bounded repair scope. Resolve D13-EXTRA2-PRIVACY-01/02 and D13-EXTRA2-LINEAGE-01 while preserving scientific lineage and existing guards, then obtain independent verification and fresh Astra. Keep accepted D08/D15 and M7/G7 unchanged; G8/G9 stay closed.",
+      "next_transition": "fresh Luna from c805f04, independent local/gate verification, fresh Astra, one receipt; G8/G9closed",
       "extra_candidate": "c805f0418fe637d412290466c28b8c661db4a51d",
       "source_counts_producer": "independent Sol source on c805f04; not acceptance",
       "final_local_review": {
@@ -8765,6 +8761,18 @@
           "worker_commit": "7f50b14c95a9f563f646b842004318552033089d",
           "status": "consumed_blocked",
           "review_ref": "docs/implementation/reviews/2026-11-05-d13-extra-repair-blocked-close.md"
+        },
+        {
+          "episode": 2,
+          "allowed": 1,
+          "used": 1,
+          "reason": "D13-EXTRA1-PRIVACY-01 identifier leakage while preserving numeric lineage",
+          "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-privacy-exception-dispatch.md",
+          "accepted": false,
+          "status": "consumed_blocked",
+          "worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
+          "Sol_commit": "c805f0418fe637d412290466c28b8c661db4a51d",
+          "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra2-blocked-close.md"
         }
       ],
       "extra2_worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
@@ -9095,7 +9103,7 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D13_extra2_closed_blocked_G8_G9_closed",
+  "close_state": "D13_extra3_active_G8_G9_closed",
   "D13_extra_repair1_orchestration": {
     "worker": {
       "agent": "/root/d13_numeric_extra1_luna",
