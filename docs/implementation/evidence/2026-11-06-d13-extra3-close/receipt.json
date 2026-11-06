@@ -1,0 +1,208 @@
+{
+  "packet_id": "D-T13",
+  "status": "blocked_after_third_explicit_extra_repair",
+  "accepted": false,
+  "completion_credit": false,
+  "recorded_at": "2026-11-06T10:11:26.633753+00:00",
+  "canonical_dispatch_commit": "c67cf809e348514f0af03c0608b204967941963b",
+  "prior_receipt_commit": "a231123bbc0b13e1c389af4f5c9f8e88f7299184",
+  "worker_base": "c805f0418fe637d412290466c28b8c661db4a51d",
+  "worker_red_commit": "e329b9b338a3a3298e13f85f2be0baf4867a281d",
+  "worker_commit": "4b04dfde061a901781041c672d27bec5127c2aa4",
+  "Sol_candidate_commit": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+  "repair_comparison_base": "c7d167025f7f97a73de642269b1e6a5b2be48269",
+  "integration_commit": null,
+  "repair_files": [
+    "R/report_targets.R",
+    "tests/testthat/test-D-T13.R"
+  ],
+  "original_attempts": 1,
+  "original_repairs": 2,
+  "previous_extra_repairs_used": 2,
+  "current_extra_episode": 3,
+  "current_extra_allowed": 1,
+  "current_extra_used": 1,
+  "total_repairs": 5,
+  "further_repairs_authorized": false,
+  "worker_RED": {
+    "pass": 387,
+    "fail": 36,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "exit_code": 1
+  },
+  "worker_source_counts": {
+    "pass": 703,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 60
+  },
+  "independent_source_counts": {
+    "pass": 703,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 60
+  },
+  "independent_source_by_file": {
+    "test-D-T08.R": {
+      "pass": 148,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 25
+    },
+    "test-D-T13.R": {
+      "pass": 423,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 12
+    },
+    "test-D-T15.R": {
+      "pass": 132,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 23
+    }
+  },
+  "source_exit": 0,
+  "source_command": "Rscript --vanilla run-source-unbounded-report.R <clean-Sol-worktree> <fresh-evidence> \"D-T13|D-T08|D-T15\"",
+  "named_testthat_warnings": [],
+  "named_skips": [],
+  "original_counterexamples": {
+    "passed": 31,
+    "failed": 0,
+    "cases": 31,
+    "all_seven_fixed": true,
+    "exit_code": 0,
+    "command": "Rscript --vanilla counterexample-probe.R <immutable-archive-source> <result.json> 1553e52d4d5161e32c38ab34c74185f3087fa68c",
+    "receipt": "original-counterexamples.json"
+  },
+  "additional_capitalization_counterexamples": {
+    "passed": 32,
+    "failed": 3,
+    "cases": 35,
+    "exit_code": 1,
+    "command": "Rscript --vanilla capitalization-probe.R <immutable-archive-source> <result.json> 1553e52d4d5161e32c38ab34c74185f3087fa68c",
+    "receipt": "capitalization-counterexamples.json",
+    "failures": [
+      "Sample-Level score constructed from 3 features",
+      "Sample-Wise normalization of 32 measurements",
+      "Sample: Median normalization of 32 measurements"
+    ]
+  },
+  "probe_scope": "Actual synthetic producer/profile/report tables/HTML projection; no native rendering and no universal anonymization claim. Both lineage fields checked, overlap remains shared_subjects, independent_replication remains false.",
+  "local_reviews": {
+    "Standards": {
+      "agent": "/root/d13_extra3_standards_review",
+      "verdict": "pass",
+      "findings": [],
+      "integrity": "1144 source hashes and five artifact digests verified",
+      "probe": "five descriptions retained, eight identifiers withheld; read-only actual boundary"
+    },
+    "Spec": {
+      "agent": "/root/d13_extra3_spec_review",
+      "verdict": "changes_required",
+      "findings": [
+        {
+          "id": "D13-EXTRA3-LINEAGE-01",
+          "severity": "P2",
+          "file": "R/report_targets.R",
+          "line": 75,
+          "finding": "Ordinary title-case Sample-Level, Sample-Wise and Sample: Median scientific descriptions are discarded although lowercase equivalents survive."
+        }
+      ],
+      "original_counterexamples": "31/31 pass; all seven fixed",
+      "integrity": "1144 source hashes and five artifact digests verified",
+      "probe": "actual producer/profile/report/HTML; no fits"
+    }
+  },
+  "Astra": {
+    "audit_pass": false,
+    "agent": "/root/d13_extra3_astra",
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "low",
+    "effective_settings_exposed": false,
+    "candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+    "findings": [
+      {
+        "id": "D13-EXTRA3-LINEAGE-01",
+        "severity": "P2",
+        "file": "R/report_targets.R",
+        "line": 75,
+        "finding": "Ordinary title-case Sample-Level, Sample-Wise and Sample: Median scientific descriptions are discarded although lowercase equivalents survive."
+      }
+    ],
+    "acceptance_criterion": "D_ANNOTATION_TARGET_REPORT.md section6 lines158-162: preserve score/construction lineage; extra3 dispatch requires descriptive numeric prose. Supports D-T13-AC2 interpretation; overlap/non-independence flags remain correct.",
+    "integrity": "all1144 source hashes and five frozen artifact digests verified",
+    "review_limit": "read-only targeted code/evidence review; no independent fits or test rerun; historical extra2 results cannot substitute",
+    "acceptance": false,
+    "G8": "closed",
+    "G9": "closed"
+  },
+  "archive_commit": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+  "archive_sha256": "040fdab4178f027caba8650b838625246e9d3850a6a4aa1b0b0c6513af9c20f7",
+  "archive_file_count": 1144,
+  "snapshot_digests": {
+    "snapshot.tar": "040fdab4178f027caba8650b838625246e9d3850a6a4aa1b0b0c6513af9c20f7",
+    "files.json": "14ef6ed96485ff3aded3226dbd4b8d2af13436cfec939383ea9f64a8cf81a993",
+    "repair.diff": "72c5ef6697d5f519c6f727fcee01dcfd7e2e754beb7c63187a50a8b703ff3bdc",
+    "product.diff": "b0a3b63bd6cb65fc1b949182d95e2fbdf5e1b04ac342373507bd2bba98b74ba9",
+    "commits.txt": "55739a95b1512f8a3b08e126a64e36469e343be23bb443640721ddfab0534caa"
+  },
+  "archive_unchanged": true,
+  "worker_Sol_product_identical": true,
+  "protected_dirt_unchanged": true,
+  "evidence_hashes": {
+    "parent-source/source-receipt.json": "f279f787a4459770fc587afdb0548701c4dbb1556024150cc8985ff20a9a8233",
+    "parent-source.log": "23475a565b2f0af96b17350e1f0d263624f2bbda4e2e581b51cef184f788d14a",
+    "parent-boundary/counterexamples.json": "1766ec6cbfa4cbce73b1e99b121e4c2ef5b62719952381f06920b82192812e92",
+    "parent-boundary/command.json": "e540d60d3f513094aca39ebc32f6b2c05344daad63da8cbe86bd698fc220519c",
+    "parent-boundary/probe.log": "fffd6a5f1efa9afc4644fb69af821e82b261ad37e010266273fde17aa2fa1af7",
+    "parent-capitalization/result.json": "3d13ff902a5f5d35a2325aa186dd486601fe987171439f89006ca38a22ab4d4f",
+    "parent-capitalization/command.json": "e4343e4918e6562d0deb2775c7a65cfbbf3cae6d8610b80c3d1b6231707c4ef7",
+    "parent-capitalization/probe.log": "99e0529d2e8849dae5693937e63cc44526dd4ebdc51767308d739bcaa56e7fb8",
+    "luna/red/source-receipt.json": "4aab1799843ee38dfbcc59972dab7562685cfc7f20715bfb2ded3d2b4a16e740",
+    "luna/green/source-receipt.json": "940bc06a257c3128e0c8dc3495894601d74c310039e812bf4f13d8183e693a78",
+    "reviews/local-reviews.json": "226c8754cb0b15d1ba9d3e2899d544bce410224135077e9aedcc6afd4799514f",
+    "reviews/astra-verdict.json": "5f520071e478c4a517e4e6a1d75d43948d2c29a71c3522703963c092685e912d",
+    "scripts/counterexample-probe.R": "a803ee9ad1a06ccf5aa92f20bd6a80d3e124f5524a06e4ca8436f615434c2158",
+    "scripts/capitalization-probe.R": "0a306bd715b45aac7b0be20af5679d6586f53c315811711aff58b040b37b75a8"
+  },
+  "native_report": "not_run_on_this_candidate",
+  "installed_focused_tests": "not_run_on_this_candidate",
+  "full_source_suite": "not_run_on_this_candidate",
+  "package_Status": "not_run; no Status: OK claim",
+  "remaining_validation_reason": "Stop-on-finding: local Spec and parent boundary checks fail required lineage preservation. Fresh Astra nevertheless ran as explicitly authorized. Historical extra2 native/installed gates are not evidence for1553e52.",
+  "milestone_acceptance": false,
+  "M7_G7": "accepted/released unchanged",
+  "D08_D15": "accepted unchanged",
+  "G8": "closed",
+  "G9": "closed",
+  "C07": "not_run",
+  "C09": "unqualified; synthetic_fixture_only; benefit_guaranteed=false",
+  "conditional_D_without_completion_credit": [
+    "D-T06",
+    "D-T07",
+    "D-T14"
+  ],
+  "frozen_kit_independent_audit": "pending",
+  "private_data_read": false,
+  "push": false,
+  "server_run": false,
+  "Notion_sync": "not performed",
+  "all_run_owned_workers_terminal": true,
+  "active_processes": [],
+  "run_owned_sidebar_chats": [],
+  "persistent_polling": false,
+  "next": "D13 extra3 is blocked at Sol candidate1553e52 and Luna4b04dfd. Preserve c805f04 and all previous attempts: initial1, original repairs2, extra1/extra2/extra3 consumed. All seven original counterexamples are fixed. Do not integrate or redispatch under this exhausted grant. A separately authorized bounded follow-up must resolve D13-EXTRA3-LINEAGE-01 (capitalized scientific descriptions lost), retain the 31 passing cases and numeric/privacy/overlap guards, then pass independent source/installed/native verification and fresh Astra. Keep D08/D15 and M7/G7 unchanged; G8/G9 remain closed. No M8 close or D09 yet."
+}

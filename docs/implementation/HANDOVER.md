@@ -1,3 +1,11 @@
+# Current checkpoint: D13 extra3 closed blocked
+
+Read [Sol’s receipt](reviews/2026-11-06-d13-extra3-blocked-close.md) and [fresh Astra](reviews/2026-11-06-d13-extra3-astra.md). All seven original counterexamples fixed; original matrix31/31 and independent source703 pass with zero failures/errors/warnings/skips. New capitalization matrix32 pass/3 fail shows valid scientific lineage omitted. Standards pass; Spec changes_required P2; Astra audit_pass:no. Candidate1553e52 and worker4b04dfd remain unintegrated. Native/installed/full-source/package gates not run for this candidate. Initial1+original repairs2+extra1/2/3 consumed. G8/G9 closed; accepted D08/D15 and M7/G7 unchanged. All owned workers/processes terminal; no sidebar children or polling. Protected dirt preserved.
+
+Literal resume: **D13 extra3 is blocked at Sol candidate1553e52 and Luna4b04dfd. Preserve c805f04 and all previous attempts: initial1, original repairs2, extra1/extra2/extra3 consumed. All seven original counterexamples are fixed. Do not integrate or redispatch under this exhausted grant. A separately authorized bounded follow-up must resolve D13-EXTRA3-LINEAGE-01 (capitalized scientific descriptions lost), retain the 31 passing cases and numeric/privacy/overlap guards, then pass independent source/installed/native verification and fresh Astra. Keep D08/D15 and M7/G7 unchanged; G8/G9 remain closed. No M8 close or D09 yet.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D13 extra3 authorized
 
 Read [the dispatch](reviews/2026-11-06-d13-seven-counterexamples-dispatch.md). Omar authorized one more two-file repair from preserved c805f04 to fix all seven extra2 counterexamples. Original initial1+repairs2 and extra1/extra2 remain consumed. This is extra3, total repair5. Fresh Luna owns the isolated edit; Sol owns verification and acceptance. G8/G9 closed.

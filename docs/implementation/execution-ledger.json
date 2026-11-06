@@ -37,15 +37,15 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D13_extra3_dispatch_prepared",
-    "last_reconciled": "2026-11-05T23:31:28.056091+00:00",
+    "status": "D13_extra3_closed_blocked",
+    "last_reconciled": "2026-11-06T10:11:26.633753+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "fresh Luna from c805f04, independent local/gate verification, fresh Astra, one receipt; G8/G9closed",
+    "disposition": "D13 extra3 is blocked at Sol candidate1553e52 and Luna4b04dfd. Preserve c805f04 and all previous attempts: initial1, original repairs2, extra1/extra2/extra3 consumed. All seven original counterexamples are fixed. Do not integrate or redispatch under this exhausted grant. A separately authorized bounded follow-up must resolve D13-EXTRA3-LINEAGE-01 (capitalized scientific descriptions lost), retain the 31 passing cases and numeric/privacy/overlap guards, then pass independent source/installed/native verification and fresh Astra. Keep D08/D15 and M7/G7 unchanged; G8/G9 remain closed. No M8 close or D09 yet.",
     "current_gate": {
-      "status": "D13_extra2_blocked",
-      "candidate": "c805f0418fe637d412290466c28b8c661db4a51d",
-      "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra2-blocked-close.md",
+      "status": "blocked",
+      "candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+      "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra3-blocked-close.md",
       "Astra": "audit_pass_no",
       "G8": "closed",
       "G9": "closed"
@@ -7228,6 +7228,13 @@
       "candidate": "c805f0418fe637d412290466c28b8c661db4a51d",
       "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra2-close/receipt.json",
       "all_terminal": true
+    },
+    {
+      "at": "2026-11-06T10:11:26.633753+00:00",
+      "event": "D13_extra3_closed_blocked",
+      "candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+      "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra3-close/receipt.json",
+      "all_terminal": true
     }
   ],
   "packets": {
@@ -8693,14 +8700,12 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "extra3_dispatch_prepared",
+      "status": "blocked_after_third_explicit_extra_repair",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": [
-        "D13-EXTRA2-PRIVACY-01 P1: prefixed identifiers evade prior guard",
-        "D13-EXTRA2-PRIVACY-02 P1: punctuation-separated identifiers leak",
-        "D13-EXTRA2-LINEAGE-01 P2: valid hyphenated numeric scientific descriptions disappear"
+        "D13-EXTRA3-LINEAGE-01 P2: capitalized scientific descriptions blanked; independent reproduction32pass3fail"
       ],
       "repair_attempts": 5,
       "implementation_base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
@@ -8708,14 +8713,14 @@
       "accepted": false,
       "completion_credit": false,
       "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t13-dispatch.md",
-      "candidate_commit": "c805f0418fe637d412290466c28b8c661db4a51d",
+      "candidate_commit": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
       "initial_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-initial-review.md",
       "repair1_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-repair1-review.md",
-      "final_product_commit": "c805f0418fe637d412290466c28b8c661db4a51d",
-      "final_review_ref": "docs/implementation/reviews/2026-11-06-d13-extra2-blocked-close.md",
-      "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra2-close/receipt.json",
+      "final_product_commit": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+      "final_review_ref": "docs/implementation/reviews/2026-11-06-d13-extra3-blocked-close.md",
+      "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra3-close/receipt.json",
       "source_counts": {
-        "pass": 612,
+        "pass": 703,
         "fail": 0,
         "error": 0,
         "warn": 0,
@@ -8723,8 +8728,9 @@
         "blocks": 60
       },
       "pending_gates": [
-        "Separately authorized bounded follow-up for three verified findings",
-        "Independent verification and fresh applicable packet audit after repair",
+        "Separately authorized bounded follow-up for D13-EXTRA3-LINEAGE-01",
+        "Independent source/installed/native verification after repair",
+        "Fresh applicable packet audit",
         "M8 milestone gates"
       ],
       "original_bounded_run": {
@@ -8739,18 +8745,22 @@
         "used": 1,
         "reason": "all seven extra2 counterexamples",
         "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-seven-counterexamples-dispatch.md",
-        "accepted": false
+        "accepted": false,
+        "status": "consumed_blocked",
+        "worker_commit": "4b04dfde061a901781041c672d27bec5127c2aa4",
+        "Sol_commit": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+        "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra3-blocked-close.md"
       },
-      "next_transition": "fresh Luna from c805f04, independent local/gate verification, fresh Astra, one receipt; G8/G9closed",
-      "extra_candidate": "c805f0418fe637d412290466c28b8c661db4a51d",
-      "source_counts_producer": "independent Sol source on c805f04; not acceptance",
+      "next_transition": "D13 extra3 is blocked at Sol candidate1553e52 and Luna4b04dfd. Preserve c805f04 and all previous attempts: initial1, original repairs2, extra1/extra2/extra3 consumed. All seven original counterexamples are fixed. Do not integrate or redispatch under this exhausted grant. A separately authorized bounded follow-up must resolve D13-EXTRA3-LINEAGE-01 (capitalized scientific descriptions lost), retain the 31 passing cases and numeric/privacy/overlap guards, then pass independent source/installed/native verification and fresh Astra. Keep D08/D15 and M7/G7 unchanged; G8/G9 remain closed. No M8 close or D09 yet.",
+      "extra_candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+      "source_counts_producer": "independent Sol focused source on1553e52; not acceptance",
       "final_local_review": {
-        "Spec": "changes_required P1/P1/P2",
-        "Standards": "changes_required P1/P2",
-        "Sol": "counterexample_readback_failed; native fixture and focused suites passed",
+        "Spec": "changes_required P2",
+        "Standards": "pass",
+        "Sol": "all seven fixed; capitalization readback32pass3fail",
         "Astra": "audit_pass_no"
       },
-      "final_snapshot_commit": "c805f0418fe637d412290466c28b8c661db4a51d",
+      "final_snapshot_commit": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
       "additional_repair_history": [
         {
           "allowed": 1,
@@ -8777,16 +8787,17 @@
       ],
       "extra2_worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
       "extra2_Sol_candidate": "c805f0418fe637d412290466c28b8c661db4a51d",
-      "final_worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
+      "final_worker_commit": "4b04dfde061a901781041c672d27bec5127c2aa4",
       "previous_extra1_candidate": "7f50b14c95a9f563f646b842004318552033089d",
-      "installed_counts": {
-        "pass": 612,
-        "fail": 0,
-        "error": 0,
-        "warn": 0,
-        "skip": 0,
-        "blocks": 60
-      }
+      "installed_counts": null,
+      "extra3_worker_commit": "4b04dfde061a901781041c672d27bec5127c2aa4",
+      "extra3_Sol_candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+      "resolved_in_extra3": [
+        "D13-EXTRA2-PRIVACY-01",
+        "D13-EXTRA2-PRIVACY-02",
+        "D13-EXTRA2-LINEAGE-01"
+      ],
+      "installed_status": "not_run_on1553e52; extra2 installed612 remains historical"
     },
     "D-T15": {
       "status": "accepted_synthetic_software_evidence",
@@ -9230,5 +9241,56 @@
       "G9": "closed",
       "status": "completed"
     }
+  },
+  "D13_extra_repair3_orchestration": {
+    "worker": {
+      "agent": "/root/d13_seven_extra3_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "base_commit": "c805f0418fe637d412290466c28b8c661db4a51d",
+      "status": "completed",
+      "allowed_next_transition": "inspect and independently probe final candidate; freeze two-axis review; focused/native/installed gates and fresh Astra; stop at receipt",
+      "cursor": null
+    },
+    "state_ref": "d13/seven-counterexamples-extra3/state.json",
+    "reviewers": [
+      {
+        "agent": "/root/d13_extra3_spec_review",
+        "candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+        "requested_model": "gpt-6.1-sol",
+        "requested_effort": "high",
+        "effective_settings_exposed": false,
+        "status": "completed",
+        "allowed_next_transition": "reconcile findings; launch full independent packet gate only if locally qualified",
+        "cursor": null,
+        "verdict": "changes_required P2"
+      },
+      {
+        "agent": "/root/d13_extra3_standards_review",
+        "candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+        "requested_model": "gpt-6.1-sol",
+        "requested_effort": "high",
+        "effective_settings_exposed": false,
+        "status": "completed",
+        "allowed_next_transition": "reconcile findings; launch full independent packet gate only if locally qualified",
+        "cursor": null,
+        "verdict": "pass"
+      }
+    ],
+    "Astra": {
+      "agent": "/root/d13_extra3_astra",
+      "candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "effective_settings_exposed": false,
+      "status": "completed",
+      "allowed_next_transition": "record verdict, preserve consumed allowance, close bounded D13 receipt; no further product edits",
+      "cursor": null,
+      "verdict": "audit_pass_no"
+    },
+    "status": "closed_blocked",
+    "all_terminal": true,
+    "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra3-blocked-close.md"
   }
 }

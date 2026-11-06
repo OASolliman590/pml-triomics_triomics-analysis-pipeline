@@ -1,0 +1,288 @@
+{
+  "candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+  "passed": 31,
+  "failed": 0,
+  "case_count": 31,
+  "scope": "Actual synthetic producer/profile/report boundary and HTML projection; not native rendering or universal anonymization",
+  "cases": [
+    {
+      "input": "Clinical score constructed from 3 molecular features",
+      "expected": "Clinical score constructed from 3 molecular features",
+      "kind": "scientific_lineage",
+      "construction": "Clinical score constructed from 3 molecular features",
+      "selection": "Clinical score constructed from 3 molecular features",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "Top 10 features selected in the same study",
+      "expected": "Top 10 features selected in the same study",
+      "kind": "scientific_lineage",
+      "construction": "Top 10 features selected in the same study",
+      "selection": "Top 10 features selected in the same study",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "Score constructed from 3 features across 32 subjects",
+      "expected": "Score constructed from 3 features across 32 subjects",
+      "kind": "scientific_lineage",
+      "construction": "Score constructed from 3 features across 32 subjects",
+      "selection": "Score constructed from 3 features across 32 subjects",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "PCA v2.1 with 10 features",
+      "expected": "PCA v2.1 with 10 features",
+      "kind": "scientific_lineage",
+      "construction": "PCA v2.1 with 10 features",
+      "selection": "PCA v2.1 with 10 features",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "Sample count 32; 10 features selected",
+      "expected": "Sample count 32; 10 features selected",
+      "kind": "scientific_lineage",
+      "construction": "Sample count 32; 10 features selected",
+      "selection": "Sample count 32; 10 features selected",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "Subject count 32; 10 features selected",
+      "expected": "Subject count 32; 10 features selected",
+      "kind": "scientific_lineage",
+      "construction": "Subject count 32; 10 features selected",
+      "selection": "Subject count 32; 10 features selected",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "Sample-wise normalization of 32 measurements",
+      "expected": "Sample-wise normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "construction": "Sample-wise normalization of 32 measurements",
+      "selection": "Sample-wise normalization of 32 measurements",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "Sample-level score constructed from 3 features",
+      "expected": "Sample-level score constructed from 3 features",
+      "kind": "scientific_lineage",
+      "construction": "Sample-level score constructed from 3 features",
+      "selection": "Sample-level score constructed from 3 features",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "Sample-level splitting with 10 features",
+      "expected": "Sample-level splitting with 10 features",
+      "kind": "scientific_lineage",
+      "construction": "Sample-level splitting with 10 features",
+      "selection": "Sample-level splitting with 10 features",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "Patient: 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "Subject: 7 features selected",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "Patient ID A13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "Patient number 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "MRN 123456 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "participant number A13 used for selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "patient id: A13 used for selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "Subject - A13 used for selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "Subject identifier A13 used for selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "MRN: A13 used for selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "Sample ID A13 used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "Patient ID (A13) clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "Subject 'S7' used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "MRN (AB-123) used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "participant No.: A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "PatientAlpha",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "SubjectAlpha",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "ParticipantAlpha",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "cohortPatientAlpha clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "ClinicalPatient_ID_A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "Patient, A13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "MRN; 123456 used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    }
+  ]
+}
