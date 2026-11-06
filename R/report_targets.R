@@ -54,20 +54,9 @@ triomics_report_target_safe_association_prose <- function(value) {
   plural_label_suffix <- paste0(
     "(?!(?i:s)(?!", identifier_token_character, "))"
   )
-  person_label <- paste0(
-    "(?i:(?:\\b|_)(?:subject|patient|participant|mrn)", plural_label_suffix,
-    "(?=(?:",
-    identifier_separator,
-    "|id|identifier|number|no\\.?|[[:digit:]]|(?-i:[A-Z]))))"
-  )
   medical_record_label <- paste0(
     "(?i:(?:\\b|_)medical[[:space:]_-]*record", plural_label_suffix,
     "(?=(?:",
-    identifier_separator,
-    "|id|identifier|number|no\\.?|[[:digit:]]|(?-i:[A-Z]))))"
-  )
-  sample_label <- paste0(
-    "(?i:(?:\\b|_)sample", plural_label_suffix, "(?=(?:",
     identifier_separator,
     "|id|identifier|number|no\\.?|[[:digit:]]|(?-i:[A-Z]))))"
   )
@@ -75,10 +64,13 @@ triomics_report_target_safe_association_prose <- function(value) {
     "(?!(?i:(?:used|in|by|for|with|from|of|the|same|and|or|to|at|as|is|are|was|were))\\b)",
     "[[:alpha:]][[:alnum:]_-]*"
   )
+  sample_operation_term <- "[[:alpha:]][[:alnum:]_-]*(?:ing|tion|sion)"
   sample_operation_lineage <- paste0(
     "(?i:(?:", lineage_descriptor, "[[:space:]]+)*",
-    "[[:alpha:]][[:alnum:]_-]*(?:ing|tion|sion)",
-    "[[:space:]]+of[[:space:]]+[[:digit:]]+",
+    sample_operation_term,
+    "(?:[[:space:]]+and[[:space:]]+(?:", lineage_descriptor, "[[:space:]]+)*",
+    sample_operation_term, ")?",
+    "[[:space:]]+(?:of|using)[[:space:]]+[[:digit:]]+",
     "[[:space:]]+(?:molecular[[:space:]]+)?(?:measurements?|features?))"
   )
   sample_score_construction <- paste0(
@@ -93,6 +85,40 @@ triomics_report_target_safe_association_prose <- function(value) {
   sample_scientific_description <- paste0(
     "(?:", sample_operation_lineage, "|",
     sample_score_construction, "|", sample_top_selection, ")"
+  )
+  complete_sample_description <- paste0(
+    "(?i:(?:\\b|_)samples?):[[:space:]]*",
+    sample_scientific_description,
+    "(?![[:alnum:]_.-])"
+  )
+  subject_count_description <- paste0(
+    "(?i:subjects:[[:space:]]+[[:digit:]]+;[[:space:]]+features[[:space:]]+selected)",
+    "(?![[:alnum:]_.-])"
+  )
+  plural_subject_label <- paste0(
+    "(?i:(?:\\b|_)subjects)(?=(?:",
+    identifier_separator,
+    "|id|identifier|number|no\\.?|[[:digit:]]|(?-i:[A-Z])))"
+  )
+  plural_sample_label <- paste0(
+    "(?i:(?:\\b|_)samples)(?=(?:",
+    identifier_separator,
+    "|id|identifier|number|no\\.?|[[:digit:]]|(?-i:[A-Z])))"
+  )
+  person_label <- paste0(
+    "(?!(?:", subject_count_description, "))",
+    "(?:", plural_subject_label, "|",
+    "(?i:(?:\\b|_)(?:subject|patient|participant|mrn)", plural_label_suffix,
+    "(?=(?:",
+    identifier_separator,
+    "|id|identifier|number|no\\.?|[[:digit:]]|(?-i:[A-Z])))))"
+  )
+  sample_label <- paste0(
+    "(?!(?:", complete_sample_description, "))",
+    "(?:", plural_sample_label, "|",
+    "(?i:(?:\\b|_)sample", plural_label_suffix, "(?=(?:",
+    identifier_separator,
+    "|id|identifier|number|no\\.?|[[:digit:]]|(?-i:[A-Z])))))"
   )
   identifier_label <- paste0("(?:", person_label, "|", medical_record_label, ")")
   qualified_identifier <- paste0(
