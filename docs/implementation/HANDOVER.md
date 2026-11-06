@@ -1,3 +1,11 @@
+# Current checkpoint: D13 extra7 authorized
+
+Read [the bounded dispatch](reviews/2026-11-06-d13-count-format-extra7-dispatch.md). One fresh two-file Luna repair from397d753 for count spacing/punctuation, with all previous attempts preserved. Existing source3,084 and199 cases are historical baseline evidence; no current repair has passed. G8/G9closed.
+
+Literal resume: **Join the recorded extra7 worker; do not redispatch. Verify the consolidated count-formatting and privacy cases, focused/installed/native gates and fresh Astra. No post-handoff repair or milestone release.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D13 extra6 closed blocked
 
 Read [Sol’s receipt](reviews/2026-11-06-d13-extra6-blocked-close.md) and [fresh Astra](reviews/2026-11-06-d13-extra6-astra.md). Candidate397d753 and worker b938594 remain unintegrated. Independent source3,084, known199/199 and numeric lineage pass with zero warnings/skips. Standards pass; Spec and Astra confirm one P2 count-formatting lineage regression. Actual-archive paired12case candidate6pass6fail. Native/installed/full-source/package gates not run on this candidate. Totalrepairs8 consumed; all prior attempts preserved. G8/G9closed. All owned agents/processes terminal.
