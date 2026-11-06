@@ -37,11 +37,11 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D13_extra5_closed_blocked",
-    "last_reconciled": "2026-11-06T13:19:01.814935+00:00",
+    "status": "D13_extra6_authorized",
+    "last_reconciled": "2026-11-06T14:06:44.694913+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "D13 extra5 is closed blocked at Sol6781319 and Luna4dbd713, basef1d57da. Preserve initial1+original repairs2 and consumed extra1/2/3/4/5 (total repairs7), all four extra5 commits and the interim anchor. Independent source/installed1606 each, known127+9 probes and native A/B/C/D/report readback pass. Paired12-case review6pass6fail and fresh Astra:no leave D13-EXTRA5-LINEAGE-01/PLURAL-01 open. Do not integrate or start another product repair under this consumed grant. A separately authorized bounded follow-up must resolve these ordinary implementation failures without weakening privacy or lineage, then obtain independent verification and fresh Astra. Keep D08/D15 and M7/G7 accepted, G8/G9closed. After D13 acceptance, continue the existing M8, D09 and M9 sequence with the clarified functional-pipeline completion evidence; no duplicate architecture or cap reset.",
+    "disposition": "Fresh Luna from6781319; independent verification and fresh Astra; one bounded receipt; G8/G9 closed",
     "current_gate": {
       "status": "blocked",
       "candidate": "6781319396b4a44fa04d877469440db72db3bbef",
@@ -8714,7 +8714,7 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "blocked_after_fifth_explicit_extra_repair",
+      "status": "extra6_authorized",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
@@ -8754,18 +8754,14 @@
         "receipt_ref": "docs/implementation/evidence/2026-11-04-d-t13-close/blocked-receipt.json"
       },
       "authorized_additional_repair": {
-        "episode": 5,
+        "episode": 6,
         "allowed": 1,
-        "used": 1,
-        "reason": "attached-identifier regression and remaining capitalization loss",
-        "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-boundaries-extra5-dispatch.md",
-        "accepted": false,
-        "status": "consumed_blocked",
-        "worker_commit": "4dbd71368216f26a76898a77efb9f6c60f3ec8f2",
-        "Sol_commit": "6781319396b4a44fa04d877469440db72db3bbef",
-        "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra5-blocked-close.md"
+        "used": 0,
+        "reason": "compound/using lineage and plural-colon capitalization",
+        "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-lineage-extra6-dispatch.md",
+        "accepted": false
       },
-      "next_transition": "D13 extra5 is closed blocked at Sol6781319 and Luna4dbd713, basef1d57da. Preserve initial1+original repairs2 and consumed extra1/2/3/4/5 (total repairs7), all four extra5 commits and the interim anchor. Independent source/installed1606 each, known127+9 probes and native A/B/C/D/report readback pass. Paired12-case review6pass6fail and fresh Astra:no leave D13-EXTRA5-LINEAGE-01/PLURAL-01 open. Do not integrate or start another product repair under this consumed grant. A separately authorized bounded follow-up must resolve these ordinary implementation failures without weakening privacy or lineage, then obtain independent verification and fresh Astra. Keep D08/D15 and M7/G7 accepted, G8/G9closed. After D13 acceptance, continue the existing M8, D09 and M9 sequence with the clarified functional-pipeline completion evidence; no duplicate architecture or cap reset.",
+      "next_transition": "Fresh Luna from6781319; independent verification and fresh Astra; one bounded receipt; G8/G9 closed",
       "extra_candidate": "6781319396b4a44fa04d877469440db72db3bbef",
       "source_counts_producer": "Independent Sol source on6781319; not acceptance",
       "final_local_review": {
@@ -8821,6 +8817,18 @@
           "worker_commit": "0e7ccedc7fedb1c4f11cc5eff14515813789a1fa",
           "Sol_commit": "f1d57da656156fd2da0430f56094708ab5926998",
           "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra4-blocked-close.md"
+        },
+        {
+          "episode": 5,
+          "allowed": 1,
+          "used": 1,
+          "reason": "attached-identifier regression and remaining capitalization loss",
+          "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-boundaries-extra5-dispatch.md",
+          "accepted": false,
+          "status": "consumed_blocked",
+          "worker_commit": "4dbd71368216f26a76898a77efb9f6c60f3ec8f2",
+          "Sol_commit": "6781319396b4a44fa04d877469440db72db3bbef",
+          "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra5-blocked-close.md"
         }
       ],
       "extra2_worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
@@ -9445,5 +9453,9 @@
     },
     "all_terminal": true,
     "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra5-blocked-close.md"
+  },
+  "D13_extra_repair6_orchestration": {
+    "status": "prepared",
+    "state_ref": "d13/lineage-grammar-extra6/state.json"
   }
 }

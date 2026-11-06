@@ -1,3 +1,11 @@
+# Current checkpoint: D13 extra6 authorized
+
+Read [the bounded dispatch](reviews/2026-11-06-d13-lineage-extra6-dispatch.md). One fresh Luna repair from 6781319, two product files, both remaining lineage defects, all prior attempts retained. Parent twelve-case replay is six passes and six failures. G8/G9 stay closed.
+
+Literal resume: **Join the recorded extra6 worker; do not redispatch or reset attempts. Independently verify the two lineage defects and privacy, then focused/installed/native gates and fresh Astra. Stop at the bounded receipt.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D13 extra5 closed blocked; native diagnostic verified
 
 Read [Sol’s receipt](reviews/2026-11-06-d13-extra5-blocked-close.md) and [fresh Astra](reviews/2026-11-06-d13-extra5-astra.md). Candidate6781319 and worker4dbd713 remain unintegrated. Independent source/installed 1,606 each, known127+9 cases, native A/B/C/D/report exits0/0/0/0/0, and saved-value/provenance/offline checks pass. Actual synthetic HTML exists. Compound/using capitalization and uppercase plural-colon losses remain: paired12case6pass6fail, both local reviews changes_required, Astra:no. All five extra allowances consumed; total repairs7. G8/G9closed. Owned workers/processes terminal; prior receipts and protected dirt preserved. Functional-goal clarification is saved without cap reset.

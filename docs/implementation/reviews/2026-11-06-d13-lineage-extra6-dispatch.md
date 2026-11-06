@@ -1,0 +1,9 @@
+# D13 extra6: bounded lineage grammar repair
+
+Omar authorizes one additional repair from `6781319396b4a44fa04d877469440db72db3bbef`, limited to `R/report_targets.R` and `tests/testthat/test-D-T13.R`. Original initial attempt, two repairs, and five explicit extra repairs remain consumed. Extra6 grants one repair, no post-return implementation retry. Prior candidates and receipts remain unchanged.
+
+Resolve D13-EXTRA5-LINEAGE-01 and D13-EXTRA5-PLURAL-01: retain compound and using descriptions across casing, and complete plural labels followed by a colon, while continuing to reject attached identifiers. Preserve both construction_lineage and source_selection_history, numeric lineage, overlap status and non-independence. No case conversion of displayed lineage and no whole-string privacy exemption. Existing public synthetic producer/profile/report/HTML probes reproduced six passes and six failures out of twelve on the immutable base, exit 1. Source strings are intact: the report's descriptor/plural classification is the failing seam.
+
+Fresh Luna max implements one two-file packet with behavioral RED then GREEN evidence. Sol independently inspects the diff, reruns source D-T13/D-T08/D-T15 and boundary/read-back probes, then clean-archive installed and native synthetic A/B/C/D/report gates when local reviews pass. Fresh read-only Astra low reviews the immutable candidate with passing and failing evidence. Integration requires passing applicable gates; a failed review ends the consumed allowance. G8/G9 remain closed even on packet acceptance. No M8 close, D09, private data, push, statistical/schema/frozen-contract edits or cap reset.
+
+Literal resume: Join the recorded extra6 Luna worker; do not redispatch. Preserve all previous attempts and base6781319. Verify both reproduced lineage defects, attached-ID privacy, numeric and shared-subject behavior, focused/installed/native gates and fresh Astra; record a bounded D13 receipt and keep G8/G9 closed.
