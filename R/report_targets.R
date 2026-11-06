@@ -76,7 +76,7 @@ triomics_report_target_safe_association_prose <- function(value) {
     "[[:alpha:]][[:alnum:]_-]*"
   )
   sample_operation_lineage <- paste0(
-    "(?i:(?:", lineage_descriptor, "[[:space:]]+){1,3}",
+    "(?i:(?:", lineage_descriptor, "[[:space:]]+)*",
     "[[:alpha:]][[:alnum:]_-]*(?:ing|tion|sion)",
     "[[:space:]]+of[[:space:]]+[[:digit:]]+",
     "[[:space:]]+(?:molecular[[:space:]]+)?(?:measurements?|features?))"
@@ -133,10 +133,11 @@ triomics_report_target_safe_association_prose <- function(value) {
     sample_punctuated_identifier,
     ")|", strong_identifier_value, ")"
   )
-  # Keep the original embedded-prefix matches for subject, patient, and participant labels.
+  # Embedded labels cannot use the plural exception: the left side is part of the
+  # same identifier token, even when the suffix is followed by whitespace or end.
   legacy_identifier_pattern <- paste0(
     "(?i:subject|patient|participant)[_.:-][A-Za-z0-9]+|",
-    "(?i:subject|patient|participant)", plural_label_suffix, "(?=[A-Z0-9])|",
+    identifier_token_character, "(?i:subject|patient|participant)(?=[A-Z0-9])|",
     "(?i:(?:subject|patient|participant)[[:space:]]+(?:id[[:space:]_.:-]*)?[0-9]+)"
   )
   if (!nzchar(value) || nchar(value, type = "bytes") > 512L ||
