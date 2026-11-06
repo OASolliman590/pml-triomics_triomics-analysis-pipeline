@@ -672,6 +672,32 @@ testthat::test_that("D-T13 association lineage preserves descriptions and reject
       paste0(prefix, tolower(description))
     }, character(1))
   ))
+  additional_count_lineage <- c(
+    "subjects:32; features selected",
+    "Subjects:32; features selected",
+    "SUBJECTS:32; FEATURES SELECTED",
+    "subjects: 32. Features selected",
+    "Subjects: 32. Features selected",
+    "SUBJECTS: 32. FEATURES SELECTED",
+    "subjects : 32; 10 features selected",
+    "Subjects : 32; 10 features selected",
+    "SUBJECTS : 32; 10 FEATURES SELECTED",
+    "subjects  :  32. Features retained",
+    "Subjects  :  32. Features retained",
+    "SUBJECTS  :  32. FEATURES RETAINED",
+    "subjects:32, features selected",
+    "Subjects:32, features selected",
+    "SUBJECTS:32, FEATURES SELECTED",
+    "subjects:32.",
+    "Subjects:32.",
+    "SUBJECTS:32.",
+    "subjects : 32",
+    "Subjects : 32",
+    "SUBJECTS : 32",
+    "Subjects:7. Features selected",
+    "SUBJECTS : 128; features retained"
+  )
+  safe <- unique(c(safe, additional_count_lineage))
   attached_plural_identifiers <- c(
     "SubjectS-7 used in selection",
     "PatientS-A13 used in construction",
@@ -722,6 +748,39 @@ testthat::test_that("D-T13 association lineage preserves descriptions and reject
       paste0(count_token_identifiers, "; ", description)
     )
   ), use.names = FALSE))
+  count_spacing_identifier_forms <- c(
+    "SubjectS-7", "Patient ID 13 clinical score"
+  )
+  count_spacing_mixed_lineage <- c(
+    "subjects:32; features selected",
+    "subjects: 32. Features selected",
+    "subjects : 32; 10 features selected",
+    "subjects  :  32. Features retained",
+    "subjects:32, features selected",
+    "subjects:32.",
+    "subjects : 32"
+  )
+  count_spacing_mixed_identifiers <- unique(unlist(lapply(
+    count_spacing_mixed_lineage,
+    function(description) c(
+      paste0(description, "; ", count_spacing_identifier_forms),
+      paste0(count_spacing_identifier_forms, "; ", description)
+    )
+  ), use.names = FALSE))
+  count_spacing_composite_identifiers <- c(
+    "SubjectS: 32-A13 used in selection",
+    "SUBJECTS:32:A13 used in selection",
+    "SUBJECTS:32.A13 used in selection",
+    "SUBJECTS:32_A13 used in selection",
+    "SUBJECTS:32-A13 used in selection",
+    "SUBJECTS:32A13 used in selection",
+    "SUBJECTS:32.7 used in selection",
+    "SUBJECTS: 32.A13 used in selection",
+    "SUBJECTS: 32_A13 used in selection",
+    "SUBJECTS: 32-A13 used in selection",
+    "SUBJECTS: 32A13 used in selection",
+    "SUBJECTS: 32.7 used in selection"
+  )
   mixed_lineage_identifiers <- unique(c(
     unlist(lapply(mixed_lineage_descriptions, function(description) {
       paste0(description, "; ", mixed_identifier_forms)
@@ -755,6 +814,7 @@ testthat::test_that("D-T13 association lineage preserves descriptions and reject
     plural_value_identifier_forms, count_token_identifiers, count_token_mixed_identifiers,
     "Sample: Robust normalization of 32 measurements; Sample ID A13",
     mixed_lineage_identifiers, subject_count_mixed_identifiers,
+    count_spacing_composite_identifiers, count_spacing_mixed_identifiers,
     "Sample: ALPHA used in construction of 32 measurements",
     paste0("SubjectS-7; ", lineage_descriptions),
     paste0(lineage_descriptions, "; cohortPatientS-A13")
