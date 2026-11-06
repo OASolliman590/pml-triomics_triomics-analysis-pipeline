@@ -37,15 +37,15 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D13_extra5_authorized",
-    "last_reconciled": "2026-11-06T11:00:46.724772+00:00",
+    "status": "D13_extra5_closed_blocked",
+    "last_reconciled": "2026-11-06T13:19:01.814935+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "fresh Luna fromf1d57da; independent verification and fresh Astra; bounded receipt; G8/G9closed",
+    "disposition": "D13 extra5 is closed blocked at Sol6781319 and Luna4dbd713, basef1d57da. Preserve initial1+original repairs2 and consumed extra1/2/3/4/5 (total repairs7), all four extra5 commits and the interim anchor. Independent source/installed1606 each, known127+9 probes and native A/B/C/D/report readback pass. Paired12-case review6pass6fail and fresh Astra:no leave D13-EXTRA5-LINEAGE-01/PLURAL-01 open. Do not integrate or start another product repair under this consumed grant. A separately authorized bounded follow-up must resolve these ordinary implementation failures without weakening privacy or lineage, then obtain independent verification and fresh Astra. Keep D08/D15 and M7/G7 accepted, G8/G9closed. After D13 acceptance, continue the existing M8, D09 and M9 sequence with the clarified functional-pipeline completion evidence; no duplicate architecture or cap reset.",
     "current_gate": {
       "status": "blocked",
-      "candidate": "f1d57da656156fd2da0430f56094708ab5926998",
-      "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra4-blocked-close.md",
+      "candidate": "6781319396b4a44fa04d877469440db72db3bbef",
+      "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra5-blocked-close.md",
       "Astra": "audit_pass_no",
       "G8": "closed",
       "G9": "closed"
@@ -7242,6 +7242,13 @@
       "candidate": "f1d57da656156fd2da0430f56094708ab5926998",
       "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra4-close/receipt.json",
       "all_terminal": true
+    },
+    {
+      "at": "2026-11-06T13:17:49.113217+00:00",
+      "event": "D13_extra5_closed_blocked_with_native_diagnostic",
+      "candidate": "6781319396b4a44fa04d877469440db72db3bbef",
+      "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra5-close/receipt.json",
+      "all_terminal": true
     }
   ],
   "packets": {
@@ -8707,28 +8714,28 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "extra5_authorized",
+      "status": "blocked_after_fifth_explicit_extra_repair",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": [
-        "D13-EXTRA4-PRIVACY-01 P1: plural exemption leaks attached S-punctuation IDs",
-        "D13-EXTRA4-LINEAGE-01 P2: capitalized descriptive terms still dropped"
+        "D13-EXTRA5-LINEAGE-01 P2: compound/preposition case variants disappear",
+        "D13-EXTRA5-PLURAL-01 P2: uppercase plural-colon prose newly disappears"
       ],
-      "repair_attempts": 6,
+      "repair_attempts": 7,
       "implementation_base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
       "active_worker": null,
       "accepted": false,
       "completion_credit": false,
       "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t13-dispatch.md",
-      "candidate_commit": "f1d57da656156fd2da0430f56094708ab5926998",
+      "candidate_commit": "6781319396b4a44fa04d877469440db72db3bbef",
       "initial_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-initial-review.md",
       "repair1_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-repair1-review.md",
-      "final_product_commit": "f1d57da656156fd2da0430f56094708ab5926998",
-      "final_review_ref": "docs/implementation/reviews/2026-11-06-d13-extra4-blocked-close.md",
-      "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra4-close/receipt.json",
+      "final_product_commit": "6781319396b4a44fa04d877469440db72db3bbef",
+      "final_review_ref": "docs/implementation/reviews/2026-11-06-d13-extra5-blocked-close.md",
+      "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra5-close/receipt.json",
       "source_counts": {
-        "pass": 906,
+        "pass": 1606,
         "fail": 0,
         "error": 0,
         "warn": 0,
@@ -8736,10 +8743,9 @@
         "blocks": 60
       },
       "pending_gates": [
-        "Separate bounded authority for D13-EXTRA4-PRIVACY-01 and D13-EXTRA4-LINEAGE-01",
-        "Independent source/installed/native verification after repair",
-        "Fresh applicable packet audit",
-        "M8 milestone gates"
+        "Separate bounded authority for D13-EXTRA5-LINEAGE-01 and D13-EXTRA5-PLURAL-01",
+        "Independent verification and fresh packet audit after repair",
+        "M8, D09, M9 completion evidence"
       ],
       "original_bounded_run": {
         "attempts": 1,
@@ -8750,21 +8756,25 @@
       "authorized_additional_repair": {
         "episode": 5,
         "allowed": 1,
-        "used": 0,
+        "used": 1,
         "reason": "attached-identifier regression and remaining capitalization loss",
         "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-boundaries-extra5-dispatch.md",
-        "accepted": false
+        "accepted": false,
+        "status": "consumed_blocked",
+        "worker_commit": "4dbd71368216f26a76898a77efb9f6c60f3ec8f2",
+        "Sol_commit": "6781319396b4a44fa04d877469440db72db3bbef",
+        "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra5-blocked-close.md"
       },
-      "next_transition": "fresh Luna fromf1d57da; independent verification and fresh Astra; bounded receipt; G8/G9closed",
-      "extra_candidate": "f1d57da656156fd2da0430f56094708ab5926998",
-      "source_counts_producer": "Independent Sol focused source onf1d57da; not acceptance",
+      "next_transition": "D13 extra5 is closed blocked at Sol6781319 and Luna4dbd713, basef1d57da. Preserve initial1+original repairs2 and consumed extra1/2/3/4/5 (total repairs7), all four extra5 commits and the interim anchor. Independent source/installed1606 each, known127+9 probes and native A/B/C/D/report readback pass. Paired12-case review6pass6fail and fresh Astra:no leave D13-EXTRA5-LINEAGE-01/PLURAL-01 open. Do not integrate or start another product repair under this consumed grant. A separately authorized bounded follow-up must resolve these ordinary implementation failures without weakening privacy or lineage, then obtain independent verification and fresh Astra. Keep D08/D15 and M7/G7 accepted, G8/G9closed. After D13 acceptance, continue the existing M8, D09 and M9 sequence with the clarified functional-pipeline completion evidence; no duplicate architecture or cap reset.",
+      "extra_candidate": "6781319396b4a44fa04d877469440db72db3bbef",
+      "source_counts_producer": "Independent Sol source on6781319; not acceptance",
       "final_local_review": {
-        "Spec": "changes_required P1/P2",
-        "Standards": "pass",
-        "Sol": "prior58passed; broader60pass5fail; source906pass",
+        "Spec": "changes_required P2 lineage grammar",
+        "Standards": "changes_required P2 plural colon",
+        "Sol": "known127+9 pass; paired6pass6fail; source/installed1606; native diagnostic pass",
         "Astra": "audit_pass_no"
       },
-      "final_snapshot_commit": "f1d57da656156fd2da0430f56094708ab5926998",
+      "final_snapshot_commit": "6781319396b4a44fa04d877469440db72db3bbef",
       "additional_repair_history": [
         {
           "allowed": 1,
@@ -8815,9 +8825,16 @@
       ],
       "extra2_worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
       "extra2_Sol_candidate": "c805f0418fe637d412290466c28b8c661db4a51d",
-      "final_worker_commit": "0e7ccedc7fedb1c4f11cc5eff14515813789a1fa",
+      "final_worker_commit": "4dbd71368216f26a76898a77efb9f6c60f3ec8f2",
       "previous_extra1_candidate": "7f50b14c95a9f563f646b842004318552033089d",
-      "installed_counts": null,
+      "installed_counts": {
+        "pass": 1606,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 60
+      },
       "extra3_worker_commit": "4b04dfde061a901781041c672d27bec5127c2aa4",
       "extra3_Sol_candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
       "resolved_in_extra3": [
@@ -8825,9 +8842,11 @@
         "D13-EXTRA2-PRIVACY-02",
         "D13-EXTRA2-LINEAGE-01"
       ],
-      "installed_status": "not_run_onf1d57da",
+      "installed_status": "diagnostic archive-installed passed on6781319; local review failed",
       "extra4_worker_commit": "0e7ccedc7fedb1c4f11cc5eff14515813789a1fa",
-      "extra4_Sol_candidate": "f1d57da656156fd2da0430f56094708ab5926998"
+      "extra4_Sol_candidate": "f1d57da656156fd2da0430f56094708ab5926998",
+      "extra5_worker_commit": "4dbd71368216f26a76898a77efb9f6c60f3ec8f2",
+      "extra5_Sol_candidate": "6781319396b4a44fa04d877469440db72db3bbef"
     },
     "D-T15": {
       "status": "accepted_synthetic_software_evidence",
@@ -9376,7 +9395,55 @@
     "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra4-blocked-close.md"
   },
   "D13_extra_repair5_orchestration": {
-    "status": "prepared",
-    "state_ref": "d13/identifier-lineage-extra5/state.json"
+    "status": "closed_blocked",
+    "state_ref": "d13/identifier-lineage-extra5/state.json",
+    "worker": {
+      "agent": "/root/d13_extra5_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "base_commit": "f1d57da656156fd2da0430f56094708ab5926998",
+      "status": "completed",
+      "allowed_next_transition": "inspect immutable worker result; local reviews; independent source/installed/native verification and fresh Astra; bounded receipt",
+      "cursor": null
+    },
+    "reviewers": [
+      {
+        "agent": "/root/d13_extra5_spec",
+        "candidate": "6781319396b4a44fa04d877469440db72db3bbef",
+        "requested_model": "gpt-6.1-sol",
+        "requested_effort": "high",
+        "effective_settings_exposed": false,
+        "status": "completed",
+        "allowed_next_transition": "join local reviews and parent phaseA; native/installed gates if qualified; fresh Astra; receipt",
+        "cursor": null,
+        "verdict": "changes_required P2"
+      },
+      {
+        "agent": "/root/d13_extra5_standards",
+        "candidate": "6781319396b4a44fa04d877469440db72db3bbef",
+        "requested_model": "gpt-6.1-sol",
+        "requested_effort": "high",
+        "effective_settings_exposed": false,
+        "status": "completed",
+        "allowed_next_transition": "join local reviews and parent phaseA; native/installed gates if qualified; fresh Astra; receipt",
+        "cursor": null,
+        "verdict": "changes_required P2"
+      }
+    ],
+    "parent_process": null,
+    "Astra": {
+      "agent": "/root/d13_extra5_astra",
+      "candidate": "6781319396b4a44fa04d877469440db72db3bbef",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "effective_settings_exposed": false,
+      "status": "completed",
+      "allowed_next_transition": "record fresh audit and full diagnostic evidence; bounded receipt; G8/G9closed",
+      "cursor": null,
+      "verdict": "audit_pass_no"
+    },
+    "all_terminal": true,
+    "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra5-blocked-close.md"
   }
 }

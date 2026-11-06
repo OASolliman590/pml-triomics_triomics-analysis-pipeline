@@ -1,0 +1,117 @@
+{
+  "candidate": "6781319396b4a44fa04d877469440db72db3bbef",
+  "passed": 6,
+  "failed": 6,
+  "case_count": 12,
+  "scope": "Actual synthetic producer/profile/report boundary and HTML projection; not native rendering or universal anonymization",
+  "cases": [
+    {
+      "input": "sample: centering and scaling of 32 measurements",
+      "expected": "sample: centering and scaling of 32 measurements",
+      "kind": "scientific_lineage",
+      "construction": "sample: centering and scaling of 32 measurements",
+      "selection": "sample: centering and scaling of 32 measurements",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "Sample: Centering and scaling of 32 measurements",
+      "expected": "Sample: Centering and scaling of 32 measurements",
+      "kind": "scientific_lineage",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": false
+    },
+    {
+      "input": "SAMPLE: CENTERING AND SCALING OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: CENTERING AND SCALING OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": false
+    },
+    {
+      "input": "sample: robust normalization using 32 measurements",
+      "expected": "sample: robust normalization using 32 measurements",
+      "kind": "scientific_lineage",
+      "construction": "sample: robust normalization using 32 measurements",
+      "selection": "sample: robust normalization using 32 measurements",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "Sample: Robust normalization using 32 measurements",
+      "expected": "Sample: Robust normalization using 32 measurements",
+      "kind": "scientific_lineage",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": false
+    },
+    {
+      "input": "SAMPLE: ROBUST NORMALIZATION USING 32 MEASUREMENTS",
+      "expected": "SAMPLE: ROBUST NORMALIZATION USING 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": false
+    },
+    {
+      "input": "subjects: 32; features selected",
+      "expected": "subjects: 32; features selected",
+      "kind": "scientific_lineage",
+      "construction": "subjects: 32; features selected",
+      "selection": "subjects: 32; features selected",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "Subjects: 32; features selected",
+      "expected": "Subjects: 32; features selected",
+      "kind": "scientific_lineage",
+      "construction": "Subjects: 32; features selected",
+      "selection": "Subjects: 32; features selected",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "SUBJECTS: 32; FEATURES SELECTED",
+      "expected": "SUBJECTS: 32; FEATURES SELECTED",
+      "kind": "scientific_lineage",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": false
+    },
+    {
+      "input": "samples: normalization of 32 measurements",
+      "expected": "samples: normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "construction": "samples: normalization of 32 measurements",
+      "selection": "samples: normalization of 32 measurements",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "Samples: normalization of 32 measurements",
+      "expected": "Samples: normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "construction": "Samples: normalization of 32 measurements",
+      "selection": "Samples: normalization of 32 measurements",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "SAMPLES: NORMALIZATION OF 32 MEASUREMENTS",
+      "expected": "SAMPLES: NORMALIZATION OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": false
+    }
+  ]
+}

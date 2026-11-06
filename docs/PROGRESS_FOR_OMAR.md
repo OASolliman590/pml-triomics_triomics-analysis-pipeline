@@ -1,11 +1,9 @@
 # Pipeline progress — 6 November 2026
 
-The goal is a report that preserves scientific results, score construction, selection history and privacy. D08, D15 and M7/G7 remain accepted for synthetic software behavior. G8/G9 remain closed.
+The goal explicitly requires a functional, reproducible pipeline: verified source, clean package checks, installed synthetic walkthroughs, a realistic supported-path smoke test, an offline report and copyable rerun instructions. Existing scientific requirements and repair limits remain intact.
 
-This D13 repair fixes the earlier capitalization examples. All58 previously supplied cases now pass, and independent focused tests passed906 assertions with no failures, errors, warnings or skips. Numerical lineage and shared-subject warnings remain present in those cases.
+This D13 cycle produced end-to-end evidence. Synthetic ingestion, analysis, integration, Stage D and reporting all completed. The offline Quarto report has 23 tables and no scripts; saved values and provenance hashes were independently checked. Source and archive-installed focused tests each passed 1,606 assertions, with no failures, errors, warnings or skips. All 127 known structural cases and nine nearby boundary cases pass.
 
-Broader readback found two unresolved problems. The rule intended to preserve uppercase “SUBJECTS” also lets attached identifiers such as “SubjectS-7” appear in the report; the old code withheld them. Other legitimate descriptions, including capitalized Robust or Log normalization, still disappear. These are report-filtering defects, not changes to the statistical analyses.
+D13 still cannot be accepted. Ordinary compound descriptions and uppercase plural labels followed by a colon can lose scientific history. Independent reviewers and fresh Astra confirmed these two remaining implementation defects. The candidate and every previous attempt are preserved, without integration or gate release.
 
-Fresh Astra confirmed both findings and withheld approval. The candidate is preserved but not integrated. All previous attempts remain recorded; the fourth additional repair allowance is consumed. Next acceptance remains D13, after repairing these boundaries and passing independent verification and review. Needs Omar: separate bounded authority before another product edit.
-
-No biological validity is established and private study data remain unread. Sync: local records only; no Notion update, server run or GitHub push.
+Next is D13 acceptance, then the existing M8, installed-walkthrough and M9 gates. Needs Omar: separate bounded authority before another product repair; this allowance is consumed. G8/G9 remain closed. No private studies were read; synthetic success is not biological validation. Sync: local records only; no Notion update, server run or GitHub push.

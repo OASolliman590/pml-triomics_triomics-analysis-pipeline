@@ -1,3 +1,11 @@
+# Current checkpoint: D13 extra5 closed blocked; native diagnostic verified
+
+Read [Sol’s receipt](reviews/2026-11-06-d13-extra5-blocked-close.md) and [fresh Astra](reviews/2026-11-06-d13-extra5-astra.md). Candidate6781319 and worker4dbd713 remain unintegrated. Independent source/installed 1,606 each, known127+9 cases, native A/B/C/D/report exits0/0/0/0/0, and saved-value/provenance/offline checks pass. Actual synthetic HTML exists. Compound/using capitalization and uppercase plural-colon losses remain: paired12case6pass6fail, both local reviews changes_required, Astra:no. All five extra allowances consumed; total repairs7. G8/G9closed. Owned workers/processes terminal; prior receipts and protected dirt preserved. Functional-goal clarification is saved without cap reset.
+
+Literal resume: **D13 extra5 is closed blocked at Sol6781319 and Luna4dbd713, basef1d57da. Preserve initial1+original repairs2 and consumed extra1/2/3/4/5 (total repairs7), all four extra5 commits and the interim anchor. Independent source/installed1606 each, known127+9 probes and native A/B/C/D/report readback pass. Paired12-case review6pass6fail and fresh Astra:no leave D13-EXTRA5-LINEAGE-01/PLURAL-01 open. Do not integrate or start another product repair under this consumed grant. A separately authorized bounded follow-up must resolve these ordinary implementation failures without weakening privacy or lineage, then obtain independent verification and fresh Astra. Keep D08/D15 and M7/G7 accepted, G8/G9closed. After D13 acceptance, continue the existing M8, D09 and M9 sequence with the clarified functional-pipeline completion evidence; no duplicate architecture or cap reset.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D13 extra5 authorized
 
 Read [the dispatch](reviews/2026-11-06-d13-boundaries-extra5-dispatch.md). Omar authorizes one fresh two-file repair fromf1d57da for attached-identifier leaks and capitalization loss. Original initial1+repairs2+extra1/2/3/4 stay consumed. Extra5 grants one repair only; G8/G9closed.

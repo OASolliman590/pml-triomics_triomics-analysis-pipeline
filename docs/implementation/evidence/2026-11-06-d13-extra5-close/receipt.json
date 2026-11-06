@@ -1,0 +1,411 @@
+{
+  "packet_id": "D-T13",
+  "status": "blocked_after_fifth_explicit_extra_repair",
+  "accepted": false,
+  "completion_credit": false,
+  "recorded_at": "2026-11-06T13:17:49.113217+00:00",
+  "canonical_dispatch_commit": "ea6abcac8f11cc2358af6f9d2d87b5adaf20522a",
+  "prior_receipt_commit": "f6aec3987c634af38567ac31c7dc1ac83d8d0770",
+  "worker_base": "f1d57da656156fd2da0430f56094708ab5926998",
+  "worker_commit": "4dbd71368216f26a76898a77efb9f6c60f3ec8f2",
+  "worker_commits": [
+    "1ef7ac12ec600ab5f3d133255378f0cc0f9f9ccd",
+    "682d9f81601158f989c88ec9bba02c2917c44ae9",
+    "3ff6f09a91f97e5725fc31bc5a5481310201a1ed",
+    "4dbd71368216f26a76898a77efb9f6c60f3ec8f2"
+  ],
+  "Sol_candidate_commit": "6781319396b4a44fa04d877469440db72db3bbef",
+  "repair_comparison_base": "207ef595e2f37873320c7d31d75893867a1d4eed",
+  "integration_commit": null,
+  "repair_files": [
+    "R/report_targets.R",
+    "tests/testthat/test-D-T13.R"
+  ],
+  "original_attempts": 1,
+  "original_repairs": 2,
+  "previous_extra_repairs_used": 4,
+  "current_extra_episode": 5,
+  "current_extra_allowed": 1,
+  "current_extra_used": 1,
+  "total_repairs": 7,
+  "further_repairs_authorized": false,
+  "worker_evidence": [
+    {
+      "commit": "1ef7ac1",
+      "phase": "RED",
+      "pass": 1386,
+      "fail": 150,
+      "exit": 1
+    },
+    {
+      "commit": "682d9f8",
+      "phase": "interim GREEN",
+      "pass": 1536,
+      "fail": 0,
+      "exit": 0
+    },
+    {
+      "commit": "3ff6f09",
+      "phase": "added boundary RED",
+      "pass": 1585,
+      "fail": 21,
+      "exit": 1
+    },
+    {
+      "commit": "4dbd71368216f26a76898a77efb9f6c60f3ec8f2",
+      "phase": "final GREEN",
+      "pass": 1606,
+      "fail": 0,
+      "exit": 0
+    }
+  ],
+  "worker_conditions": "zero errors/warnings/skips in all named worker receipts; earlier passes are historical",
+  "independent_source_counts": {
+    "pass": 1606,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 60
+  },
+  "independent_source_by_file": {
+    "test-D-T08.R": {
+      "pass": 148,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 25
+    },
+    "test-D-T13.R": {
+      "pass": 1326,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 12
+    },
+    "test-D-T15.R": {
+      "pass": 132,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 23
+    }
+  },
+  "independent_installed_counts": {
+    "pass": 1606,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 60
+  },
+  "source_exit": 0,
+  "installed_exit": 0,
+  "source_command": "Rscript --vanilla run-source-unbounded-report.R <clean-Sol-worktree> <fresh-evidence> \"D-T13|D-T08|D-T15\"",
+  "installed_command": "R CMD INSTALL --install-tests --library=<fresh-library> <clean-git-archive>; Rscript --vanilla run-installed-focused.R <fresh-evidence> \"D-T13|D-T08|D-T15\" 6781319396b4a44fa04d877469440db72db3bbef",
+  "named_testthat_warnings": [],
+  "named_skips": [],
+  "known_boundary_probes": {
+    "structural_lineage": {
+      "pass": 127,
+      "fail": 0
+    },
+    "plural_prefix_and_long_descriptions": {
+      "pass": 9,
+      "fail": 0
+    },
+    "mixed_numeric_lineage": "passed"
+  },
+  "paired_review_cases": {
+    "cases": 12,
+    "baseline_commit": "f1d57da656156fd2da0430f56094708ab5926998",
+    "baseline_pass": 8,
+    "baseline_fail": 4,
+    "candidate_pass": 6,
+    "candidate_fail": 6,
+    "baseline_exit": 1,
+    "candidate_exit": 1,
+    "command": "Rscript --vanilla review-findings-probe.R <immutable-archive-source> <result.json> <commit>",
+    "scope": "actual synthetic producer/profile/report tables/HTML; both lineage fields, overlap and non-independence",
+    "base_receipt": "base-review-cases.json",
+    "candidate_receipt": "candidate-review-cases.json"
+  },
+  "local_reviews": {
+    "Spec": {
+      "agent": "/root/d13_extra5_spec",
+      "verdict": "changes_required",
+      "findings": [
+        {
+          "id": "D13-EXTRA5-LINEAGE-01",
+          "severity": "P2",
+          "file": "R/report_targets.R",
+          "line": 74,
+          "finding": "Compound descriptions with and, or using instead of of, still disappear when capitalized."
+        }
+      ],
+      "limits": "read-only targeted synthetic producer/profile/report/HTML probes; no full suite/fits"
+    },
+    "Standards": {
+      "agent": "/root/d13_extra5_standards",
+      "verdict": "changes_required",
+      "findings": [
+        {
+          "id": "D13-EXTRA5-PLURAL-01",
+          "severity": "P2",
+          "file": "R/report_targets.R",
+          "line": 53,
+          "finding": "Uppercase SUBJECTS:/SAMPLES: aggregate prose newly disappears; title/lowercase and previous snapshot retain it."
+        }
+      ],
+      "hard_standard_violations": [],
+      "additional_heuristics": [],
+      "limits": "read-only targeted paired base/candidate probes; no full suite/fits"
+    }
+  },
+  "Astra": {
+    "audit_pass": false,
+    "agent": "/root/d13_extra5_astra",
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "low",
+    "effective_settings_exposed": false,
+    "candidate": "6781319396b4a44fa04d877469440db72db3bbef",
+    "findings": [
+      {
+        "id": "D13-EXTRA5-LINEAGE-01",
+        "severity": "P2",
+        "file": "R/report_targets.R",
+        "line": 74,
+        "finding": "Compound descriptions with and, or using instead of of, still disappear when capitalized."
+      },
+      {
+        "id": "D13-EXTRA5-PLURAL-01",
+        "severity": "P2",
+        "file": "R/report_targets.R",
+        "line": 53,
+        "finding": "Uppercase SUBJECTS:/SAMPLES: aggregate prose newly disappears; title/lowercase and previous snapshot retain it."
+      }
+    ],
+    "acceptance_basis": "Section6 lineage preservation alongside privacy; ordinary unresolved implementation requirements, not new methods or universal anonymization",
+    "integrity": "all1159 source hashes and frozen archive/diff digests verified",
+    "independent_reproduction": "Reviewer reports reproducing both findings; Sol paired readback independently corroborates them",
+    "diagnostic_assessment": "Supports native synthetic execution, saved-value readback, offline HTML and focused source/installed tests; does not override local-review failure",
+    "acceptance": false,
+    "G8": "closed",
+    "G9": "closed"
+  },
+  "diagnostic_only": true,
+  "local_review_gate_passed": false,
+  "diagnostic_decision_ref": "docs/implementation/reviews/2026-11-06-d13-extra5-native-diagnostic-decision.md",
+  "native_fixture": "inst/examples/tickets/D-T13.yaml; public synthetic only",
+  "native_commands": [
+    {
+      "stage": "A",
+      "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T13.yaml --stage A --output <fresh-internal-APFS-root>",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "B",
+      "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T13.yaml --stage B --output <fresh-internal-APFS-root>",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "C",
+      "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T13.yaml --stage C --output <fresh-internal-APFS-root>",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "D",
+      "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T13.yaml --stage D --output <fresh-internal-APFS-root>",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "report",
+      "command": "Rscript --vanilla inst/exec/triomics --config inst/examples/tickets/D-T13.yaml --stage report --output <fresh-internal-APFS-root>",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "negative_probes": [
+    {
+      "name": "missing_producers",
+      "exit_code": 3,
+      "expected_error_code": "D_REPORT_REQUIRED_MISSING",
+      "log_sha256": "f3ed76ab15db4dd86efb1d86fce150b49be61eaf8e42c0d941f5e4424d7a0c7e"
+    },
+    {
+      "name": "missing_runtime",
+      "exit_code": 3,
+      "expected_error_code": "D_REPORT_RUNTIME_MISSING",
+      "log_sha256": "e1cda6319d3f89ef353392b5f343c9ae17f763a703a4e10116a3042488663990"
+    },
+    {
+      "name": "rehashed_B_result",
+      "exit_code": 2,
+      "expected_error_code": "D_REPORT_SOURCE_INVALID",
+      "log_sha256": "1b9cbdf940e0874e6e550030b8a7662adf55d05dfddbefc8f8ec1ab5f8617fa8"
+    }
+  ],
+  "native_lineage_verified": true,
+  "predecessor_bytes_unchanged_by_report": true,
+  "base_saved_value_checks": 1729,
+  "target_saved_value_checks": 456,
+  "native_B_C_provenance": {
+    "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/bundle.envelope.json": {
+      "sha256": "b7d2dfef1e4bfe84488be83bed6b5193335d444c76175eb5db8b3c07af29c023",
+      "bytes": 1054
+    },
+    "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/bundle.json": {
+      "sha256": "1a6127584c7f2beb5ea27965ca107e2147a589116319cb7f0bf77e3e09bc9eaa",
+      "bytes": 4505
+    },
+    "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/stage-handoff-provenance.envelope.json": {
+      "sha256": "b8b13b0ecd065d069524c63666d29f125559a81fa00b5aaa411096b23ece6f46",
+      "bytes": 826
+    },
+    "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/stage-handoff-provenance.json": {
+      "sha256": "e1e76e54c8691b6cd1b5a906b1acf951408a250beac805b9342f37cbd6d8ab5c",
+      "bytes": 31151
+    },
+    "D/stage-handoff-provenance.envelope.json": {
+      "sha256": "6ce926c7438db4bb28ebca709e32e570b2e3c3061a148fcfccb2faa350e794b3",
+      "bytes": 943
+    },
+    "D/stage-handoff-provenance.json": {
+      "sha256": "4840e087262654f0ba0704f86cadf39a74709d008c7832e6c1dbfc17e905c30d",
+      "bytes": 38620
+    }
+  },
+  "native_D_and_report_hashes": {
+    "current-D.json": "55ff71b372ecfa6b3b9b46ea779651b7adc41ae9d0a530621f9819ac6f96267d",
+    "generation-manifest.json": "1e09a5c0dae8f25db24b0c23a6bfdb34302de2447c2adc01ae031b353f4d0fdb",
+    "evidence-routing.json": "c9c0fd8dc61a962664bc7de0dddfec90ea23ae89710136a3257578949343c0d4",
+    "report.html": "c518d16eb5fe7b188d1ea2a28fb8b3f7af79a84c0eb375d4e3ca4f9e7ba8ac0c",
+    "report_data.json": "f9312a6ca97605275257d76196eef88c466cac86719c38b3b152a48abfdbee96",
+    "report_manifest.json": "063879166f824a541f6158224eebf65ad7808f1dd2fc4aeb772de78ce41fab1b"
+  },
+  "report_artifact_hashes": {
+    "integration_eligibility.tsv": "b80a588ca566c2c074677ffef760b25b78c15bf7f0d5bb28b21eb3d09f6b1e67",
+    "results.tsv": "4a17652632950ed4457a88210dea7db0ae1154ef6f6d01bedba4f26c580bc4b5",
+    "enrichment.tsv": "a32b239f240ca74ea5da5f13346c038e573ad40a4aa205029a2b8def8f3ed337",
+    "clinical_results.tsv": "3176d5fbe60072b27f167e414b80225215f3c72ac80a10562ea336f058776d62",
+    "section_statuses.tsv": "40c31857b7e7a557cfcb4098a88df90a7a143012e515b3dfadba9f7a2ea476ab",
+    "report_manifest.json": "063879166f824a541f6158224eebf65ad7808f1dd2fc4aeb772de78ce41fab1b",
+    "report_manifest.envelope.json": "5cacb318b6a614a6638c247176f43576102c85e75d13edf369910ebe9a764f4d",
+    "report.html": "c518d16eb5fe7b188d1ea2a28fb8b3f7af79a84c0eb375d4e3ca4f9e7ba8ac0c",
+    "report_data.json": "f9312a6ca97605275257d76196eef88c466cac86719c38b3b152a48abfdbee96",
+    "integration_variance.tsv": "590da21a6e4b78a05df3ebae43bdd46f60a94630be2705447f3ab916f4aa04cd",
+    "report_data.envelope.json": "5240937bd5be632512a3f68961fadd2772e17d07976a546cd5ab13adc6e31eb7"
+  },
+  "offline_HTML": {
+    "html_sha256": "c518d16eb5fe7b188d1ea2a28fb8b3f7af79a84c0eb375d4e3ca4f9e7ba8ac0c",
+    "counts": {
+      "tables": 23,
+      "images": 0,
+      "scripts": 0,
+      "styles": 2,
+      "headings": 29
+    },
+    "embedded_resources": [],
+    "issues": [],
+    "passed_structural_inspection": true,
+    "scientific_semantics": "separate readback required"
+  },
+  "runtime": {
+    "R": "R version 4.6.1 (2026-06-24)",
+    "packages": {
+      "triomics": "0.1.0",
+      "testthat": "3.3.2",
+      "pkgload": "1.5.3",
+      "jsonlite": "2.0.0",
+      "yaml": "2.3.12",
+      "digest": "0.6.39",
+      "limma": "3.68.5",
+      "MOFA2": "1.22.1",
+      "reticulate": "1.47.0"
+    },
+    "Quarto": "1.11.9",
+    "scope": "Version readback only; no additional scientific qualification"
+  },
+  "archive_commit": "6781319396b4a44fa04d877469440db72db3bbef",
+  "snapshot_digests": {
+    "snapshot.tar": "c873955a4280124fd753498264990b6d3a999fb2dabf395355aa3b2e64f8a1fa",
+    "files.json": "282d0f8896598897415b569a4b5d12c6ecbb8871faaa59fff7300969ebad5047",
+    "repair.diff": "7500895220927c57dcffe0c662867e4ff9233e5acf1a473b72a0e3e9531d9287",
+    "product.diff": "1c4fca22a289c4d0cf28b4fc0bbb4c891e770f6580fb4c9647465b5ad8912e24",
+    "commits.txt": "024500dcfebe7af7d04db18d3cd57f42ae498cfc8cbda1e62a770e0eb15ba9b2"
+  },
+  "archive_file_count": 1159,
+  "archive_unchanged": true,
+  "worker_Sol_product_identical": true,
+  "protected_dirty_files_unchanged": true,
+  "runtime_hiccups": {
+    "worker_stat_preflight": "format mismatch before R launch; parent df/diskutil verified internal APFS",
+    "git_metadata": "verified AppleDouble ._pack index sidecar quarantined with bytes preserved; real Git index unchanged",
+    "interim_history": "brief worker reset restored; all four commits retained and682d9f8 additionally anchored"
+  },
+  "evidence_hashes": {
+    "parent-final/phase-a-receipt.json": "b99ba346c137806b921cd597cbfe279567effd25fb0c31cc43e1a19ca4fb1c20",
+    "parent-final/source/source-receipt.json": "14929dec873b67c0b3dc2ae685066f8b32e04babeb3ebc0d5def36a62d834336",
+    "parent-final/lineage-boundaries.json": "f961d49fabbcdc3cfb8b0f1bd00ccc0e5e41ecc82b74f79018e1e5feb1665711",
+    "parent-final/plural-prefix.json": "eaa906cd65712f55d16b7d2fdf28e9dd8b1ff730a63385d67a7c314d35a2d4b9",
+    "parent-final/numeric-lineage.json": "d30259fbe69d783fffbcb7b5a559b64051bff8dbdf6ff877a3dadcbdc34638ec",
+    "parent-review-proof/base.json": "5225092cc2f6762174ff541882ca762ef900f48a1ac74868a9d64001dfe88529",
+    "parent-review-proof/candidate.json": "de697feab4c6acdf14bc814299452115a78b3ec8ed37f49af43578e9355134db",
+    "parent-review-proof/commands.json": "9a9b1f0d248c9ed08efe42f59dd2efca40f54955d32aee407970c1531b1c7244",
+    "diagnostic-gates/gate-receipt.json": "1ebea7ab352eeaf61f37971e6f01802fa396c8b8835f546b610cc763b077940e",
+    "diagnostic-gates/native/native-receipt.json": "b4d8a25d06b263b3dd0723e2528225bcd7a6744228d8af4a5bc151b27886f506",
+    "diagnostic-gates/base-readback.json": "4872075725719be8928d901e747f7d7a9aff902243b01d6dbb0ebcfcec178590",
+    "diagnostic-gates/target-readback.json": "65a533e0fb7bfc3ce11f77d8e2a0a61ac5f39591745f57cc27cc987500d7c3ed",
+    "diagnostic-gates/offline_html.log": "5888ac91b3c6b1c521f1a835d6e699868347a6dd8a5f44d830b98746d31c97e8",
+    "diagnostic-gates/installed-focused/installed-source-receipt.json": "db43cbd9e3a79e7ded43431c492d563a17ada2150dd6946856e936159f80bbd0",
+    "reviews/local-reviews.json": "fa7eded493fdd41d430f965dcf97dd251534dc27dc9348af0cbcaf05ea0989b2",
+    "reviews/astra-verdict.json": "6fdfd83011f4462626341477229096331fb540689cdf183ab10a1faa9b79ccb3",
+    "runtime-versions.json": "b0dc81d3bc9961335274342e0b6fa4230e149000d14810c10b4719814c32e0a6",
+    "goal-clarification-receipt.json": "25951880e82ee06576df3d1ffc84f057992a0fa67a55487192f35e60635c847e",
+    "git-metadata-quarantine-receipt.json": "fa66edae72f1b8fc5e457830186849762db543cfeb991b5f51e1e5c7f50921e7",
+    "worker-interim-preservation.json": "f14be9d1a609e55cf9abfde4adf1b12b3d594c1238279e4f9653f3dfe04841d7",
+    "scripts/lineage-boundaries-probe.R": "6ab4628040275dd875f1dcab1ff9937ef0eb949e34da4c30c22080ee1df46236",
+    "scripts/plural-prefix-probe.R": "d7d8837bc3f80ad36ae5e873aabdb05a985b90d92506c61dcc57ab708faf452d",
+    "scripts/review-findings-probe.R": "8fbaeeab9591e74b803e48fe1832408cfc38148b48c0a3ebb273083f4c29d631",
+    "scripts/diagnostic-phase-b.py": "8955f3079432b5e393528512770148b3f239c55c344cb0ab9daeb1bb1d51bf9f"
+  },
+  "full_source_suite": "not_run_on_this_candidate",
+  "package_Status": "not_run; archive installation and focused tests are not a full package check",
+  "goal_clarification": {
+    "persisted_in_goal_referenced_file": true,
+    "original_preserved": true,
+    "sha256": "55ccb82e7ced9eb49a9e3173afdf12bb37b3fe583744d074158514f47315ac96",
+    "six_completion_requirements_mapped_to_existing_packets": true,
+    "repairs_or_methods_expanded": false
+  },
+  "final_realistic_smoke_and_installed_vignettes": "not_established; D-T09/M8/M9 sequence pending",
+  "milestone_acceptance": false,
+  "M7_G7": "accepted/released unchanged",
+  "D08_D15": "accepted unchanged",
+  "G8": "closed",
+  "G9": "closed",
+  "C07": "not_run",
+  "C09": "unqualified; synthetic_fixture_only; benefit_guaranteed=false",
+  "conditional_D_without_completion_credit": [
+    "D-T06",
+    "D-T07",
+    "D-T14"
+  ],
+  "frozen_kit_independent_audit": "pending",
+  "private_data_read": false,
+  "push": false,
+  "server_run": false,
+  "Notion_sync": "not performed",
+  "all_run_owned_workers_terminal": true,
+  "active_processes": [],
+  "run_owned_sidebar_chats": [],
+  "persistent_polling": false,
+  "next": "D13 extra5 is closed blocked at Sol6781319 and Luna4dbd713, basef1d57da. Preserve initial1+original repairs2 and consumed extra1/2/3/4/5 (total repairs7), all four extra5 commits and the interim anchor. Independent source/installed1606 each, known127+9 probes and native A/B/C/D/report readback pass. Paired12-case review6pass6fail and fresh Astra:no leave D13-EXTRA5-LINEAGE-01/PLURAL-01 open. Do not integrate or start another product repair under this consumed grant. A separately authorized bounded follow-up must resolve these ordinary implementation failures without weakening privacy or lineage, then obtain independent verification and fresh Astra. Keep D08/D15 and M7/G7 accepted, G8/G9closed. After D13 acceptance, continue the existing M8, D09 and M9 sequence with the clarified functional-pipeline completion evidence; no duplicate architecture or cap reset."
+}
