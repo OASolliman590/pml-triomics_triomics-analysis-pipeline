@@ -1,0 +1,22 @@
+{
+  "candidate_inputs": 447,
+  "base_inputs": 384,
+  "manifest_inputs": 264,
+  "missing_old": [],
+  "changed_old_expectations": [],
+  "missing_manifest": [],
+  "wrong_manifest": [],
+  "scope": "Case coverage and literal expected outcome audit; behavioral gates are separate",
+  "passed": true,
+  "command": [
+    "Rscript",
+    "--vanilla",
+    "$EVIDENCE/scripts/verify-suite-coverage.R",
+    "$WORKER_SOURCE",
+    "$RUN/d13/lineage-grammar-extra6/snapshot/source",
+    "$EVIDENCE/consolidated-cases.json",
+    "$EVIDENCE/suite-coverage.json"
+  ],
+  "exit_code": 0,
+  "test_sha256": "5781087744bc6ae6d4d85d4d9eb8538bf4ee5898f4121fda3279e0285dcad87b"
+}

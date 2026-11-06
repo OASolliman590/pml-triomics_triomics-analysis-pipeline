@@ -1,0 +1,121 @@
+{
+  "candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+  "phase": "passed",
+  "commands": [
+    {
+      "label": "native",
+      "command": [
+        "python3",
+        "$EVIDENCE/scripts/native-proof.py",
+        "$SOURCE",
+        "$EVIDENCE/final-gates/native",
+        "$EVIDENCE/runtime-env.json"
+      ],
+      "cwd": "$SOURCE",
+      "exit_code": 0,
+      "log": "$EVIDENCE/final-gates/native.log",
+      "log_sha256": "6bd28f1b19488af703ac9bd2bed56d0fe72e798f766a5809fa86df42d1fb5154"
+    },
+    {
+      "label": "base_readback",
+      "command": [
+        "python3",
+        "$RUN/scripts/readback-d08.py",
+        "$EVIDENCE/final-gates/native/output",
+        "$EVIDENCE/final-gates/base-readback.json"
+      ],
+      "cwd": "$SOURCE",
+      "exit_code": 0,
+      "log": "$EVIDENCE/final-gates/base_readback.log",
+      "log_sha256": "461eff1ee378664e8877e45e1402d9833e628fbab7a3321494115817b282d26a"
+    },
+    {
+      "label": "target_readback",
+      "command": [
+        "python3",
+        "$RUN/d13/scripts/readback-targets.py",
+        "$EVIDENCE/final-gates/native/output",
+        "$EVIDENCE/final-gates/target-readback.json"
+      ],
+      "cwd": "$SOURCE",
+      "exit_code": 0,
+      "log": "$EVIDENCE/final-gates/target_readback.log",
+      "log_sha256": "215dfd6be68b701329abae17efe472ca1b77637342edf7105193f21c8493470c"
+    },
+    {
+      "label": "offline_html",
+      "command": [
+        "python3",
+        "$RUN/scripts/inspect-offline-html.py",
+        "$EVIDENCE/final-gates/native/output/report/report.html"
+      ],
+      "cwd": "$SOURCE",
+      "exit_code": 0,
+      "log": "$EVIDENCE/final-gates/offline_html.log",
+      "log_sha256": "bda8785457b736a99a525af61a8fd4e220d110623fe0180a16071be584061957"
+    },
+    {
+      "label": "install",
+      "command": [
+        "R",
+        "CMD",
+        "INSTALL",
+        "--install-tests",
+        "--library=$EVIDENCE/final-gates/installed-library",
+        "$EVIDENCE/snapshot/source"
+      ],
+      "cwd": "$EVIDENCE/final-gates",
+      "exit_code": 0,
+      "log": "$EVIDENCE/final-gates/install.log",
+      "log_sha256": "650ecffc7fc1e1e470a7ac75874bb2034a4b90fc07d44806256b35ec5a3886fa"
+    },
+    {
+      "label": "installed_focused",
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "$EVIDENCE/scripts/run-installed-focused.R",
+        "$EVIDENCE/final-gates/installed-focused",
+        "D-T13|D-T08|D-T15",
+        "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70"
+      ],
+      "cwd": "$EVIDENCE/final-gates",
+      "exit_code": 0,
+      "log": "$EVIDENCE/final-gates/installed_focused.log",
+      "log_sha256": "9afa00ea89ff92c4e512d55612d21e3b6e85b51886728c0d2015694ae230162d"
+    }
+  ],
+  "pid": 49718,
+  "scope": "D13 packet focused proofs, not full package check",
+  "source_counts": {
+    "pass": 3525,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 60
+  },
+  "source_conditions": [],
+  "phase_a_receipt_sha256": "1ca1aebc5a89e6e28d00ba999a31a0e9655fe43ca020921417c48d17495fd7ac",
+  "installed_counts": {
+    "pass": 3525,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 60
+  },
+  "installed_conditions": [],
+  "snapshot_bytes_unchanged": true,
+  "harness_hashes": {
+    "$EVIDENCE/scripts/phase-b-gate.py": "14a8a2ebb71699a5ec7084c85550ee58a6ecc2d9c021f4f117d6c99f7e495c88",
+    "$EVIDENCE/scripts/native-proof.py": "6a4d61ffa60f9876001b1f8ce1a0b5212978c23146b61a58b8c31703180cebb3",
+    "$EVIDENCE/scripts/numeric-probe.R": "7650226f4004713481b587cba32824973a9e8d301daf92a5447c207531e01bdc",
+    "$EVIDENCE/scripts/counterexample-probe.R": "a803ee9ad1a06ccf5aa92f20bd6a80d3e124f5524a06e4ca8436f615434c2158",
+    "$EVIDENCE/scripts/run-installed-focused.R": "7aec5b5bf333cc9e5fc5092ff271c80dca7169bcdd005af0f1bf5417ac10c251",
+    "$RUN/scripts/run-source-unbounded-report.R": "5d32d0ac9bb8496e29a83a96f17dba22a425e33b87db4342f2f82f7ed7d314d1",
+    "$RUN/scripts/readback-d08.py": "12aeb68733fb72e344cf3d7ca34f54ac08a223564917ce049e18d750317ce07a",
+    "$RUN/d13/scripts/readback-targets.py": "95c8c144ce247f3390150c9ee3174865f85510c06e5f42a76487908be93f0369",
+    "$RUN/scripts/inspect-offline-html.py": "f6d3f994d25749e02923b84789582fed444eb0a6e4ad08d31349f54ff94a9010"
+  }
+}

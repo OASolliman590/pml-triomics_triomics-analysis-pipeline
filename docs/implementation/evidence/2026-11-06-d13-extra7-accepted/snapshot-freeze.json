@@ -1,0 +1,18 @@
+{
+  "candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+  "repair_base": "6c0d75ae310486249b05eff976ae96825dbe0fc8",
+  "product_base": "1e926d97284830eb89facf768e13f000e9aefa67",
+  "repair_files": [
+    "R/report_targets.R",
+    "tests/testthat/test-D-T13.R"
+  ],
+  "file_count": 1179,
+  "digests": {
+    "snapshot.tar": "08a471403f26c7b7c1506f97bf0cf1d7ae4c7ed9d454877b0f6eeef09c7bd5c7",
+    "files.json": "d2a21212a68f3814bd3ed5c21ccc32c5fafa0614ff1a85991f85ebff9eae9830",
+    "repair.diff": "45257140ab79995ae06cff7c811c393439c9da3420d777d50ccdf5e8f0752b03",
+    "product.diff": "8044d423ffb390d6f934787ba7b95bc0b7733cb6fa276744c5dd57f04dee5d22",
+    "commits.txt": "8425d7914f261078ebc47bf69bd6eff66a1bf9f25173e52b936738c03ab606a9"
+  },
+  "acceptance": false
+}

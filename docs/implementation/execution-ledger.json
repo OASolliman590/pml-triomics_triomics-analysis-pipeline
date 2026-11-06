@@ -37,16 +37,16 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D13_extra7_authorized",
-    "last_reconciled": "2026-11-06T15:47:29.052772+00:00",
+    "status": "D13_extra7_closed_accepted",
+    "last_reconciled": "2026-11-06T16:40:47.143498+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Fresh Luna from397d753; consolidated focused verification and fresh Astra; bounded receipt; G8/G9closed",
+    "disposition": "D13 integrated and accepted after fresh Astra pass; all owned workers/processes terminal; M8/D09 not started in this bounded run",
     "current_gate": {
-      "status": "blocked",
-      "candidate": "397d7537585b42db3258e17b06aa0360eedf3b24",
-      "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra6-blocked-close.md",
-      "Astra": "audit_pass_no",
+      "status": "packet_accepted_milestone_pending",
+      "candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+      "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra7-sol-acceptance.md",
+      "Astra": "audit_pass_yes",
       "G8": "closed",
       "G9": "closed"
     }
@@ -3933,7 +3933,7 @@
       "snapshot_commit": "542a7b4",
       "implementation_commit": "bded42a",
       "integration_commit": "9cd36fe",
-      "review_scope": "B-T08 AC1\u2013AC4, 139-assertion suite, public synthetic CLI, registration, integration drift, fixed families, fail-closed handling and privacy",
+      "review_scope": "B-T08 AC1–AC4, 139-assertion suite, public synthetic CLI, registration, integration drift, fixed families, fail-closed handling and privacy",
       "allowed_next_transition": "PASS permits Sol to mark B-T08 accepted and immediately dispatch B-T07; findings preserve the dependency block and require an authorized bounded resolution",
       "disposition": "This review reconciles missing acceptance evidence only; it does not reset B-T08 implementation counters or authorize code changes."
     },
@@ -7256,6 +7256,19 @@
       "candidate": "397d7537585b42db3258e17b06aa0360eedf3b24",
       "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra6-close/receipt.json",
       "all_terminal": true
+    },
+    {
+      "at": "2026-11-06T16:40:47.143498+00:00",
+      "event": "D13_extra7_fresh_Astra_pass_and_Sol_acceptance",
+      "candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+      "worker_commit": "9180c24efd0de955d1f9d6068266c677f958f994",
+      "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra7-accepted/receipt.json",
+      "original_attempts": 1,
+      "original_repairs": 2,
+      "explicit_extra_repairs": 7,
+      "all_terminal": true,
+      "G8": "closed",
+      "G9": "closed"
     }
   ],
   "packets": {
@@ -8721,38 +8734,35 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "extra7_authorized",
+      "status": "accepted_synthetic_software_evidence",
       "attempts": 1,
-      "commit": null,
-      "acceptance_refs": [],
-      "blockers": [
-        "D13-EXTRA6-LINEAGE-01 P2: count-clause whitespace and terminal-period formatting loses lineage"
+      "commit": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-11-06-d13-extra7-sol-acceptance.md",
+        "docs/implementation/reviews/2026-11-06-d13-extra7-astra.md"
       ],
-      "repair_attempts": 8,
+      "blockers": [],
+      "repair_attempts": 9,
       "implementation_base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
       "active_worker": null,
-      "accepted": false,
-      "completion_credit": false,
+      "accepted": true,
+      "completion_credit": true,
       "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t13-dispatch.md",
-      "candidate_commit": "397d7537585b42db3258e17b06aa0360eedf3b24",
+      "candidate_commit": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
       "initial_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-initial-review.md",
       "repair1_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-repair1-review.md",
-      "final_product_commit": "397d7537585b42db3258e17b06aa0360eedf3b24",
-      "final_review_ref": "docs/implementation/reviews/2026-11-06-d13-extra6-blocked-close.md",
-      "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra6-close/receipt.json",
+      "final_product_commit": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+      "final_review_ref": "docs/implementation/reviews/2026-11-06-d13-extra7-sol-acceptance.md",
+      "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra7-accepted/receipt.json",
       "source_counts": {
-        "pass": 3084,
+        "pass": 3525,
         "fail": 0,
         "error": 0,
         "warn": 0,
         "skip": 0,
         "blocks": 60
       },
-      "pending_gates": [
-        "Separate bounded authority for the remaining count-formatting lineage failure",
-        "Independent verification and fresh packet audit after repair",
-        "M8/D09/M9 completion evidence"
-      ],
+      "pending_gates": [],
       "original_bounded_run": {
         "attempts": 1,
         "repairs": 2,
@@ -8762,21 +8772,25 @@
       "authorized_additional_repair": {
         "episode": 7,
         "allowed": 1,
-        "used": 0,
+        "used": 1,
         "reason": "count spacing and terminal punctuation; complete-token privacy",
         "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-count-format-extra7-dispatch.md",
-        "accepted": false
+        "accepted": true,
+        "status": "consumed_accepted",
+        "worker_commit": "9180c24efd0de955d1f9d6068266c677f958f994",
+        "Sol_commit": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+        "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra7-sol-acceptance.md"
       },
-      "next_transition": "Fresh Luna from397d753; consolidated focused verification and fresh Astra; bounded receipt; G8/G9closed",
-      "extra_candidate": "397d7537585b42db3258e17b06aa0360eedf3b24",
-      "source_counts_producer": "Independent Sol focused source on397d753; no acceptance",
+      "next_transition": "D13 closed accepted; M8 documentation/package/milestone gates remain. G8/G9 closed.",
+      "extra_candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+      "source_counts_producer": "Independent Sol focused source on 8b18c5b; packet software acceptance only",
       "final_local_review": {
-        "Spec": "changes_required P2 count formatting",
+        "Spec": "pass",
         "Standards": "pass",
-        "Sol": "known199pass; source3084pass; final paired6pass6fail",
-        "Astra": "audit_pass_no"
+        "Sol": "source/installed/native/readback passed",
+        "Astra": "audit_pass_yes"
       },
-      "final_snapshot_commit": "397d7537585b42db3258e17b06aa0360eedf3b24",
+      "final_snapshot_commit": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
       "additional_repair_history": [
         {
           "allowed": 1,
@@ -8851,9 +8865,16 @@
       ],
       "extra2_worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
       "extra2_Sol_candidate": "c805f0418fe637d412290466c28b8c661db4a51d",
-      "final_worker_commit": "b93859482b839de3609c8365bc23a754123025e6",
+      "final_worker_commit": "9180c24efd0de955d1f9d6068266c677f958f994",
       "previous_extra1_candidate": "7f50b14c95a9f563f646b842004318552033089d",
-      "installed_counts": null,
+      "installed_counts": {
+        "pass": 3525,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 60
+      },
       "extra3_worker_commit": "4b04dfde061a901781041c672d27bec5127c2aa4",
       "extra3_Sol_candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
       "resolved_in_extra3": [
@@ -8861,13 +8882,19 @@
         "D13-EXTRA2-PRIVACY-02",
         "D13-EXTRA2-LINEAGE-01"
       ],
-      "installed_status": "not_run_on397d753; local Spec review failed",
+      "installed_status": "passed from clean git archive of 8b18c5b",
       "extra4_worker_commit": "0e7ccedc7fedb1c4f11cc5eff14515813789a1fa",
       "extra4_Sol_candidate": "f1d57da656156fd2da0430f56094708ab5926998",
       "extra5_worker_commit": "4dbd71368216f26a76898a77efb9f6c60f3ec8f2",
       "extra5_Sol_candidate": "6781319396b4a44fa04d877469440db72db3bbef",
       "extra6_worker_commit": "b93859482b839de3609c8365bc23a754123025e6",
-      "extra6_Sol_candidate": "397d7537585b42db3258e17b06aa0360eedf3b24"
+      "extra6_Sol_candidate": "397d7537585b42db3258e17b06aa0360eedf3b24",
+      "extra7_worker_commit": "9180c24efd0de955d1f9d6068266c677f958f994",
+      "extra7_Sol_candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+      "milestone_acceptance": false,
+      "resolved_in_extra7": [
+        "D13-EXTRA6-LINEAGE-01"
+      ]
     },
     "D-T15": {
       "status": "accepted_synthetic_software_evidence",
@@ -9109,22 +9136,24 @@
       "focused_final_rereviews_used": 1
     },
     "M8": {
-      "status": "blocked",
+      "status": "awaiting_milestone_gates",
       "review_ref": null,
       "commit": null,
-      "blocking_packets": [
-        "D-T13"
-      ],
+      "blocking_packets": [],
       "runtime_blocker_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md",
-      "remaining_packets": [
-        "D-T13"
-      ],
+      "remaining_packets": [],
       "remaining_gates": [
         "Terra M8 documentation",
         "clean git-archive Status: OK",
         "fresh immutable Astra milestone review",
         "Sol M8 acceptance and G8 release"
-      ]
+      ],
+      "packet_prerequisites_accepted": [
+        "D-T08",
+        "D-T13",
+        "D-T15"
+      ],
+      "G8": "closed"
     },
     "M9": {
       "status": "not_started",
@@ -9179,12 +9208,12 @@
       "docs/implementation/notion-sync/2026-10-17-pipeline-development-github-report.md",
       "docs/implementation/notion-sync/2026-10-17-three-study-dataset-handover.md"
     ],
-    "current_run_sync": "Local only; no push or Notion sync in this run. Final main-branch integration readback recorded separately; earlier sync metadata is historical.",
+    "current_run_sync": "Local D13 acceptance records only; no push or Notion sync in this bounded run.",
     "local_integration_acceptance_record": "e411a7d54d5d6565acb2df2a62f4b09d5e434814",
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "D13_extra3_active_G8_G9_closed",
+  "close_state": "D13_accepted_bounded_run_closed_G8_G9_closed",
   "D13_extra_repair1_orchestration": {
     "worker": {
       "agent": "/root/d13_numeric_extra1_luna",
@@ -9549,7 +9578,59 @@
     "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra6-blocked-close.md"
   },
   "D13_extra_repair7_orchestration": {
-    "status": "prepared",
-    "state_ref": "d13/count-format-extra7/state.json"
+    "status": "closed_accepted",
+    "state_ref": "d13/count-format-extra7/state.json",
+    "worker": {
+      "agent": "/root/d13_extra7_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "status": "completed",
+      "base": "397d7537585b42db3258e17b06aa0360eedf3b24",
+      "allowed_next_transition": "none; result integrated and accepted",
+      "cursor": null
+    },
+    "reviewers": [
+      {
+        "agent": "/root/d13_extra7_spec",
+        "axis": "spec",
+        "requested_model": "gpt-6.1-sol",
+        "requested_effort": "high",
+        "effective_settings_exposed": false,
+        "candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+        "status": "completed",
+        "allowed_next_transition": "none; result reconciled into acceptance",
+        "cursor": null,
+        "verdict": "pass"
+      },
+      {
+        "agent": "/root/d13_extra7_standards",
+        "axis": "standards",
+        "requested_model": "gpt-6.1-sol",
+        "requested_effort": "high",
+        "effective_settings_exposed": false,
+        "candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+        "status": "completed",
+        "allowed_next_transition": "none; result reconciled into acceptance",
+        "cursor": null,
+        "verdict": "pass"
+      }
+    ],
+    "candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+    "Astra": {
+      "agent": "/root/d13_extra7_astra",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "effective_settings_exposed": false,
+      "candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+      "status": "completed",
+      "allowed_next_transition": "none; Sol acceptance recorded",
+      "cursor": null,
+      "audit_pass": true,
+      "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra7-astra.md"
+    },
+    "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra7-accepted/receipt.json",
+    "active_workers": [],
+    "active_processes": []
   }
 }

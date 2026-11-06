@@ -1,3 +1,13 @@
+# Current checkpoint: D13 accepted; M8 gates remain
+
+Read [Sol's acceptance receipt](reviews/2026-11-06-d13-extra7-sol-acceptance.md) and [fresh Astra](reviews/2026-11-06-d13-extra7-astra.md). Product `8b18c5ba7547efa06b5bc3e6790ad73b1c34be70` is integrated after all packet gates passed; worker `9180c24efd0de955d1f9d6068266c677f958f994` is preserved. Source and archive-installed focused suites each pass 3,525 assertions with zero failures, errors, warnings or skips. Independent oracle 264/264; end-to-end coverage 447 distinct inputs; previous attempts unchanged. Native A/B/C/D/report each exits 0; saved-value/provenance/offline HTML readback passes. Astra audit_pass yes, no findings. All owned agents/processes terminal. Full source/package checks were not run in this cycle.
+
+D13 is accepted on public synthetic software evidence only. Initial attempt 1, original repairs 2, and all seven explicit extra repairs remain recorded (nine total repairs). D08/D15 and M7/G7 acceptance are unchanged. **M8/G8 and M9/G9 are not accepted/released.** C-07 stays unrun; C-09 unqualified; conditional D06/D07/D14 retain no completion credit. No private study data or push.
+
+Literal resume: **D13 is accepted at `8b18c5ba7547efa06b5bc3e6790ad73b1c34be70`. From the acceptance-record HEAD, read this receipt and continue the existing M8 Terra documentation, clean git-archive package gate requiring exactly Status: OK, fresh immutable Astra milestone review and Sol acceptance. Do not redispatch D13 or repeat passed packet gates without new evidence. Keep G8/G9 closed until their respective gates pass, and do not start D09 before G8 release.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D13 extra7 authorized
 
 Read [the bounded dispatch](reviews/2026-11-06-d13-count-format-extra7-dispatch.md). One fresh two-file Luna repair from397d753 for count spacing/punctuation, with all previous attempts preserved. Existing source3,084 and199 cases are historical baseline evidence; no current repair has passed. G8/G9closed.

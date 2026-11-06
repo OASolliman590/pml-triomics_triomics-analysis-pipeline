@@ -1,0 +1,746 @@
+{
+  "packet": "D-T13",
+  "episode": 7,
+  "recorded_at": "2026-11-06T16:40:47.143498+00:00",
+  "decision": "Sol accepted; synthetic software evidence only",
+  "accepted": true,
+  "accepted_commit": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+  "repair_base": "397d7537585b42db3258e17b06aa0360eedf3b24",
+  "worker_commit": "9180c24efd0de955d1f9d6068266c677f958f994",
+  "worker_commits": [
+    "61f381cd3e9aad6f103db37d99eab2447a4948b3",
+    "9180c24efd0de955d1f9d6068266c677f958f994"
+  ],
+  "integration_dispatch_commit": "1e926d97284830eb89facf768e13f000e9aefa67",
+  "review_base": "6c0d75ae310486249b05eff976ae96825dbe0fc8",
+  "repair_files": [
+    "R/report_targets.R",
+    "tests/testthat/test-D-T13.R"
+  ],
+  "integration": "fast-forward to exact reviewed/tested candidate; no product changes after freeze",
+  "attempts": {
+    "initial": 1,
+    "original_repairs": 2,
+    "prior_explicit_extra_repairs": 6,
+    "current_extra_allowed": 1,
+    "current_extra_used": 1,
+    "total_repairs": 9,
+    "history_preserved": true,
+    "post_handoff_repairs": 0
+  },
+  "parent_RED": {
+    "pass": 241,
+    "fail": 23,
+    "cases": 264,
+    "exit": 1,
+    "failed_scientific": 23,
+    "failed_identifiers": 0
+  },
+  "worker_RED": {
+    "commit": "61f381cd3e9aad6f103db37d99eab2447a4948b3",
+    "counts": {
+      "pass": 3176,
+      "fail": 69,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 12
+    },
+    "exit_code": 1,
+    "parent_readback": true
+  },
+  "source": {
+    "command": "Rscript --vanilla '$RUN/scripts/run-source-unbounded-report.R' '$SOURCE' '$EVIDENCE/parent-final/source' 'D-T13|D-T08|D-T15'",
+    "exit_code": 0,
+    "counts": {
+      "pass": 3525,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 60
+    },
+    "by_file": {
+      "test-D-T08.R": {
+        "pass": 148,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 25
+      },
+      "test-D-T13.R": {
+        "pass": 3245,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 12
+      },
+      "test-D-T15.R": {
+        "pass": 132,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 23
+      }
+    },
+    "conditions": []
+  },
+  "installed": {
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "$EVIDENCE/scripts/run-installed-focused.R",
+      "$EVIDENCE/final-gates/installed-focused",
+      "D-T13|D-T08|D-T15",
+      "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70"
+    ],
+    "exit_code": 0,
+    "counts": {
+      "pass": 3525,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 60
+    },
+    "by_file": {
+      "test-D-T08.R": {
+        "pass": 148,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 25
+      },
+      "test-D-T13.R": {
+        "pass": 3245,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 12
+      },
+      "test-D-T15.R": {
+        "pass": 132,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 23
+      }
+    },
+    "conditions": [],
+    "from_clean_archive": true
+  },
+  "warnings": [],
+  "skips": [],
+  "consolidated_oracle": {
+    "cases": 264,
+    "passed": 264,
+    "failed": 0,
+    "retain": 134,
+    "reject": 130,
+    "helper_substitution": false
+  },
+  "suite_coverage": {
+    "unique_inputs": 447,
+    "all384_prior_inputs_and_expectations_preserved": true,
+    "all264_oracle_inputs_covered": true,
+    "duplicates": 0,
+    "safe_unsafe_overlap": 0,
+    "test_sha256": "5781087744bc6ae6d4d85d4d9eb8538bf4ee5898f4121fda3279e0285dcad87b"
+  },
+  "former_Astra_cases": {
+    "passed": 12,
+    "failed": 0,
+    "derived_subset_of264_not_additional_execution_credit": true
+  },
+  "numeric_lineage_scope": "Distinct textual construction/selection descriptions containing counts and overlap flags; not a check of numeric-valued fields or model performance",
+  "local_reviews": {
+    "Spec": {
+      "agent": "/root/d13_extra7_spec",
+      "verdict": "pass",
+      "findings": [],
+      "reviewer_reported_probes": {
+        "pass": 46,
+        "fail": 0
+      },
+      "integrity": "five artifact digests and1179source hashes match before/after",
+      "scope": "synthetic lineage/casing/count-formatting/IDs/mixed text/flags; no native/installed/scientific validation"
+    },
+    "Standards": {
+      "agent": "/root/d13_extra7_standards",
+      "verdict": "pass",
+      "hard_violations": [],
+      "heuristics": [],
+      "reviewer_reported_scalar_probes": {
+        "pass": 12,
+        "fail": 0
+      },
+      "integrity": "five artifact digests and1179source hashes match before/after; worker bytes match",
+      "scope": "bounded read-only standards review; no scientific validation or privacy-completeness claim"
+    }
+  },
+  "Astra": {
+    "audit_pass": true,
+    "candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+    "findings": [],
+    "basis": "Read frozen dispatch, D section 6, actual repair diff and end-to-end assertions. Only local plural count clause is exempt; mixed text continues scanning. Two-line fix and 60 added test lines satisfy bounded spacing/punctuation criteria.",
+    "independent_checks": {
+      "artifact_digests_before_after": 5,
+      "source_hashes_before_after": 1179,
+      "scalar_probes_passed": 9,
+      "gate_log_and_harness_hashes": "all match",
+      "html_sha256": "446f43029ea6c22654851039d1a204b1acceb03998962c45f7a1a72a31bf9996"
+    },
+    "reviewed_evidence": "Candidate-linked source and installed receipts each 3525 pass, zero fail/error/warn/skip, 60 blocks; consolidated 264/264; distinct textual numeric lineage and shared_subjects/independent_replication=false receipt; native/readback/install gate receipts. Parent evidence not auditor reruns; nine scalar probes are not extra testthat credit.",
+    "limits": "Packet audit only. No full suite/fits/full R CMD check/scientific validation/universal anonymization/milestone acceptance/integration. G8/G9 closed. Terra documentation, full required archive Status OK, fresh milestone audit and Sol acceptance remain. Frozen-kit audit separate/pending.",
+    "runtime": "Requested Astra low; effective model/effort not exposed."
+  },
+  "Astra_requested_model": "gpt-6-astra",
+  "Astra_requested_effort": "low",
+  "effective_settings_exposed": false,
+  "native": {
+    "commands": [
+      {
+        "stage": "A",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T13.yaml",
+          "--stage",
+          "A",
+          "--output",
+          "$EVIDENCE/final-gates/native/output"
+        ],
+        "exit_code": 0,
+        "log": "$EVIDENCE/final-gates/native/A.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "stage": "B",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T13.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "$EVIDENCE/final-gates/native/output"
+        ],
+        "exit_code": 0,
+        "log": "$EVIDENCE/final-gates/native/B.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "stage": "C",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T13.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "$EVIDENCE/final-gates/native/output"
+        ],
+        "exit_code": 0,
+        "log": "$EVIDENCE/final-gates/native/C.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "stage": "D",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T13.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "$EVIDENCE/final-gates/native/output"
+        ],
+        "exit_code": 0,
+        "log": "$EVIDENCE/final-gates/native/D.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "stage": "report",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T13.yaml",
+          "--stage",
+          "report",
+          "--output",
+          "$EVIDENCE/final-gates/native/output"
+        ],
+        "exit_code": 0,
+        "log": "$EVIDENCE/final-gates/native/report.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "expected_negative_probes": [
+      {
+        "name": "missing_producers",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T13.yaml",
+          "--stage",
+          "report",
+          "--output",
+          "$EVIDENCE/final-gates/native/missing-producers"
+        ],
+        "exit_code": 3,
+        "expected_exit_code": 3,
+        "expected_error_code": "D_REPORT_REQUIRED_MISSING",
+        "log": "$EVIDENCE/final-gates/native/missing_producers.log",
+        "log_sha256": "f3ed76ab15db4dd86efb1d86fce150b49be61eaf8e42c0d941f5e4424d7a0c7e"
+      },
+      {
+        "name": "missing_runtime",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T13.yaml",
+          "--stage",
+          "report",
+          "--output",
+          "$EVIDENCE/final-gates/native/output"
+        ],
+        "exit_code": 3,
+        "expected_exit_code": 3,
+        "expected_error_code": "D_REPORT_RUNTIME_MISSING",
+        "log": "$EVIDENCE/final-gates/native/missing_runtime.log",
+        "log_sha256": "e1cda6319d3f89ef353392b5f343c9ae17f763a703a4e10116a3042488663990"
+      },
+      {
+        "name": "rehashed_B_result",
+        "command": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T13.yaml",
+          "--stage",
+          "report",
+          "--output",
+          "$EVIDENCE/final-gates/native/rehashed-B-negative-root"
+        ],
+        "exit_code": 2,
+        "expected_exit_code": 2,
+        "expected_error_code": "D_REPORT_SOURCE_INVALID",
+        "log": "$EVIDENCE/final-gates/native/rehashed_B_result.log",
+        "log_sha256": "1b9cbdf940e0874e6e550030b8a7662adf55d05dfddbefc8f8ec1ab5f8617fa8"
+      }
+    ],
+    "predecessor_bytes_unchanged_by_report": true,
+    "native_lineage_verified": true,
+    "files": {
+      "A/assays.envelope.json": {
+        "sha256": "90c23d07921b4ffe771685a34ee78fad2aa4f9209cd7b87e5aaa9847274be3d8",
+        "bytes": 857
+      },
+      "A/assays.json": {
+        "sha256": "84aa0a7ef5382a06d97a931194086709e5a9636a6dd7c38034639e7cd917fae6",
+        "bytes": 7151
+      },
+      "B/block-results.envelope.json": {
+        "sha256": "70d388e6944befc1203e88f8f1d315706ad9dc1f0d6b5154a71253d7e68dfaac",
+        "bytes": 878
+      },
+      "B/block-results.json": {
+        "sha256": "fbbfbed20a41ee712ce52745c89e18364428581bf52e7741e4ddf4f85fa51349",
+        "bytes": 49031
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/acceptance-record.envelope.json": {
+        "sha256": "60db33cfb309af376547a2acbcd7305db589cd87e91d668e5704f52d05ccb51e",
+        "bytes": 1388
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/acceptance-record.json": {
+        "sha256": "ded7db75d13fc3e721f78147fb3826d43b70e0e03bc1bafff067c4d6b9d495bf",
+        "bytes": 3600
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/bundle.envelope.json": {
+        "sha256": "4d6786f6b436b8bef32d41e328994ffce45c3868fdf5d113834d600ed4febaf7",
+        "bytes": 1054
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/bundle.json": {
+        "sha256": "2753d93e062fe1e44a8355dbb409ca0eb28fd8c2a82b2d40b6b2a1a1052145ae",
+        "bytes": 4505
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/candidate-nominations.envelope.json": {
+        "sha256": "fc7a63ade6d69189f7beb5883f727ad0278424408b120a376f64ec89bb271ddf",
+        "bytes": 814
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/candidate-nominations.json": {
+        "sha256": "181add3208db67a2d8ad11689556979306630e4f1c9fbaa6173e239c71b77d9a",
+        "bytes": 278
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/family-ledger.envelope.json": {
+        "sha256": "a8cdfe61f259da1f182debea5ce1af65ae654305643fc90bad4b50b3f59f9a90",
+        "bytes": 790
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/family-ledger.json": {
+        "sha256": "d614d6871220b4120a9f81bb972663e2928d5ada2cb8aab812b2b2b2267c1d89",
+        "bytes": 4442
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/reproduction.envelope.json": {
+        "sha256": "172b7b3d59fc3be0dc762224d9e54d444f53e6301eba303e73dd23103a77c6fc",
+        "bytes": 1061
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/reproduction.md": {
+        "sha256": "de5aaa1c0214a0131e49eb1c7479c2869b7c4d808d63fdc5bb44cb09542483eb",
+        "bytes": 4597
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/stage-c-matrices.envelope.json": {
+        "sha256": "77bb53a27c56f9d173fb1eee2a12c14c3478d22a237a9bb52454ff8b71bfcb40",
+        "bytes": 813
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/stage-c-matrices.json": {
+        "sha256": "a6e7e569753ddaa7898c4f93454abdee7142bb87854c29e68bc5706c0d9fd32d",
+        "bytes": 12722
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/stage-c-matrix-values.envelope.json": {
+        "sha256": "69132ca0883d39493d5cda601d60b5a7133c9574de1152f7fcb1569157b66c0d",
+        "bytes": 815
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/stage-c-matrix-values.rds": {
+        "sha256": "86bcddae9a2d4a5246c7add8ffeb98ad6faf353041dd78c6082d490b3fde143d",
+        "bytes": 2287
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/stage-handoff-provenance.envelope.json": {
+        "sha256": "4faec1cbdb900b3891a5222d3f3b7b2d60b7f09ebd7e3a34e712d22b7726fbe7",
+        "bytes": 826
+      },
+      "B/handoffs/08a1159877ca622655326d5cb6cb9a2b88cb34c18261cba7a48c56b1e295a0ad/stage-handoff-provenance.json": {
+        "sha256": "747fb282dff24d902e785da2de19302b9e4c9a9429b004c90a549d4fd6d43a06",
+        "bytes": 31151
+      },
+      "C/integration-results.envelope.json": {
+        "sha256": "430083bb480a4a2c6167527fef5c9e8402289bec8ed6818a50f74594badeefec",
+        "bytes": 1173
+      },
+      "C/integration-results.json": {
+        "sha256": "c0602d9ab8fb8e301d5de573d29927573645103b15ee4e9668e38ddc0d0890ba",
+        "bytes": 27950
+      },
+      "C/native-states/integration-01.envelope.json": {
+        "sha256": "4ea628591dee91c975eb311088e2ea0df2f4c868a4f114afd0dc5f6504a7bd4b",
+        "bytes": 1611
+      },
+      "C/native-states/integration-01.json": {
+        "sha256": "f44ffbdc9d8da5bc02cc66f8c33ca5a364302afd5ad4d46fccc64f6b74cfbe4a",
+        "bytes": 6914
+      },
+      "C/preparation-states/st_53e14394594b089920bb.json": {
+        "sha256": "daa0addab251984191a0807dd3b049c23925d3b6681fb4afe1fb08c2b06ba02e",
+        "bytes": 7792
+      },
+      "C/preparation-states/st_79ef0e0da5335490815e.json": {
+        "sha256": "97c67e9ba1613e7c3d24226534424098cccc659a4c5dc979252460ca2c468741",
+        "bytes": 7652
+      },
+      "C/score-endpoints/integration-01.envelope.json": {
+        "sha256": "5cfb273b2ea8b0803ef58424e7d7f12ac3d52f4eecb6871b7060a0fa5adad971",
+        "bytes": 1028
+      },
+      "C/score-endpoints/integration-01.json": {
+        "sha256": "2c14c7dde44d5869d4b4098650d7ce82183e1456fab8280bb3694f1584dc2707",
+        "bytes": 24522
+      },
+      "D/candidate-nominations.envelope.json": {
+        "sha256": "432568bbbfee8fd0648f1c3866e7a5193e0e1b99f924406cdd14cb34cbe05278",
+        "bytes": 1531
+      },
+      "D/candidate-nominations.json": {
+        "sha256": "2c11e934dc7dc4c591d993f300739f4bd23386e753010206e8ccd1882fec8122",
+        "bytes": 38185
+      },
+      "D/evaluation-evidence.envelope.json": {
+        "sha256": "7e4d4884e7c74115653f457b5da45e5b7993ab0fecd70035e29e8ffa5e766f39",
+        "bytes": 1392
+      },
+      "D/evaluation-evidence.json": {
+        "sha256": "d9d1bf8e4cc26a6a7db65b6610f421ef62e300993a01ddd427d94bdbd750fb31",
+        "bytes": 14482
+      },
+      "D/generations/fc87af389774c930bcdd1f447be89d1670ac6962306ae2b1a68c742512e3a6ae/evidence-routing.envelope.json": {
+        "sha256": "8a274ca3f61b980e6e8abc5f74bb243b1795b172ebcda0a1eb061042ffdbae0c",
+        "bytes": 4395
+      },
+      "D/generations/fc87af389774c930bcdd1f447be89d1670ac6962306ae2b1a68c742512e3a6ae/evidence-routing.json": {
+        "sha256": "5e96a6378c2871d87032afcbb22b87be8a2d5fcaa02d0889bc9ee7ae541e63a1",
+        "bytes": 387244
+      },
+      "D/generations/fc87af389774c930bcdd1f447be89d1670ac6962306ae2b1a68c742512e3a6ae/generation-manifest.json": {
+        "sha256": "fc87af389774c930bcdd1f447be89d1670ac6962306ae2b1a68c742512e3a6ae",
+        "bytes": 4235
+      },
+      "D/handoff-manifest.envelope.json": {
+        "sha256": "e6d2f1208cfce0e365040f070e62730b13c79799bbddd7b68b4faa2836a4495a",
+        "bytes": 2099
+      },
+      "D/handoff-manifest.json": {
+        "sha256": "449d779396d6ce52e2dc11bc7232c2210a8a0ee441c9170264af48ffd0f5d179",
+        "bytes": 2071
+      },
+      "D/integration-comparisons.envelope.json": {
+        "sha256": "8bd50314ac48b7c5bd535b4de72e7816dde4cf2d655d67c11b40c58649b9821a",
+        "bytes": 1536
+      },
+      "D/integration-comparisons.json": {
+        "sha256": "d9fc97c7bc621fe793b4fde7efd9720afdbf9248e86090ff48c6a0300f5e3263",
+        "bytes": 397
+      },
+      "D/integration-evidence.envelope.json": {
+        "sha256": "8c76ffc5fb1bfabdd92c73d245103b6ef77708b0c6692705bc2ac0db12866d5d",
+        "bytes": 1534
+      },
+      "D/integration-evidence.json": {
+        "sha256": "4052e46c4fa8299d6a4e8c05393de1634e92fc915a46f9dacbf6f268e734ff25",
+        "bytes": 50219
+      },
+      "D/stage-handoff-provenance.envelope.json": {
+        "sha256": "2ba119ccdffc163f460a88ef15b3e04bca9e36c77249d43eabd8517f24b42feb",
+        "bytes": 943
+      },
+      "D/stage-handoff-provenance.json": {
+        "sha256": "955c29d53a2426b985229337f5740118eff0d385b1c5fbe24c514e4530031d85",
+        "bytes": 38620
+      },
+      "D/stage-status.envelope.json": {
+        "sha256": "4c59fb09d57794af2f0360fc0f39fc5a5cfbec9e43097d624840d1b75683290e",
+        "bytes": 1505
+      },
+      "D/stage-status.json": {
+        "sha256": "8a086e6435ffe9dd9ce82d0e9e4e7cd63fe380d6489bdb45a888414c6e218990",
+        "bytes": 1213
+      },
+      "registries/current-D.json": {
+        "sha256": "0c8fec8d38a14df4ff294d30ff2c40125d28e330a1d73691e5c123b5916a6881",
+        "bytes": 419
+      },
+      "registries/run-B.json": {
+        "sha256": "8ee3c6f23b5ec3c34dd7c44cf2a69f35f72432dd90d91ddc197debfe874d4b7a",
+        "bytes": 131
+      },
+      "registries/run-C.json": {
+        "sha256": "3f42898ed508efe161e48f7859dcc534e123bde2b3e7d5a52f7aa05402e53e37",
+        "bytes": 130
+      },
+      "registries/run.json": {
+        "sha256": "de70c252149d7e312170c972fdbfd73bc7a9d07dfbdb935423ef661abc470faa",
+        "bytes": 131
+      },
+      "report/clinical_results.tsv": {
+        "sha256": "3176d5fbe60072b27f167e414b80225215f3c72ac80a10562ea336f058776d62",
+        "bytes": 450
+      },
+      "report/enrichment.tsv": {
+        "sha256": "a32b239f240ca74ea5da5f13346c038e573ad40a4aa205029a2b8def8f3ed337",
+        "bytes": 558
+      },
+      "report/integration_eligibility.tsv": {
+        "sha256": "b80a588ca566c2c074677ffef760b25b78c15bf7f0d5bb28b21eb3d09f6b1e67",
+        "bytes": 336
+      },
+      "report/integration_variance.tsv": {
+        "sha256": "590da21a6e4b78a05df3ebae43bdd46f60a94630be2705447f3ab916f4aa04cd",
+        "bytes": 947
+      },
+      "report/report.html": {
+        "sha256": "446f43029ea6c22654851039d1a204b1acceb03998962c45f7a1a72a31bf9996",
+        "bytes": 90756
+      },
+      "report/report_data.envelope.json": {
+        "sha256": "bed34a024ed6ca2d384298564526f6f9a167e3d24760e54d7639416c881f85d8",
+        "bytes": 2078
+      },
+      "report/report_data.json": {
+        "sha256": "c09b25685befb13f3263b361965acac77f12fab0b5b8c86c26a6cd7ac78d3270",
+        "bytes": 100092
+      },
+      "report/report_manifest.envelope.json": {
+        "sha256": "25931fa43c2f065bb9644ec80bac3b4dd2d4c40ba585263b07376aa5c2ca81d9",
+        "bytes": 2230
+      },
+      "report/report_manifest.json": {
+        "sha256": "0cc410bc6eaf5e3464c41c910938ecae93c67eb63c01de7a7782a7992144e28e",
+        "bytes": 8607
+      },
+      "report/results.tsv": {
+        "sha256": "4a17652632950ed4457a88210dea7db0ae1154ef6f6d01bedba4f26c580bc4b5",
+        "bytes": 20753
+      },
+      "report/section_statuses.tsv": {
+        "sha256": "40c31857b7e7a557cfcb4098a88df90a7a143012e515b3dfadba9f7a2ea476ab",
+        "bytes": 864
+      }
+    }
+  },
+  "gate_commands": {
+    "native": {
+      "command": [
+        "python3",
+        "$EVIDENCE/scripts/native-proof.py",
+        "$SOURCE",
+        "$EVIDENCE/final-gates/native",
+        "$EVIDENCE/runtime-env.json"
+      ],
+      "exit_code": 0,
+      "log": "$EVIDENCE/final-gates/native.log",
+      "log_sha256": "6bd28f1b19488af703ac9bd2bed56d0fe72e798f766a5809fa86df42d1fb5154"
+    },
+    "base_readback": {
+      "command": [
+        "python3",
+        "$RUN/scripts/readback-d08.py",
+        "$EVIDENCE/final-gates/native/output",
+        "$EVIDENCE/final-gates/base-readback.json"
+      ],
+      "exit_code": 0,
+      "log": "$EVIDENCE/final-gates/base_readback.log",
+      "log_sha256": "461eff1ee378664e8877e45e1402d9833e628fbab7a3321494115817b282d26a"
+    },
+    "target_readback": {
+      "command": [
+        "python3",
+        "$RUN/d13/scripts/readback-targets.py",
+        "$EVIDENCE/final-gates/native/output",
+        "$EVIDENCE/final-gates/target-readback.json"
+      ],
+      "exit_code": 0,
+      "log": "$EVIDENCE/final-gates/target_readback.log",
+      "log_sha256": "215dfd6be68b701329abae17efe472ca1b77637342edf7105193f21c8493470c"
+    },
+    "offline_html": {
+      "command": [
+        "python3",
+        "$RUN/scripts/inspect-offline-html.py",
+        "$EVIDENCE/final-gates/native/output/report/report.html"
+      ],
+      "exit_code": 0,
+      "log": "$EVIDENCE/final-gates/offline_html.log",
+      "log_sha256": "bda8785457b736a99a525af61a8fd4e220d110623fe0180a16071be584061957"
+    },
+    "install": {
+      "command": [
+        "R",
+        "CMD",
+        "INSTALL",
+        "--install-tests",
+        "--library=$EVIDENCE/final-gates/installed-library",
+        "$EVIDENCE/snapshot/source"
+      ],
+      "exit_code": 0,
+      "log": "$EVIDENCE/final-gates/install.log",
+      "log_sha256": "650ecffc7fc1e1e470a7ac75874bb2034a4b90fc07d44806256b35ec5a3886fa"
+    },
+    "installed_focused": {
+      "command": [
+        "Rscript",
+        "--vanilla",
+        "$EVIDENCE/scripts/run-installed-focused.R",
+        "$EVIDENCE/final-gates/installed-focused",
+        "D-T13|D-T08|D-T15",
+        "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70"
+      ],
+      "exit_code": 0,
+      "log": "$EVIDENCE/final-gates/installed_focused.log",
+      "log_sha256": "9afa00ea89ff92c4e512d55612d21e3b6e85b51886728c0d2015694ae230162d"
+    }
+  },
+  "base_readback_checks": 1729,
+  "target_readback_checks": 456,
+  "offline_HTML": {
+    "html_sha256": "446f43029ea6c22654851039d1a204b1acceb03998962c45f7a1a72a31bf9996",
+    "counts": {
+      "tables": 23,
+      "images": 0,
+      "scripts": 0,
+      "styles": 2,
+      "headings": 29
+    },
+    "embedded_resources": [],
+    "issues": [],
+    "passed_structural_inspection": true,
+    "scientific_semantics": "separate readback required"
+  },
+  "snapshot": {
+    "candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+    "repair_base": "6c0d75ae310486249b05eff976ae96825dbe0fc8",
+    "product_base": "1e926d97284830eb89facf768e13f000e9aefa67",
+    "repair_files": [
+      "R/report_targets.R",
+      "tests/testthat/test-D-T13.R"
+    ],
+    "file_count": 1179,
+    "digests": {
+      "snapshot.tar": "08a471403f26c7b7c1506f97bf0cf1d7ae4c7ed9d454877b0f6eeef09c7bd5c7",
+      "files.json": "d2a21212a68f3814bd3ed5c21ccc32c5fafa0614ff1a85991f85ebff9eae9830",
+      "repair.diff": "45257140ab79995ae06cff7c811c393439c9da3420d777d50ccdf5e8f0752b03",
+      "product.diff": "8044d423ffb390d6f934787ba7b95bc0b7733cb6fa276744c5dd57f04dee5d22",
+      "commits.txt": "8425d7914f261078ebc47bf69bd6eff66a1bf9f25173e52b936738c03ab606a9"
+    },
+    "acceptance": false
+  },
+  "archive_installation_exit": 0,
+  "full_source_suite": "not_run_this_cycle",
+  "full_package_Status": "not_run_this_cycle; archive install is not Status: OK",
+  "runtime": {
+    "R": "R version 4.6.1 (2026-06-24)",
+    "MOFA_library": "$RUNTIME/R",
+    "python": "$RUNTIME/python312/bin/python3"
+  },
+  "local_evidence_layout": "d13/count-format-extra7 under the coordinator verification run; raw commands/logs retained locally",
+  "acceptance_ref": "docs/implementation/reviews/2026-11-06-d13-extra7-sol-acceptance.md",
+  "milestone_acceptance": false,
+  "M8": "awaiting_milestone_gates",
+  "G8": "closed",
+  "M9": "not_started",
+  "G9": "closed",
+  "unchanged_constraints": [
+    "C-07 not_run",
+    "C-09 unqualified synthetic_fixture_only; benefit_guaranteed=false",
+    "D-T06/D-T07/D-T14 blocked without completion credit",
+    "frozen-kit independent audit remains separate/pending",
+    "B-T04 bound and seeds unchanged"
+  ],
+  "private_study_data_read": false,
+  "GitHub_push": false,
+  "Notion_sync": false,
+  "active_workers": [],
+  "active_processes": [],
+  "evidence_manifest": {
+    "astra-audit.json": "e742242b7d2dab1723772a5a75a0391b3b5512096b307cf0862a0dd659902e26",
+    "consolidated-cases.json": "e21dc04c97774a981fc7bac8ed39bce6d67e1ebe8dd6b0192198913cd781d21e",
+    "consolidated-lineage-probe.R": "87311fdb34b89267de1529638579e5910dc1feae54644f33627a16d97dafa015",
+    "consolidated-results.json": "301460012f2e48f3f1996b2bef18be5440219fa8f28bc1b701cff366fc98c920",
+    "gate-receipt.json": "ab0fc75e8d495082a915f17e34d86bcc5fd0355341344ab4e095048ce9052bfa",
+    "installed-receipt.json": "b1c6bda9d8ec063ed20bed4ea6920a230f612ddafb39a852ee837889d98620e0",
+    "local-reviews.json": "ec0a75e67b11dac3396991b93fc409257be1011792bf530175aeb54c5f57dd79",
+    "native-receipt.json": "5769e0d349f5a0590ba0deb494a350a06fc618a09b776c27ef61d2a7eed7e4ed",
+    "numeric-lineage.json": "c5b377839b13f1e3938789067084f620ca0f8fe0e79ab742d6391c31982fe2ee",
+    "readback-summary.json": "f6f982172ca3fe77be977c38fd7359cfdefbb87dd24cd78befe59f3d6cac2912",
+    "snapshot-freeze.json": "f252919655c4f5016a85e08ba947ae54643d05bfa7ee3ff1b6f096d6f0bb9f77",
+    "source-receipt.json": "44a94e4c44f3f90c424867c65c690a41a525485bd28d2fdeb69f85385b2bbefb",
+    "suite-coverage.json": "429bec2dee95af42c5581a5de8622dc12e4a43ff6b6124bb617e885ed8888117"
+  }
+}

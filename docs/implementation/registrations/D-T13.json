@@ -1,7 +1,7 @@
 {
   "packet_id": "D-T13",
   "request_type": "registration_request",
-  "request_status": "worker_candidate_unreviewed",
+  "request_status": "applied_and_sol_accepted_synthetic_software",
   "namespace_edits": false,
   "local_files": [
     "R/report_targets.R",
@@ -33,22 +33,67 @@
     "scope": "Descriptive rendering only. The report does not fit models, estimate targets, infer affinity, or complete D-T14."
   },
   "verification_evidence": {
-    "repair_attempt": "repair1of2",
-    "candidate_commit": "ed37578ea157bc8bdfdb0cad469861a0555adcc2",
-    "red": {
-      "status": "confirmed_behavioral_failure",
-      "observed_failures": 10,
-      "failure_output_capped": true
+    "candidate_commit": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+    "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra7-accepted/receipt.json",
+    "source_counts": {
+      "pass": 3525,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 60
     },
-    "source_tests": {
-      "filter": "^(D-T08|D-T13)$",
-      "D-T13": {"status": "passed", "pass": 99, "fail": 0, "error": 0, "warn": 0, "skip": 0},
-      "D-T08": {"status": "passed", "pass": 151, "fail": 0, "error": 0, "warn": 0, "skip": 0}
+    "installed_counts": {
+      "pass": 3525,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 60
     },
-    "native_render_readback": "pending_parent_verification"
+    "native_render_readback": "passed",
+    "Astra": "audit_pass_yes",
+    "scientific_scope": "public synthetic software fixtures only"
   },
-  "accepted": false,
-  "accepted_commit": null,
-  "acceptance_ref": null,
-  "milestone_acceptance": false
+  "accepted": true,
+  "accepted_commit": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+  "acceptance_ref": "docs/implementation/reviews/2026-11-06-d13-extra7-sol-acceptance.md",
+  "milestone_acceptance": false,
+  "verification_evidence_history": [
+    {
+      "repair_attempt": "repair1of2",
+      "candidate_commit": "ed37578ea157bc8bdfdb0cad469861a0555adcc2",
+      "red": {
+        "status": "confirmed_behavioral_failure",
+        "observed_failures": 10,
+        "failure_output_capped": true
+      },
+      "source_tests": {
+        "filter": "^(D-T08|D-T13)$",
+        "D-T13": {
+          "status": "passed",
+          "pass": 99,
+          "fail": 0,
+          "error": 0,
+          "warn": 0,
+          "skip": 0
+        },
+        "D-T08": {
+          "status": "passed",
+          "pass": 151,
+          "fail": 0,
+          "error": 0,
+          "warn": 0,
+          "skip": 0
+        }
+      },
+      "native_render_readback": "pending_parent_verification"
+    }
+  ],
+  "acceptance_evidence_ref": "docs/implementation/evidence/2026-11-06-d13-extra7-accepted/receipt.json",
+  "acceptance": {
+    "status": "sol_accepted_synthetic_software_evidence",
+    "scientific_claims": "No biological or clinical validity established; bounded privacy cases only.",
+    "G8_G9": "remain closed"
+  }
 }

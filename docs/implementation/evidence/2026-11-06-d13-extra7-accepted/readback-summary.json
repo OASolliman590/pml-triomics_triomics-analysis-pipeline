@@ -1,0 +1,152 @@
+{
+  "candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+  "native_receipt_phase_scope": "commands and lineage only; later semantic readbacks below passed",
+  "base": {
+    "checks": 1729,
+    "B_rows": 20,
+    "C_variance_cells": 4,
+    "figures": 1,
+    "report_id": "6a6b577ecc0b72033129fc31acba924f77e8c932162ccfcc396004f9d12576f0",
+    "report_status": "complete",
+    "stage_statuses": {
+      "A": "complete",
+      "B": "complete",
+      "C": "complete",
+      "D": "complete",
+      "clinical": "not_requested",
+      "target": "recorded"
+    },
+    "conditional_capabilities": [
+      {
+        "capability": "MOFA native",
+        "status": "not_requested",
+        "scope": "D-T06",
+        "completion_policy": "conditional",
+        "qualification_status": "unqualified",
+        "benefit_guaranteed": false,
+        "model_execution": "not_reported",
+        "project_acceptance_status": "not_assessed"
+      },
+      {
+        "capability": "BioPAN",
+        "status": "not_requested",
+        "scope": "D-T07",
+        "completion_policy": "conditional",
+        "qualification_status": "unqualified",
+        "benefit_guaranteed": false,
+        "model_execution": "not_reported",
+        "project_acceptance_status": "not_assessed"
+      },
+      {
+        "capability": "C-07 controls",
+        "status": "not_run",
+        "scope": "C-07",
+        "completion_policy": "not_applicable",
+        "qualification_status": "not_applicable",
+        "benefit_guaranteed": false,
+        "model_execution": "not_applicable",
+        "project_acceptance_status": "not_assessed"
+      },
+      {
+        "capability": "C-09 clinical prediction",
+        "status": "not_started",
+        "scope": "synthetic_fixture_only",
+        "completion_policy": "conditional",
+        "qualification_status": "unqualified",
+        "benefit_guaranteed": false,
+        "model_execution": "not_started",
+        "project_acceptance_status": "not_assessed"
+      },
+      {
+        "capability": "D-T13 target dossier",
+        "status": "complete",
+        "scope": "D-T13",
+        "completion_policy": "conditional",
+        "qualification_status": "not_evaluated",
+        "benefit_guaranteed": false,
+        "model_execution": "not_applicable",
+        "project_acceptance_status": "not_assessed"
+      },
+      {
+        "capability": "D-T14 quantitative target method",
+        "status": "conditional_unapproved",
+        "scope": "D-T14",
+        "completion_policy": "conditional",
+        "qualification_status": "unapproved",
+        "benefit_guaranteed": false,
+        "model_execution": "not_started",
+        "project_acceptance_status": "not_assessed"
+      },
+      {
+        "capability": "D-T15 clinical report",
+        "status": "not_requested",
+        "scope": "D-T15",
+        "completion_policy": "conditional",
+        "qualification_status": "not_evaluated",
+        "benefit_guaranteed": false,
+        "model_execution": "not_applicable",
+        "project_acceptance_status": "not_assessed"
+      }
+    ],
+    "sha256": {
+      "integration_eligibility.tsv": "b80a588ca566c2c074677ffef760b25b78c15bf7f0d5bb28b21eb3d09f6b1e67",
+      "results.tsv": "4a17652632950ed4457a88210dea7db0ae1154ef6f6d01bedba4f26c580bc4b5",
+      "enrichment.tsv": "a32b239f240ca74ea5da5f13346c038e573ad40a4aa205029a2b8def8f3ed337",
+      "clinical_results.tsv": "3176d5fbe60072b27f167e414b80225215f3c72ac80a10562ea336f058776d62",
+      "section_statuses.tsv": "40c31857b7e7a557cfcb4098a88df90a7a143012e515b3dfadba9f7a2ea476ab",
+      "report_manifest.json": "0cc410bc6eaf5e3464c41c910938ecae93c67eb63c01de7a7782a7992144e28e",
+      "report_manifest.envelope.json": "25931fa43c2f065bb9644ec80bac3b4dd2d4c40ba585263b07376aa5c2ca81d9",
+      "report.html": "446f43029ea6c22654851039d1a204b1acceb03998962c45f7a1a72a31bf9996",
+      "report_data.json": "c09b25685befb13f3263b361965acac77f12fab0b5b8c86c26a6cd7ac78d3270",
+      "integration_variance.tsv": "590da21a6e4b78a05df3ebae43bdd46f60a94630be2705447f3ab916f4aa04cd",
+      "report_data.envelope.json": "bed34a024ed6ca2d384298564526f6f9a167e3d24760e54d7639416c881f85d8"
+    },
+    "scope": "Independent saved-byte, numeric, TSV, figure and privacy readback; synthetic only."
+  },
+  "targets": {
+    "status": "passed",
+    "checks": 456,
+    "source_root": "$EVIDENCE/final-gates/native/output",
+    "tables": {
+      "dossier": 1,
+      "profiles": 2,
+      "evidence_axes": 8,
+      "mechanistic_context": 2,
+      "observations": 6,
+      "source_lineage": 6,
+      "external_evidence": 4,
+      "alternatives": 2,
+      "discovery": 3,
+      "selection_history": 0,
+      "provenance": 9,
+      "limitations": 6
+    },
+    "semantic_limits": [
+      "Native assay values null; no affinity or biological validation",
+      "Association repair additionally covered by actual-producer tests",
+      "No target ranking; D14 not completed"
+    ],
+    "hashes": {
+      "current-D.json": "0c8fec8d38a14df4ff294d30ff2c40125d28e330a1d73691e5c123b5916a6881",
+      "generation-manifest.json": "fc87af389774c930bcdd1f447be89d1670ac6962306ae2b1a68c742512e3a6ae",
+      "evidence-routing.json": "5e96a6378c2871d87032afcbb22b87be8a2d5fcaa02d0889bc9ee7ae541e63a1",
+      "report.html": "446f43029ea6c22654851039d1a204b1acceb03998962c45f7a1a72a31bf9996",
+      "report_data.json": "c09b25685befb13f3263b361965acac77f12fab0b5b8c86c26a6cd7ac78d3270",
+      "report_manifest.json": "0cc410bc6eaf5e3464c41c910938ecae93c67eb63c01de7a7782a7992144e28e"
+    }
+  },
+  "offline_HTML": {
+    "html_sha256": "446f43029ea6c22654851039d1a204b1acceb03998962c45f7a1a72a31bf9996",
+    "counts": {
+      "tables": 23,
+      "images": 0,
+      "scripts": 0,
+      "styles": 2,
+      "headings": 29
+    },
+    "embedded_resources": [],
+    "issues": [],
+    "passed_structural_inspection": true,
+    "scientific_semantics": "separate readback required"
+  }
+}

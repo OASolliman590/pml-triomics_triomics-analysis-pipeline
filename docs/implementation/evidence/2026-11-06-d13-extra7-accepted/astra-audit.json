@@ -1,0 +1,16 @@
+{
+  "audit_pass": true,
+  "candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+  "findings": [],
+  "basis": "Read frozen dispatch, D section 6, actual repair diff and end-to-end assertions. Only local plural count clause is exempt; mixed text continues scanning. Two-line fix and 60 added test lines satisfy bounded spacing/punctuation criteria.",
+  "independent_checks": {
+    "artifact_digests_before_after": 5,
+    "source_hashes_before_after": 1179,
+    "scalar_probes_passed": 9,
+    "gate_log_and_harness_hashes": "all match",
+    "html_sha256": "446f43029ea6c22654851039d1a204b1acceb03998962c45f7a1a72a31bf9996"
+  },
+  "reviewed_evidence": "Candidate-linked source and installed receipts each 3525 pass, zero fail/error/warn/skip, 60 blocks; consolidated 264/264; distinct textual numeric lineage and shared_subjects/independent_replication=false receipt; native/readback/install gate receipts. Parent evidence not auditor reruns; nine scalar probes are not extra testthat credit.",
+  "limits": "Packet audit only. No full suite/fits/full R CMD check/scientific validation/universal anonymization/milestone acceptance/integration. G8/G9 closed. Terra documentation, full required archive Status OK, fresh milestone audit and Sol acceptance remain. Frozen-kit audit separate/pending.",
+  "runtime": "Requested Astra low; effective model/effort not exposed."
+}

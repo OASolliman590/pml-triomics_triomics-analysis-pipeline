@@ -1,0 +1,2269 @@
+{
+  "name": "D13 lineage and privacy behavioral regression",
+  "base": "397d7537585b42db3258e17b06aa0360eedf3b24",
+  "case_count": 264,
+  "safe_cases": 134,
+  "unsafe_cases": 130,
+  "history": "All199 extra6 cases retained; its six final review failures added; formatting/token/mixed cases deduplicated before dispatch",
+  "cases": [
+    {
+      "input": "Clinical score constructed from 3 molecular features",
+      "expected": "Clinical score constructed from 3 molecular features",
+      "kind": "scientific_lineage",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Top 10 features selected in the same study",
+      "expected": "Top 10 features selected in the same study",
+      "kind": "scientific_lineage",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Score constructed from 3 features across 32 subjects",
+      "expected": "Score constructed from 3 features across 32 subjects",
+      "kind": "scientific_lineage",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json",
+        "plural-prefix.json"
+      ]
+    },
+    {
+      "input": "PCA v2.1 with 10 features",
+      "expected": "PCA v2.1 with 10 features",
+      "kind": "scientific_lineage",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample count 32; 10 features selected",
+      "expected": "Sample count 32; 10 features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Subject count 32; 10 features selected",
+      "expected": "Subject count 32; 10 features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample-wise normalization of 32 measurements",
+      "expected": "Sample-wise normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample-level score constructed from 3 features",
+      "expected": "Sample-level score constructed from 3 features",
+      "kind": "scientific_lineage",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample-level splitting with 10 features",
+      "expected": "Sample-level splitting with 10 features",
+      "kind": "scientific_lineage",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Patient: 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Subject: 7 features selected",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Patient ID A13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Patient number 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "MRN 123456 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "participant number A13 used for selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "patient id: A13 used for selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Subject - A13 used for selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Subject identifier A13 used for selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "MRN: A13 used for selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample ID A13 used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Patient ID (A13) clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Subject 'S7' used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "MRN (AB-123) used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "participant No.: A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "PatientAlpha",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SubjectAlpha",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "ParticipantAlpha",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "cohortPatientAlpha clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "ClinicalPatient_ID_A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Patient, A13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "MRN; 123456 used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "counterexamples.json",
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample-Level score constructed from 3 features",
+      "expected": "Sample-Level score constructed from 3 features",
+      "kind": "scientific_lineage",
+      "origins": [
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample-Wise normalization of 32 measurements",
+      "expected": "Sample-Wise normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Median normalization of 32 measurements",
+      "expected": "Sample: Median normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: median normalization of 32 measurements",
+      "expected": "Sample: median normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "capitalization-counterexamples.json",
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "CLINICAL SCORE CONSTRUCTED FROM 3 MOLECULAR FEATURES",
+      "expected": "CLINICAL SCORE CONSTRUCTED FROM 3 MOLECULAR FEATURES",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "TOP 10 FEATURES SELECTED IN THE SAME STUDY",
+      "expected": "TOP 10 FEATURES SELECTED IN THE SAME STUDY",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SCORE CONSTRUCTED FROM 3 FEATURES ACROSS 32 SUBJECTS",
+      "expected": "SCORE CONSTRUCTED FROM 3 FEATURES ACROSS 32 SUBJECTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json",
+        "plural-prefix.json"
+      ]
+    },
+    {
+      "input": "PCA V2.1 WITH 10 FEATURES",
+      "expected": "PCA V2.1 WITH 10 FEATURES",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE COUNT 32; 10 FEATURES SELECTED",
+      "expected": "SAMPLE COUNT 32; 10 FEATURES SELECTED",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SUBJECT COUNT 32; 10 FEATURES SELECTED",
+      "expected": "SUBJECT COUNT 32; 10 FEATURES SELECTED",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE-WISE NORMALIZATION OF 32 MEASUREMENTS",
+      "expected": "SAMPLE-WISE NORMALIZATION OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE-LEVEL SCORE CONSTRUCTED FROM 3 FEATURES",
+      "expected": "SAMPLE-LEVEL SCORE CONSTRUCTED FROM 3 FEATURES",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE-LEVEL SPLITTING WITH 10 FEATURES",
+      "expected": "SAMPLE-LEVEL SPLITTING WITH 10 FEATURES",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: MEDIAN NORMALIZATION OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: MEDIAN NORMALIZATION OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample-Level Median normalization of 32 measurements",
+      "expected": "Sample-Level Median normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample-Wise PCA v2.1 with 10 features",
+      "expected": "Sample-Wise PCA v2.1 with 10 features",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: MEAN normalization of 32 measurements",
+      "expected": "Sample: MEAN normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Quantile normalization of 32 measurements",
+      "expected": "Sample: Quantile normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: robust normalization of 32 measurements",
+      "expected": "Sample: robust normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Robust normalization of 32 measurements",
+      "expected": "Sample: Robust normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: log normalization of 32 measurements",
+      "expected": "Sample: log normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Log normalization of 32 measurements",
+      "expected": "Sample: Log normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: A13 used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: ALPHA used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample-Alpha used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample_ID_a13 used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample-Level score constructed from 3 features; Patient ID A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample-Wise normalization of 32 measurements; Sample ID A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Median normalization of 32 measurements; MRN 123456",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Patient ID A13; Sample-Level score constructed from 3 features",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Median normalization of 32 measurements; cohortPatientAlpha",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SubjectS-7 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json",
+        "plural-prefix.json"
+      ]
+    },
+    {
+      "input": "PatientS-A13 used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "cohortPatientS-A13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "candidate-boundaries.json",
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: centering and scaling of 32 measurements",
+      "expected": "sample: centering and scaling of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-review-cases.json"
+      ]
+    },
+    {
+      "input": "Sample: Centering and scaling of 32 measurements",
+      "expected": "Sample: Centering and scaling of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-review-cases.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: CENTERING AND SCALING OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: CENTERING AND SCALING OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-review-cases.json"
+      ]
+    },
+    {
+      "input": "sample: robust normalization using 32 measurements",
+      "expected": "sample: robust normalization using 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-review-cases.json"
+      ]
+    },
+    {
+      "input": "Sample: Robust normalization using 32 measurements",
+      "expected": "Sample: Robust normalization using 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-review-cases.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: ROBUST NORMALIZATION USING 32 MEASUREMENTS",
+      "expected": "SAMPLE: ROBUST NORMALIZATION USING 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-review-cases.json"
+      ]
+    },
+    {
+      "input": "subjects: 32; features selected",
+      "expected": "subjects: 32; features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-review-cases.json",
+        "extra6-final-review"
+      ]
+    },
+    {
+      "input": "Subjects: 32; features selected",
+      "expected": "Subjects: 32; features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-review-cases.json",
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SUBJECTS: 32; FEATURES SELECTED",
+      "expected": "SUBJECTS: 32; FEATURES SELECTED",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-review-cases.json",
+        "extra6-mixed",
+        "extra6-final-review"
+      ]
+    },
+    {
+      "input": "samples: normalization of 32 measurements",
+      "expected": "samples: normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-review-cases.json"
+      ]
+    },
+    {
+      "input": "Samples: normalization of 32 measurements",
+      "expected": "Samples: normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-review-cases.json"
+      ]
+    },
+    {
+      "input": "SAMPLES: NORMALIZATION OF 32 MEASUREMENTS",
+      "expected": "SAMPLES: NORMALIZATION OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "candidate-review-cases.json",
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Sample: Total intensity normalization of 32 measurements",
+      "expected": "Sample: Total intensity normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Median scaling of 32 measurements",
+      "expected": "Sample: Median scaling of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Pareto scaling of 32 measurements",
+      "expected": "Sample: Pareto scaling of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Unit variance scaling of 32 measurements",
+      "expected": "Sample: Unit variance scaling of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Batch correction of 32 measurements",
+      "expected": "Sample: Batch correction of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Probabilistic quotient normalization of 32 measurements",
+      "expected": "Sample: Probabilistic quotient normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Log transformation of 32 measurements",
+      "expected": "Sample: Log transformation of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Robust feature filtering of 32 measurements",
+      "expected": "Sample: Robust feature filtering of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE-LEVEL MEDIAN NORMALIZATION OF 32 MEASUREMENTS",
+      "expected": "SAMPLE-LEVEL MEDIAN NORMALIZATION OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE-WISE PCA V2.1 WITH 10 FEATURES",
+      "expected": "SAMPLE-WISE PCA V2.1 WITH 10 FEATURES",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: MEAN NORMALIZATION OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: MEAN NORMALIZATION OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: QUANTILE NORMALIZATION OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: QUANTILE NORMALIZATION OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: ROBUST NORMALIZATION OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: ROBUST NORMALIZATION OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: LOG NORMALIZATION OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: LOG NORMALIZATION OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: TOTAL INTENSITY NORMALIZATION OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: TOTAL INTENSITY NORMALIZATION OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: MEDIAN SCALING OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: MEDIAN SCALING OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: PARETO SCALING OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: PARETO SCALING OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: UNIT VARIANCE SCALING OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: UNIT VARIANCE SCALING OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: BATCH CORRECTION OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: BATCH CORRECTION OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: PROBABILISTIC QUOTIENT NORMALIZATION OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: PROBABILISTIC QUOTIENT NORMALIZATION OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: LOG TRANSFORMATION OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: LOG TRANSFORMATION OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: ROBUST FEATURE FILTERING OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: ROBUST FEATURE FILTERING OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "clinical score constructed from 3 molecular features",
+      "expected": "clinical score constructed from 3 molecular features",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "top 10 features selected in the same study",
+      "expected": "top 10 features selected in the same study",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "score constructed from 3 features across 32 subjects",
+      "expected": "score constructed from 3 features across 32 subjects",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "pca v2.1 with 10 features",
+      "expected": "pca v2.1 with 10 features",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample count 32; 10 features selected",
+      "expected": "sample count 32; 10 features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "subject count 32; 10 features selected",
+      "expected": "subject count 32; 10 features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample-wise normalization of 32 measurements",
+      "expected": "sample-wise normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample-level score constructed from 3 features",
+      "expected": "sample-level score constructed from 3 features",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample-level splitting with 10 features",
+      "expected": "sample-level splitting with 10 features",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: median normalization of 32 measurements",
+      "expected": "sample: median normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample-level median normalization of 32 measurements",
+      "expected": "sample-level median normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample-wise pca v2.1 with 10 features",
+      "expected": "sample-wise pca v2.1 with 10 features",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: mean normalization of 32 measurements",
+      "expected": "sample: mean normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: quantile normalization of 32 measurements",
+      "expected": "sample: quantile normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: robust normalization of 32 measurements",
+      "expected": "sample: robust normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: log normalization of 32 measurements",
+      "expected": "sample: log normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: total intensity normalization of 32 measurements",
+      "expected": "sample: total intensity normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: median scaling of 32 measurements",
+      "expected": "sample: median scaling of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: pareto scaling of 32 measurements",
+      "expected": "sample: pareto scaling of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: unit variance scaling of 32 measurements",
+      "expected": "sample: unit variance scaling of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: batch correction of 32 measurements",
+      "expected": "sample: batch correction of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: probabilistic quotient normalization of 32 measurements",
+      "expected": "sample: probabilistic quotient normalization of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: log transformation of 32 measurements",
+      "expected": "sample: log transformation of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: robust feature filtering of 32 measurements",
+      "expected": "sample: robust feature filtering of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Score constructed from 3 features",
+      "expected": "Sample: Score constructed from 3 features",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Top 10 features selected in the same study",
+      "expected": "Sample: Top 10 features selected in the same study",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: SCORE CONSTRUCTED FROM 3 FEATURES",
+      "expected": "SAMPLE: SCORE CONSTRUCTED FROM 3 FEATURES",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: TOP 10 FEATURES SELECTED IN THE SAME STUDY",
+      "expected": "SAMPLE: TOP 10 FEATURES SELECTED IN THE SAME STUDY",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: score constructed from 3 features",
+      "expected": "sample: score constructed from 3 features",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "sample: top 10 features selected in the same study",
+      "expected": "sample: top 10 features selected in the same study",
+      "kind": "scientific_lineage",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "cohortSubjectS-7 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SampleS-7 used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "ParticipantS-A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SubjectS.7 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "PatientS:A13 used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SampleS_A13 used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Robust normalization of 32 measurements; Sample ID A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Median scaling of 32 measurements; cohortPatientS-A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "SubjectS-7; Sample: Total intensity normalization of 32 measurements",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: ALPHA used in construction of 32 measurements",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "lineage-boundaries.json"
+      ]
+    },
+    {
+      "input": "Sample: Pooled quality control based signal correction of 32 measurements",
+      "expected": "Sample: Pooled quality control based signal correction of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "plural-prefix.json"
+      ]
+    },
+    {
+      "input": "sample: pooled quality control based signal correction of 32 measurements",
+      "expected": "sample: pooled quality control based signal correction of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "plural-prefix.json"
+      ]
+    },
+    {
+      "input": "SAMPLE: POOLED QUALITY CONTROL BASED SIGNAL CORRECTION OF 32 MEASUREMENTS",
+      "expected": "SAMPLE: POOLED QUALITY CONTROL BASED SIGNAL CORRECTION OF 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "plural-prefix.json"
+      ]
+    },
+    {
+      "input": "cohortPatientS clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "plural-prefix.json"
+      ]
+    },
+    {
+      "input": "ClinicalSubjectS used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "plural-prefix.json"
+      ]
+    },
+    {
+      "input": "cohortParticipantS used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "plural-prefix.json"
+      ]
+    },
+    {
+      "input": "Sample: Centering and Scaling of 32 Measurements",
+      "expected": "Sample: Centering and Scaling of 32 Measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SAMPLE: CENTERING AND SCALING USING 32 MEASUREMENTS",
+      "expected": "SAMPLE: CENTERING AND SCALING USING 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Sample: Robust Normalization Using 32 Measurements",
+      "expected": "Sample: Robust Normalization Using 32 Measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Sample: centering and scaling of 16 features",
+      "expected": "Sample: centering and scaling of 16 features",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Samples: normalization using 32 measurements",
+      "expected": "Samples: normalization using 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SubjectS-7",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "cohortPatientS-A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Patient ID 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SubjectS.A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SubjectS:A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SubjectS/A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "cohortParticipantS7",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Sample: Centering and Scaling of 32 Measurements; SubjectS-7",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Sample: Centering and Scaling of 32 Measurements; cohortPatientS-A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Sample: Centering and Scaling of 32 Measurements; Patient ID 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SAMPLE: CENTERING AND SCALING USING 32 MEASUREMENTS; SubjectS-7",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SAMPLE: CENTERING AND SCALING USING 32 MEASUREMENTS; cohortPatientS-A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SAMPLE: CENTERING AND SCALING USING 32 MEASUREMENTS; Patient ID 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Sample: Robust Normalization Using 32 Measurements; SubjectS-7",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Sample: Robust Normalization Using 32 Measurements; cohortPatientS-A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Sample: Robust Normalization Using 32 Measurements; Patient ID 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SUBJECTS: 32; FEATURES SELECTED; SubjectS-7",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SUBJECTS: 32; FEATURES SELECTED; cohortPatientS-A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SUBJECTS: 32; FEATURES SELECTED; Patient ID 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SAMPLES: NORMALIZATION OF 32 MEASUREMENTS; SubjectS-7",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SAMPLES: NORMALIZATION OF 32 MEASUREMENTS; cohortPatientS-A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SAMPLES: NORMALIZATION OF 32 MEASUREMENTS; Patient ID 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SubjectS-7; Sample: Centering and Scaling of 32 Measurements",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "cohortPatientS-A13; Sample: Centering and Scaling of 32 Measurements",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Patient ID 13 clinical score; Sample: Centering and Scaling of 32 Measurements",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SubjectS-7; SAMPLE: CENTERING AND SCALING USING 32 MEASUREMENTS",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "cohortPatientS-A13; SAMPLE: CENTERING AND SCALING USING 32 MEASUREMENTS",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Patient ID 13 clinical score; SAMPLE: CENTERING AND SCALING USING 32 MEASUREMENTS",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SubjectS-7; Sample: Robust Normalization Using 32 Measurements",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "cohortPatientS-A13; Sample: Robust Normalization Using 32 Measurements",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Patient ID 13 clinical score; Sample: Robust Normalization Using 32 Measurements",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SubjectS-7; SUBJECTS: 32; FEATURES SELECTED",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "cohortPatientS-A13; SUBJECTS: 32; FEATURES SELECTED",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Patient ID 13 clinical score; SUBJECTS: 32; FEATURES SELECTED",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SubjectS-7; SAMPLES: NORMALIZATION OF 32 MEASUREMENTS",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "cohortPatientS-A13; SAMPLES: NORMALIZATION OF 32 MEASUREMENTS",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "Patient ID 13 clinical score; SAMPLES: NORMALIZATION OF 32 MEASUREMENTS",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-mixed"
+      ]
+    },
+    {
+      "input": "SubjectS: A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "plural-value-boundary"
+      ]
+    },
+    {
+      "input": "SUBJECTS: A13",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "plural-value-boundary"
+      ]
+    },
+    {
+      "input": "Samples: A13 used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "plural-value-boundary"
+      ]
+    },
+    {
+      "input": "SAMPLES: A13 used in construction",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "plural-value-boundary"
+      ]
+    },
+    {
+      "input": "subjects: 32; 10 features selected",
+      "expected": "subjects: 32; 10 features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "count-clause-regression"
+      ]
+    },
+    {
+      "input": "Subjects: 32; 10 features selected",
+      "expected": "Subjects: 32; 10 features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "count-clause-regression"
+      ]
+    },
+    {
+      "input": "SUBJECTS: 32; 10 FEATURES SELECTED",
+      "expected": "SUBJECTS: 32; 10 FEATURES SELECTED",
+      "kind": "scientific_lineage",
+      "origins": [
+        "count-clause-regression"
+      ]
+    },
+    {
+      "input": "subjects: 32; features retained",
+      "expected": "subjects: 32; features retained",
+      "kind": "scientific_lineage",
+      "origins": [
+        "count-clause-regression"
+      ]
+    },
+    {
+      "input": "Subjects: 32; features retained",
+      "expected": "Subjects: 32; features retained",
+      "kind": "scientific_lineage",
+      "origins": [
+        "count-clause-regression"
+      ]
+    },
+    {
+      "input": "SUBJECTS: 32; FEATURES RETAINED",
+      "expected": "SUBJECTS: 32; FEATURES RETAINED",
+      "kind": "scientific_lineage",
+      "origins": [
+        "count-clause-regression"
+      ]
+    },
+    {
+      "input": "SUBJECTS: 32:A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "count-token-regression",
+        "extra6-final-review",
+        "extra7-attached-count-token"
+      ]
+    },
+    {
+      "input": "SubjectS: 32:A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "count-token-regression"
+      ]
+    },
+    {
+      "input": "subjects:32; features selected",
+      "expected": "subjects:32; features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra6-final-review",
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "Subjects:32; features selected",
+      "expected": "Subjects:32; features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra6-final-review",
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "SUBJECTS:32; FEATURES SELECTED",
+      "expected": "SUBJECTS:32; FEATURES SELECTED",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra6-final-review",
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "subjects: 32. Features selected",
+      "expected": "subjects: 32. Features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra6-final-review",
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "Subjects: 32. Features selected",
+      "expected": "Subjects: 32. Features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra6-final-review",
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "SUBJECTS: 32. FEATURES SELECTED",
+      "expected": "SUBJECTS: 32. FEATURES SELECTED",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra6-final-review",
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "Sample: centering and scaling of 32 measurements",
+      "expected": "Sample: centering and scaling of 32 measurements",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra6-final-review"
+      ]
+    },
+    {
+      "input": "SAMPLES: NORMALIZATION USING 32 MEASUREMENTS",
+      "expected": "SAMPLES: NORMALIZATION USING 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra6-final-review"
+      ]
+    },
+    {
+      "input": "SubjectS: 32-A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra6-final-review"
+      ]
+    },
+    {
+      "input": "subjects : 32; 10 features selected",
+      "expected": "subjects : 32; 10 features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "Subjects : 32; 10 features selected",
+      "expected": "Subjects : 32; 10 features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "SUBJECTS : 32; 10 FEATURES SELECTED",
+      "expected": "SUBJECTS : 32; 10 FEATURES SELECTED",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "subjects  :  32. Features retained",
+      "expected": "subjects  :  32. Features retained",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "Subjects  :  32. Features retained",
+      "expected": "Subjects  :  32. Features retained",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "SUBJECTS  :  32. FEATURES RETAINED",
+      "expected": "SUBJECTS  :  32. FEATURES RETAINED",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "subjects:32, features selected",
+      "expected": "subjects:32, features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "Subjects:32, features selected",
+      "expected": "Subjects:32, features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "SUBJECTS:32, FEATURES SELECTED",
+      "expected": "SUBJECTS:32, FEATURES SELECTED",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "subjects:32.",
+      "expected": "subjects:32.",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "Subjects:32.",
+      "expected": "Subjects:32.",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "SUBJECTS:32.",
+      "expected": "SUBJECTS:32.",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "subjects : 32",
+      "expected": "subjects : 32",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "Subjects : 32",
+      "expected": "Subjects : 32",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "SUBJECTS : 32",
+      "expected": "SUBJECTS : 32",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-count-format"
+      ]
+    },
+    {
+      "input": "Subjects:7. Features selected",
+      "expected": "Subjects:7. Features selected",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-variable-count"
+      ]
+    },
+    {
+      "input": "SUBJECTS : 128; features retained",
+      "expected": "SUBJECTS : 128; features retained",
+      "kind": "scientific_lineage",
+      "origins": [
+        "extra7-variable-count"
+      ]
+    },
+    {
+      "input": "SUBJECTS:32:A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-attached-count-token"
+      ]
+    },
+    {
+      "input": "SUBJECTS:32.A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-attached-count-token"
+      ]
+    },
+    {
+      "input": "SUBJECTS:32_A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-attached-count-token"
+      ]
+    },
+    {
+      "input": "SUBJECTS:32-A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-attached-count-token"
+      ]
+    },
+    {
+      "input": "SUBJECTS:32A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-attached-count-token"
+      ]
+    },
+    {
+      "input": "SUBJECTS:32.7 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-attached-count-token"
+      ]
+    },
+    {
+      "input": "SUBJECTS: 32.A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-attached-count-token"
+      ]
+    },
+    {
+      "input": "SUBJECTS: 32_A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-attached-count-token"
+      ]
+    },
+    {
+      "input": "SUBJECTS: 32-A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-attached-count-token"
+      ]
+    },
+    {
+      "input": "SUBJECTS: 32A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-attached-count-token"
+      ]
+    },
+    {
+      "input": "SUBJECTS: 32.7 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-attached-count-token"
+      ]
+    },
+    {
+      "input": "subjects:32; features selected; SubjectS-7",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "SubjectS-7; subjects:32; features selected",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "subjects:32; features selected; Patient ID 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "Patient ID 13 clinical score; subjects:32; features selected",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "subjects: 32. Features selected; SubjectS-7",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "SubjectS-7; subjects: 32. Features selected",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "subjects: 32. Features selected; Patient ID 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "Patient ID 13 clinical score; subjects: 32. Features selected",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "subjects : 32; 10 features selected; SubjectS-7",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "SubjectS-7; subjects : 32; 10 features selected",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "subjects : 32; 10 features selected; Patient ID 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "Patient ID 13 clinical score; subjects : 32; 10 features selected",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "subjects  :  32. Features retained; SubjectS-7",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "SubjectS-7; subjects  :  32. Features retained",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "subjects  :  32. Features retained; Patient ID 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "Patient ID 13 clinical score; subjects  :  32. Features retained",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "subjects:32, features selected; SubjectS-7",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "SubjectS-7; subjects:32, features selected",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "subjects:32, features selected; Patient ID 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "Patient ID 13 clinical score; subjects:32, features selected",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "subjects:32.; SubjectS-7",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "SubjectS-7; subjects:32.",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "subjects:32.; Patient ID 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "Patient ID 13 clinical score; subjects:32.",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "subjects : 32; SubjectS-7",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "SubjectS-7; subjects : 32",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "subjects : 32; Patient ID 13 clinical score",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    },
+    {
+      "input": "Patient ID 13 clinical score; subjects : 32",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "origins": [
+        "extra7-mixed-count-identifier"
+      ]
+    }
+  ]
+}

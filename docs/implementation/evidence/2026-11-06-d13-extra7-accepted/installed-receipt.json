@@ -1,0 +1,41 @@
+{
+  "candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+  "scope": "installed-layout focused test; not a full package check",
+  "filter": "D-T13|D-T08|D-T15",
+  "counts": {
+    "pass": 3525,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 60
+  },
+  "by_file": {
+    "test-D-T08.R": {
+      "pass": 148,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 25
+    },
+    "test-D-T13.R": {
+      "pass": 3245,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 12
+    },
+    "test-D-T15.R": {
+      "pass": 132,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 23
+    }
+  },
+  "conditions": [],
+  "package_path": "$EVIDENCE/final-gates/installed-library/triomics"
+}

@@ -1,0 +1,25 @@
+{
+  "Spec": {
+    "agent": "/root/d13_extra7_spec",
+    "verdict": "pass",
+    "findings": [],
+    "reviewer_reported_probes": {
+      "pass": 46,
+      "fail": 0
+    },
+    "integrity": "five artifact digests and1179source hashes match before/after",
+    "scope": "synthetic lineage/casing/count-formatting/IDs/mixed text/flags; no native/installed/scientific validation"
+  },
+  "Standards": {
+    "agent": "/root/d13_extra7_standards",
+    "verdict": "pass",
+    "hard_violations": [],
+    "heuristics": [],
+    "reviewer_reported_scalar_probes": {
+      "pass": 12,
+      "fail": 0
+    },
+    "integrity": "five artifact digests and1179source hashes match before/after; worker bytes match",
+    "scope": "bounded read-only standards review; no scientific validation or privacy-completeness claim"
+  }
+}
