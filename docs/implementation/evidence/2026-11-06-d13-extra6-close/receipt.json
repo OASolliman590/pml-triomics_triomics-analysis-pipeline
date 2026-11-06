@@ -1,0 +1,378 @@
+{
+  "packet_id": "D-T13",
+  "status": "blocked_after_sixth_explicit_extra_repair",
+  "accepted": false,
+  "completion_credit": false,
+  "recorded_at": "2026-11-06T15:09:11.764454+00:00",
+  "prior_receipt_commit": "b41b3a1ccb13261767e1f400a10acc4ff8d1bd44",
+  "canonical_dispatch_commit": "f1613467a26f10dde39068522c6bf3f9e54fb996",
+  "worker_base": "6781319396b4a44fa04d877469440db72db3bbef",
+  "worker_commit": "b93859482b839de3609c8365bc23a754123025e6",
+  "worker_commits": [
+    "d14a32329a2115940aa2c0db112bae1f4859aabb",
+    "0ed21ddc340c3af98ca754683d707136b1a8d186",
+    "82dbc2b038e80cb116bdc237040705644a03d83b",
+    "d4d884075699c9ab3cae76c38f55ef66d6cc7dc5",
+    "e2cc04e0f603c92c3b2faa34380ec49fdb59238b",
+    "f4242d6509157ece3f62be73cb526caa4372a4d3",
+    "b93859482b839de3609c8365bc23a754123025e6"
+  ],
+  "Sol_candidate_commit": "397d7537585b42db3258e17b06aa0360eedf3b24",
+  "repair_comparison_base": "0c3b5c8cac7419b20c10e083a7f6fe1298b298ed",
+  "integration_commit": null,
+  "repair_files": [
+    "R/report_targets.R",
+    "tests/testthat/test-D-T13.R"
+  ],
+  "original_attempts": 1,
+  "original_repairs": 2,
+  "prior_extra_repairs_used": 5,
+  "current_extra_episode": 6,
+  "current_extra_allowed": 1,
+  "current_extra_used": 1,
+  "total_repairs": 8,
+  "further_repairs_authorized": false,
+  "worker_evidence": [
+    {
+      "phase": "red",
+      "commit": "d14a32329a2115940aa2c0db112bae1f4859aabb",
+      "filter": "D-T13",
+      "counts": {
+        "pass": 2392,
+        "fail": 48,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 12
+      },
+      "exit_code": 1
+    },
+    {
+      "phase": "red-combined",
+      "commit": "0ed21ddc340c3af98ca754683d707136b1a8d186",
+      "filter": "D-T13",
+      "counts": {
+        "pass": 2473,
+        "fail": 51,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 12
+      },
+      "exit_code": 1
+    },
+    {
+      "phase": "green",
+      "commit": "82dbc2b038e80cb116bdc237040705644a03d83b",
+      "filter": "D-T13",
+      "counts": {
+        "pass": 2524,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 12
+      },
+      "exit_code": 0
+    },
+    {
+      "phase": "red-counts",
+      "commit": "d4d884075699c9ab3cae76c38f55ef66d6cc7dc5",
+      "filter": "D-T13",
+      "counts": {
+        "pass": 2704,
+        "fail": 30,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 12
+      },
+      "exit_code": 1
+    },
+    {
+      "phase": "green-final",
+      "commit": "e2cc04e0f603c92c3b2faa34380ec49fdb59238b",
+      "filter": "D-T13|D-T08|D-T15",
+      "counts": {
+        "pass": 3014,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 60
+      },
+      "exit_code": 0
+    },
+    {
+      "phase": "red-count-token",
+      "commit": "f4242d6509157ece3f62be73cb526caa4372a4d3",
+      "filter": "D-T13",
+      "counts": {
+        "pass": 2774,
+        "fail": 30,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 12
+      },
+      "exit_code": 1
+    },
+    {
+      "phase": "green-count-token",
+      "commit": "b93859482b839de3609c8365bc23a754123025e6",
+      "filter": "D-T13",
+      "counts": {
+        "pass": 2804,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 12
+      },
+      "exit_code": 0
+    },
+    {
+      "phase": "final-runner",
+      "commit": "b93859482b839de3609c8365bc23a754123025e6",
+      "filter": "D-T13|D-T08|D-T15",
+      "counts": {
+        "pass": 3084,
+        "fail": 0,
+        "error": 0,
+        "warn": 0,
+        "skip": 0,
+        "blocks": 60
+      },
+      "exit_code": 0
+    }
+  ],
+  "inflight_review_disposition": "Two coordinator-confirmed count-clause/count-token regressions repaired during the same active implementation before handoff; all RED/GREEN commits retained. No post-handoff implementation repair.",
+  "named_suite": {
+    "file": "tests/testthat/test-D-T13.R",
+    "test": "D-T13 association lineage preserves descriptions and rejects identifiers end to end",
+    "unique_inputs": 384,
+    "coverage": "actual producer -> profile -> both report lineage columns -> HTML, with exact case, numeric lineage and shared-subject/non-independence flags",
+    "deduplicated": true,
+    "old_assertions_preserved": true
+  },
+  "independent_source_counts": {
+    "pass": 3084,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 60
+  },
+  "independent_source_by_file": {
+    "test-D-T08.R": {
+      "pass": 148,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 25
+    },
+    "test-D-T13.R": {
+      "pass": 2804,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 12
+    },
+    "test-D-T15.R": {
+      "pass": 132,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 23
+    }
+  },
+  "source_exit": 0,
+  "source_command": "Rscript --vanilla run-source-unbounded-report.R <clean-Sol-worktree> <fresh-evidence> \"D-T13|D-T08|D-T15\"",
+  "named_testthat_warnings": [],
+  "named_skips": [],
+  "known_case_oracle": {
+    "cases": 199,
+    "safe": 109,
+    "unsafe": 90,
+    "pass": 199,
+    "fail": 0,
+    "exit_code": 0,
+    "command": "Rscript --vanilla consolidated-lineage-probe.R <immutable-source> <result.json> <commit>",
+    "manifest": "consolidated-cases.json",
+    "prior_187_and_191_and_197_manifests_preserved_locally": true,
+    "source_manifest_union": "historical extra2/3/4 cases; extra5 127+9+12; reproduced current mixed/count-clause/token boundaries"
+  },
+  "mixed_numeric_lineage": {
+    "snapshot": "397d7537585b42db3258e17b06aa0360eedf3b24",
+    "source": {
+      "construction_lineage": "Clinical score constructed from 3 molecular features",
+      "source_selection_history": "Top 10 features selected in the same study"
+    },
+    "reported": {
+      "construction_lineage": "Clinical score constructed from 3 molecular features",
+      "source_selection_history": "Top 10 features selected in the same study"
+    },
+    "subject_overlap_status": "shared_subjects",
+    "independent_replication": false,
+    "preservation_pass": true
+  },
+  "paired_final_review": {
+    "cases": 12,
+    "baseline_commit": "6781319396b4a44fa04d877469440db72db3bbef",
+    "baseline_pass": 8,
+    "baseline_fail": 4,
+    "candidate_pass": 6,
+    "candidate_fail": 6,
+    "baseline_exit": 1,
+    "candidate_exit": 1,
+    "command": "Rscript --vanilla final-review-probe.R <immutable-source> <result.json> <commit>",
+    "actual_archives_used": true,
+    "helper_substitution": false,
+    "base_receipt": "base-review-cases.json",
+    "candidate_receipt": "candidate-review-cases.json"
+  },
+  "local_reviews": {
+    "Spec": {
+      "agent": "/root/d13_extra6_spec",
+      "verdict": "changes_required",
+      "findings": [
+        {
+          "id": "D13-EXTRA6-LINEAGE-01",
+          "severity": "P2",
+          "file": "R/report_targets.R",
+          "lines": "96-112",
+          "finding": "Plural aggregate count prose loses construction/selection lineage with no whitespace after colon or a sentence-ending period after the count. Lower/title variants regress; upper variants remain lost.",
+          "reproducers": [
+            "subjects:32; features selected",
+            "subjects: 32. Features selected"
+          ],
+          "acceptance_basis": "D_ANNOTATION_TARGET_REPORT.md section6 lineage preservation; extra6 numeric/plural preservation",
+          "source_profile_unchanged": true,
+          "overlap_flags_preserved": true
+        }
+      ],
+      "integrity": "five freeze digests and1169source hashes match",
+      "scope": "12 paired synthetic producer/profile/report/HTML probes; no full suite/fits",
+      "effective_settings_exposed": false
+    },
+    "Standards": {
+      "agent": "/root/d13_extra6_standards",
+      "verdict": "pass",
+      "hard_violations": [],
+      "heuristics": [],
+      "reviewer_reported_probes": {
+        "candidate_pass": 20,
+        "base_pass": 16,
+        "cases": 20
+      },
+      "integrity": "five freeze digests and1169source hashes match",
+      "scope": "bounded diff plus synthetic probes; no full suite/fits",
+      "effective_settings_exposed": false
+    }
+  },
+  "Astra": {
+    "audit_pass": false,
+    "agent": "/root/d13_extra6_astra",
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "low",
+    "effective_settings_exposed": false,
+    "candidate": "397d7537585b42db3258e17b06aa0360eedf3b24",
+    "findings": [
+      {
+        "id": "D13-EXTRA6-LINEAGE-01",
+        "severity": "P2",
+        "file": "R/report_targets.R",
+        "lines": "96-112",
+        "finding": "Plural aggregate count prose loses construction/selection lineage with no whitespace after colon or a sentence-ending period after the count. Lower/title variants regress; upper variants remain lost.",
+        "reproducers": [
+          "subjects:32; features selected",
+          "subjects: 32. Features selected"
+        ],
+        "acceptance_basis": "D_ANNOTATION_TARGET_REPORT.md section6 lineage preservation; extra6 numeric/plural preservation",
+        "source_profile_unchanged": true,
+        "overlap_flags_preserved": true
+      }
+    ],
+    "independent_probe": {
+      "pass": 6,
+      "fail": 6,
+      "cases": 12,
+      "exit_code": 1,
+      "helper_substitution": false
+    },
+    "acceptance_basis": "Ordinary scoped lineage correctness failure, not a new scientific contract",
+    "source_integrity": "1169 source hashes and five artifact digests verified before and after",
+    "qualification": "Focused source and known cases passed; no native/installed/full-source/package qualification on this candidate",
+    "accepted": false,
+    "G8": "closed",
+    "G9": "closed"
+  },
+  "native_installed_gate": "not_run_on397d753; existing local-review pass guard failed",
+  "full_source_suite": "not_run_on_this_candidate",
+  "package_Status": "not_run_on_this_candidate",
+  "historical_native_installed_evidence": "6781319 native HTML and installed1606 were previous-cycle diagnostics only; no current-candidate credit",
+  "archive_commit": "397d7537585b42db3258e17b06aa0360eedf3b24",
+  "snapshot_digests": {
+    "snapshot.tar": "9012d68569051efcc630755653d1b93d8bb8216c81bb52df030518a58a5a6e4f",
+    "files.json": "174ecfe3b5e707719e5ac86ea7d3fa24cb21116ca634a6d99e89384e3fbd7e9b",
+    "repair.diff": "cfdeb98f91c3f1997526c1c8a7776546a1f7ef60125f873ae08c92b8cccb0ec3",
+    "product.diff": "923f3a3204d440e0b738bca80c70d4932d50eed5bf49b0fe79792469554cbc8d",
+    "commits.txt": "28f0643fbd4b1adef52a26d5eef73e48594114e28abb19d57e3c5991860d59cd"
+  },
+  "archive_file_count": 1169,
+  "archive_unchanged": true,
+  "worker_Sol_product_identical": true,
+  "protected_dirty_files_unchanged": true,
+  "spec_validator": "exit1: current default and established MOFA Python lack jsonschema/PyYAML; no install or spec edit; independent frozen-kit audit remains pending",
+  "evidence_hashes": {
+    "parent-final/phase-a-receipt.json": "682d2acfef4f85bd3cd167897e32abe00a1dab9d1f004737e37b9601162ec6f2",
+    "parent-final/source/source-receipt.json": "bf32e38e01364e13ab238a75abccb0335ecc09c1753b8a624ef5a43e3332f3c4",
+    "parent-final/consolidated.json": "dafe01b8b94aaed8ac9890f10689e0e3f0e3d8f8ca98ca844facb1439fc33818",
+    "parent-final/numeric-lineage.json": "b682e74066026ed3c5034e976ed544cbfa3355ced778d36a9a404ca0a2ad1033",
+    "parent-final-review/base.json": "2e82b863dd3ddf961a86b9d5881b690b4d980b5812f385d58bd714f62a454cde",
+    "parent-final-review/candidate.json": "cedc3fcfebb9324bb0beffb617b4e77a3e91f9e566e2c95d28b28c16bfc45872",
+    "parent-final-review/commands.json": "1a8402705e62f0df8c591ad021eb6b808f815e5492dae2b7293c7a19d664d75d",
+    "parent-red/consolidated.json": "fc25182b5d5709b1e9676bbab32f4374905ebc722661585b07be1d74fe82a078",
+    "parent-red/plural-value-boundary.json": "6313d991ccd061dc4ff9ce05461f1d47e6587630859aea99b11861c79e0ee139",
+    "parent-inflight-review/base.json": "63e117615bef05a8538df42bb27cf8878bb0331b85ca870de0aa01476b405711",
+    "parent-inflight-review/candidate.json": "80eee942626e26b3be47b3c8eb4bf520e66c318af193b6a37d6c509f72828c82",
+    "parent-count-token/base.json": "c6be5788f79dcca7bd21356ab7322fcb149ea634dbece1eb06122c8a12f133d1",
+    "parent-count-token/candidate.json": "e1e0cc27255dc6e4c4120e3bbe654bcbf0808f18f9deaee8b2302214fc0cb421",
+    "reviews/local-reviews.json": "ff2b8e9c3f0b9e84aaec7b56dce71f02ef377c15324dc25fbcf854145ca5d671",
+    "reviews/astra-verdict.json": "2389989ed51bb2fc86e8d4296415622de27c677428437df45d771f7ccae44eb4",
+    "reviews/astra/boundary-probe.json": "cedc3fcfebb9324bb0beffb617b4e77a3e91f9e566e2c95d28b28c16bfc45872",
+    "reviews/astra/integrity-receipt.json": "3ce256a24b93f1412e452753b959355f11183283560fae5eefd99bc6560c85b0",
+    "luna/receipt.md": "11cecd7f610647a573045b73364b02bf3d3e7f33f6c581dc29461aa4238f5222",
+    "luna/final-runner/source-receipt.json": "f88eefe16c13b8e6f23b126c18144d1c121985a58647c43ce81f15ee4c6cb40a",
+    "luna/consolidated/result.json": "5de318ca4fffe7c462e2164cdc5880ad13f8d0674201d987129b51fbde4a4f34",
+    "luna/numeric/result.json": "4ac284129975a1881812e59d16965fe18b3c8cd84e36c27808ec5d722e4dcc27",
+    "consolidated-cases.json": "a113ab1464c91430a5ca0ab7714e0589d7cb0fcca009ab52b8302a05cf91375c",
+    "scripts/consolidated-lineage-probe.R": "46d6e8aa19e121290c100c9e5b10d52026c6b877770a27ffe9594fd782ef016f",
+    "scripts/final-review-probe.R": "0206f1d332a114e729d8c1a6c4138b4b5125df3c80a9af743b183f2c0bee9515",
+    "spec-validation-receipt.json": "7425bc878329be8563108c9808be129593d35ba8005d01fdc680438e95fe70f1"
+  },
+  "M7_G7": "accepted/released unchanged",
+  "D08_D15": "accepted unchanged",
+  "G8": "closed",
+  "G9": "closed",
+  "C07": "not_run",
+  "C09": "unqualified; synthetic_fixture_only; benefit_guaranteed=false",
+  "conditional_D_without_completion_credit": [
+    "D-T06",
+    "D-T07",
+    "D-T14"
+  ],
+  "frozen_kit_independent_audit": "pending",
+  "private_data_read": false,
+  "push": false,
+  "server_run": false,
+  "Notion_sync": "not performed",
+  "all_run_owned_workers_terminal": true,
+  "active_processes": [],
+  "run_owned_sidebar_chats": [],
+  "persistent_polling": false,
+  "next": "D13 extra6 is closed blocked at Sol397d753 and Luna b938594, base6781319. Preserve original attempt1, repairs2 and consumed extra1..6 (totalrepairs8), all seven current commits and prior receipts. Source3084 and known199 pass with numeric/shared-subject preservation; final paired12case candidate6pass6fail and Astra:no leave P2 D13-EXTRA6-LINEAGE-01 open. Do not integrate or redispatch under this consumed grant. Any separately authorized follow-up must preserve the consolidated suite and repair the count-clause formatting boundary without losing complete-token privacy, then pass independent verification and fresh Astra. Keep accepted D08/D15 and M7/G7 unchanged; G8/G9closed. No M8 close or D09 in this cycle."
+}

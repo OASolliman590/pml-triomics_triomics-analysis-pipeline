@@ -1,0 +1,117 @@
+{
+  "candidate": "6781319396b4a44fa04d877469440db72db3bbef",
+  "passed": 8,
+  "failed": 4,
+  "case_count": 12,
+  "scope": "Actual synthetic producer/profile/report boundary and HTML projection; not native rendering or universal anonymization",
+  "cases": [
+    {
+      "input": "subjects:32; features selected",
+      "expected": "subjects:32; features selected",
+      "kind": "scientific_lineage",
+      "construction": "subjects:32; features selected",
+      "selection": "subjects:32; features selected",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "Subjects:32; features selected",
+      "expected": "Subjects:32; features selected",
+      "kind": "scientific_lineage",
+      "construction": "Subjects:32; features selected",
+      "selection": "Subjects:32; features selected",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "SUBJECTS:32; FEATURES SELECTED",
+      "expected": "SUBJECTS:32; FEATURES SELECTED",
+      "kind": "scientific_lineage",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": false
+    },
+    {
+      "input": "subjects: 32. Features selected",
+      "expected": "subjects: 32. Features selected",
+      "kind": "scientific_lineage",
+      "construction": "subjects: 32. Features selected",
+      "selection": "subjects: 32. Features selected",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "Subjects: 32. Features selected",
+      "expected": "Subjects: 32. Features selected",
+      "kind": "scientific_lineage",
+      "construction": "Subjects: 32. Features selected",
+      "selection": "Subjects: 32. Features selected",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "SUBJECTS: 32. FEATURES SELECTED",
+      "expected": "SUBJECTS: 32. FEATURES SELECTED",
+      "kind": "scientific_lineage",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": false
+    },
+    {
+      "input": "subjects: 32; features selected",
+      "expected": "subjects: 32; features selected",
+      "kind": "scientific_lineage",
+      "construction": "subjects: 32; features selected",
+      "selection": "subjects: 32; features selected",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "SUBJECTS: 32; FEATURES SELECTED",
+      "expected": "SUBJECTS: 32; FEATURES SELECTED",
+      "kind": "scientific_lineage",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": false
+    },
+    {
+      "input": "Sample: centering and scaling of 32 measurements",
+      "expected": "Sample: centering and scaling of 32 measurements",
+      "kind": "scientific_lineage",
+      "construction": "Sample: centering and scaling of 32 measurements",
+      "selection": "Sample: centering and scaling of 32 measurements",
+      "visible_in_html": true,
+      "passed": true
+    },
+    {
+      "input": "SAMPLES: NORMALIZATION USING 32 MEASUREMENTS",
+      "expected": "SAMPLES: NORMALIZATION USING 32 MEASUREMENTS",
+      "kind": "scientific_lineage",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": false
+    },
+    {
+      "input": "SUBJECTS: 32:A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    },
+    {
+      "input": "SubjectS: 32-A13 used in selection",
+      "expected": "",
+      "kind": "synthetic_identifier",
+      "construction": "",
+      "selection": "",
+      "visible_in_html": false,
+      "passed": true
+    }
+  ]
+}

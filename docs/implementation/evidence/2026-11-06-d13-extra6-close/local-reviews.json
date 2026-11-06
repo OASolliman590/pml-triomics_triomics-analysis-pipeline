@@ -1,0 +1,39 @@
+{
+  "Spec": {
+    "agent": "/root/d13_extra6_spec",
+    "verdict": "changes_required",
+    "findings": [
+      {
+        "id": "D13-EXTRA6-LINEAGE-01",
+        "severity": "P2",
+        "file": "R/report_targets.R",
+        "lines": "96-112",
+        "finding": "Plural aggregate count prose loses construction/selection lineage with no whitespace after colon or a sentence-ending period after the count. Lower/title variants regress; upper variants remain lost.",
+        "reproducers": [
+          "subjects:32; features selected",
+          "subjects: 32. Features selected"
+        ],
+        "acceptance_basis": "D_ANNOTATION_TARGET_REPORT.md section6 lineage preservation; extra6 numeric/plural preservation",
+        "source_profile_unchanged": true,
+        "overlap_flags_preserved": true
+      }
+    ],
+    "integrity": "five freeze digests and1169source hashes match",
+    "scope": "12 paired synthetic producer/profile/report/HTML probes; no full suite/fits",
+    "effective_settings_exposed": false
+  },
+  "Standards": {
+    "agent": "/root/d13_extra6_standards",
+    "verdict": "pass",
+    "hard_violations": [],
+    "heuristics": [],
+    "reviewer_reported_probes": {
+      "candidate_pass": 20,
+      "base_pass": 16,
+      "cases": 20
+    },
+    "integrity": "five freeze digests and1169source hashes match",
+    "scope": "bounded diff plus synthetic probes; no full suite/fits",
+    "effective_settings_exposed": false
+  }
+}

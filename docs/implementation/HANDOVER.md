@@ -1,3 +1,11 @@
+# Current checkpoint: D13 extra6 closed blocked
+
+Read [Sol’s receipt](reviews/2026-11-06-d13-extra6-blocked-close.md) and [fresh Astra](reviews/2026-11-06-d13-extra6-astra.md). Candidate397d753 and worker b938594 remain unintegrated. Independent source3,084, known199/199 and numeric lineage pass with zero warnings/skips. Standards pass; Spec and Astra confirm one P2 count-formatting lineage regression. Actual-archive paired12case candidate6pass6fail. Native/installed/full-source/package gates not run on this candidate. Totalrepairs8 consumed; all prior attempts preserved. G8/G9closed. All owned agents/processes terminal.
+
+Literal resume: **D13 extra6 is closed blocked at Sol397d753 and Luna b938594, base6781319. Preserve original attempt1, repairs2 and consumed extra1..6 (totalrepairs8), all seven current commits and prior receipts. Source3084 and known199 pass with numeric/shared-subject preservation; final paired12case candidate6pass6fail and Astra:no leave P2 D13-EXTRA6-LINEAGE-01 open. Do not integrate or redispatch under this consumed grant. Any separately authorized follow-up must preserve the consolidated suite and repair the count-clause formatting boundary without losing complete-token privacy, then pass independent verification and fresh Astra. Keep accepted D08/D15 and M7/G7 unchanged; G8/G9closed. No M8 close or D09 in this cycle.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D13 extra6 authorized
 
 Read [the bounded dispatch](reviews/2026-11-06-d13-lineage-extra6-dispatch.md). One fresh Luna repair from 6781319, two product files, both remaining lineage defects, all prior attempts retained. Parent twelve-case replay is six passes and six failures. G8/G9 stay closed.
