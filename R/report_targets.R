@@ -46,7 +46,7 @@ triomics_report_target_safe_association_token <- function(value) {
 triomics_report_target_safe_association_prose <- function(value) {
   if (!is.character(value) || length(value) != 1L || is.na(value)) return("")
   value <- trimws(value)
-  identifier_separator <- "[[:space:]_.:/#=()'’\"-]"
+  identifier_separator <- "[[:space:]_,.;:/#=()'’\"-]"
   identifier_value <- "[[:alnum:]][[:alnum:]_.-]*"
   person_label <- paste0(
     "(?i:(?:\\b|_)(?:subject|patient|participant|sample|mrn)(?=(?:",
@@ -72,6 +72,7 @@ triomics_report_target_safe_association_prose <- function(value) {
   )
   punctuated_identifier <- paste0(
     "(?:[[:space:]]*[:=#/._-][[:space:]]*|[[:space:]]+['’\"()_-][[:space:]]*)",
+    "(?=[[:digit:]]|(?-i:[A-Z]))",
     identifier_value
   )
   strong_identifier_value <- paste0(
@@ -84,10 +85,17 @@ triomics_report_target_safe_association_prose <- function(value) {
     punctuated_identifier,
     ")|", strong_identifier_value, ")"
   )
+  # Keep the original embedded-prefix matches for subject, patient, and participant labels.
+  legacy_identifier_pattern <- paste0(
+    "(?i:subject|patient|participant)[_.:-][A-Za-z0-9]+|",
+    "(?i:subject|patient|participant)(?=[A-Z0-9])|",
+    "(?i:(?:subject|patient|participant)[[:space:]]+(?:id[[:space:]_.:-]*)?[0-9]+)"
+  )
   if (!nzchar(value) || nchar(value, type = "bytes") > 512L ||
       grepl("[[:cntrl:]<>`]", value, perl = TRUE) ||
       triomics_report_contains_private_text(value) ||
-      grepl(identifier_pattern, value, perl = TRUE)) {
+      grepl(identifier_pattern, value, perl = TRUE) ||
+      grepl(legacy_identifier_pattern, value, perl = TRUE)) {
     return("")
   }
   token <- triomics_report_target_safe_association_token(value)
