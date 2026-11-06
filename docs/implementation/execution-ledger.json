@@ -37,15 +37,15 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D13_extra4_authorized",
-    "last_reconciled": "2026-11-06T10:11:26.633753+00:00",
+    "status": "D13_extra4_closed_blocked",
+    "last_reconciled": "2026-11-06T11:00:46.724772+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "fresh Luna from1553e52; independent verification and fresh Astra; bounded receipt; G8/G9closed",
+    "disposition": "D13 extra4 is blocked at Sol candidatef1d57da and Luna0e7cced from1553e52. Preserve original initial1+repairs2 and consumed extra1/2/3/4 (total repairs6). The previous58 probe cases now pass; three attached-identifier regressions and continuing capitalization losses block acceptance. Do not integrate or redispatch under this consumed grant. A separately authorized bounded follow-up must resolve D13-EXTRA4-PRIVACY-01 and D13-EXTRA4-LINEAGE-01, preserve all prior positive/negative cases, then pass independent source/installed/native verification and fresh Astra. Keep D08/D15 and M7/G7 unchanged; G8/G9 remain closed. No M8 close or D09.",
     "current_gate": {
       "status": "blocked",
-      "candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
-      "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra3-blocked-close.md",
+      "candidate": "f1d57da656156fd2da0430f56094708ab5926998",
+      "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra4-blocked-close.md",
       "Astra": "audit_pass_no",
       "G8": "closed",
       "G9": "closed"
@@ -7235,6 +7235,13 @@
       "candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
       "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra3-close/receipt.json",
       "all_terminal": true
+    },
+    {
+      "at": "2026-11-06T11:00:46.724772+00:00",
+      "event": "D13_extra4_closed_blocked",
+      "candidate": "f1d57da656156fd2da0430f56094708ab5926998",
+      "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra4-close/receipt.json",
+      "all_terminal": true
     }
   ],
   "packets": {
@@ -8700,27 +8707,28 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "extra4_authorized",
+      "status": "blocked_after_fourth_explicit_extra_repair",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
       "blockers": [
-        "D13-EXTRA3-LINEAGE-01 P2: capitalized scientific descriptions blanked; independent reproduction32pass3fail"
+        "D13-EXTRA4-PRIVACY-01 P1: plural exemption leaks attached S-punctuation IDs",
+        "D13-EXTRA4-LINEAGE-01 P2: capitalized descriptive terms still dropped"
       ],
-      "repair_attempts": 5,
+      "repair_attempts": 6,
       "implementation_base": "92556411e4a7e129bc0d67f8e47fa4abdf27da0a",
       "active_worker": null,
       "accepted": false,
       "completion_credit": false,
       "dispatch_ref": "docs/implementation/reviews/2026-11-04-d-t13-dispatch.md",
-      "candidate_commit": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+      "candidate_commit": "f1d57da656156fd2da0430f56094708ab5926998",
       "initial_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-initial-review.md",
       "repair1_review_ref": "docs/implementation/reviews/2026-11-04-d-t13-repair1-review.md",
-      "final_product_commit": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
-      "final_review_ref": "docs/implementation/reviews/2026-11-06-d13-extra3-blocked-close.md",
-      "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra3-close/receipt.json",
+      "final_product_commit": "f1d57da656156fd2da0430f56094708ab5926998",
+      "final_review_ref": "docs/implementation/reviews/2026-11-06-d13-extra4-blocked-close.md",
+      "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra4-close/receipt.json",
       "source_counts": {
-        "pass": 703,
+        "pass": 906,
         "fail": 0,
         "error": 0,
         "warn": 0,
@@ -8728,7 +8736,7 @@
         "blocks": 60
       },
       "pending_gates": [
-        "Separately authorized bounded follow-up for D13-EXTRA3-LINEAGE-01",
+        "Separate bounded authority for D13-EXTRA4-PRIVACY-01 and D13-EXTRA4-LINEAGE-01",
         "Independent source/installed/native verification after repair",
         "Fresh applicable packet audit",
         "M8 milestone gates"
@@ -8742,21 +8750,25 @@
       "authorized_additional_repair": {
         "episode": 4,
         "allowed": 1,
-        "used": 0,
+        "used": 1,
         "reason": "capitalization loss D13-EXTRA3-LINEAGE-01",
         "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-capitalization-extra4-dispatch.md",
-        "accepted": false
+        "accepted": false,
+        "status": "consumed_blocked",
+        "worker_commit": "0e7ccedc7fedb1c4f11cc5eff14515813789a1fa",
+        "Sol_commit": "f1d57da656156fd2da0430f56094708ab5926998",
+        "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra4-blocked-close.md"
       },
-      "next_transition": "fresh Luna from1553e52; independent verification and fresh Astra; bounded receipt; G8/G9closed",
-      "extra_candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
-      "source_counts_producer": "independent Sol focused source on1553e52; not acceptance",
+      "next_transition": "D13 extra4 is blocked at Sol candidatef1d57da and Luna0e7cced from1553e52. Preserve original initial1+repairs2 and consumed extra1/2/3/4 (total repairs6). The previous58 probe cases now pass; three attached-identifier regressions and continuing capitalization losses block acceptance. Do not integrate or redispatch under this consumed grant. A separately authorized bounded follow-up must resolve D13-EXTRA4-PRIVACY-01 and D13-EXTRA4-LINEAGE-01, preserve all prior positive/negative cases, then pass independent source/installed/native verification and fresh Astra. Keep D08/D15 and M7/G7 unchanged; G8/G9 remain closed. No M8 close or D09.",
+      "extra_candidate": "f1d57da656156fd2da0430f56094708ab5926998",
+      "source_counts_producer": "Independent Sol focused source onf1d57da; not acceptance",
       "final_local_review": {
-        "Spec": "changes_required P2",
+        "Spec": "changes_required P1/P2",
         "Standards": "pass",
-        "Sol": "all seven fixed; capitalization readback32pass3fail",
+        "Sol": "prior58passed; broader60pass5fail; source906pass",
         "Astra": "audit_pass_no"
       },
-      "final_snapshot_commit": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+      "final_snapshot_commit": "f1d57da656156fd2da0430f56094708ab5926998",
       "additional_repair_history": [
         {
           "allowed": 1,
@@ -8795,7 +8807,7 @@
       ],
       "extra2_worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
       "extra2_Sol_candidate": "c805f0418fe637d412290466c28b8c661db4a51d",
-      "final_worker_commit": "4b04dfde061a901781041c672d27bec5127c2aa4",
+      "final_worker_commit": "0e7ccedc7fedb1c4f11cc5eff14515813789a1fa",
       "previous_extra1_candidate": "7f50b14c95a9f563f646b842004318552033089d",
       "installed_counts": null,
       "extra3_worker_commit": "4b04dfde061a901781041c672d27bec5127c2aa4",
@@ -8805,7 +8817,9 @@
         "D13-EXTRA2-PRIVACY-02",
         "D13-EXTRA2-LINEAGE-01"
       ],
-      "installed_status": "not_run_on1553e52; extra2 installed612 remains historical"
+      "installed_status": "not_run_onf1d57da",
+      "extra4_worker_commit": "0e7ccedc7fedb1c4f11cc5eff14515813789a1fa",
+      "extra4_Sol_candidate": "f1d57da656156fd2da0430f56094708ab5926998"
     },
     "D-T15": {
       "status": "accepted_synthetic_software_evidence",
@@ -9302,7 +9316,55 @@
     "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra3-blocked-close.md"
   },
   "D13_extra_repair4_orchestration": {
-    "status": "prepared",
-    "state_ref": "d13/capitalization-extra4/state.json"
+    "status": "closed_blocked",
+    "state_ref": "d13/capitalization-extra4/state.json",
+    "worker": {
+      "agent": "/root/d13_extra4_luna",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "base_commit": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+      "status": "completed",
+      "allowed_next_transition": "inspect diff; two-axis local review; independent source/native/installed proof and fresh Astra; bounded receipt",
+      "cursor": null
+    },
+    "reviewers": [
+      {
+        "agent": "/root/d13_extra4_spec",
+        "candidate": "f1d57da656156fd2da0430f56094708ab5926998",
+        "requested_model": "gpt-6.1-sol",
+        "requested_effort": "high",
+        "effective_settings_exposed": false,
+        "status": "completed",
+        "allowed_next_transition": "reconcile independent review and parent proof; fresh Astra; no further product repair under this grant",
+        "cursor": null,
+        "verdict": "changes_required P1/P2"
+      },
+      {
+        "agent": "/root/d13_extra4_standards",
+        "candidate": "f1d57da656156fd2da0430f56094708ab5926998",
+        "requested_model": "gpt-6.1-sol",
+        "requested_effort": "high",
+        "effective_settings_exposed": false,
+        "status": "completed",
+        "allowed_next_transition": "reconcile independent review and parent proof; fresh Astra; no further product repair under this grant",
+        "cursor": null,
+        "verdict": "pass"
+      }
+    ],
+    "parent_process": null,
+    "Astra": {
+      "agent": "/root/d13_extra4_astra",
+      "candidate": "f1d57da656156fd2da0430f56094708ab5926998",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "low",
+      "effective_settings_exposed": false,
+      "status": "completed",
+      "allowed_next_transition": "record verdict and bounded receipt; no further product repair; G8/G9closed",
+      "cursor": null,
+      "verdict": "audit_pass_no"
+    },
+    "all_terminal": true,
+    "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra4-blocked-close.md"
   }
 }

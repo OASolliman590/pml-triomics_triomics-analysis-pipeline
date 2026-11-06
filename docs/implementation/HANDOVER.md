@@ -1,3 +1,11 @@
+# Current checkpoint: D13 extra4 closed blocked
+
+Read [Sol’s receipt](reviews/2026-11-06-d13-extra4-blocked-close.md) and [fresh Astra](reviews/2026-11-06-d13-extra4-astra.md). Independent source906passes, zero failures/errors/warnings/skips; previous58cases pass. Broader65case probe60pass/5fail shows three newly leaked identifier forms and two continuing capitalization losses. Spec changes_required P1/P2; Standards pass; Astra audit_pass:no. Candidatef1d57da and worker0e7cced preserved, unintegrated. Native/installed/full-source/package gates not run on this candidate. Totalrepairs6 consumed. G8/G9closed; accepted D08/D15 and M7/G7 unchanged. All owned agents/processes terminal; protected dirt preserved.
+
+Literal resume: **D13 extra4 is blocked at Sol candidatef1d57da and Luna0e7cced from1553e52. Preserve original initial1+repairs2 and consumed extra1/2/3/4 (total repairs6). The previous58 probe cases now pass; three attached-identifier regressions and continuing capitalization losses block acceptance. Do not integrate or redispatch under this consumed grant. A separately authorized bounded follow-up must resolve D13-EXTRA4-PRIVACY-01 and D13-EXTRA4-LINEAGE-01, preserve all prior positive/negative cases, then pass independent source/installed/native verification and fresh Astra. Keep D08/D15 and M7/G7 unchanged; G8/G9 remain closed. No M8 close or D09.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D13 extra4 authorized
 
 Read [the dispatch](reviews/2026-11-06-d13-capitalization-extra4-dispatch.md). User authorizes one fresh two-file repair from1553e52 for capitalization-dependent lineage loss. Initial1+original repairs2+extra1/2/3 remain consumed. Extra4 grants one repair only. G8/G9 closed.

@@ -1,0 +1,232 @@
+{
+  "packet_id": "D-T13",
+  "status": "blocked_after_fourth_explicit_extra_repair",
+  "accepted": false,
+  "completion_credit": false,
+  "recorded_at": "2026-11-06T11:00:46.724772+00:00",
+  "canonical_dispatch_commit": "3693c660781def13570266502b56ab6ab8413a05",
+  "prior_receipt_commit": "42803c5e1df38bafd84207bf4d019e04553047e9",
+  "worker_base": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+  "worker_red_commit": "28b40839fc3ac5c92e44244d731343057f29fc51",
+  "worker_commit": "0e7ccedc7fedb1c4f11cc5eff14515813789a1fa",
+  "Sol_candidate_commit": "f1d57da656156fd2da0430f56094708ab5926998",
+  "repair_comparison_base": "7de7e6a383ceed47f080b904b21db4c70280e737",
+  "integration_commit": null,
+  "repair_files": [
+    "R/report_targets.R",
+    "tests/testthat/test-D-T13.R"
+  ],
+  "original_attempts": 1,
+  "original_repairs": 2,
+  "previous_extra_repairs_used": 3,
+  "current_extra_episode": 4,
+  "current_extra_allowed": 1,
+  "current_extra_used": 1,
+  "total_repairs": 6,
+  "further_repairs_authorized": false,
+  "worker_RED": {
+    "pass": 861,
+    "fail": 45,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 60,
+    "exit_code": 1
+  },
+  "worker_source_counts": {
+    "pass": 906,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 60
+  },
+  "independent_source_counts": {
+    "pass": 906,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 60
+  },
+  "independent_source_by_file": {
+    "test-D-T08.R": {
+      "pass": 148,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 25
+    },
+    "test-D-T13.R": {
+      "pass": 626,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 12
+    },
+    "test-D-T15.R": {
+      "pass": 132,
+      "fail": 0,
+      "error": 0,
+      "warn": 0,
+      "skip": 0,
+      "blocks": 23
+    }
+  },
+  "source_exit": 0,
+  "source_command": "Rscript --vanilla run-source-unbounded-report.R <clean-Sol-worktree> <fresh-evidence> \"D-T13|D-T08|D-T15\"",
+  "named_testthat_warnings": [],
+  "named_skips": [],
+  "previous_58_cases": {
+    "pass": 58,
+    "fail": 0,
+    "parent_independently_confirmed_as_subset_of_65_case_probe": true,
+    "all_original_capitalization_examples_fixed": true
+  },
+  "parent_paired_boundaries": {
+    "case_count": 65,
+    "baseline_pass": 51,
+    "baseline_fail": 14,
+    "candidate_pass": 60,
+    "candidate_fail": 5,
+    "baseline_exit": 1,
+    "candidate_exit": 1,
+    "baseline_commit": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+    "candidate_commit": "f1d57da656156fd2da0430f56094708ab5926998",
+    "command": "Rscript --vanilla review-boundaries-probe.R <immutable-archive-source> <result.json> <commit>",
+    "scope": "Actual synthetic producer/profile/report tables/HTML projection; both lineage fields, overlap and non-independence checked",
+    "baseline_receipt": "base-boundaries.json",
+    "candidate_receipt": "candidate-boundaries.json",
+    "candidate_failures": [
+      "Sample: Robust normalization of 32 measurements",
+      "Sample: Log normalization of 32 measurements",
+      "SubjectS-7 used in selection",
+      "PatientS-A13 used in construction",
+      "cohortPatientS-A13 clinical score"
+    ]
+  },
+  "local_reviews": {
+    "Standards": {
+      "agent": "/root/d13_extra4_standards",
+      "verdict": "pass",
+      "findings": [],
+      "limits": "Read-only static standards review; worker tests inspected, no independent R rerun. Not Spec approval."
+    },
+    "Spec": {
+      "agent": "/root/d13_extra4_spec",
+      "verdict": "changes_required",
+      "findings": [
+        {
+          "id": "D13-EXTRA4-PRIVACY-01",
+          "severity": "P1",
+          "file": "R/report_targets.R",
+          "line": 52,
+          "finding": "Plural exemption s\\b permits SubjectS-7, PatientS-A13 and cohortPatientS-A13 which previous snapshot withheld."
+        },
+        {
+          "id": "D13-EXTRA4-LINEAGE-01",
+          "severity": "P2",
+          "file": "R/report_targets.R",
+          "line": 90,
+          "finding": "Normalization-name exceptions leave capitalized Robust/Log descriptions blank although lowercase controls survive."
+        }
+      ],
+      "independent_probe": {
+        "candidate_pass": 7,
+        "candidate_fail": 9,
+        "baseline_sanitizer_pass": 11,
+        "baseline_sanitizer_fail": 5,
+        "cases": 16,
+        "baseline_method": "previous sanitizer substituted into same pipeline; parent separately compared full immutable snapshots"
+      },
+      "evidence": "reviews/spec/review.md"
+    }
+  },
+  "Astra": {
+    "audit_pass": false,
+    "agent": "/root/d13_extra4_astra",
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "low",
+    "effective_settings_exposed": false,
+    "candidate": "f1d57da656156fd2da0430f56094708ab5926998",
+    "findings": [
+      {
+        "id": "D13-EXTRA4-PRIVACY-01",
+        "severity": "P1",
+        "file": "R/report_targets.R",
+        "line": 52,
+        "finding": "Plural exemption s\\b permits SubjectS-7, PatientS-A13 and cohortPatientS-A13 which previous snapshot withheld."
+      },
+      {
+        "id": "D13-EXTRA4-LINEAGE-01",
+        "severity": "P2",
+        "file": "R/report_targets.R",
+        "line": 90,
+        "finding": "Normalization-name exceptions leave capitalized Robust/Log descriptions blank although lowercase controls survive."
+      }
+    ],
+    "acceptance_basis": "Section6 joint privacy and construction/selection lineage requirements; no universal anonymization requirement",
+    "integrity": "all1152 source hashes, five frozen digests, repaired Git objects verified",
+    "scope": "read-only static/evidence review; no independent R rerun",
+    "acceptance": false,
+    "G8": "closed",
+    "G9": "closed"
+  },
+  "snapshot_digests": {
+    "snapshot.tar": "757b05b9a47a885ccd7377a4e8861bdf29c0de85b04c4f94ba24bb9612256e76",
+    "files.json": "c55e1e5276d737275668c060eec2e76f957278152f0f9a836b64a9bc8cff1b9a",
+    "repair.diff": "4a4e6cb1ddd17fe36a854abcc69b4984dae6dde3e2657554eb12ad95bf94b5e0",
+    "product.diff": "631269bc670aa08ea3da5e7fa962a93631f48fe8cf08e00e8a255f4b2c327fec",
+    "commits.txt": "4de75309b25b6cf7d07c3997f0651f81d790b9755ab6b0763abbed719bbaeec1"
+  },
+  "archive_commit": "f1d57da656156fd2da0430f56094708ab5926998",
+  "archive_file_count": 1152,
+  "archive_unchanged": true,
+  "worker_Sol_product_identical": true,
+  "protected_dirt_unchanged": true,
+  "evidence_hashes": {
+    "parent-final/source/source-receipt.json": "1a323fc5aedf4be7617ecbca8caaba84cf947a14c8f6feb805a5d5baee6e3e73",
+    "parent-final/source.log": "4931e3d567c9e6dec8c0d37c6947a142ee35759bb03214668031c126d1620934",
+    "parent-final/base-boundaries.json": "3df8626d3dc143248042cfd717e5d4bee24808a44b877b3f8f74a8e29393b9ff",
+    "parent-final/candidate-boundaries.json": "e966e4be5c746a1b5a3231e3eac4d6117c5e1550c7f21d3c4ad10ae825156e52",
+    "parent-final/commands.json": "ca968469ce59f76bd0832fb996108838b38154ad471d580a7e80e949b7a421ee",
+    "luna/red/source-receipt.json": "adbd05dfc214862e6966fad5d4f082b7c4e09e7187ff38cb7f6b54b99fa663d9",
+    "luna/green/source-receipt.json": "162578ef7d74335cbb6a42d6bd4e8dea91212dda2ef1453e1c7f17af580ba24e",
+    "luna/probe/result.json": "d170a944105454392711ab1dc665258f5e68b9410997af0f94579a670827e150",
+    "scripts/review-boundaries-probe.R": "c8e41bc82b274ed17ef8ffe70dd33823a01d7f78fca5a6301a90e54c2a4c0ca8",
+    "reviews/local-reviews.json": "1acdb7631768ddc5f19f97e543c6c08d99b31d8bd25ff81518e4200398a11c65",
+    "reviews/spec/review.md": "cd84e60518117e9d06857edbcf6d8eda152f67a6b589c7520f41013424214164",
+    "reviews/spec/nearby-probe.json": "8a1e1071c1e7c73ac71a3d8fd54d860449a282138f2a57b344864f06275f8588",
+    "reviews/spec/baseline-nearby-probe.json": "6c75dde8e1cf5bbc76fdffd58191ab54a8fb5565e3e8e0827d39a30884ffa955",
+    "reviews/astra-verdict.json": "44847ad6006dcf1bbe40bcc141c01cbc814fdec54565255b36dfad63d6c2a3a3"
+  },
+  "native_report": "not_run_on_this_candidate",
+  "installed_focused_tests": "not_run_on_this_candidate",
+  "full_source_suite": "not_run_on_this_candidate",
+  "package_Status": "not_run; no Status: OK claimed",
+  "remaining_validation_reason": "Required privacy and lineage gates failed; fresh Astra ran as authorized. Previous native/installed results cannot substitute.",
+  "milestone_acceptance": false,
+  "M7_G7": "accepted/released unchanged",
+  "D08_D15": "accepted unchanged",
+  "G8": "closed",
+  "G9": "closed",
+  "C07": "not_run",
+  "C09": "unqualified; synthetic_fixture_only; benefit_guaranteed=false",
+  "conditional_D_without_completion_credit": [
+    "D-T06",
+    "D-T07",
+    "D-T14"
+  ],
+  "frozen_kit_independent_audit": "pending",
+  "private_data_read": false,
+  "push": false,
+  "server_run": false,
+  "Notion_sync": "not performed",
+  "all_run_owned_workers_terminal": true,
+  "active_processes": [],
+  "run_owned_sidebar_chats": [],
+  "persistent_polling": false,
+  "next": "D13 extra4 is blocked at Sol candidatef1d57da and Luna0e7cced from1553e52. Preserve original initial1+repairs2 and consumed extra1/2/3/4 (total repairs6). The previous58 probe cases now pass; three attached-identifier regressions and continuing capitalization losses block acceptance. Do not integrate or redispatch under this consumed grant. A separately authorized bounded follow-up must resolve D13-EXTRA4-PRIVACY-01 and D13-EXTRA4-LINEAGE-01, preserve all prior positive/negative cases, then pass independent source/installed/native verification and fresh Astra. Keep D08/D15 and M7/G7 unchanged; G8/G9 remain closed. No M8 close or D09."
+}
