@@ -622,6 +622,7 @@ testthat::test_that("association prose suppresses labeled identifiers and retain
     "Sample: Probabilistic quotient normalization of 32 measurements",
     "Sample: Log transformation of 32 measurements",
     "Sample: Robust feature filtering of 32 measurements",
+    "Sample: Pooled quality control based signal correction of 32 measurements",
     "Sample: Score constructed from 3 features",
     "Sample: Top 10 features selected in the same study"
   )
@@ -655,7 +656,11 @@ testthat::test_that("association prose suppresses labeled identifiers and retain
     "SampleS.7 used in construction",
     "SampleS:A13 used in construction",
     "ParticipantS.7 used in selection",
-    "cohortParticipantS-13 used in selection"
+    "cohortParticipantS-13 used in selection",
+    "cohortPatientS",
+    "cohortPatientS count 32",
+    "ClinicalSubjectS",
+    "ClinicalSubjectS count 32"
   )
   identifiers <- c(
     identifiers, attached_plural_identifiers,
