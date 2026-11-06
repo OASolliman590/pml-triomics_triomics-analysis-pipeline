@@ -1,3 +1,11 @@
+# Current checkpoint: D13 extra4 authorized
+
+Read [the dispatch](reviews/2026-11-06-d13-capitalization-extra4-dispatch.md). User authorizes one fresh two-file repair from1553e52 for capitalization-dependent lineage loss. Initial1+original repairs2+extra1/2/3 remain consumed. Extra4 grants one repair only. G8/G9 closed.
+
+Literal resume: **Join the recorded extra4 Luna worker; do not redispatch or reset attempts. Verify case-invariant scientific lineage and retained privacy at the producer/report/HTML boundary, focused/installed/native gates and fresh Astra. Stop at the bounded D13 receipt; no M8 close or D09.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D13 extra3 closed blocked
 
 Read [Sol’s receipt](reviews/2026-11-06-d13-extra3-blocked-close.md) and [fresh Astra](reviews/2026-11-06-d13-extra3-astra.md). All seven original counterexamples fixed; original matrix31/31 and independent source703 pass with zero failures/errors/warnings/skips. New capitalization matrix32 pass/3 fail shows valid scientific lineage omitted. Standards pass; Spec changes_required P2; Astra audit_pass:no. Candidate1553e52 and worker4b04dfd remain unintegrated. Native/installed/full-source/package gates not run for this candidate. Initial1+original repairs2+extra1/2/3 consumed. G8/G9 closed; accepted D08/D15 and M7/G7 unchanged. All owned workers/processes terminal; no sidebar children or polling. Protected dirt preserved.

@@ -37,11 +37,11 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D13_extra3_closed_blocked",
+    "status": "D13_extra4_authorized",
     "last_reconciled": "2026-11-06T10:11:26.633753+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "D13 extra3 is blocked at Sol candidate1553e52 and Luna4b04dfd. Preserve c805f04 and all previous attempts: initial1, original repairs2, extra1/extra2/extra3 consumed. All seven original counterexamples are fixed. Do not integrate or redispatch under this exhausted grant. A separately authorized bounded follow-up must resolve D13-EXTRA3-LINEAGE-01 (capitalized scientific descriptions lost), retain the 31 passing cases and numeric/privacy/overlap guards, then pass independent source/installed/native verification and fresh Astra. Keep D08/D15 and M7/G7 unchanged; G8/G9 remain closed. No M8 close or D09 yet.",
+    "disposition": "fresh Luna from1553e52; independent verification and fresh Astra; bounded receipt; G8/G9closed",
     "current_gate": {
       "status": "blocked",
       "candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
@@ -8700,7 +8700,7 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "blocked_after_third_explicit_extra_repair",
+      "status": "extra4_authorized",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
@@ -8740,18 +8740,14 @@
         "receipt_ref": "docs/implementation/evidence/2026-11-04-d-t13-close/blocked-receipt.json"
       },
       "authorized_additional_repair": {
-        "episode": 3,
+        "episode": 4,
         "allowed": 1,
-        "used": 1,
-        "reason": "all seven extra2 counterexamples",
-        "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-seven-counterexamples-dispatch.md",
-        "accepted": false,
-        "status": "consumed_blocked",
-        "worker_commit": "4b04dfde061a901781041c672d27bec5127c2aa4",
-        "Sol_commit": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
-        "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra3-blocked-close.md"
+        "used": 0,
+        "reason": "capitalization loss D13-EXTRA3-LINEAGE-01",
+        "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-capitalization-extra4-dispatch.md",
+        "accepted": false
       },
-      "next_transition": "D13 extra3 is blocked at Sol candidate1553e52 and Luna4b04dfd. Preserve c805f04 and all previous attempts: initial1, original repairs2, extra1/extra2/extra3 consumed. All seven original counterexamples are fixed. Do not integrate or redispatch under this exhausted grant. A separately authorized bounded follow-up must resolve D13-EXTRA3-LINEAGE-01 (capitalized scientific descriptions lost), retain the 31 passing cases and numeric/privacy/overlap guards, then pass independent source/installed/native verification and fresh Astra. Keep D08/D15 and M7/G7 unchanged; G8/G9 remain closed. No M8 close or D09 yet.",
+      "next_transition": "fresh Luna from1553e52; independent verification and fresh Astra; bounded receipt; G8/G9closed",
       "extra_candidate": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
       "source_counts_producer": "independent Sol focused source on1553e52; not acceptance",
       "final_local_review": {
@@ -8783,6 +8779,18 @@
           "worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
           "Sol_commit": "c805f0418fe637d412290466c28b8c661db4a51d",
           "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra2-blocked-close.md"
+        },
+        {
+          "episode": 3,
+          "allowed": 1,
+          "used": 1,
+          "reason": "all seven extra2 counterexamples",
+          "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-seven-counterexamples-dispatch.md",
+          "accepted": false,
+          "status": "consumed_blocked",
+          "worker_commit": "4b04dfde061a901781041c672d27bec5127c2aa4",
+          "Sol_commit": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
+          "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra3-blocked-close.md"
         }
       ],
       "extra2_worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
@@ -9292,5 +9300,9 @@
     "status": "closed_blocked",
     "all_terminal": true,
     "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra3-blocked-close.md"
+  },
+  "D13_extra_repair4_orchestration": {
+    "status": "prepared",
+    "state_ref": "d13/capitalization-extra4/state.json"
   }
 }
