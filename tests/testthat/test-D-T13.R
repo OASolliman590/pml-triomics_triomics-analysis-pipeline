@@ -558,6 +558,17 @@ testthat::test_that("association prose suppresses labeled identifiers and retain
     "Sample-based score constructed from 3 features",
     "Sample-level PCA v2.1 with 10 features"
   )
+  safe <- unique(c(
+    safe,
+    toupper(safe),
+    "Sample-Level score constructed from 3 features",
+    "Sample-Wise normalization of 32 measurements",
+    "Sample: Median normalization of 32 measurements",
+    "Sample-Level Median normalization of 32 measurements",
+    "Sample-Wise PCA v2.1 with 10 features",
+    "Sample: MEAN normalization of 32 measurements",
+    "Sample: Quantile normalization of 32 measurements"
+  ))
   identifiers <- c(
     "Patient: 13 clinical score",
     "Subject: 7 features selected",
@@ -589,7 +600,16 @@ testthat::test_that("association prose suppresses labeled identifiers and retain
     "Patient, A13 clinical score",
     "MRN; 123456 used in construction",
     "cohortSubjectBeta used in selection",
-    "Sample-A13 used in construction"
+    "Sample-A13 used in construction",
+    "Sample: A13 used in construction",
+    "Sample: ALPHA used in construction",
+    "Sample-Alpha used in selection",
+    "Sample_ID_a13 used in construction",
+    "Sample-Level score constructed from 3 features; Patient ID A13",
+    "Sample-Wise normalization of 32 measurements; Sample ID A13",
+    "Sample: Median normalization of 32 measurements; MRN 123456",
+    "Patient ID A13; Sample-Level score constructed from 3 features",
+    "Sample: Median normalization of 32 measurements; cohortPatientAlpha"
   )
   cases <- c(safe, identifiers)
 
