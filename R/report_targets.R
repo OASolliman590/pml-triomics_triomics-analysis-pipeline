@@ -48,13 +48,22 @@ triomics_report_target_safe_association_prose <- function(value) {
   value <- trimws(value)
   identifier_separator <- "[[:space:]_,.;:/#=()'’\"-]"
   identifier_value <- "[[:alnum:]][[:alnum:]_.-]*"
+  # A standalone plural label is prose (for example, an uppercase SUBJECTS count).
+  plural_label_suffix <- "(?!(?i:s\\b))"
   person_label <- paste0(
-    "(?i:(?:\\b|_)(?:subject|patient|participant|sample|mrn)(?=(?:",
+    "(?i:(?:\\b|_)(?:subject|patient|participant|mrn)", plural_label_suffix,
+    "(?=(?:",
     identifier_separator,
     "|id|identifier|number|no\\.?|[[:digit:]]|(?-i:[A-Z]))))"
   )
   medical_record_label <- paste0(
-    "(?i:(?:\\b|_)medical[[:space:]_-]*record(?=(?:",
+    "(?i:(?:\\b|_)medical[[:space:]_-]*record", plural_label_suffix,
+    "(?=(?:",
+    identifier_separator,
+    "|id|identifier|number|no\\.?|[[:digit:]]|(?-i:[A-Z]))))"
+  )
+  sample_label <- paste0(
+    "(?i:(?:\\b|_)sample", plural_label_suffix, "(?=(?:",
     identifier_separator,
     "|id|identifier|number|no\\.?|[[:digit:]]|(?-i:[A-Z]))))"
   )
@@ -75,20 +84,30 @@ triomics_report_target_safe_association_prose <- function(value) {
     "(?=[[:digit:]]|(?-i:[A-Z]))",
     identifier_value
   )
+  sample_punctuated_identifier <- paste0(
+    "(?:[[:space:]]*[:=#/._-][[:space:]]*|[[:space:]]+['’\"()_-][[:space:]]*)",
+    "(?!(?i:(?:level|wise|based))(?![[:alnum:]_.-]))",
+    "(?!(?i:(?:median|mean|quantile)[[:space:]]+normalization)(?![[:alnum:]_.-]))",
+    "(?=[[:digit:]]|(?-i:[A-Z]))",
+    identifier_value
+  )
   strong_identifier_value <- paste0(
-    "(?i:(?:\\b|_)(?:mrn|medical[[:space:]_-]*record)\\b)",
+    "(?i:(?:\\b|_)(?:mrn|medical[[:space:]_-]*record)", plural_label_suffix, "\\b)",
     identifier_separator, "+", identifier_value
   )
   identifier_pattern <- paste0(
     "(?:", identifier_label, "(?:",
     qualified_identifier, "|", attached_identifier, "|", numeric_identifier, "|",
     punctuated_identifier,
+    ")|", sample_label, "(?:",
+    qualified_identifier, "|", attached_identifier, "|", numeric_identifier, "|",
+    sample_punctuated_identifier,
     ")|", strong_identifier_value, ")"
   )
   # Keep the original embedded-prefix matches for subject, patient, and participant labels.
   legacy_identifier_pattern <- paste0(
     "(?i:subject|patient|participant)[_.:-][A-Za-z0-9]+|",
-    "(?i:subject|patient|participant)(?=[A-Z0-9])|",
+    "(?i:subject|patient|participant)", plural_label_suffix, "(?=[A-Z0-9])|",
     "(?i:(?:subject|patient|participant)[[:space:]]+(?:id[[:space:]_.:-]*)?[0-9]+)"
   )
   if (!nzchar(value) || nchar(value, type = "bytes") > 512L ||
