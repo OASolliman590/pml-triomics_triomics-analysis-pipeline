@@ -641,7 +641,13 @@ testthat::test_that("D-T13 association lineage preserves descriptions and reject
     "SAMPLE: CENTERING AND SCALING USING 32 MEASUREMENTS",
     "Sample: Robust Normalization Using 32 Measurements",
     "Sample: centering and scaling of 16 features",
-    "Samples: normalization using 32 measurements"
+    "Samples: normalization using 32 measurements",
+    "subjects: 32; 10 features selected",
+    "Subjects: 32; 10 features selected",
+    "SUBJECTS: 32; 10 FEATURES SELECTED",
+    "subjects: 32; features retained",
+    "Subjects: 32; features retained",
+    "SUBJECTS: 32; FEATURES RETAINED"
   )
   title_case <- function(value) {
     tokens <- strsplit(value, " ", fixed = TRUE)[[1L]]
@@ -714,6 +720,16 @@ testthat::test_that("D-T13 association lineage preserves descriptions and reject
       function(description) paste0(description, "; ", plural_value_identifier_forms)
     ), use.names = FALSE)
   ))
+  subject_count_mixed_identifiers <- unique(c(
+    unlist(lapply(
+      c("SUBJECTS: 32; 10 FEATURES SELECTED", "SUBJECTS: 32; FEATURES RETAINED"),
+      function(description) paste0(description, "; ", mixed_identifier_forms)
+    ), use.names = FALSE),
+    unlist(lapply(
+      c("SUBJECTS: 32; 10 FEATURES SELECTED", "SUBJECTS: 32; FEATURES RETAINED"),
+      function(description) paste0(mixed_identifier_forms, "; ", description)
+    ), use.names = FALSE)
+  ))
   identifiers <- c(
     identifiers, attached_plural_identifiers,
     "ClinicalSubjectS used in selection",
@@ -724,7 +740,7 @@ testthat::test_that("D-T13 association lineage preserves descriptions and reject
     "SubjectS/A13", "cohortParticipantS7", "SampleS_A13 used in construction",
     plural_value_identifier_forms,
     "Sample: Robust normalization of 32 measurements; Sample ID A13",
-    mixed_lineage_identifiers,
+    mixed_lineage_identifiers, subject_count_mixed_identifiers,
     "Sample: ALPHA used in construction of 32 measurements",
     paste0("SubjectS-7; ", lineage_descriptions),
     paste0(lineage_descriptions, "; cohortPatientS-A13")
