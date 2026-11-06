@@ -708,6 +708,20 @@ testthat::test_that("D-T13 association lineage preserves descriptions and reject
     "SubjectS: A13 used in selection", "SUBJECTS: A13",
     "Samples: A13 used in construction", "SAMPLES: A13 used in construction"
   )
+  count_token_identifiers <- c(
+    "SUBJECTS: 32:A13 used in selection",
+    "SubjectS: 32:A13 used in selection"
+  )
+  count_token_mixed_identifiers <- unique(unlist(lapply(
+    c(
+      "Sample: Robust Normalization Using 32 Measurements",
+      "SAMPLES: NORMALIZATION OF 32 MEASUREMENTS"
+    ),
+    function(description) c(
+      paste0(description, "; ", count_token_identifiers),
+      paste0(count_token_identifiers, "; ", description)
+    )
+  ), use.names = FALSE))
   mixed_lineage_identifiers <- unique(c(
     unlist(lapply(mixed_lineage_descriptions, function(description) {
       paste0(description, "; ", mixed_identifier_forms)
@@ -738,7 +752,7 @@ testthat::test_that("D-T13 association lineage preserves descriptions and reject
     "Patient ID 13 clinical score",
     "SubjectS-7", "cohortPatientS-A13", "SubjectS.A13", "SubjectS:A13",
     "SubjectS/A13", "cohortParticipantS7", "SampleS_A13 used in construction",
-    plural_value_identifier_forms,
+    plural_value_identifier_forms, count_token_identifiers, count_token_mixed_identifiers,
     "Sample: Robust normalization of 32 measurements; Sample ID A13",
     mixed_lineage_identifiers, subject_count_mixed_identifiers,
     "Sample: ALPHA used in construction of 32 measurements",
