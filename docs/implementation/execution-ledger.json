@@ -37,11 +37,11 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "D13_extra4_closed_blocked",
+    "status": "D13_extra5_authorized",
     "last_reconciled": "2026-11-06T11:00:46.724772+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "D13 extra4 is blocked at Sol candidatef1d57da and Luna0e7cced from1553e52. Preserve original initial1+repairs2 and consumed extra1/2/3/4 (total repairs6). The previous58 probe cases now pass; three attached-identifier regressions and continuing capitalization losses block acceptance. Do not integrate or redispatch under this consumed grant. A separately authorized bounded follow-up must resolve D13-EXTRA4-PRIVACY-01 and D13-EXTRA4-LINEAGE-01, preserve all prior positive/negative cases, then pass independent source/installed/native verification and fresh Astra. Keep D08/D15 and M7/G7 unchanged; G8/G9 remain closed. No M8 close or D09.",
+    "disposition": "fresh Luna fromf1d57da; independent verification and fresh Astra; bounded receipt; G8/G9closed",
     "current_gate": {
       "status": "blocked",
       "candidate": "f1d57da656156fd2da0430f56094708ab5926998",
@@ -8707,7 +8707,7 @@
       "report_readback_checks": 1729
     },
     "D-T13": {
-      "status": "blocked_after_fourth_explicit_extra_repair",
+      "status": "extra5_authorized",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
@@ -8748,18 +8748,14 @@
         "receipt_ref": "docs/implementation/evidence/2026-11-04-d-t13-close/blocked-receipt.json"
       },
       "authorized_additional_repair": {
-        "episode": 4,
+        "episode": 5,
         "allowed": 1,
-        "used": 1,
-        "reason": "capitalization loss D13-EXTRA3-LINEAGE-01",
-        "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-capitalization-extra4-dispatch.md",
-        "accepted": false,
-        "status": "consumed_blocked",
-        "worker_commit": "0e7ccedc7fedb1c4f11cc5eff14515813789a1fa",
-        "Sol_commit": "f1d57da656156fd2da0430f56094708ab5926998",
-        "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra4-blocked-close.md"
+        "used": 0,
+        "reason": "attached-identifier regression and remaining capitalization loss",
+        "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-boundaries-extra5-dispatch.md",
+        "accepted": false
       },
-      "next_transition": "D13 extra4 is blocked at Sol candidatef1d57da and Luna0e7cced from1553e52. Preserve original initial1+repairs2 and consumed extra1/2/3/4 (total repairs6). The previous58 probe cases now pass; three attached-identifier regressions and continuing capitalization losses block acceptance. Do not integrate or redispatch under this consumed grant. A separately authorized bounded follow-up must resolve D13-EXTRA4-PRIVACY-01 and D13-EXTRA4-LINEAGE-01, preserve all prior positive/negative cases, then pass independent source/installed/native verification and fresh Astra. Keep D08/D15 and M7/G7 unchanged; G8/G9 remain closed. No M8 close or D09.",
+      "next_transition": "fresh Luna fromf1d57da; independent verification and fresh Astra; bounded receipt; G8/G9closed",
       "extra_candidate": "f1d57da656156fd2da0430f56094708ab5926998",
       "source_counts_producer": "Independent Sol focused source onf1d57da; not acceptance",
       "final_local_review": {
@@ -8803,6 +8799,18 @@
           "worker_commit": "4b04dfde061a901781041c672d27bec5127c2aa4",
           "Sol_commit": "1553e52d4d5161e32c38ab34c74185f3087fa68c",
           "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra3-blocked-close.md"
+        },
+        {
+          "episode": 4,
+          "allowed": 1,
+          "used": 1,
+          "reason": "capitalization loss D13-EXTRA3-LINEAGE-01",
+          "dispatch_ref": "docs/implementation/reviews/2026-11-06-d13-capitalization-extra4-dispatch.md",
+          "accepted": false,
+          "status": "consumed_blocked",
+          "worker_commit": "0e7ccedc7fedb1c4f11cc5eff14515813789a1fa",
+          "Sol_commit": "f1d57da656156fd2da0430f56094708ab5926998",
+          "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra4-blocked-close.md"
         }
       ],
       "extra2_worker_commit": "92dbba17c6e6d3e05b0af527f910d41c18bcf843",
@@ -9366,5 +9374,9 @@
     },
     "all_terminal": true,
     "review_ref": "docs/implementation/reviews/2026-11-06-d13-extra4-blocked-close.md"
+  },
+  "D13_extra_repair5_orchestration": {
+    "status": "prepared",
+    "state_ref": "d13/identifier-lineage-extra5/state.json"
   }
 }

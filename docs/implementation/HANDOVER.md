@@ -1,3 +1,11 @@
+# Current checkpoint: D13 extra5 authorized
+
+Read [the dispatch](reviews/2026-11-06-d13-boundaries-extra5-dispatch.md). Omar authorizes one fresh two-file repair fromf1d57da for attached-identifier leaks and capitalization loss. Original initial1+repairs2+extra1/2/3/4 stay consumed. Extra5 grants one repair only; G8/G9closed.
+
+Literal resume: **Join the recorded extra5 worker, do not redispatch or reset attempts. Verify complete-token identifier boundaries and case-invariant scientific prose at the actual producer/report/HTML seam, source/installed/native gates and fresh Astra. Stop at the bounded receipt; no M8 close or D09.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D13 extra4 closed blocked
 
 Read [Sol’s receipt](reviews/2026-11-06-d13-extra4-blocked-close.md) and [fresh Astra](reviews/2026-11-06-d13-extra4-astra.md). Independent source906passes, zero failures/errors/warnings/skips; previous58cases pass. Broader65case probe60pass/5fail shows three newly leaked identifier forms and two continuing capitalization losses. Spec changes_required P1/P2; Standards pass; Astra audit_pass:no. Candidatef1d57da and worker0e7cced preserved, unintegrated. Native/installed/full-source/package gates not run on this candidate. Totalrepairs6 consumed. G8/G9closed; accepted D08/D15 and M7/G7 unchanged. All owned agents/processes terminal; protected dirt preserved.
