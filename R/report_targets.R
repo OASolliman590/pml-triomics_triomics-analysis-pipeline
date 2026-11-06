@@ -48,8 +48,12 @@ triomics_report_target_safe_association_prose <- function(value) {
   value <- trimws(value)
   identifier_separator <- "[[:space:]_,.;:/#=()'’\"-]"
   identifier_value <- "[[:alnum:]][[:alnum:]_.-]*"
-  # A standalone plural label is prose (for example, an uppercase SUBJECTS count).
-  plural_label_suffix <- "(?!(?i:s\\b))"
+  # Treat identifier connectors as token content: the S in SubjectS-7 is attached,
+  # while the final S in SUBJECTS count is a complete plural label.
+  identifier_token_character <- "[[:alnum:]_.:/#=-]"
+  plural_label_suffix <- paste0(
+    "(?!(?i:s)(?!", identifier_token_character, "))"
+  )
   person_label <- paste0(
     "(?i:(?:\\b|_)(?:subject|patient|participant|mrn)", plural_label_suffix,
     "(?=(?:",
@@ -66,6 +70,29 @@ triomics_report_target_safe_association_prose <- function(value) {
     "(?i:(?:\\b|_)sample", plural_label_suffix, "(?=(?:",
     identifier_separator,
     "|id|identifier|number|no\\.?|[[:digit:]]|(?-i:[A-Z]))))"
+  )
+  lineage_descriptor <- paste0(
+    "(?!(?i:(?:used|in|by|for|with|from|of|the|same|and|or|to|at|as|is|are|was|were))\\b)",
+    "[[:alpha:]][[:alnum:]_-]*"
+  )
+  sample_operation_lineage <- paste0(
+    "(?i:(?:", lineage_descriptor, "[[:space:]]+){1,3}",
+    "[[:alpha:]][[:alnum:]_-]*(?:ing|tion|sion)",
+    "[[:space:]]+of[[:space:]]+[[:digit:]]+",
+    "[[:space:]]+(?:molecular[[:space:]]+)?(?:measurements?|features?))"
+  )
+  sample_score_construction <- paste0(
+    "(?i:(?:[[:alpha:]][[:alpha:]_-]*[[:space:]]+)*",
+    "score[[:space:]]+constructed[[:space:]]+from[[:space:]]+[[:digit:]]+",
+    "[[:space:]]+(?:molecular[[:space:]]+)?features?)"
+  )
+  sample_top_selection <- paste0(
+    "(?i:top[[:space:]]+[[:digit:]]+[[:space:]]+features?",
+    "[[:space:]]+selected[[:space:]]+in[[:space:]]+(?:the[[:space:]]+)?same[[:space:]]+study)"
+  )
+  sample_scientific_description <- paste0(
+    "(?:", sample_operation_lineage, "|",
+    sample_score_construction, "|", sample_top_selection, ")"
   )
   identifier_label <- paste0("(?:", person_label, "|", medical_record_label, ")")
   qualified_identifier <- paste0(
@@ -86,6 +113,8 @@ triomics_report_target_safe_association_prose <- function(value) {
   )
   sample_punctuated_identifier <- paste0(
     "(?:[[:space:]]*[:=#/._-][[:space:]]*|[[:space:]]+['’\"()_-][[:space:]]*)",
+    # Exempt only this local description shape; identifier matches still scan all of value.
+    "(?!(?:", sample_scientific_description, ")(?![[:alnum:]_.-]))",
     "(?!(?i:(?:level|wise|based))(?![[:alnum:]_.-]))",
     "(?!(?i:(?:median|mean|quantile)[[:space:]]+normalization)(?![[:alnum:]_.-]))",
     "(?=[[:digit:]]|(?-i:[A-Z]))",
