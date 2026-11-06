@@ -524,7 +524,7 @@ testthat::test_that("association-only producer profiles retain safe study and co
   ))
 })
 
-testthat::test_that("association prose suppresses labeled identifiers and retains numeric lineage", {
+testthat::test_that("D-T13 association lineage preserves descriptions and rejects identifiers end to end", {
   request <- triomics_target_request(
     list(namespace = "synthetic_protein", id = "TARGET_ASSOCIATION_PRIVACY", taxon_id = 9606,
          entity_type = "protein"),
@@ -624,7 +624,24 @@ testthat::test_that("association prose suppresses labeled identifiers and retain
     "Sample: Robust feature filtering of 32 measurements",
     "Sample: Pooled quality control based signal correction of 32 measurements",
     "Sample: Score constructed from 3 features",
-    "Sample: Top 10 features selected in the same study"
+    "Sample: Top 10 features selected in the same study",
+    "sample: centering and scaling of 32 measurements",
+    "Sample: Centering and scaling of 32 measurements",
+    "SAMPLE: CENTERING AND SCALING OF 32 MEASUREMENTS",
+    "sample: robust normalization using 32 measurements",
+    "Sample: Robust normalization using 32 measurements",
+    "SAMPLE: ROBUST NORMALIZATION USING 32 MEASUREMENTS",
+    "subjects: 32; features selected",
+    "Subjects: 32; features selected",
+    "SUBJECTS: 32; FEATURES SELECTED",
+    "samples: normalization of 32 measurements",
+    "Samples: normalization of 32 measurements",
+    "SAMPLES: NORMALIZATION OF 32 MEASUREMENTS",
+    "Sample: Centering and Scaling of 32 Measurements",
+    "SAMPLE: CENTERING AND SCALING USING 32 MEASUREMENTS",
+    "Sample: Robust Normalization Using 32 Measurements",
+    "Sample: centering and scaling of 16 features",
+    "Samples: normalization using 32 measurements"
   )
   title_case <- function(value) {
     tokens <- strsplit(value, " ", fixed = TRUE)[[1L]]
@@ -639,6 +656,15 @@ testthat::test_that("association prose suppresses labeled identifiers and retain
   safe <- unique(c(
     safe, lineage_variants,
     "SUBJECTS count 32; features selected"
+  ))
+  safe <- unique(c(
+    safe, tolower(safe), toupper(safe),
+    vapply(safe, function(value) {
+      if (!grepl(":", value, fixed = TRUE)) return(tolower(value))
+      prefix <- sub("^([^:]+:[[:space:]]*).*$", "\\1", value, perl = TRUE)
+      description <- sub("^[^:]+:[[:space:]]*", "", value, perl = TRUE)
+      paste0(prefix, tolower(description))
+    }, character(1))
   ))
   attached_plural_identifiers <- c(
     "SubjectS-7 used in selection",
@@ -662,16 +688,47 @@ testthat::test_that("association prose suppresses labeled identifiers and retain
     "ClinicalSubjectS",
     "ClinicalSubjectS count 32"
   )
+  mixed_lineage_descriptions <- c(
+    "Sample: Centering and Scaling of 32 Measurements",
+    "SAMPLE: CENTERING AND SCALING USING 32 MEASUREMENTS",
+    "Sample: Robust Normalization Using 32 Measurements",
+    "SUBJECTS: 32; FEATURES SELECTED",
+    "SAMPLES: NORMALIZATION OF 32 MEASUREMENTS"
+  )
+  mixed_identifier_forms <- c(
+    "SubjectS-7", "cohortPatientS-A13", "Patient ID 13 clinical score"
+  )
+  mixed_lineage_identifiers <- unique(c(
+    unlist(lapply(mixed_lineage_descriptions, function(description) {
+      paste0(description, "; ", mixed_identifier_forms)
+    }), use.names = FALSE),
+    unlist(lapply(mixed_lineage_descriptions, function(description) {
+      paste0(mixed_identifier_forms, "; ", description)
+    }), use.names = FALSE)
+  ))
   identifiers <- c(
     identifiers, attached_plural_identifiers,
+    "ClinicalSubjectS used in selection",
+    "ParticipantAlpha", "PatientAlpha", "SubjectAlpha",
+    "cohortPatientS clinical score", "cohortParticipantS used in construction",
+    "Patient ID 13 clinical score",
+    "SubjectS-7", "cohortPatientS-A13", "SubjectS.A13", "SubjectS:A13",
+    "SubjectS/A13", "cohortParticipantS7", "SampleS_A13 used in construction",
+    "Sample: Robust normalization of 32 measurements; Sample ID A13",
+    mixed_lineage_identifiers,
     "Sample: ALPHA used in construction of 32 measurements",
     paste0("SubjectS-7; ", lineage_descriptions),
     paste0(lineage_descriptions, "; cohortPatientS-A13")
   )
-  cases <- c(safe, identifiers)
+  safe <- unique(safe)
+  identifiers <- unique(identifiers)
+  testthat::expect_length(intersect(safe, identifiers), 0L)
+  cases <- unique(c(safe, identifiers))
 
   for (value in cases) {
-    expected <- if (value %in% safe) value else ""
+    is_safe_description <- value %in% safe
+    expected <- if (is_safe_description) value else ""
+    case_group <- if (is_safe_description) "safe scientific lineage" else "identifier-bearing lineage"
     case <- association
     case$construction_lineage <- value
     case$source_selection_history <- value
@@ -681,11 +738,11 @@ testthat::test_that("association prose suppresses labeled identifiers and retain
     )
     testthat::expect_identical(
       profile$external_associations[[1L]]$construction_lineage, value,
-      info = paste("producer construction lineage:", value)
+      info = paste(case_group, "producer construction lineage:", value)
     )
     testthat::expect_identical(
       profile$external_associations[[1L]]$source_selection_history, value,
-      info = paste("producer selection history:", value)
+      info = paste(case_group, "producer selection history:", value)
     )
 
     section <- triomics_report_optional_sections(
@@ -695,11 +752,11 @@ testthat::test_that("association prose suppresses labeled identifiers and retain
     rows <- section$tables$external_evidence
     testthat::expect_identical(
       rows$construction_lineage, expected,
-      info = paste("report construction lineage:", value)
+      info = paste(case_group, "report construction lineage:", value)
     )
     testthat::expect_identical(
       rows$source_selection_history, expected,
-      info = paste("report selection history:", value)
+      info = paste(case_group, "report selection history:", value)
     )
     testthat::expect_identical(rows$subject_overlap_status, "shared_subjects")
     testthat::expect_identical(rows$independent_replication, FALSE)
@@ -708,7 +765,7 @@ testthat::test_that("association prose suppresses labeled identifiers and retain
     visible <- grepl(value, html, fixed = TRUE)
     testthat::expect_identical(
       visible, value %in% safe,
-      info = paste("optional section HTML visibility:", value)
+      info = paste(case_group, "optional section HTML visibility:", value)
     )
   }
 })
