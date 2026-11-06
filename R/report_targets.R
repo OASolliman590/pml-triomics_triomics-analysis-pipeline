@@ -94,8 +94,8 @@ triomics_report_target_safe_association_prose <- function(value) {
   # Protect only the plural count clause; any following lineage or identifier text
   # remains visible to the identifier patterns below.
   subject_count_clause <- paste0(
-    "(?i:subjects:[[:space:]]+[[:digit:]]+)",
-    "(?!", identifier_token_character, ")"
+    "(?i:subjects[[:space:]]*:[[:space:]]*[[:digit:]]+)",
+    "(?![[:alnum:]_:/#=-]|\\.(?![[:space:]]|$))"
   )
   plural_subject_label <- paste0(
     "(?i:(?:\\b|_)subjects)(?=(?:",
