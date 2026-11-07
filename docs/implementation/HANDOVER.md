@@ -1,3 +1,11 @@
+# Live checkpoint: M9 integrated snapshot frozen for final gates
+
+Read [the final-gate freeze](reviews/2026-11-07-m9-final-gates-freeze.md) and [D09 integration proof](reviews/2026-11-07-d09-integration.md). D09 product99248d3 and reviewed DOC-M9 are integrated. All workers terminal; Luna repairs2/2 and DOC finalization1/1 exhausted. Both focused suites passed218 independently. The local m9-20261107-01/state.json records the immutable final-gate candidate and durable process receipts. G9closed.
+
+Literal resume: **Join the recorded final-gate process if active; do not restart it or any worker. Complete the same-commit native/clinical/walkthrough, uninterrupted full-source and clean-archive gates, reconcile scope, then fresh Astra and Sol acceptance only if every gate passes. Preserve M8/D13, all attempts and conditional exclusions. No repair3 or early G9 release.**
+
+## Historical checkpoints below
+
 # Live checkpoint: D09 integrated; same Terra finalizing DOC-M9
 
 Read [the integration receipt](reviews/2026-11-07-d09-integration.md). Worker8a82a64 and independent Sol focused suites each passed218 with no failures/warnings/skips; both bounded reviews passed. Integrated product99248d3 preserves all six D09 blobs and every failed attempt. Luna terminal, repairs2/2 exhausted. Same Terra /root/m9_docs_terra is doing its single documentation finalization; no heavy process active. G9closed.

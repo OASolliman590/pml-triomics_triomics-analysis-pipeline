@@ -35,35 +35,13 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "worker": "/root/m9_docs_terra",
-      "role": "Terra documentation",
-      "status": "running",
-      "worktree": "/private/tmp/triomics-m9-doc-20261107",
-      "scope": "DOC-M9 one-file finalization",
-      "requested_model": "gpt-6.1-terra",
-      "requested_effort": "max",
-      "effective_settings_exposed": false
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "DOC_M9_finalization_running",
-    "last_reconciled": "2026-11-07T17:35:51.326121+00:00",
-    "active_handoffs": [
-      {
-        "worker": "/root/m9_docs_terra",
-        "role": "Terra documentation",
-        "status": "running",
-        "worktree": "/private/tmp/triomics-m9-doc-20261107",
-        "scope": "DOC-M9 one-file finalization",
-        "requested_model": "gpt-6.1-terra",
-        "requested_effort": "max",
-        "effective_settings_exposed": false
-      }
-    ],
+    "status": "M9_final_gates_pending",
+    "last_reconciled": "2026-11-07T17:40:00.799979+00:00",
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "D09 integrated after independent focused pass; same Terra finalizing; final same-commit gates pending; G9 closed.",
+    "disposition": "D09 and reviewed DOC-M9 integrated; all agents terminal; final same-commit gates and fresh Astra pending; G9closed.",
     "current_gate": {
       "candidate": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
       "package": "Status: OK",
@@ -7538,6 +7516,13 @@
       "product_commit": "99248d317d810694349cb12ac2f559f0b56d260f",
       "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-integration.md",
       "G9": "closed"
+    },
+    {
+      "at": "2026-11-07T17:40:00.799979+00:00",
+      "event": "DOC_M9_finalization_reviewed_integrated_final_gates_freeze",
+      "documentation_commit": "cc25440010c97fa50538f1a48398e89515f302eb",
+      "receipt_ref": "docs/implementation/reviews/2026-11-07-m9-final-gates-freeze.md",
+      "G9": "closed"
     }
   ],
   "packets": {
@@ -9505,14 +9490,17 @@
       "focused_rereviews": 0,
       "authorization": "Continue D09/M9 from f2fe176 using Luna and agreed review process; do not redo M8/D13; G9 gated",
       "documentation": {
-        "status": "finalization_in_progress",
+        "status": "integrated_reviewed_final_gates_pending",
         "attempts": 1,
         "repairs": 1,
         "worker": "/root/m9_docs_terra",
         "dispatch_ref": "docs/implementation/reviews/2026-11-07-doc-m9-draft-dispatch.md",
         "accepted": false,
         "draft_commit": "b6fbcaa2bdc3e077db284250b50e3e98f7148587",
-        "draft_review_ref": "docs/implementation/reviews/2026-11-07-d09-worker-green-doc-draft.md"
+        "draft_review_ref": "docs/implementation/reviews/2026-11-07-d09-worker-green-doc-draft.md",
+        "commit": "cc25440010c97fa50538f1a48398e89515f302eb",
+        "worker_final_commit": "330768f6cbe1958fcc2fc3bd04d007123cbd681e",
+        "review_ref": "docs/implementation/reviews/2026-11-07-m9-final-gates-freeze.md"
       }
     }
   },
