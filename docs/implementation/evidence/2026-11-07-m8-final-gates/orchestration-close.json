@@ -1,0 +1,20 @@
+{
+  "checked_at": "2026-11-07T08:43:51.670031+00:00",
+  "owned_agents": {
+    "/root/m8_terra_documentation": "completed; integrated509fe3d",
+    "/root/m8_portability_luna": "completed; integrated006962d",
+    "/root/m8_final_astra": "completed; pass; reconciled by Sol"
+  },
+  "owned_gate_session": {
+    "session_id": 39648,
+    "status": "terminal",
+    "exit_code": 0
+  },
+  "active_owned_workers": [],
+  "active_owned_processes": [],
+  "sidebar_check": "list_threads returned coordinator only for this project; no run-owned sidebar children created or requiring archival",
+  "unrelated_chats_untouched": true,
+  "G8": "released",
+  "G9": "closed",
+  "next": "D-T09/M9 not started; literal resume saved in HANDOVER.md"
+}

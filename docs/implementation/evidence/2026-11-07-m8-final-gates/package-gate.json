@@ -1,0 +1,59 @@
+{
+  "candidate": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
+  "command": [
+    "Rscript",
+    "--vanilla",
+    "tools/check-package.R",
+    "--root",
+    "$M8_EVIDENCE/package-correction-1/snapshot/source",
+    "--output",
+    "$M8_EVIDENCE/package-correction-1/package"
+  ],
+  "cwd": "$M8_EVIDENCE/package-correction-1/snapshot/source",
+  "started": "2026-11-07T07:35:47.252347+00:00",
+  "status": "passed",
+  "pid": 73552,
+  "archive_sha256": "25314c061841f1fd77f74facf4295eed3f7d536efb1e888301ffa2fc5cfd6ce8",
+  "file_count": 1207,
+  "source_revision_stamp": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
+  "child_pid": 73561,
+  "exit_code": 0,
+  "finished": "2026-11-07T08:35:51.748293+00:00",
+  "archive_source_unchanged": true,
+  "changed": [],
+  "extras": [],
+  "Status_lines": [
+    "Status: OK"
+  ],
+  "testthat_counts": {
+    "fail": 0,
+    "warn": 15,
+    "skip": 0,
+    "pass": 11518
+  },
+  "warning_inventory_captured": true,
+  "named_warnings": {
+    "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes": 11,
+    "C-05 real MOFA2 fits and extracts a missing sample-view capability cell": 3,
+    "D-T01 refuses stale paired signs and preserves the old pointer": 1
+  },
+  "same_warning_names_and_counts_as_M7": true,
+  "log_hashes": {
+    "triomics_0.1.0.tar.gz": "5a36c10bed3e7d0534317081eae89c865023ee2080d1f91bd0b760c40b2fac2c",
+    "testthat.Rout": "9b0061847a33da3b3028ff85880a480d39f16ed271ec53fa92b2dea967e05b19",
+    "00check.log": "b45b10e587a201e98bfcbce53a14256348fe4ef9b097243a3ab759532fa04ce6",
+    "warning-inventory.json": "38de983086dbe6f99856a0bb63ac2e87900ebb1de92ce9f3b57c33d7ded6e1c8",
+    "driver.log": "ad70a0ce244b42b4fc8995d098491c381a07a6cac5b038ab4b3abee839db4458",
+    "check.log": "ec61a5a443b57aa620e03eb45cfd11632fc01f5c58c1f7160cf50192e143fcf6",
+    "build.log": "1d8bf68d1fa9b44d4467f9cb7a78db09157497389d3432b61ebbc750fdd66f01"
+  },
+  "warning_message_review": "C-05 messages/multiplicities exactly match M7; D-T01 retains expected stale-sign native status2 with generated paths",
+  "warning_dispositions": {
+    "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes": "Native MOFA small-fixture power, correlation and low-variance diagnostics; retained without suppression.",
+    "C-05 real MOFA2 fits and extracts a missing sample-view capability cell": "Native MOFA small-fixture diagnostics; retained without suppression.",
+    "D-T01 refuses stale paired signs and preserves the old pointer": "Expected native CLI exit 2 from intentional stale-sign rejection; prior generation preservation is asserted."
+  },
+  "acceptance": "pending fresh Astra and Sol",
+  "G8": "closed",
+  "G9": "closed"
+}

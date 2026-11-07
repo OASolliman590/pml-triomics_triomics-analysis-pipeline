@@ -1,0 +1,11 @@
+{
+  "candidate": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
+  "base": "4cba2581d4e70558981b8a02efcb4653cc9a5b01",
+  "all_packet_records_and_attempts_unchanged": true,
+  "conditional_dispositions_unchanged": true,
+  "other_milestones_unchanged": true,
+  "frozen_spec_tests_fixtures_and_statistical_methods_unchanged": true,
+  "D13_test_sha256": "5781087744bc6ae6d4d85d4d9eb8538bf4ee5898f4121fda3279e0285dcad87b",
+  "G8": "closed",
+  "G9": "closed"
+}

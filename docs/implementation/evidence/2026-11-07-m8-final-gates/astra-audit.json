@@ -1,0 +1,80 @@
+{
+  "verdict": "pass",
+  "audit_pass": true,
+  "reviewed_candidate": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
+  "milestone": "M8",
+  "audit_call": 1,
+  "focused_rereviews_used": 0,
+  "reviewer_requested": {
+    "model": "gpt-6-astra",
+    "effort": "low"
+  },
+  "effective_settings_exposed": false,
+  "recorded_at": "2026-11-07T08:40:24.378129+00:00",
+  "spec_hash": {
+    "label": "Declared frozen-kit content_sha256, not a successful current-content validation",
+    "value": "21ebbd04688dfacb058af671d288a85d5910c657ff2e2437d2c6e99e7461aaaf",
+    "freeze_file_sha256": "f5eb17c5371a0342710fc1e6ff32d6b01975033a94e2bd901f46f32de12f01d4",
+    "validator_exit": 1,
+    "mismatched_entries": [
+      "AGENTS.md",
+      "CLAUDE.md"
+    ]
+  },
+  "integrity": {
+    "before_and_after_all_source_hashes_match": true,
+    "source_file_count": 1207,
+    "archive_sha256": "25314c061841f1fd77f74facf4295eed3f7d536efb1e888301ffa2fc5cfd6ce8",
+    "files_manifest_sha256": "0f50d787bad7df6021e1204d4fd741137e0fb9c8b6448570d3fa5763808f2b81",
+    "snapshot_freeze_sha256": "bab5954ab415229cd39ea0b4c4d41aa85151066a8ac8ef27d7f67078313203e9",
+    "package_log_hashes_match": true,
+    "bounded_diff_hashes_match": true
+  },
+  "package_gate": {
+    "Status": "Status: OK",
+    "fail": 0,
+    "warn": 15,
+    "skip": 0,
+    "pass": 11518,
+    "actual_check_log_and_final_Rout_inspected": true,
+    "warning_names_and_multiplicities_match_M7": true,
+    "C05_messages_and_multiplicities_match_M7": true,
+    "D01": "Same intentional stale-sign status-2 native refusal; generated paths differ"
+  },
+  "blocking_findings": [],
+  "nonblocking_notes": [
+    {
+      "id": "M8-N01",
+      "file": "discovery/spec-v2/freeze.json; AGENTS.md; CLAUDE.md",
+      "criterion": "Frozen identity disclosure",
+      "assessment": "Inherited documentation-manifest limitation, nonblocking for this bounded M8 product review. Independently enumerated only these two mismatches and compared their actual bytes to accepted M7 fabd6fa. No M8 scientific-contract drift found. Validator remains failed; separate frozen-kit audit remains pending."
+    },
+    {
+      "id": "M8-N02",
+      "file": "R/report_clinical.R; docs/implementation/milestones/M8.md",
+      "criterion": "D-T15-AC3",
+      "assessment": "Clinical approved_aggregate export fails closed without institution-approved minimum-cell/complementary-suppression implementation. Private local and synthetic behavior is the accepted scope; this is not an implemented aggregate release route."
+    },
+    {
+      "id": "M8-N03",
+      "file": "docs/implementation/milestones/M8.md",
+      "criterion": "Evidence qualification",
+      "assessment": "D08/D15/D13 native report proofs belong to their accepted packet snapshots. Current full package gate is candidate-linked; no newly orchestrated native M8 report run is claimed. C07 four controls remain not_run; C09 unqualified/synthetic_fixture_only/benefit_guaranteed=false; D06/D07/D14 blocked with zero credit."
+    }
+  ],
+  "assessment": {
+    "D-T08": "Reviewed bundle/source verification, fixed output and template path, escaping/sanitization, offline resource checks, staging inventory and atomic publication, saved numeric/unit/family/status projection. Accepted compact native/readback proofs support AC1-AC4; D08 proof artifact hashes independently match receipt.",
+    "D-T15": "Reviewed pinned B clinical-member verification and absence contradiction refusal, endpoint transport/evidence-class logic, saved count/unit/uncertainty projection, and aggregate refusal. Clinical source/test/template/fixture hashes match accepted packet; registration metadata differs from that historical product and is not represented as retested code.",
+    "D-T13": "Reviewed dossier axes, external source/value/units and overlap lineage projection, unavailable quantitative method and interpretation limits; carried forward accepted D13 oracle/native proof without reopening or rerunning D13. Independently confirmed exact four source escape replacements; supplied parse-identity receipt is consistent.",
+    "supporting_seams": "Reviewed bounded scope records and final combined S01/S02 risky-diff Astra/acceptance evidence, plus relevant CLI and producer boundary portions. Prior combined numerical, zero-refit, rollback and adversarial evidence remains snapshot-qualified.",
+    "DOC-M8": "Accurately separates software from scientific evidence, prior packet snapshots from current gate, reproduction commands from results, and conditional exclusions from completed scope."
+  },
+  "limits": [
+    "Static milestone audit plus inspected existing execution evidence; no suites, fits or native stages rerun. Targeted source and diff inspection, not an independent reimplementation of all producer checks.",
+    "Synthetic software behavior does not establish biological validity, clinical performance, method power or universal anonymization.",
+    "Regex/text guards and fixture leak scans are not proof of generic privacy completeness; private reports remain local.",
+    "No approval of the separately pending frozen-kit audit, no acceptance/integration/publication/release. G8/G9 remain closed pending Sol decision.",
+    "Requested model/effort recorded; host does not expose effective settings."
+  ],
+  "next": "Stop. Sol reconciles this audit with the package gate and decides M8 acceptance; G9 remains closed."
+}

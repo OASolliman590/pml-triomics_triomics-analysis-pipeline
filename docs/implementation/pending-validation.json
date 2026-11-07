@@ -9,8 +9,8 @@
     },
     {
       "id": "HOST-QUARTO",
-      "status": "installed_and_D_T08_real_render_verified",
-      "evidence": "Quarto 1.11.9 official checksum/version and real D-T08 render passed; packet accepted on f85fa6d. M8 package and milestone gates remain pending.",
+      "status": "qualified_for_M8_local_synthetic_reporting",
+      "evidence": "Quarto 1.11.9 prior native packet render evidence plus current immutable M8 full package Status: OK and fresh Astra pass. G8 released; G9 closed.",
       "history": [
         {
           "id": "HOST-QUARTO",
@@ -22,9 +22,15 @@
           "status": "blocked_runtime_confirmed_2026_11_04",
           "evidence": "Fresh quarto --version exited127. PATH and nine standard executable paths had no Quarto. D-T08 stopped before implementation as explicitly required by the current goal.",
           "receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md"
+        },
+        {
+          "id": "HOST-QUARTO",
+          "status": "installed_and_D_T08_real_render_verified",
+          "evidence": "Quarto 1.11.9 official checksum/version and real D-T08 render passed; packet accepted on f85fa6d. M8 package and milestone gates remain pending.",
+          "receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-sol-acceptance.md"
         }
       ],
-      "receipt_ref": "docs/implementation/reviews/2026-11-04-d-t08-sol-acceptance.md"
+      "receipt_ref": "docs/implementation/reviews/2026-11-07-m8-sol-acceptance.md"
     },
     {
       "id": "GITHUB-AUTH",
@@ -52,7 +58,9 @@
           "evidence": "Rechecked on 2026-10-26: the spec validator could not start in system, isolated MOFA or bundled workspace Python because its jsonschema/PyYAML dependency set is unavailable; exit 1. No installation was attempted. The last accepted G0 validator result remains historical evidence, not a fresh pass. Frozen spec files are unchanged from 0afe2c5."
         }
       ],
-      "receipt_ref": "docs/implementation/evidence/2026-11-04-d-t08-preflight/spec-validation.json"
+      "receipt_ref": "docs/implementation/evidence/2026-11-04-d-t08-preflight/spec-validation.json",
+      "M8_disposition": "Astra M8-N01 independently confirms inherited AGENTS/CLAUDE mismatch, same bytes as accepted M7; nonblocking for bounded M8. Validator failure and separate frozen-kit audit remain pending.",
+      "M8_review_ref": "docs/implementation/reviews/2026-11-07-m8-astra.md"
     },
     {
       "id": "M7-010-SOURCE-GATE",
@@ -137,6 +145,13 @@
         }
       ],
       "receipt_ref": "docs/implementation/reviews/2026-11-04-m7-sol-acceptance.md"
+    },
+    {
+      "id": "M8-FINAL-GATE",
+      "status": "accepted_G8_released",
+      "candidate": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
+      "evidence": "Clean archive Status: OK; FAIL0/WARN15/SKIP0/PASS11518; unchanged named warnings, 1207 files; fresh Astra pass; Terra DOC-M8 and Sol acceptance. G9closed, D09not_started.",
+      "receipt_ref": "docs/implementation/reviews/2026-11-07-m8-sol-acceptance.md"
     }
   ]
 }

@@ -1,11 +1,17 @@
-# Pipeline progress — 6 November 2026
+# Pipeline progress — 7 November 2026
 
-The goal is a reproducible analysis pipeline with a trustworthy offline report. D13, the target-evidence report section, is now accepted on synthetic software evidence. D08 and D15 were already accepted; all three reporting prerequisites for M8 are therefore in place.
+The goal is a reproducible pipeline with a trustworthy offline report. M8 is now accepted and G8 released. Reports present saved molecular, clinical and target evidence with analysis history and unavailable-method labels.
 
-This repair preserves analysis-history descriptions when a subject count has different spacing or sentence punctuation. The tested identifier patterns remain excluded, and legitimate construction and selection histories remain distinct. Previous attempts and their failures remain recorded.
+| Area | Current evidence |
+|---|---|
+| Offline report | D08 accepted on synthetic fixtures |
+| Clinical section | D15 accepted; aggregate release unavailable |
+| Target dossier | D13 accepted; prior repairs preserved |
+| M8 combined package | 11,518 passes; fresh Astra passed |
+| Final reproduction | D09/M9 not started; G9 closed |
 
-Sol verified 3,525 assertions from source and another 3,525 after clean-archive installation, with no failures, errors, warnings or skips. The independent case matrix passed 264/264. A fresh synthetic A-to-B-to-C-to-D run produced an offline report; saved values and provenance hashes matched. Both local reviews and fresh Astra passed.
+The clean archive ended with exactly Status: OK, zero failures, zero skips and the same fifteen named warnings. The only new product correction encoded four characters portably and declared an existing R helper; D13's logic and tests were unchanged.
 
-These results establish software behavior on fixtures, not biological validity or performance in the fasting, diabetic-treatment or organophosphate studies. No private study data were read.
+These are software results, not biological validation or performance evidence for the fasting, diabetic-treatment or organophosphate studies. No private study data were read. Conditional methods and the separate frozen-kit audit remain unresolved and receive no completion credit.
 
-Next is M8 documentation, its clean package check and fresh milestone review. G8/G9 remain closed; D09 has not started. No new decision is needed for this completed repair. Sync: local records only; no Notion update, server run or GitHub push.
+Next is D09/M9 reproduction and final system acceptance. No new decision is needed. Sync: local records only; no Notion update, AIU run or GitHub push.

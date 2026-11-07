@@ -1,0 +1,24 @@
+{
+  "candidate": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
+  "verified_at": "2026-11-07T08:36:08.072934+00:00",
+  "Status": "Status: OK",
+  "counts": {
+    "fail": 0,
+    "warn": 15,
+    "skip": 0,
+    "pass": 11518
+  },
+  "exit_code": 0,
+  "warning_names": {
+    "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes": 11,
+    "C-05 real MOFA2 fits and extracts a missing sample-view capability cell": 3,
+    "D-T01 refuses stale paired signs and preserves the old pointer": 1
+  },
+  "C05_messages_and_multiplicities_exact": true,
+  "D01_same_intentional_status2_diagnostic_generated_paths_differ": true,
+  "new_warning_names": [],
+  "archive_and_all_1207_files_verified": true,
+  "log_hashes_verified": true,
+  "archive_sha256": "25314c061841f1fd77f74facf4295eed3f7d536efb1e888301ffa2fc5cfd6ce8",
+  "manifest_sha256": "0f50d787bad7df6021e1204d4fd741137e0fb9c8b6448570d3fa5763808f2b81"
+}

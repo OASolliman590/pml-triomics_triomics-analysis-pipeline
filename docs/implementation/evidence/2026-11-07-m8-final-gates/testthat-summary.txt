@@ -1,0 +1,5 @@
+Final summaries extracted from the raw installed test log.
+[ FAIL 0 | WARN 15 | SKIP 0 | PASS 11518 ]
+[ FAIL 0 | WARN 15 | SKIP 0 | PASS 11518 ]
+Raw testthat.Rout SHA-256: 9b0061847a33da3b3028ff85880a480d39f16ed271ec53fa92b2dea967e05b19
+Full raw log retained locally; no separate source suite claimed.

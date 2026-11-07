@@ -1,0 +1,128 @@
+{
+  "milestone": "M8",
+  "Sol_decision": "accepted",
+  "accepted_product_commit": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
+  "accepted_at": "2026-11-07T08:42:50.464662+00:00",
+  "released_gate": "G8",
+  "G8": "released",
+  "G9": "closed",
+  "M9": "not_started",
+  "D-T09": "not_started",
+  "acceptance_record_commit": "The Git commit containing this receipt; metadata only, not a newly checked product",
+  "required_packets": [
+    "D-T08",
+    "D-T13",
+    "D-T15"
+  ],
+  "packet_evidence": {
+    "D-T08": {
+      "commit": "f85fa6def678f23cc61b791531dbcd7a5adea13b",
+      "receipt_ref": "docs/implementation/evidence/2026-11-04-d-t08-final/acceptance-receipt.json",
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-11-04-d-t08-sol-acceptance.md"
+      ],
+      "review_ref": null
+    },
+    "D-T13": {
+      "commit": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+      "receipt_ref": "docs/implementation/evidence/2026-11-06-d13-extra7-accepted/receipt.json",
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-11-06-d13-extra7-sol-acceptance.md",
+        "docs/implementation/reviews/2026-11-06-d13-extra7-astra.md"
+      ],
+      "review_ref": null
+    },
+    "D-T15": {
+      "commit": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+      "receipt_ref": "docs/implementation/evidence/2026-11-05-d15-extra-repair-accepted/receipt.json",
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-11-05-d15-sol-acceptance.md"
+      ],
+      "review_ref": "docs/implementation/reviews/2026-11-05-d15-extra-repair-astra.md"
+    }
+  },
+  "documentation": {
+    "ref": "docs/implementation/milestones/M8.md",
+    "commit": "509fe3dcf05622a802ef95077ed5d070945a4e2c",
+    "Sol_review": "pass"
+  },
+  "package_gate_ref": "docs/implementation/evidence/2026-11-07-m8-final-gates/package-gate.json",
+  "Status": "Status: OK",
+  "exit_code": 0,
+  "testthat_counts": {
+    "fail": 0,
+    "warn": 15,
+    "skip": 0,
+    "pass": 11518
+  },
+  "warnings": {
+    "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes": 11,
+    "C-05 real MOFA2 fits and extracts a missing sample-view capability cell": 3,
+    "D-T01 refuses stale paired signs and preserves the old pointer": 1
+  },
+  "new_warning_names": [],
+  "warning_review": "C05 exact messages/multiplicities; D01 expected native status2 with generated path differences",
+  "archive_sha256": "25314c061841f1fd77f74facf4295eed3f7d536efb1e888301ffa2fc5cfd6ce8",
+  "archive_manifest_sha256": "0f50d787bad7df6021e1204d4fd741137e0fb9c8b6448570d3fa5763808f2b81",
+  "archive_files": 1207,
+  "source_unchanged_after_gate_and_audit": true,
+  "raw_log_sha256": {
+    "triomics_0.1.0.tar.gz": "5a36c10bed3e7d0534317081eae89c865023ee2080d1f91bd0b760c40b2fac2c",
+    "testthat.Rout": "9b0061847a33da3b3028ff85880a480d39f16ed271ec53fa92b2dea967e05b19",
+    "00check.log": "b45b10e587a201e98bfcbce53a14256348fe4ef9b097243a3ab759532fa04ce6",
+    "warning-inventory.json": "38de983086dbe6f99856a0bb63ac2e87900ebb1de92ce9f3b57c33d7ded6e1c8",
+    "driver.log": "ad70a0ce244b42b4fc8995d098491c381a07a6cac5b038ab4b3abee839db4458",
+    "check.log": "ec61a5a443b57aa620e03eb45cfd11632fc01f5c58c1f7160cf50192e143fcf6",
+    "build.log": "1d8bf68d1fa9b44d4467f9cb7a78db09157497389d3432b61ebbc750fdd66f01"
+  },
+  "astra": {
+    "audit_pass": true,
+    "verdict": "pass",
+    "candidate": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
+    "initial_reviews_used": 1,
+    "focused_rereviews_used": 0,
+    "audit_ref": "docs/implementation/evidence/2026-11-07-m8-final-gates/astra-audit.json",
+    "raw_audit_json_sha256": "c46da20fab8d4b3f445206cf39364e594bfda465aa243deac2c86b7675d0eb3a",
+    "raw_audit_md_sha256": "4012ab14c35f271a135a7dc6078266a85a553bb17fd03341638305db1cb1d4cb",
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "low",
+    "effective_settings_exposed": false
+  },
+  "packaging_correction": {
+    "record": "docs/implementation/change-records/M8-PKG-001-portability.md",
+    "Luna_commit": "006962d29e579f66951f4d06c69cd454e4efe4b6",
+    "changes": "Four identical-meaning Unicode source escapes; Sol adds existing stats::setNames import",
+    "D13_parsed_expressions_identical": true,
+    "D13_reopened": false,
+    "D13_attempts_preserved": true,
+    "tests_changed": false
+  },
+  "first_failed_gate_preserved": "docs/implementation/evidence/2026-11-07-m8-first-package/receipt.json",
+  "spec_validation": {
+    "label": "Declared frozen-kit content_sha256, not a successful current-content validation",
+    "value": "21ebbd04688dfacb058af671d288a85d5910c657ff2e2437d2c6e99e7461aaaf",
+    "freeze_file_sha256": "f5eb17c5371a0342710fc1e6ff32d6b01975033a94e2bd901f46f32de12f01d4",
+    "validator_exit": 1,
+    "mismatched_entries": [
+      "AGENTS.md",
+      "CLAUDE.md"
+    ]
+  },
+  "Astra_spec_disposition": "M8-N01 nonblocking inherited documentation-manifest discrepancy; not a validator pass or a completed frozen-kit audit",
+  "conditional_limits": {
+    "C-07": "four controls not_run",
+    "C-09": "unqualified; synthetic_fixture_only; benefit_guaranteed=false",
+    "D-T06": "blocked; zero completion credit",
+    "D-T07": "blocked; zero completion credit",
+    "D-T14": "blocked; zero completion credit",
+    "clinical_approved_aggregate": "unavailable; fails closed; no implementation credit"
+  },
+  "evidence_qualification": "Public synthetic software evidence on recorded local R/Quarto/MOFA runtime and internal APFS. Prior separately orchestrated native report proofs are attributed to accepted packet commits; current candidate has full installed package tests, including native cases. No new separate source/full native report run claimed.",
+  "private_study_data_used": false,
+  "GitHub_push": false,
+  "Notion_sync": false,
+  "AIU_run": false,
+  "active_workers": [],
+  "active_processes": [],
+  "next": "D-T09/M9 reproduction and final acceptance, in a later run; G9 remains closed"
+}

@@ -1,0 +1,24 @@
+{
+  "worker_commit": "006962d29e579f66951f4d06c69cd454e4efe4b6",
+  "base": "159bee1513c7649b8c4cc04743dc87093aed63df",
+  "changed_file": "R/report_targets.R",
+  "literal_replacements": 4,
+  "source_character_delta": 20,
+  "byte_delta": 12,
+  "exact_byte_replacement_verified": true,
+  "ASCII_only": true,
+  "parsed_expressions_identical": true,
+  "command": [
+    "Rscript",
+    "--vanilla",
+    "-",
+    "$M8_EVIDENCE/snapshot/source/R/report_targets.R",
+    "/private/tmp/triomics-m8-portability-20261107/R/report_targets.R"
+  ],
+  "exit_code": 0,
+  "NAMESPACE_only_change": "importFrom(stats,setNames)",
+  "D13_tests_rerun": false,
+  "before_sha256": "372b3325fb909a2939f73a047dc7b35b444e16746afc018329c9a37cf1531ce5",
+  "after_sha256": "ee52e9c00b1905ca1f448a20dbbc2ac51c615e7b1cd360c348840cd123de01b3",
+  "log_sha256": "f9fb3b5cf109eb5d6406c7810081337c653fb83dcc6f1914622c1b4d9bc88e38"
+}

@@ -1,3 +1,35 @@
+# Current checkpoint: M8 accepted; G8 released; G9 closed
+
+Read [Sol's M8 acceptance](reviews/2026-11-07-m8-sol-acceptance.md), [package gate](reviews/2026-11-07-m8-package-gate.md) and [fresh Astra](reviews/2026-11-07-m8-astra.md). Immutable product `4c0c59d91b5c8f7117b1097a57e68b0211f0e45a` passed exactly `Status: OK`, FAIL 0/WARN 15/SKIP 0/PASS 11518; the warning names/messages match M7. All 1,207 archive source hashes stayed unchanged. Astra audit_pass yes, no blocking findings; Sol accepted M8/released G8 only after the gates passed. Initial milestone review 1 used, focused rereview 0.
+
+Terra509fe3d and Luna006962d are terminal. The first failed ac66bd6 archive remains preserved. The packaging correction changed only equivalent Unicode spelling and an explicit existing stats helper import. D13 logic/tests/acceptance and every repair attempt remain intact; no separate D13 rerun. Prior native evidence stays attributed to its packet snapshots.
+
+C07 four controls not_run; C09 unqualified/synthetic_fixture_only/benefit_guaranteed=false; D06/D07/D14 blocked with zero credit. Clinical approved_aggregate remains unavailable and fails closed. The inherited AGENTS/CLAUDE manifest discrepancy is nonblocking for bounded M8 per Astra M8-N01, but the validator still failed and the separate frozen-kit audit is pending. No private study data, push, Notion sync or AIU run.
+
+All run-owned workers/processes are terminal. **G8 released; G9 closed; D-T09/M9 not started.**
+
+Literal resume: **Continue from the M8 acceptance-record HEAD, read the linked receipt and actual ledger/Git state, and select D-T09/M9 reproduction/final acceptance as the next authorized cycle. Do not redo D13, DOC-M8 or the passed M8 package/audit gates. Preserve all prior attempts, conditional exclusions and frozen-spec audit limits. Keep G9 closed until its own packet, documentation, package, fresh Astra and Sol acceptance gates pass.**
+
+## Historical checkpoints below
+
+# Live checkpoint: M8 package passed; fresh Astra active
+
+Immutable candidate `4c0c59d91b5c8f7117b1097a57e68b0211f0e45a` passed the [clean archive package gate](reviews/2026-11-07-m8-package-gate.md): exactly `Status: OK`, FAIL 0/WARN 15/SKIP 0/PASS 11518. The fifteen named warnings match M7, and all 1,207 source files remain unchanged. Terra and Luna are terminal. One fresh read-only `/root/m8_final_astra` is active; initial milestone review 1 used, focused rereview 0. G8/G9 remain closed pending Sol's decision.
+
+Literal resume: **Join the existing M8 Astra audit on4c0c59d and read its local `milestone-20261106/reviews/astra` artifacts. Do not rerun the passed gate, Terra, Luna or D13. Reconcile the audit immediately; Sol may accept M8/release G8 only after all gates pass. Keep G9 closed; do not start D09.**
+
+## Historical checkpoints below
+
+# Live checkpoint: corrected M8 archive gate running
+
+Corrected immutable candidate `4c0c59d91b5c8f7117b1097a57e68b0211f0e45a` is being checked in existing session **39648**. The coordinator's local `milestone-20261106/package-correction-1` directory contains the snapshot, state and package logs. The non-ASCII and code-problem checks now report OK; the full installed suite is running and final Status/counts are not yet available. Do not restart this gate.
+
+Terra `509fe3d` and Luna `006962d` are terminal. The first archive `ac66bd6`, its failed Status and 11,518 passing assertions remain preserved. The only product changes are four equivalent Unicode escapes and the explicit base `setNames` import; tests, frozen contracts, methods, all packet attempts and acceptance records are unchanged.
+
+Literal resume: **Join corrected package session39648 for4c0c59d; inspect its final logs and unchanged snapshot. Do not redispatch Terra/Luna or redo D13. If exact Status: OK, complete counts/no required skips and named warnings pass, dispatch one fresh read-only Astra-low M8 review on that same immutable snapshot. No Astra milestone calls have been used. Sol may release G8 only after every M8 gate passes; keep G9 closed and do not start D09.**
+
+## Historical checkpoints below
+
 # Current checkpoint: M8 packaging correction verified
 
 Luna `006962d` and Sol's one-line namespace declaration resolve the two observed package diagnostics with identical parsed D13 code. Read [Sol's portability review](reviews/2026-11-07-m8-portability-sol-review.md). All original D13 attempts/acceptance and tests are preserved. No separate D13 suite was repeated. The first failed package archive and its 11,518 passes/15 named warnings remain recorded.
