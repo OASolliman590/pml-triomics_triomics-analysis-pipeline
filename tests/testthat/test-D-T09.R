@@ -287,8 +287,15 @@ testthat::test_that("the installed CLI uses authoritative inputs and keeps execu
 })
 
 testthat::test_that("the installed A exporter recovers a partial checkpoint and invalidates stale inputs", {
-  package_root <- normalizePath(find.package("triomics"), winslash = "/", mustWork = TRUE)
-  expected_library <- Sys.getenv("TRIOMICS_CANDIDATE_LIBRARY", unset = dirname(package_root))
+  candidate_library <- Sys.getenv("TRIOMICS_CANDIDATE_LIBRARY", unset = "")
+  if (nzchar(candidate_library)) {
+    expected_library <- candidate_library
+    package_root <- normalizePath(file.path(candidate_library, "triomics"),
+                                  winslash = "/", mustWork = TRUE)
+  } else {
+    package_root <- normalizePath(find.package("triomics"), winslash = "/", mustWork = TRUE)
+    expected_library <- dirname(package_root)
+  }
   installed_stamp <- file.path(package_root, "triomics-source-revision")
   testthat::expect_true(nzchar(expected_library),
                         info = "The installed triomics package library must be resolvable.")
