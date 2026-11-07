@@ -46,7 +46,7 @@ triomics_report_target_safe_association_token <- function(value) {
 triomics_report_target_safe_association_prose <- function(value) {
   if (!is.character(value) || length(value) != 1L || is.na(value)) return("")
   value <- trimws(value)
-  identifier_separator <- "[[:space:]_,.;:/#=()'’\"-]"
+  identifier_separator <- "[[:space:]_,.;:/#=()'\u2019\"-]"
   identifier_value <- "[[:alnum:]][[:alnum:]_.-]*"
   # Treat identifier connectors as token content: the S in SubjectS-7 is attached,
   # while the final S in SUBJECTS count is a complete plural label.
@@ -135,12 +135,12 @@ triomics_report_target_safe_association_prose <- function(value) {
     identifier_separator, "*(?=[[:alnum:]_.-]*[[:digit:]])", identifier_value
   )
   punctuated_identifier <- paste0(
-    "(?:[[:space:]]*[:=#/._-][[:space:]]*|[[:space:]]+['’\"()_-][[:space:]]*)",
+    "(?:[[:space:]]*[:=#/._-][[:space:]]*|[[:space:]]+['\u2019\"()_-][[:space:]]*)",
     "(?=[[:digit:]]|(?-i:[A-Z]))",
     identifier_value
   )
   sample_punctuated_identifier <- paste0(
-    "(?:[[:space:]]*[:=#/._-][[:space:]]*|[[:space:]]+['’\"()_-][[:space:]]*)",
+    "(?:[[:space:]]*[:=#/._-][[:space:]]*|[[:space:]]+['\u2019\"()_-][[:space:]]*)",
     # Exempt only this local description shape; identifier matches still scan all of value.
     "(?!(?:", sample_scientific_description, ")(?![[:alnum:]_.-]))",
     "(?!(?i:(?:level|wise|based))(?![[:alnum:]_.-]))",
@@ -177,7 +177,7 @@ triomics_report_target_safe_association_prose <- function(value) {
   }
   token <- triomics_report_target_safe_association_token(value)
   if (nzchar(token)) return(token)
-  if (!grepl("^[[:alpha:]][[:alpha:][:digit:][:space:],.;:'’():-]*$", value, perl = TRUE)) return("")
+  if (!grepl("^[[:alpha:]][[:alpha:][:digit:][:space:],.;:'\u2019():-]*$", value, perl = TRUE)) return("")
   triomics_report_clean_text(value)
 }
 
