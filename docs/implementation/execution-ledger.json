@@ -35,13 +35,37 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m9_d09_luna",
+      "role": "D-T09 implementer",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "base": "f2fe176240a958fac6fe0b1b72d3e2625abbc45d",
+      "status": "running",
+      "allowed_next_transition": "Sol inspects diff and dispatches Standards/Spec reviews; no automatic acceptance",
+      "cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "M8_accepted_G8_released_G9_closed",
-    "last_reconciled": "2026-11-07T08:42:50.464662+00:00",
-    "active_handoffs": [],
+    "status": "D09_Luna_running",
+    "last_reconciled": "2026-11-07T13:17:41.435820+00:00",
+    "active_handoffs": [
+      {
+        "agent": "/root/m9_d09_luna",
+        "role": "D-T09 implementer",
+        "requested_model": "gpt-6-luna",
+        "requested_effort": "max",
+        "effective_settings_exposed": false,
+        "base": "f2fe176240a958fac6fe0b1b72d3e2625abbc45d",
+        "status": "running",
+        "allowed_next_transition": "Sol inspects diff and dispatches Standards/Spec reviews; no automatic acceptance",
+        "cursor": null
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "All M8 handoffs reconciled; no active run-owned workers or processes; D09 not started",
+    "disposition": "Fresh bounded D09 initial cycle; M8/D13 preserved; G9 closed",
     "current_gate": {
       "candidate": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
       "package": "Status: OK",
@@ -7329,6 +7353,15 @@
       "G9": "closed",
       "active_workers": [],
       "active_processes": []
+    },
+    {
+      "at": "2026-11-07T13:16:49.801436+00:00",
+      "event": "D09_initial_cycle_authorized",
+      "base": "f2fe176240a958fac6fe0b1b72d3e2625abbc45d",
+      "initial_attempts": 1,
+      "repairs_used": 0,
+      "G8": "released",
+      "G9": "closed"
     }
   ],
   "packets": {
@@ -9084,11 +9117,15 @@
       }
     },
     "D-T09": {
-      "status": "not_started",
-      "attempts": 0,
+      "status": "dispatched",
+      "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
-      "blockers": []
+      "blockers": [],
+      "repairs": 0,
+      "base_commit": "f2fe176240a958fac6fe0b1b72d3e2625abbc45d",
+      "dispatch_ref": "docs/implementation/reviews/2026-11-07-d-t09-dispatch.md",
+      "worker_ref": "/root/m9_d09_luna"
     }
   },
   "milestones": {
@@ -9251,9 +9288,13 @@
       "historical_runtime_blocker_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md"
     },
     "M9": {
-      "status": "not_started",
+      "status": "in_progress",
       "review_ref": null,
-      "commit": null
+      "commit": null,
+      "G9": "closed",
+      "review_attempts": 0,
+      "focused_rereviews": 0,
+      "authorization": "Continue D09/M9 from f2fe176 using Luna and agreed review process; do not redo M8/D13; G9 gated"
     }
   },
   "conditional_dispositions": {
@@ -9308,7 +9349,7 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "M8_accepted_G8_released_M9_not_started_G9_closed",
+  "close_state": "M9_in_progress_G8_released_G9_closed",
   "D13_extra_repair1_orchestration": {
     "worker": {
       "agent": "/root/d13_numeric_extra1_luna",

@@ -1,3 +1,11 @@
+# Live checkpoint: D09/M9 initial cycle authorized
+
+Read [the D09 dispatch](reviews/2026-11-07-d-t09-dispatch.md). Base f2fe176 preserves accepted M8/G8 and D13. One fresh Luna initial attempt, at most two targeted repairs, then independent local reviews, final installed walkthrough/native/full-source/archive gates, Terra documentation and fresh Astra M9. G9 remains closed. The local M9 evidence state records the exact worker and transitions; do not restart from chat memory.
+
+Literal resume: **Join the recorded D09 worker after dispatch, inspect its real diff/results, then perform the authorized reviews and independent verification. Do not redo M8 or D13. Keep G9 closed until all final acceptance gates pass; preserve all conditional exclusions and the pending frozen-kit audit.**
+
+## Historical checkpoints below
+
 # Current checkpoint: M8 accepted; G8 released; G9 closed
 
 Read [Sol's M8 acceptance](reviews/2026-11-07-m8-sol-acceptance.md), [package gate](reviews/2026-11-07-m8-package-gate.md) and [fresh Astra](reviews/2026-11-07-m8-astra.md). Immutable product `4c0c59d91b5c8f7117b1097a57e68b0211f0e45a` passed exactly `Status: OK`, FAIL 0/WARN 15/SKIP 0/PASS 11518; the warning names/messages match M7. All 1,207 archive source hashes stayed unchanged. Astra audit_pass yes, no blocking findings; Sol accepted M8/released G8 only after the gates passed. Initial milestone review 1 used, focused rereview 0.
