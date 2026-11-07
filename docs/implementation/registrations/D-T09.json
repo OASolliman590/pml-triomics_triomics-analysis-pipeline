@@ -35,6 +35,7 @@
   "verification_evidence": {
     "status": "worker_candidate_verification_pending",
     "focused_test": "Rscript --vanilla -e \"testthat::test_local(filter='D-T09', stop_on_failure=TRUE)\"",
+    "authority_root_env": "Set TRIOMICS_D_T09_PROJECT_ROOT to the read-only immutable source archive when package tests run from a context that does not contain discovery/spec-v2 and docs/implementation authority records.",
     "walkthroughs": [
       "vignettes/paired-study.qmd",
       "vignettes/independent-study.qmd"

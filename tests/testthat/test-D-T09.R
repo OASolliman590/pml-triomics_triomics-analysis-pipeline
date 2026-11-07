@@ -1,14 +1,24 @@
 d09_project_root <- function() {
+  supplied <- Sys.getenv("TRIOMICS_D_T09_PROJECT_ROOT", unset = "")
+  if (nzchar(supplied)) {
+    candidate <- normalizePath(supplied, winslash = "/", mustWork = FALSE)
+    if (file.exists(file.path(candidate, "discovery", "spec-v2", "packets.json")) &&
+        file.exists(file.path(candidate, "docs", "implementation", "execution-ledger.json"))) {
+      return(candidate)
+    }
+    return(NULL)
+  }
   candidate <- normalizePath(getwd(), winslash = "/", mustWork = TRUE)
   for (attempt in seq_len(8L)) {
-    if (file.exists(file.path(candidate, "discovery", "spec-v2", "packets.json"))) {
+    if (file.exists(file.path(candidate, "discovery", "spec-v2", "packets.json")) &&
+        file.exists(file.path(candidate, "docs", "implementation", "execution-ledger.json"))) {
       return(candidate)
     }
     parent <- dirname(candidate)
     if (identical(parent, candidate)) break
     candidate <- parent
   }
-  stop("Could not locate the public triomics project records.", call. = FALSE)
+  NULL
 }
 
 d09_test_root <- function(name) {
@@ -37,8 +47,15 @@ testthat::test_that("the programme evidence snapshot binds complete identities a
                       inherits = TRUE)
   testthat::expect_true(is.function(snapshot_fn),
                         info = "The D-T09 authority snapshot interface is missing.")
+  testthat::expect_false(
+    is.null(root),
+    info = paste(
+      "The positive authority test requires the immutable source archive;",
+      "set TRIOMICS_D_T09_PROJECT_ROOT when package tests run outside the repository."
+    )
+  )
 
-  if (is.function(snapshot_fn)) {
+  if (is.function(snapshot_fn) && !is.null(root)) {
     snapshot <- snapshot_fn(root)
     testthat::expect_identical(snapshot$status, "pending_sol_reconciliation")
     testthat::expect_identical(snapshot$packet_count, 41L)
@@ -49,6 +66,12 @@ testthat::test_that("the programme evidence snapshot binds complete identities a
       snapshot$authorities$execution_ledger$sha256,
       triomics_sha256(file.path(root, "docs", "implementation", "execution-ledger.json"))
     )
+    missing_root <- d09_test_root("missing-authority-root")
+    error <- testthat::expect_error(
+      snapshot_fn(missing_root),
+      class = "triomics_error"
+    )
+    testthat::expect_identical(error$code, "D_REPRODUCTION_AUTHORITY_INVALID")
 
     packet_path <- file.path(root, "discovery", "spec-v2", "packets.json")
     original <- jsonlite::read_json(packet_path, simplifyVector = FALSE)
@@ -155,7 +178,7 @@ testthat::test_that("paired and independent fixtures materialize with their decl
   }
 })
 
-testthat::test_that("the installed CLI walks both designs and binds execution separately from acceptance", {
+testthat::test_that("the installed CLI uses authoritative inputs and keeps execution separate from acceptance", {
   run_fn <- get0("triomics_reproduction_run_installed", mode = "function", inherits = TRUE)
   manifest_fn <- get0("triomics_reproduction_manifest", mode = "function", inherits = TRUE)
   testthat::expect_true(is.function(run_fn),
@@ -163,22 +186,30 @@ testthat::test_that("the installed CLI walks both designs and binds execution se
   testthat::expect_true(is.function(manifest_fn),
                         info = "The D-T09 immutable reproduction manifest is missing.")
 
-  if (is.function(run_fn)) {
+  project_root <- d09_project_root()
+  testthat::expect_false(
+    is.null(project_root),
+    info = paste(
+      "The installed walkthrough test requires the immutable source archive;",
+      "set TRIOMICS_D_T09_PROJECT_ROOT when package tests run outside the repository."
+    )
+  )
+  if (is.function(run_fn) && !is.null(project_root)) {
     runs <- list()
     for (design in c("paired", "independent")) {
       fixture <- triomics_reproduction_materialize_fixture(
         design, d09_new_root(paste0(design, "-run-fixture"))
       )
       output_root <- d09_new_root(paste0(design, "-run-output"))
-      runs[[design]] <- run_fn(fixture, output_root, d09_project_root())
+      runs[[design]] <- run_fn(fixture, output_root, project_root)
       run <- runs[[design]]
       testthat::expect_identical(
         vapply(run$stages, `[[`, character(1L), "stage"),
-        c("A", "B", "C", "D", "report")
+        c(A = "A", B = "B", C = "C", D = "D", report = "report")
       )
       testthat::expect_identical(
         vapply(run$stages, `[[`, integer(1L), "exit_code"),
-        rep(0L, 5L)
+        c(A = 0L, B = 0L, C = 0L, D = 0L, report = 0L)
       )
       testthat::expect_identical(run$manifest$execution_status, "complete")
       testthat::expect_identical(run$manifest$scientific_validation_status,
@@ -191,7 +222,7 @@ testthat::test_that("the installed CLI walks both designs and binds execution se
       testthat::expect_true(file.exists(run$manifest_path))
       testthat::expect_true(file.exists(file.path(output_root, "A", "assays.json")))
       testthat::expect_true(file.exists(file.path(output_root, "A", "assays.envelope.json")))
-      testthat::expect_identical(run$manifest$a_assays$sha256,
+      testthat::expect_identical(run$manifest$producer_artifacts$a$payload_sha256,
                                  triomics_sha256(file.path(output_root, "A", "assays.json")))
       testthat::expect_identical(run$manifest_byte_sha256,
                                  triomics_sha256(run$manifest_path))
@@ -218,6 +249,14 @@ testthat::test_that("the installed CLI walks both designs and binds execution se
         testthat::expect_gt(selected$effect[[1L]], 0)
       }
     }
+
+    missing_root <- d09_test_root(paste0("missing-authority-run-", Sys.getpid()))
+    missing_output <- d09_new_root("missing-authority-run-output")
+    error <- testthat::expect_error(
+      run_fn(runs$paired$fixture, missing_output, missing_root),
+      class = "triomics_error"
+    )
+    testthat::expect_identical(error$code, "D_REPRODUCTION_AUTHORITY_INVALID")
 
     if (is.function(manifest_fn)) {
       run <- runs$paired
@@ -248,12 +287,11 @@ testthat::test_that("the installed CLI walks both designs and binds execution se
 })
 
 testthat::test_that("the installed A exporter recovers a partial checkpoint and invalidates stale inputs", {
-  expected_library <- Sys.getenv("TRIOMICS_CANDIDATE_LIBRARY", unset = "")
-  installed_stamp <- if (nzchar(expected_library)) {
-    file.path(expected_library, "triomics", "triomics-source-revision")
-  } else ""
+  package_root <- normalizePath(find.package("triomics"), winslash = "/", mustWork = TRUE)
+  expected_library <- Sys.getenv("TRIOMICS_CANDIDATE_LIBRARY", unset = dirname(package_root))
+  installed_stamp <- file.path(package_root, "triomics-source-revision")
   testthat::expect_true(nzchar(expected_library),
-                        info = "The focused run must name its isolated archive-installed library.")
+                        info = "The installed triomics package library must be resolvable.")
   testthat::expect_true(nzchar(installed_stamp) && file.exists(installed_stamp),
                         info = "The isolated installed candidate has no source revision stamp.")
 

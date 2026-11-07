@@ -737,13 +737,17 @@ triomics_reproduction_run_installed <- function(fixture, output_root, project_ro
   } else {
     triomics_reproduction_find_project_root(project_root)
   }
-  if (!file.exists(file.path(project_root, "exec", "triomics"))) {
+  launcher <- system.file("exec", "triomics", package = "triomics")
+  if (!nzchar(launcher) || !file.exists(launcher) || dir.exists(launcher) ||
+      triomics_is_symlink(launcher)) {
     triomics_reproduction_abort(
       "D_REPRODUCTION_INSTALLED_UNQUALIFIED",
-      "The relative installed launcher is missing from the walkthrough root.",
+      "The archive-installed package launcher is missing or unsafe.",
       "installed.launcher"
     )
   }
+  launcher <- normalizePath(launcher, winslash = "/", mustWork = TRUE)
+  launcher_root <- normalizePath(dirname(dirname(launcher)), winslash = "/", mustWork = TRUE)
   installed <- triomics_reproduction_installed_identity()
   if (!dir.create(output_root, recursive = TRUE, showWarnings = FALSE)) {
     triomics_reproduction_abort(
@@ -754,13 +758,13 @@ triomics_reproduction_run_installed <- function(fixture, output_root, project_ro
   output_root <- normalizePath(output_root, winslash = "/", mustWork = TRUE)
   previous_wd <- getwd()
   on.exit(setwd(previous_wd), add = TRUE)
-  setwd(project_root)
+  setwd(launcher_root)
   rscript <- file.path(R.home("bin"), "Rscript")
   stages <- list()
   stage_names <- c("A", "B", "C", "D", "report")
   for (stage in stage_names) {
     arguments <- c(
-      "--vanilla", "exec/triomics", "--config", fixture$config_path,
+      "--vanilla", file.path("exec", "triomics"), "--config", fixture$config_path,
       "--stage", stage, "--output", output_root
     )
     output <- tryCatch(
