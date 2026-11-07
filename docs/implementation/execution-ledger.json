@@ -38,34 +38,34 @@
   "active_workers": [
     {
       "agent": "/root/m9_d09_luna",
-      "role": "D-T09 targeted repair1",
+      "role": "D-T09 final targeted repair2",
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "effective_settings_exposed": false,
-      "base": "0fc0890ccab2b4118cf49ddf6cb1f9e27fcbfe23",
+      "base": "507af2b57ba7a5e01cb91c2d22817dbbf91b53c4",
       "status": "running",
-      "allowed_next_transition": "Sol inspects repair diff, reviews and verifies; no automatic integration or acceptance",
+      "allowed_next_transition": "Sol reviews/verifies fixed candidate; failure stops this bounded cycle, no repair3",
       "cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "D09_same_Luna_repair1_running",
-    "last_reconciled": "2026-11-07T15:27:30.808330+00:00",
+    "status": "D09_same_Luna_final_repair2_running",
+    "last_reconciled": "2026-11-07T16:10:13.985107+00:00",
     "active_handoffs": [
       {
         "agent": "/root/m9_d09_luna",
-        "role": "D-T09 targeted repair1",
+        "role": "D-T09 final targeted repair2",
         "requested_model": "gpt-6-luna",
         "requested_effort": "max",
         "effective_settings_exposed": false,
-        "base": "0fc0890ccab2b4118cf49ddf6cb1f9e27fcbfe23",
+        "base": "507af2b57ba7a5e01cb91c2d22817dbbf91b53c4",
         "status": "running",
-        "allowed_next_transition": "Sol inspects repair diff, reviews and verifies; no automatic integration or acceptance",
+        "allowed_next_transition": "Sol reviews/verifies fixed candidate; failure stops this bounded cycle, no repair3",
         "cursor": null
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Existing Luna targeted repair1; one further repair remains; all final M9 gates pending; G9 closed.",
+    "disposition": "Final targeted repair2 of2; no further implementation repair. Final M9 gates pending; G9closed.",
     "current_gate": {
       "candidate": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
       "package": "Status: OK",
@@ -7456,6 +7456,23 @@
       "protected_working_bytes_preserved": true,
       "worker_repairs_unchanged": 1,
       "G9": "closed"
+    },
+    {
+      "at": "2026-11-07T16:10:13.985107+00:00",
+      "event": "D09_repair1_changes_required_final_repair2_dispatched",
+      "candidate": "507af2b57ba7a5e01cb91c2d22817dbbf91b53c4",
+      "Standards": "changes_required",
+      "Spec": "changes_required",
+      "full_focused_suite": "not_run_coordinator_hold",
+      "install_exit": "unknown",
+      "Sol_actual_installed_probes": "both_residual_findings_reproduced_originals_unchanged",
+      "worker": "/root/m9_d09_luna",
+      "initial_attempts": 1,
+      "repairs_used": 2,
+      "remaining_targeted_repairs": 0,
+      "M9_Astra_calls": 0,
+      "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-review-repair2-dispatch.md",
+      "G9": "closed"
     }
   ],
   "packets": {
@@ -9217,16 +9234,17 @@
       "acceptance_refs": [],
       "blockers": [
         "D09-STD-01",
-        "D09-SPEC-001",
         "D09-SPEC-002"
       ],
-      "repairs": 1,
+      "repairs": 2,
       "base_commit": "f2fe176240a958fac6fe0b1b72d3e2625abbc45d",
       "dispatch_ref": "docs/implementation/reviews/2026-11-07-d-t09-dispatch.md",
       "worker_ref": "/root/m9_d09_luna",
-      "candidate_commit": "0fc0890ccab2b4118cf49ddf6cb1f9e27fcbfe23",
+      "candidate_commit": "507af2b57ba7a5e01cb91c2d22817dbbf91b53c4",
       "review_ref": "docs/implementation/reviews/2026-11-07-d09-initial-review.md",
-      "repair1_dispatch_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-dispatch.md"
+      "repair1_dispatch_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-dispatch.md",
+      "repair1_review_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-review-repair2-dispatch.md",
+      "repair2_dispatch_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-review-repair2-dispatch.md"
     }
   },
   "milestones": {

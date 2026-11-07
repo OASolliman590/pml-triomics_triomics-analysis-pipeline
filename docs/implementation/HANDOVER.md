@@ -1,3 +1,11 @@
+# Live checkpoint: same D09 Luna final repair2 running
+
+Read [repair1 disposition and repair2 dispatch](reviews/2026-11-07-d09-repair1-review-repair2-dispatch.md). Preserved507af2b failed both focused reviews; Sol reproduced both residual defects with the installed candidate. No full focused test counts on507; installer exit unknown despite verified load/stamp. Same worker/worktree, initial1 plus repair2/2; no further implementation repair. Packaging metadata c80c7e6 is integrated separately. D09 product unintegrated; M8/G8 and D13 preserved; G9closed.
+
+Literal resume: **Join existing /root/m9_d09_luna final repair2 from507af2b; never restart/recreate it or reset attempts. Review its fixed two-file candidate and independently verify before integration. If tests/review fail, stop this bounded cycle with evidence; no repair3. If it passes, continue Terra DOC-M9 and all final same-commit native/clinical/source/clean-archive/fresh-Astra gates. M9 Astra0/0; keep G9closed until all gates pass.**
+
+## Historical checkpoints below
+
 # Live checkpoint: existing D09 Luna repair1 running
 
 Read [the repair1 dispatch](reviews/2026-11-07-d09-repair1-dispatch.md) and [initial reviews](reviews/2026-11-07-d09-initial-review.md). Same worker `/root/m9_d09_luna`, original worktree/branch, base0fc0890; initial1 plus repair1/2. Three reproduced defects are confined to R/reproduction_manifest.R and its D09 tests. No product integration or M9 acceptance. M8/G8 and D13 are preserved; G9closed.
