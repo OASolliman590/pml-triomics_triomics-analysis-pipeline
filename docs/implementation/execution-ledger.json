@@ -35,13 +35,37 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "agent": "/root/m9_d09_luna",
+      "role": "D-T09 targeted repair1",
+      "requested_model": "gpt-6-luna",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "base": "0fc0890ccab2b4118cf49ddf6cb1f9e27fcbfe23",
+      "status": "running",
+      "allowed_next_transition": "Sol inspects repair diff, reviews and verifies; no automatic integration or acceptance",
+      "cursor": null
+    }
+  ],
   "orchestration_control": {
-    "status": "D09_initial_review_complete_repair1_ready",
-    "last_reconciled": "2026-11-07T15:24:12.234480+00:00",
-    "active_handoffs": [],
+    "status": "D09_same_Luna_repair1_running",
+    "last_reconciled": "2026-11-07T15:27:30.808330+00:00",
+    "active_handoffs": [
+      {
+        "agent": "/root/m9_d09_luna",
+        "role": "D-T09 targeted repair1",
+        "requested_model": "gpt-6-luna",
+        "requested_effort": "max",
+        "effective_settings_exposed": false,
+        "base": "0fc0890ccab2b4118cf49ddf6cb1f9e27fcbfe23",
+        "status": "running",
+        "allowed_next_transition": "Sol inspects repair diff, reviews and verifies; no automatic integration or acceptance",
+        "cursor": null
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Luna and both Sol reviewers terminal; three reproduced defects require bounded same-worker repair1. G9 closed.",
+    "disposition": "Existing Luna targeted repair1; one further repair remains; all final M9 gates pending; G9 closed.",
     "current_gate": {
       "candidate": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
       "package": "Status: OK",
@@ -7395,6 +7419,17 @@
       "repairs_used": 0,
       "M9_Astra_calls": 0,
       "G9": "closed"
+    },
+    {
+      "at": "2026-11-07T15:27:30.808330+00:00",
+      "event": "D09_targeted_repair1_dispatched_same_worker",
+      "candidate_base": "0fc0890ccab2b4118cf49ddf6cb1f9e27fcbfe23",
+      "worker": "/root/m9_d09_luna",
+      "initial_attempts": 1,
+      "repairs_used": 1,
+      "remaining_targeted_repairs": 1,
+      "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-dispatch.md",
+      "G9": "closed"
     }
   ],
   "packets": {
@@ -9150,7 +9185,7 @@
       }
     },
     "D-T09": {
-      "status": "review_changes_required",
+      "status": "repair_in_progress",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
@@ -9159,12 +9194,13 @@
         "D09-SPEC-001",
         "D09-SPEC-002"
       ],
-      "repairs": 0,
+      "repairs": 1,
       "base_commit": "f2fe176240a958fac6fe0b1b72d3e2625abbc45d",
       "dispatch_ref": "docs/implementation/reviews/2026-11-07-d-t09-dispatch.md",
       "worker_ref": "/root/m9_d09_luna",
       "candidate_commit": "0fc0890ccab2b4118cf49ddf6cb1f9e27fcbfe23",
-      "review_ref": "docs/implementation/reviews/2026-11-07-d09-initial-review.md"
+      "review_ref": "docs/implementation/reviews/2026-11-07-d09-initial-review.md",
+      "repair1_dispatch_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-dispatch.md"
     }
   },
   "milestones": {

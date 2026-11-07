@@ -1,3 +1,11 @@
+# Live checkpoint: existing D09 Luna repair1 running
+
+Read [the repair1 dispatch](reviews/2026-11-07-d09-repair1-dispatch.md) and [initial reviews](reviews/2026-11-07-d09-initial-review.md). Same worker `/root/m9_d09_luna`, original worktree/branch, base0fc0890; initial1 plus repair1/2. Three reproduced defects are confined to R/reproduction_manifest.R and its D09 tests. No product integration or M9 acceptance. M8/G8 and D13 are preserved; G9closed.
+
+Literal resume: **Join the existing D09 Luna repair1; do not restart it or dispatch a replacement. Preserve0fc0890 and every earlier failed candidate/verification attempt. On handoff review the two-file diff and independently verify all three fixes plus the full focused suite before integration, then continue the pending final M9 native/source/archive/Terra/Astra gates. One targeted repair remains; M9 Astra0/0. Keep G9closed until all acceptance gates pass.**
+
+## Historical checkpoints below
+
 # Live checkpoint: D09 initial reviews require repair1
 
 Read [the initial review receipt](reviews/2026-11-07-d09-initial-review.md). Candidate0fc0890 is unintegrated. Both installed walkthroughs and the isolated restart block ran, but no full focused suite is green. Fresh Standards/Spec reviews and independent Sol probes identify three defects: rehashed-result lineage, offline resource detection, and spaced command paths. M8/G8 and D13 remain accepted; G9closed.
