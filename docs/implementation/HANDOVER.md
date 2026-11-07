@@ -1,3 +1,11 @@
+# Live checkpoint: same D09 Luna resumed after usage interruption
+
+Read [the continuation receipt](reviews/2026-11-07-d09-same-worker-resume.md). `/root/m9_d09_luna` is the existing worker, verified running after explicit followup; no new worker or attempt reset. Worker basef2fe176 and dirty owned helper/test remain preserved. Initial1, repairs0/2; M9 reviews0. Integration HEAD039fcb4 includes reviewed retrospective M2/M5 notes; M8/G8 and D13 remain accepted. G9closed.
+
+Literal resume: **Inspect the live existing `/root/m9_d09_luna` handle and its saved M9 worker evidence; join its next result, never redispatch from scratch. Review and independently verify the same candidate through the agreed bounded process. Keep G9 closed until all final gates pass. Preserve the service-usage interruption record and do not bypass approval review.**
+
+## Historical checkpoints below
+
 # Live checkpoint: D09/M9 initial cycle authorized
 
 Read [the D09 dispatch](reviews/2026-11-07-d-t09-dispatch.md). Base f2fe176 preserves accepted M8/G8 and D13. One fresh Luna initial attempt, at most two targeted repairs, then independent local reviews, final installed walkthrough/native/full-source/archive gates, Terra documentation and fresh Astra M9. G9 remains closed. The local M9 evidence state records the exact worker and transitions; do not restart from chat memory.

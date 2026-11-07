@@ -49,8 +49,8 @@
     }
   ],
   "orchestration_control": {
-    "status": "D09_Luna_running",
-    "last_reconciled": "2026-11-07T13:17:41.435820+00:00",
+    "status": "D09_same_Luna_resumed",
+    "last_reconciled": "2026-11-07T13:43:34.269617+00:00",
     "active_handoffs": [
       {
         "agent": "/root/m9_d09_luna",
@@ -7381,6 +7381,27 @@
       "integration_commit": "1f14e8b59a8384bd20a47399a3c53e7f9b404a99",
       "review_ref": "docs/implementation/reviews/2026-11-07-m9-historical-docs.md",
       "historical_execution_rerun": false,
+      "G9": "closed"
+    },
+    {
+      "at": "2026-11-07T13:43:34.269617+00:00",
+      "event": "D09_same_worker_resumed_after_usage_error",
+      "agent": "/root/m9_d09_luna",
+      "worker_head": "f2fe176240a958fac6fe0b1b72d3e2625abbc45d",
+      "product_commit": null,
+      "initial_attempts": 1,
+      "repairs_used": 0,
+      "live_status": "running verified by list_agents",
+      "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-same-worker-resume.md",
+      "G9": "closed"
+    },
+    {
+      "at": "2026-11-07T13:47:34.615694+00:00",
+      "event": "M9_normal_approval_review_revalidated",
+      "action": "protected contract hash record saved",
+      "exit_code": 0,
+      "same_worker": "/root/m9_d09_luna",
+      "attempt_reset": false,
       "G9": "closed"
     }
   ],
