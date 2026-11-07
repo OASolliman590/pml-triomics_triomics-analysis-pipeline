@@ -38,34 +38,80 @@
   "active_workers": [
     {
       "agent": "/root/m9_d09_luna",
-      "role": "D-T09 final targeted repair2",
+      "role": "D-T09 final repair2 verification",
       "requested_model": "gpt-6-luna",
       "requested_effort": "max",
       "effective_settings_exposed": false,
       "base": "507af2b57ba7a5e01cb91c2d22817dbbf91b53c4",
-      "status": "running",
+      "status": "installing_then_focused_suite",
       "allowed_next_transition": "Sol reviews/verifies fixed candidate; failure stops this bounded cycle, no repair3",
+      "cursor": null,
+      "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4"
+    },
+    {
+      "agent": "/root/m9_d09_spec",
+      "role": "D-T09 repair2 Spec read-only rereview",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "effective_settings_exposed": false,
+      "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
+      "status": "running",
+      "allowed_next_transition": "Sol records verdict; no edits or acceptance",
+      "cursor": null
+    },
+    {
+      "agent": "/root/m9_d09_standards",
+      "role": "D-T09 repair2 Standards read-only rereview",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "effective_settings_exposed": false,
+      "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
+      "status": "running",
+      "allowed_next_transition": "Sol records verdict; no edits or acceptance",
       "cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "D09_same_Luna_final_repair2_running",
-    "last_reconciled": "2026-11-07T16:10:13.985107+00:00",
+    "status": "D09_final_repair2_verification_running",
+    "last_reconciled": "2026-11-07T16:54:24.098629+00:00",
     "active_handoffs": [
       {
         "agent": "/root/m9_d09_luna",
-        "role": "D-T09 final targeted repair2",
+        "role": "D-T09 final repair2 verification",
         "requested_model": "gpt-6-luna",
         "requested_effort": "max",
         "effective_settings_exposed": false,
         "base": "507af2b57ba7a5e01cb91c2d22817dbbf91b53c4",
-        "status": "running",
+        "status": "installing_then_focused_suite",
         "allowed_next_transition": "Sol reviews/verifies fixed candidate; failure stops this bounded cycle, no repair3",
+        "cursor": null,
+        "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4"
+      },
+      {
+        "agent": "/root/m9_d09_spec",
+        "role": "D-T09 repair2 Spec read-only rereview",
+        "requested_model": "gpt-6.1-sol",
+        "requested_effort": "high",
+        "effective_settings_exposed": false,
+        "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
+        "status": "running",
+        "allowed_next_transition": "Sol records verdict; no edits or acceptance",
+        "cursor": null
+      },
+      {
+        "agent": "/root/m9_d09_standards",
+        "role": "D-T09 repair2 Standards read-only rereview",
+        "requested_model": "gpt-6.1-sol",
+        "requested_effort": "high",
+        "effective_settings_exposed": false,
+        "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
+        "status": "running",
+        "allowed_next_transition": "Sol records verdict; no edits or acceptance",
         "cursor": null
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Final targeted repair2 of2; no further implementation repair. Final M9 gates pending; G9closed.",
+    "disposition": "Immutable8a82a64 installation/focused verification plus two read-only rereviews; no repair3; G9closed.",
     "current_gate": {
       "candidate": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
       "package": "Status: OK",
@@ -7473,6 +7519,23 @@
       "M9_Astra_calls": 0,
       "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-review-repair2-dispatch.md",
       "G9": "closed"
+    },
+    {
+      "at": "2026-11-07T16:54:24.098629+00:00",
+      "event": "D09_repair2_frozen_verification_dispatched",
+      "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
+      "archive_sha256": "f6cf23dddc8bbbd120918c55c7776652479e5c9def78ee8a96e1adfc170b53a1",
+      "source_offline_reporter_assertions": 32,
+      "source_replay_cases": 12,
+      "full_suite": "pending",
+      "reviewers": [
+        "/root/m9_d09_spec",
+        "/root/m9_d09_standards"
+      ],
+      "repairs_used": 2,
+      "remaining_repairs": 0,
+      "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-repair2-verification.md",
+      "G9": "closed"
     }
   ],
   "packets": {
@@ -9228,7 +9291,7 @@
       }
     },
     "D-T09": {
-      "status": "repair_in_progress",
+      "status": "verification_in_progress",
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
@@ -9240,11 +9303,12 @@
       "base_commit": "f2fe176240a958fac6fe0b1b72d3e2625abbc45d",
       "dispatch_ref": "docs/implementation/reviews/2026-11-07-d-t09-dispatch.md",
       "worker_ref": "/root/m9_d09_luna",
-      "candidate_commit": "507af2b57ba7a5e01cb91c2d22817dbbf91b53c4",
+      "candidate_commit": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
       "review_ref": "docs/implementation/reviews/2026-11-07-d09-initial-review.md",
       "repair1_dispatch_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-dispatch.md",
       "repair1_review_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-review-repair2-dispatch.md",
-      "repair2_dispatch_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-review-repair2-dispatch.md"
+      "repair2_dispatch_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-review-repair2-dispatch.md",
+      "repair2_verification_ref": "docs/implementation/reviews/2026-11-07-d09-repair2-verification.md"
     }
   },
   "milestones": {

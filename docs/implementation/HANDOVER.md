@@ -1,3 +1,11 @@
+# Live checkpoint: D09 final repair2 frozen at8a82a64
+
+Read [the immutable verification checkpoint](reviews/2026-11-07-d09-repair2-verification.md). Same Luna is installing/testing8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4; both read-only Sol reviewers are active. Source offline32 reporter assertions and12 no-fit replay cases passed before freeze; full installed suite and review verdicts remain pending. No D09 integration. Attempts initial1 + repairs2/2; no repair3. M8/G8 and D13 preserved; G9closed.
+
+Literal resume: **Join the existing Luna and both recorded repair2 reviewers on immutable8a82a64. Never restart/recreate workers, amend this candidate or reset attempts. Read durable install/test exits before any transition. If a gate fails, stop this bounded cycle with evidence. If they pass, perform independent Sol verification and the remaining final M9 gates; G9 stays closed until all pass.**
+
+## Historical checkpoints below
+
 # Live checkpoint: same D09 Luna final repair2 running
 
 Read [repair1 disposition and repair2 dispatch](reviews/2026-11-07-d09-repair1-review-repair2-dispatch.md). Preserved507af2b failed both focused reviews; Sol reproduced both residual defects with the installed candidate. No full focused test counts on507; installer exit unknown despite verified load/stamp. Same worker/worktree, initial1 plus repair2/2; no further implementation repair. Packaging metadata c80c7e6 is integrated separately. D09 product unintegrated; M8/G8 and D13 preserved; G9closed.
