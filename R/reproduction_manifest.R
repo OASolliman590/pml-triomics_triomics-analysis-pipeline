@@ -933,6 +933,7 @@ triomics_reproduction_validate_report <- function(output_root, fixture) {
   }
   config <- triomics_read_config(fixture$config_path)
   analysis <- config$analyses[[1L]]
+  design <- analysis$design
   selected <- results[
     results$block_id == "block_1" & results$contrast_id == "target_minus_reference",
     , drop = FALSE
@@ -1068,7 +1069,6 @@ triomics_reproduction_manifest <- function(run) {
     )
   })
   input_records <- run$fixture$inputs
-  design <- fixture_state$config$analyses[[1L]]$design
   metadata_path <- file.path(run$fixture$root, "data", run$fixture$design, "metadata.tsv")
   metadata <- utils::read.delim(metadata_path, check.names = FALSE, stringsAsFactors = FALSE,
                                 fileEncoding = "UTF-8")

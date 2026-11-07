@@ -329,10 +329,12 @@ testthat::test_that("the installed A exporter recovers a partial checkpoint and 
       "  unrelated_block_reused = isTRUE(unchanged_feature[[1L]]$reused), configuration_invalidated = !isTRUE(config_feature[[1L]]$reused),",
       "  version_invalidated = !isTRUE(version_feature[[1L]]$reused), seed_invalidated = !isTRUE(seed_feature[[1L]]$reused),",
       "  recovered_feature_count = length(resumed$features$prot$feature_keys), corrupt_key_absent = !('CORRUPT_D09_KEY' %in% resumed$features$prot$feature_keys))",
-      ")",
       "jsonlite::write_json(result, result_path, auto_unbox = TRUE, pretty = TRUE, digits = NA)",
       "cat('D09_RESTART_RESULT:', as.character(jsonlite::toJSON(result, auto_unbox = TRUE)), '\\n', sep = '')"
     )
+    script_parse <- tryCatch(parse(text = script), error = function(error) error)
+    testthat::expect_false(inherits(script_parse, "error"),
+                           info = "The installed restart subprocess script must parse before execution.")
     writeLines(script, script_path, useBytes = TRUE)
     output <- tryCatch(
       system2(file.path(R.home("bin"), "Rscript"),

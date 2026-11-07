@@ -44,7 +44,7 @@
   "acceptance": {
     "status": "pending_sol_acceptance",
     "scientific_claims": "Public synthetic software evidence only; no biological, clinical, or real-data validation is established.",
-    "G8_G9": "remain closed"
+    "G8_G9": "G8 is released; G9 remains closed"
   },
   "integration_request": "No shared CLI, stage registry, namespace, schema, specification, or ledger change is requested. Sol owns integration, final programme reconciliation, packet acceptance, and milestone acceptance."
 }
