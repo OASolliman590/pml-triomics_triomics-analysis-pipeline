@@ -1,0 +1,9 @@
+# DOC-M9 parallel draft dispatch
+
+One fresh Terra worker `/root/m9_docs_terra`, requested gpt-6.1-terra/max (effective settings unexposed), is drafting only `docs/implementation/milestones/M9.md` in isolated `/private/tmp/triomics-m9-doc-20261107`, branch `codex/m9-doc-20261107`, base8aeb064. This is DOC-M9 initial attempt1, with at most one subsequent targeted finalization/repair. No product/shared ledger/acceptance edits, children, fits, tests or private inputs.
+
+Authority: `discovery/spec-v2/prompts/TERRA_DOCUMENTATION.md` explicitly says “Draft the milestone note while coding proceeds; finalize only against actual integrated commits/tests and explicit conditional dispositions.” G8 and bounded D09 code-review gates pass. Drafting is therefore legal alongside Luna’s single heavy focused suite, with disjoint files and fewer than four active agents. This does not release a consumer or accept D09. The earlier local draft-brief template that waited for integration is superseded by this bounded drafting brief, not by a scientific contract change.
+
+The draft reads immutable reviewed8a82a64 and supplied receipts, labels all unfinished native/full-source/archive/clinical/Astra gates pending, and returns a one-file local commit. Sol must inspect it; finalization waits for actual integrated/tested evidence. No final test counts may be invented from live progress. Public documentation uses portable path placeholders; literal host receipts stay local. Preserve all41 identities/29 requirements, conditional zero credit, M8/G8/D13 history and separate frozen-kit audit qualifications. G9closed.
+
+Local brief: `m9-20261107-01/doc-m9/brief.md`; SHA-256 `644f898941a95f751d686f557470d49a2f71e7017307f7a41bb41f83ad66ade3`. Worker must stop after its draft receipt, never wait idle for upstream gates or mark the milestone accepted. Luna’s final implementation repair remains2/2; no third repair is authorized.

@@ -47,11 +47,26 @@
       "allowed_next_transition": "Join full suite; on pass Sol independently verifies before integration; on failure stop, no repair3",
       "cursor": null,
       "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4"
+    },
+    {
+      "agent": "/root/m9_docs_terra",
+      "role": "DOC-M9 initial draft",
+      "requested_model": "gpt-6.1-terra",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "base": "8aeb0646d9166451e4aa7e33eca514ac4e147b6d",
+      "product_candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
+      "status": "drafting",
+      "allowlist": [
+        "docs/implementation/milestones/M9.md"
+      ],
+      "allowed_next_transition": "Sol inspects draft; finalization waits for integrated/tested evidence; no acceptance",
+      "cursor": null
     }
   ],
   "orchestration_control": {
     "status": "D09_repair2_reviews_pass_focused_running",
-    "last_reconciled": "2026-11-07T16:59:02.775446+00:00",
+    "last_reconciled": "2026-11-07T17:13:20.252093+00:00",
     "active_handoffs": [
       {
         "agent": "/root/m9_d09_luna",
@@ -64,6 +79,21 @@
         "allowed_next_transition": "Join full suite; on pass Sol independently verifies before integration; on failure stop, no repair3",
         "cursor": null,
         "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4"
+      },
+      {
+        "agent": "/root/m9_docs_terra",
+        "role": "DOC-M9 initial draft",
+        "requested_model": "gpt-6.1-terra",
+        "requested_effort": "max",
+        "effective_settings_exposed": false,
+        "base": "8aeb0646d9166451e4aa7e33eca514ac4e147b6d",
+        "product_candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
+        "status": "drafting",
+        "allowlist": [
+          "docs/implementation/milestones/M9.md"
+        ],
+        "allowed_next_transition": "Sol inspects draft; finalization waits for integrated/tested evidence; no acceptance",
+        "cursor": null
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -7506,6 +7536,17 @@
       "repairs_used": 2,
       "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-repair2-verification.md",
       "G9": "closed"
+    },
+    {
+      "at": "2026-11-07T17:13:20.252093+00:00",
+      "event": "DOC_M9_initial_draft_dispatched_parallel",
+      "worker": "/root/m9_docs_terra",
+      "base": "8aeb0646d9166451e4aa7e33eca514ac4e147b6d",
+      "product_candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
+      "scope_ref": "docs/implementation/reviews/2026-11-07-doc-m9-draft-dispatch.md",
+      "documentation_attempts": 1,
+      "documentation_repairs": 0,
+      "G9": "closed"
     }
   ],
   "packets": {
@@ -9449,7 +9490,15 @@
       "G9": "closed",
       "review_attempts": 0,
       "focused_rereviews": 0,
-      "authorization": "Continue D09/M9 from f2fe176 using Luna and agreed review process; do not redo M8/D13; G9 gated"
+      "authorization": "Continue D09/M9 from f2fe176 using Luna and agreed review process; do not redo M8/D13; G9 gated",
+      "documentation": {
+        "status": "drafting",
+        "attempts": 1,
+        "repairs": 0,
+        "worker": "/root/m9_docs_terra",
+        "dispatch_ref": "docs/implementation/reviews/2026-11-07-doc-m9-draft-dispatch.md",
+        "accepted": false
+      }
     }
   },
   "conditional_dispositions": {
