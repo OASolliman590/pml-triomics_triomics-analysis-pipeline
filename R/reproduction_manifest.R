@@ -764,8 +764,8 @@ triomics_reproduction_run_installed <- function(fixture, output_root, project_ro
   stage_names <- c("A", "B", "C", "D", "report")
   for (stage in stage_names) {
     arguments <- c(
-      "--vanilla", file.path("exec", "triomics"), "--config", fixture$config_path,
-      "--stage", stage, "--output", output_root
+      "--vanilla", file.path("exec", "triomics"), "--config", shQuote(fixture$config_path),
+      "--stage", stage, "--output", shQuote(output_root)
     )
     output <- tryCatch(
       system2(rscript, arguments, stdout = TRUE, stderr = TRUE),
@@ -835,6 +835,70 @@ triomics_reproduction_read_json <- function(root, relative_path) {
   list(value = value, reference = reference)
 }
 
+triomics_reproduction_remote_reference <- function(value) {
+  if (!is.character(value) || length(value) != 1L || is.na(value)) return(FALSE)
+  value <- trimws(value)
+  value <- gsub("[\\r\\n\\t]", "", value, perl = TRUE)
+  value <- gsub("&#0*58;?", ":", value, ignore.case = TRUE, perl = TRUE)
+  value <- gsub("&#x0*3a;?", ":", value, ignore.case = TRUE, perl = TRUE)
+  value <- gsub("&#0*47;?", "/", value, ignore.case = TRUE, perl = TRUE)
+  value <- gsub("&#x0*2f;?", "/", value, ignore.case = TRUE, perl = TRUE)
+  grepl("^(?:https?:)?//", value, ignore.case = TRUE, perl = TRUE)
+}
+
+triomics_reproduction_html_attributes <- function(value) {
+  matches <- gregexpr(
+    "[[:alpha:]_:][[:alnum:]_.:-]*\\s*=\\s*(?:\"[^\"]*\"|'[^']*'|[^\\s>]+)",
+    value, ignore.case = TRUE, perl = TRUE
+  )
+  attributes <- regmatches(value, matches)[[1L]]
+  if (!length(attributes)) return(list())
+  output <- list()
+  for (attribute in attributes) {
+    equals <- regexpr("=", attribute, fixed = TRUE)[[1L]]
+    if (equals < 1L) next
+    name <- tolower(trimws(substr(attribute, 1L, equals - 1L)))
+    content <- trimws(substr(attribute, equals + 1L, nchar(attribute)))
+    if (nchar(content) >= 2L && substr(content, 1L, 1L) %in% c("'", "\"") &&
+        identical(substr(content, nchar(content), nchar(content)), substr(content, 1L, 1L))) {
+      content <- substr(content, 2L, nchar(content) - 1L)
+    } else {
+      content <- sub("/+$", "", content)
+    }
+    output[[length(output) + 1L]] <- list(name = name, value = content)
+  }
+  output
+}
+
+triomics_reproduction_css_remote <- function(css) {
+  css <- gsub("/\\*.*?\\*/", "", css, perl = TRUE)
+  url_pattern <- "(?is)url\\(\\s*(?:\"[^\"]*\"|'[^']*'|[^)]*)\\s*\\)"
+  url_matches <- gregexpr(url_pattern, css, perl = TRUE)
+  urls <- regmatches(css, url_matches)[[1L]]
+  if (length(urls)) {
+    values <- vapply(urls, function(url) {
+      value <- sub("(?is)^url\\(\\s*", "", url, perl = TRUE)
+      value <- sub("\\s*\\)$", "", value, perl = TRUE)
+      if (nchar(value) >= 2L && substr(value, 1L, 1L) %in% c("'", "\"") &&
+          identical(substr(value, nchar(value), nchar(value)), substr(value, 1L, 1L))) {
+        value <- substr(value, 2L, nchar(value) - 1L)
+      }
+      value
+    }, character(1L))
+    if (any(vapply(values, triomics_reproduction_remote_reference, logical(1L)))) return(TRUE)
+  }
+  import_pattern <- "(?is)@import\\s+(?:layer\\([^)]*\\)\\s*)?(?:supports\\([^)]*\\)\\s*)?(['\"])(.*?)\\1"
+  imports <- gregexpr(import_pattern, css, perl = TRUE)
+  import_matches <- regmatches(css, imports)[[1L]]
+  if (!length(import_matches)) return(FALSE)
+  import_values <- vapply(import_matches, function(item) {
+    value <- sub("(?is)^@import\\s+", "", item, perl = TRUE)
+    value <- sub("(?is)^(?:layer\\([^)]*\\)\\s*)?(?:supports\\([^)]*\\)\\s*)?", "", value, perl = TRUE)
+    if (nchar(value) >= 2L) substr(value, 2L, nchar(value) - 1L) else value
+  }, character(1L))
+  any(vapply(import_values, triomics_reproduction_remote_reference, logical(1L)))
+}
+
 triomics_reproduction_offline_html <- function(path) {
   size <- file.info(path)$size
   if (is.na(size) || size < 0 || size > .Machine$integer.max) {
@@ -844,11 +908,64 @@ triomics_reproduction_offline_html <- function(path) {
     )
   }
   bytes <- readBin(path, what = "raw", n = as.integer(size))
-  html <- rawToChar(bytes)
-  active_remote <- grepl(
-    "(?is)<(?:script|iframe|img|source)[^>]+(?:src)\\s*=\\s*['\\\"]https?://|<link[^>]+rel\\s*=\\s*['\\\"]stylesheet['\\\"][^>]+href\\s*=\\s*['\\\"]https?://",
-    html, perl = TRUE
-  )
+  html <- gsub("(?is)<!--.*?-->", "", rawToChar(bytes), perl = TRUE)
+  style_matches <- gregexpr("(?is)<style\\b[^>]*>.*?</style\\s*>", html, perl = TRUE)
+  style_blocks <- regmatches(html, style_matches)[[1L]]
+  style_bodies <- vapply(style_blocks, function(block) {
+    body <- sub("(?is)^<style\\b[^>]*>", "", block, perl = TRUE)
+    sub("(?is)</style\\s*>$", "", body, perl = TRUE)
+  }, character(1L))
+  if (length(style_bodies) && any(vapply(style_bodies, triomics_reproduction_css_remote, logical(1L)))) {
+    triomics_reproduction_abort(
+      "D_REPRODUCTION_RENDER_INVALID",
+      "The rendered report depends on an active remote resource.", "report.html"
+    )
+  }
+  html_without_styles <- gsub("(?is)<style\\b[^>]*>.*?</style\\s*>", "", html, perl = TRUE)
+  tag_matches <- gregexpr("(?is)<[[:alpha:]][^<>]*>", html_without_styles, perl = TRUE)
+  tags <- regmatches(html_without_styles, tag_matches)[[1L]]
+  active_tags <- c("script", "iframe", "img", "source", "audio", "video", "track",
+                   "embed", "object", "image", "use")
+  active_link_relations <- c("stylesheet", "preload", "modulepreload", "import", "prefetch",
+                             "preconnect", "dns-prefetch", "manifest", "icon", "apple-touch-icon",
+                             "mask-icon", "pingback", "serviceworker")
+  active_remote <- FALSE
+  for (tag in tags) {
+    tag_match <- regmatches(tag, regexec("(?is)^<([[:alpha:]][[:alnum:]:_-]*)\\b([^<>]*)>$",
+                                         tag, perl = TRUE))[[1L]]
+    if (length(tag_match) < 3L) next
+    tag_name <- tolower(tag_match[[2L]])
+    attributes <- triomics_reproduction_html_attributes(tag_match[[3L]])
+    names_by_attr <- vapply(attributes, `[[`, character(1L), "name")
+    values_by_attr <- vapply(attributes, `[[`, character(1L), "value")
+    values <- split(values_by_attr, names_by_attr)
+    references <- character()
+    if (tag_name %in% active_tags) {
+      active_names <- if (tag_name %in% c("object")) c("data", "codebase") else
+        if (tag_name %in% c("image", "use")) c("href", "xlink:href") else
+          c("src", "srcset", "poster")
+      references <- unlist(values[intersect(active_names, names(values))], use.names = FALSE)
+    }
+    if (identical(tag_name, "link") && "rel" %in% names(values) && "href" %in% names(values)) {
+      relation_tokens <- unlist(strsplit(paste(values$rel, collapse = " "), "[[:space:]]+"),
+                                use.names = FALSE)
+      if (any(tolower(relation_tokens) %in% active_link_relations)) {
+        references <- c(references, values$href)
+      }
+    }
+    if ("style" %in% names(values) &&
+        triomics_reproduction_css_remote(paste(values$style, collapse = " "))) {
+      active_remote <- TRUE
+      break
+    }
+    if (length(references)) {
+      reference_urls <- unlist(strsplit(references, ",", fixed = TRUE), use.names = FALSE)
+      if (any(vapply(reference_urls, triomics_reproduction_remote_reference, logical(1L)))) {
+        active_remote <- TRUE
+        break
+      }
+    }
+  }
   if (isTRUE(active_remote)) {
     triomics_reproduction_abort(
       "D_REPRODUCTION_RENDER_INVALID",
@@ -935,7 +1052,46 @@ triomics_reproduction_validate_report <- function(output_root, fixture) {
       "report/results.tsv"
     )
   }
-  config <- triomics_read_config(fixture$config_path)
+  report_config <- triomics_report_config(fixture$config_path)
+  report_sources <- tryCatch(
+    triomics_report_verify_bundle(report_bundle, report_config),
+    error = function(error) error
+  )
+  if (inherits(report_sources, "error")) {
+    triomics_reproduction_abort(
+      "D_REPRODUCTION_SOURCE_INVALID",
+      "The report source bundle could not reproduce the saved result projection.",
+      "report/results.tsv"
+    )
+  }
+  projection_path <- tempfile(
+    "d09-report-results-",
+    tmpdir = triomics_reproduction_evidence_root()
+  )
+  on.exit(unlink(projection_path, force = TRUE), add = TRUE)
+  tryCatch(
+    triomics_report_write_tsv(
+      triomics_report_rows(report_sources$payloads$b, report_config$blocks),
+      projection_path
+    ),
+    error = function(error) triomics_reproduction_abort(
+      "D_REPRODUCTION_SOURCE_INVALID",
+      "The report result projection could not be reproduced from the verified B handoff.",
+      "report/results.tsv"
+    )
+  )
+  projected_size <- file.info(projection_path)$size
+  projected_sha256 <- triomics_sha256(projection_path)
+  if (is.na(projected_size) || !identical(as.numeric(projected_size),
+                                          as.numeric(results_ref$size_bytes)) ||
+      !identical(projected_sha256, results_ref$sha256)) {
+    triomics_reproduction_abort(
+      "D_REPRODUCTION_SOURCE_INVALID",
+      "The complete saved result table differs from the verified B-backed report projection.",
+      "report/results.tsv"
+    )
+  }
+  config <- report_config$config
   analysis <- config$analyses[[1L]]
   design <- analysis$design
   selected <- results[
@@ -1152,6 +1308,50 @@ triomics_reproduction_manifest <- function(run) {
   }
   relative_path <- file.path("reproduction", paste0("manifest-", content_id, ".json"))
   manifest_path <- file.path(output_root, relative_path)
+  existing_manifests <- sort(
+    list.files(reproduction_dir, pattern = "^manifest-.*[.]json$", full.names = FALSE),
+    method = "radix"
+  )
+  if (length(existing_manifests) > 1L) {
+    triomics_reproduction_abort(
+      "D_REPRODUCTION_SOURCE_INVALID",
+      "The completed walkthrough already has multiple reproduction wrappers; existing evidence was preserved.",
+      "reproduction.manifest"
+    )
+  }
+  if (length(existing_manifests) == 1L) {
+    existing_relative <- file.path("reproduction", existing_manifests[[1L]])
+    existing_record <- tryCatch(
+      triomics_reproduction_read_json(output_root, existing_relative),
+      error = function(error) error
+    )
+    if (inherits(existing_record, "error")) {
+      triomics_reproduction_abort(
+        "D_REPRODUCTION_SOURCE_INVALID",
+        "The existing completed reproduction wrapper is invalid; it was preserved.",
+        "reproduction.manifest"
+      )
+    }
+    existing <- existing_record$value
+    existing_id <- as.character(existing$manifest_id %||% "")
+    existing_body <- existing
+    existing_body$manifest_id <- NULL
+    if (!identical(existing_id, sub("^manifest-(.*)[.]json$", "\\1", existing_manifests[[1L]])) ||
+        !identical(triomics_hash_text(triomics_canonical_json(existing_body)), existing_id)) {
+      triomics_reproduction_abort(
+        "D_REPRODUCTION_SOURCE_INVALID",
+        "The existing completed reproduction wrapper failed its identity check; it was preserved.",
+        "reproduction.manifest"
+      )
+    }
+    if (!identical(triomics_canonical_json(existing), triomics_canonical_json(payload))) {
+      triomics_reproduction_abort(
+        "D_REPRODUCTION_SOURCE_INVALID",
+        "Completed walkthrough evidence changed after its original wrapper; existing bytes were preserved.",
+        "reproduction.manifest"
+      )
+    }
+  }
   if (file.exists(manifest_path) || dir.exists(manifest_path)) {
     existing <- triomics_reproduction_read_json(output_root, relative_path)$value
     existing_id <- as.character(existing$manifest_id %||% "")

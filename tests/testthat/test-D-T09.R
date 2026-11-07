@@ -41,6 +41,76 @@ d09_append_newline <- function(path) {
   original
 }
 
+d09_rehash_report_outputs <- function(output_root, relative_paths) {
+  report_manifest_path <- file.path(output_root, "report", "report_manifest.json")
+  report_manifest <- jsonlite::read_json(report_manifest_path, simplifyVector = FALSE)
+  for (relative_path in relative_paths) {
+    output_index <- which(vapply(report_manifest$outputs, function(output) {
+      is.list(output) && identical(as.character(output$path), relative_path)
+    }, logical(1L)))
+    if (length(output_index) != 1L) {
+      stop("expected one report output reference for ", relative_path, call. = FALSE)
+    }
+    path <- file.path(output_root, "report", relative_path)
+    report_manifest$outputs[[output_index]]$digest <- triomics_sha256(path)
+    report_manifest$outputs[[output_index]]$size_bytes <- as.numeric(file.info(path)$size)
+  }
+  jsonlite::write_json(report_manifest, report_manifest_path, auto_unbox = TRUE,
+                       pretty = TRUE, null = "null", digits = NA)
+
+  envelope_path <- file.path(output_root, "report", "report_manifest.envelope.json")
+  envelope <- jsonlite::read_json(envelope_path, simplifyVector = FALSE)
+  envelope$payload_sha256 <- triomics_sha256(report_manifest_path)
+  jsonlite::write_json(envelope, envelope_path, auto_unbox = TRUE,
+                       pretty = TRUE, null = "null", digits = NA)
+  list(report_manifest_path = report_manifest_path, envelope_path = envelope_path,
+       rehashed_outputs = relative_paths)
+}
+
+testthat::test_that("offline verification rejects active remote resources without rejecting inert links", {
+  offline_fn <- get0("triomics_reproduction_offline_html", mode = "function",
+                     inherits = TRUE)
+  testthat::expect_true(is.function(offline_fn),
+                        info = "The D-T09 offline report verifier is missing.")
+
+  if (is.function(offline_fn)) {
+    root <- d09_test_root("offline-html")
+    cases <- list(
+      ordered_stylesheet = '<link rel="stylesheet" href="https://example.invalid/style.css">',
+      reordered_stylesheet = '<link href="https://example.invalid/style.css" rel="stylesheet">',
+      case_and_single_quotes = "<LINK HREF='HTTPS://example.invalid/style.css' REL='StyleSheet'>",
+      unquoted_attributes = "<script SRC=https://example.invalid/runtime.js></script>",
+      protocol_relative_script = '<script src="//example.invalid/runtime.js"></script>',
+      css_import = '<style>@import url("https://example.invalid/style.css");</style>',
+      quoted_css_import = '<style>@import "https://example.invalid/style.css";</style>',
+      css_url = '<div style="background-image:url(//example.invalid/pixel.png)"></div>'
+    )
+    for (name in names(cases)) {
+      path <- file.path(root, paste0(name, ".html"))
+      writeLines(cases[[name]], path, useBytes = TRUE)
+      error <- testthat::expect_error(offline_fn(path), class = "triomics_error")
+      if (!is.null(error)) {
+        testthat::expect_identical(error$code, "D_REPRODUCTION_RENDER_INVALID")
+      }
+    }
+
+    control_path <- file.path(root, "inert-references.html")
+    writeLines(c(
+      "<!doctype html>",
+      "<p>Reference text: https://example.invalid/help</p>",
+      '<a href="https://example.invalid/help">External documentation link</a>',
+      '<link rel="stylesheet" href="styles.css">',
+      '<img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="pixel">',
+      '<div style="background-image:url(data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs)"></div>',
+      '<!-- <script src="https://example.invalid/commented.js"></script> -->'
+    ), control_path, useBytes = TRUE)
+    testthat::expect_identical(
+      offline_fn(control_path),
+      list(status = "offline_assets_verified", active_remote_resources = 0L)
+    )
+  }
+})
+
 testthat::test_that("the programme evidence snapshot binds complete identities and stays pending", {
   root <- d09_project_root()
   snapshot_fn <- get0("triomics_reproduction_authority_snapshot", mode = "function",
@@ -195,12 +265,20 @@ testthat::test_that("the installed CLI uses authoritative inputs and keeps execu
     )
   )
   if (is.function(run_fn) && !is.null(project_root)) {
+    base_evidence_root <- Sys.getenv("TRIOMICS_PACKET_EVIDENCE_ROOT", unset = tempdir())
+    spaced_evidence_root <- file.path(base_evidence_root, "D09 evidence with spaces")
+    dir.create(spaced_evidence_root, recursive = TRUE, showWarnings = FALSE)
+    withr::local_envvar(c(TRIOMICS_PACKET_EVIDENCE_ROOT = spaced_evidence_root))
     runs <- list()
     for (design in c("paired", "independent")) {
       fixture <- triomics_reproduction_materialize_fixture(
         design, d09_new_root(paste0(design, "-run-fixture"))
       )
       output_root <- d09_new_root(paste0(design, "-run-output"))
+      testthat::expect_true(grepl(" ", fixture$config_path, fixed = TRUE),
+                            info = "The installed walkthrough config must contain spaces.")
+      testthat::expect_true(grepl(" ", output_root, fixed = TRUE),
+                            info = "The installed walkthrough output path must contain spaces.")
       runs[[design]] <- run_fn(fixture, output_root, project_root)
       run <- runs[[design]]
       testthat::expect_identical(
@@ -217,6 +295,9 @@ testthat::test_that("the installed CLI uses authoritative inputs and keeps execu
       testthat::expect_identical(run$manifest$packet_acceptance_status,
                                  "pending_sol_acceptance")
       testthat::expect_false(run$manifest$self_acceptance)
+      testthat::expect_identical(run$manifest$report$offline_assets,
+                                 list(status = "offline_assets_verified",
+                                      active_remote_resources = 0L))
       testthat::expect_gte(run$manifest$report$figure_count, 1L)
       testthat::expect_match(run$installed$source_revision, "^[0-9a-f]{40}$")
       testthat::expect_true(file.exists(run$manifest_path))
@@ -248,6 +329,92 @@ testthat::test_that("the installed CLI uses authoritative inputs and keeps execu
         testthat::expect_identical(selected$effect_unit[[1L]], "group_difference")
         testthat::expect_gt(selected$effect[[1L]], 0)
       }
+    }
+
+    run <- runs$independent
+    manifest_path <- run$manifest_path
+    manifest_bytes <- readBin(manifest_path, what = "raw",
+                              n = as.integer(file.info(manifest_path)$size))
+    reproduction_dir <- file.path(run$output_root, "reproduction")
+    manifest_files <- sort(list.files(reproduction_dir, pattern = "^manifest-.*[.]json$"),
+                           method = "radix")
+    valid_replay <- manifest_fn(run)
+    testthat::expect_identical(valid_replay$path, manifest_path)
+    testthat::expect_identical(valid_replay$byte_sha256, triomics_sha256(manifest_path))
+    testthat::expect_identical(
+      readBin(manifest_path, what = "raw", n = as.integer(file.info(manifest_path)$size)),
+      manifest_bytes
+    )
+    testthat::expect_identical(
+      sort(list.files(reproduction_dir, pattern = "^manifest-.*[.]json$"), method = "radix"),
+      manifest_files
+    )
+
+    results_path <- file.path(run$output_root, "report", "results.tsv")
+    report_manifest_path <- file.path(run$output_root, "report", "report_manifest.json")
+    report_envelope_path <- file.path(run$output_root, "report", "report_manifest.envelope.json")
+    original_report_manifest <- readBin(report_manifest_path, what = "raw",
+                                       n = as.integer(file.info(report_manifest_path)$size))
+    original_report_envelope <- readBin(report_envelope_path, what = "raw",
+                                       n = as.integer(file.info(report_envelope_path)$size))
+    output_mutations <- list(
+      result_effect = list(path = "results.tsv", mutate = function(path) {
+        changed_results <- utils::read.delim(path, check.names = FALSE,
+                                             stringsAsFactors = FALSE)
+        testthat::expect_gte(nrow(changed_results), 2L)
+        changed_results$effect[[2L]] <- as.numeric(changed_results$effect[[2L]]) + 100
+        utils::write.table(changed_results, path, sep = "\t", row.names = FALSE,
+                           col.names = TRUE, quote = TRUE, na = "", fileEncoding = "UTF-8")
+      }),
+      report_html = list(path = "report.html", mutate = function(path) {
+        connection <- file(path, open = "ab")
+        on.exit(close(connection), add = TRUE)
+        writeBin(charToRaw("\n<!-- altered report view -->\n"), connection)
+      })
+    )
+    for (mutation in output_mutations) {
+      mutated_path <- file.path(run$output_root, "report", mutation$path)
+      original_output <- readBin(mutated_path, what = "raw",
+                                 n = as.integer(file.info(mutated_path)$size))
+      original_report_manifest <- readBin(report_manifest_path, what = "raw",
+                                          n = as.integer(file.info(report_manifest_path)$size))
+      original_report_envelope <- readBin(report_envelope_path, what = "raw",
+                                          n = as.integer(file.info(report_envelope_path)$size))
+      mutation$mutate(mutated_path)
+      d09_rehash_report_outputs(run$output_root, mutation$path)
+      testthat::expect_true(triomics_validate_envelope(report_envelope_path))
+      tampered_report_manifest <- jsonlite::read_json(report_manifest_path,
+                                                      simplifyVector = FALSE)
+      output_entry <- Filter(function(item) identical(as.character(item$path), mutation$path),
+                             tampered_report_manifest$outputs)[[1L]]
+      testthat::expect_identical(as.character(output_entry$digest), triomics_sha256(mutated_path))
+      testthat::expect_identical(as.numeric(output_entry$size_bytes),
+                                 as.numeric(file.info(mutated_path)$size))
+      if (identical(mutation$path, "report.html")) {
+        testthat::expect_identical(
+          triomics_reproduction_offline_html(mutated_path),
+          list(status = "offline_assets_verified", active_remote_resources = 0L)
+        )
+      }
+      replay <- tryCatch(manifest_fn(run), error = function(error) error)
+      manifest_bytes_after <- readBin(manifest_path, what = "raw",
+                                      n = as.integer(file.info(manifest_path)$size))
+      manifest_files_after <- sort(list.files(reproduction_dir,
+                                              pattern = "^manifest-.*[.]json$"),
+                                   method = "radix")
+      writeBin(original_output, mutated_path)
+      writeBin(original_report_manifest, report_manifest_path)
+      writeBin(original_report_envelope, report_envelope_path)
+      new_manifest_files <- setdiff(manifest_files_after, manifest_files)
+      if (length(new_manifest_files)) {
+        unlink(file.path(reproduction_dir, new_manifest_files), force = TRUE)
+      }
+      testthat::expect_s3_class(replay, "triomics_error")
+      if (inherits(replay, "triomics_error")) {
+        testthat::expect_identical(replay$code, "D_REPRODUCTION_SOURCE_INVALID")
+      }
+      testthat::expect_identical(manifest_bytes_after, manifest_bytes)
+      testthat::expect_identical(manifest_files_after, manifest_files)
     }
 
     missing_root <- d09_test_root(paste0("missing-authority-run-", Sys.getpid()))
