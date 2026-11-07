@@ -1,3 +1,11 @@
+# Live checkpoint: D09 integrated; same Terra finalizing DOC-M9
+
+Read [the integration receipt](reviews/2026-11-07-d09-integration.md). Worker8a82a64 and independent Sol focused suites each passed218 with no failures/warnings/skips; both bounded reviews passed. Integrated product99248d3 preserves all six D09 blobs and every failed attempt. Luna terminal, repairs2/2 exhausted. Same Terra /root/m9_docs_terra is doing its single documentation finalization; no heavy process active. G9closed.
+
+Literal resume: **Join the existing Terra finalization, inspect its one-file commit, integrate reviewed documentation and freeze the final product. Then execute all same-commit native/clinical/walkthrough/full-source/clean-archive gates and fresh Astra before any Sol acceptance. Do not restart Luna, redo M8/D13, reset attempts or release G9 early.**
+
+## Historical checkpoints below
+
 # Live checkpoint: Sol independent D09 focused verification running
 
 Read [worker GREEN and documentation draft receipt](reviews/2026-11-07-d09-worker-green-doc-draft.md). Candidate8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4 passed both bounded reviews and the worker's complete focused suite (218pass,0fail/warn/skip). Same Luna is terminal; its two repairs are exhausted. Terra draftb6fbcaa is terminal/reviewed but not integrated; one bounded finalization remains. Sol's independent fresh-output focused run is active: parent69439/child69443/session94861, local sol-focused-8a82a64/process-receipt.json. No product integration or acceptance; G9closed.

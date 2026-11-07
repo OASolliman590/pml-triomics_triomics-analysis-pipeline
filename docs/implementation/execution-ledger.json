@@ -35,13 +35,35 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "worker": "/root/m9_docs_terra",
+      "role": "Terra documentation",
+      "status": "running",
+      "worktree": "/private/tmp/triomics-m9-doc-20261107",
+      "scope": "DOC-M9 one-file finalization",
+      "requested_model": "gpt-6.1-terra",
+      "requested_effort": "max",
+      "effective_settings_exposed": false
+    }
+  ],
   "orchestration_control": {
-    "status": "Sol_D09_independent_focused_running",
-    "last_reconciled": "2026-11-07T17:22:52.870072+00:00",
-    "active_handoffs": [],
+    "status": "DOC_M9_finalization_running",
+    "last_reconciled": "2026-11-07T17:35:51.326121+00:00",
+    "active_handoffs": [
+      {
+        "worker": "/root/m9_docs_terra",
+        "role": "Terra documentation",
+        "status": "running",
+        "worktree": "/private/tmp/triomics-m9-doc-20261107",
+        "scope": "DOC-M9 one-file finalization",
+        "requested_model": "gpt-6.1-terra",
+        "requested_effort": "max",
+        "effective_settings_exposed": false
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Luna and both reviewers terminal; DOC-M9 draft terminal/reviewed. Sol focused process69443/session94861 active; no product integration or G9 release.",
+    "disposition": "D09 integrated after independent focused pass; same Terra finalizing; final same-commit gates pending; G9 closed.",
     "current_gate": {
       "candidate": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
       "package": "Status: OK",
@@ -7509,6 +7531,13 @@
       "Sol_session": 94861,
       "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-worker-green-doc-draft.md",
       "G9": "closed"
+    },
+    {
+      "at": "2026-11-07T17:35:51.326121+00:00",
+      "event": "D09_integrated_after_Sol_focused_pass_DOC_M9_finalization_dispatched",
+      "product_commit": "99248d317d810694349cb12ac2f559f0b56d260f",
+      "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-integration.md",
+      "G9": "closed"
     }
   ],
   "packets": {
@@ -9264,9 +9293,9 @@
       }
     },
     "D-T09": {
-      "status": "verification_in_progress",
+      "status": "integrated_verification_pending",
       "attempts": 1,
-      "commit": null,
+      "commit": "99248d317d810694349cb12ac2f559f0b56d260f",
       "acceptance_refs": [],
       "blockers": [],
       "repairs": 2,
@@ -9282,7 +9311,7 @@
       "repair2_review_status": {
         "Standards": "pass_bounded",
         "Spec": "pass_bounded",
-        "native_full_suite": "pending"
+        "native_full_suite": "worker_and_Sol_focused_pass"
       },
       "worker_verification": {
         "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
@@ -9293,7 +9322,19 @@
         "pass": 218,
         "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-worker-green-doc-draft.md"
       },
-      "Sol_verification": "running"
+      "Sol_verification": {
+        "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
+        "counts": {
+          "pass": 218,
+          "fail": 0,
+          "error": 0,
+          "warn": 0,
+          "skip": 0
+        },
+        "exit_code": 0,
+        "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-integration.md"
+      },
+      "integration_ref": "docs/implementation/reviews/2026-11-07-d09-integration.md"
     }
   },
   "milestones": {
@@ -9464,9 +9505,9 @@
       "focused_rereviews": 0,
       "authorization": "Continue D09/M9 from f2fe176 using Luna and agreed review process; do not redo M8/D13; G9 gated",
       "documentation": {
-        "status": "draft_reviewed_waiting_integration",
+        "status": "finalization_in_progress",
         "attempts": 1,
-        "repairs": 0,
+        "repairs": 1,
         "worker": "/root/m9_docs_terra",
         "dispatch_ref": "docs/implementation/reviews/2026-11-07-doc-m9-draft-dispatch.md",
         "accepted": false,

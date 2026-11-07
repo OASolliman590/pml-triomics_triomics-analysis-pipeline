@@ -1,7 +1,7 @@
 {
   "packet_id": "D-T09",
   "request_type": "registration_request",
-  "request_status": "registration_requested",
+  "request_status": "integrated_pending_final_acceptance",
   "accepted": false,
   "namespace_edits": false,
   "public_namespace_request": {
@@ -33,14 +33,23 @@
     "missingness_and_clinical": "Not exercised by this packet's paired/independent result fixtures. Sol's merged installed clinical smoke should use the accepted D-T15 materializer, include the approved placeholder token in a measurement, and verify the complete-case clinical exclusion read-back."
   },
   "verification_evidence": {
-    "status": "worker_candidate_verification_pending",
+    "status": "worker_and_Sol_focused_pass_final_gates_pending",
     "focused_test": "Rscript --vanilla -e \"testthat::test_local(filter='D-T09', stop_on_failure=TRUE)\"",
     "authority_root_env": "Set TRIOMICS_D_T09_PROJECT_ROOT to the read-only immutable source archive when package tests run from a context that does not contain discovery/spec-v2 and docs/implementation authority records.",
     "walkthroughs": [
       "vignettes/paired-study.qmd",
       "vignettes/independent-study.qmd"
     ],
-    "installed_restart_contract": "The test invokes triomics_export_a(request, output, resume=TRUE, interrupt='feature:prot') in a clean installed subprocess, then checks partial-payload recovery, full checkpoint reuse, block-local source invalidation, and seed/configuration/version invalidation."
+    "installed_restart_contract": "The test invokes triomics_export_a(request, output, resume=TRUE, interrupt='feature:prot') in a clean installed subprocess, then checks partial-payload recovery, full checkpoint reuse, block-local source invalidation, and seed/configuration/version invalidation.",
+    "worker_commit": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
+    "integration_commit": "99248d317d810694349cb12ac2f559f0b56d260f",
+    "focused_counts": {
+      "pass": 218,
+      "fail": 0,
+      "warn": 0,
+      "skip": 0
+    },
+    "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-integration.md"
   },
   "acceptance": {
     "status": "pending_sol_acceptance",
