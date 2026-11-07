@@ -43,37 +43,15 @@
       "requested_effort": "max",
       "effective_settings_exposed": false,
       "base": "507af2b57ba7a5e01cb91c2d22817dbbf91b53c4",
-      "status": "installing_then_focused_suite",
-      "allowed_next_transition": "Sol reviews/verifies fixed candidate; failure stops this bounded cycle, no repair3",
+      "status": "focused_suite_running",
+      "allowed_next_transition": "Join full suite; on pass Sol independently verifies before integration; on failure stop, no repair3",
       "cursor": null,
       "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4"
-    },
-    {
-      "agent": "/root/m9_d09_spec",
-      "role": "D-T09 repair2 Spec read-only rereview",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "effective_settings_exposed": false,
-      "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
-      "status": "running",
-      "allowed_next_transition": "Sol records verdict; no edits or acceptance",
-      "cursor": null
-    },
-    {
-      "agent": "/root/m9_d09_standards",
-      "role": "D-T09 repair2 Standards read-only rereview",
-      "requested_model": "gpt-6.1-sol",
-      "requested_effort": "high",
-      "effective_settings_exposed": false,
-      "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
-      "status": "running",
-      "allowed_next_transition": "Sol records verdict; no edits or acceptance",
-      "cursor": null
     }
   ],
   "orchestration_control": {
-    "status": "D09_final_repair2_verification_running",
-    "last_reconciled": "2026-11-07T16:54:24.098629+00:00",
+    "status": "D09_repair2_reviews_pass_focused_running",
+    "last_reconciled": "2026-11-07T16:59:02.775446+00:00",
     "active_handoffs": [
       {
         "agent": "/root/m9_d09_luna",
@@ -82,36 +60,14 @@
         "requested_effort": "max",
         "effective_settings_exposed": false,
         "base": "507af2b57ba7a5e01cb91c2d22817dbbf91b53c4",
-        "status": "installing_then_focused_suite",
-        "allowed_next_transition": "Sol reviews/verifies fixed candidate; failure stops this bounded cycle, no repair3",
+        "status": "focused_suite_running",
+        "allowed_next_transition": "Join full suite; on pass Sol independently verifies before integration; on failure stop, no repair3",
         "cursor": null,
         "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4"
-      },
-      {
-        "agent": "/root/m9_d09_spec",
-        "role": "D-T09 repair2 Spec read-only rereview",
-        "requested_model": "gpt-6.1-sol",
-        "requested_effort": "high",
-        "effective_settings_exposed": false,
-        "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
-        "status": "running",
-        "allowed_next_transition": "Sol records verdict; no edits or acceptance",
-        "cursor": null
-      },
-      {
-        "agent": "/root/m9_d09_standards",
-        "role": "D-T09 repair2 Standards read-only rereview",
-        "requested_model": "gpt-6.1-sol",
-        "requested_effort": "high",
-        "effective_settings_exposed": false,
-        "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
-        "status": "running",
-        "allowed_next_transition": "Sol records verdict; no edits or acceptance",
-        "cursor": null
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Immutable8a82a64 installation/focused verification plus two read-only rereviews; no repair3; G9closed.",
+    "disposition": "Both bounded read-only reviews pass8a82a64; complete focused suite active; no repair3; G9closed.",
     "current_gate": {
       "candidate": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
       "package": "Status: OK",
@@ -7536,6 +7492,20 @@
       "remaining_repairs": 0,
       "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-repair2-verification.md",
       "G9": "closed"
+    },
+    {
+      "at": "2026-11-07T16:59:02.775446+00:00",
+      "event": "D09_final_repair2_reviews_pass_focused_running",
+      "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
+      "Standards": "pass_23_of_23",
+      "Spec": "pass_14_of_14_boundary_cases",
+      "Spec_full_wrapper_probe": "timeout_no_credit",
+      "install_exit": 0,
+      "full_focused_suite": "running",
+      "worker": "/root/m9_d09_luna",
+      "repairs_used": 2,
+      "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-repair2-verification.md",
+      "G9": "closed"
     }
   ],
   "packets": {
@@ -9295,10 +9265,7 @@
       "attempts": 1,
       "commit": null,
       "acceptance_refs": [],
-      "blockers": [
-        "D09-STD-01",
-        "D09-SPEC-002"
-      ],
+      "blockers": [],
       "repairs": 2,
       "base_commit": "f2fe176240a958fac6fe0b1b72d3e2625abbc45d",
       "dispatch_ref": "docs/implementation/reviews/2026-11-07-d-t09-dispatch.md",
@@ -9308,7 +9275,12 @@
       "repair1_dispatch_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-dispatch.md",
       "repair1_review_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-review-repair2-dispatch.md",
       "repair2_dispatch_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-review-repair2-dispatch.md",
-      "repair2_verification_ref": "docs/implementation/reviews/2026-11-07-d09-repair2-verification.md"
+      "repair2_verification_ref": "docs/implementation/reviews/2026-11-07-d09-repair2-verification.md",
+      "repair2_review_status": {
+        "Standards": "pass_bounded",
+        "Spec": "pass_bounded",
+        "native_full_suite": "pending"
+      }
     }
   },
   "milestones": {
