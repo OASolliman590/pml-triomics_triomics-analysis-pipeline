@@ -80,7 +80,14 @@ testthat::test_that("offline verification rejects active remote resources withou
       reordered_stylesheet = '<link href="https://example.invalid/style.css" rel="stylesheet">',
       case_and_single_quotes = "<LINK HREF='HTTPS://example.invalid/style.css' REL='StyleSheet'>",
       unquoted_attributes = "<script SRC=https://example.invalid/runtime.js></script>",
+      quoted_gt_attribute = '<script data-label="a>b" src="https://example.invalid/runtime.js"></script>',
       protocol_relative_script = '<script src="//example.invalid/runtime.js"></script>',
+      remote_srcset_candidate = '<img srcset="data:image/png;base64,AAAA 1x, https://example.invalid/pixel.png 2x">',
+      decimal_entity_in_scheme = '<script src="h&#116;tps://example.invalid/runtime.js"></script>',
+      hexadecimal_entity_in_scheme = '<script src="h&#x74;tps://example.invalid/runtime.js"></script>',
+      named_colon_entity = '<script src="https&colon;//example.invalid/runtime.js"></script>',
+      named_slash_entities = '<script src="&sol;&sol;example.invalid/runtime.js"></script>',
+      named_control_entity = '<script src="https&colon;&Tab;//example.invalid/runtime.js"></script>',
       css_import = '<style>@import url("https://example.invalid/style.css");</style>',
       quoted_css_import = '<style>@import "https://example.invalid/style.css";</style>',
       css_url = '<div style="background-image:url(//example.invalid/pixel.png)"></div>'
@@ -101,8 +108,16 @@ testthat::test_that("offline verification rejects active remote resources withou
       '<a href="https://example.invalid/help">External documentation link</a>',
       '<link rel="stylesheet" href="styles.css">',
       '<img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="pixel">',
+      '<img src="data:text/plain,https://example.invalid/inert">',
       '<div style="background-image:url(data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs)"></div>',
-      '<!-- <script src="https://example.invalid/commented.js"></script> -->'
+      '<div data-label="<img src=\'https://example.invalid/inert.png\'>"></div>',
+      '<!-- <script src="https://example.invalid/commented.js"></script> -->',
+      '<script type="application/json">',
+      as.character(jsonlite::toJSON(
+        list(sample = '<img src="https://example.invalid/inert.png">'),
+        auto_unbox = TRUE
+      )),
+      '</script>'
     ), control_path, useBytes = TRUE)
     testthat::expect_identical(
       offline_fn(control_path),
@@ -349,6 +364,76 @@ testthat::test_that("the installed CLI uses authoritative inputs and keeps execu
       sort(list.files(reproduction_dir, pattern = "^manifest-.*[.]json$"), method = "radix"),
       manifest_files
     )
+    completion_fields <- c("manifest", "manifest_path", "manifest_byte_sha256")
+    testthat::expect_true(all(completion_fields %in% names(run)))
+    testthat::expect_identical(run$manifest_byte_sha256, triomics_sha256(manifest_path))
+
+    expect_receipt_refusal <- function(candidate_run, expected_bytes = manifest_bytes,
+                                       expected_files = manifest_files) {
+      replay <- tryCatch(manifest_fn(candidate_run), error = function(error) error)
+      testthat::expect_s3_class(replay, "triomics_error")
+      if (inherits(replay, "triomics_error")) {
+        testthat::expect_identical(replay$code, "D_REPRODUCTION_SOURCE_INVALID")
+      }
+      if (is.null(expected_bytes)) {
+        testthat::expect_false(file.exists(manifest_path))
+      } else {
+        testthat::expect_identical(
+          readBin(manifest_path, what = "raw", n = as.integer(file.info(manifest_path)$size)),
+          expected_bytes
+        )
+      }
+      testthat::expect_identical(
+        sort(list.files(reproduction_dir, pattern = "^manifest-.*[.]json$"), method = "radix"),
+        expected_files
+      )
+      invisible(replay)
+    }
+    for (field in completion_fields) {
+      partial_receipt <- run
+      partial_receipt[[field]] <- NULL
+      expect_receipt_refusal(partial_receipt)
+    }
+    no_receipt <- run
+    for (field in completion_fields) no_receipt[[field]] <- NULL
+    expect_receipt_refusal(no_receipt)
+
+    mismatched_receipts <- list(
+      path = local({ candidate <- run; candidate$manifest_path <- file.path(
+        reproduction_dir, "manifest-replaced.json"); candidate }),
+      hash = local({ candidate <- run; candidate$manifest_byte_sha256 <- paste(rep("0", 64L), collapse = ""); candidate }),
+      payload = local({ candidate <- run; candidate$manifest$execution_status <- "failed"; candidate })
+    )
+    for (candidate in mismatched_receipts) expect_receipt_refusal(candidate)
+
+    unlink(manifest_path)
+    expect_receipt_refusal(run, expected_bytes = NULL, expected_files = character())
+    testthat::expect_false(file.exists(manifest_path))
+    missing_wrapper_files <- sort(list.files(reproduction_dir, pattern = "^manifest-.*[.]json$"),
+                                  method = "radix")
+    testthat::expect_length(missing_wrapper_files, 0L)
+    writeBin(manifest_bytes, manifest_path)
+
+    renamed_wrapper_path <- file.path(reproduction_dir, "manifest-renamed.json")
+    testthat::expect_true(file.rename(manifest_path, renamed_wrapper_path))
+    expect_receipt_refusal(run, expected_bytes = NULL,
+                           expected_files = "manifest-renamed.json")
+    testthat::expect_true(file.exists(renamed_wrapper_path))
+    testthat::expect_identical(
+      readBin(renamed_wrapper_path, what = "raw",
+              n = as.integer(file.info(renamed_wrapper_path)$size)),
+      manifest_bytes
+    )
+    testthat::expect_true(file.rename(renamed_wrapper_path, manifest_path))
+
+    replacement_bytes <- c(manifest_bytes, as.raw(10L))
+    writeBin(replacement_bytes, manifest_path)
+    expect_receipt_refusal(run, expected_bytes = replacement_bytes)
+    testthat::expect_identical(
+      readBin(manifest_path, what = "raw", n = as.integer(file.info(manifest_path)$size)),
+      replacement_bytes
+    )
+    writeBin(manifest_bytes, manifest_path)
 
     results_path <- file.path(run$output_root, "report", "results.tsv")
     report_manifest_path <- file.path(run$output_root, "report", "report_manifest.json")
