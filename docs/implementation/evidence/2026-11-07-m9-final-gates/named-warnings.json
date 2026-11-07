@@ -1,0 +1,44 @@
+{
+  "source_and_package_named_warnings": {
+    "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes": 11,
+    "C-05 real MOFA2 fits and extracts a missing sample-view capability cell": 3,
+    "D-T01 refuses stale paired signs and preserves the old pointer": 1
+  },
+  "total_each": 15,
+  "source_categories": [
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message_or_disposition": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....",
+      "count": 3
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message_or_disposition": "Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.\n",
+      "count": 4
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message_or_disposition": "no non-missing arguments to max; returning -Inf",
+      "count": 4
+    },
+    {
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "message_or_disposition": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....",
+      "count": 1
+    },
+    {
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "message_or_disposition": "All 2 factors were found to explain little or no variance so remove_inactive_factors option has been disabled.",
+      "count": 2
+    },
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "message_or_disposition": "Expected native Stage D refusal of stale paired signs (exit2); previous pointer remains intact.",
+      "count": 1
+    }
+  ],
+  "package_comparison": "MOFA text normalized for whitespace and counted by full test name/message; D01 generated paths differ, same deliberate stale-paired-sign Stage D exit2",
+  "raw_source_log_sha256": "45c06d54b1fb853ec0dc362cabee5ff53f472041df38105304d2a01f597cdb88",
+  "raw_package_warning_inventory_sha256": "741b8eebb352fee16d8e52cc69acde81c4c7c0cdef2eaae78bd98064cda96013",
+  "warnings_suppressed": false
+}

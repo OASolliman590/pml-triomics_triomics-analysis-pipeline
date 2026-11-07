@@ -1,0 +1,38 @@
+{
+  "candidate": "2f8c83727be9f693d0e60457024edc55474c006b",
+  "status": "pass",
+  "coordinator": "Sol",
+  "verified_at": "2026-11-07T20:36:24.220652+00:00",
+  "exit_code": 0,
+  "Status": "Status: OK",
+  "counts": {
+    "fail": 0,
+    "warn": 15,
+    "skip": 0,
+    "pass": 11739
+  },
+  "archive_sha256": "d00a44e00309f946780a07221a33c6d1152f8fb1895017c9f24f35629812c67d",
+  "source_files_unchanged": 1242,
+  "named_warnings": {
+    "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes": 11,
+    "C-05 real MOFA2 fits and extracts a missing sample-view capability cell": 3,
+    "D-T01 refuses stale paired signs and preserves the old pointer": 1
+  },
+  "warning_messages_match_existing_dispositions": true,
+  "comparison_rule": "MOFA text normalized for whitespace and counted by full test name/message; D01 generated paths differ, same deliberate stale-paired-sign Stage D exit2",
+  "test_files_in_tarball_identical_to_archive": 56,
+  "source_count": 11766,
+  "package_count": 11739,
+  "count_difference_disposition": "Reported separately; per-file installed counts were not captured. No missing or changed test files; both actual runs fail0/skip0. Do not infer identical assertion totals or invent an explanation. Audit to assess any implication.",
+  "log_hashes": {
+    "triomics_0.1.0.tar.gz": "75d0b95bc8dc62d393f3fd131d1d35f804284f01a66427a1d72130d0aaaff377",
+    "testthat.Rout": "ca5da7bbe4964c687554b67c2e705b9e5ec2bcaba248608251d8db57896db007",
+    "00check.log": "32470ee8fc5517dd68def602f8980081c2b80ba4c5776e5dee741e99e8bf359a",
+    "warning-inventory.json": "741b8eebb352fee16d8e52cc69acde81c4c7c0cdef2eaae78bd98064cda96013",
+    "driver.log": "ad70a0ce244b42b4fc8995d098491c381a07a6cac5b038ab4b3abee839db4458",
+    "check.log": "4e0d61d55255fc236dd84bc802acd3bee8d419492478cb26dbff9b94620d8345",
+    "build.log": "c4f3dad722b5b098ee5699dd94bbbd64b12f0253acd3cb194bc6c9490000d7ef"
+  },
+  "G9": "closed",
+  "Astra": "pending"
+}

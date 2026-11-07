@@ -1,0 +1,22 @@
+{
+  "candidate": "2f8c83727be9f693d0e60457024edc55474c006b",
+  "declared_spec_content_hash": "21ebbd04688dfacb058af671d288a85d5910c657ff2e2437d2c6e99e7461aaaf",
+  "agent": "/root/m9_final_astra",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "low",
+  "effective_settings_verified": false,
+  "review_attempts": 1,
+  "focused_rereviews": 0,
+  "verdict": "pass",
+  "audit_pass": true,
+  "blocking_findings": [],
+  "missing_required_runtime_evidence": [],
+  "nonblocking_notes": {
+    "M9-N01": "Source11766/package11739 separately qualified. The27 assertion difference is unattributed; both gates pass independently, no missing/changed packaged test files or skips. Do not claim equivalent assertion paths.",
+    "M9-N02": "Original clinical verifier/driver exit1 preserved. Separate read-only correction verified already-produced detailed JSON and HTML; no fit/render/pipeline rerun or product repair.",
+    "M9-N03": "Historical B04 companion artifacts match immutable tracked review hashes but are outside archive. M2/M5 reconstruction limits and separate frozen-kit mismatch/audit pending remain."
+  },
+  "coordinator_closure_required_after_audit": true,
+  "accepted_by_reviewer": false,
+  "reviewer_terminal": true
+}

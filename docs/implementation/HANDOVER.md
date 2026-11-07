@@ -1,3 +1,17 @@
+# Closed: D-T09 and M9 accepted; G9 released
+
+Sol accepted immutable product `2f8c83727be9f693d0e60457024edc55474c006b` after fresh Astra passed and the clean archive printed **Status: OK**. This acceptance-record commit changes documentation/state only. [Sol receipt](reviews/2026-11-07-m9-sol-acceptance.md), [Astra](reviews/2026-11-07-m9-astra.md), [M9 rerun instructions](milestones/M9.md), and [full machine evidence](evidence/2026-11-07-m9-final-gates/receipt.json).
+
+Source: 11,766 passes, 0 failures/errors, 15 warnings, 0 skips. Package: 11,739 passes, 0 failures, 15 warnings, 0 skips. The 27-assertion difference remains qualified; no missing test files or required skips. Both installed synthetic walkthroughs and standalone ticket completed A/B/C/D/report; clinical smoke read back 11 included, 1 clinical exclusion and 0 endpoint exclusions. Full provenance/output hashes are recorded. Original clinical verifier failure and its separate read-only correction remain visible.
+
+All 41 packet identities and 29 requirements accounted for; 37 required accepted, 4 conditional receive no credit. G7/G8 and M8/D13 preserved. C-07 four controls not_run; C-09 unqualified/synthetic_fixture_only/benefit_guaranteed=false; D-T06/D-T07/D-T14 blocked; approved_aggregate unavailable; frozen-kit independent audit pending. Qualified local runtime only; no biological/clinical validation or private-study readiness claim.
+
+Luna initial 1 / repairs 2; Terra draft 1 / finalization 1; Astra initial 1 / focused 0. All run-owned workers and gates are terminal; no polling/relaunch remains. Protected working-copy dirt preserved. No private data, GitHub push, AIU run, Notion sync or fasting checks.
+
+Literal resume: **D09/M9 is accepted and G9 released on `2f8c837`. Do not restart Luna, repeat M8/D13, reset attempts or rerun completed gates. Begin only a newly requested bounded task, using this receipt and preserving every scientific qualification and the separate pending frozen-kit audit.**
+
+## Historical checkpoints below
+
 # Live checkpoint: M9 integrated snapshot frozen for final gates
 
 Read [the final-gate freeze](reviews/2026-11-07-m9-final-gates-freeze.md) and [D09 integration proof](reviews/2026-11-07-d09-integration.md). D09 product99248d3 and reviewed DOC-M9 are integrated. All workers terminal; Luna repairs2/2 and DOC finalization1/1 exhausted. Both focused suites passed218 independently. The local m9-20261107-01/state.json records the immutable final-gate candidate and durable process receipts. G9closed.

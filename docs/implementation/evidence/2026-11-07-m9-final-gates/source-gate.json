@@ -1,0 +1,67 @@
+{
+  "candidate": "2f8c83727be9f693d0e60457024edc55474c006b",
+  "gate": "one uninterrupted full source suite",
+  "status": "pass",
+  "counts": {
+    "pass": 11766,
+    "fail": 0,
+    "error": 0,
+    "warn": 15,
+    "skip": 0,
+    "blocks": 604
+  },
+  "exit_code": 0,
+  "started": "2026-11-07T18:14:10.310012+00:00",
+  "finished": "2026-11-07T19:47:59.919627+00:00",
+  "log_sha256": "45c06d54b1fb853ec0dc362cabee5ff53f472041df38105304d2a01f597cdb88",
+  "source_clean_and_HEAD_unchanged": true,
+  "named_warnings": {
+    "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes": 11,
+    "C-05 real MOFA2 fits and extracts a missing sample-view capability cell": 3,
+    "D-T01 refuses stale paired signs and preserves the old pointer": 1
+  },
+  "warning_messages_match_prior_dispositions": true,
+  "comparison_note": "MOFA warning strings and frequencies match exactly; the D-T01 expected native stale-paired-sign exit2 differs only in run paths. No warning suppressed.",
+  "warning_categories": [
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message_or_disposition": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....",
+      "count": 3
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message_or_disposition": "Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.\n",
+      "count": 4
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message_or_disposition": "no non-missing arguments to max; returning -Inf",
+      "count": 4
+    },
+    {
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "message_or_disposition": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)....",
+      "count": 1
+    },
+    {
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "message_or_disposition": "All 2 factors were found to explain little or no variance so remove_inactive_factors option has been disabled.",
+      "count": 2
+    },
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "message_or_disposition": "Expected native Stage D refusal of stale paired signs (exit2); previous pointer remains intact.",
+      "count": 1
+    }
+  ],
+  "D09_counts": {
+    "pass": 218,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0,
+    "blocks": 5
+  },
+  "G9": "closed",
+  "Astra": "not_run"
+}

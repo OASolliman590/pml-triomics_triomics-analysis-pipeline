@@ -37,19 +37,19 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "M9_final_gates_pending",
-    "last_reconciled": "2026-11-07T17:40:00.799979+00:00",
+    "status": "closed",
+    "last_reconciled": "2026-11-07T20:41:51.452220+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "D09 and reviewed DOC-M9 integrated; all agents terminal; final same-commit gates and fresh Astra pending; G9closed.",
+    "disposition": "All M9 workers and gate processes terminal; final same-Q evidence and fresh Astra pass reconciled; Sol accepts D09/M9 and releases G9; no next packet started.",
     "current_gate": {
-      "candidate": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
+      "candidate": "2f8c83727be9f693d0e60457024edc55474c006b",
       "package": "Status: OK",
       "Astra": "audit_pass_yes",
-      "Sol": "M8 accepted",
+      "Sol": "D09 and M9 accepted",
       "G8": "released",
-      "G9": "closed",
-      "receipt_ref": "docs/implementation/reviews/2026-11-07-m8-sol-acceptance.md"
+      "G9": "released",
+      "receipt_ref": "docs/implementation/reviews/2026-11-07-m9-sol-acceptance.md"
     }
   },
   "orchestration_events": [
@@ -3934,7 +3934,7 @@
       "snapshot_commit": "542a7b4",
       "implementation_commit": "bded42a",
       "integration_commit": "9cd36fe",
-      "review_scope": "B-T08 AC1\u2013AC4, 139-assertion suite, public synthetic CLI, registration, integration drift, fixed families, fail-closed handling and privacy",
+      "review_scope": "B-T08 AC1–AC4, 139-assertion suite, public synthetic CLI, registration, integration drift, fixed families, fail-closed handling and privacy",
       "allowed_next_transition": "PASS permits Sol to mark B-T08 accepted and immediately dispatch B-T07; findings preserve the dependency block and require an authorized bounded resolution",
       "disposition": "This review reconciles missing acceptance evidence only; it does not reset B-T08 implementation counters or authorize code changes."
     },
@@ -7523,6 +7523,44 @@
       "documentation_commit": "cc25440010c97fa50538f1a48398e89515f302eb",
       "receipt_ref": "docs/implementation/reviews/2026-11-07-m9-final-gates-freeze.md",
       "G9": "closed"
+    },
+    {
+      "at": "2026-11-07T20:41:51.452220+00:00",
+      "event": "M9_final_same_commit_gates_and_fresh_Astra_reconciled",
+      "candidate": "2f8c83727be9f693d0e60457024edc55474c006b",
+      "source_counts": {
+        "pass": 11766,
+        "fail": 0,
+        "error": 0,
+        "warn": 15,
+        "skip": 0,
+        "blocks": 604
+      },
+      "package_counts": {
+        "fail": 0,
+        "warn": 15,
+        "skip": 0,
+        "pass": 11739
+      },
+      "package_status": "Status: OK",
+      "Astra_agent": "/root/m9_final_astra",
+      "Astra_requested_model": "gpt-6-astra",
+      "Astra_requested_effort": "low",
+      "effective_settings_verified": false,
+      "Astra_verdict": "pass",
+      "review_attempts": 1,
+      "focused_rereviews": 0,
+      "receipt_ref": "docs/implementation/reviews/2026-11-07-m9-astra.md"
+    },
+    {
+      "at": "2026-11-07T20:41:51.452220+00:00",
+      "event": "Sol_accepts_D09_M9_releases_G9_and_closes_run",
+      "accepted_product_commit": "2f8c83727be9f693d0e60457024edc55474c006b",
+      "receipt_ref": "docs/implementation/reviews/2026-11-07-m9-sol-acceptance.md",
+      "all_owned_workers_terminal": true,
+      "all_owned_gate_processes_terminal": true,
+      "G9": "released",
+      "new_packet_started": false
     }
   ],
   "packets": {
@@ -9278,10 +9316,13 @@
       }
     },
     "D-T09": {
-      "status": "integrated_verification_pending",
+      "status": "accepted",
       "attempts": 1,
-      "commit": "99248d317d810694349cb12ac2f559f0b56d260f",
-      "acceptance_refs": [],
+      "commit": "2f8c83727be9f693d0e60457024edc55474c006b",
+      "acceptance_refs": [
+        "docs/implementation/reviews/2026-11-07-m9-sol-acceptance.md",
+        "docs/implementation/reviews/2026-11-07-m9-astra.md"
+      ],
       "blockers": [],
       "repairs": 2,
       "base_commit": "f2fe176240a958fac6fe0b1b72d3e2625abbc45d",
@@ -9319,7 +9360,10 @@
         "exit_code": 0,
         "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-integration.md"
       },
-      "integration_ref": "docs/implementation/reviews/2026-11-07-d09-integration.md"
+      "integration_ref": "docs/implementation/reviews/2026-11-07-d09-integration.md",
+      "integration_commit": "99248d317d810694349cb12ac2f559f0b56d260f",
+      "accepted_commit": "2f8c83727be9f693d0e60457024edc55474c006b",
+      "final_gate_ref": "docs/implementation/evidence/2026-11-07-m9-final-gates/receipt.json"
     }
   },
   "milestones": {
@@ -9482,26 +9526,50 @@
       "historical_runtime_blocker_ref": "docs/implementation/reviews/2026-11-04-d-t08-runtime-blocker.md"
     },
     "M9": {
-      "status": "in_progress",
-      "review_ref": null,
-      "commit": null,
-      "G9": "closed",
-      "review_attempts": 0,
+      "status": "accepted",
+      "review_ref": "docs/implementation/reviews/2026-11-07-m9-astra.md",
+      "commit": "2f8c83727be9f693d0e60457024edc55474c006b",
+      "G9": "released",
+      "review_attempts": 1,
       "focused_rereviews": 0,
       "authorization": "Continue D09/M9 from f2fe176 using Luna and agreed review process; do not redo M8/D13; G9 gated",
       "documentation": {
-        "status": "integrated_reviewed_final_gates_pending",
+        "status": "accepted_with_Sol_final_evidence",
         "attempts": 1,
         "repairs": 1,
         "worker": "/root/m9_docs_terra",
         "dispatch_ref": "docs/implementation/reviews/2026-11-07-doc-m9-draft-dispatch.md",
-        "accepted": false,
+        "accepted": true,
         "draft_commit": "b6fbcaa2bdc3e077db284250b50e3e98f7148587",
         "draft_review_ref": "docs/implementation/reviews/2026-11-07-d09-worker-green-doc-draft.md",
         "commit": "cc25440010c97fa50538f1a48398e89515f302eb",
         "worker_final_commit": "330768f6cbe1958fcc2fc3bd04d007123cbd681e",
-        "review_ref": "docs/implementation/reviews/2026-11-07-m9-final-gates-freeze.md"
-      }
+        "review_ref": "docs/implementation/reviews/2026-11-07-m9-final-gates-freeze.md",
+        "final_acceptance_ref": "docs/implementation/reviews/2026-11-07-m9-sol-acceptance.md"
+      },
+      "acceptance_ref": "docs/implementation/reviews/2026-11-07-m9-sol-acceptance.md",
+      "receipt_ref": "docs/implementation/evidence/2026-11-07-m9-final-gates/receipt.json",
+      "package_status": "Status: OK",
+      "installed_counts": {
+        "fail": 0,
+        "warn": 15,
+        "skip": 0,
+        "pass": 11739
+      },
+      "full_source_counts": {
+        "pass": 11766,
+        "fail": 0,
+        "error": 0,
+        "warn": 15,
+        "skip": 0,
+        "blocks": 604
+      },
+      "astra_verdict": "pass; audit_pass yes; no blocking findings; M9-N01/N02/N03 retained",
+      "gate_release": "G9",
+      "accepted_packets": [
+        "D-T09"
+      ],
+      "remaining_gates": []
     }
   },
   "conditional_dispositions": {
@@ -9556,7 +9624,7 @@
     "local_integration_verified": true,
     "local_integration_ref": "docs/implementation/reviews/2026-11-04-m7-final-integration.md"
   },
-  "close_state": "M9_in_progress_G8_released_G9_closed",
+  "close_state": "M9_accepted_G9_released_qualified_required_core_complete",
   "D13_extra_repair1_orchestration": {
     "worker": {
       "agent": "/root/d13_numeric_extra1_luna",

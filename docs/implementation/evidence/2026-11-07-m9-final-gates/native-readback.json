@@ -1,0 +1,523 @@
+{
+  "candidate": "2f8c83727be9f693d0e60457024edc55474c006b",
+  "native_verdict": "pass_after_read_only_harness_correction",
+  "archive_sha256": "d00a44e00309f946780a07221a33c6d1152f8fb1895017c9f24f35629812c67d",
+  "archive_files": 1242,
+  "runtime": "runtime-env.json and frozen M9.md; qualified local runtime, not fresh-machine dependency restore",
+  "walkthroughs": {
+    "paired": {
+      "outer_html": {
+        "path": "<verification_root>/final-native/walkthroughs/paired/html/paired-study.html",
+        "sha256": "f904fec458b6ca79e0c5eda436c2bc3ba1e9517e9630fd647514061303d08145",
+        "bytes": 1434231,
+        "active_external_assets": []
+      },
+      "report_html": {
+        "path": "<verification_root>/final-native/walkthroughs/paired/runs/paired-installed-run-12218a1baa2b/report/report.html",
+        "sha256": "87ef326942db86e643c1aa13a32f368c303ecdcc37fcf1da729f9ae60c2ae676",
+        "bytes": 61782,
+        "active_external_assets": []
+      },
+      "manifest_sha256": "d7babd3054b9b89a14d93b96cd06e33e6cabc65a490f93d5b36b67756f5976bb",
+      "manifest_id": "4562a87cf4ba3a595bea7f994b06d60ec7bb50dd65c36afd43cecaee32c621bb",
+      "analysis_verification": {
+        "design": "paired",
+        "representation": "delta",
+        "subject_count": 6,
+        "pair_count": 6,
+        "contrast": "target_minus_reference",
+        "effect_unit": "delta_difference",
+        "first_saved_effect": 3.87380486666667,
+        "first_saved_feature_key": "fk1|29:triomics_d_t09_paired_fixture|7:block_1|1:1"
+      },
+      "figure_count": 1,
+      "provenance_sha256": {
+        "B/handoffs/0d77fe488e7bbf487acee0e6ccd0a0277ee18726224eb24d2086a93b83985706/bundle.json": "8b5f926fad9d4aa1e58d676a2f0aff23510cad99e479e17f8b9be3912334e3f1",
+        "B/handoffs/0d77fe488e7bbf487acee0e6ccd0a0277ee18726224eb24d2086a93b83985706/bundle.envelope.json": "7920bacb0163ea6d97a921baf89ce84514ce94ec1bbc64f9317c05175baa25ea",
+        "B/handoffs/0d77fe488e7bbf487acee0e6ccd0a0277ee18726224eb24d2086a93b83985706/stage-handoff-provenance.json": "a1b99fd9473fd1c33aa635d0109d795eb458f78354c763718c9ef341cb247a8a",
+        "B/handoffs/0d77fe488e7bbf487acee0e6ccd0a0277ee18726224eb24d2086a93b83985706/stage-handoff-provenance.envelope.json": "fefcb130b7b109786ffb76029cd7ba2cf4ac9b194dbad2023f18fa8dc48bf48c",
+        "D/stage-handoff-provenance.json": "985bb5b0f374b952af8ed6741a2e6a7ba67eeafe81cfd5a0682666c9b7f2eaf0",
+        "D/stage-handoff-provenance.envelope.json": "b7629c3cf9970b1120cc95dfb6b88d2d5e6a1dfc9403ec4c22cf9176d1742ac9",
+        "D/generations/eec5d34a5bc237553191b1d9f865cf9592181de9a8f686f5684ac2a0c5e4644e/generation-manifest.json": "eec5d34a5bc237553191b1d9f865cf9592181de9a8f686f5684ac2a0c5e4644e",
+        "registries/current-D.json": "62cc2dae585e3a64efbba9a3b7a1bcd7abf222989afe82857e4e459d872dda56"
+      },
+      "stage_receipts": {
+        "A": {
+          "stage": "A",
+          "status": "complete",
+          "exit_code": 0,
+          "command": "Rscript --vanilla exec/triomics --config <fixture>/tickets/D-T09.yaml --stage A --output <packet-evidence-root>",
+          "warning_count": 0
+        },
+        "B": {
+          "stage": "B",
+          "status": "complete",
+          "exit_code": 0,
+          "command": "Rscript --vanilla exec/triomics --config <fixture>/tickets/D-T09.yaml --stage B --output <packet-evidence-root>",
+          "warning_count": 0
+        },
+        "C": {
+          "stage": "C",
+          "status": "complete",
+          "exit_code": 0,
+          "command": "Rscript --vanilla exec/triomics --config <fixture>/tickets/D-T09.yaml --stage C --output <packet-evidence-root>",
+          "warning_count": 0
+        },
+        "D": {
+          "stage": "D",
+          "status": "complete",
+          "exit_code": 0,
+          "command": "Rscript --vanilla exec/triomics --config <fixture>/tickets/D-T09.yaml --stage D --output <packet-evidence-root>",
+          "warning_count": 0
+        },
+        "report": {
+          "stage": "report",
+          "status": "complete",
+          "exit_code": 0,
+          "command": "Rscript --vanilla exec/triomics --config <fixture>/tickets/D-T09.yaml --stage report --output <packet-evidence-root>",
+          "warning_count": 0
+        }
+      }
+    },
+    "independent": {
+      "outer_html": {
+        "path": "<verification_root>/final-native/walkthroughs/independent/html/independent-study.html",
+        "sha256": "f656c05f3132f43e6d1f3627d93f8ba79308187e6ca672efaaa5bbc2501c2efd",
+        "bytes": 1442793,
+        "active_external_assets": []
+      },
+      "report_html": {
+        "path": "<verification_root>/final-native/walkthroughs/independent/runs/independent-installed-run-126e4762e18da/report/report.html",
+        "sha256": "2258b34976a00b631e91f9ce617996bfffb835e7b2504f924f8b446e6e359ac5",
+        "bytes": 62723,
+        "active_external_assets": []
+      },
+      "manifest_sha256": "307342f686eb60dd2c886c297d0d357ced0e6c5425e28840d3204ec2a0e0ab48",
+      "manifest_id": "bc2a10112423e4dbe36b86935b7349d007b1ce3723264d08ffa0927e0db4f0e4",
+      "analysis_verification": {
+        "design": "independent",
+        "representation": "levels",
+        "sample_count": 12,
+        "paired_count": null,
+        "contrast": "target_minus_reference",
+        "effect_unit": "group_difference",
+        "first_saved_effect": 3.13076885,
+        "first_saved_feature_key": "fk1|34:triomics_d_t09_independent_fixture|7:block_1|1:1"
+      },
+      "figure_count": 1,
+      "provenance_sha256": {
+        "B/handoffs/345c269daa81af18063b63aa70137197734150e03f5d379ecb5c1addba03297c/bundle.json": "1f00625190a5e336a674a2e12b39188288d22b2ca04ade9713a46bbd745381a5",
+        "B/handoffs/345c269daa81af18063b63aa70137197734150e03f5d379ecb5c1addba03297c/bundle.envelope.json": "27976fd6f489985afb6285ff7f967afb447414c2926d7ba7f70d9e2c8ca5cad9",
+        "B/handoffs/345c269daa81af18063b63aa70137197734150e03f5d379ecb5c1addba03297c/stage-handoff-provenance.json": "1dd15e9cf54fc857e37bad514fa6dfe4c5e4dc8b40ef555b84267b412ab64d83",
+        "B/handoffs/345c269daa81af18063b63aa70137197734150e03f5d379ecb5c1addba03297c/stage-handoff-provenance.envelope.json": "822c7065afc014076a11542168eefd99ff7d0ea063c8a651a4aa3f80f196fb56",
+        "D/stage-handoff-provenance.json": "a4eaceedc7f34a7fa68c6a860e128ff11ea5e974167d1d4a9085400e37a5fc79",
+        "D/stage-handoff-provenance.envelope.json": "bd4b68b6847fdadc29ce8bae3e9371f4238899a5a80e6f5d76254bea34ca2871",
+        "D/generations/e2c8892375db8ac2145d4b85716396d8f8b5128d0373394d4536e0da6f1bb2a9/generation-manifest.json": "e2c8892375db8ac2145d4b85716396d8f8b5128d0373394d4536e0da6f1bb2a9",
+        "registries/current-D.json": "aca8c55f5334f9b7059097745b08fa8ffd06fe8403b903980b1bad94a6656032"
+      },
+      "stage_receipts": {
+        "A": {
+          "stage": "A",
+          "status": "complete",
+          "exit_code": 0,
+          "command": "Rscript --vanilla exec/triomics --config <fixture>/tickets/D-T09.yaml --stage A --output <packet-evidence-root>",
+          "warning_count": 0
+        },
+        "B": {
+          "stage": "B",
+          "status": "complete",
+          "exit_code": 0,
+          "command": "Rscript --vanilla exec/triomics --config <fixture>/tickets/D-T09.yaml --stage B --output <packet-evidence-root>",
+          "warning_count": 0
+        },
+        "C": {
+          "stage": "C",
+          "status": "complete",
+          "exit_code": 0,
+          "command": "Rscript --vanilla exec/triomics --config <fixture>/tickets/D-T09.yaml --stage C --output <packet-evidence-root>",
+          "warning_count": 0
+        },
+        "D": {
+          "stage": "D",
+          "status": "complete",
+          "exit_code": 0,
+          "command": "Rscript --vanilla exec/triomics --config <fixture>/tickets/D-T09.yaml --stage D --output <packet-evidence-root>",
+          "warning_count": 0
+        },
+        "report": {
+          "stage": "report",
+          "status": "complete",
+          "exit_code": 0,
+          "command": "Rscript --vanilla exec/triomics --config <fixture>/tickets/D-T09.yaml --stage report --output <packet-evidence-root>",
+          "warning_count": 0
+        }
+      }
+    }
+  },
+  "standalone": {
+    "commands": [
+      {
+        "stage": "A",
+        "argv": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T09.yaml",
+          "--stage",
+          "A",
+          "--output",
+          "<verification_root>/final-native/standalone/output"
+        ],
+        "cwd": "<verification_root>/final-native/archive",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "stage": "B",
+        "argv": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T09.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "<verification_root>/final-native/standalone/output"
+        ],
+        "cwd": "<verification_root>/final-native/archive",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "stage": "C",
+        "argv": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T09.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "<verification_root>/final-native/standalone/output"
+        ],
+        "cwd": "<verification_root>/final-native/archive",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "stage": "D",
+        "argv": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T09.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "<verification_root>/final-native/standalone/output"
+        ],
+        "cwd": "<verification_root>/final-native/archive",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "stage": "report",
+        "argv": [
+          "Rscript",
+          "--vanilla",
+          "inst/exec/triomics",
+          "--config",
+          "inst/examples/tickets/D-T09.yaml",
+          "--stage",
+          "report",
+          "--output",
+          "<verification_root>/final-native/standalone/output"
+        ],
+        "cwd": "<verification_root>/final-native/archive",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "ticket_sha256": "90fe5326f6edb4ae9fafbcbf2a38c1e929aed9a7acf3a63df8caa18688dd6392",
+    "provenance_sha256": {
+      "B/handoffs/71ff8a5a413064942c0e4bbc23036d76cf02f92e62ab3f74c1f5667559bf1581/bundle.json": "d855538b6e21a3e5a8e722f3d94dcd6a0a0370642650c69a0302f0502d3b15d2",
+      "B/handoffs/71ff8a5a413064942c0e4bbc23036d76cf02f92e62ab3f74c1f5667559bf1581/bundle.envelope.json": "90440146502c271b0454cbf217f08c80d1dc29e197bf6c30724a871e2074565b",
+      "B/handoffs/71ff8a5a413064942c0e4bbc23036d76cf02f92e62ab3f74c1f5667559bf1581/stage-handoff-provenance.json": "da71080ce91753d4455ffa58f2dc0f53c74e1508fe2f1f0b92168d476a6f43a9",
+      "B/handoffs/71ff8a5a413064942c0e4bbc23036d76cf02f92e62ab3f74c1f5667559bf1581/stage-handoff-provenance.envelope.json": "8e0ddd73ef3b1a2fa55583ef9cd2fd2e42566de4ca7282b8dcbbcead0783879e",
+      "D/stage-handoff-provenance.json": "4534d2d52145dfef0ce4c749eaf8f96276459a1a33b95db4059b1686f9310623",
+      "D/stage-handoff-provenance.envelope.json": "312b30cd808f1795b572e978c723de02c8192e85b4637566cfd0910ade0e6167",
+      "D/generations/6daf2c4d10602dcb5797b56890a6caf9247d876b422798d83ef90d54403d1c2e/generation-manifest.json": "6daf2c4d10602dcb5797b56890a6caf9247d876b422798d83ef90d54403d1c2e",
+      "registries/current-D.json": "c98d5859650c8cb33b48cb5ddce5428c3a2465783e71bdbe1159047258ce53e1"
+    },
+    "report_outputs": {
+      "report/integration_eligibility.tsv": "50d5fc82197b0157c76244a840243055a18431ad0e8ecfe3d67b0c04ff9fa7a1",
+      "report/results.tsv": "1809f4c54680fc0e4ca526ac5d90ddcf3c19179c7da06eefcd7d4dc11eca1628",
+      "report/enrichment.tsv": "a32b239f240ca74ea5da5f13346c038e573ad40a4aa205029a2b8def8f3ed337",
+      "report/clinical_results.tsv": "3176d5fbe60072b27f167e414b80225215f3c72ac80a10562ea336f058776d62",
+      "report/section_statuses.tsv": "c324d16a5357ebb0c39f7e3829d929e1f6d80e7af6071648b5d87c9408e5720a",
+      "report/report_manifest.json": "2fd2e33489bcbc03fb25be6df8b647da6bdc45d94483ed69abb0dc9ceb654df7",
+      "report/report_manifest.envelope.json": "c5ceb348683b8611f72d72682136acdb3abda5098c3d6057fd847847c8208d0d",
+      "report/report.html": "24f6f89edb46fd64ec693821a4b2183cfdb2d08a23a6640263d9a5a87798fdbf",
+      "report/report_data.json": "7d3162662544d4372a0f8e01fc1ffbc6db07122f12f10d8cf6360c2163f7e524",
+      "report/integration_variance.tsv": "50637cc25ea5bd0ccf3ec6b7be4b883f8f0b1ab6132f7683788b45e7ab135bfb",
+      "report/report_data.envelope.json": "b98331c56234b2a5326ac94f327617276fde707cb810fa57a7999c2cec9b577d"
+    }
+  },
+  "clinical": {
+    "commands": [
+      {
+        "label": "materialize",
+        "argv": [
+          "Rscript",
+          "--vanilla",
+          "<verification_root>/scripts/materialize-clinical-missingness.R",
+          "<verification_root>/final-native/archive",
+          "<verification_root>/final-native/clinical/fixture",
+          "2f8c83727be9f693d0e60457024edc55474c006b"
+        ],
+        "cwd": "<verification_root>/final-native/library/triomics",
+        "exit_code": 0,
+        "log": "<verification_root>/final-native/clinical/materialize.log",
+        "log_sha256": "38d3a65c4854e886c739c2b3f56fd7391c5f5ec601e24d78740bda92976f907f"
+      },
+      {
+        "label": "A",
+        "argv": [
+          "Rscript",
+          "--vanilla",
+          "exec/triomics",
+          "--config",
+          "<verification_root>/final-native/clinical/fixture/tickets/D-T15.yaml",
+          "--stage",
+          "A",
+          "--output",
+          "<verification_root>/final-native/clinical/output"
+        ],
+        "cwd": "<verification_root>/final-native/library/triomics",
+        "exit_code": 0,
+        "log": "<verification_root>/final-native/clinical/A.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "C_schedule",
+        "argv": [
+          "Rscript",
+          "--vanilla",
+          "exec/triomics",
+          "--config",
+          "<verification_root>/final-native/clinical/fixture/tickets/D-T15.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "<verification_root>/final-native/clinical/output"
+        ],
+        "cwd": "<verification_root>/final-native/library/triomics",
+        "exit_code": 0,
+        "log": "<verification_root>/final-native/clinical/C_schedule.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "B",
+        "argv": [
+          "Rscript",
+          "--vanilla",
+          "exec/triomics",
+          "--config",
+          "<verification_root>/final-native/clinical/fixture/tickets/D-T15.yaml",
+          "--stage",
+          "B",
+          "--output",
+          "<verification_root>/final-native/clinical/output"
+        ],
+        "cwd": "<verification_root>/final-native/library/triomics",
+        "exit_code": 0,
+        "log": "<verification_root>/final-native/clinical/B.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "C_publish",
+        "argv": [
+          "Rscript",
+          "--vanilla",
+          "exec/triomics",
+          "--config",
+          "<verification_root>/final-native/clinical/fixture/tickets/D-T15.yaml",
+          "--stage",
+          "C",
+          "--output",
+          "<verification_root>/final-native/clinical/output"
+        ],
+        "cwd": "<verification_root>/final-native/library/triomics",
+        "exit_code": 0,
+        "log": "<verification_root>/final-native/clinical/C_publish.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "D",
+        "argv": [
+          "Rscript",
+          "--vanilla",
+          "exec/triomics",
+          "--config",
+          "<verification_root>/final-native/clinical/fixture/tickets/D-T15.yaml",
+          "--stage",
+          "D",
+          "--output",
+          "<verification_root>/final-native/clinical/output"
+        ],
+        "cwd": "<verification_root>/final-native/library/triomics",
+        "exit_code": 0,
+        "log": "<verification_root>/final-native/clinical/D.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "report",
+        "argv": [
+          "Rscript",
+          "--vanilla",
+          "exec/triomics",
+          "--config",
+          "<verification_root>/final-native/clinical/fixture/tickets/D-T15.yaml",
+          "--stage",
+          "report",
+          "--output",
+          "<verification_root>/final-native/clinical/output"
+        ],
+        "cwd": "<verification_root>/final-native/library/triomics",
+        "exit_code": 0,
+        "log": "<verification_root>/final-native/clinical/report.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "analysis_missingness": {
+      "input_subjects": 12,
+      "missing_glucose": 1,
+      "used_subjects": 11,
+      "clinical_excluded": 1,
+      "endpoint_excluded": 0
+    },
+    "html_exclusion_checks": {
+      "n_subjects": "11",
+      "n_rows_used": "11",
+      "n_excluded_clinical": "1",
+      "n_excluded_endpoint": "0",
+      "effect_unit": "score_unit per mmol/L",
+      "endpoint_lineage_status": "saved_C_endpoint_verified"
+    },
+    "provenance_hashes": {
+      "B/handoffs/f637cd28e7c3b5b688ca447fecd5cd4fbdc7723d6d586be66e659b495f5e20f6/bundle.json": "54653d314098591df3857229c68c7e4d671817f9444e3c9b8ac0a43847aad2d6",
+      "B/handoffs/f637cd28e7c3b5b688ca447fecd5cd4fbdc7723d6d586be66e659b495f5e20f6/bundle.envelope.json": "b45fa98fe5ad54da4e31f04762a94ced2116616842012db68286fe83d21cd24c",
+      "B/handoffs/f637cd28e7c3b5b688ca447fecd5cd4fbdc7723d6d586be66e659b495f5e20f6/stage-handoff-provenance.json": "558bb8fd0cfc8fe1990f3c9e65419968125cf27d2b0e3c0a17b5730fac7cf571",
+      "B/handoffs/f637cd28e7c3b5b688ca447fecd5cd4fbdc7723d6d586be66e659b495f5e20f6/stage-handoff-provenance.envelope.json": "58918ebd55b089e77d77cace63364edaf13c340d8390874e8c05b67cd8d229e3",
+      "D/stage-handoff-provenance.json": "0a15453702c177392e7105c1fde0a5746dcbbef371c481551c130f54777219a4",
+      "D/stage-handoff-provenance.envelope.json": "8d7d3a166a77d6ffc2aacb9c6282b1a363cfc586adf07635d3f5dc0ee2904ddc",
+      "D/generations/148f5c81d8b5993b11c1c7b7e8793605573ded2279debb224ceff913b439855f/generation-manifest.json": "148f5c81d8b5993b11c1c7b7e8793605573ded2279debb224ceff913b439855f",
+      "registries/current-D.json": "fc3b0fe36a2c2f72b9ec2cfff9de11ebea3966a288a22a935dbf5c2262b3efaf"
+    },
+    "offline_html_sha256": "fab033404f4f734fc3f8280527a28dcbb971bd0e06f3280bef28ea0ff41f8637",
+    "report_manifest_sha256": "32beb369ff813fa3a5d159cb49af7603ec3eb6a5051cc68975d439c90f704b8e",
+    "projected_value_checks": [
+      "JSON:effect",
+      "TSV:effect",
+      "detailed JSON:effect",
+      "JSON:effect_unit",
+      "TSV:effect_unit",
+      "detailed JSON:effect_unit",
+      "JSON:ordinary_se",
+      "TSV:ordinary_se",
+      "detailed JSON:ordinary_se",
+      "JSON:moderated_se",
+      "TSV:moderated_se",
+      "detailed JSON:moderated_se",
+      "JSON:interval_lower",
+      "TSV:interval_lower",
+      "detailed JSON:interval_lower",
+      "JSON:interval_upper",
+      "TSV:interval_upper",
+      "detailed JSON:interval_upper",
+      "JSON:interval_method",
+      "TSV:interval_method",
+      "detailed JSON:interval_method",
+      "JSON:statistic",
+      "TSV:statistic",
+      "detailed JSON:statistic",
+      "JSON:statistic_name",
+      "TSV:statistic_name",
+      "detailed JSON:statistic_name",
+      "JSON:ordinary_df",
+      "TSV:ordinary_df",
+      "detailed JSON:ordinary_df",
+      "JSON:effective_test_df",
+      "TSV:effective_test_df",
+      "detailed JSON:effective_test_df",
+      "JSON:p",
+      "TSV:p",
+      "detailed JSON:p",
+      "JSON:q",
+      "TSV:q",
+      "detailed JSON:q",
+      "JSON:n_subjects",
+      "TSV:n_subjects",
+      "detailed JSON:n_subjects",
+      "JSON:n_rows_used",
+      "TSV:n_rows_used",
+      "detailed JSON:n_rows_used",
+      "detailed JSON:n_excluded_clinical",
+      "detailed JSON:n_excluded_endpoint",
+      "JSON:objective_id",
+      "TSV:objective_id",
+      "detailed JSON:objective_id",
+      "JSON:endpoint_id",
+      "TSV:endpoint_id",
+      "detailed JSON:endpoint_id",
+      "JSON:clinical_variable",
+      "TSV:clinical_variable",
+      "detailed JSON:clinical_variable"
+    ],
+    "external_assets": [],
+    "privacy_leaks": [],
+    "C07": "four_controls_not_run",
+    "C09": "unqualified",
+    "source_and_outputs_unchanged": true
+  },
+  "harness_correction": "Original clinical verifier incorrectly demanded D15 detailed exclusion columns in the compact legacy TSV. Read-only correction checks all common values in compact JSON/TSV and detailed JSON, plus all exclusion/subject/unit guards in detailed JSON and HTML. All seven clinical commands had already exited0; no command, fit or render was repeated. Original failed receipts are unmodified. No product change or new implementation attempt.",
+  "historical_local_B04_evidence": {
+    "candidate": "2f8c83727be9f693d0e60457024edc55474c006b",
+    "tracked_authority": "docs/implementation/reviews/B-T04-review.md",
+    "tracked_review_sha256": "ff5fa14e2da18f09a39b1f91c45f238b7cd0a5ce8bf903d21c791123bcbed60b",
+    "issue": "clean-snapshot reconciliation cannot resolve two ignored runtime artifact paths",
+    "disposition": "Both historical local artifacts exist and byte-match the full SHA-256 pinned in the tracked immutable B-T04 review. They are companion evidence, not files inside the final Git archive. No calibration rerun, acceptance reset, statistical change or new scientific credit. Original anomaly list preserved.",
+    "artifacts": [
+      {
+        "reference": "artifacts/acceptance/B-T04/acceptance-record.json",
+        "sha256": "1bb75f6ecc414417185238be0e515ee1f56e4d0e5c64d97fb5569b5d04f35591",
+        "matches_hash_pinned_in_immutable_review": true,
+        "included_in_git_archive": false,
+        "preserved_local_copy": "acceptance-record.json"
+      },
+      {
+        "reference": "artifacts/acceptance/B-T04/calibration.json",
+        "sha256": "7dec4d66cd9fa3053de399e2e737c6e7b2ae4e6a90620794efb6bfbd6133729a",
+        "matches_hash_pinned_in_immutable_review": true,
+        "included_in_git_archive": false,
+        "preserved_local_copy": "calibration.json"
+      }
+    ],
+    "original_reconciliation": "reconciliation-2f8c837/scope.json"
+  },
+  "source_and_package_gates": "pending",
+  "Astra": "not_run",
+  "G9": "closed",
+  "evidence_sha256": {
+    "final-native/native-verification-reconciliation.json": "e5df62098eb8ae4e906a412e9758fe291f060386151c41b9675928197ad77448",
+    "final-native/walkthroughs/receipt.json": "c47b9a3451d2efd0eea2800f5871de4d3775f8e1b4ba62855af048da45127f27",
+    "final-native/standalone/receipt.json": "3fc4a01a995286d7fdb3d85fd75784c91c9ab2d7d0c44bd0f06a89c57e0b37de",
+    "clinical-readback-correction/receipt.json": "907a2c2584c77810d3158703e0121801e2458e024c4f915c076fecbfb7a2f101",
+    "historical-B04-local-receipts/disposition.json": "3a5516d392c0bc9efe6d64e49255ee7252b90f9a3530f7cfe70c26887bd99e48"
+  },
+  "record_role": "Native evidence only, produced before final source/package and Astra; chronological pending fields are retained. Final decision is receipt.json."
+}

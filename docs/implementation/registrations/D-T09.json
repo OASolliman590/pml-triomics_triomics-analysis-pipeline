@@ -1,8 +1,8 @@
 {
   "packet_id": "D-T09",
   "request_type": "registration_request",
-  "request_status": "integrated_pending_final_acceptance",
-  "accepted": false,
+  "request_status": "accepted",
+  "accepted": true,
   "namespace_edits": false,
   "public_namespace_request": {
     "exports": [],
@@ -29,11 +29,11 @@
   "interfaces": {
     "installed_runner": "Runs the installed relative exec/triomics launcher in executable A, B, C, D, and report order against the same materialized config and reads producer outputs through the existing report bundle consumer.",
     "wrapper_manifest": "Records byte-bound input/config/output references, installed package identity, source revision, and authoritative packet/requirement/ledger file hashes. Execution status, synthetic software evidence, scientific validation, packet acceptance, and publication remain separate fields.",
-    "programme_reconciliation": "Supplied authoritative identities are validated as complete, unique, and cross-referenced. Counts and sorted-identity hashes are recorded while final packet/requirement/conditional acceptance reconciliation remains pending Sol; no all-accepted roster is embedded.",
-    "missingness_and_clinical": "Not exercised by this packet's paired/independent result fixtures. Sol's merged installed clinical smoke should use the accepted D-T15 materializer, include the approved placeholder token in a measurement, and verify the complete-case clinical exclusion read-back."
+    "programme_reconciliation": "Supplied authoritative identities are validated as complete, unique, and cross-referenced. Runtime wrappers record counts and sorted-identity hashes, not a fabricated all-accepted roster. Sol completed the final 41-packet/29-requirement reconciliation in the M9 acceptance receipt.",
+    "missingness_and_clinical": "The paired/independent fixtures do not exercise clinical missingness. Sol separately verified the accepted D-T15 synthetic materializer with one approved placeholder: 11 included subjects, 1 clinical exclusion, 0 endpoint exclusions, with detailed JSON/HTML read-back."
   },
   "verification_evidence": {
-    "status": "worker_and_Sol_focused_pass_final_gates_pending",
+    "status": "final_gates_and_fresh_Astra_pass",
     "focused_test": "Rscript --vanilla -e \"testthat::test_local(filter='D-T09', stop_on_failure=TRUE)\"",
     "authority_root_env": "Set TRIOMICS_D_T09_PROJECT_ROOT to the read-only immutable source archive when package tests run from a context that does not contain discovery/spec-v2 and docs/implementation authority records.",
     "walkthroughs": [
@@ -49,12 +49,16 @@
       "warn": 0,
       "skip": 0
     },
-    "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-integration.md"
+    "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-integration.md",
+    "accepted_product_commit": "2f8c83727be9f693d0e60457024edc55474c006b",
+    "final_receipt_ref": "docs/implementation/evidence/2026-11-07-m9-final-gates/receipt.json"
   },
   "acceptance": {
-    "status": "pending_sol_acceptance",
+    "status": "accepted_by_Sol",
     "scientific_claims": "Public synthetic software evidence only; no biological, clinical, or real-data validation is established.",
-    "G8_G9": "G8 is released; G9 remains closed"
+    "G8_G9": "G8 and G9 released; conditional exclusions retained",
+    "accepted_product_commit": "2f8c83727be9f693d0e60457024edc55474c006b",
+    "receipt_ref": "docs/implementation/reviews/2026-11-07-m9-sol-acceptance.md"
   },
   "integration_request": "No shared CLI, stage registry, namespace, schema, specification, or ledger change is requested. Sol owns integration, final programme reconciliation, packet acceptance, and milestone acceptance."
 }

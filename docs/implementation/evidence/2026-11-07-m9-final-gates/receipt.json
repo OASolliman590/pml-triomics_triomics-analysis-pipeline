@@ -1,0 +1,182 @@
+{
+  "decision": "Sol accepts D-T09 and M9 and releases G9",
+  "decided_at": "2026-11-07T20:41:51.452220+00:00",
+  "accepted_product_commit": "2f8c83727be9f693d0e60457024edc55474c006b",
+  "record_commit": "The later documentation-only commit containing this receipt; not a newly tested product",
+  "archive_sha256": "d00a44e00309f946780a07221a33c6d1152f8fb1895017c9f24f35629812c67d",
+  "source_files_unchanged_after_tests_and_audit": 1242,
+  "focused_worker": {
+    "commit": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
+    "pass": 218,
+    "fail": 0,
+    "warn": 0,
+    "skip": 0
+  },
+  "focused_Sol": {
+    "commit": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
+    "pass": 218,
+    "fail": 0,
+    "error": 0,
+    "warn": 0,
+    "skip": 0
+  },
+  "full_source": {
+    "commit": "2f8c83727be9f693d0e60457024edc55474c006b",
+    "exit_code": 0,
+    "counts": {
+      "pass": 11766,
+      "fail": 0,
+      "error": 0,
+      "warn": 15,
+      "skip": 0,
+      "blocks": 604
+    },
+    "log_sha256": "45c06d54b1fb853ec0dc362cabee5ff53f472041df38105304d2a01f597cdb88"
+  },
+  "package": {
+    "commit": "2f8c83727be9f693d0e60457024edc55474c006b",
+    "exit_code": 0,
+    "Status": "Status: OK",
+    "counts": {
+      "fail": 0,
+      "warn": 15,
+      "skip": 0,
+      "pass": 11739
+    },
+    "log_hashes": {
+      "triomics_0.1.0.tar.gz": "75d0b95bc8dc62d393f3fd131d1d35f804284f01a66427a1d72130d0aaaff377",
+      "testthat.Rout": "ca5da7bbe4964c687554b67c2e705b9e5ec2bcaba248608251d8db57896db007",
+      "00check.log": "32470ee8fc5517dd68def602f8980081c2b80ba4c5776e5dee741e99e8bf359a",
+      "warning-inventory.json": "741b8eebb352fee16d8e52cc69acde81c4c7c0cdef2eaae78bd98064cda96013",
+      "driver.log": "ad70a0ce244b42b4fc8995d098491c381a07a6cac5b038ab4b3abee839db4458",
+      "check.log": "4e0d61d55255fc236dd84bc802acd3bee8d419492478cb26dbff9b94620d8345",
+      "build.log": "c4f3dad722b5b098ee5699dd94bbbd64b12f0253acd3cb194bc6c9490000d7ef"
+    },
+    "command": [
+      "Rscript",
+      "--vanilla",
+      "tools/check-package.R",
+      "--root",
+      "<verification_root>/snapshot/source",
+      "--output",
+      "<verification_root>/package"
+    ]
+  },
+  "native": {
+    "verdict": "pass_after_preserved_verifier_failure_and_read_only_correction",
+    "walkthrough_render_exits": {
+      "paired": 0,
+      "independent": 0
+    },
+    "paired_stages": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "report": 0
+    },
+    "independent_stages": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "report": 0
+    },
+    "standalone_ticket_stages": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "report": 0
+    },
+    "clinical_stages": {
+      "materialize": 0,
+      "A": 0,
+      "C_schedule": 0,
+      "B": 0,
+      "C_publish": 0,
+      "D": 0,
+      "report": 0
+    },
+    "clinical_subjects": 12,
+    "clinical_included": 11,
+    "clinical_excluded": 1,
+    "endpoint_excluded": 0,
+    "detail": "native-readback.json",
+    "offline_HTML": true,
+    "scientific_validation": "public synthetic software evidence only"
+  },
+  "Astra": {
+    "candidate": "2f8c83727be9f693d0e60457024edc55474c006b",
+    "declared_spec_content_hash": "21ebbd04688dfacb058af671d288a85d5910c657ff2e2437d2c6e99e7461aaaf",
+    "agent": "/root/m9_final_astra",
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "low",
+    "effective_settings_verified": false,
+    "review_attempts": 1,
+    "focused_rereviews": 0,
+    "verdict": "pass",
+    "audit_pass": true,
+    "blocking_findings": [],
+    "missing_required_runtime_evidence": [],
+    "nonblocking_notes": {
+      "M9-N01": "Source11766/package11739 separately qualified. The27 assertion difference is unattributed; both gates pass independently, no missing/changed packaged test files or skips. Do not claim equivalent assertion paths.",
+      "M9-N02": "Original clinical verifier/driver exit1 preserved. Separate read-only correction verified already-produced detailed JSON and HTML; no fit/render/pipeline rerun or product repair.",
+      "M9-N03": "Historical B04 companion artifacts match immutable tracked review hashes but are outside archive. M2/M5 reconstruction limits and separate frozen-kit mismatch/audit pending remain."
+    },
+    "coordinator_closure_required_after_audit": true,
+    "accepted_by_reviewer": false,
+    "reviewer_terminal": true
+  },
+  "attempts": {
+    "D09_initial": 1,
+    "D09_repairs": 2,
+    "DOC_M9_initial": 1,
+    "DOC_M9_finalization": 1,
+    "M9_initial_Astra": 1,
+    "M9_focused_rereview": 0
+  },
+  "scope": {
+    "packets": 41,
+    "required": 37,
+    "required_accepted_credit": 37,
+    "conditional": 4,
+    "conditional_completion_credit": 0,
+    "requirements_accounted_for": 29
+  },
+  "qualifications": {
+    "C07": "four controls not_run",
+    "C09": "unqualified, synthetic_fixture_only, benefit_guaranteed=false",
+    "D06_D07_D14": "blocked without completion credit",
+    "real_study_data": "not read or analyzed in M9",
+    "biological_validation": "not established by software fixtures",
+    "publication": "no GitHub push, AIU run or Notion sync in M9",
+    "frozen_kit_audit": "pending",
+    "current_spec_validator": "Inherited AGENTS/CLAUDE mismatch remains disclosed; no current validator pass claimed",
+    "historical_evidence_limits": "See retrospective M2/M5 notes and2026-11-07-m9-historical-docs.md; accepted-ledger blocker notes are retained, not silently declared resolved"
+  },
+  "runtime": {
+    "R": "4.6.1",
+    "Quarto": "1.11.9",
+    "testthat": "3.3.2",
+    "limma": "3.68.5",
+    "mixOmics": "6.36.0",
+    "MOFA2": "1.22.1",
+    "DEqMS": "1.30.0",
+    "mofapy2": "0.7.5",
+    "fresh_machine_restore_tested": false,
+    "output_storage": "local internal APFS"
+  },
+  "G7": "accepted baseline preserved",
+  "G8": "released; M8/D13 unchanged",
+  "G9": "released",
+  "owned_workers": "terminal",
+  "owned_gate_processes": "terminal",
+  "new_downstream_work_started": false,
+  "private_study_data_used": false,
+  "GitHub_push": false,
+  "AIU_run": false,
+  "Notion_sync": false,
+  "fasting_software_checks": false,
+  "resume_instruction": "D09/M9 is accepted on Q; do not rerun workers or gates. Start only a newly requested bounded next task, preserving conditional exclusions and the pending frozen-kit audit."
+}

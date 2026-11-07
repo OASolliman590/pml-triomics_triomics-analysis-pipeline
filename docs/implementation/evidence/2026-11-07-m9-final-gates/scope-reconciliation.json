@@ -1,0 +1,878 @@
+{
+  "candidate": "2f8c83727be9f693d0e60457024edc55474c006b",
+  "counts_before_acceptance": {
+    "packets": 41,
+    "required": 37,
+    "conditional": 4,
+    "accepted_credit": 36,
+    "requirements": 29
+  },
+  "packets": [
+    {
+      "id": "A-T01",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "ee9fd36250414904b438bb14e782aa89179d2774",
+      "requirements": [
+        "R01",
+        "R02",
+        "R04",
+        "R28",
+        "R29"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "A-T02",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "12021f9e7d1406e95701b45b6e3c2ae0b42fc7a5",
+      "requirements": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R22"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "A-T03",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "901e39ba8adf324aa9bdc352cf8e1b1f63d133b5",
+      "requirements": [
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R28"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "A-T09",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "9c4929aab3717a12d2a8f477c46e471a1280f0e4",
+      "requirements": [
+        "R03",
+        "R16",
+        "R17",
+        "R26"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "A-T04",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "ddc0ae55ab5b12570b9d52d6737d83ac2d048cd5",
+      "requirements": [
+        "R04",
+        "R05",
+        "R06",
+        "R11"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "A-T05",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "ddc0ae55ab5b12570b9d52d6737d83ac2d048cd5",
+      "requirements": [
+        "R04",
+        "R05",
+        "R06"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "A-T06",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "ddc0ae55ab5b12570b9d52d6737d83ac2d048cd5",
+      "requirements": [
+        "R04",
+        "R06",
+        "R07",
+        "R21"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "A-T07",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "ddc0ae55ab5b12570b9d52d6737d83ac2d048cd5",
+      "requirements": [
+        "R04",
+        "R05",
+        "R13"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "A-T08",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "ddc0ae55ab5b12570b9d52d6737d83ac2d048cd5",
+      "requirements": [
+        "R01",
+        "R02",
+        "R04",
+        "R05",
+        "R28",
+        "R29"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "B-T01",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "ddc0ae55ab5b12570b9d52d6737d83ac2d048cd5",
+      "requirements": [
+        "R08",
+        "R09",
+        "R10",
+        "R11",
+        "R12"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "B-T02",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "bded42a58c5318be5f601e84c6cd7a8560a2dc8d",
+      "requirements": [
+        "R08",
+        "R09",
+        "R10",
+        "R12"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "B-T03",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "bded42a58c5318be5f601e84c6cd7a8560a2dc8d",
+      "requirements": [
+        "R03",
+        "R08",
+        "R09",
+        "R10",
+        "R12"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "B-T04",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "af69a9e2d9d1e95c1dd641dfa413ec1944e1d383",
+      "requirements": [
+        "R08",
+        "R09",
+        "R10",
+        "R27"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "B-T05",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "b1e753d3b9004737eaf68ecc9916da472f3f5754",
+      "requirements": [
+        "R09",
+        "R11",
+        "R27"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "B-T06",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "033e0f6ea637cc7f9cc14643592d7453f2a8e643",
+      "requirements": [
+        "R10",
+        "R12",
+        "R22"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "B-T08",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "bded42a58c5318be5f601e84c6cd7a8560a2dc8d",
+      "requirements": [
+        "R16",
+        "R17",
+        "R18",
+        "R26"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "B-T09",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "be1b52df2777e4cefbce6b23e9d10e536a6ca082",
+      "requirements": [
+        "R08",
+        "R09",
+        "R16",
+        "R17",
+        "R18"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "B-T07",
+      "scope_type": "required",
+      "status": "accepted_synthetic_software_evidence",
+      "credit": true,
+      "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "requirements": [
+        "R08",
+        "R09",
+        "R10",
+        "R16",
+        "R28",
+        "R29"
+      ],
+      "status_before_final_acceptance": "accepted_synthetic_software_evidence"
+    },
+    {
+      "id": "C-01",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "40caa9f08171ab6f7d3a147f72ae59af1920fc2e",
+      "requirements": [
+        "R02",
+        "R08",
+        "R13",
+        "R14",
+        "R15"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "C-02",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "85922cfa52d0a6f60a357b90c1eedf3184498754",
+      "requirements": [
+        "R05",
+        "R13",
+        "R14",
+        "R19",
+        "R27"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "C-03",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "d5037ec921588c4230626b9be90224f8df460e8d",
+      "requirements": [
+        "R13",
+        "R14",
+        "R15",
+        "R27"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "C-04",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "6ea8d20f0b654e8e544f9f8d6cf8517ab0fcae29",
+      "requirements": [
+        "R13",
+        "R14",
+        "R15",
+        "R27"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "C-05",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "c34d9fffd4f17d88d54a69dda6410d4bc6ee6365",
+      "requirements": [
+        "R13",
+        "R14",
+        "R15",
+        "R27",
+        "R28"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "C-08",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "d69ef1e8418563b851301881c399aebb42f4c810",
+      "requirements": [
+        "R16",
+        "R18",
+        "R19",
+        "R28"
+      ],
+      "status_before_final_acceptance": "accepted"
+    },
+    {
+      "id": "C-09",
+      "scope_type": "conditional",
+      "status": "conditional_deferred_synthetic_fixture_only_no_completion_credit",
+      "credit": false,
+      "accepted_commit": "de9ea9e73e3bb24d69c6e1232b25225408c200a9",
+      "requirements": [
+        "R13",
+        "R18",
+        "R19",
+        "R27"
+      ],
+      "status_before_final_acceptance": "conditional_deferred_synthetic_fixture_only_no_completion_credit"
+    },
+    {
+      "id": "C-06",
+      "scope_type": "required",
+      "status": "accepted_synthetic_software_evidence",
+      "credit": true,
+      "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "requirements": [
+        "R13",
+        "R14",
+        "R15",
+        "R18",
+        "R27",
+        "R29"
+      ],
+      "status_before_final_acceptance": "accepted_synthetic_software_evidence"
+    },
+    {
+      "id": "D-T01",
+      "scope_type": "required",
+      "status": "accepted_synthetic_software_evidence",
+      "credit": true,
+      "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "requirements": [
+        "R02",
+        "R20",
+        "R21",
+        "R22",
+        "R25"
+      ],
+      "status_before_final_acceptance": "accepted_synthetic_software_evidence"
+    },
+    {
+      "id": "D-T02",
+      "scope_type": "required",
+      "status": "accepted_synthetic_software_evidence",
+      "credit": true,
+      "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "requirements": [
+        "R07",
+        "R20",
+        "R21",
+        "R25"
+      ],
+      "status_before_final_acceptance": "accepted_synthetic_software_evidence"
+    },
+    {
+      "id": "D-T03",
+      "scope_type": "required",
+      "status": "accepted_synthetic_software_evidence",
+      "credit": true,
+      "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "requirements": [
+        "R20",
+        "R21",
+        "R25"
+      ],
+      "status_before_final_acceptance": "accepted_synthetic_software_evidence"
+    },
+    {
+      "id": "D-T04",
+      "scope_type": "required",
+      "status": "accepted_synthetic_software_evidence",
+      "credit": true,
+      "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "requirements": [
+        "R10",
+        "R20",
+        "R21",
+        "R22"
+      ],
+      "status_before_final_acceptance": "accepted_synthetic_software_evidence"
+    },
+    {
+      "id": "D-T05",
+      "scope_type": "required",
+      "status": "accepted_synthetic_software_evidence",
+      "credit": true,
+      "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "requirements": [
+        "R20",
+        "R25",
+        "R28",
+        "R29"
+      ],
+      "status_before_final_acceptance": "accepted_synthetic_software_evidence"
+    },
+    {
+      "id": "D-T06",
+      "scope_type": "conditional",
+      "status": "blocked_without_completion_credit",
+      "credit": false,
+      "accepted_commit": null,
+      "requirements": [
+        "R14",
+        "R20",
+        "R21",
+        "R25",
+        "R27"
+      ],
+      "status_before_final_acceptance": "blocked_without_completion_credit"
+    },
+    {
+      "id": "D-T07",
+      "scope_type": "conditional",
+      "status": "blocked_without_completion_credit",
+      "credit": false,
+      "accepted_commit": null,
+      "requirements": [
+        "R07",
+        "R20",
+        "R21",
+        "R25",
+        "R27"
+      ],
+      "status_before_final_acceptance": "blocked_without_completion_credit"
+    },
+    {
+      "id": "D-T10",
+      "scope_type": "required",
+      "status": "accepted_synthetic_software_evidence",
+      "credit": true,
+      "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "requirements": [
+        "R23",
+        "R24",
+        "R25"
+      ],
+      "status_before_final_acceptance": "accepted_synthetic_software_evidence"
+    },
+    {
+      "id": "D-T11",
+      "scope_type": "required",
+      "status": "accepted_synthetic_software_evidence",
+      "credit": true,
+      "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "requirements": [
+        "R21",
+        "R23",
+        "R24"
+      ],
+      "status_before_final_acceptance": "accepted_synthetic_software_evidence"
+    },
+    {
+      "id": "D-T12",
+      "scope_type": "required",
+      "status": "accepted_synthetic_software_evidence",
+      "credit": true,
+      "accepted_commit": "fabd6fa6bb7ae06f6eea1276517010829ea4cde1",
+      "requirements": [
+        "R22",
+        "R23",
+        "R24"
+      ],
+      "status_before_final_acceptance": "accepted_synthetic_software_evidence"
+    },
+    {
+      "id": "D-T14",
+      "scope_type": "conditional",
+      "status": "blocked_without_completion_credit",
+      "credit": false,
+      "accepted_commit": null,
+      "requirements": [
+        "R23",
+        "R24",
+        "R27"
+      ],
+      "status_before_final_acceptance": "blocked_without_completion_credit"
+    },
+    {
+      "id": "D-T08",
+      "scope_type": "required",
+      "status": "accepted_synthetic_software_evidence",
+      "credit": true,
+      "accepted_commit": "f85fa6def678f23cc61b791531dbcd7a5adea13b",
+      "requirements": [
+        "R20",
+        "R23",
+        "R26",
+        "R28",
+        "R29"
+      ],
+      "status_before_final_acceptance": "accepted_synthetic_software_evidence"
+    },
+    {
+      "id": "D-T13",
+      "scope_type": "required",
+      "status": "accepted_synthetic_software_evidence",
+      "credit": true,
+      "accepted_commit": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
+      "requirements": [
+        "R23",
+        "R24",
+        "R26",
+        "R29"
+      ],
+      "status_before_final_acceptance": "accepted_synthetic_software_evidence"
+    },
+    {
+      "id": "D-T15",
+      "scope_type": "required",
+      "status": "accepted_synthetic_software_evidence",
+      "credit": true,
+      "accepted_commit": "3a7f996a8fd722b02bddecea48c88a3228c56dd1",
+      "requirements": [
+        "R16",
+        "R18",
+        "R19",
+        "R26",
+        "R29"
+      ],
+      "status_before_final_acceptance": "accepted_synthetic_software_evidence"
+    },
+    {
+      "id": "D-T09",
+      "scope_type": "required",
+      "status": "accepted",
+      "credit": true,
+      "accepted_commit": "2f8c83727be9f693d0e60457024edc55474c006b",
+      "requirements": [
+        "R01",
+        "R02",
+        "R27",
+        "R28",
+        "R29"
+      ],
+      "status_before_final_acceptance": "integrated_verification_pending",
+      "acceptance_ref": "docs/implementation/reviews/2026-11-07-m9-sol-acceptance.md"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "R01",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": [
+        "D-T09"
+      ]
+    },
+    {
+      "id": "R02",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": [
+        "D-T09"
+      ]
+    },
+    {
+      "id": "R03",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R04",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R05",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R06",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R07",
+      "pending_required": [],
+      "conditional_without_credit": [
+        "D-T07"
+      ],
+      "accounting": "required_core_accepted_with_conditional_exclusions",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R08",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R09",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R10",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R11",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R12",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R13",
+      "pending_required": [],
+      "conditional_without_credit": [
+        "C-09"
+      ],
+      "accounting": "required_core_accepted_with_conditional_exclusions",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R14",
+      "pending_required": [],
+      "conditional_without_credit": [
+        "D-T06"
+      ],
+      "accounting": "required_core_accepted_with_conditional_exclusions",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R15",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R16",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R17",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R18",
+      "pending_required": [],
+      "conditional_without_credit": [
+        "C-09"
+      ],
+      "accounting": "required_core_accepted_with_conditional_exclusions",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R19",
+      "pending_required": [],
+      "conditional_without_credit": [
+        "C-09"
+      ],
+      "accounting": "required_core_accepted_with_conditional_exclusions",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R20",
+      "pending_required": [],
+      "conditional_without_credit": [
+        "D-T06",
+        "D-T07"
+      ],
+      "accounting": "required_core_accepted_with_conditional_exclusions",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R21",
+      "pending_required": [],
+      "conditional_without_credit": [
+        "D-T06",
+        "D-T07"
+      ],
+      "accounting": "required_core_accepted_with_conditional_exclusions",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R22",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R23",
+      "pending_required": [],
+      "conditional_without_credit": [
+        "D-T14"
+      ],
+      "accounting": "required_core_accepted_with_conditional_exclusions",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R24",
+      "pending_required": [],
+      "conditional_without_credit": [
+        "D-T14"
+      ],
+      "accounting": "required_core_accepted_with_conditional_exclusions",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R25",
+      "pending_required": [],
+      "conditional_without_credit": [
+        "D-T06",
+        "D-T07"
+      ],
+      "accounting": "required_core_accepted_with_conditional_exclusions",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R26",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": []
+    },
+    {
+      "id": "R27",
+      "pending_required": [],
+      "conditional_without_credit": [
+        "C-09",
+        "D-T06",
+        "D-T07",
+        "D-T14"
+      ],
+      "accounting": "required_core_accepted_with_conditional_exclusions",
+      "pending_before_final_acceptance": [
+        "D-T09"
+      ]
+    },
+    {
+      "id": "R28",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": [
+        "D-T09"
+      ]
+    },
+    {
+      "id": "R29",
+      "pending_required": [],
+      "conditional_without_credit": [],
+      "accounting": "required_core_accepted",
+      "pending_before_final_acceptance": [
+        "D-T09"
+      ]
+    }
+  ],
+  "anomalies_preserved": [
+    {
+      "packet": "B-T04",
+      "issue": "missing receipt",
+      "reference": "artifacts/acceptance/B-T04/acceptance-record.json"
+    },
+    {
+      "packet": "B-T04",
+      "issue": "missing receipt",
+      "reference": "artifacts/acceptance/B-T04/calibration.json"
+    }
+  ],
+  "anomaly_disposition": "historical-B04-local-receipts/disposition.json: two companion public synthetic receipts byte-match immutable B-T04 review hashes; not in Git archive",
+  "qualifications": {
+    "C07": "four controls not_run",
+    "C09": "unqualified, synthetic_fixture_only, benefit_guaranteed=false",
+    "D06_D07_D14": "blocked without completion credit",
+    "real_study_data": "not read or analyzed in M9",
+    "biological_validation": "not established by software fixtures",
+    "publication": "no GitHub push, AIU run or Notion sync in M9",
+    "frozen_kit_audit": "pending",
+    "current_spec_validator": "Inherited AGENTS/CLAUDE mismatch remains disclosed; no current validator pass claimed",
+    "historical_evidence_limits": "See retrospective M2/M5 notes and2026-11-07-m9-historical-docs.md; accepted-ledger blocker notes are retained, not silently declared resolved"
+  },
+  "G9": "released",
+  "Sol_acceptance": "D-T09 and M9 accepted on Q",
+  "Astra": "pass; audit_pass yes",
+  "record_role": "Final Sol accounting of tested product Q plus subsequent acceptance record; prior counts and pending-at-Q state retained.",
+  "counts_after_acceptance": {
+    "packets": 41,
+    "required": 37,
+    "required_accepted_credit": 37,
+    "conditional": 4,
+    "conditional_completion_credit": 0,
+    "requirements_accounted_for": 29
+  }
+}
