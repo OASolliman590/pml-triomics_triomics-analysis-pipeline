@@ -37,11 +37,11 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "M8_packaging_worker_pending",
-    "last_reconciled": "2026-11-07T07:30:59.012000+00:00",
+    "status": "M8_corrected_archive_gate_pending",
+    "last_reconciled": "2026-11-07T07:35:22.248685+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "First full package tests passed; two package portability diagnostics remain; bounded M8 correction then new archive gate and fresh Astra; D13 not reopened",
+    "disposition": "Packaging-only correction verified; repeat full archive gate next; fresh Astra after pass; D13 not reopened,G9closed",
     "current_gate": {
       "status": "packet_accepted_milestone_pending",
       "candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
@@ -7295,6 +7295,17 @@
       "D13_reopened": false,
       "G8": "closed",
       "G9": "closed"
+    },
+    {
+      "at": "2026-11-07T07:35:22.248685+00:00",
+      "event": "M8_PKG_001_verified",
+      "worker_commit": "006962d29e579f66951f4d06c69cd454e4efe4b6",
+      "actual_byte_identity_check": "pass",
+      "parsed_expression_identity": "pass",
+      "D13_tests_changed": false,
+      "D13_attempts_reset": false,
+      "G8": "closed",
+      "G9": "closed"
     }
   ],
   "packets": {
@@ -9162,7 +9173,7 @@
       "focused_final_rereviews_used": 1
     },
     "M8": {
-      "status": "package_portability_correction",
+      "status": "corrected_package_gate_pending",
       "review_ref": null,
       "commit": null,
       "blocking_packets": [],
@@ -9199,7 +9210,9 @@
       "first_package_receipt": "docs/implementation/evidence/2026-11-07-m8-first-package/receipt.json",
       "packaging_correction_ref": "docs/implementation/change-records/M8-PKG-001-portability.md",
       "packaging_initial_attempts": 1,
-      "packaging_repairs": 0
+      "packaging_repairs": 0,
+      "packaging_worker_commit": "006962d29e579f66951f4d06c69cd454e4efe4b6",
+      "packaging_Sol_review": "pass: exact four replacements, identical parsed expressions, one stats helper import"
     },
     "M9": {
       "status": "not_started",

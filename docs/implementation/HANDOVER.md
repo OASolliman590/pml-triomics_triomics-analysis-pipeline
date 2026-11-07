@@ -1,3 +1,11 @@
+# Current checkpoint: M8 packaging correction verified
+
+Luna `006962d` and Sol's one-line namespace declaration resolve the two observed package diagnostics with identical parsed D13 code. Read [Sol's portability review](reviews/2026-11-07-m8-portability-sol-review.md). All original D13 attempts/acceptance and tests are preserved. No separate D13 suite was repeated. The first failed package archive and its 11,518 passes/15 named warnings remain recorded.
+
+Literal resume: **Join the corrected M8 package gate once dispatched; do not repeat the first gate or redispatch Terra/Luna/D13. Require exact Status: OK, complete counts, named warnings and archive integrity. Then obtain fresh read-only Astra on that immutable candidate and accept M8/release G8 only if every gate passes. G9 stays closed; no D09 in this run.**
+
+## Historical checkpoints below
+
 # Current checkpoint: M8 first gate completed; packaging correction next
 
 The first archive `ac66bd6` completed with `Status: 1 WARNING, 1 NOTE`: literal Unicode source and missing `setNames` import only. Tests: PASS 11518, FAIL 0, WARN 15, SKIP 0; all fifteen warnings match the named M7 baseline. The original archive/logs are preserved, and source bytes are unchanged. Read [the first-gate receipt](reviews/2026-11-07-m8-first-package-gate.md) and [M8-PKG-001](change-records/M8-PKG-001-portability.md).
