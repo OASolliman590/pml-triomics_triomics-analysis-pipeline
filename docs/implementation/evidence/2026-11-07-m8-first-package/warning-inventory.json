@@ -1,0 +1,64 @@
+{
+  "warnings": [
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)...."
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.\n"
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "no non-missing arguments to max; returning -Inf"
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.\n"
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "no non-missing arguments to max; returning -Inf"
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)...."
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.\n"
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "no non-missing arguments to max; returning -Inf"
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)...."
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "Factor(s) 1 are strongly correlated with the average expression of features for at least one of your omics. Such factors appear when there are differences in the total 'levels' between your samples, *sometimes* because of poor normalisation in the preprocessing steps.\n"
+    },
+    {
+      "test": "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes",
+      "message": "no non-missing arguments to max; returning -Inf"
+    },
+    {
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "message": "Some view(s) have less than 15 features, MOFA will have little power to to learn meaningful factors for these view(s)...."
+    },
+    {
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "message": "All 2 factors were found to explain little or no variance so remove_inactive_factors option has been disabled."
+    },
+    {
+      "test": "C-05 real MOFA2 fits and extracts a missing sample-view capability cell",
+      "message": "All 2 factors were found to explain little or no variance so remove_inactive_factors option has been disabled."
+    },
+    {
+      "test": "D-T01 refuses stale paired signs and preserves the old pointer",
+      "message": "running command ''/Library/Frameworks/R.framework/Resources/bin/Rscript' --vanilla 'triomics' --config '$M8_EVIDENCE/runtime-tmp/Rtmp1N2ULL/d-t01-paired-native-fixture-f8c53a9a28bf/tickets/d-t01-paired-sign-stale-f8c52323a6d1.yaml' --stage 'D' --output '$M8_EVIDENCE/runtime-tmp/Rtmp1N2ULL/d-t01-paired-native-output-f8c55ee931a7' 2>&1' had status 2"
+    }
+  ]
+}

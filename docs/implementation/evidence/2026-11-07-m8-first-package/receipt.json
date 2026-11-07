@@ -1,0 +1,60 @@
+{
+  "candidate": "ac66bd65a4d99957b1e631cadb73fe3b4e346d2a",
+  "command": [
+    "Rscript",
+    "--vanilla",
+    "tools/check-package.R",
+    "--root",
+    "$M8_EVIDENCE/snapshot/source",
+    "--output",
+    "$M8_EVIDENCE/package"
+  ],
+  "cwd": "$M8_EVIDENCE/snapshot/source",
+  "started": "2026-11-06T16:54:10.466795+00:00",
+  "status": "needs_review",
+  "pid": 62263,
+  "archive_sha256": "39ebc4959c14c92202d1f196ed7f5bf7809da79ff123090fba171e849ab107ce",
+  "file_count": 1198,
+  "source_revision_stamp": "ac66bd65a4d99957b1e631cadb73fe3b4e346d2a",
+  "child_pid": 62429,
+  "exit_code": 1,
+  "finished": "2026-11-07T07:29:30.868619+00:00",
+  "archive_source_unchanged": true,
+  "changed": [],
+  "extras": [],
+  "Status_lines": [
+    "Status: 1 WARNING, 1 NOTE"
+  ],
+  "testthat_counts": {
+    "fail": 0,
+    "warn": 15,
+    "skip": 0,
+    "pass": 11518
+  },
+  "warning_inventory_captured": true,
+  "named_warnings": {
+    "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes": 11,
+    "C-05 real MOFA2 fits and extracts a missing sample-view capability cell": 3,
+    "D-T01 refuses stale paired signs and preserves the old pointer": 1
+  },
+  "same_warning_names_and_counts_as_M7": true,
+  "log_hashes": {
+    "triomics_0.1.0.tar.gz": "84b255268871a165d6b5839fdcfbc78506a02f90aed215ed0483a4041595461f",
+    "testthat.Rout": "f0c4a2cd09bf622e0b20fcbf9012a6fae9fb79d7132add6d9a2b143fd1f1809b",
+    "00check.log": "2334d7ba514476399339ad04c8d8e877dd3b9995f6b9657a071978cf1c736e92",
+    "warning-inventory.json": "922d4436a801cf841f543c75886c02f29841741a78ea74af7aa38bc2cc9a7064",
+    "driver.log": "3b09de52e1f323e2ceef76a615be58900a69f7f820a77657ba7fa213ad45101b",
+    "check.log": "2162490288278b7641cc6ea19549916234505b85761757c0154a609dfcf6092f",
+    "build.log": "584b15cdc3cc5ff468a3f8db8f68212ced910e5b4d102ce65c703145e1351cb5"
+  },
+  "warning_message_review": "C-05 exact messages/multiplicities match baseline; D-T01 is the same expected CLI status2 with generated paths",
+  "warning_dispositions": {
+    "C-05 real MOFA2 fit preserves scattered missingness and reports seed sensitivity and enrichment hashes": "Native MOFA small-fixture power, correlation and low-variance diagnostics; retained without suppression.",
+    "C-05 real MOFA2 fits and extracts a missing sample-view capability cell": "Native MOFA small-fixture diagnostics; retained without suppression.",
+    "D-T01 refuses stale paired signs and preserves the old pointer": "Expected native CLI exit 2 from intentional stale-sign rejection; prior generation preservation is asserted."
+  },
+  "result": "package_gate_failed_two_portability_diagnostics_only",
+  "G8": "closed",
+  "G9": "closed",
+  "D13_reopened": false
+}

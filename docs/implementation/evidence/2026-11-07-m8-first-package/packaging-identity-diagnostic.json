@@ -1,0 +1,11 @@
+{
+  "exit_code": 0,
+  "command": [
+    "Rscript",
+    "--vanilla",
+    "-",
+    "$M8_EVIDENCE/snapshot/source/R/report_targets.R"
+  ],
+  "scope": "Read-only in-memory parsed-expression comparison; no product edit, fit, or D13 suite rerun",
+  "log_sha256": "3831499f312ff40ffc5430e94964a82bc0ef2cb1c9e98278a5b833a45d451b9f"
+}

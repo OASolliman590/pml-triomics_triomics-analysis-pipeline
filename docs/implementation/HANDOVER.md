@@ -1,3 +1,21 @@
+# Current checkpoint: M8 first gate completed; packaging correction next
+
+The first archive `ac66bd6` completed with `Status: 1 WARNING, 1 NOTE`: literal Unicode source and missing `setNames` import only. Tests: PASS 11518, FAIL 0, WARN 15, SKIP 0; all fifteen warnings match the named M7 baseline. The original archive/logs are preserved, and source bytes are unchanged. Read [the first-gate receipt](reviews/2026-11-07-m8-first-package-gate.md) and [M8-PKG-001](change-records/M8-PKG-001-portability.md).
+
+Literal resume: **Continue the recorded M8-PKG-001 worker once dispatched; do not restart the first gate or redispatch Terra/D13. Only equivalent Unicode escapes and the existing helper import are permitted. Verify identity, run a new clean-archive package gate and fresh Astra, then release G8 only if every M8 gate passes. G9 remains closed; no D09.**
+
+## Historical checkpoints below
+
+# Live checkpoint: M8 first package gate running
+
+M8 candidate `ac66bd65a4d99957b1e631cadb73fe3b4e346d2a` contains reviewed Terra DOC-M8 `509fe3d`; product files are unchanged from accepted D13 record `4cba258`. The first clean-archive gate is still running in session **61750**, in the local verification run's `milestone-20261106` evidence directory. Do not restart it. The SSD interruption and restored candidate/protected-file checks are recorded locally.
+
+Two package diagnostics have been observed, but final Status/counts are pending: literal U+2019 characters in `R/report_targets.R` and an undeclared `setNames` import. An unapplied, packaging-only proposal preserves identical parsed R expressions and all D13 logic/tests/attempts. No product correction may occur until the original gate ends and its complete result is retained.
+
+Literal resume: **Join M8 package session61750 for ac66bd6; inspect the local package-gate.json and final logs, never infer success from process exit. Do not redispatch Terra or redo D13. If the complete check confirms only the two known packaging issues, proceed with the recorded narrow M8 packaging correction, a new clean-archive gate, and fresh Astra on the corrected immutable snapshot. G8/G9 remain closed until their respective gates pass; no D09 in this run.**
+
+## Historical checkpoints below
+
 # Current checkpoint: D13 accepted; M8 gates remain
 
 Read [Sol's acceptance receipt](reviews/2026-11-06-d13-extra7-sol-acceptance.md) and [fresh Astra](reviews/2026-11-06-d13-extra7-astra.md). Product `8b18c5ba7547efa06b5bc3e6790ad73b1c34be70` is integrated after all packet gates passed; worker `9180c24efd0de955d1f9d6068266c677f958f994` is preserved. Source and archive-installed focused suites each pass 3,525 assertions with zero failures, errors, warnings or skips. Independent oracle 264/264; end-to-end coverage 447 distinct inputs; previous attempts unchanged. Native A/B/C/D/report each exits 0; saved-value/provenance/offline HTML readback passes. Astra audit_pass yes, no findings. All owned agents/processes terminal. Full source/package checks were not run in this cycle.

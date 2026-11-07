@@ -1,0 +1,18 @@
+--- a/R/report_targets.R
++++ b/R/report_targets.R
+@@ -49 +49 @@
+-  identifier_separator <- "[[:space:]_,.;:/#=()'’\"-]"
++  identifier_separator <- "[[:space:]_,.;:/#=()'\u2019\"-]"
+@@ -138 +138 @@
+-    "(?:[[:space:]]*[:=#/._-][[:space:]]*|[[:space:]]+['’\"()_-][[:space:]]*)",
++    "(?:[[:space:]]*[:=#/._-][[:space:]]*|[[:space:]]+['\u2019\"()_-][[:space:]]*)",
+@@ -143 +143 @@
+-    "(?:[[:space:]]*[:=#/._-][[:space:]]*|[[:space:]]+['’\"()_-][[:space:]]*)",
++    "(?:[[:space:]]*[:=#/._-][[:space:]]*|[[:space:]]+['\u2019\"()_-][[:space:]]*)",
+@@ -180 +180 @@
+-  if (!grepl("^[[:alpha:]][[:alpha:][:digit:][:space:],.;:'’():-]*$", value, perl = TRUE)) return("")
++  if (!grepl("^[[:alpha:]][[:alpha:][:digit:][:space:],.;:'\u2019():-]*$", value, perl = TRUE)) return("")
+--- a/NAMESPACE
++++ b/NAMESPACE
+@@ -32,0 +33 @@
++importFrom(stats,setNames)

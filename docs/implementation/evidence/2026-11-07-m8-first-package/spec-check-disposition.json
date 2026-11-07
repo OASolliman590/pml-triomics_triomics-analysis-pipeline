@@ -1,0 +1,22 @@
+{
+  "validator_exit": 1,
+  "failure": "Frozen content changed: AGENTS.md",
+  "all_frozen_entry_mismatches": [
+    {
+      "path": "AGENTS.md",
+      "frozen_sha256": "ee206cd77888e430dc37ad6e7461bfd62210adffd2633562d5264cee1bc4d4a5",
+      "actual_sha256": "e0de9739ef8e3062f977ed221e9cbd9a5fb5c2693df04dbdf0441889c4f71e1a",
+      "same_as_accepted_M7_product": true,
+      "last_commit": "b585b2620e3a5d357bf29faf7c92fc61861a06ec docs: record accepted G2 and resume point"
+    },
+    {
+      "path": "CLAUDE.md",
+      "frozen_sha256": "d4b356fae3df49af3e0ff6b602b19c6fe1136c5d1e4d9de7ef50beb8c92e60ec",
+      "actual_sha256": "c7f5cf5bfc72084066d255c1e5d9034b677a1eadc65cdea5485028a00a098df8",
+      "same_as_accepted_M7_product": true,
+      "last_commit": "b585b2620e3a5d357bf29faf7c92fc61861a06ec docs: record accepted G2 and resume point"
+    }
+  ],
+  "changed_in_M8": false,
+  "disposition": "Unchanged historical delivery-freeze mismatch; no specification or hash edited. Carry exact failure to fresh M8 Astra; separate frozen-kit audit remains pending. Not a validator pass."
+}

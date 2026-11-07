@@ -37,11 +37,11 @@
   },
   "active_workers": [],
   "orchestration_control": {
-    "status": "M8_archive_gate_pending",
-    "last_reconciled": "2026-11-06T16:53:49.196112+00:00",
+    "status": "M8_packaging_worker_pending",
+    "last_reconciled": "2026-11-07T07:30:59.012000+00:00",
     "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "DOC-M8 reviewed/integrated; package gate next on immutable candidate; fresh Astra after pass; G8/G9closed",
+    "disposition": "First full package tests passed; two package portability diagnostics remain; bounded M8 correction then new archive gate and fresh Astra; D13 not reopened",
     "current_gate": {
       "status": "packet_accepted_milestone_pending",
       "candidate": "8b18c5ba7547efa06b5bc3e6790ad73b1c34be70",
@@ -7279,6 +7279,22 @@
       "effective_settings_exposed": false,
       "Sol_review": "pass",
       "packet_rework": false
+    },
+    {
+      "at": "2026-11-07T07:30:59.012000+00:00",
+      "event": "M8_first_package_gate_failed_portability_only",
+      "candidate": "ac66bd65a4d99957b1e631cadb73fe3b4e346d2a",
+      "status_line": "Status: 1 WARNING, 1 NOTE",
+      "counts": {
+        "fail": 0,
+        "warn": 15,
+        "skip": 0,
+        "pass": 11518
+      },
+      "receipt_ref": "docs/implementation/evidence/2026-11-07-m8-first-package/receipt.json",
+      "D13_reopened": false,
+      "G8": "closed",
+      "G9": "closed"
     }
   ],
   "packets": {
@@ -9146,7 +9162,7 @@
       "focused_final_rereviews_used": 1
     },
     "M8": {
-      "status": "package_gate_pending",
+      "status": "package_portability_correction",
       "review_ref": null,
       "commit": null,
       "blocking_packets": [],
@@ -9171,7 +9187,19 @@
       "documentation_repairs": 0,
       "documentation_ref": "docs/implementation/milestones/M8.md",
       "documentation_commit": "509fe3dcf05622a802ef95077ed5d070945a4e2c",
-      "documentation_review": "Sol pass"
+      "documentation_review": "Sol pass",
+      "first_package_candidate": "ac66bd65a4d99957b1e631cadb73fe3b4e346d2a",
+      "first_package_status": "Status: 1 WARNING, 1 NOTE",
+      "first_package_counts": {
+        "fail": 0,
+        "warn": 15,
+        "skip": 0,
+        "pass": 11518
+      },
+      "first_package_receipt": "docs/implementation/evidence/2026-11-07-m8-first-package/receipt.json",
+      "packaging_correction_ref": "docs/implementation/change-records/M8-PKG-001-portability.md",
+      "packaging_initial_attempts": 1,
+      "packaging_repairs": 0
     },
     "M9": {
       "status": "not_started",
