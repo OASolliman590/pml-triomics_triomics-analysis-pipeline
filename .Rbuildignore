@@ -22,3 +22,4 @@
 (^|/)CONTEXT\.md$
 (^|/)FILE_MANIFEST\.json$
 (^|/)fleet-discovery\.json$
+(^|/)vignettes/(paired-study|independent-study)\.qmd$

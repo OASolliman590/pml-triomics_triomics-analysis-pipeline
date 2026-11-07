@@ -1622,4 +1622,4 @@ Product/fixture baseline RED before implementation is retained separately. Fresh
 Astra implementation review is required for the risky D04 diff before D05 release;
 scope approval alone is not that review.
 
-Coordinator packaging preflight: see `docs/implementation/reviews/2026-11-07-d09-quarto-packaging.md`. A narrow clean-blob `.Rbuildignore` rule is pending; never stage protected live dirt. Same Luna repair1 remains active; no gate accepted.
+Coordinator packaging preflight: see `docs/implementation/reviews/2026-11-07-d09-quarto-packaging.md`. The narrow clean-blob `.Rbuildignore` rule passed the packaging-only diagnostic and independent metadata review; it is integrated without staging or changing protected live dirt. This diagnostic is not the full package gate. Same Luna repair1 remains active; no gate accepted.
