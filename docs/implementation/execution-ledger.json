@@ -7430,6 +7430,20 @@
       "remaining_targeted_repairs": 1,
       "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-repair1-dispatch.md",
       "G9": "closed"
+    },
+    {
+      "at": "2026-11-07T15:49:44.358849+00:00",
+      "event": "D09_coordinator_quarto_packaging_scope_recorded",
+      "candidate": "0fc0890ccab2b4118cf49ddf6cb1f9e27fcbfe23",
+      "diagnostic_status": "Status: 1 WARNING, 1 NOTE",
+      "acceptance_credit": false,
+      "allowlist": [
+        ".Rbuildignore"
+      ],
+      "reason": "Keep source-run Quarto tutorials in Git archive, outside R package vignette engine",
+      "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-quarto-packaging.md",
+      "worker_repairs_unchanged": 1,
+      "G9": "closed"
     }
   ],
   "packets": {

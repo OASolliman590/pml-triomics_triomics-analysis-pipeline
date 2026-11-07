@@ -1621,3 +1621,5 @@ implementation, including internal rounds. One further targeted repair maximum.
 Product/fixture baseline RED before implementation is retained separately. Fresh
 Astra implementation review is required for the risky D04 diff before D05 release;
 scope approval alone is not that review.
+
+Coordinator packaging preflight: see `docs/implementation/reviews/2026-11-07-d09-quarto-packaging.md`. A narrow clean-blob `.Rbuildignore` rule is pending; never stage protected live dirt. Same Luna repair1 remains active; no gate accepted.
