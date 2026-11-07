@@ -7362,6 +7362,26 @@
       "repairs_used": 0,
       "G8": "released",
       "G9": "closed"
+    },
+    {
+      "event": "M9_historical_documentation_reconciliation",
+      "ruling": "Restore missing canonical DOC-M2 and DOC-M5 from accepted receipts, explicitly dated retrospective; no old software re-execution, no retroactive claim of prior documentation completion.",
+      "reason": "D09 AC3 and final close require all nine documentation packets accounted for; acceptance records exist but two notes are absent.",
+      "risk_if_wrong": "Any unsupported historical claim must be corrected from source receipt, not accepted on inference.",
+      "files_allowed": [
+        "docs/implementation/milestones/M2.md",
+        "docs/implementation/milestones/M5.md"
+      ],
+      "G9": "closed"
+    },
+    {
+      "at": "2026-11-07T13:26:32.792267+00:00",
+      "event": "M9_retrospective_DOC_M2_M5_integrated",
+      "worker_commit": "9e4e2ce17d79b35bb41256aa3f214bfa8e36c7e9",
+      "integration_commit": "1f14e8b59a8384bd20a47399a3c53e7f9b404a99",
+      "review_ref": "docs/implementation/reviews/2026-11-07-m9-historical-docs.md",
+      "historical_execution_rerun": false,
+      "G9": "closed"
     }
   ],
   "packets": {
