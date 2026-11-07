@@ -1,0 +1,50 @@
+{
+  "packet_id": "D-T09",
+  "request_type": "registration_request",
+  "request_status": "registration_requested",
+  "accepted": false,
+  "namespace_edits": false,
+  "public_namespace_request": {
+    "exports": [],
+    "manual_pages": []
+  },
+  "dependencies": [
+    "D-T13",
+    "D-T15"
+  ],
+  "local_files": [
+    "vignettes/paired-study.qmd",
+    "vignettes/independent-study.qmd",
+    "R/reproduction_manifest.R",
+    "tests/testthat/test-D-T09.R",
+    "inst/examples/tickets/D-T09.yaml",
+    "docs/implementation/registrations/D-T09.json"
+  ],
+  "owned_functions": [
+    "triomics_reproduction_authority_snapshot",
+    "triomics_reproduction_materialize_fixture",
+    "triomics_reproduction_run_installed",
+    "triomics_reproduction_manifest"
+  ],
+  "interfaces": {
+    "installed_runner": "Runs the installed relative exec/triomics launcher in executable A, B, C, D, and report order against the same materialized config and reads producer outputs through the existing report bundle consumer.",
+    "wrapper_manifest": "Records byte-bound input/config/output references, installed package identity, source revision, and authoritative packet/requirement/ledger file hashes. Execution status, synthetic software evidence, scientific validation, packet acceptance, and publication remain separate fields.",
+    "programme_reconciliation": "Supplied authoritative identities are validated as complete, unique, and cross-referenced. Counts and sorted-identity hashes are recorded while final packet/requirement/conditional acceptance reconciliation remains pending Sol; no all-accepted roster is embedded.",
+    "missingness_and_clinical": "Not exercised by this packet's paired/independent result fixtures. Sol's merged installed clinical smoke should use the accepted D-T15 materializer, include the approved placeholder token in a measurement, and verify the complete-case clinical exclusion read-back."
+  },
+  "verification_evidence": {
+    "status": "worker_candidate_verification_pending",
+    "focused_test": "Rscript --vanilla -e \"testthat::test_local(filter='D-T09', stop_on_failure=TRUE)\"",
+    "walkthroughs": [
+      "vignettes/paired-study.qmd",
+      "vignettes/independent-study.qmd"
+    ],
+    "installed_restart_contract": "The test invokes triomics_export_a(request, output, resume=TRUE, interrupt='feature:prot') in a clean installed subprocess, then checks partial-payload recovery, full checkpoint reuse, block-local source invalidation, and seed/configuration/version invalidation."
+  },
+  "acceptance": {
+    "status": "pending_sol_acceptance",
+    "scientific_claims": "Public synthetic software evidence only; no biological, clinical, or real-data validation is established.",
+    "G8_G9": "remain closed"
+  },
+  "integration_request": "No shared CLI, stage registry, namespace, schema, specification, or ledger change is requested. Sol owns integration, final programme reconciliation, packet acceptance, and milestone acceptance."
+}

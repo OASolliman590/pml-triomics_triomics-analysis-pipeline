@@ -1,0 +1,104 @@
+---
+title: "Paired synthetic study walkthrough"
+format: html
+execute:
+  echo: true
+  cache: false
+  freeze: false
+---
+
+This walkthrough runs the installed `triomics` command line on a public synthetic
+paired study. The six subjects each have a baseline and followup sample. The
+analysis table and figure below are read from the completed report; this document
+does not fit or refit a model.
+
+```{r}
+if (!requireNamespace("triomics", quietly = TRUE)) {
+  stop("The archive-installed triomics package is required.", call. = FALSE)
+}
+project_root <- triomics:::triomics_reproduction_find_project_root(getwd())
+evidence_root <- Sys.getenv("TRIOMICS_PACKET_EVIDENCE_ROOT", unset = "")
+if (!nzchar(evidence_root) || !dir.exists(evidence_root)) {
+  stop("Set TRIOMICS_PACKET_EVIDENCE_ROOT to a local evidence directory.", call. = FALSE)
+}
+fixture_root <- tempfile("paired-fixture-", tmpdir = evidence_root)
+fixture <- triomics:::triomics_reproduction_materialize_fixture("paired", fixture_root)
+output_root <- tempfile("paired-installed-run-", tmpdir = evidence_root)
+run <- triomics:::triomics_reproduction_run_installed(
+  fixture, output_root, project_root = project_root
+)
+```
+
+## Saved paired results
+
+The producer stages validate, prepare, analyze, integrate, and render the paired
+fixture. The following rows retain stable feature identities, six subjects, six
+complete pairs, and the target-minus-reference delta difference.
+
+```{r}
+saved_results <- utils::read.delim(
+  file.path(output_root, "report", "results.tsv"),
+  check.names = FALSE, stringsAsFactors = FALSE
+)
+paired_results <- saved_results[
+  saved_results$block_id == "block_1" &
+    saved_results$contrast_id == "target_minus_reference",
+  , drop = FALSE
+]
+paired_results <- paired_results[order(paired_results$feature_key), , drop = FALSE]
+stopifnot(
+  nrow(paired_results) > 0L,
+  all(startsWith(paired_results$feature_key, "fk1|")),
+  all(paired_results$representation_id == "delta"),
+  all(paired_results$effect_unit == "delta_difference"),
+  all(paired_results$n_subjects == 6L),
+  all(paired_results$n_pairs == 6L)
+)
+knitr::kable(
+  paired_results[c(
+    "feature_key", "n_subjects", "n_pairs", "effect", "effect_unit"
+  )],
+  digits = 4,
+  caption = "Saved paired effects from six baseline/followup subject pairs"
+)
+```
+
+```{r}
+graphics::dotchart(
+  paired_results$effect,
+  labels = paired_results$feature_key,
+  xlab = "Followup minus baseline effect (synthetic arbitrary units)",
+  main = "Saved paired effects by stable feature key"
+)
+```
+
+## Reproduction receipt
+
+The receipt records successful software execution while leaving scientific and
+packet acceptance pending. Synthetic data establish software behavior only.
+
+```{r}
+knitr::kable(data.frame(
+  item = c(
+    "Installed source revision", "Execution status", "Scientific validation",
+    "Packet acceptance", "Manifest ID", "Manifest byte SHA-256",
+    "Packet / requirement records", "Conditional scope records"
+  ),
+  value = c(
+    run$installed$source_revision,
+    run$manifest$execution_status,
+    run$manifest$scientific_validation_status,
+    run$manifest$packet_acceptance_status,
+    run$manifest$manifest_id,
+    run$manifest_byte_sha256,
+    paste(run$manifest$programme_accounting$packet_count,
+          run$manifest$programme_accounting$requirement_count, sep = " / "),
+    run$manifest$programme_accounting$conditional_scope_count
+  ),
+  check.names = FALSE
+))
+```
+
+This walkthrough contains no missing measurement or clinical values and does not
+claim missingness coverage. Sol's merged clinical smoke should use the accepted
+D-T15 fixture to verify the supported complete-case exclusion path.

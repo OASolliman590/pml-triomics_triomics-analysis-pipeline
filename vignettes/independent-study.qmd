@@ -1,0 +1,111 @@
+---
+title: "Independent synthetic study walkthrough"
+format: html
+execute:
+  echo: true
+  cache: false
+  freeze: false
+---
+
+This walkthrough runs the installed `triomics` command line on a public synthetic
+independent study. It contains twelve unique samples, six controls and six
+treatments. Samples are the generalization units; the analysis does not pair
+observations. The report table and plot below come from the saved results, with
+no model fitting in this document.
+
+```{r}
+if (!requireNamespace("triomics", quietly = TRUE)) {
+  stop("The archive-installed triomics package is required.", call. = FALSE)
+}
+project_root <- triomics:::triomics_reproduction_find_project_root(getwd())
+evidence_root <- Sys.getenv("TRIOMICS_PACKET_EVIDENCE_ROOT", unset = "")
+if (!nzchar(evidence_root) || !dir.exists(evidence_root)) {
+  stop("Set TRIOMICS_PACKET_EVIDENCE_ROOT to a local evidence directory.", call. = FALSE)
+}
+fixture_root <- tempfile("independent-fixture-", tmpdir = evidence_root)
+fixture <- triomics:::triomics_reproduction_materialize_fixture(
+  "independent", fixture_root
+)
+output_root <- tempfile("independent-installed-run-", tmpdir = evidence_root)
+run <- triomics:::triomics_reproduction_run_installed(
+  fixture, output_root, project_root = project_root
+)
+```
+
+## Saved independent results
+
+The producer stages validate, prepare, analyze, integrate, and render the
+independent fixture. Each result row retains its stable feature identity,
+twelve-sample count, independent group contrast, and group-difference unit.
+
+```{r}
+saved_results <- utils::read.delim(
+  file.path(output_root, "report", "results.tsv"),
+  check.names = FALSE, stringsAsFactors = FALSE
+)
+independent_results <- saved_results[
+  saved_results$block_id == "block_1" &
+    saved_results$contrast_id == "target_minus_reference",
+  , drop = FALSE
+]
+independent_results <- independent_results[
+  order(independent_results$feature_key), , drop = FALSE
+]
+stopifnot(
+  nrow(independent_results) > 0L,
+  all(startsWith(independent_results$feature_key, "fk1|")),
+  all(independent_results$representation_id == "levels"),
+  all(independent_results$effect_unit == "group_difference"),
+  all(independent_results$n_samples == 12L),
+  all(is.na(independent_results$n_pairs) | independent_results$n_pairs == 0L)
+)
+knitr::kable(
+  independent_results[c(
+    "feature_key", "n_samples", "effect", "effect_unit"
+  )],
+  digits = 4,
+  caption = "Saved independent treatment-minus-control group differences"
+)
+```
+
+```{r}
+graphics::dotchart(
+  independent_results$effect,
+  labels = independent_results$feature_key,
+  xlab = "Treatment minus control effect (synthetic arbitrary units)",
+  main = "Saved independent effects by stable feature key"
+)
+```
+
+## Reproduction receipt
+
+The receipt records successful software execution while keeping scientific and
+packet acceptance pending. It binds the supplied programme records by file
+identity and hash without asserting an all-accepted roster.
+
+```{r}
+knitr::kable(data.frame(
+  item = c(
+    "Installed source revision", "Execution status", "Scientific validation",
+    "Packet acceptance", "Manifest ID", "Manifest byte SHA-256",
+    "Packet / requirement records", "Conditional scope records"
+  ),
+  value = c(
+    run$installed$source_revision,
+    run$manifest$execution_status,
+    run$manifest$scientific_validation_status,
+    run$manifest$packet_acceptance_status,
+    run$manifest$manifest_id,
+    run$manifest_byte_sha256,
+    paste(run$manifest$programme_accounting$packet_count,
+          run$manifest$programme_accounting$requirement_count, sep = " / "),
+    run$manifest$programme_accounting$conditional_scope_count
+  ),
+  check.names = FALSE
+))
+```
+
+This walkthrough contains no missing measurement or clinical values and does
+not claim missingness coverage. Sol's merged clinical smoke should use the
+accepted D-T15 fixture to verify the supported complete-case exclusion path.
+The twelve samples are deliberately independent and have no subject-pair count.
