@@ -35,69 +35,13 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "agent": "/root/m9_d09_luna",
-      "role": "D-T09 final repair2 verification",
-      "requested_model": "gpt-6-luna",
-      "requested_effort": "max",
-      "effective_settings_exposed": false,
-      "base": "507af2b57ba7a5e01cb91c2d22817dbbf91b53c4",
-      "status": "focused_suite_running",
-      "allowed_next_transition": "Join full suite; on pass Sol independently verifies before integration; on failure stop, no repair3",
-      "cursor": null,
-      "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4"
-    },
-    {
-      "agent": "/root/m9_docs_terra",
-      "role": "DOC-M9 initial draft",
-      "requested_model": "gpt-6.1-terra",
-      "requested_effort": "max",
-      "effective_settings_exposed": false,
-      "base": "8aeb0646d9166451e4aa7e33eca514ac4e147b6d",
-      "product_candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
-      "status": "drafting",
-      "allowlist": [
-        "docs/implementation/milestones/M9.md"
-      ],
-      "allowed_next_transition": "Sol inspects draft; finalization waits for integrated/tested evidence; no acceptance",
-      "cursor": null
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
-    "status": "D09_repair2_reviews_pass_focused_running",
-    "last_reconciled": "2026-11-07T17:13:20.252093+00:00",
-    "active_handoffs": [
-      {
-        "agent": "/root/m9_d09_luna",
-        "role": "D-T09 final repair2 verification",
-        "requested_model": "gpt-6-luna",
-        "requested_effort": "max",
-        "effective_settings_exposed": false,
-        "base": "507af2b57ba7a5e01cb91c2d22817dbbf91b53c4",
-        "status": "focused_suite_running",
-        "allowed_next_transition": "Join full suite; on pass Sol independently verifies before integration; on failure stop, no repair3",
-        "cursor": null,
-        "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4"
-      },
-      {
-        "agent": "/root/m9_docs_terra",
-        "role": "DOC-M9 initial draft",
-        "requested_model": "gpt-6.1-terra",
-        "requested_effort": "max",
-        "effective_settings_exposed": false,
-        "base": "8aeb0646d9166451e4aa7e33eca514ac4e147b6d",
-        "product_candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
-        "status": "drafting",
-        "allowlist": [
-          "docs/implementation/milestones/M9.md"
-        ],
-        "allowed_next_transition": "Sol inspects draft; finalization waits for integrated/tested evidence; no acceptance",
-        "cursor": null
-      }
-    ],
+    "status": "Sol_D09_independent_focused_running",
+    "last_reconciled": "2026-11-07T17:22:52.870072+00:00",
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "Both bounded read-only reviews pass8a82a64; complete focused suite active; no repair3; G9closed.",
+    "disposition": "Luna and both reviewers terminal; DOC-M9 draft terminal/reviewed. Sol focused process69443/session94861 active; no product integration or G9 release.",
     "current_gate": {
       "candidate": "4c0c59d91b5c8f7117b1097a57e68b0211f0e45a",
       "package": "Status: OK",
@@ -7547,6 +7491,24 @@
       "documentation_attempts": 1,
       "documentation_repairs": 0,
       "G9": "closed"
+    },
+    {
+      "at": "2026-11-07T17:22:52.870072+00:00",
+      "event": "D09_worker_green_DOC_M9_draft_reconciled_Sol_running",
+      "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
+      "worker_counts": {
+        "fail": 0,
+        "warn": 0,
+        "skip": 0,
+        "pass": 218
+      },
+      "worker_terminal": true,
+      "DOC_M9_terminal": true,
+      "DOC_M9_draft_commit": "b6fbcaa2bdc3e077db284250b50e3e98f7148587",
+      "Sol_child_pid": 69443,
+      "Sol_session": 94861,
+      "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-worker-green-doc-draft.md",
+      "G9": "closed"
     }
   ],
   "packets": {
@@ -9321,7 +9283,17 @@
         "Standards": "pass_bounded",
         "Spec": "pass_bounded",
         "native_full_suite": "pending"
-      }
+      },
+      "worker_verification": {
+        "candidate": "8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4",
+        "exit_code": 0,
+        "fail": 0,
+        "warn": 0,
+        "skip": 0,
+        "pass": 218,
+        "receipt_ref": "docs/implementation/reviews/2026-11-07-d09-worker-green-doc-draft.md"
+      },
+      "Sol_verification": "running"
     }
   },
   "milestones": {
@@ -9492,12 +9464,14 @@
       "focused_rereviews": 0,
       "authorization": "Continue D09/M9 from f2fe176 using Luna and agreed review process; do not redo M8/D13; G9 gated",
       "documentation": {
-        "status": "drafting",
+        "status": "draft_reviewed_waiting_integration",
         "attempts": 1,
         "repairs": 0,
         "worker": "/root/m9_docs_terra",
         "dispatch_ref": "docs/implementation/reviews/2026-11-07-doc-m9-draft-dispatch.md",
-        "accepted": false
+        "accepted": false,
+        "draft_commit": "b6fbcaa2bdc3e077db284250b50e3e98f7148587",
+        "draft_review_ref": "docs/implementation/reviews/2026-11-07-d09-worker-green-doc-draft.md"
       }
     }
   },

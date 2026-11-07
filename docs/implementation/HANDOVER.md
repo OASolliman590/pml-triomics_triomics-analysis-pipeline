@@ -1,3 +1,11 @@
+# Live checkpoint: Sol independent D09 focused verification running
+
+Read [worker GREEN and documentation draft receipt](reviews/2026-11-07-d09-worker-green-doc-draft.md). Candidate8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4 passed both bounded reviews and the worker's complete focused suite (218pass,0fail/warn/skip). Same Luna is terminal; its two repairs are exhausted. Terra draftb6fbcaa is terminal/reviewed but not integrated; one bounded finalization remains. Sol's independent fresh-output focused run is active: parent69439/child69443/session94861, local sol-focused-8a82a64/process-receipt.json. No product integration or acceptance; G9closed.
+
+Literal resume: **Join existing Sol verification session94861/read its durable receipt; do not rerun Luna or restart the suite. On pass integrate the fixed product serially and finalize DOC-M9 with the same Terra, then finish all same-commit final gates and fresh Astra. On failure stop the bounded implementation cycle; no repair3. Preserve M8/G8 and D13.**
+
+## Historical checkpoints below
+
 # Live checkpoint: D09 final repair2 frozen at8a82a64
 
 Read [the immutable verification checkpoint](reviews/2026-11-07-d09-repair2-verification.md). Same Luna is installing/testing8a82a6465e97d8abf6d7d4bdf5e07a46177f72a4; both bounded read-only Sol reviews passed; the complete focused suite is running. Source offline32 reporter assertions and12 no-fit replay cases passed before freeze; full installed suite remains pending. The Spec full-wrapper probe timed out with no credit; its14-case boundary review passed. No D09 integration. Terra DOC-M9 draft is active on /root/m9_docs_terra (see reviews/2026-11-07-doc-m9-draft-dispatch.md); draft inspection/finalization remains gated by actual evidence. Attempts initial1 + repairs2/2; no repair3. M8/G8 and D13 preserved; G9closed.
