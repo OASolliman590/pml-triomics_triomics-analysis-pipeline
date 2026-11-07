@@ -1,3 +1,11 @@
+# Live checkpoint: D09 initial reviews require repair1
+
+Read [the initial review receipt](reviews/2026-11-07-d09-initial-review.md). Candidate0fc0890 is unintegrated. Both installed walkthroughs and the isolated restart block ran, but no full focused suite is green. Fresh Standards/Spec reviews and independent Sol probes identify three defects: rehashed-result lineage, offline resource detection, and spaced command paths. M8/G8 and D13 remain accepted; G9closed.
+
+Literal resume: **Join the recorded same-worker D09 repair1 if dispatched; never start a new worker or reset attempts. Preserve0fc0890 and all earlier failed snapshots. Resolve the three named findings within the two owned files, rerun focused verification, and continue the agreed final gates only after review/read-back pass. M9 Astra calls0, rereviews0. Keep G9closed until every acceptance gate passes.**
+
+## Historical checkpoints below
+
 # Live checkpoint: same D09 Luna resumed after usage interruption
 
 Read [the continuation receipt](reviews/2026-11-07-d09-same-worker-resume.md). `/root/m9_d09_luna` is the existing worker, verified running after explicit followup; no new worker or attempt reset. Worker basef2fe176 and dirty owned helper/test remain preserved. Initial1, repairs0/2; M9 reviews0. Integration HEAD039fcb4 includes reviewed retrospective M2/M5 notes; M8/G8 and D13 remain accepted. G9closed.
