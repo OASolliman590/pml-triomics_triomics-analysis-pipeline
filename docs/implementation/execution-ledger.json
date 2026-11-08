@@ -35,13 +35,49 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "worker_id": "/root/readiness_c07_protocol_terra",
+      "role": "Terra",
+      "requested_model": "gpt-6.1-terra",
+      "requested_effort": "max",
+      "effective_settings_exposed": false,
+      "scope": "RDY-002 C07 protocol documentation",
+      "base_commit": "276f90b",
+      "status": "running",
+      "attempts": 1,
+      "repairs": 0,
+      "allowlist": [
+        "docs/implementation/readiness/RDY-002-c07-qualification-protocol.md",
+        "docs/implementation/readiness/RDY-002-c07-protocol.json"
+      ],
+      "next_transition": "Sol review then immutable protocol audit; no coding or fitting before pass"
+    }
+  ],
   "orchestration_control": {
-    "status": "closed",
-    "last_reconciled": "2026-11-07T20:41:51.452220+00:00",
-    "active_handoffs": [],
+    "status": "readiness_active",
+    "last_reconciled": "2026-11-08T12:52:39.952781+00:00",
+    "active_handoffs": [
+      {
+        "worker_id": "/root/readiness_c07_protocol_terra",
+        "role": "Terra",
+        "requested_model": "gpt-6.1-terra",
+        "requested_effort": "max",
+        "effective_settings_exposed": false,
+        "scope": "RDY-002 C07 protocol documentation",
+        "base_commit": "276f90b",
+        "status": "running",
+        "attempts": 1,
+        "repairs": 0,
+        "allowlist": [
+          "docs/implementation/readiness/RDY-002-c07-qualification-protocol.md",
+          "docs/implementation/readiness/RDY-002-c07-protocol.json"
+        ],
+        "next_transition": "Sol review then immutable protocol audit; no coding or fitting before pass"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "All M9 workers and gate processes terminal; final same-Q evidence and fresh Astra pass reconciled; Sol accepts D09/M9 and releases G9; no next packet started.",
+    "disposition": "RDY001 accepted; same audit terminal. Terra optional-methods research reviewed/integrated. Fresh RDY002 protocol writer active; private onboarding stays local. M7-M9/G7-G9 preserved.",
     "current_gate": {
       "candidate": "2f8c83727be9f693d0e60457024edc55474c006b",
       "package": "Status: OK",
@@ -10054,10 +10090,19 @@
     "G7_G8_G9": "released",
     "attempts": {
       "RDY-001_initial_audit": 1,
-      "RDY-001_focused_rereview": 0
+      "RDY-001_focused_rereview": 0,
+      "RDY-002": {
+        "documentation_initial": 1,
+        "documentation_repairs": 0,
+        "audit_initial": 0,
+        "focused_rereview": 0,
+        "implementation_initial": 0,
+        "implementation_repairs": 0
+      }
     },
     "worker_ledger": "local readiness-20261108-01/state.json",
     "private_inputs": "local coordinator inspection only; no delegated rows or public artifacts",
-    "spec_readiness_approval_ref": "docs/implementation/readiness/spec-readiness-approval.json"
+    "spec_readiness_approval_ref": "docs/implementation/readiness/spec-readiness-approval.json",
+    "first_study_readiness": "local structure inspected; authoritative identity/processing input pending; no fit"
   }
 }

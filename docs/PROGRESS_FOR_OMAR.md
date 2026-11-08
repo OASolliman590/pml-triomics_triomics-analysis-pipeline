@@ -1,17 +1,16 @@
-# Pipeline progress — 7 November 2026
+# Pipeline progress — 8 November 2026
 
-The goal is a reproducible pipeline with a trustworthy offline report. M8 is now accepted and G8 released. Reports present saved molecular, clinical and target evidence with analysis history and unavailable-method labels.
+The goal is now study readiness and scientific qualification. Required Stage D work is accepted: M7, M8 and M9 are complete, and G7/G8/G9 are released. Paired and independent synthetic walkthroughs, a clinical missingness smoke, the full source suite and a clean package archive passed; fresh M9 Astra review passed. This is software acceptance, not validation of the three studies.
 
 | Area | Current evidence |
 |---|---|
-| Offline report | D08 accepted on synthetic fixtures |
-| Clinical section | D15 accepted; aggregate release unavailable |
-| Target dossier | D13 accepted; prior repairs preserved |
-| M8 combined package | 11,518 passes; fresh Astra passed |
-| Final reproduction | D09/M9 not started; G9 closed |
+| Core pipeline and reports | Accepted on synthetic fixtures; M8/D13 history preserved |
+| Current specification review | RDY-001 Astra passed; Sol recorded exact-hash approval |
+| C-07 scientific controls | Protocol being drafted; no qualification fits run |
+| First-study onboarding | Local structural inspection; identity and processing unverified |
+| Optional methods | Primary-source research recorded; conditional gates still apply |
+| Real-study results | No new study analysis or biological validation |
 
-The clean archive ended with exactly Status: OK, zero failures, zero skips and the same fifteen named warnings. The only new product correction encoded four characters portably and declared an existing R helper; D13's logic and tests were unchanged.
+RDY-001 reconciles the entrypoint checksum discrepancies without erasing historical manifests. Its current approval is separate from the original delivery record. Fasting, diabetic-treatment and organophosphate studies remain separate, with proteomic, lipidomic and metabolomic inputs checked independently.
 
-These are software results, not biological validation or performance evidence for the fasting, diabetic-treatment or organophosphate studies. No private study data were read. Conditional methods and the separate frozen-kit audit remain unresolved and receive no completion credit.
-
-Next is D09/M9 reproduction and final system acceptance. No new decision is needed. Sync: local records only; no Notion update, AIU run or GitHub push.
+Next acceptance: review and freeze the C-07 protocol, then execute its bounded controls. Needs Omar: the authoritative first-study sample/participant/visit crosswalk and lab preprocessing record. No aliases or pairing have been adopted from formatting alone. Sync: local records only; no Notion update, AIU run or GitHub push.
