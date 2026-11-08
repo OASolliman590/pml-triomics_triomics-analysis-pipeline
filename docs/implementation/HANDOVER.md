@@ -1,3 +1,28 @@
+# Active: same RDY-002 Luna resumed after reviewed dependency seam
+
+Fresh RDY-003 Astra passed; Sol applied only the two exact DESCRIPTION Suggests
+pins at `16077f5` ([receipt](reviews/2026-11-08-rdy-003-dependency-astra.md)).
+No install, lock or statistical change. The same `/root/readiness_c07_runner_luna`
+is continuing its initial attempt in `/private/tmp/triomics-rdy002-c07-runner`,
+base `16077f5`, with its uncommitted tests preserved. Allowlist remains the
+installed qualification runner and its one test file. Repairs 0/2. Native fits: 0.
+RDY-002 scientific protocol initial+focused reviews remain exhausted; RDY-003
+initial dependency audit passed, focused rereviews 0. Neither accepts the runner.
+
+The user-requested local fasting structure report has been reviewed by Sol.
+Original source hashes match. Candidate regions and potential links are mapped;
+participant/visit identities and lab processing remain unverified. Omar is
+looking for unavailable lab notes. No study fit or public/private-data upload.
+
+Literal resume: **Join existing Luna, do not restart it. Review its immutable
+GREEN diff and no-fit process-safety evidence, then independently verify the
+runner and execute only the frozen 2550-fit protocol if preflight passes. Keep
+reservation/crash history and all attempt limits. Do not invent study mapping,
+processing, clinical endpoints or conditional methods. M1–M9/G7–G9 remain
+accepted/released. Exact worker/process state is local readiness state.json.**
+
+## Historical checkpoints below
+
 # Active: RDY-003 shared dependency audit; RDY-002 initial worker preserved
 
 RDY-001 is accepted. The RDY-002 scientific protocol and one packaging rereview

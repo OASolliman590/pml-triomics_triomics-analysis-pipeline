@@ -6,13 +6,13 @@ The goal is now study readiness and scientific qualification. Required Stage D w
 |---|---|
 | Core pipeline and reports | Accepted on synthetic fixtures; M8/D13 history preserved |
 | Current specification review | RDY-001 Astra passed; Sol recorded exact-hash approval |
-| C-07 scientific controls | Protocol and corrected runner scope reviewed; initial tests underway; no fits |
+| C-07 scientific controls | Protocol and runner scope reviewed; implementation underway; no fits |
 | First-study onboarding | Local structural inspection; identity and processing unverified |
 | Optional methods | Primary-source research recorded; conditional gates still apply |
 | Real-study results | No new study analysis or biological validation |
 
 RDY-001 reconciles the entrypoint checksum discrepancies without erasing historical manifests. Its current approval is separate from the original delivery record. Fasting, diabetic-treatment and organophosphate studies remain separate, with proteomic, lipidomic and metabolomic inputs checked independently.
 
-The C-07 protocol fixes the four scenarios, seeds, comparisons and a maximum of 2,550 fits. Astra passed it and a focused correction that makes the runner available to package tests. Luna is writing initial failing tests; no required test will be skipped to hide missing runner code.
+The C-07 protocol fixes the four scenarios, seeds, comparisons and a maximum of 2,550 fits. Astra passed it and a focused correction that makes the runner available to package tests. Sol reproduced the initial failing tests. A separate audit resolved an explicit process-library dependency; the same Luna worker is implementing the runner. No required test is skipped.
 
 Next acceptance: verify the runner, execute the fixed controls and review the actual evidence. Needs Omar: confirm the sample-code meanings, clinical link and lab preprocessing record in the supplied fasting folder. Private review drafts are ready. No aliases or pairing have been adopted from formatting alone. Sync: local records only; no Notion update, AIU run or GitHub push.

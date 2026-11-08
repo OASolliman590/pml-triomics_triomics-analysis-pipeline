@@ -35,13 +35,57 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "id": "/root/readiness_c07_runner_luna",
+      "role": "Luna",
+      "requested_model": "gpt-6-luna",
+      "effort": "max",
+      "effective_settings_exposed": false,
+      "status": "running_initial_implementation_after_dependency_audit",
+      "worktree": "/private/tmp/triomics-rdy002-c07-runner",
+      "base": "16077f5da5e7a757cf061ac94f28228dd23b077f",
+      "attempts": 1,
+      "repairs": 0,
+      "allowlist": [
+        "inst/qualification/run-c07-qualification.R",
+        "tests/testthat/test-RDY-002-c07-qualification.R"
+      ],
+      "next_transition": "Sol reviews GREEN candidate and no-fit supervisor evidence; no model fits before review",
+      "red_sol_receipt": "rdy002-sol-red/receipt.json",
+      "expanded_red": "worker reports 8 errors/8 tests; not independently rerun",
+      "dirty_diff": "tests/testthat/test-RDY-002-c07-qualification.R",
+      "native_fits": 0
+    }
+  ],
   "orchestration_control": {
     "status": "readiness_active",
-    "last_reconciled": "2026-11-08T13:40:23.360153+00:00",
-    "active_handoffs": [],
+    "last_reconciled": "2026-11-08T13:41:58.024546+00:00",
+    "active_handoffs": [
+      {
+        "id": "/root/readiness_c07_runner_luna",
+        "role": "Luna",
+        "requested_model": "gpt-6-luna",
+        "effort": "max",
+        "effective_settings_exposed": false,
+        "status": "running_initial_implementation_after_dependency_audit",
+        "worktree": "/private/tmp/triomics-rdy002-c07-runner",
+        "base": "16077f5da5e7a757cf061ac94f28228dd23b077f",
+        "attempts": 1,
+        "repairs": 0,
+        "allowlist": [
+          "inst/qualification/run-c07-qualification.R",
+          "tests/testthat/test-RDY-002-c07-qualification.R"
+        ],
+        "next_transition": "Sol reviews GREEN candidate and no-fit supervisor evidence; no model fits before review",
+        "red_sol_receipt": "rdy002-sol-red/receipt.json",
+        "expanded_red": "worker reports 8 errors/8 tests; not independently rerun",
+        "dirty_diff": "tests/testthat/test-RDY-002-c07-qualification.R",
+        "native_fits": 0
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "RDY002 same initial Luna blocked before runner; no product commit or fit. Fresh bounded RDY003 shared-dependency audit active; original attempts unchanged. Local structure agent terminal/reviewed.",
+    "disposition": "RDY003 dependency audit passed and exact declaration applied/read back at16077f5. Same RDY002 initial Luna resumed, repairs0; no fits. Local structure reviewer terminal/reviewed; lab semantics pending.",
     "current_gate": {
       "candidate": "2f8c83727be9f693d0e60457024edc55474c006b",
       "package": "Status: OK",
@@ -10083,7 +10127,7 @@
         "inst/qualification/run-c07-qualification.R",
         "tests/testthat/test-RDY-002-c07-qualification.R"
       ],
-      "status": "incomplete, initial worker blocked on explicit dependency seam; uncommitted tests preserved",
+      "status": "same initial Luna implementation after audited dependency seam",
       "corrected_scope_commit": "b99fa2174fad126bffb94ee14439d83a26e5e1ff",
       "focused_scope_audit": "pass",
       "red_tests": {
