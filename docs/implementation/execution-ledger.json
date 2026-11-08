@@ -35,39 +35,11 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "id": "/root/readiness_c07_dependencies_astra",
-      "role": "Astra",
-      "requested_model": "gpt-6-astra",
-      "effort": "low",
-      "effective_settings_exposed": false,
-      "status": "running",
-      "scope": "RDY003 dependency declaration only",
-      "candidate": "59613399f34bba9d0061f795df68e6c7db1d0608",
-      "attempts": 1,
-      "focused_rereviews": 0,
-      "next_transition": "pass -> Sol exact DESCRIPTION edit and same Luna resumes; changes -> bounded RDY003 documentation repair"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
     "status": "readiness_active",
-    "last_reconciled": "2026-11-08T13:39:20.239255+00:00",
-    "active_handoffs": [
-      {
-        "id": "/root/readiness_c07_dependencies_astra",
-        "role": "Astra",
-        "requested_model": "gpt-6-astra",
-        "effort": "low",
-        "effective_settings_exposed": false,
-        "status": "running",
-        "scope": "RDY003 dependency declaration only",
-        "candidate": "59613399f34bba9d0061f795df68e6c7db1d0608",
-        "attempts": 1,
-        "focused_rereviews": 0,
-        "next_transition": "pass -> Sol exact DESCRIPTION edit and same Luna resumes; changes -> bounded RDY003 documentation repair"
-      }
-    ],
+    "last_reconciled": "2026-11-08T13:40:23.360153+00:00",
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
     "disposition": "RDY002 same initial Luna blocked before runner; no product commit or fit. Fresh bounded RDY003 shared-dependency audit active; original attempts unchanged. Local structure agent terminal/reviewed.",
     "current_gate": {
@@ -10094,7 +10066,7 @@
       "RDY-003": {
         "audit_initial": 1,
         "focused_rereview": 0,
-        "shared_declaration_applied": false
+        "shared_declaration_applied": true
       }
     },
     "worker_ledger": "local readiness-20261108-01/state.json",
@@ -10127,10 +10099,12 @@
       }
     },
     "RDY-003": {
-      "status": "scope_audit_open",
+      "status": "declaration_audited_applied_and_read_back",
       "record": "docs/implementation/change-records/RDY-003-c07-runtime-dependencies.md",
       "candidate": "59613399f34bba9d0061f795df68e6c7db1d0608",
-      "product_edit": false
+      "product_edit": "DESCRIPTION Suggests only; two exact pins",
+      "audit": "pass",
+      "review_ref": "docs/implementation/reviews/2026-11-08-rdy-003-dependency-astra.md"
     }
   }
 }

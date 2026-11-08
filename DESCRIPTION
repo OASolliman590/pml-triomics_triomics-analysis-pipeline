@@ -22,6 +22,8 @@ Suggests:
     BiocManager,
     DEqMS (== 1.30.0),
     MOFA2 (== 1.22.1),
+    processx (== 3.9.0),
+    ps (== 1.9.3),
     renv,
     reticulate,
     testthat (>= 3.0.0)
