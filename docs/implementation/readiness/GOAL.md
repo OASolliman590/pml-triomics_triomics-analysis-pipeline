@@ -1,0 +1,21 @@
+# Study readiness and scientific qualification
+
+Authorized by Omar on 8 November 2026 after Stage D/M9 acceptance. Start from record `29ba7d75170a428860a36723847a085115ed2080`; accepted product `2f8c83727be9f693d0e60457024edc55474c006b`. G7/G8/G9 and all accepted required packets remain accepted. This programme adds readiness and conditional qualification; it does not reset implementation history or create a forty-second pipeline packet.
+
+## Requested outcomes
+
+1. **Frozen-spec audit:** reconcile the two recorded entrypoint checksum differences and later binding-slot amendment against actual Git history; obtain a fresh independent Astra-low review of current specification and accepted amendments. Preserve original delivery hashes and audit receipts.
+2. **C-07 scientific controls:** prespecify intended methods, candidate/baseline comparisons, null/weak/strong/adversarial generators, seeds, criteria, uncertainty, failure accounting and fit budget. Freeze and independently review before execution. Implement only necessary bounded runner/test seams; no forced recovery under weak or absent signal. C-07 remains evaluation evidence within C-06, not a new implementation ticket.
+3. **Three-study readiness and pilot:** verify complete quantified feature tables, previous preprocessing, units, feature/sample/participant identities, visits, clinical links, batches, missingness and intended comparisons locally. Produce separate plans/configurations for each independent study. Run and review one supported-route pilot before extending to the other two. Study identity, selection history and scientific meanings cannot be guessed from spreadsheet formatting.
+4. **D-T06:** qualify release-pinned native MOFA enrichment inputs, saved model, null/statistic/family and resources against reference calculations; implement missing bounded seams only after the contract passes review.
+5. **C-09:** establish a concrete endpoint, horizon, information set and matched evaluation/uncertainty protocol. Compare clinical-only, molecular-only and combined candidates on the same eligible patients and splits. No full-cohort MOFA preprocessing for held-out prediction without an independently qualified inductive adapter.
+6. **D-T07:** verify lawful local BioPAN execution and compatible quantitative scale/design, reproduce a reference case, then complete eligible implementation. Absent runtime/rights/data compatibility stays visibly unavailable.
+7. **D-T14:** research and select a precise target question and defensible estimator/reference/null, obtain explicit approval of that scientific protocol, then implement and qualify it. No generic score, invented affinity or binding probability.
+
+## Execution and acceptance
+
+First deliverable: a reviewed readiness record and runnable first-study configuration alongside the audit/scientific checks. Continue all seven requested workstreams within their dependencies. A plan, refusal stub, test exit or unresolved conditional route is not completion. If sources cannot establish an endpoint, study interpretation, entitlement or target-method preference, ask only for that unresolved decision while continuing independent work.
+
+Sol owns coordination, frozen records, integration and acceptance. Use fresh isolated Luna-max coding workers, Terra-max bounded documentation and fresh read-only Astra-low audits. One initial implementation plus at most two repairs per new bounded packet; one initial audit plus one focused rereview. Preserve all old exhausted caps. One heavy fitting job at a time; no child orchestration. Record worker IDs, immutable subjects, exact commands, failures, counts, hashes and next transitions durably.
+
+Local real-study onboarding/pilots are authorized by this new goal. Private input files, identifiers and private paths remain outside public Git and delegated/external payloads. Workers use public code and synthetic fixtures only; the coordinator runs local data inspection without disclosing rows. Do not push, publish private results or sync Notion. No raw-MS processing or new architecture. Keep B-T04 bound0.08 and seeds1001:1400, accepted M8/D13, scientific limitations and historical records unchanged. Conditional methods receive credit only after their own gates pass; software acceptance never implies biological/clinical validation.

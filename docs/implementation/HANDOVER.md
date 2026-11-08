@@ -1,3 +1,11 @@
+# Active: study readiness and scientific qualification
+
+New user-authorized [goal](readiness/GOAL.md), starting from accepted record29ba7d7/product2f8c837. Stage D/M7-M9 and G7-G9 remain accepted/released. First cycle [RDY-001](change-records/RDY-001-frozen-spec-reconciliation.md) traces the two entrypoint checksum discrepancies and later binding-slot amendment. Fresh spec audit pending; no new product implementation or study fit yet. Terra is researching optional-method primary evidence in an isolated worktree; private inventory stays local. The new local readiness-20261108-01/state.json owns active worker/attempt transitions.
+
+Literal resume: **Join existing readiness workers and the recorded RDY-001 audit if dispatched; never restart old M8/D13/D09 workers or gates. Preserve original freeze/audit hashes, accepted milestones and repair history. Obtain current spec-readiness audit before new coding, then freeze/review C-07 protocol and continue local three-study onboarding. No private inputs to workers or Git; no push.**
+
+## Historical checkpoints below
+
 # Closed: D-T09 and M9 accepted; G9 released
 
 Sol accepted immutable product `2f8c83727be9f693d0e60457024edc55474c006b` after fresh Astra passed and the clean archive printed **Status: OK**. This acceptance-record commit changes documentation/state only. [Sol receipt](reviews/2026-11-07-m9-sol-acceptance.md), [Astra](reviews/2026-11-07-m9-astra.md), [M9 rerun instructions](milestones/M9.md), and [full machine evidence](evidence/2026-11-07-m9-final-gates/receipt.json).

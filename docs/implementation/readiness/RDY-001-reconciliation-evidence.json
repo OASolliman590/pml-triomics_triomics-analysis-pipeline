@@ -1,0 +1,166 @@
+{
+  "baseline": {
+    "base": "29ba7d75170a428860a36723847a085115ed2080",
+    "archive_sha256": "228fb06dec8da5ce9049f92e69bccfe589016ee8fa5cfd3dce3b24b1eaca722d",
+    "validator_exit": 1,
+    "validator_log_sha256": "44c6f9fd108475bed48fb93540e18de04430cf558fbebbcc32dbd9574483a98e",
+    "freeze_content_sha256": "21ebbd04688dfacb058af671d288a85d5910c657ff2e2437d2c6e99e7461aaaf",
+    "freeze_mismatches": [
+      {
+        "path": "AGENTS.md",
+        "expected": "ee206cd77888e430dc37ad6e7461bfd62210adffd2633562d5264cee1bc4d4a5",
+        "actual": "e0de9739ef8e3062f977ed221e9cbd9a5fb5c2693df04dbdf0441889c4f71e1a"
+      },
+      {
+        "path": "CLAUDE.md",
+        "expected": "d4b356fae3df49af3e0ff6b602b19c6fe1136c5d1e4d9de7ef50beb8c92e60ec",
+        "actual": "c7f5cf5bfc72084066d255c1e5d9034b677a1eadc65cdea5485028a00a098df8"
+      }
+    ],
+    "delivery_mismatches": [
+      {
+        "path": "AGENTS.md",
+        "expected": "ee206cd77888e430dc37ad6e7461bfd62210adffd2633562d5264cee1bc4d4a5",
+        "actual": "e0de9739ef8e3062f977ed221e9cbd9a5fb5c2693df04dbdf0441889c4f71e1a"
+      },
+      {
+        "path": "CLAUDE.md",
+        "expected": "d4b356fae3df49af3e0ff6b602b19c6fe1136c5d1e4d9de7ef50beb8c92e60ec",
+        "actual": "c7f5cf5bfc72084066d255c1e5d9034b677a1eadc65cdea5485028a00a098df8"
+      }
+    ]
+  },
+  "qualified_runtime_validator": {
+    "candidate": "29ba7d75170a428860a36723847a085115ed2080",
+    "command": [
+      "<validator_python>",
+      "tools/spec/validate_spec.py",
+      "--verify-delivery"
+    ],
+    "exit_code": 1,
+    "output": "SPEC VALIDATION FAILED: Frozen content changed: AGENTS.md\n",
+    "actual_content_set_sha256": "461f3d14a32a3b84cc765f44d6ef76f8073aa64c147f34d75c7ff38c6158a4b8",
+    "declared_content_sha256": "21ebbd04688dfacb058af671d288a85d5910c657ff2e2437d2c6e99e7461aaaf",
+    "environment_sha256": "a5c67f8b85a4577890b8e6cbaab4b7f45d444d4626016a333f385b986e3a66f9",
+    "baseline_missing_dependencies_attempt_preserved": true
+  },
+  "diagnostic_reconstruction": {
+    "status": "diagnostic_only_not_a_current_checkout_pass",
+    "replacements": [
+      {
+        "path": "AGENTS.md",
+        "source_commit": "b56e942",
+        "sha256": "ee206cd77888e430dc37ad6e7461bfd62210adffd2633562d5264cee1bc4d4a5"
+      },
+      {
+        "path": "CLAUDE.md",
+        "source_commit": "b56e942",
+        "sha256": "d4b356fae3df49af3e0ff6b602b19c6fe1136c5d1e4d9de7ef50beb8c92e60ec"
+      }
+    ],
+    "exit_code": 0,
+    "command": [
+      "<validator_python>",
+      "tools/spec/validate_spec.py",
+      "--verify-delivery"
+    ],
+    "purpose": "Separate schema/contract consistency from two exactly known later reporting/orchestration entrypoint changes; baseline failure is preserved. This substituted copy is not the current source and not the audit subject.",
+    "report": {
+      "status": "pass",
+      "scope": "specification_consistency_only",
+      "checks": [
+        {
+          "check": "candidate_json_parse",
+          "files": 15,
+          "status": "pass"
+        },
+        {
+          "check": "historical_ticket_identities",
+          "count": 41,
+          "status": "pass"
+        },
+        {
+          "check": "implementation_and_review_dags",
+          "packet_waves": 22,
+          "combined_nodes": 60,
+          "combined_waves": 43,
+          "status": "pass"
+        },
+        {
+          "check": "exclusive_code_doc_ownership",
+          "paths": 226,
+          "status": "pass"
+        },
+        {
+          "check": "requirement_traceability",
+          "count": 29,
+          "status": "pass"
+        },
+        {
+          "check": "schemas_synthetic_configs_sources",
+          "examples": [
+            {
+              "kind": "independent",
+              "samples": 12,
+              "blocks": 3,
+              "status": "pass"
+            },
+            {
+              "kind": "paired",
+              "samples": 12,
+              "blocks": 3,
+              "status": "pass"
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "negative_spec_controls",
+          "cases": [
+            "unknown_key",
+            "unknown_profile",
+            "double_log",
+            "repeated_no_subject",
+            "same_visits",
+            "one_block_integration",
+            "missing_design_matrix",
+            "missing_clinical_sources",
+            "missing_target_context"
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "canonical_markdown_links",
+          "count": 60,
+          "status": "pass"
+        },
+        {
+          "check": "frozen_candidate_hashes",
+          "files": 92,
+          "status": "pass"
+        },
+        {
+          "check": "full_delivery_manifest",
+          "files": 93,
+          "status": "pass"
+        }
+      ],
+      "implementation_packets": 41,
+      "required_packets": 37,
+      "conditional_packets": [
+        "C-09",
+        "D-T06",
+        "D-T07",
+        "D-T14"
+      ],
+      "pipeline_R_tests_run": false,
+      "real_data_validated": false,
+      "independent_spec_audit_performed": false,
+      "GitHub_push_performed": false
+    }
+  },
+  "historical_G0_ref": "docs/implementation/freeze-approval.json",
+  "binding_amendment_ref": "docs/implementation/change-records/2026-10-30-binding-slot.md",
+  "current_audit": "pending",
+  "scope": "specification evidence only; no package retest or private-study fit"
+}
