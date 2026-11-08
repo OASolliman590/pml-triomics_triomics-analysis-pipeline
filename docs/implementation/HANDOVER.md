@@ -1,3 +1,11 @@
+# Active: RDY-001 accepted; C-07 protocol and first-study readiness next
+
+The existing Astra initial audit passed on6e77395; Sol accepted the exact-hash [current spec-readiness subject](readiness/spec-readiness-approval.json). Read [the audit/disposition](reviews/2026-11-08-rdy-001-spec-astra.md): 177 review blobs and92 actual content files verified;53 change records, not87. Historical delivery hashes and its known validator failure remain untouched. G7/G8/G9 remain released. Scientific/data qualifications remain pending.
+
+Literal resume: **Do not restart RDY-001 Astra or old M8/D13/D09 work. Continue RDY-002 C-07 protocol freeze/review and local first-study readiness, following the new goal. Current worker/attempt state is in local readiness-20261108-01/state.json. No C07 fit before its protocol audit; no private data to workers/Git or guessed sample linkage. Preserve all attempt limits and bound0.08/seeds1001:1400.**
+
+## Historical checkpoints below
+
 # Active: study readiness and scientific qualification
 
 New user-authorized [goal](readiness/GOAL.md), starting from accepted record29ba7d7/product2f8c837. Stage D/M7-M9 and G7-G9 remain accepted/released. First cycle [RDY-001](change-records/RDY-001-frozen-spec-reconciliation.md) traces the two entrypoint checksum discrepancies and later binding-slot amendment. Fresh spec audit pending; no new product implementation or study fit yet. Terra is researching optional-method primary evidence in an isolated worktree; private inventory stays local. The new local readiness-20261108-01/state.json owns active worker/attempt transitions.

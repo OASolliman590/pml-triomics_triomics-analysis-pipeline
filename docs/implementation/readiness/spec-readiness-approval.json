@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "scope": "RDY-001 supplemental current spec-readiness approval",
+  "status": "accepted_by_Sol",
+  "accepted_at": "2026-11-08T12:43:26.107563+00:00",
+  "reviewed_commit": "6e77395360955d18258a29cd055038fcf7feb0bd",
+  "reviewed_actual_content_sha256": "461f3d14a32a3b84cc765f44d6ef76f8073aa64c147f34d75c7ff38c6158a4b8",
+  "review_context_sha256": "b34bbfec9ef403065dee9399c9befbe7895e37a4e60131c855ae3187f3395b0c",
+  "reviewed_files": 177,
+  "change_record_documents": 53,
+  "historical_declaration_sha256": "21ebbd04688dfacb058af671d288a85d5910c657ff2e2437d2c6e99e7461aaaf",
+  "historical_manifests_unchanged": true,
+  "historical_validator_disposition": "Unchanged current archive exits1 at AGENTS.md against historical delivery manifest; retained as failure, no blanket exception. Diagnostic reconstruction only passes original-entrypoint copy.",
+  "historical_G0_approval_preserved": "docs/implementation/freeze-approval.json",
+  "audit": {
+    "agent": "/root/readiness_spec_astra",
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "low",
+    "effective_settings_exposed": false,
+    "initial_attempts": 1,
+    "focused_rereviews": 0,
+    "resumed_after_user_interruption": true,
+    "verdict": "pass",
+    "audit_pass": true,
+    "P0": [],
+    "P1": [],
+    "nonblocking": [
+      "RDY-001 prose counted AppleDouble-like directory entries; actual manifest binds all53 change-record Markdown documents, not87. Corrected here without altering reviewed snapshot."
+    ]
+  },
+  "Sol_readback": {
+    "manifest_file_hashes_match": true,
+    "all_177_git_blobs_match": true,
+    "context_digest_matches": true,
+    "current_92_content_digest_matches": true,
+    "unknown_drift_allowed": false
+  },
+  "review_ref": "docs/implementation/reviews/2026-11-08-rdy-001-spec-astra.md",
+  "verification_procedure_ref": "docs/implementation/readiness/RDY-001-readback-procedure.md",
+  "qualified_for": "Subsequent bounded protocol/implementation work under existing scientific contracts and newly reviewed scope; not scientific/data/method qualification",
+  "limitations": [
+    "M1-M9/G7-G9 acceptance preserved, not rerun",
+    "C07 controls not_run",
+    "C09 unqualified",
+    "D06/D07/D14 conditional without credit",
+    "No private study fit performed",
+    "No push or external publication"
+  ],
+  "reviewer_accepted_milestone": false
+}

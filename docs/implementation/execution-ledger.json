@@ -10048,15 +10048,16 @@
     "goal_ref": "docs/implementation/readiness/GOAL.md",
     "baseline_record": "29ba7d75170a428860a36723847a085115ed2080",
     "status": "in_progress",
-    "current_scope": "RDY-001",
+    "current_scope": "RDY-002 C07 protocol and first-study readiness",
     "scope_ref": "docs/implementation/change-records/RDY-001-frozen-spec-reconciliation.md",
     "accepted_M7_M8_M9_unchanged": true,
     "G7_G8_G9": "released",
     "attempts": {
-      "RDY-001_initial_audit": 0,
+      "RDY-001_initial_audit": 1,
       "RDY-001_focused_rereview": 0
     },
     "worker_ledger": "local readiness-20261108-01/state.json",
-    "private_inputs": "local coordinator inspection only; no delegated rows or public artifacts"
+    "private_inputs": "local coordinator inspection only; no delegated rows or public artifacts",
+    "spec_readiness_approval_ref": "docs/implementation/readiness/spec-readiness-approval.json"
   }
 }

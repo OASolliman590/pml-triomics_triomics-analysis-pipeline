@@ -1,0 +1,13 @@
+# RDY-001: fresh specification audit and Sol disposition
+
+**Astra: pass; audit_pass yes. Sol accepts the supplemental current spec-readiness review subject.** Initial audit1, focused rereview0; the same worker resumed after the user interruption. No new audit attempt or implementation repair was opened. Requested gpt-6-astra/low; effective settings unexposed.
+
+Reviewed commit `6e77395360955d18258a29cd055038fcf7feb0bd`, actual92-file content `461f3d14a32a3b84cc765f44d6ef76f8073aa64c147f34d75c7ff38c6158a4b8`, and177-file context `b34bbfec9ef403065dee9399c9befbe7895e37a4e60131c855ae3187f3395b0c`. Astra independently compared every bound file with the manifest and immutable Git commit, with zero mismatches. Sol repeated that read-back before acceptance. No P0/P1 finding, no additional validator machinery required for this bounded approval.
+
+Astra reviewed scientific A/B/C/D, data/config/schema, validation, resources, dependency/gates and operative amendment precedence. It found ordinary/moderated inference, fixed families and selection limits, train-only nested evaluation, conditional methods, external binding-evidence limits, and privacy/resource boundaries consistent within the reviewed scope. M7-003's explicit adoption of corrected parts of blocked M7-002 prevents blanket acceptance of prior blocked work. Existing implementation acceptance was preserved, not rerun.
+
+**Nonblocking correction:** RDY-001's phrase “all87 change records” is inaccurate. There are53 real change-record Markdown documents at this subject, including RDY-001, and all53 are manifest-bound. Directory counting had included metadata entries. This addendum corrects the statement; the audited commit and hash are not rewritten.
+
+The old declared21ebbd hash and original f0d482 G0 approval remain historical. The unchanged delivery validator failure at AGENTS.md is retained, and diagnostic entrypoint substitution is never a current-source pass. The supplemental approval binds exact current bytes, rejects unknown drift and does not update or erase delivery manifests. Historical README/pending fields describe the original delivery; current approval is [the separately recorded decision](../readiness/spec-readiness-approval.json), with its [executable checksum procedure](../readiness/RDY-001-readback-procedure.md).
+
+No product tests, private inputs or new scientific qualification were run by Astra. C-07 remains not_run; C-09 unqualified; D06/D07/D14 conditional without credit. Next: separately freeze and review the C-07 execution protocol and continue local study onboarding. This approval does not select a prediction endpoint, confer resource rights, or invent a target method.
