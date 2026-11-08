@@ -547,7 +547,7 @@
   },
   "future_runner_scope_proposal": {
     "files": [
-      "tools/run-c07-qualification.R",
+      "inst/qualification/run-c07-qualification.R",
       "tests/testthat/test-RDY-002-c07-qualification.R"
     ],
     "shared_cli_publication_seam": "triomics_c06_cli_unrun_controls constructs unrun records; actual synthetic publication requires separate Sol-owned review",
