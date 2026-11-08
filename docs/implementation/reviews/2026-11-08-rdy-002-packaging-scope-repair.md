@@ -18,3 +18,13 @@ RED-test checkpoint and no native fit has run. Generators, seeds, comparisons,
 numerical criteria, 2,550-fit cap and all scientific boundaries are unchanged.
 No runner implementation proceeds until that rereview passes. Existing failed
 or superseded records remain intact.
+
+## Focused rereview disposition
+
+Astra passed immutable `b99fa2174fad126bffb94ee14439d83a26e5e1ff`: **audit_pass yes**,
+no P0/P1. All three archive manifest hashes matched. Existing `inst/` resource
+lookup supports the corrected two-file scope; no shared seam is needed. The
+immutable protocol must be supplied explicitly at execution because `docs/`
+is not installed. Scientific design and budget are unchanged. Initial audit 1,
+focused rereview 1/1 exhausted. Requested Astra low; effective settings unexposed.
+Sol authorizes continuation of the same Luna initial attempt after RED inspection.

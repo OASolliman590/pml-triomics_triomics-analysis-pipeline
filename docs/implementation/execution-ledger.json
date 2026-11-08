@@ -44,14 +44,14 @@
       "effective_settings_exposed": false,
       "status": "running_red_tests",
       "worktree": "/private/tmp/triomics-rdy002-c07-runner",
-      "base": "f198cf9",
+      "base": "b99fa2174fad126bffb94ee14439d83a26e5e1ff",
       "attempts": 1,
       "repairs": 0,
       "allowlist": [
-        "tools/run-c07-qualification.R",
+        "inst/qualification/run-c07-qualification.R",
         "tests/testthat/test-RDY-002-c07-qualification.R"
       ],
-      "next_transition": "Sol inspect RED tests then continue same initial worker; no fits before inspection"
+      "next_transition": "Sol inspect RED checkpoint, then same initial worker implements"
     }
   ],
   "orchestration_control": {
@@ -66,14 +66,14 @@
         "effective_settings_exposed": false,
         "status": "running_red_tests",
         "worktree": "/private/tmp/triomics-rdy002-c07-runner",
-        "base": "f198cf9",
+        "base": "b99fa2174fad126bffb94ee14439d83a26e5e1ff",
         "attempts": 1,
         "repairs": 0,
         "allowlist": [
-          "tools/run-c07-qualification.R",
+          "inst/qualification/run-c07-qualification.R",
           "tests/testthat/test-RDY-002-c07-qualification.R"
         ],
-        "next_transition": "Sol inspect RED tests then continue same initial worker; no fits before inspection"
+        "next_transition": "Sol inspect RED checkpoint, then same initial worker implements"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -10093,9 +10093,9 @@
       "RDY-001_focused_rereview": 0,
       "RDY-002": {
         "documentation_initial": 1,
-        "documentation_repairs": 0,
+        "documentation_repairs": 1,
         "audit_initial": 1,
-        "focused_rereview": 0,
+        "focused_rereview": 1,
         "implementation_initial": 1,
         "implementation_repairs": 0
       }
@@ -10111,10 +10111,12 @@
       "fit_budget": 2550,
       "fit_run": false,
       "implementation_allowlist": [
-        "tools/run-c07-qualification.R",
+        "inst/qualification/run-c07-qualification.R",
         "tests/testthat/test-RDY-002-c07-qualification.R"
       ],
-      "status": "Luna initial RED tests in progress; qualification not run"
+      "status": "Luna initial RED tests in progress; qualification not run",
+      "corrected_scope_commit": "b99fa2174fad126bffb94ee14439d83a26e5e1ff",
+      "focused_scope_audit": "pass"
     }
   }
 }
