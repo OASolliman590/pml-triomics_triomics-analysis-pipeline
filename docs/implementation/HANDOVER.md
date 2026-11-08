@@ -1,3 +1,32 @@
+# Active: RDY-003 shared dependency audit; RDY-002 initial worker preserved
+
+RDY-001 is accepted. The RDY-002 scientific protocol and one packaging rereview
+passed; those review counts are exhausted. Its same Luna initial attempt is
+blocked before runner implementation: uncommitted eight-test RED file only, no
+runner, commit or native fit. Sol preserved that diff locally. No repair used.
+
+Fresh read-only `/root/readiness_c07_dependencies_astra` audits immutable
+`5961339` and [the narrow dependency record](change-records/RDY-003-c07-runtime-dependencies.md).
+It proposes declaring already installed/locked processx and ps in DESCRIPTION;
+no dependency install, lock or scientific change. After audit pass, Sol alone
+applies the declaration, then resumes the same Luna initial two-file packet.
+RDY-003 initial audit 1, focused rereview 0. Do not confuse this with reopening
+the exhausted RDY-002 protocol review.
+
+The user-requested local fasting structure review is complete and reviewed by
+Sol. Original workbooks are unchanged. Its private receipt records candidate
+regions and unresolved identities/processing; no study fit is approved from
+that structural evidence. Omar will look for unavailable lab notes.
+
+Literal resume: **Join the existing RDY-003 Astra audit; do not restart it. On
+pass apply only the proposed DESCRIPTION declarations, record read-back, and
+continue `/root/readiness_c07_runner_luna` in its preserved worktree. No fresh
+Luna, attempt reset, native fit before GREEN review, or scientific change.
+Local readiness state.json owns exact workers/processes. M1–M9/G7–G9 remain
+accepted/released. No private data to Git or public services; no push.**
+
+## Historical checkpoints below
+
 # Active: RDY-002 initial implementation; local study structure review
 
 RDY-001 accepted. RDY-002 initial protocol audit and its one focused packaging

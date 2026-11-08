@@ -37,49 +37,39 @@
   },
   "active_workers": [
     {
-      "id": "/root/readiness_c07_runner_luna",
-      "role": "Luna",
-      "requested_model": "gpt-6-luna",
-      "effort": "max",
+      "id": "/root/readiness_c07_dependencies_astra",
+      "role": "Astra",
+      "requested_model": "gpt-6-astra",
+      "effort": "low",
       "effective_settings_exposed": false,
-      "status": "running_initial_implementation_after_sol_red",
-      "worktree": "/private/tmp/triomics-rdy002-c07-runner",
-      "base": "b99fa2174fad126bffb94ee14439d83a26e5e1ff",
+      "status": "running",
+      "scope": "RDY003 dependency declaration only",
+      "candidate": "59613399f34bba9d0061f795df68e6c7db1d0608",
       "attempts": 1,
-      "repairs": 0,
-      "allowlist": [
-        "inst/qualification/run-c07-qualification.R",
-        "tests/testthat/test-RDY-002-c07-qualification.R"
-      ],
-      "next_transition": "Sol inspect GREEN two-file commit; no native fits before review",
-      "red_sol_receipt": "rdy002-sol-red/receipt.json"
+      "focused_rereviews": 0,
+      "next_transition": "pass -> Sol exact DESCRIPTION edit and same Luna resumes; changes -> bounded RDY003 documentation repair"
     }
   ],
   "orchestration_control": {
     "status": "readiness_active",
-    "last_reconciled": "2026-11-08T13:31:46.859468+00:00",
+    "last_reconciled": "2026-11-08T13:39:20.239255+00:00",
     "active_handoffs": [
       {
-        "id": "/root/readiness_c07_runner_luna",
-        "role": "Luna",
-        "requested_model": "gpt-6-luna",
-        "effort": "max",
+        "id": "/root/readiness_c07_dependencies_astra",
+        "role": "Astra",
+        "requested_model": "gpt-6-astra",
+        "effort": "low",
         "effective_settings_exposed": false,
-        "status": "running_initial_implementation_after_sol_red",
-        "worktree": "/private/tmp/triomics-rdy002-c07-runner",
-        "base": "b99fa2174fad126bffb94ee14439d83a26e5e1ff",
+        "status": "running",
+        "scope": "RDY003 dependency declaration only",
+        "candidate": "59613399f34bba9d0061f795df68e6c7db1d0608",
         "attempts": 1,
-        "repairs": 0,
-        "allowlist": [
-          "inst/qualification/run-c07-qualification.R",
-          "tests/testthat/test-RDY-002-c07-qualification.R"
-        ],
-        "next_transition": "Sol inspect GREEN two-file commit; no native fits before review",
-        "red_sol_receipt": "rdy002-sol-red/receipt.json"
+        "focused_rereviews": 0,
+        "next_transition": "pass -> Sol exact DESCRIPTION edit and same Luna resumes; changes -> bounded RDY003 documentation repair"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "RDY001 accepted. RDY002 protocol and exact two-file runner scope passed fresh Astra audit; fresh Luna implementation next. No C07 native fits yet.",
+    "disposition": "RDY002 same initial Luna blocked before runner; no product commit or fit. Fresh bounded RDY003 shared-dependency audit active; original attempts unchanged. Local structure agent terminal/reviewed.",
     "current_gate": {
       "candidate": "2f8c83727be9f693d0e60457024edc55474c006b",
       "package": "Status: OK",
@@ -10100,6 +10090,11 @@
         "focused_rereview": 1,
         "implementation_initial": 1,
         "implementation_repairs": 0
+      },
+      "RDY-003": {
+        "audit_initial": 1,
+        "focused_rereview": 0,
+        "shared_declaration_applied": false
       }
     },
     "worker_ledger": "local readiness-20261108-01/state.json",
@@ -10116,7 +10111,7 @@
         "inst/qualification/run-c07-qualification.R",
         "tests/testthat/test-RDY-002-c07-qualification.R"
       ],
-      "status": "initial runner implementation after independent Sol RED inspection",
+      "status": "incomplete, initial worker blocked on explicit dependency seam; uncommitted tests preserved",
       "corrected_scope_commit": "b99fa2174fad126bffb94ee14439d83a26e5e1ff",
       "focused_scope_audit": "pass",
       "red_tests": {
@@ -10130,6 +10125,12 @@
         "interpretation": "expected missing runner; initial implementation authorized",
         "native_fits": 0
       }
+    },
+    "RDY-003": {
+      "status": "scope_audit_open",
+      "record": "docs/implementation/change-records/RDY-003-c07-runtime-dependencies.md",
+      "candidate": "59613399f34bba9d0061f795df68e6c7db1d0608",
+      "product_edit": false
     }
   }
 }
