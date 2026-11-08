@@ -1,0 +1,557 @@
+{
+  "document_id": "RDY-002",
+  "schema_version": "1.0",
+  "status": "proposed_for_sol_review",
+  "execution_authorized_by_this_document": false,
+  "spec_readiness_approval": "docs/implementation/readiness/spec-readiness-approval.json",
+  "scope": "public_synthetic_qualification_only",
+  "baseline_commit": "276f90b",
+  "runtime_required": {
+    "R": "4.6.1",
+    "mixOmics": "6.36.0",
+    "MOFA2": "1.22.1",
+    "mofapy2": "0.7.5",
+    "substitution_allowed": false,
+    "mofa_runtime": "verified_accepted_isolated_environment",
+    "blas_threads": 1,
+    "openmp_threads": 1,
+    "record": [
+      "executables_and_hashes",
+      "libraries_and_hashes",
+      "dependencies",
+      "OS",
+      "hardware",
+      "BLAS",
+      "thread_settings"
+    ]
+  },
+  "rng": {
+    "R_kind": "Mersenne-Twister",
+    "normal_kind": "Inversion",
+    "sample_kind": "Rejection",
+    "dataset_seeds": [
+      51001,
+      51002,
+      51003,
+      51004,
+      51005,
+      51006,
+      51007,
+      51008,
+      51009,
+      51010
+    ],
+    "split_seed": 44001,
+    "mofa_primary_seed": "dataset_seed + 100000",
+    "mofa_secondary_seed": "dataset_seed + 200000",
+    "bootstrap_seed": 909991,
+    "b04_disjoint_range": [
+      1001,
+      1400
+    ]
+  },
+  "generator": {
+    "samples": 64,
+    "samples_per_subject": 1,
+    "sample_id_format": "unit_%03d",
+    "subject_id_format": "subject_%03d",
+    "block_order": [
+      "alpha",
+      "beta"
+    ],
+    "features_per_block": 20,
+    "feature_id_format": "<block>_f%02d",
+    "matrix_orientation": "feature_by_unit",
+    "set_seed_once_per_dataset": true,
+    "draw_order_R": [
+      "g <- rnorm(64)",
+      "u <- rnorm(64)",
+      "h <- rnorm(64)",
+      "e_y <- rnorm(64)",
+      "E_alpha <- matrix(rnorm(1280), nrow=20, ncol=64)",
+      "E_beta <- matrix(rnorm(1280), nrow=20, ncol=64)"
+    ],
+    "R_matrix_filling": "column_major",
+    "latent": "z <- 0.8*g + 0.6*u",
+    "continuous_outcome": "y <- z + 0.5*e_y",
+    "categorical_outcome": "order y ascending with unit ID as tie-break; first 32 control, last 32 case; levels control,case",
+    "w": "w[j] <- if (j<=10) (-1)^(j-1) else 0 for j=1..20",
+    "v": "v[j] <- if (j>=11) (-1)^(j-11) else 0 for j=1..20",
+    "regime_order": [
+      "null",
+      "weak_signal",
+      "strong_signal",
+      "adversarial"
+    ],
+    "regimes": {
+      "null": {
+        "formula_each_block": "E_b",
+        "noise_sd": 1,
+        "components": 1
+      },
+      "weak_signal": {
+        "formula_each_block": "0.15*outer(w,z) + E_b",
+        "noise_sd": 1,
+        "components": 1
+      },
+      "strong_signal": {
+        "formula_each_block": "2*outer(w,z) + 0.5*E_b",
+        "noise_sd": 0.5,
+        "components": 1
+      },
+      "adversarial": {
+        "formula_each_block": "2*outer(w,g) + 2*outer(v,h) + 0.5*E_b",
+        "noise_sd": 0.5,
+        "components": 2
+      }
+    },
+    "shared_within_dataset_seed": [
+      "hypothetical_units",
+      "subjects",
+      "feature_keys",
+      "g",
+      "u",
+      "h",
+      "e_y",
+      "E_alpha",
+      "E_beta",
+      "z",
+      "y",
+      "class"
+    ],
+    "missing_cells": 0,
+    "latent_variables_are_predictors": false,
+    "outcome_driven_snr_adjustment": false
+  },
+  "matching_and_splits": {
+    "grouping": "subject",
+    "unit_to_subject_mapping": "one_to_one_matching_three_digit_suffix",
+    "n_outer": 3,
+    "n_inner": 2,
+    "target_column": "outcome",
+    "temporal_order": null,
+    "continuous_stratification": null,
+    "categorical_stratification": "class labels from generator",
+    "constructor": "triomics_nested_split_plan",
+    "reuse": "same actual validated plan object within a dataset seed and predictive lane across all scenarios and methods",
+    "between_method_requirements": [
+      "same_ordered_sample_ids",
+      "same_ordered_feature_keys",
+      "same_preparation_context_id",
+      "same_representation_id",
+      "same_outcomes",
+      "same_split_plan_hash",
+      "same_scenario_input_matrix_hashes"
+    ],
+    "between_scenario_requirements": [
+      "same_simulated_units",
+      "same_ordered_feature_keys",
+      "same_preparation_recipe_and_context_id",
+      "same_representation_id",
+      "same_outcome",
+      "same_split_plan_hash",
+      "retain_distinct_scenario_matrix_hashes"
+    ],
+    "cross_scenario_matrix_hashes_equal": false,
+    "c06_immutable_context_provenance_requires_sol_review": true,
+    "same_scenario_integration_comparison_requires_same_matrix_hashes": true,
+    "separate_state_directories_per": [
+      "seed",
+      "regime",
+      "lane",
+      "method"
+    ],
+    "cross_regime_fit_state_cache": false,
+    "identity_templates": {
+      "study_id": "rdy002-synthetic-<dataset_seed>",
+      "analysis_id": "rdy002-<dataset_seed>-<continuous|categorical>",
+      "predictive_preparation_context_id": "rdy002-predictive-<dataset_seed>-<continuous|categorical>",
+      "descriptive_preparation_context_id": "rdy002-descriptive-<dataset_seed>-<continuous|categorical>",
+      "fold_preparation_context_id": "<predictive_preparation_context_id>__<fold_id>",
+      "representation_id": "fold_prepared"
+    }
+  },
+  "preparation": {
+    "operations_in_order": [
+      {
+        "stage": "validate",
+        "method": "none"
+      },
+      {
+        "stage": "filter",
+        "method": "none"
+      },
+      {
+        "stage": "derive",
+        "method": "none"
+      },
+      {
+        "stage": "transform",
+        "method": "none"
+      },
+      {
+        "stage": "normalise",
+        "method": "none"
+      },
+      {
+        "stage": "impute",
+        "method": "none"
+      }
+    ],
+    "scale_features": true,
+    "predictive_scaling": "adapter_fit_on_each_training_partition_only",
+    "predictive_and_descriptive_context_ids_distinct": true,
+    "full_cohort_preparation_used_for_prediction": false
+  },
+  "exploratory": {
+    "purpose": "in_sample_synthetic_factor_recovery_not_prediction",
+    "pca": {
+      "method": "concat_pca",
+      "scale_features": true,
+      "block_scaling": "none",
+      "selection": {
+        "rule": "none"
+      },
+      "n_components": "regime.components",
+      "calls_per_cell": 1
+    },
+    "mofa": {
+      "method": "mofa2",
+      "scale_features": true,
+      "likelihoods": {
+        "alpha": "gaussian",
+        "beta": "gaussian"
+      },
+      "groups": 1,
+      "outcome_used": false,
+      "n_components": "regime.components",
+      "mofa_convergence": "medium",
+      "mofa_seed_repeats": 1,
+      "mofa_training_options": {
+        "maxiter": 1000,
+        "stochastic": false,
+        "gpu_mode": false
+      },
+      "other_options": "resolved_pinned_MOFA2_1.22.1_defaults_snapshot_and_compare_except_seed_components_and_path",
+      "calls_per_cell": 2,
+      "distinct_model_paths": true,
+      "save_reload_each_call": true
+    },
+    "strong_check": {
+      "metric": "absolute Pearson correlation of component 1 and z on all 64 training units",
+      "threshold": 0.9,
+      "minimum_successes": 9,
+      "denominator": 10,
+      "methods": [
+        "concat_pca",
+        "mofa2_primary"
+      ],
+      "all_seeds_must_be_attempted": true,
+      "failed_or_undefined_attempt_counts_as_nonsuccess": true,
+      "secondary_mofa_is_a_second_chance": false,
+      "generalizes_to_other_regimes": false
+    },
+    "adversarial_subspace": "rank-2 centered QR bases tolerance 1e-10; sum((t(Q_truth)%*%Q_fit)^2)/2; unavailable if either rank differs from 2",
+    "factor_assignment": "maximize sum of absolute score/truth Pearson correlations over one-to-one permutations; lexicographic tie break; report signed and aligned correlations",
+    "convergence_claim": "report native evidence or unknown; never infer convergence from fit return alone",
+    "predictive_mofa": false
+  },
+  "predictive": {
+    "service": "evaluate_pipeline",
+    "max_fits_per_evaluation": 15,
+    "fit_count_formula": "3 * (2 candidate configurations * 2 inner folds + 1 selected outer refit)",
+    "candidate_order": [
+      "one_component",
+      "two_components"
+    ],
+    "selection": "smallest mean inner RMSE or balanced error among candidates with no inner fit failure and finite scores on every required inner fold; exact tie chooses first; inner prediction failures can still yield finite scores and must be reported",
+    "continuous": {
+      "candidate_method": "mixomics_block_spls",
+      "baseline_method": "concat_pls",
+      "outcome": {
+        "column": "outcome",
+        "type": "continuous"
+      },
+      "common": {
+        "block_ids": [
+          "alpha",
+          "beta"
+        ],
+        "scale_features": true
+      },
+      "candidate_params": {
+        "block_scaling": "none",
+        "mode": "regression",
+        "response_block": "outcome",
+        "keepY": 1,
+        "prediction_rule": "AveragedPredict",
+        "score_definition": "consensus_mean",
+        "design_order": [
+          "alpha",
+          "beta",
+          "outcome"
+        ],
+        "design": [
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ]
+        ],
+        "candidates": [
+          {
+            "id": "one_component",
+            "ncomp": 1,
+            "keepX": {
+              "alpha": [
+                8
+              ],
+              "beta": [
+                8
+              ]
+            }
+          },
+          {
+            "id": "two_components",
+            "ncomp": 2,
+            "keepX": {
+              "alpha": [
+                8,
+                8
+              ],
+              "beta": [
+                8,
+                8
+              ]
+            }
+          }
+        ]
+      },
+      "baseline_candidates": [
+        {
+          "id": "one_component",
+          "ncomp": 1
+        },
+        {
+          "id": "two_components",
+          "ncomp": 2
+        }
+      ],
+      "metrics": [
+        "rmse",
+        "mae",
+        "r_squared_training_intercept"
+      ],
+      "paired_difference": "candidate_model_rmse - concatenation_model_rmse"
+    },
+    "categorical": {
+      "candidate_method": "mixomics_diablo",
+      "baseline_method": "concat_plsda",
+      "outcome": {
+        "column": "outcome",
+        "type": "categorical",
+        "levels": [
+          "control",
+          "case"
+        ]
+      },
+      "common": {
+        "block_ids": [
+          "alpha",
+          "beta"
+        ],
+        "scale_features": true,
+        "prediction_rule": "centroids.dist"
+      },
+      "candidate_params": {
+        "score_definition": "consensus_mean",
+        "na_capability": "complete_predictor_blocks",
+        "tuning_grid_ref": "rdy002_components_1_2_keepx8",
+        "design_order": [
+          "alpha",
+          "beta"
+        ],
+        "design_matrix": [
+          [
+            0,
+            0.5
+          ],
+          [
+            0.5,
+            0
+          ]
+        ],
+        "candidates": [
+          {
+            "id": "one_component",
+            "ncomp": 1,
+            "keepX": {
+              "alpha": [
+                8
+              ],
+              "beta": [
+                8
+              ]
+            }
+          },
+          {
+            "id": "two_components",
+            "ncomp": 2,
+            "keepX": {
+              "alpha": [
+                8,
+                8
+              ],
+              "beta": [
+                8,
+                8
+              ]
+            }
+          }
+        ]
+      },
+      "baseline_candidates": [
+        {
+          "id": "one_component",
+          "ncomp": 1
+        },
+        {
+          "id": "two_components",
+          "ncomp": 2
+        }
+      ],
+      "metrics": [
+        "balanced_error",
+        "accuracy",
+        "confusion_including_failed",
+        "per_class_denominators"
+      ],
+      "auroc": null,
+      "paired_difference": "candidate_model_balanced_error - concatenation_model_balanced_error"
+    },
+    "continuous_failure_coverage": "metric_on_successful_predictions_only_plus_full_planned_eligible_failed_ineligible_denominators",
+    "categorical_failure_coverage": "failed_predictions_count_as_errors_for_their_true_class",
+    "internal_intercept_or_majority_baseline_distinct_from_concatenation": true,
+    "qualification_completion": "all required outer predictions and all inner predictions complete; partial inner prediction makes qualification incomplete even when wrapper yields a finite score"
+  },
+  "additional_checks": {
+    "leakage_mutations": {
+      "seed": 51001,
+      "regime": "strong_signal",
+      "fold": "outer_01",
+      "lanes": [
+        "continuous_candidate",
+        "categorical_candidate"
+      ],
+      "predictors": "add 10 to every cell in outer_01 test units only",
+      "continuous_outcome": "add 100 in outer_01 test units only",
+      "categorical_outcome": "swap control and case in outer_01 test units only",
+      "split_plan": "reuse_original_unchanged",
+      "compare": [
+        "outer_01_training_preparation_state_hashes",
+        "outer_01_chosen_candidate",
+        "outer_01_model_state_hash"
+      ],
+      "max_fits_per_rerun": 15,
+      "original_failed_or_unrun": "mutation_check_not_run"
+    },
+    "no_fit_refusals": [
+      {
+        "check": "candidate_and_baseline_split_hash_mismatch",
+        "expected_code": "C_EVAL_CONTEXT_MISMATCH"
+      },
+      {
+        "check": "mofa_all_missing_feature",
+        "expected_code": "C_NA_CAPABILITY"
+      }
+    ],
+    "refusal_is_complete_execution": false
+  },
+  "uncertainty": {
+    "resampling_unit": "independent_synthetic_dataset_seed",
+    "bootstrap_replicates": 2000,
+    "paired_index_draws_per_replicate": 10,
+    "seed": 909991,
+    "statistic": "mean of within-seed candidate-minus-baseline metric differences",
+    "interval": "2.5% and 97.5% empirical quantiles using R type 7",
+    "require_all_ten_pairs_valid": true,
+    "strong_success_interval": "two-sided exact 95% binomial only if all 10 attempted; attempted failures count as nonsuccesses",
+    "interpretation": "imprecise descriptive Monte Carlo uncertainty, not patient-level uncertainty, FDR calibration, or general performance assurance"
+  },
+  "budget": {
+    "native_fits_maximum": 2550,
+    "main_predictive_evaluations": 160,
+    "predictive_native_fit_reservation": 2400,
+    "exploratory_pca_fit_reservation": 40,
+    "exploratory_mofa_fit_reservation": 80,
+    "mutation_evaluation_fit_reservation": 30,
+    "no_fit_refusal_reservation": 0,
+    "heavy_jobs": 1,
+    "simultaneous_native_fits": 1,
+    "global_wall_seconds": 21600,
+    "evaluation_wall_seconds": 300,
+    "mofa_fit_wall_seconds": 180,
+    "pca_fit_wall_seconds": 30,
+    "reservation_rule": "durably reserve maximum before subprocess launch; never silently refund on timeout or crash",
+    "planned_order": [
+      "seed_ascending",
+      "regime_null_weak_strong_adversarial",
+      "pca",
+      "mofa_primary",
+      "mofa_secondary",
+      "continuous_candidate",
+      "continuous_baseline",
+      "categorical_candidate",
+      "categorical_baseline",
+      "mutations_after_all_main_cells_continuous_then_categorical"
+    ],
+    "timeouts": "terminate_only_run_owned_subprocess; preserve failure and partial artifacts; remaining rows not_run",
+    "automatic_retries": 0
+  },
+  "publication_and_artifacts": {
+    "qualification_root": "artifacts/qualification/RDY-002/",
+    "required": [
+      "protocol_and_commit_hashes",
+      "environment_and_runtime",
+      "scenario_input_and_outcome_hashes",
+      "split_plans_and_hashes",
+      "ordered_cell_and_reservation_journal",
+      "effective_options",
+      "native_models_and_save_reload",
+      "preparation_and_model_state_hashes",
+      "real_evaluation_results",
+      "predictions_and_candidate_histories",
+      "metrics_and_recovery_tables",
+      "failure_and_coverage_ledgers",
+      "mutation_and_refusal_verdicts",
+      "commands_exits_and_times",
+      "checksummed_final_manifest"
+    ],
+    "atomic_manifest_required": true,
+    "c06_publication": "separate_synthetic_only_object_per_seed_and_predictive_lane_after_sol_context_review",
+    "complete_observation_requires": "actual_EvaluationResult_with_all_64_outer_predictions_zero_failures_and_no_inner_prediction_failures",
+    "noncomplete_observation": "reason_only_under_current_C06_validator; retain_diagnostics_in_separate_ledger",
+    "mofa_as_predictive_evaluation_result": false,
+    "attach_synthetic_evidence_to_real_study": false,
+    "automatically_relabel_real_study_c07": false
+  },
+  "future_runner_scope_proposal": {
+    "files": [
+      "tools/run-c07-qualification.R",
+      "tests/testthat/test-RDY-002-c07-qualification.R"
+    ],
+    "shared_cli_publication_seam": "triomics_c06_cli_unrun_controls constructs unrun records; actual synthetic publication requires separate Sol-owned review",
+    "modify_schema_or_statistical_contract": false,
+    "parent_review_required_before_runner_or_fits": true
+  }
+}
