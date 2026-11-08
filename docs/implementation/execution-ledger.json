@@ -53,23 +53,11 @@
       ],
       "next_transition": "Sol inspect GREEN two-file commit; no native fits before review",
       "red_sol_receipt": "rdy002-sol-red/receipt.json"
-    },
-    {
-      "id": "/root/readiness_fasting_structure_terra",
-      "role": "Terra",
-      "requested_model": "gpt-6.1-terra",
-      "effort": "max",
-      "effective_settings_exposed": false,
-      "status": "running",
-      "scope": "user-authorized local fasting structural inspection; no identifier output or fitting",
-      "attempts": 1,
-      "repairs": 0,
-      "next_transition": "Sol review private structure report; preserve unknown lab preprocessing"
     }
   ],
   "orchestration_control": {
     "status": "readiness_active",
-    "last_reconciled": "2026-11-08T13:25:20.443553+00:00",
+    "last_reconciled": "2026-11-08T13:31:46.859468+00:00",
     "active_handoffs": [
       {
         "id": "/root/readiness_c07_runner_luna",
@@ -88,18 +76,6 @@
         ],
         "next_transition": "Sol inspect GREEN two-file commit; no native fits before review",
         "red_sol_receipt": "rdy002-sol-red/receipt.json"
-      },
-      {
-        "id": "/root/readiness_fasting_structure_terra",
-        "role": "Terra",
-        "requested_model": "gpt-6.1-terra",
-        "effort": "max",
-        "effective_settings_exposed": false,
-        "status": "running",
-        "scope": "user-authorized local fasting structural inspection; no identifier output or fitting",
-        "attempts": 1,
-        "repairs": 0,
-        "next_transition": "Sol review private structure report; preserve unknown lab preprocessing"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -10129,7 +10105,7 @@
     "worker_ledger": "local readiness-20261108-01/state.json",
     "private_inputs": "local coordinator inspection only; no delegated rows or public artifacts",
     "spec_readiness_approval_ref": "docs/implementation/readiness/spec-readiness-approval.json",
-    "first_study_readiness": "User authorized separate local structural reviewer; lab notes not yet available, user searching; no clinical identity or preprocessing assumptions, no fit.",
+    "first_study_readiness": "Separate local structural review completed and reviewed by Sol; source bytes unchanged; no mapping/preprocessing acceptance or study fit. Lab notes not yet available.",
     "RDY-002": {
       "protocol_commit": "7afe8082e7a3d97d49ea50ec95917d72163b0ff6",
       "protocol_audit": "pass",
