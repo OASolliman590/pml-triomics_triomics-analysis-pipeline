@@ -35,11 +35,47 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "id": "/root/readiness_c07_runner_luna",
+      "role": "Luna",
+      "requested_model": "gpt-6-luna",
+      "effort": "max",
+      "effective_settings_exposed": false,
+      "status": "running_red_tests",
+      "worktree": "/private/tmp/triomics-rdy002-c07-runner",
+      "base": "f198cf9",
+      "attempts": 1,
+      "repairs": 0,
+      "allowlist": [
+        "tools/run-c07-qualification.R",
+        "tests/testthat/test-RDY-002-c07-qualification.R"
+      ],
+      "next_transition": "Sol inspect RED tests then continue same initial worker; no fits before inspection"
+    }
+  ],
   "orchestration_control": {
     "status": "readiness_active",
-    "last_reconciled": "2026-11-08T13:03:19.828453+00:00",
-    "active_handoffs": [],
+    "last_reconciled": "2026-11-08T13:04:28.876370+00:00",
+    "active_handoffs": [
+      {
+        "id": "/root/readiness_c07_runner_luna",
+        "role": "Luna",
+        "requested_model": "gpt-6-luna",
+        "effort": "max",
+        "effective_settings_exposed": false,
+        "status": "running_red_tests",
+        "worktree": "/private/tmp/triomics-rdy002-c07-runner",
+        "base": "f198cf9",
+        "attempts": 1,
+        "repairs": 0,
+        "allowlist": [
+          "tools/run-c07-qualification.R",
+          "tests/testthat/test-RDY-002-c07-qualification.R"
+        ],
+        "next_transition": "Sol inspect RED tests then continue same initial worker; no fits before inspection"
+      }
+    ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
     "disposition": "RDY001 accepted. RDY002 protocol and exact two-file runner scope passed fresh Astra audit; fresh Luna implementation next. No C07 native fits yet.",
     "current_gate": {
@@ -10060,7 +10096,7 @@
         "documentation_repairs": 0,
         "audit_initial": 1,
         "focused_rereview": 0,
-        "implementation_initial": 0,
+        "implementation_initial": 1,
         "implementation_repairs": 0
       }
     },
@@ -10078,7 +10114,7 @@
         "tools/run-c07-qualification.R",
         "tests/testthat/test-RDY-002-c07-qualification.R"
       ],
-      "status": "implementation_authorized_after_audit"
+      "status": "Luna initial RED tests in progress; qualification not run"
     }
   }
 }

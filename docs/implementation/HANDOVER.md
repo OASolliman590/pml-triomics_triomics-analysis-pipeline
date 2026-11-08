@@ -1,3 +1,23 @@
+# Active: RDY-002 protocol passed; Luna initial RED tests
+
+Fresh Astra passed immutable protocol `7afe808` and its exact two-file runner scope;
+[receipt](reviews/2026-11-08-rdy-002-protocol-astra.md). Integrated protocol `6fb73a8`,
+audit record `f198cf9`. RDY-001 remains accepted; do not restart it. C-07 fits: zero.
+Luna `/root/readiness_c07_runner_luna` is in the initial RED-test checkpoint, new
+worktree `/private/tmp/triomics-rdy002-c07-runner`; repairs 0/2. Sol must inspect
+its failing behavioral tests before continuing implementation or any native fit.
+The frozen maximum is 2,550 native fits; one heavy job. Private first-study
+readiness inspection is local only; source identity/processing meanings remain
+unverified. No private study fit, public upload or push.
+
+Literal resume: **Join the existing Luna initial attempt, inspect its RED tests,
+then continue that same worker. Do not restart it or the passed RDY-001/RDY-002
+protocol audits. Preserve fixed seeds, budget, failure history and attempt caps.
+Qualification and first-study readiness remain unfinished. M1–M9/G7–G9 stay
+accepted/released. Local worker/process state is readiness-20261108-01/state.json.**
+
+## Historical checkpoints below
+
 # Active: RDY-001 accepted; C-07 protocol and first-study readiness next
 
 The existing Astra initial audit passed on6e77395; Sol accepted the exact-hash [current spec-readiness subject](readiness/spec-readiness-approval.json). Read [the audit/disposition](reviews/2026-11-08-rdy-001-spec-astra.md): 177 review blobs and92 actual content files verified;53 change records, not87. Historical delivery hashes and its known validator failure remain untouched. G7/G8/G9 remain released. Scientific/data qualifications remain pending.
