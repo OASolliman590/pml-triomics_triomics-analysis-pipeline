@@ -52,11 +52,23 @@
         "tests/testthat/test-RDY-002-c07-qualification.R"
       ],
       "next_transition": "Sol inspect RED checkpoint, then same initial worker implements"
+    },
+    {
+      "id": "/root/readiness_fasting_structure_terra",
+      "role": "Terra",
+      "requested_model": "gpt-6.1-terra",
+      "effort": "max",
+      "effective_settings_exposed": false,
+      "status": "running",
+      "scope": "user-authorized local fasting structural inspection; no identifier output or fitting",
+      "attempts": 1,
+      "repairs": 0,
+      "next_transition": "Sol review private structure report; preserve unknown lab preprocessing"
     }
   ],
   "orchestration_control": {
     "status": "readiness_active",
-    "last_reconciled": "2026-11-08T13:04:28.876370+00:00",
+    "last_reconciled": "2026-11-08T13:17:17.297574+00:00",
     "active_handoffs": [
       {
         "id": "/root/readiness_c07_runner_luna",
@@ -74,6 +86,18 @@
           "tests/testthat/test-RDY-002-c07-qualification.R"
         ],
         "next_transition": "Sol inspect RED checkpoint, then same initial worker implements"
+      },
+      {
+        "id": "/root/readiness_fasting_structure_terra",
+        "role": "Terra",
+        "requested_model": "gpt-6.1-terra",
+        "effort": "max",
+        "effective_settings_exposed": false,
+        "status": "running",
+        "scope": "user-authorized local fasting structural inspection; no identifier output or fitting",
+        "attempts": 1,
+        "repairs": 0,
+        "next_transition": "Sol review private structure report; preserve unknown lab preprocessing"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -10103,7 +10127,7 @@
     "worker_ledger": "local readiness-20261108-01/state.json",
     "private_inputs": "local coordinator inspection only; no delegated rows or public artifacts",
     "spec_readiness_approval_ref": "docs/implementation/readiness/spec-readiness-approval.json",
-    "first_study_readiness": "Confirmed local folder inspected; candidate matrices and clinical workbooks found; authoritative crosswalk/preprocessing not established. No fit.",
+    "first_study_readiness": "User authorized separate local structural reviewer; lab notes not yet available, user searching; no clinical identity or preprocessing assumptions, no fit.",
     "RDY-002": {
       "protocol_commit": "7afe8082e7a3d97d49ea50ec95917d72163b0ff6",
       "protocol_audit": "pass",
