@@ -35,49 +35,13 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "worker_id": "/root/readiness_c07_protocol_terra",
-      "role": "Terra",
-      "requested_model": "gpt-6.1-terra",
-      "requested_effort": "max",
-      "effective_settings_exposed": false,
-      "scope": "RDY-002 C07 protocol documentation",
-      "base_commit": "276f90b",
-      "status": "running",
-      "attempts": 1,
-      "repairs": 0,
-      "allowlist": [
-        "docs/implementation/readiness/RDY-002-c07-qualification-protocol.md",
-        "docs/implementation/readiness/RDY-002-c07-protocol.json"
-      ],
-      "next_transition": "Sol review then immutable protocol audit; no coding or fitting before pass"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
     "status": "readiness_active",
-    "last_reconciled": "2026-11-08T12:52:39.952781+00:00",
-    "active_handoffs": [
-      {
-        "worker_id": "/root/readiness_c07_protocol_terra",
-        "role": "Terra",
-        "requested_model": "gpt-6.1-terra",
-        "requested_effort": "max",
-        "effective_settings_exposed": false,
-        "scope": "RDY-002 C07 protocol documentation",
-        "base_commit": "276f90b",
-        "status": "running",
-        "attempts": 1,
-        "repairs": 0,
-        "allowlist": [
-          "docs/implementation/readiness/RDY-002-c07-qualification-protocol.md",
-          "docs/implementation/readiness/RDY-002-c07-protocol.json"
-        ],
-        "next_transition": "Sol review then immutable protocol audit; no coding or fitting before pass"
-      }
-    ],
+    "last_reconciled": "2026-11-08T13:03:19.828453+00:00",
+    "active_handoffs": [],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
-    "disposition": "RDY001 accepted; same audit terminal. Terra optional-methods research reviewed/integrated. Fresh RDY002 protocol writer active; private onboarding stays local. M7-M9/G7-G9 preserved.",
+    "disposition": "RDY001 accepted. RDY002 protocol and exact two-file runner scope passed fresh Astra audit; fresh Luna implementation next. No C07 native fits yet.",
     "current_gate": {
       "candidate": "2f8c83727be9f693d0e60457024edc55474c006b",
       "package": "Status: OK",
@@ -10094,7 +10058,7 @@
       "RDY-002": {
         "documentation_initial": 1,
         "documentation_repairs": 0,
-        "audit_initial": 0,
+        "audit_initial": 1,
         "focused_rereview": 0,
         "implementation_initial": 0,
         "implementation_repairs": 0
@@ -10103,6 +10067,18 @@
     "worker_ledger": "local readiness-20261108-01/state.json",
     "private_inputs": "local coordinator inspection only; no delegated rows or public artifacts",
     "spec_readiness_approval_ref": "docs/implementation/readiness/spec-readiness-approval.json",
-    "first_study_readiness": "local structure inspected; authoritative identity/processing input pending; no fit"
+    "first_study_readiness": "Confirmed local folder inspected; candidate matrices and clinical workbooks found; authoritative crosswalk/preprocessing not established. No fit.",
+    "RDY-002": {
+      "protocol_commit": "7afe8082e7a3d97d49ea50ec95917d72163b0ff6",
+      "protocol_audit": "pass",
+      "audit_ref": "docs/implementation/reviews/2026-11-08-rdy-002-protocol-astra.md",
+      "fit_budget": 2550,
+      "fit_run": false,
+      "implementation_allowlist": [
+        "tools/run-c07-qualification.R",
+        "tests/testthat/test-RDY-002-c07-qualification.R"
+      ],
+      "status": "implementation_authorized_after_audit"
+    }
   }
 }
