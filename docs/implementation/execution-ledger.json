@@ -42,7 +42,7 @@
       "requested_model": "gpt-6-luna",
       "effort": "max",
       "effective_settings_exposed": false,
-      "status": "running_red_tests",
+      "status": "running_initial_implementation_after_sol_red",
       "worktree": "/private/tmp/triomics-rdy002-c07-runner",
       "base": "b99fa2174fad126bffb94ee14439d83a26e5e1ff",
       "attempts": 1,
@@ -51,7 +51,8 @@
         "inst/qualification/run-c07-qualification.R",
         "tests/testthat/test-RDY-002-c07-qualification.R"
       ],
-      "next_transition": "Sol inspect RED checkpoint, then same initial worker implements"
+      "next_transition": "Sol inspect GREEN two-file commit; no native fits before review",
+      "red_sol_receipt": "rdy002-sol-red/receipt.json"
     },
     {
       "id": "/root/readiness_fasting_structure_terra",
@@ -68,7 +69,7 @@
   ],
   "orchestration_control": {
     "status": "readiness_active",
-    "last_reconciled": "2026-11-08T13:17:17.297574+00:00",
+    "last_reconciled": "2026-11-08T13:25:20.443553+00:00",
     "active_handoffs": [
       {
         "id": "/root/readiness_c07_runner_luna",
@@ -76,7 +77,7 @@
         "requested_model": "gpt-6-luna",
         "effort": "max",
         "effective_settings_exposed": false,
-        "status": "running_red_tests",
+        "status": "running_initial_implementation_after_sol_red",
         "worktree": "/private/tmp/triomics-rdy002-c07-runner",
         "base": "b99fa2174fad126bffb94ee14439d83a26e5e1ff",
         "attempts": 1,
@@ -85,7 +86,8 @@
           "inst/qualification/run-c07-qualification.R",
           "tests/testthat/test-RDY-002-c07-qualification.R"
         ],
-        "next_transition": "Sol inspect RED checkpoint, then same initial worker implements"
+        "next_transition": "Sol inspect GREEN two-file commit; no native fits before review",
+        "red_sol_receipt": "rdy002-sol-red/receipt.json"
       },
       {
         "id": "/root/readiness_fasting_structure_terra",
@@ -10138,9 +10140,20 @@
         "inst/qualification/run-c07-qualification.R",
         "tests/testthat/test-RDY-002-c07-qualification.R"
       ],
-      "status": "Luna initial RED tests in progress; qualification not run",
+      "status": "initial runner implementation after independent Sol RED inspection",
       "corrected_scope_commit": "b99fa2174fad126bffb94ee14439d83a26e5e1ff",
-      "focused_scope_audit": "pass"
+      "focused_scope_audit": "pass",
+      "red_tests": {
+        "tests": 4,
+        "errors": 4,
+        "failed_assertions": 0,
+        "passed_assertions": 0,
+        "warnings": 0,
+        "skips": 0,
+        "exit": 1,
+        "interpretation": "expected missing runner; initial implementation authorized",
+        "native_fits": 0
+      }
     }
   }
 }

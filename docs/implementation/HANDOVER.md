@@ -1,3 +1,27 @@
+# Active: RDY-002 initial implementation; local study structure review
+
+RDY-001 accepted. RDY-002 initial protocol audit and its one focused packaging
+scope rereview passed; [scope receipt](reviews/2026-11-08-rdy-002-packaging-scope-repair.md).
+Sol inspected and reproduced [four expected RED errors](reviews/2026-11-08-rdy-002-red-checkpoint.md),
+with no warnings/skips and zero native fits. The same Luna is implementing only
+`inst/qualification/run-c07-qualification.R` and its new test file in
+`/private/tmp/triomics-rdy002-c07-runner`; initial attempt, repairs 0/2.
+
+User separately requested Terra's local fasting structure review. Worker
+`/root/readiness_fasting_structure_terra` writes only new private review files.
+No identifiers are returned in chat or public files; lab notes are not yet
+available and Omar will search. No mapping or preprocessing is assumed.
+
+Literal resume: **Join existing Luna and Terra workers; do not restart them.
+Review Luna's GREEN candidate before any native fits; execute only the frozen
+2550-fit protocol with durable reservations. Review Terra's local structural
+receipt separately. RDY-002 protocol rereview is exhausted; implementation
+repairs remain 0/2. No private-study fit is authorized to bypass identity or
+processing gaps. M1–M9/G7–G9 remain accepted/released. Local readiness state.json
+owns worker/process transitions.**
+
+## Historical checkpoints below
+
 # Active: RDY-002 protocol passed; Luna initial RED tests
 
 Fresh Astra passed immutable protocol `7afe808` and its exact two-file runner scope;
