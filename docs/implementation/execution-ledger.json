@@ -67,12 +67,20 @@
         }
       ],
       "runner_written": true,
-      "worker_checkpoint": "repair1 clean two-file handoff; source green run04; failed cold-start and sandbox recount preserved; no durable standalone positive probe log",
+      "worker_checkpoint": "Final repair2 regressions RED (worker reports 9 failures/errors incl matcher typo/missing helper); isolated-group inheritance observed, individual PID/creation/group cleanup proof under test. No native fits.",
       "commit": "dd290289e91a07ff010695ebb5012b65f256e8d8",
       "initial_commit": "ee9d905426e2b9fd13e874bf6fa4d9b775b030ba",
       "repair1_internal_test_disposition": "preserve failed log; marker-less ownership must bind actual worker run/cell/root; missing orphan identity refuses; retain positive proven-stopped case; still repair1, no new attempt",
       "checkpoint_evidence": "rdy002-repair1-checkpoints/manifest.json",
-      "worker_test_counts": "19 tests/266 expectation slots; exact outcome totals not persisted, no count credit"
+      "worker_test_counts": "19 tests/266 expectation slots; exact outcome totals not persisted, no count credit",
+      "automatic_review_rejections": [
+        {
+          "action": "whole-process-group SIGKILL dummy probe",
+          "reason": "numeric PGID target without per-member identity checks",
+          "executed": false,
+          "disposition": "worker will not retry; investigating individually verified owned PID/creation/group signals, then stop if proof unavailable"
+        }
+      ]
     }
   ],
   "orchestration_control": {
@@ -10154,7 +10162,7 @@
       },
       "RDY-006": {
         "documentation_initial": 1,
-        "documentation_repairs": 0,
+        "documentation_repairs": 1,
         "audit_initial": 0,
         "focused_rereview": 0
       }
@@ -10279,18 +10287,19 @@
       "role": "Terra",
       "requested_model": "gpt-6.1-terra",
       "effort": "max",
-      "status": "completed_sol_reviewed_proposal_integrated",
+      "status": "completed_sol_reviewed_repair1_integrated",
       "scope": "RDY006 static inventory and separate regression verification budget proposal; no execution",
       "base": "650d6fd",
       "allowlist": [
         "docs/implementation/readiness/RDY-006-regression-verification-budget-proposal.md"
       ],
       "attempts": 1,
-      "repairs": 0,
-      "next_transition": "fresh Astra only after immutable candidate and concrete execution/supervision evidence are ready; no native gate authorized",
-      "commit": "01441ec62dbd6d054e9991c8a5c69c6ac9ec880c",
-      "integration_commit": "83aba31ec87746f32dd850c2ea10c9562eab848a",
-      "proposal_sha256": "e0506c321a04136df1a9995888325be46cbb2065d858fe978bb5a79ffecd10a5",
+      "repairs": 1,
+      "next_transition": "fresh Astra pending final immutable candidate and concrete package supervisor/preflight evidence; no execution",
+      "commit": "dc1c45725444a7096b5c4162d482591cbbe6acb1",
+      "integration_commit": "e4f2ff28058ecda14adfb433b42d5014968d7621",
+      "proposal_sha256": "fc0834ea003a312ca26f1258aa53f13bb85180da680658031109e875e867ec98",
+      "reason": "RDY003 requires independent no-fit tests plus clean-archive package check; remove unnecessary unspent full-source command from unaudited proposal",
       "native_fits": 0
     }
   }
