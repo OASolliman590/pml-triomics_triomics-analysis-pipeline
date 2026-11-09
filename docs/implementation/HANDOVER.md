@@ -1,3 +1,28 @@
+# Active: C-07 initial implementation and MOFA enrichment protocol review
+
+The SSD returned with canonical `d78bd7b` and expected protected dirt; no Git
+repair or replacement was performed. RDY-004 protocol proposal is now integrated
+at `e3407b2`, after Sol checked its source fingerprints and documentation repair.
+Fresh `/root/readiness_mofa_enrichment_astra` audits that immutable proposal.
+It is not a native qualification or D-T06 activation. Eligible C-05 producer
+model/data/masks/maps remain prerequisites; no enrichment call or model fit ran.
+Documentation initial1/repair1, protocol audit initial1/focused0.
+
+The same `/root/readiness_c07_runner_luna` continues its initial two-file runner
+implementation on reviewed base `16077f5`. A transport interruption was resumed
+without resetting attempts. Native fits0; repairs0/2. The RDY-002 scientific
+protocol/review history and RDY-003 dependency declaration remain unchanged.
+The local fasting structural review is complete and reviewed; scientific
+identities and lab processing remain unverified. Omar is searching for notes.
+
+Literal resume: **Join these exact two active workers, do not restart them.
+Review Luna's immutable GREEN candidate before fitting the frozen C-07 controls.
+Record Astra's RDY-004 protocol verdict separately; do not mistake it for native
+qualification or invent producer artifacts. Preserve every attempt count and
+all accepted M1–M9/G7–G9 records. Exact local state: readiness state.json.**
+
+## Historical checkpoints below
+
 # Active: same RDY-002 Luna resumed after reviewed dependency seam
 
 Fresh RDY-003 Astra passed; Sol applied only the two exact DESCRIPTION Suggests
