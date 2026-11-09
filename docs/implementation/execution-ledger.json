@@ -35,7 +35,46 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [],
+  "active_workers": [
+    {
+      "id": "/root/readiness_c07_runner_luna",
+      "role": "Luna",
+      "requested_model": "gpt-6-luna",
+      "effort": "max",
+      "effective_settings_exposed": false,
+      "status": "running_final_targeted_repair2",
+      "worktree": "/private/tmp/triomics-rdy002-c07-runner",
+      "base": "16077f5da5e7a757cf061ac94f28228dd23b077f",
+      "attempts": 1,
+      "repairs": 2,
+      "allowlist": [
+        "inst/qualification/run-c07-qualification.R",
+        "tests/testthat/test-RDY-002-c07-qualification.R"
+      ],
+      "next_transition": "same-worker final repair2 on five reproduced/source-confirmed blockers; no fits, no repair3",
+      "red_sol_receipt": "rdy002-sol-red/receipt.json",
+      "expanded_red": "worker reports 8 errors/8 tests; not independently rerun",
+      "dirty_diff": [
+        "inst/qualification/run-c07-qualification.R",
+        "tests/testthat/test-RDY-002-c07-qualification.R"
+      ],
+      "native_fits": 0,
+      "transport_interruptions": [
+        {
+          "at": "2026-11-09T07:44:39.521880+00:00",
+          "message": "remote compact task stream disconnected; network error decoding body",
+          "disposition": "same worker resumed from persisted files; no new implementation or repair attempt"
+        }
+      ],
+      "runner_written": true,
+      "worker_checkpoint": "repair1 clean two-file handoff; source green run04; failed cold-start and sandbox recount preserved; no durable standalone positive probe log",
+      "commit": "dd290289e91a07ff010695ebb5012b65f256e8d8",
+      "initial_commit": "ee9d905426e2b9fd13e874bf6fa4d9b775b030ba",
+      "repair1_internal_test_disposition": "preserve failed log; marker-less ownership must bind actual worker run/cell/root; missing orphan identity refuses; retain positive proven-stopped case; still repair1, no new attempt",
+      "checkpoint_evidence": "rdy002-repair1-checkpoints/manifest.json",
+      "worker_test_counts": "19 tests/266 expectation slots; exact outcome totals not persisted, no count credit"
+    }
+  ],
   "orchestration_control": {
     "status": "readiness_active",
     "last_reconciled": "2026-11-09T07:59:19.834264+00:00",
@@ -10079,7 +10118,7 @@
     "goal_ref": "docs/implementation/readiness/GOAL.md",
     "baseline_record": "29ba7d75170a428860a36723847a085115ed2080",
     "status": "in_progress",
-    "current_scope": "RDY002 repair1 rejected; final same-worker repair2 authorized",
+    "current_scope": "RDY002 same Luna final targeted repair2/2 active",
     "scope_ref": "docs/implementation/change-records/RDY-001-frozen-spec-reconciliation.md",
     "accepted_M7_M8_M9_unchanged": true,
     "G7_G8_G9": "released",
@@ -10134,7 +10173,7 @@
         "inst/qualification/run-c07-qualification.R",
         "tests/testthat/test-RDY-002-c07-qualification.R"
       ],
-      "status": "repair1 rejected; same Luna final repair2 authorized",
+      "status": "same Luna final targeted repair2 running",
       "corrected_scope_commit": "b99fa2174fad126bffb94ee14439d83a26e5e1ff",
       "focused_scope_audit": "pass",
       "red_tests": {
@@ -10217,7 +10256,9 @@
       "audit": "pass_protocol_only",
       "review_ref": "docs/implementation/reviews/2026-11-09-rdy-005-protocol-astra.md"
     },
-    "active_workers": [],
+    "active_workers": [
+      "/root/readiness_c07_runner_luna"
+    ],
     "biopan_source_followup": {
       "status": "completed_sol_reviewed_research_only",
       "worker": "/root/readiness_biopan_source_terra",
