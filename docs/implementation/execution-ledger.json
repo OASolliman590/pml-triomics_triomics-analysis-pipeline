@@ -10219,11 +10219,10 @@
       "review_ref": "docs/implementation/reviews/2026-11-09-rdy-005-protocol-astra.md"
     },
     "active_workers": [
-      "/root/readiness_c07_runner_luna",
-      "/root/readiness_biopan_source_terra"
+      "/root/readiness_c07_runner_luna"
     ],
     "biopan_source_followup": {
-      "status": "read_only_primary_source_research_active",
+      "status": "completed_sol_reviewed_research_only",
       "worker": "/root/readiness_biopan_source_terra",
       "base": "c53ebf0",
       "allowlist": [
@@ -10231,9 +10230,11 @@
       ],
       "attempts": 1,
       "repairs": 0,
-      "next_transition": "Sol reviews one-file evidence; no method/rights/qualification credit inferred",
+      "next_transition": "exact source/terms/equivalence prerequisite remains; no activation",
       "private_data_access": false,
-      "execution": false
+      "execution": false,
+      "integration_commit": "c220e780920eb48680f281dda75ab6ba7b3aff7c",
+      "note_sha256": "d782a74fe2677443e6e9749b63f40ca0fc9137f1ae72e3a0e813bd756abe75af"
     }
   }
 }

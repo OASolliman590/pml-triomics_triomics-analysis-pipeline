@@ -19,12 +19,17 @@ No model or enrichment calls. Producer implementation is staged after current
 C-07 supervisor verification; no method qualification or D-T06 activation. The SSD is reconnected. Private structure review is
 complete; identities/processing remain unverified. M1–M9/G7–G9 unchanged.
 
-One additional documentation-only worker, `/root/readiness_biopan_source_terra`,
-follows the remaining official BioPAN local-source/terms lead in one isolated
-Markdown note. No private inputs, installs or execution. Review its exact source
-evidence; availability alone grants no method acceptance or rights assumption.
+BioPAN source-research Terra is terminal and Sol-reviewed, integrated at
+`c220e78`; read the dated readiness follow-up. An author-associated code lead is
+accessible, but archive/terms/equivalence prerequisites remain unverified. No
+installation, private inputs, execution or D-T07 activation.
 
-Literal resume: **Join the same Luna repair1 and BioPAN source-research Terra;
+Luna reports a positive no-fit R-watchdog coordinator-loss witness, following
+preserved failed processx probes. It is still repair1, uncommitted/unaccepted;
+Sol must independently verify immutable/installed bytes and the complete
+behavioral suite before any native fit.
+
+Literal resume: **Join the same Luna repair1; BioPAN research is terminal;
 RDY-005 audit is terminal/pass;
 do not restart or reset attempts.
 Review its immutable result and independently verify no-fit gates before any
