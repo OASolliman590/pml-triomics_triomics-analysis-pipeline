@@ -10146,7 +10146,7 @@
       }
     },
     "worker_ledger": "local readiness-20261108-01/state.json",
-    "private_inputs": "local coordinator inspection only; no delegated rows or public artifacts",
+    "private_inputs": "Explicitly user-authorized local structural subagent review completed; no private rows or identifiers in worker messages/public artifacts; no study fitting.",
     "spec_readiness_approval_ref": "docs/implementation/readiness/spec-readiness-approval.json",
     "first_study_readiness": "Separate local structural review completed and reviewed by Sol; source bytes unchanged; no mapping/preprocessing acceptance or study fit. Lab notes not yet available.",
     "RDY-002": {
