@@ -115,12 +115,18 @@ substitute a recomputation or change shared code in this packet.
 
 First freeze/audit this protocol and a bounded runner scope; then pass the
 runner's no-fit preflight before authorizing the one run. Pin the previously
-observed R 4.6.1, MOFA2 1.22.1, Python 3.12.14 and mofapy2 0.7.5; verify the
-actual R/Python executable hashes against RDY-004, package/dependency identities,
-installed MOFA2 source/tree identities, mofapy2's `run/entry_point.py`,
-`build_model/utils.py` and `build_model/save_model.py` hashes, platform, BLAS and
-configuration. No installation, network or runtime substitution. Use one heavy qualification job
-at a time, one native fit at a time; set `OMP_NUM_THREADS`,
+observed R 4.6.1, MOFA2 1.22.1, Python 3.12.14 and mofapy2 0.7.5. Verify the
+actual Rscript SHA-256 is
+`7004a18d97f2470ffaf51ed4fdfef1785f641f54e1e5c7e30d0f894b6c475d91` and
+Python executable SHA-256 is
+`f681deb489625d7f104c4549f7d15f9fdedf7ef17d2c6d7fbaeadd709ca9f739`.
+Before invocation, capture the identities and hashes of other executables,
+native code, packages/dependencies, installed MOFA2 source/tree and mofapy2's
+`run/entry_point.py`, `build_model/utils.py` and `build_model/save_model.py`,
+plus platform, BLAS and configuration. A measured identity is not a prior
+verified hash; do not imply otherwise. If a required identity cannot be
+established, stop. No installation, network or runtime substitution. Use one
+heavy qualification job at a time, one native fit at a time; set `OMP_NUM_THREADS`,
 `OPENBLAS_NUM_THREADS`, `MKL_NUM_THREADS`, `VECLIB_MAXIMUM_THREADS`,
 `BLIS_NUM_THREADS` and `NUMEXPR_NUM_THREADS` to `1` before R/Python start and
 verify effective thread-pool limits where applicable. If they cannot be verified,
@@ -133,9 +139,12 @@ reserve the sole fit attempt before launching its run-owned subprocess; a crash,
 timeout or unknown entry count consumes it and never triggers an automatic
 relaunch. Record reserved, entered when known, completed, failed, unavailable
 and unrun states separately; do not silently refund. On timeout terminate and
-reap only that run's process group and descendants; preserve partial files as
-nonfinal. Before fitting, a no-fit supervisor preflight must prove deadline
-enforcement, descendant cleanup, durable reservation across a simulated
+reap only the exact run-owned process and its verified descendants; preserve
+partial files as nonfinal. Use process-group signalling only if the group's
+identity and exclusivity to this run have been established; do not assume
+`processx` creates an exclusive OS group. Before fitting, a no-fit supervisor
+preflight must prove deadline enforcement, descendant cleanup, durable
+reservation across a simulated
 controller crash, and no restart after an ambiguous reservation using harmless
 dummy processes. Reuse a supervisor only if its actual bytes and this runner's
 preflight establish these properties; do not assume the C-07 runner qualifies.
@@ -146,6 +155,11 @@ retry, repair fit, reroll, factor adjustment or replacement model. A failed,
 timed-out, nonconvergent, pruned or otherwise ineligible model remains failed
 or unavailable with evidence. Report actual convergence if verifiable; otherwise
 unknown. Keep the native failure and any partial bytes; never call enrichment.
+Legacy source/package suites that fit models and later integration verification
+are outside this one-fit allowance. Their native calls need an explicitly
+reviewed verification budget before execution, including identification of any
+already budgeted RDY-004 calls; the four-call enrichment limit and zero-D-fit
+rule stay unchanged. No hidden gate fits are authorized.
 
 ## Authenticity and eligibility after the fit
 
@@ -210,6 +224,9 @@ runtime/executable/dependency identities, ordered maps and source-row ledger,
 validated transformed data and masks, three producer input hashes, model bytes,
 training-state hash, native readback and alignment evidence, canonical typed
 sidecar and mapping hash, fit reservation/timing, and failure or success status.
+Capture exact invocation, exit status or unknown, all warnings with their stage
+and context, and actual native-entry counts or an explicit unknown for each
+stage. Preserve failures and warnings without suppressing or relabeling them.
 Publish no private paths, data or credentials. A qualifying producer receipt is
 only permission to request the separate RDY-004 input/null/rights review; it is
 not itself D-T06 acceptance or an enrichment call.
