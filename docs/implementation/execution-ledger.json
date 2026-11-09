@@ -10217,6 +10217,23 @@
       "protocol_sha256": "9256c16bc857d0bbeb71ab2c4a0091ab80ae3f69131ee1b6713c650e7dd88f65",
       "audit": "pass_protocol_only",
       "review_ref": "docs/implementation/reviews/2026-11-09-rdy-005-protocol-astra.md"
+    },
+    "active_workers": [
+      "/root/readiness_c07_runner_luna",
+      "/root/readiness_biopan_source_terra"
+    ],
+    "biopan_source_followup": {
+      "status": "read_only_primary_source_research_active",
+      "worker": "/root/readiness_biopan_source_terra",
+      "base": "c53ebf0",
+      "allowlist": [
+        "docs/implementation/readiness/2026-11-09-biopan-local-source-followup.md"
+      ],
+      "attempts": 1,
+      "repairs": 0,
+      "next_transition": "Sol reviews one-file evidence; no method/rights/qualification credit inferred",
+      "private_data_access": false,
+      "execution": false
     }
   }
 }

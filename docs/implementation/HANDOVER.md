@@ -19,7 +19,13 @@ No model or enrichment calls. Producer implementation is staged after current
 C-07 supervisor verification; no method qualification or D-T06 activation. The SSD is reconnected. Private structure review is
 complete; identities/processing remain unverified. M1–M9/G7–G9 unchanged.
 
-Literal resume: **Join the same Luna repair1; RDY-005 audit is terminal/pass;
+One additional documentation-only worker, `/root/readiness_biopan_source_terra`,
+follows the remaining official BioPAN local-source/terms lead in one isolated
+Markdown note. No private inputs, installs or execution. Review its exact source
+evidence; availability alone grants no method acceptance or rights assumption.
+
+Literal resume: **Join the same Luna repair1 and BioPAN source-research Terra;
+RDY-005 audit is terminal/pass;
 do not restart or reset attempts.
 Review its immutable result and independently verify no-fit gates before any
 qualification fit. Preserve failed candidate ee9d905 and its 178/4 result.
