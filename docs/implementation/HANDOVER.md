@@ -13,14 +13,13 @@ Positive host cleanup and standalone CLI must be demonstrated with no-fit
 witnesses before any of the fixed 2550 native fits. Host refusal is not success.
 
 RDY-001 accepted; RDY-004 protocol-only audit passed with its eligible producer
-prerequisite unresolved. RDY-005 Terra initial1/docrepair1 is complete. Its one-file producer proposal
-is frozen at `258bd00`; fresh `/root/readiness_mofa_producer_astra` is auditing
-that immutable snapshot, initial1/focused0. No model or enrichment calls. Do not
-implement while the audit is open or infer model qualification from a protocol
-verdict. The SSD is reconnected. Private structure review is
+prerequisite unresolved. RDY-005 Terra initial1/docrepair1 and fresh Astra initial1/focused0 are
+complete: protocol-only pass on `258bd00`; see the RDY-005 review receipt.
+No model or enrichment calls. Producer implementation is staged after current
+C-07 supervisor verification; no method qualification or D-T06 activation. The SSD is reconnected. Private structure review is
 complete; identities/processing remain unverified. M1–M9/G7–G9 unchanged.
 
-Literal resume: **Join the same Luna repair1 and RDY-005 Astra protocol audit;
+Literal resume: **Join the same Luna repair1; RDY-005 audit is terminal/pass;
 do not restart or reset attempts.
 Review its immutable result and independently verify no-fit gates before any
 qualification fit. Preserve failed candidate ee9d905 and its 178/4 result.

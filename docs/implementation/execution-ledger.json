@@ -10204,7 +10204,7 @@
       "audit": "pass_protocol_only"
     },
     "RDY-005": {
-      "status": "frozen_producer_protocol_fresh_astra_audit_active",
+      "status": "protocol_audit_pass_implementation_staged_after_supervisor_verification",
       "base": "0e747f4",
       "allowlist": [
         "docs/implementation/readiness/RDY-005-c05-enrichment-producer-protocol.md"
@@ -10212,9 +10212,11 @@
       "worker": "/root/readiness_mofa_producer_astra",
       "native_fits": 0,
       "enrichment_calls": 0,
-      "next_transition": "record initial protocol audit verdict; no implementation while audit open",
+      "next_transition": "review current C07 process repair before new producer implementation; no native calls yet",
       "candidate": "258bd00a691cb67e3a5865d182087828aaa07dcf",
-      "protocol_sha256": "9256c16bc857d0bbeb71ab2c4a0091ab80ae3f69131ee1b6713c650e7dd88f65"
+      "protocol_sha256": "9256c16bc857d0bbeb71ab2c4a0091ab80ae3f69131ee1b6713c650e7dd88f65",
+      "audit": "pass_protocol_only",
+      "review_ref": "docs/implementation/reviews/2026-11-09-rdy-005-protocol-astra.md"
     }
   }
 }
