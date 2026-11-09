@@ -10123,7 +10123,7 @@
         "audit_initial": 1,
         "focused_rereview": 1,
         "implementation_initial": 1,
-        "implementation_repairs": 0
+        "implementation_repairs": 1
       },
       "RDY-003": {
         "audit_initial": 1,
@@ -10152,7 +10152,7 @@
         "inst/qualification/run-c07-qualification.R",
         "tests/testthat/test-RDY-002-c07-qualification.R"
       ],
-      "status": "same initial Luna worker completing no-fit process/CLI verification; not integrated, zero native fits",
+      "status": "initial candidate rejected; same Luna targeted repair1 dispatched",
       "corrected_scope_commit": "b99fa2174fad126bffb94ee14439d83a26e5e1ff",
       "focused_scope_audit": "pass",
       "red_tests": {
@@ -10164,6 +10164,18 @@
         "skips": 0,
         "exit": 1,
         "interpretation": "expected missing runner; initial implementation authorized",
+        "native_fits": 0
+      },
+      "initial_candidate": "ee9d905426e2b9fd13e874bf6fa4d9b775b030ba",
+      "initial_review_ref": "docs/implementation/reviews/2026-11-09-rdy-002-initial-runner-review.md",
+      "sol_initial_tests": {
+        "tests": 13,
+        "passed": 178,
+        "failed": 4,
+        "errors": 0,
+        "warnings": 0,
+        "skips": 0,
+        "exit": 1,
         "native_fits": 0
       }
     },
