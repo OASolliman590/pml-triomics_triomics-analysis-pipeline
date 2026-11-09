@@ -1,3 +1,15 @@
+# Active: RDY-002 final bounded repair 2 authorized
+
+Read [repair1 independent verification and reviews](reviews/2026-11-09-rdy-002-repair1-review.md). Immutable `dd29028` passed both source and installed focused suites: 19 tests, 266 passes each, zero failures/errors/warnings/skips and no native fits. Both fresh Sol reviews nevertheless found blockers; Sol reproduced them. The candidate is not integrated or qualified.
+
+Same `/root/readiness_c07_runner_luna`, existing two-file worktree, final targeted repair2/2 is authorized for five defects: unresolved-cleanup resume, unseen descendants, startup cleanup uncertainty, false-success CLI exit and reservation/fit-attempt accounting. No repair3, attempt reset, native fit or changed scientific contract. Local state.json records the actual dispatch and process state.
+
+RDY-001 is accepted. RDY-004/005 are protocol-only passes, with producer implementation staged after supervisor verification. RDY-006 proposal `83aba31` is reviewed documentation only; its fresh audit awaits a concrete immutable execution subject. BioPAN research and the local fasting structure review are terminal; identities and preprocessing remain unverified. Accepted M1–M9/G7–G9 are unchanged. No study fits, push, AIU or Notion sync.
+
+Literal resume: **Join the same final Luna repair2; do not restart workers or reset attempts. Review its immutable result and independently verify the retained counterexamples plus source/installed no-fit gates. If it fails, preserve the blocker; no repair3. No qualification fit or additional native regression gate before its respective reviewed prerequisites pass.**
+
+## Historical checkpoints below
+
 # Active: RDY-002 targeted repair 1 after rejected initial runner
 
 Initial candidate `ee9d905` remains unintegrated. Sol independently reproduced

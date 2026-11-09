@@ -35,45 +35,7 @@
     "effective_active_worker_cap": 3,
     "heavy_model_fit_cap": 1
   },
-  "active_workers": [
-    {
-      "id": "/root/readiness_c07_runner_luna",
-      "role": "Luna",
-      "requested_model": "gpt-6-luna",
-      "effort": "max",
-      "effective_settings_exposed": false,
-      "status": "running_targeted_repair1",
-      "worktree": "/private/tmp/triomics-rdy002-c07-runner",
-      "base": "16077f5da5e7a757cf061ac94f28228dd23b077f",
-      "attempts": 1,
-      "repairs": 1,
-      "allowlist": [
-        "inst/qualification/run-c07-qualification.R",
-        "tests/testthat/test-RDY-002-c07-qualification.R"
-      ],
-      "next_transition": "join repair1 immutable commit and full no-fit evidence; independent Sol verification/review before any qualification fits",
-      "red_sol_receipt": "rdy002-sol-red/receipt.json",
-      "expanded_red": "worker reports 8 errors/8 tests; not independently rerun",
-      "dirty_diff": [
-        "inst/qualification/run-c07-qualification.R",
-        "tests/testthat/test-RDY-002-c07-qualification.R"
-      ],
-      "native_fits": 0,
-      "transport_interruptions": [
-        {
-          "at": "2026-11-09T07:44:39.521880+00:00",
-          "message": "remote compact task stream disconnected; network error decoding body",
-          "disposition": "same worker resumed from persisted files; no new implementation or repair attempt"
-        }
-      ],
-      "runner_written": true,
-      "worker_checkpoint": "Same repair1 remains RED, no repaired commit. Positive R-watchdog parent-death witness worker-reported reproducible; broad no-fit tests expose split representation, startup identity, thread-cap and ready-idempotency defects under repair. Preserve every log; no native fits.",
-      "commit": "ee9d905426e2b9fd13e874bf6fa4d9b775b030ba",
-      "initial_commit": "ee9d905426e2b9fd13e874bf6fa4d9b775b030ba",
-      "repair1_internal_test_disposition": "preserve failed log; marker-less ownership must bind actual worker run/cell/root; missing orphan identity refuses; retain positive proven-stopped case; still repair1, no new attempt",
-      "checkpoint_evidence": "rdy002-repair1-checkpoints/manifest.json"
-    }
-  ],
+  "active_workers": [],
   "orchestration_control": {
     "status": "readiness_active",
     "last_reconciled": "2026-11-09T07:59:19.834264+00:00",
@@ -10117,7 +10079,7 @@
     "goal_ref": "docs/implementation/readiness/GOAL.md",
     "baseline_record": "29ba7d75170a428860a36723847a085115ed2080",
     "status": "in_progress",
-    "current_scope": "C07 same Luna repair1; RDY006 proposal reviewed, audit prerequisites pending",
+    "current_scope": "RDY002 repair1 rejected; final same-worker repair2 authorized",
     "scope_ref": "docs/implementation/change-records/RDY-001-frozen-spec-reconciliation.md",
     "accepted_M7_M8_M9_unchanged": true,
     "G7_G8_G9": "released",
@@ -10130,7 +10092,7 @@
         "audit_initial": 1,
         "focused_rereview": 1,
         "implementation_initial": 1,
-        "implementation_repairs": 1
+        "implementation_repairs": 2
       },
       "RDY-003": {
         "audit_initial": 1,
@@ -10172,7 +10134,7 @@
         "inst/qualification/run-c07-qualification.R",
         "tests/testthat/test-RDY-002-c07-qualification.R"
       ],
-      "status": "initial candidate rejected; same Luna targeted repair1 dispatched",
+      "status": "repair1 rejected; same Luna final repair2 authorized",
       "corrected_scope_commit": "b99fa2174fad126bffb94ee14439d83a26e5e1ff",
       "focused_scope_audit": "pass",
       "red_tests": {
@@ -10197,6 +10159,30 @@
         "skips": 0,
         "exit": 1,
         "native_fits": 0
+      },
+      "repair1_candidate": "dd290289e91a07ff010695ebb5012b65f256e8d8",
+      "repair1_review_ref": "docs/implementation/reviews/2026-11-09-rdy-002-repair1-review.md",
+      "repair1_source_counts": {
+        "mode": "source",
+        "tests": 19,
+        "passed": 266,
+        "failed": 0,
+        "errors": 0,
+        "warnings": 0,
+        "skipped": 0,
+        "native_fits": 0,
+        "native_fit_basis": "focused no-fit behavioral suite only; no qualification execution"
+      },
+      "repair1_installed_counts": {
+        "mode": "installed",
+        "tests": 19,
+        "passed": 266,
+        "failed": 0,
+        "errors": 0,
+        "warnings": 0,
+        "skipped": 0,
+        "native_fits": 0,
+        "native_fit_basis": "focused no-fit behavioral suite only; no qualification execution"
       }
     },
     "RDY-003": {
@@ -10231,9 +10217,7 @@
       "audit": "pass_protocol_only",
       "review_ref": "docs/implementation/reviews/2026-11-09-rdy-005-protocol-astra.md"
     },
-    "active_workers": [
-      "/root/readiness_c07_runner_luna"
-    ],
+    "active_workers": [],
     "biopan_source_followup": {
       "status": "completed_sol_reviewed_research_only",
       "worker": "/root/readiness_biopan_source_terra",
