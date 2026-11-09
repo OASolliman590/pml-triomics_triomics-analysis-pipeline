@@ -42,7 +42,7 @@
       "requested_model": "gpt-6-luna",
       "effort": "max",
       "effective_settings_exposed": false,
-      "status": "running_same_initial_after_ssd_restored",
+      "status": "running_initial_no_fit_checks",
       "worktree": "/private/tmp/triomics-rdy002-c07-runner",
       "base": "16077f5da5e7a757cf061ac94f28228dd23b077f",
       "attempts": 1,
@@ -51,7 +51,7 @@
         "inst/qualification/run-c07-qualification.R",
         "tests/testthat/test-RDY-002-c07-qualification.R"
       ],
-      "next_transition": "GREEN immutable two-file commit and no-fit checks for Sol review; no native fits",
+      "next_transition": "Sol reviews immutable GREEN candidate; no fits before review",
       "red_sol_receipt": "rdy002-sol-red/receipt.json",
       "expanded_red": "worker reports 8 errors/8 tests; not independently rerun",
       "dirty_diff": "tests/testthat/test-RDY-002-c07-qualification.R",
@@ -62,25 +62,14 @@
           "message": "remote compact task stream disconnected; network error decoding body",
           "disposition": "same worker resumed from persisted files; no new implementation or repair attempt"
         }
-      ]
-    },
-    {
-      "id": "/root/readiness_mofa_enrichment_astra",
-      "role": "Astra",
-      "requested_model": "gpt-6-astra",
-      "effort": "low",
-      "effective_settings_exposed": false,
-      "task": "RDY004 native MOFA enrichment prespecification audit only",
-      "status": "running",
-      "candidate": "e3407b22867aa6f57e5f39dc360bf34a81d8f2ff",
-      "attempts": 1,
-      "focused_rereviews": 0,
-      "next_transition": "record protocol verdict; qualification still requires eligible producer model; no activation from protocol approval"
+      ],
+      "runner_written": true,
+      "worker_checkpoint": "about1000lines, tests not yet run at message; expanded initial RED11 missingrunnererrors, workerreported only"
     }
   ],
   "orchestration_control": {
     "status": "readiness_active",
-    "last_reconciled": "2026-11-09T07:56:21.926830+00:00",
+    "last_reconciled": "2026-11-09T07:59:19.834264+00:00",
     "active_handoffs": [
       {
         "id": "/root/readiness_c07_runner_luna",
@@ -88,7 +77,7 @@
         "requested_model": "gpt-6-luna",
         "effort": "max",
         "effective_settings_exposed": false,
-        "status": "running_same_initial_after_ssd_restored",
+        "status": "running_initial_no_fit_checks",
         "worktree": "/private/tmp/triomics-rdy002-c07-runner",
         "base": "16077f5da5e7a757cf061ac94f28228dd23b077f",
         "attempts": 1,
@@ -97,7 +86,7 @@
           "inst/qualification/run-c07-qualification.R",
           "tests/testthat/test-RDY-002-c07-qualification.R"
         ],
-        "next_transition": "GREEN immutable two-file commit and no-fit checks for Sol review; no native fits",
+        "next_transition": "Sol reviews immutable GREEN candidate; no fits before review",
         "red_sol_receipt": "rdy002-sol-red/receipt.json",
         "expanded_red": "worker reports 8 errors/8 tests; not independently rerun",
         "dirty_diff": "tests/testthat/test-RDY-002-c07-qualification.R",
@@ -108,20 +97,9 @@
             "message": "remote compact task stream disconnected; network error decoding body",
             "disposition": "same worker resumed from persisted files; no new implementation or repair attempt"
           }
-        ]
-      },
-      {
-        "id": "/root/readiness_mofa_enrichment_astra",
-        "role": "Astra",
-        "requested_model": "gpt-6-astra",
-        "effort": "low",
-        "effective_settings_exposed": false,
-        "task": "RDY004 native MOFA enrichment prespecification audit only",
-        "status": "running",
-        "candidate": "e3407b22867aa6f57e5f39dc360bf34a81d8f2ff",
-        "attempts": 1,
-        "focused_rereviews": 0,
-        "next_transition": "record protocol verdict; qualification still requires eligible producer model; no activation from protocol approval"
+        ],
+        "runner_written": true,
+        "worker_checkpoint": "about1000lines, tests not yet run at message; expanded initial RED11 missingrunnererrors, workerreported only"
       }
     ],
     "protocol_ref": "docs/implementation/ORCHESTRATION_CONTROL.md",
@@ -10198,12 +10176,13 @@
       "review_ref": "docs/implementation/reviews/2026-11-08-rdy-003-dependency-astra.md"
     },
     "RDY-004": {
-      "status": "protocol_audit_open",
+      "status": "protocol_passed_execution_prerequisite_unresolved",
       "candidate": "e3407b22867aa6f57e5f39dc360bf34a81d8f2ff",
       "document": "docs/implementation/readiness/RDY-004-mofa-enrichment-qualification-protocol.md",
       "native_fits": 0,
       "enrichment_calls": 0,
-      "prerequisite": "eligible immutable C05 producer model/data/masks/maps not identified; not authorized by zero-D-fit budget"
+      "prerequisite": "eligible immutable C05 producer model/data/masks/maps not identified; not authorized by zero-D-fit budget",
+      "audit": "pass_protocol_only"
     }
   }
 }
