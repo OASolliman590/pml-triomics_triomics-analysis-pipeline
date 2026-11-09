@@ -10136,6 +10136,13 @@
         "audit_initial": 1,
         "focused_rereview": 0,
         "implementation_initial": 0
+      },
+      "RDY-005": {
+        "documentation_initial": 1,
+        "documentation_repairs": 0,
+        "audit_initial": 0,
+        "focused_rereview": 0,
+        "implementation_initial": 0
       }
     },
     "worker_ledger": "local readiness-20261108-01/state.json",
@@ -10195,6 +10202,17 @@
       "enrichment_calls": 0,
       "prerequisite": "eligible immutable C05 producer model/data/masks/maps not identified; not authorized by zero-D-fit budget",
       "audit": "pass_protocol_only"
+    },
+    "RDY-005": {
+      "status": "producer_prerequisite_documentation_only",
+      "base": "0e747f4",
+      "allowlist": [
+        "docs/implementation/readiness/RDY-005-c05-enrichment-producer-protocol.md"
+      ],
+      "worker": "/root/readiness_mofa_producer_terra",
+      "native_fits": 0,
+      "enrichment_calls": 0,
+      "next_transition": "Sol document review then fresh scope audit; no execution before pass"
     }
   }
 }

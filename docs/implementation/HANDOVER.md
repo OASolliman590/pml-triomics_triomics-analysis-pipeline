@@ -13,10 +13,14 @@ Positive host cleanup and standalone CLI must be demonstrated with no-fit
 witnesses before any of the fixed 2550 native fits. Host refusal is not success.
 
 RDY-001 accepted; RDY-004 protocol-only audit passed with its eligible producer
-prerequisite unresolved. The SSD is reconnected. Private structure review is
+prerequisite unresolved. Documentation-only Terra worker
+`/root/readiness_mofa_producer_terra` drafts RDY-005 for that separate producer
+prerequisite, initial1/repair0, no model or enrichment calls. Review its one-file
+proposal before freezing/auditing it; do not infer execution authorization. The SSD is reconnected. Private structure review is
 complete; identities/processing remain unverified. M1–M9/G7–G9 unchanged.
 
-Literal resume: **Join the same Luna repair1; do not restart or reset attempts.
+Literal resume: **Join the same Luna repair1 and RDY-005 Terra documentation;
+do not restart or reset attempts.
 Review its immutable result and independently verify no-fit gates before any
 qualification fit. Preserve failed candidate ee9d905 and its 178/4 result.
 No extra protocol rereview, inferred study mapping or D-T06 activation.

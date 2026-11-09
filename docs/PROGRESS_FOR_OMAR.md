@@ -1,18 +1,18 @@
-# Pipeline progress — 8 November 2026
+# Pipeline progress — 9 November 2026
 
-The goal is now study readiness and scientific qualification. Required Stage D work is accepted: M7, M8 and M9 are complete, and G7/G8/G9 are released. Paired and independent synthetic walkthroughs, a clinical missingness smoke, the full source suite and a clean package archive passed; fresh M9 Astra review passed. This is software acceptance, not validation of the three studies.
+The goal is study readiness and scientific qualification. The core pipeline and required Stage D reports remain accepted on synthetic software evidence; M7–M9 are complete and G7–G9 are released. Those decisions do not validate results from the three studies.
+
+The separate frozen-spec review is now closed through RDY-001. C-07’s four-scenario protocol is reviewed, with fixed seeds and a maximum of 2,550 fits. Its first runner candidate is incomplete. Independent verification found 178 passing assertions and four failures, plus defects in process recovery, predictive inputs and scientific summaries. The same Luna worker is making bounded repair 1; no qualification fits have run.
+
+MOFA enrichment’s protocol passed Astra review. A separate document is defining the public synthetic model it still needs; no producer fit or enrichment call is authorized from that draft. The fasting structure review is complete, while participant/visit meaning and laboratory processing remain unverified. All three studies and assay layers stay distinct.
+
+Next acceptance: independently verify the repaired runner before executing the fixed controls. Needs Omar: authoritative sample/clinical coding and the laboratory records he is seeking. Sync: local records only; no Notion update, AIU run or GitHub push.
 
 | Area | Current evidence |
 |---|---|
-| Core pipeline and reports | Accepted on synthetic fixtures; M8/D13 history preserved |
-| Current specification review | RDY-001 Astra passed; Sol recorded exact-hash approval |
-| C-07 scientific controls | Protocol and runner scope reviewed; implementation underway; no fits |
-| First-study onboarding | Local structural inspection; identity and processing unverified |
-| Optional methods | Primary-source research recorded; conditional gates still apply |
-| Real-study results | No new study analysis or biological validation |
-
-RDY-001 reconciles the entrypoint checksum discrepancies without erasing historical manifests. Its current approval is separate from the original delivery record. Fasting, diabetic-treatment and organophosphate studies remain separate, with proteomic, lipidomic and metabolomic inputs checked independently.
-
-The C-07 protocol fixes the four scenarios, seeds, comparisons and a maximum of 2,550 fits. Astra passed it and a focused correction that makes the runner available to package tests. Sol reproduced the initial failing tests. A separate audit resolved an explicit process-library dependency; the same Luna worker is implementing the runner. No required test is skipped.
-
-Next acceptance: verify the runner, execute the fixed controls and review the actual evidence. Needs Omar: confirm the sample-code meanings, clinical link and lab preprocessing record in the supplied fasting folder. Private review drafts are ready. No aliases or pairing have been adopted from formatting alone. Sync: local records only; no Notion update, AIU run or GitHub push.
+| Core pipeline and reports | Accepted on synthetic fixtures; prior acceptance history preserved |
+| Frozen-spec review | RDY-001 reviewed and accepted |
+| C-07 scientific controls | Protocol reviewed; runner repair 1 underway; zero native fits |
+| First-study readiness | Structure reviewed; identity and processing evidence still needed |
+| Optional methods | MOFA protocol reviewed; producer prerequisite proposed; other gates unchanged |
+| Real-study results | No study analysis or biological validation from this readiness work |

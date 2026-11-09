@@ -101,3 +101,12 @@ do not replace the tests or spend a model call. Sol will review and rerun the
 repaired immutable candidate before any qualification execution. M1–M9/G7–G9
 records, frozen scientific contracts and conditional dispositions are unchanged.
 No private study analysis, external upload, GitHub push or model fit occurred.
+
+### Additional no-fit standalone witness
+
+After the initial review, Sol verified that processx with an explicit named
+`env` vector does not inherit a parent sentinel variable. The runner's child
+launcher must explicitly preserve its required pinned runtime and temporary-root
+settings, without serializing the complete environment or secrets. This is part
+of repair1's existing standalone/runtime requirement, not a new attempt or native
+call. Both original root-probe dummy processes were verified absent afterward.
