@@ -10110,7 +10110,7 @@
     "goal_ref": "docs/implementation/readiness/GOAL.md",
     "baseline_record": "29ba7d75170a428860a36723847a085115ed2080",
     "status": "in_progress",
-    "current_scope": "RDY-002 C07 protocol and first-study readiness",
+    "current_scope": "RDY-002 initial runner verification; RDY-004 protocol passed with producer prerequisite pending",
     "scope_ref": "docs/implementation/change-records/RDY-001-frozen-spec-reconciliation.md",
     "accepted_M7_M8_M9_unchanged": true,
     "G7_G8_G9": "released",
@@ -10152,7 +10152,7 @@
         "inst/qualification/run-c07-qualification.R",
         "tests/testthat/test-RDY-002-c07-qualification.R"
       ],
-      "status": "same initial Luna implementation after audited dependency seam",
+      "status": "same initial Luna worker completing no-fit process/CLI verification; not integrated, zero native fits",
       "corrected_scope_commit": "b99fa2174fad126bffb94ee14439d83a26e5e1ff",
       "focused_scope_audit": "pass",
       "red_tests": {

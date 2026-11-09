@@ -1,25 +1,30 @@
-# Active: C-07 initial implementation and MOFA enrichment protocol review
+# Active: C-07 runner verification; MOFA protocol audit passed
 
-The SSD returned with canonical `d78bd7b` and expected protected dirt; no Git
-repair or replacement was performed. RDY-004 protocol proposal is now integrated
-at `e3407b2`, after Sol checked its source fingerprints and documentation repair.
-Fresh `/root/readiness_mofa_enrichment_astra` audits that immutable proposal.
-It is not a native qualification or D-T06 activation. Eligible C-05 producer
-model/data/masks/maps remain prerequisites; no enrichment call or model fit ran.
-Documentation initial1/repair1, protocol audit initial1/focused0.
+The SSD is reconnected; canonical state was verified at `ba80a13` with only the
+three protected tracked dirt paths. No Git repair/replacement was performed.
+RDY-004's fresh Astra audit passed **the protocol only** at `e3407b2`; see
+[the receipt](reviews/2026-11-09-rdy-004-protocol-astra.md). Its eligible native
+C-05 model/data/masks/maps prerequisite remains unresolved. No enrichment call,
+qualification fit or private-study analysis has run.
 
-The same `/root/readiness_c07_runner_luna` continues its initial two-file runner
-implementation on reviewed base `16077f5`. A transport interruption was resumed
-without resetting attempts. Native fits0; repairs0/2. The RDY-002 scientific
-protocol/review history and RDY-003 dependency declaration remain unchanged.
-The local fasting structural review is complete and reviewed; scientific
-identities and lab processing remain unverified. Omar is searching for notes.
+The existing `/root/readiness_c07_runner_luna` continues its initial two-file
+implementation at base `16077f5`, repairs 0/2. Its no-fit development checks
+exposed sandbox process-inspection and volume-inspection restrictions. These
+are not accepted cleanup evidence: successful ownership/descendant cleanup must
+be independently verified on the actual host, with permission failures recorded
+separately and execution refused when ownership is uncertain. The initial
+candidate has not been integrated or accepted.
 
-Literal resume: **Join these exact two active workers, do not restart them.
-Review Luna's immutable GREEN candidate before fitting the frozen C-07 controls.
-Record Astra's RDY-004 protocol verdict separately; do not mistake it for native
-qualification or invent producer artifacts. Preserve every attempt count and
-all accepted M1–M9/G7–G9 records. Exact local state: readiness state.json.**
+The fasting structural review is complete and Sol-reviewed. Participant/visit
+meaning and lab processing are still unverified; Omar is searching for notes.
+M1–M9/G7–G9 acceptance/release records remain unchanged.
+
+Literal resume: **Join the same Luna worker, do not restart it. Review its
+immutable candidate and no-fit process/CLI evidence before any of the frozen
+C-07 fits. Preserve initial1/repairs0 and all protocol review counts. RDY-004
+protocol audit is terminal/pass; do not redispatch it or infer D-T06 activation.
+No guessed study mappings or processing. Exact local state is readiness
+state.json.**
 
 ## Historical checkpoints below
 
