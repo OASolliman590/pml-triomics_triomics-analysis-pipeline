@@ -30,15 +30,16 @@ Sol must independently verify immutable/installed bytes and the complete
 behavioral suite before any native fit. The broad no-fit tests remain RED; no
 repair1 commit is ready yet.
 
-Terra `/root/readiness_verification_budget_terra` is drafting RDY-006: a static
-inventory and separate budget proposal for the later source/archive regression
-gates. This is documentation only; no native verification calls or new scientific
-budget is approved. Sol must review and obtain a fresh audit before execution.
+Terra `/root/readiness_verification_budget_terra` is terminal. Sol reviewed and
+integrated the RDY-006 static inventory and separate regression-budget proposal
+at `83aba31`. It is not execution approval. Fresh Astra review awaits the actual
+immutable candidate and concrete execution/supervision evidence required by the
+proposal. No native verification gate or new scientific budget is approved.
 
 Literal resume: **Join the same Luna repair1; BioPAN research is terminal;
 RDY-005 audit is terminal/pass;
 do not restart or reset attempts.
-Reconcile the RDY-006 documentation worker and review its proposal.
+RDY-006 Terra is terminal; preserve the pending execution-audit gate.
 Review Luna's immutable result and independently verify no-fit gates before any
 qualification fit. Preserve failed candidate ee9d905 and its 178/4 result.
 No extra protocol rereview, inferred study mapping or D-T06 activation.

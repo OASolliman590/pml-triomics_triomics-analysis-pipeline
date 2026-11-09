@@ -2,7 +2,7 @@
 
 The goal is study readiness and scientific qualification. The core pipeline and required Stage D reports remain accepted on synthetic software evidence; M7–M9 are complete and G7–G9 are released. Those decisions do not validate results from the three studies.
 
-The separate frozen-spec review is closed through RDY-001. C-07’s four-scenario protocol is reviewed, with fixed seeds and a maximum of 2,550 fits. Its first runner candidate failed independent verification. The same Luna worker is making bounded repair 1 and reports a successful no-fit crash-cleanup witness. The broad runner tests still fail; no qualification fits have run. A separate regression-budget proposal is being drafted before later native test gates.
+The separate frozen-spec review is closed through RDY-001. C-07’s four-scenario protocol is reviewed, with fixed seeds and a maximum of 2,550 fits. Its first runner candidate failed independent verification. The same Luna worker is making bounded repair 1 and reports a successful no-fit crash-cleanup witness. The broad runner tests still fail; no qualification fits have run. A separate regression-budget proposal is drafted; its audit must precede later native test gates.
 
 Astra passed the MOFA-enrichment and synthetic-producer protocols. Neither method has been executed or activated. BioPAN research found an accessible author-associated code lead, with equivalence and reference-data terms still unverified. The fasting structure review is complete; participant/visit meaning and laboratory processing remain unverified. The three studies and assay layers stay distinct.
 

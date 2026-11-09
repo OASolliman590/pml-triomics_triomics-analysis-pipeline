@@ -72,23 +72,6 @@
       "initial_commit": "ee9d905426e2b9fd13e874bf6fa4d9b775b030ba",
       "repair1_internal_test_disposition": "preserve failed log; marker-less ownership must bind actual worker run/cell/root; missing orphan identity refuses; retain positive proven-stopped case; still repair1, no new attempt",
       "checkpoint_evidence": "rdy002-repair1-checkpoints/manifest.json"
-    },
-    {
-      "id": "/root/readiness_verification_budget_terra",
-      "role": "Terra",
-      "requested_model": "gpt-6.1-terra",
-      "effort": "max",
-      "effective_settings_exposed": false,
-      "status": "running_initial_documentation",
-      "scope": "RDY006 static inventory and separate regression verification budget proposal; no execution",
-      "worktree": "/private/tmp/triomics-rdy006-verification-budget",
-      "base": "650d6fd",
-      "allowlist": [
-        "docs/implementation/readiness/RDY-006-regression-verification-budget-proposal.md"
-      ],
-      "attempts": 1,
-      "repairs": 0,
-      "next_transition": "Sol reviews proposal, freezes and obtains fresh scope audit before any extra native gate"
     }
   ],
   "orchestration_control": {
@@ -10134,7 +10117,7 @@
     "goal_ref": "docs/implementation/readiness/GOAL.md",
     "baseline_record": "29ba7d75170a428860a36723847a085115ed2080",
     "status": "in_progress",
-    "current_scope": "C07 same Luna repair1; independent regression-budget documentation only",
+    "current_scope": "C07 same Luna repair1; RDY006 proposal reviewed, audit prerequisites pending",
     "scope_ref": "docs/implementation/change-records/RDY-001-frozen-spec-reconciliation.md",
     "accepted_M7_M8_M9_unchanged": true,
     "G7_G8_G9": "released",
@@ -10249,8 +10232,7 @@
       "review_ref": "docs/implementation/reviews/2026-11-09-rdy-005-protocol-astra.md"
     },
     "active_workers": [
-      "/root/readiness_c07_runner_luna",
-      "/root/readiness_verification_budget_terra"
+      "/root/readiness_c07_runner_luna"
     ],
     "biopan_source_followup": {
       "status": "completed_sol_reviewed_research_only",
@@ -10272,7 +10254,7 @@
       "role": "Terra",
       "requested_model": "gpt-6.1-terra",
       "effort": "max",
-      "status": "running_initial_documentation",
+      "status": "completed_sol_reviewed_proposal_integrated",
       "scope": "RDY006 static inventory and separate regression verification budget proposal; no execution",
       "base": "650d6fd",
       "allowlist": [
@@ -10280,7 +10262,10 @@
       ],
       "attempts": 1,
       "repairs": 0,
-      "next_transition": "Sol reviews proposal, freezes and obtains fresh scope audit before any extra native gate",
+      "next_transition": "fresh Astra only after immutable candidate and concrete execution/supervision evidence are ready; no native gate authorized",
+      "commit": "01441ec62dbd6d054e9991c8a5c69c6ac9ec880c",
+      "integration_commit": "83aba31ec87746f32dd850c2ea10c9562eab848a",
+      "proposal_sha256": "e0506c321a04136df1a9995888325be46cbb2065d858fe978bb5a79ffecd10a5",
       "native_fits": 0
     }
   }
