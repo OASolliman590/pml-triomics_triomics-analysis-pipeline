@@ -27,12 +27,19 @@ installation, private inputs, execution or D-T07 activation.
 Luna reports a positive no-fit R-watchdog coordinator-loss witness, following
 preserved failed processx probes. It is still repair1, uncommitted/unaccepted;
 Sol must independently verify immutable/installed bytes and the complete
-behavioral suite before any native fit.
+behavioral suite before any native fit. The broad no-fit tests remain RED; no
+repair1 commit is ready yet.
+
+Terra `/root/readiness_verification_budget_terra` is drafting RDY-006: a static
+inventory and separate budget proposal for the later source/archive regression
+gates. This is documentation only; no native verification calls or new scientific
+budget is approved. Sol must review and obtain a fresh audit before execution.
 
 Literal resume: **Join the same Luna repair1; BioPAN research is terminal;
 RDY-005 audit is terminal/pass;
 do not restart or reset attempts.
-Review its immutable result and independently verify no-fit gates before any
+Reconcile the RDY-006 documentation worker and review its proposal.
+Review Luna's immutable result and independently verify no-fit gates before any
 qualification fit. Preserve failed candidate ee9d905 and its 178/4 result.
 No extra protocol rereview, inferred study mapping or D-T06 activation.
 Local readiness state.json owns the exact worker/process handoff.**

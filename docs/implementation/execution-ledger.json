@@ -42,19 +42,22 @@
       "requested_model": "gpt-6-luna",
       "effort": "max",
       "effective_settings_exposed": false,
-      "status": "running_initial_no_fit_checks",
+      "status": "running_targeted_repair1",
       "worktree": "/private/tmp/triomics-rdy002-c07-runner",
       "base": "16077f5da5e7a757cf061ac94f28228dd23b077f",
       "attempts": 1,
-      "repairs": 0,
+      "repairs": 1,
       "allowlist": [
         "inst/qualification/run-c07-qualification.R",
         "tests/testthat/test-RDY-002-c07-qualification.R"
       ],
-      "next_transition": "Sol reviews immutable GREEN candidate; no fits before review",
+      "next_transition": "join repair1 immutable commit and full no-fit evidence; independent Sol verification/review before any qualification fits",
       "red_sol_receipt": "rdy002-sol-red/receipt.json",
       "expanded_red": "worker reports 8 errors/8 tests; not independently rerun",
-      "dirty_diff": "tests/testthat/test-RDY-002-c07-qualification.R",
+      "dirty_diff": [
+        "inst/qualification/run-c07-qualification.R",
+        "tests/testthat/test-RDY-002-c07-qualification.R"
+      ],
       "native_fits": 0,
       "transport_interruptions": [
         {
@@ -64,7 +67,28 @@
         }
       ],
       "runner_written": true,
-      "worker_checkpoint": "about1000lines, tests not yet run at message; expanded initial RED11 missingrunnererrors, workerreported only"
+      "worker_checkpoint": "Same repair1 remains RED, no repaired commit. Positive R-watchdog parent-death witness worker-reported reproducible; broad no-fit tests expose split representation, startup identity, thread-cap and ready-idempotency defects under repair. Preserve every log; no native fits.",
+      "commit": "ee9d905426e2b9fd13e874bf6fa4d9b775b030ba",
+      "initial_commit": "ee9d905426e2b9fd13e874bf6fa4d9b775b030ba",
+      "repair1_internal_test_disposition": "preserve failed log; marker-less ownership must bind actual worker run/cell/root; missing orphan identity refuses; retain positive proven-stopped case; still repair1, no new attempt",
+      "checkpoint_evidence": "rdy002-repair1-checkpoints/manifest.json"
+    },
+    {
+      "id": "/root/readiness_verification_budget_terra",
+      "role": "Terra",
+      "requested_model": "gpt-6.1-terra",
+      "effort": "max",
+      "effective_settings_exposed": false,
+      "status": "running_initial_documentation",
+      "scope": "RDY006 static inventory and separate regression verification budget proposal; no execution",
+      "worktree": "/private/tmp/triomics-rdy006-verification-budget",
+      "base": "650d6fd",
+      "allowlist": [
+        "docs/implementation/readiness/RDY-006-regression-verification-budget-proposal.md"
+      ],
+      "attempts": 1,
+      "repairs": 0,
+      "next_transition": "Sol reviews proposal, freezes and obtains fresh scope audit before any extra native gate"
     }
   ],
   "orchestration_control": {
@@ -10110,7 +10134,7 @@
     "goal_ref": "docs/implementation/readiness/GOAL.md",
     "baseline_record": "29ba7d75170a428860a36723847a085115ed2080",
     "status": "in_progress",
-    "current_scope": "RDY-002 initial runner verification; RDY-004 protocol passed with producer prerequisite pending",
+    "current_scope": "C07 same Luna repair1; independent regression-budget documentation only",
     "scope_ref": "docs/implementation/change-records/RDY-001-frozen-spec-reconciliation.md",
     "accepted_M7_M8_M9_unchanged": true,
     "G7_G8_G9": "released",
@@ -10143,6 +10167,12 @@
         "audit_initial": 1,
         "focused_rereview": 0,
         "implementation_initial": 0
+      },
+      "RDY-006": {
+        "documentation_initial": 1,
+        "documentation_repairs": 0,
+        "audit_initial": 0,
+        "focused_rereview": 0
       }
     },
     "worker_ledger": "local readiness-20261108-01/state.json",
@@ -10219,7 +10249,8 @@
       "review_ref": "docs/implementation/reviews/2026-11-09-rdy-005-protocol-astra.md"
     },
     "active_workers": [
-      "/root/readiness_c07_runner_luna"
+      "/root/readiness_c07_runner_luna",
+      "/root/readiness_verification_budget_terra"
     ],
     "biopan_source_followup": {
       "status": "completed_sol_reviewed_research_only",
@@ -10235,6 +10266,22 @@
       "execution": false,
       "integration_commit": "c220e780920eb48680f281dda75ab6ba7b3aff7c",
       "note_sha256": "d782a74fe2677443e6e9749b63f40ca0fc9137f1ae72e3a0e813bd756abe75af"
+    },
+    "RDY-006": {
+      "id": "/root/readiness_verification_budget_terra",
+      "role": "Terra",
+      "requested_model": "gpt-6.1-terra",
+      "effort": "max",
+      "status": "running_initial_documentation",
+      "scope": "RDY006 static inventory and separate regression verification budget proposal; no execution",
+      "base": "650d6fd",
+      "allowlist": [
+        "docs/implementation/readiness/RDY-006-regression-verification-budget-proposal.md"
+      ],
+      "attempts": 1,
+      "repairs": 0,
+      "next_transition": "Sol reviews proposal, freezes and obtains fresh scope audit before any extra native gate",
+      "native_fits": 0
     }
   }
 }
