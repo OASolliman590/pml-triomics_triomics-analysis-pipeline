@@ -1,3 +1,15 @@
+# Closed blocked: RDY-002 final repair 2
+
+Closing documents recovered intact after SSD reconnection on 10 November 2026. This close adds documentation only; no worker, test or scientific fit was restarted.
+
+Read [the final repair2 receipt](reviews/2026-11-09-rdy-002-final-repair2-blocked.md). Candidate `2a9c409` is preserved, clean in its worker branch, and not integrated. Sol's independent source and installed focused suites each passed 25 tests / 305 assertions, with zero failures/errors/warnings/skips. Both fresh Sol reviews nevertheless returned changes_required. Sol independently reproduced premature fit-attempt accounting and rejection of actual Rscript argv; OS-exit inference is source-confirmed. Native qualification fits: zero.
+
+Initial1 + targeted repairs2/2 are exhausted. All run-owned workers and gates are terminal; no polling or automatic continuation remains. Do not redispatch the old Luna, open repair3, claim qualification, run a package/native gate or restart RDY-001. Accepted M1–M9/G7–G9 are preserved. RDY-004/005 remain protocol-only passes; RDY-006 remains an unaudited, unspent package-only proposal. Private study identity and preprocessing evidence remain unverified; the structural review is already complete.
+
+Literal resume: **Obtain explicit authorization for a new bounded C-07 cycle from `2a9c409`, limited to the three findings RDY002-R2-01/02/03 in the receipt. Preserve all prior attempts and use a fresh isolated Luna, independent Sol verification and required Astra gates. No native fits before applicable prerequisites pass; no inferred study mapping or protocol loosening.**
+
+## Historical checkpoints below
+
 # Active: RDY-002 final bounded repair 2 authorized
 
 Read [repair1 independent verification and reviews](reviews/2026-11-09-rdy-002-repair1-review.md). Immutable `dd29028` passed both source and installed focused suites: 19 tests, 266 passes each, zero failures/errors/warnings/skips and no native fits. Both fresh Sol reviews nevertheless found blockers; Sol reproduced them. The candidate is not integrated or qualified.
